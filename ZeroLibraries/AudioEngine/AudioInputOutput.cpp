@@ -14,11 +14,11 @@ namespace Audio
   //************************************************************************************************
   AudioIOInterface::AudioIOInterface() :
     MixedOutputBuffer(nullptr),
+    InputBuffer(nullptr),
     mOutputStreamLatency(LatencyValues::LowLatency)
   {
     memset(OutputBufferSizePerLatency, 0, sizeof(unsigned) * LatencyValues::Size);
 
-    InputRingBuffer.Initialize(sizeof(float), InputBufferSize, InputBuffer);
   }
 
   //************************************************************************************************
@@ -26,6 +26,8 @@ namespace Audio
   {
     if (MixedOutputBuffer)
       delete[] MixedOutputBuffer;
+    if (InputBuffer)
+      delete[] InputBuffer;
   }
 
   //************************************************************************************************
@@ -41,7 +43,6 @@ namespace Audio
     outputInfo.mChannels = AudioIO.GetStreamChannels(StreamTypes::Output);
     outputInfo.mSampleRate = AudioIO.GetStreamSampleRate(StreamTypes::Output);
 
-    // Initialize and set up the buffer used for mixed output
     InitializeOutputBuffers();
 
     // Initialize input stream
@@ -49,6 +50,8 @@ namespace Audio
     inputInfo.mStatus = AudioIO.InitializeStream(StreamTypes::Input, &inputInfo.mErrorMessage);
     inputInfo.mChannels = AudioIO.GetStreamChannels(StreamTypes::Input);
     inputInfo.mSampleRate = AudioIO.GetStreamSampleRate(StreamTypes::Input);
+
+    InitializeInputBuffers();
 
     return true;
   }
@@ -188,7 +191,7 @@ namespace Audio
     // Shut down the output stream so we can change the buffer size
     AudioIO.StopStream(StreamTypes::Output, nullptr);
     // Set up the output buffer with the current latency setting
-    SetUpOutputBuffers();
+    InitializeRingBuffer(OutputRingBuffer, MixedOutputBuffer, OutputBufferSizePerLatency[mOutputStreamLatency]);
     // Restart the audio output
     AudioIO.InitializeStream(StreamTypes::Output, nullptr);
     StreamInfoList[StreamTypes::Output].mStatus = AudioIO.StartStream(StreamTypes::Output,
@@ -198,36 +201,49 @@ namespace Audio
   //************************************************************************************************
   void AudioIOInterface::InitializeOutputBuffers()
   {
-    // Save the output sample rate and audio channels
-    unsigned outputSampleRate = AudioIO.GetStreamSampleRate(StreamTypes::Output);
-    unsigned outputChannels = AudioIO.GetStreamChannels(StreamTypes::Output);
-
-    // Start at the BufferSizeStartValue
-    unsigned size = BufferSizeStartValue;
-    // We need to get close to a value that accounts for the sample rate and channels
-    float checkValue = (float)BufferSizeMultiplier * outputSampleRate * outputChannels;
-    // Continue multiplying by 2 until we get close enough (buffer must be multiple of 2)
-    while (size < checkValue)
-      size *= 2;
+    unsigned size = GetBufferSize(AudioIO.GetStreamSampleRate(StreamTypes::Output),
+      AudioIO.GetStreamChannels(StreamTypes::Output));
 
     OutputBufferSizePerLatency[LatencyValues::LowLatency] = size;
     OutputBufferSizePerLatency[LatencyValues::HighLatency] = size * 4;
 
-    SetUpOutputBuffers();
+    InitializeRingBuffer(OutputRingBuffer, MixedOutputBuffer, OutputBufferSizePerLatency[mOutputStreamLatency]);
   }
 
   //************************************************************************************************
-  void AudioIOInterface::SetUpOutputBuffers()
+  void AudioIOInterface::InitializeInputBuffers()
+  {
+    unsigned size = GetBufferSize(AudioIO.GetStreamSampleRate(StreamTypes::Input),
+      AudioIO.GetStreamChannels(StreamTypes::Input));
+
+    InitializeRingBuffer(InputRingBuffer, InputBuffer, size * 2);
+  }
+
+  //************************************************************************************************
+  unsigned AudioIOInterface::GetBufferSize(unsigned sampleRate, unsigned channels)
+  {
+    // Start at the BufferSizeStartValue
+    unsigned size = BufferSizeStartValue;
+    // We need to get close to a value that accounts for the sample rate and channels
+    float checkValue = AudioIO.GetBufferSizeMultiplier() * sampleRate * channels;
+    // Continue multiplying by 2 until we get close enough (buffer must be multiple of 2)
+    while (size < checkValue)
+      size *= 2;
+
+    return size;
+  }
+
+  //************************************************************************************************
+  void AudioIOInterface::InitializeRingBuffer(RingBuffer& ringBuffer, float* buffer, unsigned size)
   {
     // If the buffer already exists, delete it
-    if (MixedOutputBuffer)
-      delete[] MixedOutputBuffer;
+    if (buffer)
+      delete[] buffer;
 
-    // Create the buffer at the appropriate size
-    MixedOutputBuffer = new float[OutputBufferSizePerLatency[mOutputStreamLatency]];
-    // Set up the OutputRingBuffer with the new buffer
-    OutputRingBuffer.Initialize(sizeof(float), OutputBufferSizePerLatency[mOutputStreamLatency], 
-      MixedOutputBuffer);
+    // Create the buffer
+    buffer = new float[size];
+    // Initialize the RingBuffer with the new buffer
+    ringBuffer.Initialize(sizeof(float), size, buffer);
   }
 
   //************************************************************************************************

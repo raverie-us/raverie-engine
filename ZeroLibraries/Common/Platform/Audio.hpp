@@ -16,7 +16,7 @@ DeclareEnum6(StreamStatus, Uninitialized, Initialized, Started, Stopped, ApiProb
 typedef void IOCallbackType(float* outputBuffer, float* inputBuffer, unsigned framesPerBuffer,
   void* data);
 
-//----------------------------------------------------------------------------- Audio Input Output
+//------------------------------------------------------------------------------- Audio Input Output
 
 class AudioInputOutput
 {
@@ -40,12 +40,16 @@ public:
   unsigned GetStreamChannels(StreamTypes::Enum whichStream);
   // Returns the sample rate of the specified audio stream
   unsigned GetStreamSampleRate(StreamTypes::Enum whichStream);
+  // Used to calculate the size for the input and output ring buffers
+  float GetBufferSizeMultiplier();
 
 private:
   OsHandle PlatformData;
 };
 
 DeclareEnum7(MidiEventType, MidiNoteOn, MidiNoteOff, MidiPitchWheel, MidiVolume, MidiModWheel, MidiControl, NotSet);
+
+//---------------------------------------------------------------------------------------- MIDI Data
 
 class MidiData
 {
@@ -58,6 +62,8 @@ public:
 
 class MidiInput;
 typedef void(*MidiDataCallback)(MidiData* data, MidiInput* input);
+
+//--------------------------------------------------------------------------------------- MIDI Input
 
 class MidiInput
 {

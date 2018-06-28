@@ -90,18 +90,14 @@ namespace Audio
     unsigned OutputBufferSizePerLatency[LatencyValues::Size];
     // Current latency setting for the audio output
     LatencyValues::Enum mOutputStreamLatency;
-    // Size of the buffer for input data
-    static const unsigned InputBufferSize = 8192;
-    // Buffer of input data
-    float InputBuffer[InputBufferSize];
+    // Buffer used for the InputRingBuffer
+    float* InputBuffer;
     // Ring buffer used for receiving input data
     RingBuffer InputRingBuffer;
     // For notifying the mix thread when a new buffer is needed.
     Zero::Semaphore MixThreadSemaphore;
     // List of info objects for each stream type
     StreamInfo StreamInfoList[StreamTypes::Size];
-    // The multiplier used to find the mix frames for a certain sample rate
-    const float BufferSizeMultiplier = 0.04f;
     // The value used to start calculating the mix frames
     const unsigned BufferSizeStartValue = 512;
     // Last error message pertaining to the audio API
@@ -109,8 +105,12 @@ namespace Audio
 
     // Sets variables and initializes output buffers at the appropriate size
     void InitializeOutputBuffers();
-    // Creates output buffers using the specified size
-    void SetUpOutputBuffers();
+    // Initializes the input buffer at the appropriate size
+    void InitializeInputBuffers();
+    // Determines a power of two size for buffers depending on the provided sample rate
+    unsigned GetBufferSize(unsigned sampleRate, unsigned channels);
+    // Initializes the specified RingBuffer at the specified size
+    void InitializeRingBuffer(RingBuffer& ringBuffer, float* buffer, unsigned size);
   };
 
 }

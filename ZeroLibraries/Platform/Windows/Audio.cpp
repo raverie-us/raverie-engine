@@ -787,6 +787,12 @@ unsigned AudioInputOutput::GetStreamSampleRate(StreamTypes::Enum whichStream)
     return 0;
 }
 
+//************************************************************************************************
+float AudioInputOutput::GetBufferSizeMultiplier()
+{
+  return 0.04f;
+}
+
 //-------------------------------------------------------------------------- Audio IO Windows Data
 
 //************************************************************************************************
@@ -819,6 +825,8 @@ unsigned AudioIOWindowsData::StartInputThread(void* param)
     ((AudioIOWindowsData*)param)->StreamDevices[StreamTypes::Input]->ProcessingLoop();
   return 0;
 }
+
+//--------------------------------------------------------------------------------------- MIDI Input
 
 //************************************************************************************************
 void CALLBACK MidiInProcCallback(HMIDIIN handle, UINT message, DWORD_PTR dwInstance,
@@ -910,7 +918,8 @@ MidiInput::MidiInput() :
   if (midiInGetNumDevs() > 0)
   {
     // Open the first device in the list
-    MMRESULT result = midiInOpen((HMIDIIN*)&mHandle, 0, (DWORD_PTR)&MidiInProcCallback, (DWORD_PTR)this, CALLBACK_FUNCTION);
+    MMRESULT result = midiInOpen((HMIDIIN*)&mHandle, 0, (DWORD_PTR)&MidiInProcCallback, (DWORD_PTR)this, 
+      CALLBACK_FUNCTION);
     if (result == MMSYSERR_NOERROR)
     {
       midiInStart((HMIDIIN)mHandle);
