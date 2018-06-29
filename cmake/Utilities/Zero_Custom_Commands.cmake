@@ -120,7 +120,8 @@ function(processor_post_build)
 
     foreach(aTarget ${PARSED_TARGETS})
         # create the tool directory
-        add_custom_command(TARGET ${aTarget} POST_BUILD
+        add_custom_command(
+            TARGET ${aTarget} POST_BUILD
             # executes "cmake -E make_directory
             COMMAND ${CMAKE_COMMAND} -E make_directory  
             # directory to make
@@ -129,7 +130,8 @@ function(processor_post_build)
         # copy all the dlls to the tool directory
         foreach(aDll ${PARSED_DLL_LOCATIONS})
             # copy the dll to the output directory
-            add_custom_command(TARGET ${aTarget} POST_BUILD
+            add_custom_command(
+                TARGET ${aTarget} POST_BUILD
                 # executes "cmake -E copy_if_different
                 COMMAND ${CMAKE_COMMAND} -E copy_if_different  
                 # input file
@@ -138,7 +140,8 @@ function(processor_post_build)
                 ${PARSED_PROCESSOR_OUTPUT_LOCATION}/${aTarget}
             )
             # copy the dll to the tool directory
-            add_custom_command(TARGET ${aTarget} POST_BUILD
+            add_custom_command(
+                TARGET ${aTarget} POST_BUILD
                 # executes "cmake -E copy_if_different
                 COMMAND ${CMAKE_COMMAND} -E copy_if_different  
                 # input file
@@ -167,7 +170,8 @@ function(copy_launcher_files aTarget aZeroCoreDirectory aBuildOutputDirectory)
     copy_cef_bin_post_build(${aTarget} ${aZeroCoreDirectory} ${aBuildOutputDirectory})
 
     # copy the configuration file
-    add_custom_command(TARGET ${aTarget} POST_BUILD
+    add_custom_command(
+        TARGET ${aTarget} POST_BUILD
     # executes "cmake -E copy_if_different
     COMMAND ${CMAKE_COMMAND} -E copy_if_different  
     # input file
@@ -176,7 +180,8 @@ function(copy_launcher_files aTarget aZeroCoreDirectory aBuildOutputDirectory)
     ${aBuildOutputDirectory}/${aTarget}/Configuration.data
     )
 
-    add_custom_command(TARGET ${aTarget} POST_BUILD
+    add_custom_command(
+        TARGET ${aTarget} POST_BUILD
     # executes "cmake -E copy_if_different
     COMMAND ${CMAKE_COMMAND} -E copy_if_different  
     # input file
@@ -190,7 +195,8 @@ endfunction()
 function(launcher_shared_post_build aTarget aZeroCoreDirectory aProjectDirectory aBuildOutputDirectory)
     copy_launcher_files(${aTarget} ${aZeroCoreDirectory} ${aBuildOutputDirectory})
 
-    add_custom_command(TARGET ${aTarget} POST_BUILD
+    add_custom_command(
+        TARGET ${aTarget} POST_BUILD
         COMMAND CALL "\"${aProjectDirectory}/PostBuild.cmd\"" "\"${aBuildOutputDirectory}\""
     )
 endfunction()
@@ -210,17 +216,48 @@ function(launcher_post_build aTarget aZeroCoreDirectory aProjectDirectory aBuild
 endfunction()
 ####
 
-#### Zips up the files in the given directory and puts the resulting zip in the given output file
-function(zip_directory aTarget aFolderToZip aOutputFile)
-    add_custom_command(TARGET ${aTarget} PRE_LINK 
-        # command
-        COMMAND ${CMAKE_COMMAND} -E tar 
-        "cvf"
-        # output
-        "${aOutputFile}"
-        --format=7zip
-        # input
-        ${aFolderToZip}
+
+#### Zips up the files in the directory or the list of directories and puts the resulting zip in the given output file
+function(zip_directory aTarget aFoldersToZip aOutputFile)
+    # add a command to make sure to clean out he zip first before we create a new one
+    add_custom_command(
+        TARGET ${aTarget} PRE_LINK
+        #command (-f so file not existing is still a success)
+        COMMAND ${CMAKE_COMMAND} -E remove -f
+        #file to remove
+        ${aOutputFile}
     )
+
+    # check for 7zip in path
+    find_program(sevenZipLocation 
+    NAMES 7za 7z 7z.exe 
+    HINTS CMAKE_SYSTEM_PROGRAM_PATH
+    PATHS CMAKE_SYSTEM_PROGRAM_PATH
+     )
+
+     message("===7zip location: ${sevenZipLocation}\n")
+
+     get_filename_component(sevenZip "${sevenZipLocation}" NAME)
+
+    # if we couldn't find 7zip in the path, just use the cmake command for zipping
+    if (("${sevenZip}" STREQUAL "sevenZip-NOTFOUND") OR ("${sevenZip}" STREQUAL ""))
+        add_custom_command(
+            TARGET ${aTarget} PRE_LINK 
+            # command
+            COMMAND ${CMAKE_COMMAND} -E tar 
+            "cvf"
+            # output
+            "${aOutputFile}"
+            --format=zip
+            # input
+            ${aFoldersToZip}
+        )
+    else()
+        add_custom_command(
+            TARGET ${aTarget} PRE_LINK 
+            # command
+            COMMAND ${sevenZip} a -tzip -mx=9 -mfb=128 -mpass=10 ${aOutputFile} "${aFoldersToZip}"
+        )
+    endif()
 endfunction()
 ####
