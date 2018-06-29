@@ -161,19 +161,22 @@ void MultiManager::Closed(Widget* widget)
     }
 
     LayoutInfo& info = Info[name];
-    info.Size = widget->GetSize();
-
     Window* window = GetWindowContaining(widget);
+
     if(window && window->mDocker)
     {
+      info.Size = window->GetSize();
       info.Area = window->mDocker->GetDockArea();
+    }
+    else
+    {
+      info.Size = widget->GetSize();
     }
 
     // Parent back to the main window
     mMainDock->AttachChildWidget(widget, AttachType::Normal);
     widget->SetActive(false);
     InactiveWidgets[name] = widget;
-
   }
   else
   {
