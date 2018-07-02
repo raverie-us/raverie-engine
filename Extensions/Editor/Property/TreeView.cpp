@@ -652,10 +652,11 @@ void TreeRow::Select(bool singleSelect)
 
   //Always clear everyone with onlySelected
   if(singleSelect) 
-    mTree->mSelection->SelectNone();
+    mTree->mSelection->SelectNone(false);
 
-  //Select this row
-  mTree->mSelection->Select(mIndex);
+  // Select this row. To avoid sending multiple selection events, we don't want to send one here
+  // because we're calling `SelectFinal` below which will send out the event for us.
+  mTree->mSelection->Select(mIndex, false);
 
   //Only send the event if this was not already selected.
   if(!wasSelected)
@@ -1496,6 +1497,8 @@ void TreeView::ShowRow(DataIndex& index)
   DataEntry* parent = mDataSource->Parent(entry);
   DataIndex parentIndex = mDataSource->ToIndex(parent);
 
+  bool needRefresh = false;
+
   // We want to search up starting at our parent for the first visible row
   while(parent)
   {
@@ -1505,7 +1508,14 @@ void TreeView::ShowRow(DataIndex& index)
     row = FindRowByIndex(currIndex);
     if(row)
     {
-      row->Expand();
+      if (row->mExpanded == false)
+      {
+        row->Expand();
+
+        // Expanding the row will require building rows for each child in the row
+        needRefresh = true;
+      }
+
       break;
     }
 
@@ -1520,7 +1530,8 @@ void TreeView::ShowRow(DataIndex& index)
   }
 
   // Rebuild the tree
-  Refresh();
+  if(needRefresh)
+    Refresh();
 
   // Update transform will update the size of the scroll area
   UpdateTransform();
