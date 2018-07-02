@@ -83,8 +83,8 @@ public:
   void Initialize(CogInitializer& initializer) override;
 
   /// Adds an object to be modified by this gizmo.
-  void AddObject(HandleParam meta);
-  void RemoveObject(HandleParam meta);
+  void AddObject(HandleParam meta, bool updateBasis);
+  void RemoveObject(HandleParam meta, bool updateBasis);
   void ClearObjects();
 
   /// Object getters.

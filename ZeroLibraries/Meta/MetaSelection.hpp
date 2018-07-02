@@ -60,10 +60,10 @@ public:
   type* GetPrimaryAs();
 
   /// Copy the other selection into this selection
-  void Copy(MetaSelection& other);
+  void Copy(MetaSelection& other, SendsEvents::Enum sendsEvents);
 
   /// Add all objects from other selection into this selection
-  void Add(MetaSelection& other);
+  void Add(MetaSelection& other, SendsEvents::Enum sendsEvents);
 
   /// Adds a single object to the selection. Will ignore if it's a duplicate.
   void Add(HandleParam object);

@@ -100,24 +100,23 @@ void MetaSelection::SelectOnly(HandleParam object)
 }
 
 //******************************************************************************
-void MetaSelection::Add(MetaSelection& other)
+void MetaSelection::Add(MetaSelection& other, SendsEvents::Enum sendsEvents)
 {
   forRange(const Handle& object, other.All())
     this->Add(object, SendsEvents::False);
 
-  SelectionChanged();
+  if(sendsEvents == SendsEvents::True)
+    SelectionChanged();
 }
 
 //******************************************************************************
-void MetaSelection::Copy(MetaSelection& other)
+void MetaSelection::Copy(MetaSelection& other, SendsEvents::Enum sendsEvents)
 {
   Clear(SendsEvents::False);
 
-  Add(other);
-
   mPrimary = other.mPrimary;
 
-  SelectionChanged();
+  Add(other, sendsEvents);
 }
 
 //******************************************************************************

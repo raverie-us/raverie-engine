@@ -62,7 +62,7 @@ MetaSelection* SelectionHistory::Advance(HandleParam object)
   // If it's already a selection, just copy it over. Otherwise, create
   // a selection for the new object
   if(MetaSelection* selection = object.Get<MetaSelection*>())
-    localSelection->Copy(*selection);
+    localSelection->Copy(*selection, SendsEvents::False);
   else
     localSelection->SelectOnly(object);
 
@@ -102,7 +102,7 @@ void SelectionHistory::MovedToObject(MetaSelection* selection)
   // when history is moving it does not want to create loops
   mLocked = true;
 
-  Z::gEditor->mSelection->Copy(*selection);
+  Z::gEditor->mSelection->Copy(*selection, SendsEvents::False);
   Z::gEditor->mSelection->FinalSelectionChanged();
 
   mLocked = false;
