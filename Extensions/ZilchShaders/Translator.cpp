@@ -550,9 +550,35 @@ void ZilchShaderTranslator::FormatCommentsAndLines(Zilch::SyntaxNode*& node, Zil
   // Add all comments for this node
   for(uint i = 0; i < node->Comments.Size(); ++i)
   {
-    builder.WriteIndentation();
-    builder.Write("//");
-    builder.WriteLine(node->Comments[i]);
+    String comment = node->Comments[i];
+
+    // See if there's a newline in the comment. If so this is a multi-line comment
+    bool isMultiLine = false;
+    for(StringRange range = comment.All(); !range.Empty(); range.PopFront())
+    {
+      Rune rune = range.Front();
+      if(rune.value == '\r' || rune.value == '\n')
+      {
+        isMultiLine = true;
+        break;
+      }
+    }
+
+    // If this is multi-line then emit an actual multi-line comment
+    if(isMultiLine)
+    {
+      builder.WriteIndentation();
+      builder.Write("/*");
+      builder.Write(comment);
+      builder.WriteLine("*/");
+    }
+    // Otherwise emit a single-line comment
+    else
+    {
+      builder.WriteIndentation();
+      builder.Write("//");
+      builder.WriteLine(comment);
+    }
   }
 
   // If this node is a statement (and not the root if not) then add indentation for the line
