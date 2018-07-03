@@ -1133,6 +1133,11 @@ void TextEditor::GoToLine(int lineNumber)
 
 void TextEditor::MakePositionVisible(int position)
 {
+  // Update transform is called to make sure the widget has the correct
+  // flag set on which scroll bars are visible so when ScrollAreaToView
+  // is called it properly scrolls the specified area into view.
+  UpdateTransform();
+
   Vec2 clientSize = GetClientSize();
   
   int column = SendEditor(SCI_GETCOLUMN, position);
