@@ -1213,7 +1213,7 @@ ZilchDefineType(CogPathMetaComposition, builder, type)
 CogPathMetaComposition::CogPathMetaComposition()
   : MetaComposition(ZilchTypeId(Component))
 {
-
+  mSupportsComponentAddition = false;
 }
 
 Handle CogPathMetaComposition::GetComponent(HandleParam owner, BoundType* componentType)

@@ -735,16 +735,10 @@ void PropertyWidgetObject::OpenNode(bool animate)
   // Add the 'Add Object' widget if we're of a composite type, and we have addable types
   bool canAdd = false;
 
-  if(MetaComposition* composition = mComposition)
-  {
-    Array<BoundType*> types;
-    composition->Enumerate(types, EnumerateAction::AllAddableToObject, instance);
-    canAdd = (types.Empty() == false);
-  }
-  else if(MetaArray* metaArray = mMetaArray)
-  {
+  if (MetaComposition* composition = mComposition)
+    canAdd = composition->mSupportsComponentAddition;
+  else if (mMetaArray)
     canAdd = true;
-  }
 
   if(canAdd)
   {

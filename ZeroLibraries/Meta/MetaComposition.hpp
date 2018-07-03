@@ -159,6 +159,8 @@ public:
   /// The type of Component contained in the composition.
   BoundType* mComponentType;
 
+  /// Some compositions are only there for accessing components, not adding them (e.g. CogPath).
+  bool mSupportsComponentAddition;
   bool mSupportsComponentRemoval;
   bool mSupportsComponentReorder;
   

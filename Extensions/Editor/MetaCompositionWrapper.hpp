@@ -20,6 +20,7 @@ public:
   {
     mContainedComposition = typeToWrap->HasInherited<MetaComposition>();
     mComponentType = mContainedComposition->mComponentType;
+    mSupportsComponentAddition = mContainedComposition->mSupportsComponentAddition;
     mSupportsComponentRemoval = mContainedComposition->mSupportsComponentRemoval;
     mSupportsComponentReorder = mContainedComposition->mSupportsComponentReorder;
   }

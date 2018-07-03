@@ -28,7 +28,7 @@ ZilchDefineType(EventBundleMetaComposition, builder, type)
 EventBundleMetaComposition::EventBundleMetaComposition() :
   MetaComposition(ZilchTypeId(Event))
 {
-
+  mSupportsComponentAddition = false;
 }
 
 /// "Component" Instance Management

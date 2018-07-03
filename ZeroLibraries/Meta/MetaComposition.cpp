@@ -111,6 +111,7 @@ ZilchDefineType(MetaComposition, builder, type)
 //**************************************************************************************************
 MetaComposition::MetaComposition(BoundType* componentType) :
   mComponentType(componentType),
+  mSupportsComponentAddition(true),
   mSupportsComponentRemoval(true),
   mSupportsComponentReorder(true)
 {
