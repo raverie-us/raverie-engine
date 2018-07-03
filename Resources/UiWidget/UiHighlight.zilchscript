@@ -18,8 +18,8 @@ class UiHighlight : ZilchComponent
   
   // Mouse interaction
   [Property] var MouseMode : UiHighlightMouseMode = UiHighlightMouseMode.EnterHierarchy;
-  [Property] var MouseOverCog : CogPath = CogPath(".");
-  [Property] var HighlightCog : CogPath = CogPath(".");
+  [Property] var MouseOverCog = CogPath(".");
+  [Property] var HighlightCog = CogPath(".");
   
   // Colors
   [Property] var ColorMode : UiHighlightColorMode = UiHighlightColorMode.Local;
