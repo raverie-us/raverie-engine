@@ -81,6 +81,7 @@ FindTextDialog::FindTextDialog(Composite* parent) : Composite(parent)
   mFind = new TextBox(this);
   mFind->SetEditable(true);
   ConnectThisTo(mFind, Events::KeyPreview, SubmitSearchOnFindReturn);
+  ConnectThisTo(mFind, Events::TextChanged, CheckForInvalidInput);
 
   // Create the replace label and text box
   mReplaceLabel = new Label(this, cText, "Replace with: ");
@@ -184,6 +185,21 @@ void FindTextDialog::DefaultReplaceAllSettings()
 {
   mSearchMode->SetSelectedItem(SearchMode::ReplaceAll, true);
   DefaultLookIn();
+}
+
+void FindTextDialog::UpdateTransform()
+{
+  // Update tooltip position
+  if (ToolTip* toolTip = mErrorToolTip)
+  {
+    ToolTipPlacement placement;
+    placement.SetScreenRect(mFind->GetScreenRect());
+    placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left,
+      IndicatorSide::Bottom, IndicatorSide::Top);
+    toolTip->SetArrowTipTranslation(placement);
+  }
+
+  Composite::UpdateTransform();
 }
 
 // A helper function for default modes
@@ -973,6 +989,13 @@ void FindTextDialog::DoSearchAndGetContext()
   // Create the context, as well as a regular expression from the search parameters
   mContext = new Context();
 
+  // If there was an error tooltip already displayed, do not accept the input
+  if (mFindTextBoxStatus.Failed())
+  {
+    DoNotifyWarning("Find/Replace Error.", mFindTextBoxStatus.Message);
+    return;
+  }
+
   // Get all the search regions (if they are not valid... return early)
   if (GetAndValidateSearchRegions() == false)
     return;
@@ -1104,6 +1127,27 @@ void FindTextDialog::SubmitSearchOnReplaceReturn(KeyboardEvent* event)
   SubmitTextBox(event, mReplace);
 }
 
+void Zero::FindTextDialog::CheckForInvalidInput(ObjectEvent* event)
+{
+  String text = mFind->GetText();
+
+  forRange(Rune ch, text.All())
+  {
+    if (ch > 255 || ch < 0)
+    {
+      mFindTextBoxStatus.SetFailed("Only ASCII characters are supported by Find/Replace.");
+
+      CreateErrorToolTipAtTextbox(mFindTextBoxStatus.Message, mFind);
+
+      return;
+    }
+  }
+  // if we didn't find an error, make sure we stop displaying any error box
+  mFindTextBoxStatus.SetSucceeded();
+  mFind->SetStyle(TextBoxStyle::Classic);
+  mErrorToolTip.SafeDestroy();
+}
+
 // Occurs when we click the go button
 void FindTextDialog::StartSearch(ObjectEvent* event)
 {
@@ -1162,6 +1206,28 @@ DocumentEditor* FindTextDialog::GetEditorForRegion(SearchRegion* region)
 
   return editor;
 
+}
+
+void FindTextDialog::CreateErrorToolTipAtTextbox(StringParam message, TextBox* textBox)
+{
+  mErrorToolTip.SafeDestroy();
+  ToolTip* toolTip = new ToolTip(mParent);
+  toolTip->SetText(message);
+  toolTip->SetColorScheme(ToolTipColorScheme::Red);
+  toolTip->SetDestroyOnMouseExit(false);
+
+  ToolTipPlacement placement;
+  placement.SetScreenRect(textBox->GetScreenRect());
+  placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left,
+    IndicatorSide::Bottom, IndicatorSide::Top);
+  toolTip->SetArrowTipTranslation(placement);
+
+  mErrorToolTip = toolTip;
+
+  textBox->mBackgroundColor = ToByteColor(Vec4(0.49f, 0.21f, 0.21f, 1));
+  textBox->mBorderColor = ToByteColor(Vec4(0.49f, 0.21f, 0.21f, 1));
+  textBox->mFocusBorderColor = ToByteColor(Vec4(0.625f, 0.256f, 0.256f, 1));
+  MarkAsNeedsUpdate();
 }
 
 // Take the results of the region search and use them

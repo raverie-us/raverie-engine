@@ -494,7 +494,7 @@ void BaseScrollArea::ScrollAreaToView(Vec2 min, Vec2 max, bool animate)
 
   for(uint i=0;i<2;++i)
   {
-    if(IsScrollBarVisible(i))
+    if (IsScrollBarVisible(i))
     {
       if (max[i] > viewBottom[i])
         scrollTop[i] += max[i] - viewBottom[i];
@@ -504,7 +504,6 @@ void BaseScrollArea::ScrollAreaToView(Vec2 min, Vec2 max, bool animate)
   }
 
   SetScrolledOffset(scrollTop, animate);
-  MarkAsNeedsUpdate();
 }
 
 Vec4 BaseScrollArea::GetClientArea()

@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////////////////
 ///
 /// \file TextEditor.cpp
 /// Implementation of the TextEditor Widget.
@@ -210,7 +210,6 @@ const float cTextEditorVScrollIndicatorOffset = 0.0f;
 //------------------------------------------------------------------ Text Editor
 ZilchDefineType(TextEditor, builder, type)
 {
-
 }
 
 TextEditor::TextEditor(Composite* parent)
@@ -1311,12 +1310,44 @@ bool TextEditor::IsModified()
 void TextEditor::GoToPosition(int position)
 {
   SendEditor(SCI_GOTOPOS, position);
+  // When updating the position in a document change the corresponding scroll position
+  MakePositionVisible(position);
 }
 
 void TextEditor::GoToLine(int lineNumber)
 {
-  SendEditor(SCI_ENSUREVISIBLEENFORCEPOLICY, lineNumber);
   SendEditor(SCI_GOTOLINE, lineNumber);
+  // When updating the position in a document change the corresponding scroll position
+  MakeLineVisible(lineNumber);
+}
+
+void TextEditor::MakePositionVisible(int position)
+{
+  // Update transform is called to make sure the widget has the correct
+  // flag set on which scroll bars are visible so when ScrollAreaToView
+  // is called it properly scrolls the specified area into view.
+  UpdateTransform();
+
+  Vec2 clientSize = GetClientSize();
+  
+  int column = SendEditor(SCI_GETCOLUMN, position);
+  int line = SendEditor(SCI_LINEFROMPOSITION, position);
+  int textHeight = SendEditor(SCI_TEXTHEIGHT, line);
+
+  float xPos = column;
+  float yPos = line * textHeight;
+
+  // With the way we use scintilla SCI_TEXTWIDTH always returns 0
+  Vec2 minPos(xPos, yPos);
+  Vec2 maxPos(xPos, yPos + textHeight);
+
+  ScrollAreaToView(minPos, maxPos, false);
+}
+
+void TextEditor::MakeLineVisible(int line)
+{
+  int position = SendEditor(SCI_POSITIONFROMLINE, line);
+  MakePositionVisible(position);
 }
 
 int TextEditor::GetLineFromPosition(int position)

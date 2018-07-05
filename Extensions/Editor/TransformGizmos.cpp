@@ -182,7 +182,7 @@ void ObjectTransformGizmo::Initialize(CogInitializer& initializer)
 }
 
 //******************************************************************************
-void ObjectTransformGizmo::AddObject(HandleParam object)
+void ObjectTransformGizmo::AddObject(HandleParam object, bool updateBasis)
 {
   if(object.IsNull())
     return;
@@ -192,17 +192,21 @@ void ObjectTransformGizmo::AddObject(HandleParam object)
     return;
 
   mObjects.PushBack(object);
-  UpdateGizmoBasis();
+
+  if(updateBasis)
+    UpdateGizmoBasis();
 }
 
 //******************************************************************************
-void ObjectTransformGizmo::RemoveObject(HandleParam object)
+void ObjectTransformGizmo::RemoveObject(HandleParam object, bool updateBasis)
 {
   if(object.IsNull())
     return;
 
   mObjects.EraseValue(object);
-  UpdateGizmoBasis();
+  
+  if(updateBasis)
+    UpdateGizmoBasis();
 }
 
 //******************************************************************************
@@ -210,6 +214,7 @@ void ObjectTransformGizmo::ClearObjects()
 {
   mObjects.Clear();
   mObjectStates.Clear();
+  UpdateGizmoBasis();
 }
 
 //******************************************************************************
@@ -644,9 +649,12 @@ void ObjectTranslateGizmo::OnMouseDragStart(ViewportMouseEvent* event)
 
     ClearObjects();
 
-    forRange(Handle object, mNewObjects.All())
+    if(!mNewObjects.Empty())
     {
-      AddObject(object);
+      forRange(Handle object, mNewObjects.All())
+        AddObject(object, false);
+
+      UpdateGizmoBasis();
     }
     
     // Signal that the objects were duplicated

@@ -323,6 +323,9 @@ ObjectState* LocalModifications::GetObjectState(HandleParam object, bool createN
 //**************************************************************************************************
 bool LocalModifications::IsModified(HandleParam object, bool checkHierarchy, bool ignoreOverrideProperties)
 {
+  if (IsValidForStorage(object) == false)
+    return false;
+
   if(ObjectState* state = GetObjectState(object, false, false))
   {
     if(state->IsModified(object, ignoreOverrideProperties))

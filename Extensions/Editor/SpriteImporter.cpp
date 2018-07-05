@@ -578,19 +578,43 @@ bool SpriteSheetImporter::AddMultiFrameSprite()
 
 void SpriteSheetImporter::OnAddAndContinue(ObjectEvent* event)
 {
-  AddMultiFrameSprite();
+  Status status;
+  if (!IsValidFilename(Name, status))
+  {
+    DoNotifyError("Sprite Importer Error", status.Message);
+  }
+  else
+  {
+    AddMultiFrameSprite();
+  }
 }
 
 void SpriteSheetImporter::OnAddTiles(ObjectEvent* event)
 {
-  AddFramesAsSprites();
+  Status status;
+  if (!IsValidFilename(Name, status))
+  {
+    DoNotifyError("Sprite Importer Error", status.Message);
+  }
+  else
+  {
+    AddFramesAsSprites();
+  }
 }
 
 void SpriteSheetImporter::OnAddPressed(ObjectEvent* event)
 {
-  bool added = AddMultiFrameSprite();
-  if (added)
-    Close();
+  Status status;
+  if (!IsValidFilename(Name, status))
+  {
+    DoNotifyError("Sprite Importer Error", status.Message);
+  }
+  else
+  {
+    bool added = AddMultiFrameSprite();
+    if (added)
+      Close();
+  }
 }
 
 void SpriteSheetImporter::OnClosePressed(ObjectEvent* event)
