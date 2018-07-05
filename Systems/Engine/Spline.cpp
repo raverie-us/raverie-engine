@@ -22,7 +22,18 @@ ZilchDefineType(SplineEvent, builder, type)
   ZeroBindDocumented();
   ZilchBindGetterSetterProperty(Spline);
   ZilchBindDefaultCopyDestructor();
+  ZilchFullBindConstructor(builder, type, ZilchSelf, "spline", Spline*);
+
   type->CreatableInScript = true;
+}
+
+SplineEvent::SplineEvent()
+{
+}
+
+SplineEvent::SplineEvent(Spline* spline)
+{
+  mSpline = spline;
 }
 
 Spline* SplineEvent::GetSpline() const
