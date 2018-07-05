@@ -165,4 +165,6 @@ struct Rectangle
   static const Rectangle cZero;
 };
 
+String ToString(const Rectangle& value, bool shortFormat = false);
+
 }//namespace Zero
