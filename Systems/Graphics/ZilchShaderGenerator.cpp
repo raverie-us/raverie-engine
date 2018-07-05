@@ -683,7 +683,10 @@ void ZilchShaderGenerator::OnZilchFragmentTypeParsed(Zilch::ParseEvent* event)
   // There are a lot of attributes in zilch fragments that aren't valid for zilch script.
   // Because of this, we want to ignore invalid attributes here and let the fragment compilation
   // catch them
-  AttributeExtensions::GetInstance()->ProcessType(event->Type, event->BuildingProject, true);
+  AttributeStatus status;
+  AttributeExtensions::GetInstance()->ProcessType(status, event->Type, true);
+  if (status.Failed())
+    event->BuildingProject->Raise(status.mLocation, ErrorCode::GenericError, status.Message.c_str());
 }
 
 //**************************************************************************************************
