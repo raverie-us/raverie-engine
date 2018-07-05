@@ -31,35 +31,26 @@ Vec3 ColliderPair::GetPointSeperatingVelocity(Vec3Param point) const
   return Top->ComputePointVelocityInternal(point) - Bot->ComputePointVelocityInternal(point);
 }
 
-real ColliderPair::GetMixedRestiution() const
+real ColliderPair::GetMixedRestitution() const
 {
   PhysicsMaterial* topMaterial = Top->GetMaterial();
   PhysicsMaterial* botMaterial = Bot->GetMaterial();
-  if(topMaterial->mHighPriority && !botMaterial->mHighPriority)
+  if(topMaterial->mRestitutionImportance > botMaterial->mRestitutionImportance)
     return topMaterial->mRestitution;
-  if(botMaterial->mHighPriority && !topMaterial->mHighPriority)
+  if(botMaterial->mRestitutionImportance > topMaterial->mRestitutionImportance)
     return botMaterial->mRestitution;
   return Math::Max(topMaterial->mRestitution, botMaterial->mRestitution);
 }
 
 real ColliderPair::GetMixedFriction() const
 {
-  return Math::Sqrt(Top->GetMaterial()->mDynamicFriction * Bot->GetMaterial()->mDynamicFriction);
-}
-
-real ColliderPair::GetMinRestitution() const
-{
-  return Math::Min(Top->GetMaterial()->mRestitution, Bot->GetMaterial()->mRestitution);
-}
-
-real ColliderPair::GetMinStaticFriction() const
-{
-  return Math::Min(Top->GetMaterial()->mStaticFriction, Bot->GetMaterial()->mStaticFriction);
-}
-
-real ColliderPair::GetMinDynamicFriction() const
-{
-  return Math::Min(Top->GetMaterial()->mDynamicFriction, Bot->GetMaterial()->mDynamicFriction);
+  PhysicsMaterial* topMaterial = Top->GetMaterial();
+  PhysicsMaterial* botMaterial = Bot->GetMaterial();
+  if(topMaterial->mFrictionImportance > botMaterial->mFrictionImportance)
+    return topMaterial->mDynamicFriction;
+  if(botMaterial->mFrictionImportance > topMaterial->mFrictionImportance)
+    return botMaterial->mDynamicFriction;
+  return Math::Sqrt(topMaterial->mDynamicFriction * botMaterial->mDynamicFriction);
 }
 
 u64 ColliderPair::GetId() const
