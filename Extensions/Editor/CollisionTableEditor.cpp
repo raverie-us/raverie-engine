@@ -293,6 +293,7 @@ CollisionTableMatrix::CollisionTableMatrix(Composite* parent, CollisionTableEdit
   : Composite(parent)
 {
   mAddableGroupSelector = nullptr;
+  mAddNewGroupButton = nullptr;
   mMinSize = Vec2(0,0);
 
   // Create the matrix for the current collision table
@@ -351,7 +352,18 @@ void CollisionTableMatrix::SetTable(CollisionTableEditor* tableEditor)
   mAddableGroupSelector->SetTranslation(startPosition);
   mAddableGroupSelector->SetSize(Pixels(150,20));
   mAddableGroupSelector->SetListSource(&mAvailableGroups);
-  mAddableGroupSelector->SetText("Add group");
+  mAddableGroupSelector->SetText("Add existing group");
+
+  // Create a button next to the combo-box that allows users to create a new collision group
+  mAddNewGroupButton = new IconButton(this);
+  mAddNewGroupButton->SetSize(Pixels(18, 18));
+  // Position this button just to the right of the group selector
+  mAddNewGroupButton->SetTranslation(startPosition + Vec3(mAddableGroupSelector->GetSize().x, 1, 0));
+  mAddNewGroupButton->SetIcon("NewResource");
+  mAddNewGroupButton->SetToolTip("New CollisionGroup");
+  mAddNewGroupButton->mBorder->SetActive(false);
+  ConnectThisTo(mAddNewGroupButton, Events::ButtonPressed, OnAddNewCollisionGroup);
+
   // Now build the list of what we can add (anything that exists that not already in the list)
   BuildGroupListing();
 
@@ -508,6 +520,15 @@ void CollisionTableMatrix::OnRegisterNewGroup(ObjectEvent* event)
   // Make sure to refresh the entire table and mark the resource as modified
   mTableEditor->RefreshAll();
   mTableEditor->MarkModified();
+}
+
+void CollisionTableMatrix::OnAddNewCollisionGroup(Event* event)
+{
+  Window* window = NULL;
+  BoundType* resourceType = ZilchTypeId(CollisionGroup);
+
+  AddResourceWindow* addWidget = OpenAddWindow(resourceType, &window);
+  addWidget->ShowResourceTypeSearch(false);
 }
 
 //-------------------------------------------------------------------CollisionTableEditor
