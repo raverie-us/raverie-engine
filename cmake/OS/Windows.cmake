@@ -13,3 +13,29 @@ set(platform "Windows")
 set(platform_library "Windows")
 
 remove_definitions(-DMBCS -D_MBCS)
+
+set(StaticExternals 
+Assimp 
+CEF 
+Freetype 
+GL 
+GLEW 
+Libpng 
+MemoryDebugger 
+MemoryTracker 
+Nvtt 
+Opus 
+WinHid 
+ZLib
+)
+
+# list of shared
+set(SharedExternals
+Assimp
+CEF
+Freetype
+GLEW
+MemoryDebugger
+MemoryTracker
+Nvtt
+)

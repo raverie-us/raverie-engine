@@ -8,6 +8,9 @@ function(zero_source_group aRoot aTarget aSharedPath)
   get_target_property(targetSourceDir ${aTarget} SOURCE_DIR)
   get_target_property(targetSources ${aTarget} SOURCES)
 
+  set(inAFolder "")
+  set(notInAFolder "")
+
   # This will determine if the given files are in a folder or not and separate 
   # them on that alone. 
   foreach(aFile ${targetSources}) 

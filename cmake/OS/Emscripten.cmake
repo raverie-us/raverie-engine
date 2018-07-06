@@ -10,3 +10,18 @@ add_definitions(-DPLATFORM_EMSCRIPTEN=1 -DPLATFORM_HARDWARE=1 -DPLATFORM_NAME="E
 
 set(platform "Emscripten")
 set(platform_library "Emscripten")
+
+set(StaticExternals 
+Assimp 
+Freetype 
+Libpng 
+Nvtt 
+Opus 
+)
+
+# list of shared
+set(SharedExternals
+Assimp
+Freetype
+Nvtt
+)
