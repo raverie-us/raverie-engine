@@ -22,6 +22,10 @@ void PlatformLibrary::Initialize()
 {
   SDL_Init(SDL_INIT_EVERYTHING);
 
+  // We don't want the back buffer to be multi-sampled because we can't blit a frame buffer to it.
+  SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
+  SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 0);
+
   for (size_t i = 0; i < SDL_NUM_SYSTEM_CURSORS; ++i)
     gSDLCursors[i] = SDL_CreateSystemCursor((SDL_SystemCursor)i);
 

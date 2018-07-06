@@ -100,6 +100,7 @@ Engine::Engine()
   mFrameCounter = 0;
   mHaveLoadingResources = false;
   mTimePassed = 0.0f;
+  mAutoShutdown = false;
 }
 
 //******************************************************************************
@@ -132,23 +133,28 @@ void Engine::Initialize(SystemInitializer& initializer)
 }
 
 //******************************************************************************
-void Engine::MainLoopFunction(void* userData)
+void Engine::Run(bool autoShutdown)
 {
-  ((Engine*)userData)->Update();
+  mAutoShutdown = autoShutdown;
+  RunMainLoop(&Engine::MainLoopFunction, this);
 }
 
 //******************************************************************************
-void Engine::Run(bool autoShutdown)
+void Engine::MainLoopFunction(void* enginePointer)
 {
-  SetMainLoopFunction(60, &Engine::MainLoopFunction, this, true);
+  Engine* engine = (Engine*)enginePointer;
 
-  while(mEngineActive)
+  if (!engine->mEngineActive)
   {
-    Update();
+    if (engine->mAutoShutdown)
+      engine->Shutdown();
+
+    StopMainLoop();
+    return;
   }
 
-  if(autoShutdown)
-    Shutdown();
+  engine->Update();
+  YieldToOs();
 }
 
 //******************************************************************************
@@ -302,7 +308,7 @@ void Engine::DestroyAllSpaces()
 //******************************************************************************
 void Engine::LoadingStart()
 {
-  if (!mHaveLoadingResources)
+  if (!mHaveLoadingResources || !SupportsRenderingOutsideMainLoop)
     return;
 
   Event toSend;
@@ -312,7 +318,7 @@ void Engine::LoadingStart()
 //******************************************************************************
 void Engine::LoadingUpdate(StringParam operation, StringParam currentTask, StringParam progress, ProgressType::Enum progressType, float percentage)
 {
-  if (!mHaveLoadingResources)
+  if (!mHaveLoadingResources || !SupportsRenderingOutsideMainLoop)
     return;
 
   ProgressEvent progressEvent;
@@ -328,7 +334,7 @@ void Engine::LoadingUpdate(StringParam operation, StringParam currentTask, Strin
 //******************************************************************************
 void Engine::LoadingFinish()
 {
-  if (!mHaveLoadingResources)
+  if (!mHaveLoadingResources || !SupportsRenderingOutsideMainLoop)
     return;
 
   Event toSend;

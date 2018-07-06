@@ -90,8 +90,6 @@ public:
 // Variant Configuration Helper Macros
 // TODO PLATFORM further investigate this macros usage, static constexpr float does not compile on clang 3.7 so for now was changed to an int
 #define DeclareVariantGetSetForArithmeticTypes(property, defaultFloat, defaultInt) \
-static constexpr int   DefaultFloat##property = defaultFloat;                      \
-static constexpr int   DefaultInt##property   = defaultInt;                        \
 DeclareVariantGetSetForType(property, Integer,       int);                         \
 DeclareVariantGetSetForType(property, DoubleInteger, s64);                         \
 DeclareVariantGetSetForType(property, Integer2,      Integer2);                    \
@@ -149,6 +147,8 @@ public:
 
   /// Controls the delta threshold at which a net property's primitive-components are considered changed during change detection.
   DeclareVariantGetSetForArithmeticTypes(DeltaThreshold, (1), int(1));
+#define DefaultFloatDeltaThreshold float(1.0f)
+#define DefaultIntDeltaThreshold   int(1)
 
   /// Controls how net properties are serialized.
   void SetSerializationMode(SerializationMode::Enum serializationMode);
@@ -167,9 +167,13 @@ public:
 
   /// Controls the minimum, inclusive value at which a net property's primitive-components may be quantized during serialization.
   DeclareVariantGetSetForArithmeticTypes(QuantizationRangeMin, (-1), int(-1));
+#define DefaultFloatQuantizationRangeMin float(-1.0f)
+#define DefaultIntQuantizationRangeMin   int(-1)
 
   /// Controls the maximum, inclusive value at which a net property's primitive-components may be quantized during serialization.
   DeclareVariantGetSetForArithmeticTypes(QuantizationRangeMax, (+1), int(+1));
+#define DefaultFloatQuantizationRangeMax float(+1.0f)
+#define DefaultIntQuantizationRangeMax   int(+1)
 
   /// Controls whether or not to interpolate a net property's received authoritative values before sampling them locally.
   /// (Enable to improve changing value smoothness, at the expense of some small CPU and memory impact)
@@ -217,6 +221,8 @@ public:
 
   /// Controls the threshold at which to snap a net property's locally simulated values to sampled authoritative values instead of gradually converging.
   DeclareVariantGetSetForArithmeticTypes(SnapThreshold, (10), int(10));
+#define DefaultFloatSnapThreshold float(10.0f)
+#define DefaultIntSnapThreshold   int(10)
 
   // Data
   BasicNetType::Enum      mBasicNetType;                  ///< Target basic property type.

@@ -127,7 +127,7 @@ void OpenProjectFile(StringParam filename)
   // File check
   if(!FileExists(filename))
   {
-    DoNotifyError("Failed to load project.", "Project file not found.");
+    DoNotifyError("Failed to load project.", String::Format("Project file not found '%s'", filename.c_str()));
     return;
   }
 

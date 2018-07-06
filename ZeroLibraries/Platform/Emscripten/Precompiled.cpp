@@ -25,23 +25,21 @@
 #include "../SDL/Audio.cpp"
 #include "../SDL/ExternalLibrary.cpp"
 #include "../SDL/Main.cpp"
-//#include "../SDL/OpenglRendererSDL.cpp"
+#include "../SDL/OpenglRendererSDL.cpp"
 #include "../SDL/Peripherals.cpp"
 #include "../SDL/PlatformStandard.cpp"
 #include "../SDL/Resolution.cpp"
 #include "../SDL/Shell.cpp"
 #include "../SDL/Timer.cpp"
 #include "../SDL/Utilities.cpp"
-#include "../Empty/Renderer.cpp"
-//#include "../OpenGL/OpenglRenderer.cpp"
-//#include "../OpenGL/OpenglRenderer.hpp"
+#include "../OpenGL/OpenglRenderer.cpp"
+#include "../OpenGL/OpenglRenderer.hpp"
 
 #include <emscripten.h>
 
 int vsprintf_s(char* buffer, size_t numberOfElements, const char* format, va_list args)
 {
   return vsnprintf(buffer, numberOfElements, format, args);
-  //return vsprintf(buffer, format, argptr);
 }
 
 int sprintf_s(char* buffer, size_t numberOfElements, const char* format, ...)
@@ -163,16 +161,3 @@ void glDisablei(GLenum cap, GLuint index)
 {
   Error("This function should not be called when running the Emscripten ZeroEditor, WebGL functioanlity was not properly queried");
 };
-
-bool Zero::SetMainLoopFunction(int fps, Zero::MainLoopFn callback, void* userData, bool stopExecutionHere)
-{
-  // We can only have one main loop set, so cancel it here.
-  static bool sIsMainLoopSet = false;
-  if (sIsMainLoopSet)
-    emscripten_cancel_main_loop();
-  
-  // This MUST be before because we could be stopping execution at 'emscripten_set_main_loop_arg'.
-  sIsMainLoopSet = true;
-  emscripten_set_main_loop_arg(callback, userData, 0, (int)stopExecutionHere);
-  return true;
-}

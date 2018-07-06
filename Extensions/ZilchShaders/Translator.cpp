@@ -296,11 +296,14 @@ void ZilchShaderTranslator::BuildForwardDeclarationTranslation(ShaderCodeBuilder
     ScopedRangeMapping typeForwardDeclarationRange(finalBuilder, &forwardDeclarationRanges, nullptr, &type->mSourceLocation, generateRanges,
                                                    CodeRangeDebugString("Class '%s' Forward Declarations", type->mZilchName.c_str()));
 
+    static const String cMain("main");
+
     // Forward declare functions (do this before functions/global variables in case any variable relies on that)
     for(size_t i = 0; i < type->mFunctionList.Size(); ++i)
     {
       ShaderFunction* function = type->mFunctionList[i];
-      BuildForwardDeclarationTranslationHelper(finalBuilder, type, function, typeForwardDeclarationRange, generateRanges);
+      if (function->mShaderName != cMain)
+        BuildForwardDeclarationTranslationHelper(finalBuilder, type, function, typeForwardDeclarationRange, generateRanges);
     }
 
     // If this is the main type then write out any extra shader functions. This is done inside the loop of 
@@ -310,7 +313,8 @@ void ZilchShaderTranslator::BuildForwardDeclarationTranslation(ShaderCodeBuilder
       for(size_t i = 0; i < type->mFinalShaderFunctions.Size(); ++i)
       {
         ShaderFunction* function = type->mFinalShaderFunctions[i];
-        BuildForwardDeclarationTranslationHelper(finalBuilder, type, function, typeForwardDeclarationRange, generateRanges);
+        if (function->mShaderName != cMain)
+          BuildForwardDeclarationTranslationHelper(finalBuilder, type, function, typeForwardDeclarationRange, generateRanges);
       }
     }
 

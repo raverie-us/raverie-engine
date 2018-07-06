@@ -49,7 +49,8 @@ bool IsDebuggerAttached()
 
 ZeroShared void DebuggerOutput(const char* message)
 {
-  OutputDebugStringW(Widen(message).c_str());
+  if (IsDebuggerPresent())
+    OutputDebugStringW(Widen(message).c_str());
 }
 
 u64 GetMacAddress()

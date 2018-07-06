@@ -69,7 +69,7 @@ bool IsDebuggerAttached()
 
 ZeroShared void DebuggerOutput(const char* message)
 {
-  SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "%s", message);
+  printf("%s", message);
 }
 
 #if !defined(ZeroPlatformNoIncompleteImplementations)
@@ -99,25 +99,17 @@ bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
   // Stores the resulting quote removed message from below
   String message;
   String expression = errorData.Expression;
-  expression = expression.Replace("\"", "'");
 
   // Check if no message was provided
   if (errorData.Message != nullptr)
-  {
-    message = errorData.Message;
-    message = message.Replace("\"", "'");
-  }
+    message = BuildString(errorData.Message, "\n");
   else
-  {
-    message = "No message";
-  }
-
-  ZPrint("%s\n", message.c_str());
+    message = "No message\n";
 
   Console::Print(Filter::ErrorFilter, message.c_str());
 
   // Show a message box instead
-  message = BuildString(message, "\nWould you like to continue?");
+  message = BuildString(message, "Would you like to continue?");
   
   const SDL_MessageBoxButtonData buttons[] =
   {

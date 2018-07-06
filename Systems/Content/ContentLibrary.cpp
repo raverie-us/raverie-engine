@@ -119,6 +119,8 @@ void ContentLibrary::BuildContent(BuildOptions& buildOptions)
       ++itemsBuilt;
 
     itemsToProcess.PopFront();
+
+    YieldToOs();
   }
 
   //if all of the items were built, then the build completed successfully

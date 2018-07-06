@@ -47,4 +47,15 @@ public:
   bool SupportsFragmentType(ShaderType* shaderType) override;
 };
 
+//-------------------------------------------------------------------Glsl150Translator
+/// Glsl version 300 Es specific translation
+class Glsl300EsTranslator : public BaseGlslTranslator
+{
+public:
+  String GetFullLanguageString() override;
+  int GetLanguageVersionNumber() override;
+  String GetVersionString() override;
+  bool SupportsFragmentType(ShaderType* shaderType) override;
+};
+
 }//namespace Zero

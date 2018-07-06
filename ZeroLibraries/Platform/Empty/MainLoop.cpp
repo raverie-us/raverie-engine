@@ -6,10 +6,31 @@
 
 namespace Zero
 {
+// Most platforms support this behavior.
+bool SupportsRenderingOutsideMainLoop = true;
 
-bool SetMainLoopFunction(int fps, MainLoopFn callback, void* userData, bool stopExecutionHere)
+ZeroThreadLocal bool gStopMainLoop = false;
+
+void YieldToOs()
 {
-  return false;
+  // Most platforms aren't cooperatively multi-threaded.
+}
+
+void InitializeMainLoop()
+{
+}
+
+void RunMainLoop(MainLoopFn callback, void* userData)
+{
+  while (!gStopMainLoop)
+    callback(userData);
+
+  gStopMainLoop = false;
+}
+
+void StopMainLoop()
+{
+  gStopMainLoop = true;
 }
 
 }// namespace Zero

@@ -1,0 +1,15 @@
+[
+  "We don't use this file because there are problems with SDL and EMTERPRETER. Remove this line to start using it again",
+  "_main",
+  "__ZN4Zero9YieldToOsEv",
+  "__ZN4Zero14ContentLibrary12BuildContentERNS_12BuildOptionsE",
+  "__ZN4Zero13ContentSystem12BuildPackageERNS_12BuildOptionsEPNS_14ContentLibraryERNS_15ResourcePackageE",
+  "__ZN4Zero13ContentSystem12BuildLibraryERNS_13StatusContextIjEEPNS_14ContentLibraryERNS_15ResourcePackageE",
+  "__ZN4Zero18LoadContentLibraryERKNS_6StringEb",
+  "__ZN4Zero17LoadEditorContentEPNS_3CogE",
+  "__ZN4Zero12CreateEditorEPNS_3CogERKNS_6StringES4_",
+  "__ZN4Zero7StartupEPNS_6EngineERNS_7HashMapINS_6StringES3_NS_10HashPolicyIS3_vEENS_14TypedAllocatorINS_6Memory4HeapEEEEES3_",
+  "__ZN4Zero12PlatformMainERKNS_5ArrayINS_6StringENS_14TypedAllocatorINS_6Memory4HeapEEENS_14StandardTraitsIS1_EEEE",
+  "__ZN4Zero14ResourceSystem11LoadPackageERNS_13StatusContextIjEEPNS_15ResourcePackageE",
+  "__ZN4Zero14ResourceSystem15LoadIntoLibraryERNS_13StatusContextIjEEPNS_15ResourceLibraryEPNS_15ResourcePackageEb"
+]

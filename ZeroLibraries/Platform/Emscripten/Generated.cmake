@@ -4,6 +4,7 @@
 ################################################################################
 target_sources(Platform
     PRIVATE
+    ${CMAKE_CURRENT_LIST_DIR}/MainLoop.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
 )

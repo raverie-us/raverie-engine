@@ -25,8 +25,7 @@ extern "C" ZeroShared int RunZeroLauncher(const char* dllPath)
   //Set the log and error handlers so debug printing
   //and asserts will print to the Visual Studio Output Window.
   DebuggerListener debuggerOutput;
-  if(Os::IsDebuggerAttached())
-    Zero::Console::Add(&debuggerOutput);
+  Zero::Console::Add(&debuggerOutput);
   
   //Mirror console output to a log file
   FileListener fileListener;

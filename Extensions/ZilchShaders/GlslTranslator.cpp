@@ -764,4 +764,25 @@ bool Glsl150Translator::SupportsFragmentType(ShaderType* shaderType)
   return true;
 }
 
+//-------------------------------------------------------------------Glsl130Translator
+String Glsl300EsTranslator::GetFullLanguageString()
+{
+  return "Glsl300Es";
+}
+
+int Glsl300EsTranslator::GetLanguageVersionNumber()
+{
+  return 300;
+}
+
+String Glsl300EsTranslator::GetVersionString()
+{
+  return "#version 300 es\nprecision mediump float;\nprecision mediump sampler2DShadow;";
+}
+
+bool Glsl300EsTranslator::SupportsFragmentType(ShaderType* shaderType)
+{
+  return shaderType->mFragmentType != FragmentType::Geometry;
+}
+
 }//namespace Zero

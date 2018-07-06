@@ -31,7 +31,7 @@ bool Thread::IsValid()
 
 bool Thread::Initialize(EntryFunction entryFunction, void* instance, StringParam threadName)
 {
-  Error("Cannot initialize threads on a single threaded platform (check Zero::ThreadingEnabled)");
+  Error("Cannot initialize thread '%s' on a single threaded platform (check Zero::ThreadingEnabled)", threadName.c_str());
   return false;
 }
 

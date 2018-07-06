@@ -59,7 +59,7 @@ struct Utility
   //   valueY = Utility.UnpackY(packed)
   //   valueZ = Utility.UnpackZ(packed)
   [Static] var PackPrecision : Real = 128.0;
-  [Static] var PackPrecisionPlus1 : Real = Utility.PackPrecision + 1.0;
+  [Static] var PackPrecisionPlus1 : Real = 129.0;
   
   [Static]
   function PackX(input : Real) : Real

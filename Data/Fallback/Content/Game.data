@@ -1,0 +1,35 @@
+[Version:1]
+GameSession 
+{
+	var Name = ""
+	var LinkId = 1
+	DefaultGameSetup 
+	{
+		var StartingSpace = "576f215c0825de61:Space"
+		var StartingLevel = "576f215c0825c3a8:Level"
+		var LoadEditingLevel = true
+	}
+	NetPeer 
+	{
+		var DetectOutgoingChanges = true
+		var AcceptIncomingChanges = true
+		var AllowNapping = true
+		var AutomaticChannel = "56f22bdc94800e65:Default"
+		var NetPropertyInfos = Array
+		{
+		}
+		var LanDiscoverable = true
+		var InternetDiscoverable = true
+		var HostPortRangeStart = 8000
+		var HostPortRangeEnd = 9000
+		var HostPingInterval = 0.25
+		var InternetHostPublishInterval = 30
+		var InternetHostRecordLifetime = 60
+		var InternetSameIpHostRecordLimit = 64
+		var FrameFillWarning = 0.800000012
+		var FrameFillSkip = 0.899999976
+		var InternetHostListTimeout = 4
+		var BasicHostInfoTimeout = 3
+		var ExtraHostInfoTimeout = 4
+	}
+}

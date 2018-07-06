@@ -285,6 +285,8 @@ void ResourceSystem::LoadIntoLibrary(Status& status, ResourceLibrary* resourceLi
 
     if(resource)
       resourceLibrary->Add(resource, isNew);
+
+    YieldToOs();
   }
 
   if(!status)

@@ -130,6 +130,10 @@ namespace Zilch
 
   private:
 
+    // Binding for sub-sections of the core library
+    void SetupBindingString(LibraryBuilder& builder);
+    void SetupBindingMath(LibraryBuilder& builder);
+
     // Instantiates a hash-map template when requested
     static BoundType* InstantiateHashMap
     (

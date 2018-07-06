@@ -29,25 +29,36 @@ bool Startup(Engine* engine, StringMap& arguments, String projectFile)
 {
   TimerBlock startUp("Engine Startup");
 
-  // On some platforms (Emscripten), the engine loop must be set before initializing the renderer.
-  // However, we do not want this to terminate execution here so we pass false.
-  SetMainLoopFunction(60, &Engine::MainLoopFunction, engine, false);
-
-  String project = GetStringValue<String>(arguments, "file", String());
   bool playGame = GetStringValue<bool>(arguments, "play", false);
   bool defaultConfig = GetStringValue<bool>(arguments, "safe", false);
   bool noRunLauncher = GetStringValue<bool>(arguments, "nolauncher", false);
   bool autoRestart = GetStringValue<bool>(arguments, "autorestart", false);
   String newProject = GetStringValue<String>(arguments, "newProject", String());
 
-  if(autoRestart)
+  if (autoRestart)
     CrashHandler::RestartOnCrash(true);
 
-  if(FileExists(projectFile))
+  // Check to see if there was a project file in the same directory.
+  if (FileExists(projectFile))
+  {
     playGame = true;
+  }
+  else
+  {
+    // Otherwise, we could be trying to load a project (from the launcher)
+    projectFile = GetStringValue<String>(arguments, "file", String());
+  }
 
   // Load config object
   Cog* configCog = engine->GetConfigCog();
+  MainConfig* mainConfig = configCog->has(MainConfig);
+
+  // If there was no specified project file (or it doesn't exist) and we're not creating a new project,
+  // then use a fall-back project that we open from our data directory. This project should be read-only,
+  // but is useful for testing platforms before the full launcher pipeline is implemented.
+  // Note that if the 'projectFile' does not exist, but is specified, we will not use the fall-back.
+  if (mainConfig && projectFile.Empty() && newProject.Empty())
+    projectFile = FilePath::Combine(mainConfig->DataDirectory, "Fallback", "Fallback.zeroproj");
 
   {
     TimerBlock block("Initializing core systems.");
@@ -87,7 +98,7 @@ bool Startup(Engine* engine, StringMap& arguments, String projectFile)
   }
   else
   {
-    CreateEditor(configCog, project, newProject);
+    CreateEditor(configCog, projectFile, newProject);
   }
 
   // Check specifically for the WriteBuildInfo command needed by the build tools.

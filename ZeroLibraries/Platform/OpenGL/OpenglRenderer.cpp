@@ -4,6 +4,24 @@
 #include "Precompiled.hpp"
 #include "OpenglRenderer.hpp"
 
+#if defined(PLATFORM_EMSCRIPTEN)
+#define ZeroGlEs
+#else
+#define ZeroGl
+#endif
+
+#if defined(ZeroGl)
+#define ZeroIfGl(X) X
+#else
+#define ZeroIfGl(X)
+#endif
+
+#if defined(ZeroGlEs)
+#define ZeroIfGlEs(X) X
+#else
+#define ZeroIfGlEs(X)
+#endif
+
 // As Of NVidia Driver 302 exporting this symbol will enable GPU hardware accelerated 
 // graphics when using Optimus (Laptop NVidia gpu / Intel HD auto switching). 
 // This is important for two reasons first is performance and second is stability
@@ -225,7 +243,7 @@ GLuint GlTextureMipMapping(TextureMipMapping::Enum value)
 }
 
 //**************************************************************************************************
-void CheckShader(GLuint shader)
+void CheckShader(GLuint shader, StringParam shaderCode)
 {
   GLint status = 0;
   glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
@@ -236,6 +254,15 @@ void CheckShader(GLuint shader)
     GLchar* strInfoLog = (GLchar*)alloca(infoLogLength + 1);
     glGetShaderInfoLog(shader, infoLogLength, NULL, strInfoLog);
     ZPrint("Compile Error\n%s\n", strInfoLog);
+
+#ifdef ZeroExtraGlDebug
+    static size_t sMaxPrints = 4;
+    if (sMaxPrints > 0)
+    {
+      ZPrint("\n************************************************************\n%s\n************************************************************\n", shaderCode.c_str());
+      --sMaxPrints;
+    }
+#endif
   }
 }
 
@@ -502,6 +529,7 @@ void BindTexture(TextureType::Enum textureType, uint textureSlot, uint textureId
 //**************************************************************************************************
 void CheckFramebufferStatus()
 {
+#ifdef ZeroExtraGlDebug
   GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
   switch (status)
   {
@@ -516,6 +544,7 @@ void CheckFramebufferStatus()
       break;
   }
   ErrorIf(status != GL_FRAMEBUFFER_COMPLETE, "Framebuffer incomplete");
+#endif
 }
 
 //**************************************************************************************************
@@ -773,15 +802,17 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
 
   ZPrint("OpenGL All Extensions : %s\n", gl_extensions ? gl_extensions : "(no data)");
 
-  // Required OpenGL extensions
-  if (!version_2_0 || !framebuffer_object)
-  {
-    String failedExtensions = BuildString(version_2_0 ? "" : "GL_VERSION_2_0, ",
-      framebuffer_object ? "" : "GL_ARB_framebuffer_object, ");
-    error = String::Format("Required OpenGL extensions: %s are unsupported by the active driver. "
-      "Please update your computer's graphics drivers or verify that your graphics card supports the listed features.", failedExtensions.c_str());
-    return;
-  }
+#if !defined(ZeroGlEs)
+    // Required OpenGL extensions
+    if (!version_2_0 || !framebuffer_object)
+    {
+      String failedExtensions = BuildString(version_2_0 ? "" : "GL_VERSION_2_0, ",
+        framebuffer_object ? "" : "GL_ARB_framebuffer_object, ");
+      error = String::Format("Required OpenGL extensions: %s are unsupported by the active driver. "
+        "Please update your computer's graphics drivers or verify that your graphics card supports the listed features.", failedExtensions.c_str());
+      return;
+    }
+#endif
 
   mDriverSupport.mTextureCompression = texture_compression;
   mDriverSupport.mMultiTargetBlend = draw_buffers_blend;
@@ -799,8 +830,10 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
   glPixelStorei(GL_PACK_ALIGNMENT, 1);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
+#if !defined(ZeroGlEs)
   glEnable(GL_TEXTURE_2D);
   glEnable(GL_TEXTURE_CUBE_MAP);
+#endif
 
   if (glewIsSupported("GL_ARB_seamless_cube_map"))
     glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
@@ -883,30 +916,38 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
 
   mStreamedVertexBuffer.Initialize();
 
+#define ZeroGlVertexIn ZeroIfGl("in") ZeroIfGlEs("attribute")
+#define ZeroGlVertexOut ZeroIfGl("out") ZeroIfGlEs("varying")
+#define ZeroGlPixelIn ZeroIfGl("in") ZeroIfGlEs("varying")
+
   String loadingShaderVertex =
-    "#version 150\n\
-    uniform mat4x4 Transform;\n\
-    uniform mat3x3 UvTransform;\n\
-    in vec3 attLocalPosition;\n\
-    in vec2 attUv;\n\
-    out vec2 psInUv;\n\
-    void main(void)\n\
-    {\n\
-      psInUv = (vec3(attUv, 1.0) * UvTransform).xy;\n\
-      gl_Position = vec4(attLocalPosition, 1.0) * Transform;\n\
-    }";
+    ZeroIfGl("#version 150\n")
+    ZeroIfGlEs("#version 100\n")
+    ZeroIfGlEs("precision mediump float;\n")
+    "uniform mat4 Transform;\n"
+    "uniform mat3 UvTransform;\n"
+    ZeroGlVertexIn " vec3 attLocalPosition;\n"
+    ZeroGlVertexIn " vec2 attUv;\n"
+    ZeroGlVertexOut " vec2 psInUv;\n"
+    "void main(void)\n"
+    "{\n"
+    "  psInUv = (vec3(attUv, 1.0) * UvTransform).xy;\n"
+    "  gl_Position = vec4(attLocalPosition, 1.0) * Transform;\n"
+    "}";
 
   String loadingShaderPixel =
-    "#version 150\n\
-    uniform sampler2D Texture;\n\
-    uniform float Alpha;\n\
-    in vec2 psInUv;\n\
-    void main(void)\n\
-    {\n\
-      vec2 uv = vec2(psInUv.x, 1.0 - psInUv.y);\n\
-      gl_FragColor = texture(Texture, uv);\n\
-      gl_FragColor.xyz *= Alpha;\n\
-    }";
+    ZeroIfGl("#version 150\n")
+    ZeroIfGlEs("#version 100\n")
+    ZeroIfGlEs("precision mediump float;\n")
+    "uniform sampler2D Texture;\n"
+    "uniform float Alpha;\n"
+    ZeroGlPixelIn " vec2 psInUv;\n"
+    "void main(void)\n"
+    "{\n"
+    "  vec2 uv = vec2(psInUv.x, 1.0 - psInUv.y);\n"
+    "  gl_FragColor = texture2D(Texture, uv);\n"
+    "  gl_FragColor.xyz *= Alpha;\n"
+    "}";
 
   CreateShader(loadingShaderVertex, String(), loadingShaderPixel, mLoadingShader);
 }
@@ -2054,7 +2095,7 @@ void OpenglRenderer::CreateShader(StringParam vertexSource, StringParam geometry
   GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vertexShader, 1, &vertexSourceData, &vertexSourceSize);
   glCompileShader(vertexShader);
-  CheckShader(vertexShader);
+  CheckShader(vertexShader, vertexSource);
   glAttachShader(program, vertexShader);
 
   GLuint geometryShader = 0;
@@ -2065,7 +2106,7 @@ void OpenglRenderer::CreateShader(StringParam vertexSource, StringParam geometry
     geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
     glShaderSource(geometryShader, 1, &geometrySourceData, &geometrySourceSize);
     glCompileShader(geometryShader);
-    CheckShader(geometryShader);
+    CheckShader(geometryShader, geometrySource);
     glAttachShader(program, geometryShader);
   }
 
@@ -2074,7 +2115,7 @@ void OpenglRenderer::CreateShader(StringParam vertexSource, StringParam geometry
   GLuint pixelShader = glCreateShader(GL_FRAGMENT_SHADER);
   glShaderSource(pixelShader, 1, &pixelSourceData, &pixelSourceSize);
   glCompileShader(pixelShader);
-  CheckShader(pixelShader);
+  CheckShader(pixelShader, pixelSource);
   glAttachShader(program, pixelShader);
 
   glBindAttribLocation(program, VertexSemantic::Position, "attLocalPosition");

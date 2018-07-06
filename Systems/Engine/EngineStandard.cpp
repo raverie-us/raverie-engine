@@ -550,9 +550,11 @@ void EngineLibrary::Shutdown()
 //**************************************************************************************************
 void EngineLibrary::PopulateVirtualFileSystem(void* userData)
 {
+  TimerBlock startUp("Virtual File System");
+
   // It's very important that this uses C's FILE instead of our File since our File could be virtual.
   // Attempt to load the file system either relative to our working directory or at the root.
-  FILE* file = fopen("C:/Sandbox/ZeroGit/FileSystem.zip", "rb");
+  FILE* file = fopen("FileSystem.zip", "rb");
   if (!file)
     file = fopen("/FileSystem.zip", "rb");
 

@@ -11,15 +11,6 @@ namespace Zero
 
 //-------------------------------------------------------------- Helpers
 
-void SetStateTimeout(ExecutableState* state)
-{
-#if ZeroDebug
-  state->SetTimeout(300);
-#else
-  state->SetTimeout(5);
-#endif
-}
-
 void ZeroZilchExceptionCallback(ExceptionEvent* e)
 {
   // Get the first non-native stack for debugging

@@ -14,6 +14,8 @@ void InitializeKeyboard();
 //**************************************************************************************************
 void CommonLibrary::Initialize()
 {
+  InitializeMainLoop();
+
   Thread::MainThreadId = Thread::GetCurrentThreadId();
 
   //Start the memory system used for all systems and containers.

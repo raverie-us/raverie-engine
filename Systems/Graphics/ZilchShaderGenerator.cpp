@@ -27,10 +27,21 @@ void CustomEmitVertexCallback(ShaderCodeBuilder& builder, ZilchShaderSettingsRef
 }
 
 //**************************************************************************************************
+BaseShaderTranslator* CreateShaderTranslator()
+{
+  // We need to eventually have Platform select this.
+#if defined(PLATFORM_EMSCRIPTEN)
+  return new Glsl300EsTranslator();
+#else
+  return new Glsl150Translator();
+#endif
+}
+
+//**************************************************************************************************
 ZilchShaderGenerator* CreateZilchShaderGenerator()
 {
   ZilchShaderGenerator* shaderGenerator = new ZilchShaderGenerator();
-  shaderGenerator->mTranslator = new Glsl150Translator();
+  shaderGenerator->mTranslator = CreateShaderTranslator();
   shaderGenerator->Initialize();
   return shaderGenerator;
 }
@@ -51,7 +62,7 @@ ZilchShaderGenerator::~ZilchShaderGenerator()
 void ZilchShaderGenerator::Initialize()
 {
   if(mTranslator == nullptr)
-    mTranslator = new Glsl150Translator();
+    mTranslator = CreateShaderTranslator();
 
   ShaderSettingsLibrary::GetInstance().BuildLibrary();
   EventConnect(&mFragmentsProject, Zilch::Events::CompilationError, &ZilchShaderGenerator::OnZilchFragmentCompilationError, this);

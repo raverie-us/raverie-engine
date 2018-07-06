@@ -45,7 +45,11 @@ void ZeroStartup::InitializeLibraries(ZeroStartupSettings& settings)
   // We need the calling state to be set so we can create Handles for Meta Components
   Zilch::Module module;
   mState = module.Link();
+  
+#if !defined(ZeroDebug) && !defined(PLATFORM_EMSCRIPTEN)
   mState->SetTimeout(5);
+#endif
+
   ExecutableState::CallingState = mState;
 
   MetaDatabase::Initialize();

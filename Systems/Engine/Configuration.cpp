@@ -428,17 +428,38 @@ Cog* LoadConfig(StringParam applicationName, bool useDefault, ZeroStartupSetting
   }
   else
   {
-    String localConfigFile = FilePath::Combine(applicationDirectory, "Configuration.data");
+    static const String cDataDirectory("Data");
+    static const String cDefaultConfigFile("Configuration.data");
 
-    if(FileExists(localConfigFile))
+    // Locations to look for the config file.
+    // Some of them are absolute, some are relative to the working directory.
+    String searchConfigPaths[] =
     {
-      ZPrintFilter(Filter::DefaultFilter, "Using default config.\n");
-      configCog = Z::gFactory->Create(Z::gEngine->GetEngineSpace(), localConfigFile, 0, nullptr);
-    }
-    else if(FileExists("Configuration.data"))
+      // In the application directory.
+      FilePath::Combine(applicationDirectory, cDefaultConfigFile),
+      // In the working directory.
+      cDefaultConfigFile,
+      // Into the application/Data directory.
+      FilePath::Combine(applicationDirectory, cDataDirectory, cDefaultConfigFile),
+      // Into the working/Data directory.
+      FilePath::Combine(cDataDirectory, cDefaultConfigFile),
+    };
+
+    const size_t searchconfigPathsCount = sizeof(searchConfigPaths) / sizeof(*searchConfigPaths);
+    for (size_t i = 0; i < searchconfigPathsCount; ++i)
     {
-      ZPrintFilter(Filter::DefaultFilter, "Using local config.\n");
-      configCog = Z::gFactory->Create(Z::gEngine->GetEngineSpace(), "Configuration.data", 0, nullptr);
+      StringParam path = searchConfigPaths[i];
+      if (FileExists(path))
+      {
+        configCog = Z::gFactory->Create(Z::gEngine->GetEngineSpace(), path, 0, nullptr);
+
+        // Make sure we successfully created the config Cog from the data file.
+        if (configCog != nullptr)
+        {
+          ZPrintFilter(Filter::DefaultFilter, "Using default config '%s'.\n", path.c_str());
+          break;
+        }
+      }
     }
   }
 

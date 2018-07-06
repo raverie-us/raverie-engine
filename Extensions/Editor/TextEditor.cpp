@@ -898,8 +898,8 @@ void TextEditor::OnKeyUp(KeyboardEvent* event)
 void TextEditor::OnMouseScroll(MouseEvent* event)
 {
   OsShell* shell = Z::gEngine->has(OsShell);
-  uint scroll = shell->GetScrollLineCount();
-  scroll *= event->Scroll.y;
+  int scroll = (int)shell->GetScrollLineCount();
+  scroll = int(scroll * event->Scroll.y);
 
   // vertical scroll
   if(!event->CtrlPressed && !event->ShiftPressed)
@@ -1077,7 +1077,8 @@ void TextEditor::SetAStyle(int style, ByteColor fore, ByteColor back, int size, 
 
 void TextEditor::OnUpdate(UpdateEvent* event)
 {
-  uint msTime = event->RealDt * 1000.0f;
+  ErrorIf(event->RealDt < 0.0f, "The RealDt was negative");
+  uint msTime = (uint)((int)(event->RealDt * 1000.0f));
   mTickTime += msTime;
   mTime += msTime;
   if(mTickTime > uint(mScintilla->timer.ticksToWait))

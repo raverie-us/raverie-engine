@@ -360,6 +360,18 @@ else()
     )
 endif()
 
+if (${platform} STREQUAL "Emscripten")
+    set_target_properties(
+        ZeroEditor
+        PROPERTIES SUFFIX ".html"
+        LINK_FLAGS "--preload-file \"${zero_build_out}/ZeroEditorFileSystem.zip\"@/FileSystem.zip"
+    )
+    set_target_properties(
+        ZeroLauncher
+        PROPERTIES SUFFIX ".html"
+        LINK_FLAGS "--preload-file \"${zero_build_out}/ZeroLauncherFileSystem.zip\"@/FileSystem.zip"
+    )
+endif()
 
 ################################################################################
 # Group source into folders

@@ -36,10 +36,10 @@ public:
 
   /// Initializes all systems in the engine.
   void Initialize(SystemInitializer& initializer);
-  // Updates the engine once and is intended to be used by SetMainLoopFunction. Userdata is a pointer to the Engine.
-  static void MainLoopFunction(void* userData);
   /// Update all the systems until the engine is no longer active.
   void Run(bool autoShutdown = true);
+  /// A special main loop function that we use to update the engine.
+  static void MainLoopFunction(void* enginePointer);
   /// Update all owned systems.
   void Update();
   /// Terminate the game engine loop.
@@ -134,6 +134,9 @@ private:
 
   /// Is the engine currently running. Used to shutdown the engine on the next frame.
   bool mEngineActive;
+
+  /// Do we automatically shutdown the engine when it is no longer active (terminated)?
+  bool mAutoShutdown;
 };
 
 //-------------------------------------------------------------------EngineMetaComposition

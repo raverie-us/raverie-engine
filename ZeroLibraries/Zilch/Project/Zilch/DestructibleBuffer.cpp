@@ -10,8 +10,23 @@ namespace Zilch
   //***************************************************************************
   size_t AlignToBusWidth(size_t value)
   {
-    // We need to properly impelment struct alignment
-    return value;
+    // This is necessary for platforms where unaligned loads cause faults.
+    // This also may speed up reads on platforms where unaligned reads are slow.
+#if defined(PLATFORM_64)
+    static const size_t BusSize = 8;
+#else
+    static const size_t BusSize = 4;
+#endif
+
+    // Check how far off we are from being aligned to the bus width
+    size_t remainder = value % BusSize;
+
+    // If we're exactly aligned, just return our size!
+    if (remainder == 0)
+      return value;
+
+    // Add whatever bytes we need to add to make our size aligned with the bus width
+    return value + (BusSize - remainder);
   }
 
   //***************************************************************************
