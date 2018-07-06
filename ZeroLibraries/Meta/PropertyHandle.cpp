@@ -188,6 +188,13 @@ void PropertyPath::AddComponentIndexToPath(uint index)
 //******************************************************************************
 void PropertyPath::AddPropertyToPath(Property* prop)
 {
+  if(prop == nullptr)
+  {
+    Error("Cannot add path to a null property");
+    AddPropertyToPath(String());
+    return;
+  }
+
   AddPropertyToPath(prop->Name);
 }
 

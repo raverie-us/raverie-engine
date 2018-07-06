@@ -705,6 +705,9 @@ void ObjectTranslateGizmo::OnGizmoModified(TranslateGizmoUpdateEvent* event)
     if(transform.IsNull())
       continue;
 
+    if(transform.mLocalTranslation == nullptr)
+      continue;
+
     EventDispatcher* dispatcher;
     Object* object = target.Get<Object*>();
     if(object != nullptr)
@@ -902,6 +905,9 @@ void ObjectScaleGizmo::OnGizmoModified(ScaleGizmoUpdateEvent* event)
     if(transform.IsNull())
       continue;
 
+    if(transform.mLocalScale == nullptr)
+      continue;
+
     Vec3 newScale = baseGizmo->ScaleFromDrag(mBasis, gizmoDrag, distance,
       worldMovement, objectState.StartScale, transform);
 
@@ -1039,6 +1045,9 @@ void ObjectRotateGizmo::OnGizmoModified(RotateGizmoUpdateEvent* event)
 
     MetaTransformInstance transform = metaTransform->GetInstance(target);
     if(transform.IsNull( ))
+      continue;
+
+    if(transform.mLocalRotation == nullptr)
       continue;
 
     EventDispatcher* dispatcher;
