@@ -48,6 +48,7 @@ void ZilchTypeCollector::WalkClassDeclaration(Zilch::ClassNode*& node, ZilchType
   type->mLocation.mUserData = node->Location.CodeUserData;
   type->mLocation.mZilchSourcePath = node->Location.Origin;
   type->mSourceLocation = node->Location;
+  type->mNameLocation = node->Type->NameLocation;
   type->mComplexUserData = node->Type->ComplexUserData;
 
   // Add the mapping of this zilch type to our new shader type
@@ -127,6 +128,7 @@ void ZilchTypeCollector::WalkClassMemberVariables(Zilch::MemberVariableNode*& no
   ShaderField* field = currentType->FindOrCreateField(node->Name.Token);
   field->mZilchType = node->ResultType->ToString();
   field->mSourceLocation = node->Location;
+  field->mNameLocation = node->CreatedField->NameLocation;
 
   // Parse all attributes for the field
   ParseAttributes(node->Attributes, node->CreatedField->Attributes, field, context);
@@ -144,6 +146,7 @@ void ZilchTypeCollector::AddFunction(Zilch::GenericFunctionNode* node, StringPar
   ShaderFunction* function = currentType->FindOrCreateFunction(functionName, node->DefinedFunction);
   function->mZilchReturnType = returnType;
   function->mSourceLocation = node->Location;
+  function->mNameLocation = node->DefinedFunction->NameLocation;
 
   // Parse all attributes for the function
   ParseAttributes(attributeNodes, attributes, function, context);
