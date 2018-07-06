@@ -1267,6 +1267,7 @@ void MultiConvexMeshEditor::OnKeyDown(KeyboardEvent* e)
   if(e->Key == Keys::Delete)
   {
     DeleteSelection();
+    e->Handled = true;
   }
 }
 
