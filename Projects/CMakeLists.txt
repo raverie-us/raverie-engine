@@ -364,9 +364,10 @@ endif()
 ################################################################################
 # Group source into folders
 ################################################################################
-zero_subfolder_source_group(${zero_core_path} Projects ZeroEditor "${zero_core_path}/Projects")
-zero_subfolder_source_group(${zero_core_path} Projects/ZeroLauncher ZeroLauncher "${zero_core_path}/Projects")
+zero_subfolder_source_group_ignore_target_folder(${zero_core_path} Projects ZeroEditor "${zero_core_path}/Projects")
+zero_subfolder_source_group_ignore_target_folder(${zero_core_path} Projects ZeroLauncher "${zero_core_path}/Projects")
 zero_subfolder_source_group(${zero_core_path} Projects/ZeroLauncher ZeroLauncherSharedLibrary "${zero_core_path}/Projects")
+
 zero_subfolder_source_group(${zero_core_path} Projects BrowserSubProcess "")
 
 
