@@ -88,9 +88,17 @@ namespace Audio
     // Adds decoded packets to the queue and translates the per-channel buffers to
     // an interleaved buffer
     void QueueDecodedPackets(unsigned numberOfFrames);
+    // Triggers a new decoding task 
+    void AddDecodingTask();
+    // Starts up the decoding thread, and starts a decoding tasks if decodeNow is True
+    void StartDecodingThread(bool decodeNow);
+    // Stops and shuts down the decoding thread
+    void StopDecodingThread();
+
+    friend class AudioSystemInterface;
   };
 
-  Zero::OsInt StartDecodeThread(void* data);
+  Zero::OsInt StartThreadForDecoding(void* data);
 
   //--------------------------------------------------------------------------------- Packet Decoder
 

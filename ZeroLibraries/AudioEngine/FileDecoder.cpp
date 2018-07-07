@@ -11,7 +11,7 @@
 
 namespace Audio
 {
-  Zero::OsInt StartDecodeThread(void* data)
+  Zero::OsInt StartThreadForDecoding(void* data)
   {
     ((FileDecoder*)data)->DecodingLoop();
     return 0;
@@ -91,24 +91,14 @@ namespace Audio
     }
 
     // Start the decoding thread
-    DecodeThread.Initialize(StartDecodeThread, this, "Audio decoding");
-    DecodeThread.Resume();
-
     // If not streaming, start decoding immediately
-    if (!mStreaming)
-      DecodingSemaphore.Increment();
+    StartDecodingThread(mStreaming == false);
   }
 
   //************************************************************************************************
   FileDecoder::~FileDecoder()
   {
-    // Tell the decoding thread to shut down
-    Zero::AtomicStore(&ShutDownSignal, 1);
-    // Increment the semaphore to make sure the thread sees the shut down signal
-    DecodingSemaphore.Increment();
-
-    DecodeThread.WaitForCompletion();
-    DecodeThread.Close();
+    StopDecodingThread();
 
     // Destroy any alive decoders
     for (short i = 0; i < mChannels; ++i)
@@ -134,13 +124,7 @@ namespace Audio
     if (!mStreamingInputFile.IsOpen())
       return;
 
-    // Tell the decoding thread to shut down
-    Zero::AtomicStore(&ShutDownSignal, 1);
-    // Increment the semaphore to make sure the thread sees the shut down signal
-    DecodingSemaphore.Increment();
-
-    DecodeThread.WaitForCompletion();
-    DecodeThread.Close();
+    StopDecodingThread();
 
     // Reset the semaphore and shut down signal
     DecodingSemaphore.Reset();
@@ -164,11 +148,8 @@ namespace Audio
     for (short i = 0; i < mChannels; ++i)
       Decoders[i] = opus_decoder_create(SystemSampleRate, 1, &error);
 
-    // Restart the decoding thread
-    DecodeThread.Initialize(StartDecodeThread, this, "Audio decoding");
-    DecodeThread.Resume();
-    // Signal the thread to decode a packet
-    DecodingSemaphore.Increment();
+    // Restart the decoding thread and decode a packet
+    StartDecodingThread(true);
   }
 
   //************************************************************************************************
@@ -193,7 +174,7 @@ namespace Audio
   //************************************************************************************************
   void FileDecoder::DecodeStreamingPacket()
   {
-    DecodingSemaphore.Increment();
+    AddDecodingTask();
   }
 
   //************************************************************************************************
@@ -357,7 +338,7 @@ namespace Audio
       else
       {
         returnValue = true;
-        DecodingSemaphore.Increment();
+        AddDecodingTask();
       }
     }
     // If streaming, always continue decoding but don't signal for another packet yet
@@ -393,6 +374,50 @@ namespace Audio
 
     // Add the DecodedPacket object to the queue
     DecodedPacketQueue.Write(newPacket);
+  }
+
+  //************************************************************************************************
+  void FileDecoder::AddDecodingTask()
+  {
+    if (Zero::ThreadingEnabled)
+      DecodingSemaphore.Increment();
+    else
+      gAudioSystem->DecodingTasks.PushBack(this);
+  }
+
+  //************************************************************************************************
+  void FileDecoder::StartDecodingThread(bool decodeNow)
+  {
+    // Start the decoding thread if threading is enabled
+    if (Zero::ThreadingEnabled)
+    {
+      DecodeThread.Initialize(StartThreadForDecoding, this, "Audio decoding");
+      DecodeThread.Resume();
+    }
+
+    if (decodeNow)
+      AddDecodingTask();
+  }
+
+  //************************************************************************************************
+  void FileDecoder::StopDecodingThread()
+  {
+    if (Zero::ThreadingEnabled)
+    {
+      // Tell the decoding thread to shut down
+      Zero::AtomicStore(&ShutDownSignal, 1);
+      // Increment the semaphore to make sure the thread sees the shut down signal
+      DecodingSemaphore.Increment();
+
+      DecodeThread.WaitForCompletion();
+      DecodeThread.Close();
+    }
+    else
+    {
+      // Remove any existing decoding tasks (returns false if value was not found in the array)
+      while (gAudioSystem->DecodingTasks.EraseValue(this))
+      { }
+    }
   }
 
   //--------------------------------------------------------------------------------- Packet Decoder
