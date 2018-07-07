@@ -15,9 +15,7 @@ GeometryImporter::GeometryImporter(StringParam inputFile, StringParam outputPath
     mUniquifyingIndex(0)
 {
   if (metaFile.Empty())
-    mMetaFile = BuildString(inputFile, ".meta");;
-
-  mAssetImporter.SetPropertyBool(AI_CONFIG_IMPORT_FBX_STRICT_MODE, true);
+    mMetaFile = BuildString(inputFile, ".meta");
 }
 
 GeometryImporter::~GeometryImporter()
@@ -217,7 +215,8 @@ String GeometryImporter::ExtractDataFromNodesRescursive(aiNode* node, String par
 
   // collect the hierarchy data, used for animations if the scene has any
   bool isPivot = IsPivot(node->mName.C_Str());
-  String nodeName = CleanAssetName(node->mName.C_Str());
+  String unsantizedName = node->mName.C_Str();
+  String nodeName = CleanAssetName(unsantizedName);
   // check to see if this node name is a unique entry, if no append an number to the end to make it unique
   if (mHierarchyDataMap.ContainsKey(nodeName))
     nodeName = BuildString(nodeName, ToString(mUniquifyingIndex++));
@@ -232,6 +231,10 @@ String GeometryImporter::ExtractDataFromNodesRescursive(aiNode* node, String par
   hierarchyData.mNodePath = nodePath;
   hierarchyData.mLocalTransform = AiMat4ToZeroMat4(node->mTransformation);
   hierarchyData.mIsPivot = isPivot;
+
+  // Maya outputs an inverted PostRotation value to the fbx file. We currently do not know why.
+  if (unsantizedName.Contains("_$AssimpFbx$_PostRotation"))
+    hierarchyData.mLocalTransform.Invert();
 
   // if the node has a mesh store the mesh keyed to its name
   if (node->mNumMeshes == 1)
