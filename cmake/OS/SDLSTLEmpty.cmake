@@ -7,29 +7,22 @@
 set(platform_library "SDLSTLEmpty")
 
 set(StaticExternals 
-Assimp 
-CEF 
-Freetype 
-GL 
-GLEW 
-Libpng 
-MemoryDebugger 
-MemoryTracker 
-Nvtt 
-Opus 
-WinHid 
+Assimp
+Freetype
+GL
+GLEW
+Libpng
+Nvtt
+Opus
 ZLib
-SDL 
+SDL
 )
 
 # list of shared
 set(SharedExternals
 Assimp
-CEF
 Freetype
 GLEW
-MemoryDebugger
-MemoryTracker
 Nvtt
 SDL
 )

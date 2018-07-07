@@ -64,7 +64,11 @@ endforeach()
 ################################################################################
 
 foreach(externLib ${AllPossibleStaticExternals})
-    set(${externLib}Headers ${CurrentDirectory}/${externLib}/include PARENT_SCOPE)
+    set(${externLib}Headers "" PARENT_SCOPE)
+endforeach()
+
+foreach(externLib ${StaticExternals})
+  set(${externLib}Headers ${CurrentDirectory}/${externLib}/include PARENT_SCOPE)
 endforeach()
 
 ################################################################################

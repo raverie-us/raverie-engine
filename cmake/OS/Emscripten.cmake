@@ -17,11 +17,9 @@ Freetype
 Libpng 
 Nvtt 
 Opus 
+ZLib
 )
 
 # list of shared
 set(SharedExternals
-Assimp
-Freetype
-Nvtt
 )

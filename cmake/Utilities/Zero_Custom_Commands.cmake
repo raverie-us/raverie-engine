@@ -60,6 +60,7 @@ function(editor_post_build_step aTarget aZeroCoreDirectory aLibOutputDirectory a
         "\"${pluginDir}\""
     )
 
+    if ("${platform}" STREQUAL "Windows")
     # copy the stub lib fileg
     add_custom_command(TARGET ${aTarget} POST_BUILD
         # executes "cmake -E copy_if_different
@@ -70,7 +71,6 @@ function(editor_post_build_step aTarget aZeroCoreDirectory aLibOutputDirectory a
         ${pluginDir}/${aTarget}.lib
     )
 
-    if ("${platform}" STREQUAL "Windows")
     # copy the error dialog
     add_custom_command(TARGET ${aTarget} POST_BUILD
         # executes "cmake -E copy_if_different
@@ -230,7 +230,7 @@ function(zip_directory aTarget aFoldersToZip aOutputFile)
 
     # check for 7zip in path
     find_program(sevenZipLocation 
-    NAMES 7za 7z 7z.exe 
+    NAMES 7z 7z.exe 7za
     HINTS CMAKE_SYSTEM_PROGRAM_PATH
     PATHS CMAKE_SYSTEM_PROGRAM_PATH
      )
