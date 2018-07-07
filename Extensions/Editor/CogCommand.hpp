@@ -59,9 +59,14 @@ public:
   CogCommand* GetObject(StringParam objectName) override;
   uint GetObjectCount() override;
   CogCommand* GetObject(uint index) override;
+  CogCommand* UpdateData(StringParam objectName) override;
   Space* GetSpace(CogCommand*) override;
 
   Space* GetSpace();
+
+
+public:
+  bool mCommandsModified;
 
   /// All command objects will be created in this space.
   HandleOf<Space> mCommandSpace;

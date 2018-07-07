@@ -241,6 +241,7 @@ ZilchDefineType(Rectangle, builder, type)
   ZilchBindMethod(GetLocation);
   ZilchBindOverloadedMethod(SetLocation, ZilchInstanceOverload(void, Location::Enum, Vec2Param));
 
+  type->ToStringFunction = Zilch::BoundTypeToGlobalToString<Rectangle>;
 }
 
 //**************************************************************************************************
@@ -745,6 +746,14 @@ void Rectangle::SetLocation(Location::Enum location, Vec2Param value)
   default:
     DoNotifyException("Location not supported.", "Only non-cardinal axes are supported.");
   }
+}
+
+//**************************************************************************************************
+String ToString(const Rectangle& value, bool shortFormat)
+{
+  String minStr = ToString(value.Min, shortFormat);
+  String maxStr = ToString(value.Max, shortFormat);
+  return String::Format("(%s), (%s)", minStr.c_str(), maxStr.c_str());
 }
 
 }//namespace Zero

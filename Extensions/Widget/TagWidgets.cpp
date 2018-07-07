@@ -483,6 +483,12 @@ void TagChainTextBox::OnSearchBoxKeyPreview(KeyboardEvent* e)
       TagLabel* tag = mTags.Back();
       String tagName = tag->GetName();
       mSearch.ActiveTags.Erase(tagName);
+
+      // Remove a TagElement's search type.
+      StringRange end = tagName.FindFirstOf("(");
+      if(!end.Empty())
+        tagName = tagName.SubString(tagName.Begin(), end.Begin());
+
       mSearchBar->SetText(tagName);
       mSearchBar->mEditTextField->SetEditCaretPos(tagName.ComputeRuneCount());
       mSearch.SearchString = tagName;
@@ -507,7 +513,7 @@ void TagChainTextBox::OnSearchBoxKeyPreview(KeyboardEvent* e)
         searchIndex = 0;
       SearchViewResult& result = mSearch.Results[searchIndex];
 
-      if(result.Interface->GetType(result) == "Tag")
+      if(result.Interface->GetElementType(result) == "Tag")
       {
         AddTag(result.Name, true);
         mSearchBar->SetText(String());

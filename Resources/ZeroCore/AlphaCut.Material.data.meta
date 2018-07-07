@@ -7,7 +7,6 @@ DataContent
 		var ResourceId = 0x58f4ed04b8b67cbf
 		var LoaderType = "Material"
 		var Version = 0
-		var ShowInEditor = true
 	}
 	ResourceTemplate 
 	{
@@ -16,5 +15,9 @@ DataContent
 		var SortWeight = 100
 		var Category = ""
 		var CategorySortWeight = 100
+	}
+	ContentEditorOptions
+	{
+		var ShowInEditor = true
 	}
 }

@@ -13,6 +13,7 @@ namespace Scintilla
 {
 struct SCNotification;
 class SurfaceImpl;
+struct SelectionRange;
 }//namespace Scintilla
 
 namespace Zero
@@ -43,6 +44,7 @@ public:
 
 DeclareEnum3(LinePosition, Beginning, Middle, End);
 
+// CustomIndicator is always last.
 DeclareEnum6(Lexer, Text, Cpp, Python, Console, Shader, Zilch);
 
 DeclareEnum13(IndicatorStyle, Plain,
@@ -86,6 +88,11 @@ public:
 
   //Get the number of lines in this document.
   int GetLineCount();
+
+  //Get the number of lines, including the the additional lines that would
+  //fit in the client over-scroll area.  Note: The over-scroll area does not
+  //contain editable, numbered text lines.
+  int GetClientLineCount();
 
   //Has the document been modified?
   bool IsModified();
@@ -240,6 +247,7 @@ public:
   //------------------------------------------------------------ Event Handlers
 
   void OnConfigChanged(PropertyEvent* event);
+  void OnConfigPropertyChanged(PropertyEvent* event);
   void OnColorSchemeChanged(ObjectEvent* event);
 
   void OnTextTyped(KeyboardTextEvent* event);
@@ -269,6 +277,19 @@ public:
   uint GetLineHeight();
 
   void OnUpdate(UpdateEvent* event);
+
+  // Update text body highlights and scroll well indicators for cursors & highlights.
+  void UpdateTextMatchHighlighting();
+
+  // Create/Populate scroll-well indicators associated with this TextEditor.
+  //   - Note: 'indicators' will be cleared the re-populated based on 'ranges'.
+  void UpdateIndicators(Array<Rectangle>& indicators,
+                        const std::vector<Scintilla::SelectionRange>& ranges,
+                        Vec4Param indicatorColor,
+                        Vec2Param minIndicatorHeight,
+                        float indicatorWidth,
+                        float indicatorOffsetX);
+
   Vec3 GetScreenPositionOfCursor();
   Vec3 GetScreenPositionFromCursor(int cursor);
   int GetCursorFromScreenPosition(Vec2Param screenPos);
@@ -318,6 +339,10 @@ public:
   bool mBreakpoints;
   //Folding margin
   bool mFolding;
+  //Highlight all instances of text matching the current selection.
+  bool mTextMatchHighlighting;
+  //Highlight mode is either partial text, or whole text.
+  bool mHighlightPartialTextMatch;
   //Current font Size
   int mFontSize;
   //The lexer we're using
@@ -326,6 +351,9 @@ public:
   String mColorSchemeName;
   //Active hotspots
   Array<TextEditorHotspot*> mHotspots;
+
+  PixelBuffer* mIndicators;
+  TextureView* mIndicatorDisplay;
 
   //------------------------------------------------------------ Protected
 

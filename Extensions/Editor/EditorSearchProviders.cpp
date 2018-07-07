@@ -3,8 +3,8 @@
 /// \file EditorSearchProviders.cpp
 /// Support for searching
 ///
-/// Authors: Chris Peters
-/// Copyright 2010-2012, DigiPen Institute of Technology
+/// Authors: Chris Peters, Ryan Edgemon
+/// Copyright 2010-2018, DigiPen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
@@ -12,42 +12,43 @@
 namespace Zero
 {
 
-const String ResourcesTag = "Resources";
+static const String cResourcesTag = "Resources";
 
-/// Search provider for resources
-class ResourceSearchProvider : public SearchProvider
-{
-public:
-  ResourceLibrary* mResourceLibrary;
-  Handle mObject;
-  bool mShowHidden;
-  ResourceSearchProvider(ResourceLibrary* library, bool showHidden = false) :
+
+//--------------------------------------------------- ResourceSearchProvider ---
+ResourceSearchProvider::ResourceSearchProvider(ResourceLibrary* library,
+  bool showHidden, ResourceLibrary* defaultLib)
+  : SearchProvider("Resource"),
+    mDefaultLibrary(defaultLib),
     mResourceLibrary(library), 
     mShowHidden(showHidden)
-  {
-  }
+{
+}
 
-  void RunCommand(SearchView* searchView, SearchViewResult& element) override
-  {
+void ResourceSearchProvider::RunCommand(SearchView* searchView, SearchViewResult& element)
+{
     // When selected edit the resource
     Resource* resource = (Resource*)element.Data;
     Z::gEditor->EditResource(resource);
-  }
+}
 
-  void Search(SearchData& search) override
-  {
+void ResourceSearchProvider::Search(SearchData& search)
+{
     // allResources is active if the active tags contain only "Resources"
     // so all resources and tags should be added
-    bool resourcesTag = search.ActiveTags.Contains(ResourcesTag);
+  bool resourcesTag = search.ActiveTags.Contains(cResourcesTag);
 
     // Copy tags to a local map so matched values can be removed
     // for quick filtering
     HashSet<String> localTags = search.ActiveTags;
     // If ResourcesTag is present remove from local
-    localTags.Erase(ResourcesTag);
+  localTags.Erase(cResourcesTag);
+  // Also remove the currently selected library tag, if there is one.
+  if(mResourceLibrary != nullptr)
+    localTags.Erase(BuildString(mResourceLibrary->Name, "(Library)"));
 
     if(search.ActiveTags.Empty())
-      search.AvailableTags.Insert(ResourcesTag);
+    search.AvailableTags.Insert(cResourcesTag);
 
     // For every resource manager
     ResourceSystem::ManagerMapType::valuerange r = Z::gResources->Managers.Values();
@@ -87,18 +88,32 @@ public:
         }
       }
     }
-  }
+}
 
-  void AttemptAddResource(SearchData& search, HashSet<String>& localTags, Resource* resource)
-  {
-    if(mResourceLibrary != NULL && resource->mResourceLibrary != mResourceLibrary)
+void ResourceSearchProvider::AttemptAddResource(SearchData& search, HashSet<String>& localTags, Resource* resource)
+{
+  if(mResourceLibrary != nullptr && resource->mResourceLibrary != mResourceLibrary)
       return;
 
-    if(resource->mContentItem == NULL)
+  if(resource->mContentItem == nullptr)
       return;
 
-    // Don't show hidden resources unless otherwise specified
-    if(!mShowHidden && !resource->mContentItem->ShowInEditor)
+  bool hasDefault = mDefaultLibrary != nullptr;
+  bool hasTarget = mResourceLibrary != nullptr;
+  bool hasOverride = resource->mContentItem->ShowInEditor;
+
+  // If there is no default library then showing hidden items is valid.
+  bool canShow = (mShowHidden && !hasDefault);
+  // Showing hidden items is also valid if a library is in focus.
+  canShow |= (mShowHidden && hasTarget);
+  // Showing hidden items is not valid when a default library is the only
+  // library available.  Further, The only way to show a non-default library
+  // item requires an explicit override.
+  canShow |= (hasDefault && !hasTarget && hasOverride);
+  // No library available, so fall back to the override.
+  canShow |= (!hasDefault && !hasTarget && hasOverride);
+
+  if(!canShow)
       return;
 
     // Get the tags for the resource
@@ -124,10 +139,10 @@ public:
           search.Results.PopBack();
       }
     }
-  }
+}
 
-  Composite* CreatePreview(Composite* parent, SearchViewResult& element) override
-  {
+Composite* ResourceSearchProvider::CreatePreview(Composite* parent, SearchViewResult& element)
+{
     // Use the general resource preview
     Resource* resource = (Resource*)element.Data;
     PreviewWidget* preview = ResourcePreview::CreatePreviewWidget(parent, resource->Name, resource, PreviewImportance::High);
@@ -162,21 +177,101 @@ public:
     }
 
     return nullptr;
-  }
+}
 
-  String GetType(SearchViewResult& element) override
-  {
+String ResourceSearchProvider::GetElementType(SearchViewResult& element)
+{
     Resource* resource = (Resource*)element.Data;
     return resource->GetManager()->GetResourceType()->Name;
-  }
-};
+}
 
-// Search Provider for Objects in the Editor space
-class ObjectSearchProvider : public SearchProvider
+
+//---------------------------------------------------- LibrarySearchProvider ---
+LibrarySearchProvider::LibrarySearchProvider(bool canReturnResources, ResourceLibrary* defaultLibrary) :
+  SearchProvider("Library"),
+  mCanReturnResources(canReturnResources),
+  mDefaultLibrary(defaultLibrary),
+  mTargetResourceProvider(nullptr, true, defaultLibrary),
+  mLibraries(Z::gContentSystem->Libraries)
 {
-public:
-  void RunCommand(SearchView* searchView, SearchViewResult& element) override
+}
+
+bool LibrarySearchProvider::OnMatch(SearchView* searchView, SearchViewResult& element)
+{
+  ResourceLibrary* library = (ResourceLibrary*)element.Data;
+  mTargetResourceProvider.mResourceLibrary = library;
+
+  if(library == nullptr)
   {
+    mActiveLibrary.Clear();
+    return false;
+  }
+
+  mActiveLibrary = GetElementNameAndSearchType(element);
+
+  // Create a UI Tag element to show that subsequent search results will
+  // be in the context of the selected library, only.
+  searchView->AddTag(mActiveLibrary);
+
+  // Do not close the SearchView.
+  return false;
+}
+
+void LibrarySearchProvider::RunCommand(SearchView* searchView, SearchViewResult& element)
+{
+  mTargetResourceProvider.RunCommand(searchView, element);
+}
+
+void LibrarySearchProvider::Search(SearchData& search)
+{
+  bool libraryActive = search.ActiveTags.Contains(mActiveLibrary);
+
+  if(!libraryActive)
+  {
+    mActiveLibrary.Clear();
+    mTargetResourceProvider.mResourceLibrary = nullptr;
+  }
+
+  if(mCanReturnResources)
+    mTargetResourceProvider.Search(search);
+
+  // Don't include other libraries if there's already one selected.
+  if(libraryActive)
+    return;
+
+  forRange(ContentLibrary* library, mLibraries.Values())
+  {
+    String& name = library->Name;
+    if(name == "ZeroLauncherResources")
+      continue;
+
+    // Match on the name
+    int priority = PartialMatch(search.SearchString.All(), name.All(), CaseInsensitiveCompare);
+    if(priority != cNoMatch)
+    {
+      // Add a result
+      SearchViewResult& result = search.Results.PushBack();
+      result.Data = Z::gResources->GetResourceLibrary(library->Name);
+      result.Interface = this;
+      result.Name = library->Name;
+      result.Priority = priority + SearchViewResultPriority::LibraryBegin;
+    }
+  }
+}
+
+String LibrarySearchProvider::GetElementType(SearchViewResult& element)
+{
+  const String type = "Library";
+  return type;
+}
+
+//----------------------------------------------------- ObjectSearchProvider ---
+ObjectSearchProvider::ObjectSearchProvider() : SearchProvider("Object")
+{
+}
+
+void ObjectSearchProvider::RunCommand(SearchView* searchView, SearchViewResult& element)
+{
     // Focus on the object when selected
     if(Cog* cog = element.ObjectHandle.Get<Cog*>())
     {
@@ -185,11 +280,11 @@ public:
       FocusOnSelectedObjects();
       select->FinalSelectionChanged();
     }
-  }
+}
 
-  /// Add an object the search results
-  void AddObject(Cog& object, SearchData& search)
-  {
+/// Add an object the search results
+void ObjectSearchProvider::AddObject(Cog& object, SearchData& search)
+{
     String name = object.GetName();
     if(!name.Empty())
     {
@@ -205,10 +300,10 @@ public:
         result.Priority = priority;
       }
     }
-  }
+}
 
-  void Search(SearchData& search) override
-  {
+void ObjectSearchProvider::Search(SearchData& search)
+{
     // Check for objects tag
     const String ObjectsTag = "Objects";
     if(!CheckAndAddSingleTag(search, ObjectsTag))
@@ -226,10 +321,10 @@ public:
       }
     }
 
-  }
+}
 
-  Composite* CreatePreview(Composite* parent, SearchViewResult& element) override
-  {
+Composite* ObjectSearchProvider::CreatePreview(Composite* parent, SearchViewResult& element)
+{
     // Commented out for the time being as creating a preview for cogs in the scene
     // when using general search moves the object and creates a new camera in the scene
     // that is visibly seen coming into and out of existence in both the scene and object view - Dane Curbow
@@ -239,26 +334,21 @@ public:
 //       return ResourcePreview::CreatePreviewWidget(parent, cog->GetName(), cog);
 //     else
       return nullptr;
-  }
+}
 
-  String GetType(SearchViewResult& element) override
-  {
+String ObjectSearchProvider::GetElementType(SearchViewResult& element)
+{
     const String ObjectName = "Cog";
     return ObjectName;
-  }
-};
+}
 
-/// Search Provider for Components to add to compositions
-/// using MetaComposition on MetaType
-class ComponentSearchProvider : public SearchProvider
+//-------------------------------------------------- ComponentSearchProvider ---
+ComponentSearchProvider::ComponentSearchProvider() : SearchProvider("Component")
 {
-public:
-  // Object to check for components to add.
-  HandleOf<MetaComposition> mComposition;
-  Handle mObject;
+}
 
-  void Search(SearchData& search) override
-  {
+void ComponentSearchProvider::Search(SearchData& search)
+{
     //Deference the handle and get the object
     if(mObject.IsNull())
       return;
@@ -288,15 +378,15 @@ public:
         }
       }
     }
-  }
+}
 
-  String GetType(SearchViewResult& element) override
-  {
+String ComponentSearchProvider::GetElementType(SearchViewResult& element)
+{
     return String();
-  }
+}
 
-  Composite* CreatePreview(Composite* parent, SearchViewResult& element) override
-  {
+Composite* ComponentSearchProvider::CreatePreview(Composite* parent, SearchViewResult& element)
+{
     //For preview attempt to look up class description from documentation system.
     BoundType* boundType = (BoundType*)element.Data;
     ClassDoc* classDoc = Z::gDocumentation->mClassMap.FindValue(boundType->Name, NULL);
@@ -343,8 +433,13 @@ public:
 
       return NULL;
     }
-  }
-};
+}
+
+//------------------------------------------------------------------ Helpers ---
+SearchProvider* GetLibrarySearchProvider(bool canReturnResources, ResourceLibrary* defaultLibrary)
+{
+  return new LibrarySearchProvider(canReturnResources, defaultLibrary);
+}
 
 SearchProvider* GetObjectSearchProvider()
 {
@@ -354,13 +449,6 @@ SearchProvider* GetObjectSearchProvider()
 SearchProvider* GetResourceSearchProvider(ResourceLibrary* resourceLibrary, bool showHidden)
 {
   return new ResourceSearchProvider(resourceLibrary, showHidden);
-}
-
-SearchProvider* GetResourceSearchProvider(HandleParam object)
-{
-  ResourceSearchProvider* provider = new ResourceSearchProvider(NULL);
-  provider->mObject = object;
-  return provider;
 }
 
 SearchProvider* GetFactoryProvider(HandleParam object, HandleOf<MetaComposition>& composition)
@@ -373,8 +461,13 @@ SearchProvider* GetFactoryProvider(HandleParam object, HandleOf<MetaComposition>
 
 void AddEditorProviders(SearchData& search)
 {
-  search.SearchProviders.PushBack(GetResourceSearchProvider(NULL));
+  ResourceLibrary* library = Z::gResources->GetResourceLibrary(Z::gEditor->mProjectLibrary->Name);
+  search.SearchProviders.PushBack(GetLibrarySearchProvider(true, library));
+
   search.SearchProviders.PushBack(GetObjectSearchProvider());
+
+  CommandManager* commandManager = CommandManager::GetInstance();
+  search.SearchProviders.PushBack(commandManager->GetCommandSearchProvider());
 }
 
 }//namespace Zero

@@ -65,6 +65,16 @@ bool IsAlphaNumeric(Rune rune)
   return isalnum(rune.value);
 }
 
+// The standard "C" locale considers punctuation characters all graphic
+// characters(as in isgraph) that are not alphanumeric(as in isalnum).
+bool IsPunctuation(Rune rune)
+{
+  // temporary fix for windows lack of any real UTF8 support
+  if(rune.value > cUnicodeRangeStart)
+    return false;
+  return ispunct(rune.value);
+}
+
 Rune ToLower(Rune rune)
 {
   return Rune(tolower(rune.value));

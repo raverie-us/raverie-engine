@@ -24,9 +24,6 @@ namespace Events
 {
   DeclareEvent(GizmoRayTest);
   DeclareEvent(GizmoModified);
-  DeclareEvent(TranslateGizmoModified);
-  DeclareEvent(ScaleGizmoModified);
-  DeclareEvent(RotateGizmoModified);
   /// Sent on root Gizmo's when the target has been set. This only happens with
   /// Gizmos that were created by the editor to edit a specific Component.
   /// This event is only sent because in their Initialize, the editing object
@@ -53,11 +50,21 @@ public:
   Cog* GetGizmo();
   ViewportMouseEvent* GetViewportMouseEvent();
 
-  /// The Gizmo corresponding to this event.
+  /// OperationQueue is valid only when 'Finished' returns true. Expect null otherwise.
+  OperationQueue* GetOperationQueue();
+  bool GetFinished();
+
+  /// The Gizmo object corresponding to this event.
   CogId mGizmo;
+
+  /// The component gizmo corresponding to this event, can be null.
+  Component* mSource;
 
   /// This can be null if the gizmo was disabled while the mouse was over it.
   ViewportMouseEvent* mMouseEvent;
+
+  /// Can be null.
+  HandleOf<OperationQueue> mOperationQueue;
 };
 
 //--------------------------------------------------------- Gizmo Ray Test Event

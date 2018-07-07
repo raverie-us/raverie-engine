@@ -32,6 +32,18 @@ namespace Audio
   //************************************************************************************************
   void AudioSystemInterface::Update()
   {
+    // If not threaded, run decoding tasks and mix loop
+    if (!Zero::ThreadingEnabled)
+    {
+      for (unsigned i = 0; i < System->MaxDecodingTasksToRun && !System->DecodingTasks.Empty(); ++i)
+      {
+        System->DecodingTasks.Front()->DecodePacket();
+        System->DecodingTasks.PopFront();
+      }
+
+      System->MixLoopThreaded();
+    }
+
     // Run tasks from the mix thread
     System->HandleTasks();
 

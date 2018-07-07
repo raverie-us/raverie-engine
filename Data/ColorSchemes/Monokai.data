@@ -19,4 +19,7 @@ ColorScheme
 	var Gutter = Real4{0.152941182, 0.156862751, 0.13333334, 1}
 	var GutterText = Real4{0.56078434, 0.564705908, 0.541176498, 1}
 	var Link = Real4{0.623529434, 0.623529434, 0.964705944, 1}
+	var TextMatchIndicator = Real4{0.321568627, 1, 0, 0.75}
+	var TextMatchHighlight = Real4{0.521568627, 0.886274509, 0.180392156, 0.196078431}
+	var TextMatchOutlineAlpha = 0.411764705
 }

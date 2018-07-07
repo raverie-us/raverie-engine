@@ -842,9 +842,6 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
   commands->LoadMenu(FilePath::Combine(dataDirectory, "Menus.data"));
   commands->LoadMenu(FilePath::Combine(dataDirectory, "Toolbars.data"));
 
-  // Copy commands from Command.data to the HotKeyCommands DataSource.
-  HotKeyCommands::GetInstance()->CopyCommandData(commands->mCommands);
-
   SetupTools(editorMain);
 
   commands->SetContext(editorMain, ZilchTypeId(Editor));
@@ -1160,6 +1157,9 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
   }
 
   CommandManager::GetInstance()->ValidateCommands();
+
+  // Copy commands to the HotKeyCommands DataSource.
+  HotKeyCommands::GetInstance()->CopyCommandData(commands->mCommands);
 }
 
 }//namespace Zero

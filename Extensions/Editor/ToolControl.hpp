@@ -97,6 +97,7 @@ public:
   ToolData* GetObject(StringParam objectName) override;
   uint GetObjectCount() override;
   ToolData* GetObject(uint index) override;
+  ToolData* UpdateData(StringParam objectName) override;
   Space* GetSpace(ToolData* object) override;
   void CreateOrUpdateCog(ToolData* object) override;
 

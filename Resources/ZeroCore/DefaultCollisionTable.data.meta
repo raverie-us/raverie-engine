@@ -7,7 +7,6 @@ DataContent
 		var ResourceId = 0x4e66a5c0b9dc59b9
 		var LoaderType = "CollisionTable"
 		var Version = 0
-		var ShowInEditor = true
 	}
 	ResourceTemplate 
 	{

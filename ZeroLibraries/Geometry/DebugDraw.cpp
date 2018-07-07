@@ -185,6 +185,7 @@ ZilchDefineType(Line, builder, type)
   ZilchFullBindConstructor(builder, type, ZilchSelf, "start, end", Vec3, Vec3);
   ZilchFullBindConstructor(builder, type, ZilchSelf, "start, end, headSize", Vec3, Vec3, float);
   ZilchFullBindConstructor(builder, type, ZilchSelf, "ray", Ray);
+  ZilchFullBindConstructor(builder, type, ZilchSelf, "ray, t", Ray, float);
   ZilchFullBindConstructor(builder, type, ZilchSelf, "segment", Segment);
 
   ZilchBindFieldProperty(mStart);

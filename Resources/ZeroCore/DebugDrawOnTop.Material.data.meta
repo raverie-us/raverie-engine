@@ -7,6 +7,9 @@ DataContent
 		var ResourceId = 0x56581e2bb81777be
 		var LoaderType = "Material"
 		var Version = 0
+	}
+	ContentEditorOptions
+	{
 		var ShowInEditor = true
 	}
 }

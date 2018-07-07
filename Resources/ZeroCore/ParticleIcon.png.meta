@@ -25,4 +25,8 @@ ImageContent
 		var Slices = Real4{0, 0, 0, 0}
 		var Fill = SpriteFill.Stretch
 	}
+	ContentEditorOptions
+	{
+		var ShowInEditor = true
+	}
 }

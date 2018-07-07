@@ -14,8 +14,8 @@ namespace Zero
 
 namespace Events
 {
-  DefineEvent(CommandRenamed);
-  DefineEvent(BindingOverwrite);
+DefineEvent(CommandRenamed);
+DefineEvent(BindingOverwrite);
 }
 
 //------------------------------------------------------------------------------
@@ -23,9 +23,10 @@ namespace Events
 static const String cDefaultCommandString = "\'NEW COMMAND\'";
 static const String cDefaultBindingString = "\'NEW BINDING\'";
 
+static const String cScriptColumn = "Script";
 static const String cCommandColumn = "Command";
 static const String cBindingColumn = "Shortcut";
-static const String cTagColumn = "Tag";
+static const String cTagsColumn = "Tags";
 static const String cDescriptionColumn = "Description";
 
 static const bool cNotUsingHotKeyResource = true;
@@ -38,11 +39,79 @@ class BindingConflictEvent : public Event
 {
 public:
   BindingConflictEvent(CommandEntry* newCommand, CommandEntry* existingComnnad, HotKeyBinding* newBinding)
-    : mNewCommand(newCommand), mExistingCommad(existingComnnad), mNewBinding(newBinding) {}
+    : mNewCommand(newCommand), mExistingCommad(existingComnnad), mNewBinding(newBinding)
+  {
+  }
 
   CommandEntry* mNewCommand;
   CommandEntry* mExistingCommad;
   HotKeyBinding* mNewBinding;
+};
+
+//-------------------------------------------------------- CogCommand Editor ---
+class CogCommandScriptEditor : public ValueEditor
+{
+public:
+  typedef CogCommandScriptEditor ZilchSelf;
+  Element* mIcon;
+  HandleOf<CogCommand> mCommand;
+
+  CogCommandScriptEditor(Composite* parent)
+    : ValueEditor(parent)
+  {
+    mIcon = CreateAttached<Element>("EditScript");
+    mIcon->SetTranslation(Pixels(0, 2, 0));
+
+    ConnectThisTo(mIcon, Events::LeftClick, OnLeftClick);
+    ConnectThisTo(mIcon, Events::MouseEnter, OnMouseEnter);
+  }
+
+  void SetVariant(AnyParam variant) override
+  {
+    mCommand = variant.Get<CogCommand*>();
+    if(mCommand == nullptr)
+      mIcon->SetVisible(false);
+    else
+      mIcon->SetVisible(true);
+  }
+
+  void GetVariant(Any& variant) override
+  {
+    variant = mCommand;
+  }
+
+  void OnLeftClick(MouseEvent* event)
+  {
+    if(mIcon->GetVisible() == false)
+      return;
+
+      // Open script.
+    MetaResource* meta = mCommand->mScriptComponentType->HasInherited<MetaResource>();
+    ResourceId resourceId = meta->mResourceId;
+    Resource* resource = Z::gResources->GetResource(resourceId);
+    ReturnIf(resource == nullptr, , "Could not find %s script", mCommand->GetName().c_str());
+    Z::gEditor->EditResource(resource);
+  }
+
+  void OnMouseEnter(MouseEvent* event)
+  {
+    if(mIcon->GetVisible() == false)
+      return;
+
+    ToolTip* toolTip;
+    if(!mCommand->ToolTip.Empty())
+      toolTip = new ToolTip(this, mCommand->ToolTip);
+    else
+      toolTip = new ToolTip(this, BuildString("Edit '", mCommand->GetName(), "' script"));
+
+    ToolTipPlacement placement;
+    placement.SetScreenRect(mIcon->GetScreenRect());
+    placement.SetPriority(IndicatorSide::Left, IndicatorSide::Right,
+      IndicatorSide::Bottom, IndicatorSide::Top);
+
+    toolTip->SetArrowTipTranslation(placement);
+  }
+
 };
 
 //----------------------------------------------------------- Binding Editor ---
@@ -84,9 +153,9 @@ public:
   {
     //if(mainKey == Keys::Unknown && event->Key >= Keys::A && event->Key <= Keys::Backslash)
     //  mainKey = event->Key;
-    //if(modifier1 == Keys::Unknown && event->Key >= Keys::Up && event->Key <= Keys::NumPad9)
+    //if(modifier1 == Keys::Unknown && event->Key >= Keys::Up && event->Key <= Keys::Decimal)
     //  modifier1 = event->Key;
-    //if(modifier2 == Keys::Unknown && event->Key >= Keys::Up && event->Key <= Keys::NumPad9)
+    //if(modifier2 == Keys::Unknown && event->Key >= Keys::Up && event->Key <= Keys::Decimal)
     //  modifier2 = event->Key;
 
     if(!mEdit || mEdit->mEditTextField->mTakeFocusMode != FocusMode::Hard)
@@ -94,7 +163,7 @@ public:
 
     if(event->Key != Keys::Control && event->Key != Keys::Alt && event->Key != Keys::Shift)
     {
-      if(mMainKey == Keys::Unknown && event->Key >= Keys::A && event->Key <= Keys::NumPad9)
+      if(mMainKey == Keys::Unknown && event->Key >= Keys::A && event->Key <= Keys::Decimal)
       {
         mMainKey = event->Key;
 
@@ -106,7 +175,6 @@ public:
 
         ObjectEvent objectEvent(this);
         DispatchEvent(Events::ValueChanged, &objectEvent);
-        
 
         mModifier1 = Keys::Unknown;
         mModifier2 = Keys::Unknown;
@@ -178,7 +246,7 @@ public:
     out = BuildString(pm1, (pm1 && (pm2 || pm0)) ? " + " : "\0", pm2, (pm2 && pm0) ? " + " : "\0", pm0);
   }
 
-  void Edit( )
+  void Edit()
   {
     //String text;
     //BuildBindingString(text);
@@ -210,6 +278,11 @@ public:
   }
 
 };
+
+ValueEditor* CreateCogCommandScriptEditor(Composite* parent, AnyParam data, u32 flags)
+{
+  return new CogCommandScriptEditor(parent);
+}
 
 ValueEditor* CreateBindingEditor(Composite* parent, AnyParam data, u32 flags)
 {
@@ -264,12 +337,12 @@ public:
     Rune rune = filterString.Front();
     if(rune == '$')
     {
-      SubFilterString.PopFront( );
+      SubFilterString.PopFront();
       searchMode = FilterSearchMode::BindingString;
     }
     else if(rune == '.')
     {
-      SubFilterString.PopFront( );
+      SubFilterString.PopFront();
       searchMode = FilterSearchMode::CommandTag;
     }
 
@@ -380,12 +453,96 @@ public:
 
 };
 
+//------------------------------------------------------ CogCommandSelection ---
+//Simple adapter class to bind a engine selection to a DataSelection.
+class CogCommandSelection : public DataSelection
+{
+public:
+  MetaSelection* mSelection;
+  HotKeyCommands* mSource;
+
+  CogCommandSelection(MetaSelection* selection, HotKeyCommands* source)
+    :mSelection(selection)
+  {
+    mSource = source;
+  }
+
+  void GetSelected(Array<DataIndex>& selected) override
+  {
+    Cog* primary = mSelection->GetPrimaryAs<Cog>();
+    selected.PushBack(primary->GetId().ToUint64());
+  }
+
+  uint Size() override
+  {
+    return 1;
+  }
+
+  bool IsSelected(DataIndex index) override
+  {
+    CommandEntry *row = ((CommandEntry *)mSource->ToEntry(index));
+
+    if(!row->mIsACogCommand)
+      return false;
+    
+    Cog* object = ((CogCommand*)row->mZeroCommand)->mCog;
+    return mSelection->Contains(object);
+  }
+
+  void Select(DataIndex index, bool sendsEvents) override
+  {
+    CommandEntry *row = ((CommandEntry *)mSource->ToEntry(index));
+
+    if(!row->mIsACogCommand)
+      return;
+
+    Cog* object = ((CogCommand*)row->mZeroCommand)->mCog;
+    if(object)
+      mSelection->SelectOnly(object->GetComponentByName(row->mZeroCommand->Name));
+  }
+
+  void Deselect(DataIndex index) override
+  {
+    CommandEntry *row = ((CommandEntry *)mSource->ToEntry(index));
+
+    if(!row->mIsACogCommand)
+      return;
+
+    Cog* object = ((CogCommand*)row->mZeroCommand)->mCog;
+    mSelection->Remove(object);
+  }
+
+  void SelectNone(bool sendsEvents) override
+  {
+    mSelection->Clear((SendsEvents::Enum)sendsEvents);
+  }
+
+  void SelectionModified() override
+  {
+    mSelection->SelectionChanged();
+    DataSelection::SelectionModified();
+  }
+
+  void SelectFinal() override
+  {
+    mSelection->FinalSelectionChanged();
+    DataSelection::SelectFinal();
+  }
+
+};
+
 //------------------------------------------------------------- CommandEntry ---
 
 /******************************************************************************/
 bool CommandEntry::operator<(const CommandEntry& rhs) const
 {
   return mName < rhs.mName;
+}
+
+/******************************************************************************/
+bool CommandEntry::operator==(const Command& rhs) const
+{
+  return mName == rhs.Name;
 }
 
 //----------------------------------------------------------- HotKeyCommands ---
@@ -399,32 +556,57 @@ HotKeyCommands::HotKeyCommands()
 void HotKeyCommands::CopyCommandData(Array<Command*>& commands)
 {
   // Already loaded, no need to do it again.
-  if(!mCommand.Empty( ))
+  if(!mCommand.Empty())
     return;
 
-  unsigned index = 0;
-  forRange(Command* command, commands.All( ))
+  forRange(Command* command, commands.All())
   {
-    CommandEntry& entry = mCommand.PushBack();
-
-    entry.mDevOnly = command->DevOnly;
-    entry.mIndex = index++;
-
-    entry.mName = command->Name;
-    entry.mDescription = command->Description;
-
-    entry.mIconName = command->IconName;
-    entry.mFunction = command->Function;
-
-    entry.mTags = command->Tags;
-
-    entry.mBindingStr = command->Shortcut.Replace("+", " + ");
-
-    entry.mModifier1 = (unsigned)Keys::Unknown;
-    entry.mModifier2 = (unsigned)Keys::Unknown;
-    entry.mMainKey = (unsigned)Keys::Unknown;
+    AddCommand(command);
   }
 
+}
+
+//------------------------------------------------------------------------------
+static void CopyCommand(CommandEntry& lhs, Command* rhs)
+{
+  lhs.mIsACogCommand = (rhs->ZilchGetDerivedType() == ZilchTypeId(CogCommand));
+  lhs.mDevOnly = rhs->DevOnly;
+
+  lhs.mZeroCommand = rhs;
+  lhs.mName = rhs->Name;
+  lhs.mDescription = rhs->Description;
+
+  lhs.mIconName = rhs->IconName;
+  lhs.mFunction = rhs->Function;
+
+  lhs.mTags = rhs->Tags;
+
+  lhs.mBindingStr = rhs->Shortcut.Replace("+", " + ");
+}
+
+/******************************************************************************/
+void HotKeyCommands::AddCommand(Command* command, bool checkForDuplicate)
+{
+  if(checkForDuplicate)
+  {
+    if(mCommand.FindIndex(*command) != CommandSet::InvalidIndex)
+      return;
+  }
+
+  CommandEntry& entry = mCommand.PushBack();
+  entry.mIndex = mCommand.Size() - 1;
+
+  CopyCommand(entry, command);
+
+  entry.mModifier1 = (unsigned)Keys::Unknown;
+  entry.mModifier2 = (unsigned)Keys::Unknown;
+  entry.mMainKey = (unsigned)Keys::Unknown;
+}
+
+/******************************************************************************/
+void HotKeyCommands::RemoveCommand(Command* command)
+{
+  mCommand.Erase(mCommand.FindPointer(*command));
 }
 
 /******************************************************************************/
@@ -518,14 +700,29 @@ void HotKeyCommands::GetData(DataEntry* dataEntry, Any& variant, StringParam col
 {
   CommandEntry *row = ((CommandEntry *)dataEntry);
 
-  if(column == cCommandColumn)
+  if(column == cScriptColumn)
+  {
+    variant = nullptr;
+
+    if(row->mIsACogCommand)
+      variant = (CogCommand*)row->mZeroCommand;
+  }
+  else if(column == cCommandColumn)
+  {
     variant = row->mName;
+  }
   else if(column == cBindingColumn)
+  {
     variant = row->mBindingStr;
-  else if(column == cTagColumn)
+  }
+  else if(column == cTagsColumn)
+  {
     variant = row->mTags;
+  }
   else if(column == cDescriptionColumn)
+  {
     variant = row->mDescription;
+  }
 }
 
 /******************************************************************************/
@@ -537,12 +734,11 @@ bool HotKeyCommands::SetData(DataEntry* dataEntry, AnyParam variant, StringParam
   {
     row->mName = variant.ToString();
 
-    HotKeySortHelper(true, mCommand);
+      // Sort from root down.
+    Sort(&mCommand, cCommandColumn, false);
 
     ObjectEvent objectEvent(this);
     DispatchEvent(Events::CommandRenamed, &objectEvent);
-    //mTreeView->ClearAllRows();
-    //mTreeView->SetDataSource(mHotKeys);
   }
   else if(column == cBindingColumn)
   {
@@ -569,7 +765,7 @@ bool HotKeyCommands::SetData(DataEntry* dataEntry, AnyParam variant, StringParam
     
     delete binding;
   }
-  else if(column == cTagColumn)
+  else if(column == cTagsColumn)
   {
     row->mTags = variant.ToString();
   }
@@ -610,7 +806,7 @@ HotKeyEditor::HotKeyEditor(Composite* parent) : Composite(parent)
 
   if(!cNotUsingHotKeyResource)
   {
-    String userHotKeyFile = FilePath::Combine(GetUserDocumentsDirectory( ), "ZeroEditor", "Default.HotKeyDataSet.data");
+    String userHotKeyFile = FilePath::Combine(GetUserDocumentsDirectory(), "ZeroEditor", "Default.HotKeyDataSet.data");
 
     if(!FileExists(userHotKeyFile))
     {
@@ -621,15 +817,28 @@ HotKeyEditor::HotKeyEditor(Composite* parent) : Composite(parent)
 
   }
 
+  ConnectThisTo(ZilchManager::GetInstance(), Events::ScriptsCompiledPostPatch, OnScriptsCompiled);
+
+  CommandManager* commands = CommandManager::GetInstance();
+  ConnectThisTo(commands, Events::CommandAdded, OnGlobalCommandAdded);
+  ConnectThisTo(commands, Events::CommandRemoved, OnGlobalCommandRemoved);
+  ConnectThisTo(commands, Events::CommandUpdated, OnGlobalCommandUpdated);
+
   SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0, 2), Thickness::cZero));
   
   if(cHotKeysEditable)
     ConnectThisTo(mHotKeys, Events::CommandRenamed, OnRenamedCommand);
 
+  MetaSelection* selection = Z::gEditor->GetSelection();
+
+    // Search must be declared before the TreeView so that it shows up in the
+    // layout before the TreeView.
   TreeViewSearch* search = new TreeViewSearchHotKeys(this);
   search->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(20));
 
   mTreeView = new TreeView(this);
+  mTreeView->SetSelection(new CogCommandSelection(selection, mHotKeys));
+
   search->mTreeView = mTreeView;
 
   if(cHotKeysEditable)
@@ -713,7 +922,7 @@ HotKeyEditor::HotKeyEditor(Composite* parent) : Composite(parent)
     // symbols
   sKeyMap[Keys::LeftBracket] = "[";
   sKeyMap[Keys::RightBracket] = "]";
-  sKeyMap[Keys::Comma] = ";";
+  sKeyMap[Keys::Comma] = ",";
   sKeyMap[Keys::Period] = ".";
   sKeyMap[Keys::Semicolon] = ";";
   sKeyMap[Keys::Minus] = "-";
@@ -769,6 +978,11 @@ HotKeyEditor::HotKeyEditor(Composite* parent) : Composite(parent)
   sKeyMap[Keys::NumPad7] = "NumPad7";
   sKeyMap[Keys::NumPad8] = "NumPad8";
   sKeyMap[Keys::NumPad9] = "NumPad9";
+  sKeyMap[Keys::Add] = "NumPadPlus";
+  sKeyMap[Keys::Multiply] = "NumPadMultiply";
+  sKeyMap[Keys::Subtract] = "NumPadMinus";
+  sKeyMap[Keys::Divide] = "NumPadDivide";
+  sKeyMap[Keys::Decimal] = "NumPadDecimal";
 }
 
 /******************************************************************************/
@@ -776,8 +990,19 @@ void HotKeyEditor::BuildFormat(TreeFormatting& formatting)
 {
   formatting.Flags.SetFlag(FormatFlags::ShowHeaders);
 
-    // command column
+  // script column (for CogCommands)
   ColumnFormat* format = &formatting.Columns.PushBack();
+  format->Index = formatting.Columns.Size() - 1;
+  format->FixedSize = Pixels(24, 20);
+  format->MinWidth = Pixels(24);
+  format->Name = cScriptColumn;
+  format->HeaderIcon = "EditScript";
+  format->Editable = true;
+  format->ColumnType = ColumnType::Fixed;
+  format->CustomEditor = "CogCommandScriptEditor";
+
+    // command column
+  format = &formatting.Columns.PushBack();
   format->Index = formatting.Columns.Size() - 1;
   format->Name = cCommandColumn;
   format->HeaderName = "Command";
@@ -801,8 +1026,8 @@ void HotKeyEditor::BuildFormat(TreeFormatting& formatting)
     // tag column
   format = &formatting.Columns.PushBack();
   format->Index = formatting.Columns.Size() - 1;
-  format->Name = cTagColumn;
-  format->HeaderName = "Tag";
+  format->Name = cTagsColumn;
+  format->HeaderName = "Tags";
   format->ColumnType = ColumnType::Flex;
   format->FlexSize = 1;
   format->MinWidth = Pixels(80.0f);
@@ -816,20 +1041,26 @@ void HotKeyEditor::BuildFormat(TreeFormatting& formatting)
   format->HeaderName = "Description";
   format->ColumnType = ColumnType::Flex;
   format->FlexSize = 5;
-  //format->FixedSize = Pixels(20, 400);
   format->MinWidth = Pixels(600.0f);
   format->Editable = true;
   format->CustomEditor = "DescriptionEditor";
 }
 
 /******************************************************************************/
-void HotKeyEditor::UpdateTransform( )
+void HotKeyEditor::UpdateTransform()
 {
   Composite::UpdateTransform();
 }
 
 /******************************************************************************/
-void HotKeyEditor::DisplayResource( )
+void HotKeyEditor::Refresh()
+{
+  mTreeView->ClearAllRows();
+  mTreeView->SetDataSource(mHotKeys);
+}
+
+/******************************************************************************/
+void HotKeyEditor::DisplayResource()
 {
   mTreeView->SetDataSource(mHotKeys);
 
@@ -838,14 +1069,14 @@ void HotKeyEditor::DisplayResource( )
 }
 
 /******************************************************************************/
-bool HotKeyEditor::TakeFocusOverride( )
+bool HotKeyEditor::TakeFocusOverride()
 {
-  this->HardTakeFocus( );
+  this->HardTakeFocus();
   return true;
 }
 
 /******************************************************************************/
-void HotKeyEditor::AutoClose( )
+void HotKeyEditor::AutoClose()
 {
   if(HasFocus())
     LoseFocus();
@@ -860,15 +1091,54 @@ void HotKeyEditor::OnCancel(SearchViewEvent* event)
 }
 
 /******************************************************************************/
+void HotKeyEditor::OnScriptsCompiled(Event*)
+{
+  mHotKeys->mCommand.Clear();
+
+  CommandManager* commands = CommandManager::GetInstance();
+  HotKeyCommands::GetInstance()->CopyCommandData(commands->mCommands);
+
+  Sort(true);
+
+  Refresh();
+}
+
+/******************************************************************************/
+void HotKeyEditor::Sort(bool updateIndexes)
+{
+  CommandSet& set = mHotKeys->mCommand;
+
+  int i = 0;
+  CommandSet::range sortRange = set.All();
+  while(sortRange[0].mName == cDefaultCommandString || sortRange[0].mBindingStr == cDefaultBindingString)
+  {
+    sortRange.PopFront();
+    ++i;
+  }
+
+  QuickSort(sortRange.Begin(), sortRange.End(), &sortRange.Front(), less<CommandEntry>());
+
+  // Reset the scroll of the view the to top.
+  mTreeView->mArea->SetScrolledPercentage(Vec2(0, 0));
+
+  if(!updateIndexes)
+    return;
+
+  int size = (int)set.Size();
+  for(; i < size; ++i)
+    set[i].mIndex = i;
+}
+
+
+/******************************************************************************/
 void HotKeyEditor::OnCommandRename(ObjectEvent* event)
 {
-  TreeRow* row = mTreeView->FindRowByIndex(mRowIndex);
+  TreeRow* row = mTreeView->FindRowByIndex(mRightClickedRowIndex);
   row->Edit(cCommandColumn);
 
-  HotKeySortHelper(true, mHotKeys->mCommand);
+  Sort(true);
 
-  mTreeView->ClearAllRows();
-  mTreeView->SetDataSource(mHotKeys);
+  Refresh();
 
   MetaOperations::NotifyObjectModified(mHotKeys->mCommand);
 }
@@ -876,7 +1146,7 @@ void HotKeyEditor::OnCommandRename(ObjectEvent* event)
 /******************************************************************************/
 void HotKeyEditor::OnCommandRebind(ObjectEvent* event)
 {
-  TreeRow* row = mTreeView->FindRowByIndex(mRowIndex);
+  TreeRow* row = mTreeView->FindRowByIndex(mRightClickedRowIndex);
 
   row->Edit(cBindingColumn);
 }
@@ -884,13 +1154,13 @@ void HotKeyEditor::OnCommandRebind(ObjectEvent* event)
 /******************************************************************************/
 void HotKeyEditor::OnCommandDelete(ObjectEvent* event)
 {
-  TreeRow* row = mTreeView->FindRowByIndex(mRowIndex);
+  TreeRow* row = mTreeView->FindRowByIndex(mRightClickedRowIndex);
   row->Remove();  // dispatch event
   
-  mHotKeys->mCommand.EraseAt((unsigned)mRowIndex.Id);
-  mTreeView->mRows.EraseAt((unsigned)mRowIndex.Id);
+  mHotKeys->mCommand.EraseAt((unsigned)mRightClickedRowIndex.Id);
+  mTreeView->mRows.EraseAt((unsigned)mRightClickedRowIndex.Id);
 
-  HotKeySortHelper(false, mHotKeys->mCommand);
+  Sort(false);
 
   int size = (int)mHotKeys->mCommand.Size();
   for(int i = 0; i < size; ++i)
@@ -915,9 +1185,6 @@ void HotKeyEditor::OnCommandDelete(ObjectEvent* event)
     toErase.PushBack((unsigned)selection);
   }
 
-  Sort(toErase.All());
-  mHotKeys->mCommand.Erase(mHotKeys->mCommand.SubRange(toErase[0], toErase.Size()));
-
   size = (int)mHotKeys->mCommand.Size();
   for(int i = 0; i < size; ++i)
     mHotKeys->mCommand[i].mIndex = i;
@@ -925,8 +1192,7 @@ void HotKeyEditor::OnCommandDelete(ObjectEvent* event)
     // deselect UI elements
   data->mSelection.Clear();
 
-  mTreeView->ClearAllRows();
-  mTreeView->SetDataSource(mHotKeys);
+  Refresh();
 
   MetaOperations::NotifyObjectModified(mHotKeys->mCommand);
 }
@@ -937,7 +1203,7 @@ void HotKeyEditor::OnCommandRightClick(TreeEvent* event)
   ContextMenu* menu = new ContextMenu(event->Row);
   Mouse* mouse = Z::gMouse;
   menu->SetBelowMouse(mouse, Pixels(0, 0));
-  mRowIndex = event->Row->mIndex;
+  mRightClickedRowIndex = event->Row->mIndex;
   ConnectMenu(menu, "Rename", OnCommandRename);
   ConnectMenu(menu, "Rebind", OnCommandRebind);
   ConnectMenu(menu, "Delete", OnCommandDelete);
@@ -959,34 +1225,58 @@ void HotKeyEditor::OnKeyDown(KeyboardEvent* event)
     //  mHotKeys->mSet->mCommand.EraseAt((unsigned)selection);
     //}
 
-    //mRowIndex = event->Row->mIndex;
+    //mRightClickedRowIndex = event->Row->mIndex;
     OnCommandDelete(nullptr);
   }
 
 }
 
 /******************************************************************************/
-void HotKeyEditor::OnSelectionChanged(Event* event)
+void HotKeyEditor::OnGlobalCommandAdded(CommandUpdateEvent* event)
 {
-  mTreeView->MarkAsNeedsUpdate();
+  mHotKeys->AddCommand(event->mCommand, true);
 
-  // Do not show row when focus change is caused by the object view itself
-  if(this->HasFocus())
+  Sort(true);
+
+  Refresh();
+}
+
+/******************************************************************************/
+void HotKeyEditor::OnGlobalCommandRemoved(CommandUpdateEvent* event)
+{
+  DataIndex i = mHotKeys->mCommand.FindIndex(*event->mCommand);
+  TreeRow* row = mTreeView->FindRowByIndex(i);
+
+    // Dispatch data source remove event.
+  row->Remove();  
+
+  mHotKeys->mCommand.EraseAt((size_t)i.Id);
+  mTreeView->mRows.EraseAt((size_t)i.Id);
+
+  Refresh();
+}
+
+/******************************************************************************/
+void HotKeyEditor::OnGlobalCommandUpdated(CommandUpdateEvent* event)
+{
+  int index = mHotKeys->mCommand.FindIndex(*event->mCommand);
+
+  if(index != CommandSet::InvalidIndex)
     return;
+
+  CopyCommand(mHotKeys->mCommand[index], event->mCommand);
+  Refresh();
 }
 
 /******************************************************************************/
 void HotKeyEditor::OnRenamedCommand(ObjectEvent* event)
 {
-  mTreeView->ClearAllRows();
-  mTreeView->SetDataSource(mHotKeys);
+  Refresh();
 }
 
 /******************************************************************************/
 void HotKeyEditor::OnAddCommand(MouseEvent* event)
 {
-  mTreeView->ClearAllRows();
-
   mHotKeys->mCommand.InsertAt(0, CommandEntry());
 
   mHotKeys->mCommand[0].mName = cDefaultCommandString;
@@ -997,7 +1287,7 @@ void HotKeyEditor::OnAddCommand(MouseEvent* event)
   for(int i = 0; i < size; ++i)
     mHotKeys->mCommand[i].mIndex = i;
 
-  mTreeView->SetDataSource(mHotKeys);
+  Refresh();
 
   MetaOperations::NotifyObjectModified(mHotKeys->mCommand);
 }
@@ -1059,8 +1349,7 @@ void HotKeyEditor::OnModalOption(ModalConfirmEvent* event)
   delete effectedData;
   effectedData = nullptr;
 
-  mTreeView->ClearAllRows();
-  mTreeView->SetDataSource(mHotKeys);
+  Refresh();
 
   MetaOperations::NotifyObjectModified(mHotKeys->mCommand);
 }
@@ -1092,32 +1381,11 @@ ZilchDefineType(HotKeyBinding, builder, type)
   ZilchBindFieldProperty(mMainKey);
 }
 
-
 //------------------------------------------------------------------------------
-void HotKeySortHelper(bool updateIndexes, CommandSet& set)
+void RegisterHotKeyEditors()
 {
-  int i = 0;
-  CommandSet::range sortRange = set.All( );
-  while(sortRange[0].mName == cDefaultCommandString || sortRange[0].mBindingStr == cDefaultBindingString)
-  {
-    sortRange.PopFront( );
-    ++i;
-  }
-
-  Sort(sortRange);
-
-  if(!updateIndexes)
-    return;
-
-  int size = (int)set.Size( );
-  for(; i < size; ++i)
-    set[i].mIndex = i;
-}
-
-//------------------------------------------------------------------------------
-void RegisterHotKeyEditors( )
-{
-  ValueEditorFactory* factory = ValueEditorFactory::GetInstance( );
+  ValueEditorFactory* factory = ValueEditorFactory::GetInstance();
+  factory->RegisterEditor("CogCommandScriptEditor", CreateCogCommandScriptEditor);
   factory->RegisterEditor("CommandEditor", CreateCommandEditor);
   factory->RegisterEditor("ShortcutEditor", CreateBindingEditor);
   factory->RegisterEditor("TagEditor", CreateTagEditor);

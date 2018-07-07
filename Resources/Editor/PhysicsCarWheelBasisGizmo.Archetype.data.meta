@@ -14,6 +14,5 @@ DataContent
 		var ResourceId = 0x5806ee26acc4ddae
 		var LoaderType = "Cog"
 		var Version = 0
-		var ShowInEditor = true
 	}
 }

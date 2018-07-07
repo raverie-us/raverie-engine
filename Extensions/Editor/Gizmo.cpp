@@ -19,9 +19,6 @@ namespace Events
 {
   DefineEvent(GizmoRayTest);
   DefineEvent(GizmoModified);
-  DefineEvent(TranslateGizmoModified);
-  DefineEvent(ScaleGizmoModified);
-  DefineEvent(RotateGizmoModified);
   DefineEvent(GizmoTargetSet);
   DefineEvent(MouseEnterGizmo);
   DefineEvent(MouseEnterGizmoHierarchy);
@@ -64,15 +61,20 @@ Ray GizmoRayTestEvent::GetWorldRay()
 ZilchDefineType(GizmoEvent, builder, type)
 {
   ZilchBindGetterProperty(Gizmo);
+  ZilchBindFieldGetter(mSource);
   ZilchBindGetterProperty(ViewportMouseEvent);
+
+  ZilchBindGetter(OperationQueue);
+  ZilchBindGetter(Finished);
 }
 
 //******************************************************************************
 GizmoEvent::GizmoEvent(Cog* gizmoCog, ViewportMouseEvent* e) :
   mGizmo(gizmoCog),
-  mMouseEvent(e)
+  mSource(nullptr),
+  mMouseEvent(e),
+  mOperationQueue(nullptr)
 {
-
 }
 
 //******************************************************************************
@@ -85,6 +87,18 @@ Cog* GizmoEvent::GetGizmo()
 ViewportMouseEvent* GizmoEvent::GetViewportMouseEvent()
 {
   return mMouseEvent;
+}
+
+//******************************************************************************
+OperationQueue* GizmoEvent::GetOperationQueue()
+{
+  return mOperationQueue;
+}
+
+//******************************************************************************
+bool GizmoEvent::GetFinished()
+{
+  return mOperationQueue.IsNotNull();
 }
 
 //------------------------------------------------------------------------ Gizmo

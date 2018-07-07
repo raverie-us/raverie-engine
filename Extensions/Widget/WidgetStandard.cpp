@@ -36,6 +36,7 @@ ZilchDefineStaticLibrary(WidgetLibrary)
   ZilchInitializeType(FocusEvent);
   ZilchInitializeType(MouseEvent);
   ZilchInitializeType(CommandEvent);
+  ZilchInitializeType(CommandUpdateEvent);
   ZilchInitializeType(CommandCaptureContextEvent);
   ZilchInitializeType(HighlightBorderEvent);
   ZilchInitializeType(TabModifiedEvent);

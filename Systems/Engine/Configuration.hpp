@@ -210,6 +210,12 @@ public:
   /// Show Line numbers
   bool LineNumbers;
 
+  /// Turn on/off highlighting all instances of text matching current text selection.
+  bool TextMatchHighlighting;
+
+  /// Highlight mode is either partial text match, or whole text match.
+  bool HighlightPartialTextMatch;
+
   /// Name of color scheme to use
   String ColorScheme;
 };

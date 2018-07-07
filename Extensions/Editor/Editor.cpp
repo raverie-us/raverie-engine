@@ -1217,7 +1217,7 @@ void Editor::Update()
 
 void Editor::ExecuteCommand(StringParam commandName)
 {
-  Command* command = mCommands->NamedCommands.FindValue(commandName, nullptr);
+  Command* command = mCommands->mNamedCommands.FindValue(commandName, nullptr);
   if(command)
   {
     command->Execute();

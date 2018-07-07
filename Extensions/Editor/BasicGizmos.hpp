@@ -21,8 +21,55 @@ class ObjectTransformState;
 namespace Events
 {
   DeclareEvent(RingGizmoModified);
+  DeclareEvent(TranslateGizmoModified);
+  DeclareEvent(ScaleGizmoModified);
+  DeclareEvent(RotateGizmoModified);
 }
 
+//------------------------------------------------- Translate Gizmo Update Event
+class TranslateGizmoUpdateEvent : public GizmoUpdateEvent
+{
+public:
+  /// Meta Initialization.
+  ZilchDeclareType(TranslateGizmoUpdateEvent, TypeCopyMode::ReferenceType);
+
+  /// Constructor.
+  TranslateGizmoUpdateEvent(GizmoUpdateEvent* e);
+
+  /// Output of the 'TranslateGizmo'.
+  Vec3 mGizmoWorldTranslation;
+};
+
+//----------------------------------------------------- Scale Gizmo Update Event
+class ScaleGizmoUpdateEvent : public GizmoUpdateEvent
+{
+public:
+  /// Meta Initialization.
+  ZilchDeclareType(ScaleGizmoUpdateEvent, TypeCopyMode::ReferenceType);
+
+  /// Constructor.
+  ScaleGizmoUpdateEvent(GizmoUpdateEvent* e);
+
+  /// Output of the 'ScaleGizmo'.
+  Vec3 mGizmoWorldScale;
+};
+
+//---------------------------------------------------- Rotate Gizmo Update Event
+class RotateGizmoUpdateEvent : public GizmoUpdateEvent
+{
+public:
+  /// Meta Initialization.
+  ZilchDeclareType(RotateGizmoUpdateEvent, TypeCopyMode::ReferenceType);
+
+  /// Constructor.
+  RotateGizmoUpdateEvent(GizmoUpdateEvent* e);
+
+  /// Output of the 'RotateGizmo'.
+  float mGizmoRotation;
+
+  /// Normalized axis about which 'FinalRotation' is applied.
+  Vec3 mGizmoWorldRotationAxis;
+};
 
 //----------------------------------------------------------------- GizmoHelpers
 namespace GizmoHelpers
@@ -36,12 +83,9 @@ Vec3 SingleAxisToOffAxesScale(int dragAxis, Vec3Param movement);
 Vec3 GetMovementDirection(Vec3Param movement, Mat3Param bases);
 
 Vec3 MovementToUniformSignedLocalScale(float scaleDirection,
-  Vec3Param worldMovement, Mat4 worldToParent, QuatParam parentToLocal);
+  Vec3Param worldMovement, QuatParam worldToLocal);
 Vec3 MovementToUniformSignedLocalScale(Vec3Param scaleDirection,
-  Vec3Param worldMovement, Mat4 worldToParent, QuatParam parentToLocal);
-
-Vec3 NormalToLocal(Vec3Param vector0, Transform* transform);
-void SetLocalPositionFromWorld(ObjectTransformState& object, Vec3Param worldTranslation, Transform* transform);
+  Vec3Param worldMovement, QuatParam worldToLocal);
 
 float ProcessScale(float movement, float startDis, float starting);
 Vec3 ScaleVector(Vec3Param delta, float distance, Vec3Param start);

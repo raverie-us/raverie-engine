@@ -151,7 +151,20 @@ void SurfaceImpl::RoundedRectangle(PRectangle rc, ColourDesired fore, ColourDesi
 
 void SurfaceImpl::AlphaRectangle(PRectangle rc, int cornerSize, ColourDesired fill, int alphaFill, ColourDesired outline, int alphaOutline, int flags)
 {
-  ErrorIf(true, "Not implemented.");
+  RoundedLineRectHelper(rc, cornerSize, fill, alphaFill, outline, alphaOutline, flags);
+
+  if(mViewNode == nullptr || mDrawType != Quads)
+  {
+    mDrawType = Quads;
+    Zero::Texture* texture = Zero::TextureManager::FindOrNull("White");
+    mViewNode = &mWidget->AddRenderNodes(*mViewBlock, *mFrameBlock, mClipRect, texture);
+  }
+
+  Vec3 pos0 = Vec3(rc.left, rc.top, 0);
+  Vec3 pos1 = Vec3(rc.right, rc.bottom , 0);
+  Vec4 color = ToFloatColor((alphaFill << 24) | fill.AsLong());
+
+  mFrameBlock->mRenderQueues->AddStreamedQuad(*mViewNode, pos0, pos1, Vec2(0,0), Vec2(1,1), color);
 }
 
 void SurfaceImpl::DrawRGBAImage(PRectangle rc, int width, int height, const unsigned char *pixelsImage)
@@ -322,6 +335,72 @@ void SurfaceImpl::SetDBCSMode(int codePage)
 {
   // Do nothing
 }
+
+// 'cornerEmulation' is either 0 or 1 based on 'cornerSize' passed from Scintilla
+// to the 'AlphaRectangle' method defined in this file.  Internally, Scintilla
+// keeps track of an indicator style for each indicator ID. So, if:
+//
+// style == INDIC_ROUNDBOX [ie, Zero's IndicatorStyle::Roundbox]
+//
+// then: 'cornerSize' is 1, and thus 'cornerEmulation' is 1.
+void SurfaceImpl::RoundedLineRectHelper(PRectangle rc, int cornerEmulation, ColourDesired fill, int alphaFill, ColourDesired outline, int alphaOutline, int flags)
+{
+  if(mViewNode == nullptr || mDrawType != Lines)
+  {
+    mDrawType = Lines;
+    Zero::Texture* texture = Zero::TextureManager::FindOrNull("White");
+    mViewNode = &mWidget->AddRenderNodes(*mViewBlock, *mFrameBlock, mClipRect, texture);
+    mViewNode->mStreamedVertexType = Zero::PrimitiveType::Lines;
+  }
+
+  // Prevent the bottom line of the outline rect from getting clipped by Scintilla.
+  const int cScintillaCorrection = 1;
+
+  Vec3 pos0 = Vec3(rc.left, rc.top, 0);
+  Vec3 pos1 = Vec3(rc.right, rc.bottom - cScintillaCorrection, 0);
+  Vec4 color = ToFloatColor((alphaOutline << 24) | outline.AsLong());
+
+  Vec2 uv0(0,0);
+  Vec2 uv1(1,1);
+
+  if(cornerEmulation == 0)
+  {
+    mFrameBlock->mRenderQueues->AddStreamedLineRect(*mViewNode, pos0, pos1, uv0, uv1, color);
+    return;
+  }
+
+  int ce = cornerEmulation;
+
+  float leftX = pos0.x;
+  float rightX = pos1.x + ce;
+  Zero::StreamedVertex v0(Math::TransformPoint(mViewNode->mLocalToView, Vec3(leftX, pos0.y, 0)), uv0, color, uv0);
+  Zero::StreamedVertex v1(Math::TransformPoint(mViewNode->mLocalToView, Vec3(leftX, pos1.y, 0)), Vec2(uv0.x, uv1.y), color, Vec2(uv0.x, uv1.y));
+  Zero::StreamedVertex v2(Math::TransformPoint(mViewNode->mLocalToView, Vec3(pos1.x, pos1.y, 0)), uv1, color, uv1);
+  Zero::StreamedVertex v3(Math::TransformPoint(mViewNode->mLocalToView, Vec3(rightX, pos0.y, 0)), Vec2(uv1.x, uv0.y), color, Vec2(uv1.x, uv0.y));
+
+  Zero::RenderQueues* queue = mFrameBlock->mRenderQueues;
+
+  // TopLeft to BottomLeft
+  queue->mStreamedVertices.PushBack(v0);
+  queue->mStreamedVertices.PushBack(v1);
+  // BottomLeft to BottomRight
+  queue->mStreamedVertices.PushBack(v1);
+  queue->mStreamedVertices.PushBack(v2);
+  // BottomRight to TopRight
+  v2.mPosition = Math::TransformPoint(mViewNode->mLocalToView, Vec3(rightX, pos1.y, 0));
+  queue->mStreamedVertices.PushBack(v2);
+  queue->mStreamedVertices.PushBack(v3);
+  // TopRight to TopLeft
+  float topY = pos0.y - ce;
+  v3.mPosition = Math::TransformPoint(mViewNode->mLocalToView, Vec3(pos1.x, topY, 0));
+  v0.mPosition = Math::TransformPoint(mViewNode->mLocalToView, Vec3(leftX, topY, 0));
+  queue->mStreamedVertices.PushBack(v3);
+  queue->mStreamedVertices.PushBack(v0);
+
+  mViewNode->mStreamedVertexCount = queue->mStreamedVertices.Size() - mViewNode->mStreamedVertexStart;
+  mViewNode->mStreamedVertexType = Zero::PrimitiveType::Lines;
+}
+
 
 class DynamicLibraryImpl : public DynamicLibrary
 {

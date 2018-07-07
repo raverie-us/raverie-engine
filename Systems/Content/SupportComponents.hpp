@@ -42,6 +42,19 @@ namespace Zero
     void Serialize(Serializer& stream);
   };
 
+  /// Stores any options for the content item that will effect the item's
+  /// uses in editor vs in game.
+  class ContentEditorOptions : public ContentComponent
+  {
+  public:
+    ZilchDeclareType(ContentEditorOptions, TypeCopyMode::ReferenceType);
+
+    void Serialize(Serializer& stream) override;
+    void Initialize(ContentComposition* item) override;
+    
+    bool mShowInEditor;
+  };
+
   /// When added 
   class ResourceTemplate : public ContentComponent
   {

@@ -36,7 +36,6 @@ public:
   ResourceId mResourceId;
   String LoaderType;
   uint Version;
-  bool mShowInEditor;
 
   String GetOutputFile();
 
@@ -44,7 +43,6 @@ public:
   void Generate(ContentInitializer& initializer) override;
   void Serialize(Serializer& stream) override;
 
-  void SetShowInEditor(bool state) override;
   void Rename(StringParam newName) override;
   bool NeedsBuilding(BuildOptions& options) override;
   void BuildContent(BuildOptions& buildOptions) override;

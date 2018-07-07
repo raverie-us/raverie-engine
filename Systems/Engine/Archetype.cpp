@@ -20,6 +20,7 @@ bool Archetype::sRebuilding = false;
 ZilchDefineType(Archetype, builder, type)
 {
   ZeroBindDocumented();
+  ZilchBindField(mStoredType);
 }
 
 //**************************************************************************************************

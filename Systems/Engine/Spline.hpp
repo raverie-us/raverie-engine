@@ -26,6 +26,9 @@ class SplineEvent : public Event
 public:
   ZilchDeclareType(SplineEvent, TypeCopyMode::ReferenceType);
   
+  SplineEvent();
+  SplineEvent(Spline* spline);
+  
   Spline* GetSpline() const;
   void SetSpline(Spline* spline);
   

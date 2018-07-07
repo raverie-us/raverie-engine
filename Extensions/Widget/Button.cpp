@@ -58,7 +58,6 @@ ButtonBase::ButtonBase(Composite* parent, StringParam styleClass)
   : Composite(parent)
   , mToolTipColor(ToolTipColorScheme::Default)
 {
-  mCommand = NULL;
   mDefSet = mDefSet->GetDefinitionSet(styleClass);
 
   mBackground = CreateAttached<Element>(cWhiteSquare);
@@ -93,13 +92,15 @@ ButtonBase::ButtonBase(Composite* parent, StringParam styleClass)
   mBackgroundClickedColor = ToByteColor(ButtonUi::ClickedColor);
 }
 
-void ButtonBase::SetCommand(Command* command)
+void ButtonBase::SetToolTip(StringParam text)
 {
-  if(mCommand)
-    mCommand->GetDispatcher()->Disconnect(this);
+  mToolTipText = text;
+}
 
-  mCommand = command;
-  mToolTipText = command->ToolTip;
+void ButtonBase::AddCommand(Command* command)
+{
+  mCommands.PushBack(command);
+
   ConnectThisTo(command, Events::CommandStateChange, OnCommandStateChange);
 }
 
@@ -161,20 +162,41 @@ void ButtonBase::OnMouseUp(MouseEvent* event)
 
 void ButtonBase::OnHover(MouseEvent* event)
 {
-  if(mShowToolTip && !mToolTipText.Empty())
+  if(mShowToolTip)
   {
     ToolTip* toolTip = new ToolTip(this);
-    toolTip->SetText(mToolTipText);
-    toolTip->SetColorScheme(mToolTipColor);
 
-    ToolTipPlacement placement;
-    placement.SetScreenRect(GetScreenRect());
-    placement.SetPriority(IndicatorSide::Bottom, IndicatorSide::Right, 
-                          IndicatorSide::Left, IndicatorSide::Top);
-    toolTip->SetArrowTipTranslation(placement);
-    // Temporary to fix jitter when the tool pops up
-    toolTip->UpdateTransform();
-    mToolTip = toolTip;
+    bool hasText = false;
+    forRange(Command* command, mCommands.All())
+    {
+      if(hasText |= (!command->ToolTip.Empty()))
+        toolTip->AddText(command->ToolTip, Vec4(1));
+    }
+
+    // Check if there's tooltip text not associated with commands.
+    if(!hasText && !mToolTipText.Empty())
+    {
+      hasText = true;
+      toolTip->AddText(mToolTipText, Vec4(1));
+    }
+
+    if(!hasText)
+    {
+      toolTip->Destroy();
+    }
+    else
+    {
+      toolTip->SetColorScheme(mToolTipColor);
+
+      ToolTipPlacement placement;
+      placement.SetScreenRect(GetScreenRect());
+      placement.SetPriority(IndicatorSide::Bottom, IndicatorSide::Right,
+                            IndicatorSide::Left, IndicatorSide::Top);
+      toolTip->SetArrowTipTranslation(placement);
+      // Temporary to fix jitter when the tool pops up
+      toolTip->UpdateTransform();
+      mToolTip = toolTip;
+    }
   }
 }
 
@@ -232,12 +254,15 @@ void ButtonBase::Activate()
 
   ObjectEvent e(this);
   GetDispatcher()->Dispatch(Events::ButtonPressed, &e);
-  if(mCommand)
+
+  if(!mCommands.Empty())
   {
     CommandCaptureContextEvent commandCaptureEvent;
     commandCaptureEvent.ActiveSet = CommandManager::GetInstance();
     this->DispatchBubble(Events::CommandCaptureContext, &commandCaptureEvent);
-    mCommand->Execute();
+
+    // Only execute the primary command.
+    mCommands[0]->Execute();
   }
 }
 
@@ -372,10 +397,13 @@ IconButton::IconButton(Composite* parent)
   mBackgroundClickedColor = ToByteColor(IconButtonUi::ClickedColor);
 }
 
-void IconButton::SetCommand(Command* command)
+void IconButton::AddCommand(Command* command)
 {
-  ButtonBase::SetCommand(command);
-  SetIcon(command->IconName);
+  ButtonBase::AddCommand(command);
+
+  // Use the icon of the primary command.
+  if(mCommands.Size() == 1)
+    SetIcon(command->IconName);
 }
 
 void IconButton::UpdateIconColor()
@@ -419,7 +447,8 @@ void IconButton::UpdateTransform()
   ButtonBase::UpdateTransform();
 
   // Command can show themselves as active
-  bool commandActive = mCommand && mCommand->IsActive();
+  Command* primary = nullptr;
+  bool commandActive = !mCommands.Empty() && (primary = mCommands[0]) && primary->IsActive();
 
   if(mMouseDown)
   {

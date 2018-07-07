@@ -2376,7 +2376,7 @@ public:
   ResourceList* mResourceList;
 
   ResourceListSearchProvider(ResourceList* resourceList)
-    : mResourceList(resourceList)
+    : SearchProvider("ResourceList"), mResourceList(resourceList)
   {
   }
 
@@ -2408,7 +2408,7 @@ public:
     }
   }
 
-  String GetType(SearchViewResult& element) override
+  String GetElementType(SearchViewResult& element) override
   {
     return mResourceList->GetResourceTypeName();
   }

@@ -10,4 +10,8 @@ BinaryContent
 		var FilterTag = "TileMesh"
 		var ResourceOwner = ""
 	}
+	ContentEditorOptions
+	{
+		var ShowInEditor = true
+	}
 }

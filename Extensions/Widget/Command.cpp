@@ -15,6 +15,9 @@ namespace Events
   DefineEvent(CommandStateChange);
   DefineEvent(CommandCaptureContext);
   DefineEvent(CommandExecute);
+  DefineEvent(CommandAdded);
+  DefineEvent(CommandRemoved);
+  DefineEvent(CommandUpdated);
 }//namespace Events
 
 //------------------------------------------------------------------------- Tags
@@ -22,6 +25,18 @@ namespace Tags
 {
   DefineTag(Command);
 }//namespace Tags
+
+//--------------------------------------------------------- Command Update Event
+//******************************************************************************
+ZilchDefineType(CommandUpdateEvent, builder, type)
+{
+}
+
+//******************************************************************************
+CommandUpdateEvent::CommandUpdateEvent(Command* command)
+  : mCommand(command)
+{
+}
 
 //---------------------------------------------------------------- Command Event
 //******************************************************************************
@@ -47,10 +62,12 @@ Space* CommandEvent::GetSpace()
 }
 
 //-------------------------------------------------------------------CommandExecuter
+//******************************************************************************
 ZilchDefineType(CommandExecuter, builder, type)
 {
 }
 
+//******************************************************************************
 CommandExecuter* BuildMetaCommandExecuter(StringParam executionFunction)
 {
   // Parse the function string
@@ -83,10 +100,12 @@ CommandExecuter* BuildMetaCommandExecuter(StringParam executionFunction)
 }
 
 //---------------------------------------------------------------------- Command
+//******************************************************************************
 ZilchDefineType(Command, builder, type)
 {
 }
 
+//******************************************************************************
 Command::Command()
 {
   mExecuter = nullptr;
@@ -94,11 +113,13 @@ Command::Command()
   Active = false;
 }
 
+//******************************************************************************
 Command::~Command()
 {
   SafeDelete(mExecuter);
 }
 
+//******************************************************************************
 void Command::Serialize(Serializer& stream)
 {
   SerializeName(Name);
@@ -110,17 +131,20 @@ void Command::Serialize(Serializer& stream)
   SerializeNameDefault(DevOnly, false);
 }
 
+//******************************************************************************
 void Command::SetActive(bool active)
 {
   Active = active;
   ChangeState();
 }
 
+//******************************************************************************
 bool Command::IsActive()
 {
   return Active;
 }
 
+//******************************************************************************
 bool Command::IsEnabled()
 {
   CommandManager* commandManager = CommandManager::GetInstance();
@@ -131,6 +155,7 @@ bool Command::IsEnabled()
   return true;
 }
 
+//******************************************************************************
 void Command::Execute()
 {
   CommandManager* commandManager = CommandManager::GetInstance();
@@ -142,6 +167,7 @@ void Command::Execute()
     mExecuter->Execute(this, commandManager);
 }
 
+//******************************************************************************
 void Command::Format()
 {
   // Assumes all commands must have names.
@@ -163,9 +189,9 @@ void Command::Format()
   {
     ToolTip = String::Format("%s", Name.c_str());
   }
-
 }
 
+//******************************************************************************
 void Command::ChangeState()
 {
   ObjectEvent toSend = ObjectEvent(this);
@@ -190,6 +216,11 @@ String SeperateWords(StringParam sourceString)
 }
 
 //-------------------------------------------------------------------CommandSearchProvider
+CommandSearchProvider::CommandSearchProvider()
+  : SearchProvider("Command")
+{
+}
+
 void CommandSearchProvider::Search(SearchData& search)
 {
   DeveloperConfig* devConfig = Z::gEngine->GetConfigCog()->has(DeveloperConfig);
@@ -205,24 +236,28 @@ void CommandSearchProvider::Search(SearchData& search)
   }
 }
 
-String CommandSearchProvider::GetType(SearchViewResult& element)
+//******************************************************************************
+String CommandSearchProvider::GetElementType(SearchViewResult& element)
 {
   const String CommandName = "Command";
   return CommandName;
 }
 
+//******************************************************************************
 void CommandSearchProvider::RunCommand(SearchView* searchView, SearchViewResult& element)
 {
   Command* command = (Command*)element.Data;
   command->Execute();
 }
 
+//******************************************************************************
 Composite* CommandSearchProvider::CreatePreview(Composite* parent, SearchViewResult& element)
 {
   Command* command = (Command*)element.Data;
   return CreateTextPreview(parent, command->Description);
 }
 
+//******************************************************************************
 void CommandSearchProvider::FilterAddCommand(SearchData& search, Command* command)
 {
   if(!CheckAndAddTags(search, command->TagList))
@@ -235,7 +270,7 @@ void CommandSearchProvider::FilterAddCommand(SearchData& search, Command* comman
     result.Data = command;
     result.Interface = this;
     result.Name = command->Name;
-    result.Priority = priority + sCommandPriorityBoost;
+    result.Priority = priority + SearchViewResultPriority::CommandBegin;
   }
 }
 
@@ -249,22 +284,26 @@ void MenuDefinition::Serialize(Serializer& stream)
 }
 
 //------------------------------------------------------------------ Command Manager
+//******************************************************************************
 ZilchDefineType(CommandManager, builder, type)
 {
   ZeroBindEvent(Events::CommandExecute, CommandEvent);
 }
 
+//******************************************************************************
 CommandManager::CommandManager()
 {
   
 }
 
+//******************************************************************************
 CommandManager::~CommandManager()
 {
   DeleteObjectsInContainer(mCommands);
   DeleteObjectsInContainer(mMenus);
 }
 
+//******************************************************************************
 void CommandManager::LoadCommands(StringParam filename)
 {
   Status status;
@@ -286,6 +325,7 @@ void CommandManager::LoadCommands(StringParam filename)
   }
 }
 
+//******************************************************************************
 void CommandManager::LoadMenu(StringParam filename)
 {
   Status status;
@@ -300,20 +340,23 @@ void CommandManager::LoadMenu(StringParam filename)
     mMenus[menuDef->Name] = menuDef;
 }
 
+//******************************************************************************
 Command* CommandManager::CreateFromName(StringParam name)
 {
   return new Command();
 }
 
+//******************************************************************************
 Command* CommandManager::AddCommand(StringParam commandName, CommandExecuter* executer)
 {
-  Command* existingCommand = NamedCommands.FindValue(commandName, nullptr);
+  Command* existingCommand = mNamedCommands.FindValue(commandName, nullptr);
   if(existingCommand)
   {
-    // Command already loaded but binding executer
+    // Command already loaded, except the binding executer.
     existingCommand->mExecuter = executer;
     if(existingCommand->Description.Empty())
       existingCommand->Description = executer->GetDescription();
+
     return existingCommand;
   }
 
@@ -330,26 +373,39 @@ Command* CommandManager::AddCommand(StringParam commandName, CommandExecuter* ex
   return command;
 }
 
+//******************************************************************************
 void CommandManager::AddCommand(Command* command)
 {
-  NamedCommands[command->Name] = command;
-  mCommands.PushBack(command); 
+  mNamedCommands[command->Name] = command;
+  mCommands.PushBack(command);
+
+  if(!command->Shortcut.Empty() && !IsShortcutReserved(command->Shortcut))
+    mShortcuts.Insert(command->Shortcut, command);
+
+  CommandUpdateEvent eventToSend(command);
+  DispatchEvent(Events::CommandAdded, &eventToSend);
 }
 
+//******************************************************************************
 Command* CommandManager::GetCommand(StringParam name)
 {
-  return NamedCommands.FindValue(name, nullptr);
+  return mNamedCommands.FindValue(name, nullptr);
 }
 
+//******************************************************************************
 void CommandManager::RemoveCommand(Command* command)
 {
-  NamedCommands.Erase(command->Name);
-  ShortCuts.Erase(command->Name);
+  mNamedCommands.Erase(command->Name);
+  mShortcuts.Erase(command->Name);
   mCommands.EraseValueError(command);
+
+  CommandUpdateEvent eventToSend(command);
+  DispatchEvent(Events::CommandRemoved, &eventToSend);
 
   delete command;
 }
 
+//******************************************************************************
 void CommandManager::RunParsedCommands()
 {
   Environment* environment = Environment::GetInstance();
@@ -363,24 +419,28 @@ void CommandManager::RunParsedCommands()
   }
 }
 
+//******************************************************************************
 Handle CommandManager::GetContextFromTypeName(StringParam typeName)
 {
-  return ContextMap.FindValue(typeName, Handle());
+  return mContextMap.FindValue(typeName, Handle());
 }
 
+//******************************************************************************
 void CommandManager::SetContext(HandleParam context, BoundType* overrideType)
 {
   if(overrideType)
-    ContextMap[overrideType->Name] = context;
+    mContextMap[overrideType->Name] = context;
   else
-    ContextMap[context.StoredType->Name] = context;
+    mContextMap[context.StoredType->Name] = context;
 }
 
+//******************************************************************************
 void CommandManager::ClearContext(BoundType* boundType)
 {
-  ContextMap.Erase(boundType->Name);
+  mContextMap.Erase(boundType->Name);
 }
 
+//******************************************************************************
 bool CommandManager::TestCommandKeyboardShortcuts(KeyboardEvent* event)
 {
   // Do not process handled keyboard events
@@ -388,25 +448,34 @@ bool CommandManager::TestCommandKeyboardShortcuts(KeyboardEvent* event)
     return false;
 
   StringBuilder builder;
+
   if(event->CtrlPressed)
     builder << "Ctrl+";
   if(event->AltPressed)
     builder << "Alt+";
   if(event->ShiftPressed)
     builder << "Shift+";
+
   builder << event->mKeyboard->ToSymbol(event->Key);
   String shortcutString = builder.ToString();
 
   // ZPrint("Shortcut %s\n", shortcutString.c_str());
-  Command* command = ShortCuts.FindValue(shortcutString, nullptr);
+  Command* command = mShortcuts.FindValue(shortcutString, nullptr);
   if(command == nullptr)
     return false;
 
   event->Handled = true;
   command->Execute();
+
   return true;
 }
 
+//******************************************************************************
+bool CommandManager::IsShortcutReserved(StringParam validShortcut)
+{
+  return mShortcuts.FindValue(validShortcut, nullptr) != nullptr;
+}
+//******************************************************************************
 SearchProvider* CommandManager::GetCommandSearchProvider()
 {
   CommandSearchProvider* commandCompletion = new CommandSearchProvider();
@@ -414,6 +483,7 @@ SearchProvider* CommandManager::GetCommandSearchProvider()
   return commandCompletion;
 }
 
+//******************************************************************************
 void CommandManager::ScanCommands()
 {
   forRange(Command* command, mCommands.All())
@@ -427,8 +497,8 @@ void CommandManager::ScanCommands()
     }
 
     // Add shortcut if provided
-    if(!command->Shortcut.Empty())
-      ShortCuts.Insert(command->Shortcut, command);
+    if(!command->Shortcut.Empty() && !IsShortcutReserved(command->Shortcut))
+      mShortcuts.Insert(command->Shortcut, command);
 
     // Build command executer from meta
     if(!command->Function.Empty())
@@ -438,6 +508,7 @@ void CommandManager::ScanCommands()
   }
 }
 
+//******************************************************************************
 void CommandManager::ValidateCommands()
 {
   forRange(Command* command, mCommands.All())

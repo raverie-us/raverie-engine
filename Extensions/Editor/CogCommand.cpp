@@ -32,6 +32,7 @@ CogCommand::CogCommand(BoundType* componentType) :
 {
   DisplayName = componentType->Name;
   Name = componentType->Name;
+  Description = componentType->Description;
 }
 
 //******************************************************************************
@@ -55,49 +56,74 @@ ZilchDefineType(CogCommandManager, builder, type)
 CogCommandManager::CogCommandManager() :
   EditorScriptObjects<CogCommand>(ObjectAttributes::cCommand)
 {
+  mCommandsModified = false;
   mCommands = CommandManager::GetInstance();
 }
 
+//******************************************************************************
 void CogCommandManager::AddObject(CogCommand* object)
 {
   mCommands->AddCommand(object);
 }
 
+//******************************************************************************
 void CogCommandManager::RemoveObject(CogCommand* object)
 {
   mCommands->RemoveCommand(object);
 }
 
+//******************************************************************************
 CogCommand* CogCommandManager::GetObject(StringParam objectName)
 {
   Command* command = mCommands->GetCommand(objectName);
   return Type::DynamicCast<CogCommand*>(command);
 }
 
-uint CogCommandManager::GetObjectCount() 
+//******************************************************************************
+uint CogCommandManager::GetObjectCount()
 {
   return mCommands->mCommands.Size();
 }
 
+//******************************************************************************
 CogCommand* CogCommandManager::GetObject(uint index)
 {
   Command* command = mCommands->mCommands[index];
   return Type::DynamicCast<CogCommand*>(command);
 }
 
+//******************************************************************************
+CogCommand* CogCommandManager::UpdateData(StringParam objectName)
+{
+  CogCommand* command = (CogCommand*)mCommands->GetCommand(objectName);
+
+  if(command == nullptr)
+    return command;
+
+  BoundType* componentType = MetaDatabase::GetInstance()->FindType(objectName);
+  command->Description = componentType->Description;
+
+  CommandUpdateEvent eventToSend(command);
+  mCommands->DispatchEvent(Events::CommandUpdated, &eventToSend);
+
+  return command;
+}
+
+//******************************************************************************
 Space* CogCommandManager::GetSpace(CogCommand*)
 {
   return GetSpace();
 }
 
+//******************************************************************************
 Space* CogCommandManager::GetSpace()
 {
   if(mCommandSpace.IsNull())
   {
-    GameSession* gameSession = Z::gEditor->GetEditGameSession();
-
-    if(gameSession)
+    if(Z::gEditor->mEditGame != nullptr)
     {
+      GameSession* gameSession = Z::gEditor->GetEditGameSession();
+
       Archetype* spaceArchetype = ArchetypeManager::Find(CoreArchetypes::DefaultSpace);
       mCommandSpace = gameSession->CreateSpace(spaceArchetype);
     }

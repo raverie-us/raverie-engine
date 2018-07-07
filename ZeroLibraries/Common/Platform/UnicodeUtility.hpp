@@ -29,6 +29,7 @@ namespace UTF8
   bool IsUpper(Rune rune);
   bool IsWhiteSpace(Rune rune);
   bool IsAlphaNumeric(Rune rune);
+  bool IsPunctuation(Rune rune);
   Rune  ToLower(Rune rune);
   Rune  ToUpper(Rune rune);
 

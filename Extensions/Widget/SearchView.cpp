@@ -35,6 +35,89 @@ ZilchDefineType(SearchViewEvent, builder, type)
 {
 }
 
+//------------------------------------------------------------ Interface Helpers
+class TagProvider : public SearchProvider
+{
+public:
+  TagProvider() : SearchProvider("Tag")
+  {
+  }
+
+  String GetElementType(SearchViewResult& element) override
+  {
+    const String tag = "Tag";
+    return tag;
+  }
+
+  bool OnMatch(SearchView* searchView, SearchViewResult& element) override
+  {
+    // Tags don't have the provider type in the TagChain (unlike Libraries).
+    searchView->AddTag(element.Name);
+    return false;
+  }
+};
+
+static TagProvider sTagProviderInterface;
+
+struct SortByPriority
+{
+  bool operator()(const SearchViewResult& left, const SearchViewResult& right)
+  {
+    if(left.Priority == right.Priority)
+      return left.Name < right.Name;
+    else
+      return left.Priority > right.Priority;
+  }
+};
+
+//----------------------------------------------------------- Search Provider
+bool SearchProvider::FilterResult(SearchViewResult& result)
+{
+  if(mFilter)
+    return mFilter->FilterResult(result);
+  return true;
+}
+
+//--------------------------------------------------------------- Search Data
+SearchData::~SearchData()
+{
+  ClearSearchProviders();
+}
+
+void SearchData::Search()
+{
+  forRange(SearchProvider* provider, SearchProviders.All())
+  {
+    provider->Search(*this);
+  }
+}
+
+void SearchData::AddAvailableTagsToResults()
+{
+  forRange(StringParam tag, AvailableTags.All())
+  {
+    int priority = PartialMatch(SearchString.All(), tag.All(), CaseInsensitiveCompare);
+    if(priority != cNoMatch && !ActiveTags.Contains(tag))
+    {
+      SearchViewResult& results = Results.PushBack();
+      results.Data = (void*)tag.Hash();
+      results.Interface = &sTagProviderInterface;
+      results.Name = tag;
+      results.Priority = priority + SearchViewResultPriority::TagBegin;
+    }
+  }
+}
+
+void SearchData::Sort()
+{
+  Zero::Sort(Results.All(), SortByPriority());
+}
+
+void SearchData::ClearSearchProviders()
+{
+  DeleteObjectsInContainer(SearchProviders);
+}
+
 //------------------------------------------------------- Search View Element
 ZilchDefineType(SearchViewElement, builder, type)
 {
@@ -72,7 +155,7 @@ void SearchViewElement::Setup(SearchView* view, uint index, bool selected, Searc
 
   mIndex = index;
   mName->SetText(element.Name);
-  String typeString = element.Interface->GetType(element);
+  String typeString = element.Interface->GetElementType(element);
 
   mType->SetText(typeString);
 
@@ -330,7 +413,7 @@ void SearchView::BuildResults()
     }
 
     const String tag = "Tag";
-    if(result.Interface->GetType(result) != tag)
+    if(result.Interface->GetElementType(result) != tag)
     {
       SearchViewEvent e;
       e.Element = &result;
@@ -381,78 +464,6 @@ bool SearchView::TakeFocusOverride()
 {
   mSearchBar->TakeFocus();
   return true;
-}
-
-class TagProvider : public SearchProvider
-{
-public:
-  String GetType(SearchViewResult& element) override
-  {
-    const String tag = "Tag";
-    return tag;
-  }
-
-  bool OnMatch(SearchView* searchView, SearchViewResult& element) override
-  {
-    searchView->AddTag(element.Name);
-    return false;
-  }
-};
-
-bool SearchProvider::FilterResult(SearchViewResult& result)
-{
-  if (mFilter)
-    return mFilter->FilterResult(result);
-  return true;
-}
-
-void SearchData::Search()
-{
-  forRange(SearchProvider* provider, SearchProviders.All())
-  {
-    provider->Search(*this);
-  }
-}
-
-TagProvider tagProvider;
-
-void SearchData::AddAvailableTagsToResults()
-{
-  const uint TagPriorityIncrease = 100;
-
-  forRange(StringParam tag, AvailableTags.All())
-  {
-    int priority = PartialMatch(SearchString.All(), tag.All(), CaseInsensitiveCompare);
-    if(priority != cNoMatch && !ActiveTags.Contains(tag))
-    {
-      SearchViewResult& results = Results.PushBack();
-      results.Data = (void*)tag.Hash();
-      results.Interface = &tagProvider;
-      results.Name = tag;
-      results.Priority = priority + TagPriorityIncrease;
-    }
-  }
-}
-
-struct SortByPriority
-{
-  bool operator()(const SearchViewResult& left, const SearchViewResult& right)
-  {
-    if(left.Priority == right.Priority)
-      return left.Name < right.Name;
-    else
-      return left.Priority > right.Priority;
-  }
-};
-
-void SearchData::Sort()
-{
-  Zero::Sort(Results.All(), SortByPriority());
-}
-
-void SearchData::ClearSearchProviders()
-{
-  DeleteObjectsInContainer(SearchProviders);
 }
 
 bool CheckTags(HashSet<String>& testTags, HashSet<String>& tags)

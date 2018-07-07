@@ -6,4 +6,8 @@ FontContent
 		var Name = "NotoSans-Bold"
 		var ResourceId = 0x587b2f7646ba23d5
 	}
+	ContentEditorOptions
+	{
+		var ShowInEditor = true
+	}
 }

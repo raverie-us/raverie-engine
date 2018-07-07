@@ -203,7 +203,7 @@ inline Math::Vec4 FloatColorToHSV(float r, float g, float b, float alpha = 1.0f)
 
   // Calculate Saturation
   float saturation;
-  if(chroma == 0.0f)
+  if(value == 0.0f)
     saturation = 0.0f;
   else
     saturation = chroma / value;

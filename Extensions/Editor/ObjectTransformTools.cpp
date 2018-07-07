@@ -185,9 +185,9 @@ void ObjectTransformTool::RegisterNewGizmo( )
 
     // add each object in the selection to the gizmo
   forRange(Handle object, mRegisteredObjects.All())
-  {
-    transformGizmo->AddObject(object);
-  }
+    transformGizmo->AddObject(object, false);
+  
+  transformGizmo->UpdateGizmoBasis();
 }
 
 /******************************************************************************/
@@ -301,7 +301,7 @@ void ObjectTransformTool::OnSelectionChanged(Event* event)
       object->GetDispatcher()->Disconnect(this);
   }
 
-  mRegisteredObjects.Copy(*selection);
+  mRegisteredObjects.Copy(*selection, SendsEvents::False);
 
   Cog* primary = selection->GetPrimaryAs<Cog>( );
 

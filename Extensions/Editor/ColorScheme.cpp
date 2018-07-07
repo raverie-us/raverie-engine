@@ -50,6 +50,9 @@ ZilchDefineType(ColorScheme, builder, type)
   ZilchBindFieldProperty(Gutter);
   ZilchBindFieldProperty(GutterText);
   ZilchBindFieldProperty(Link);
+  ZilchBindFieldProperty(TextMatchIndicator);
+  ZilchBindFieldProperty(TextMatchHighlight);
+  ZilchBindFieldProperty(TextMatchOutlineAlpha)->Add(new EditorSlider());
 
   ZilchBindGetterSetterProperty(SaveName);
   ZilchBindMethodProperty(Save)->AddAttribute(FunctionAttributes::cInvalidatesObject);
@@ -64,23 +67,27 @@ void ColorPropertyChanged(BoundType* meta, Property* property,
 
 ColorScheme::ColorScheme()
 {
-  Default       = FloatColorRGBA(0xDA, 0xDA, 0xDA, 0xFF);
-  Background    = FloatColorRGBA(0x21, 0x1E, 0x1E, 0xFF);
-  Selection     = FloatColorRGBA(0x45, 0x40, 0x40, 0xFF);
-  LineSelection = FloatColorRGBA(0x35, 0x30, 0x30, 0xFF);
-  Comment       = FloatColorRGBA(0x00, 0x80, 0x00, 0xFF);
-  StringLiteral = FloatColorRGBA(0xAD, 0x93, 0x61, 0xFF);
-  Number        = FloatColorRGBA(0xDA, 0xDA, 0xDA, 0xFF);
-  Keyword       = FloatColorRGBA(0x69, 0x69, 0xFA, 0xFF);
-  Operator      = FloatColorRGBA(0xDA, 0xDA, 0xDA, 0xFF);
-  ClassName     = FloatColorRGBA(0x98, 0x4A, 0x4A, 0xFF);
-  FunctionName  = FloatColorRGBA(0x98, 0x4A, 0x4A, 0xFF);
-  SpecialWords  = FloatColorRGBA(0xC1, 0xC1, 0x44, 0xFF);
-  Error         = FloatColorRGBA(0xC8, 0x00, 0x00, 0xFF);
-  Whitespace    = FloatColorRGBA(0x60, 0x60, 0x60, 0xFF);
-  Gutter        = FloatColorRGBA(0x21, 0x1E, 0x1E, 0xFF);
-  GutterText    = FloatColorRGBA(0x90, 0x90, 0x90, 0xFF);
-  Link          = FloatColorRGBA(0x64, 0x64, 0xFA, 0xFF);
+  Default               = FloatColorRGBA(0xDA, 0xDA, 0xDA, 0xFF);
+  Background            = FloatColorRGBA(0x21, 0x1E, 0x1E, 0xFF);
+  Selection             = FloatColorRGBA(0x45, 0x40, 0x40, 0xFF);
+  LineSelection         = FloatColorRGBA(0x35, 0x30, 0x30, 0xFF);
+  Comment               = FloatColorRGBA(0x00, 0x80, 0x00, 0xFF);
+  StringLiteral         = FloatColorRGBA(0xAD, 0x93, 0x61, 0xFF);
+  Number                = FloatColorRGBA(0xDA, 0xDA, 0xDA, 0xFF);
+  Keyword               = FloatColorRGBA(0x69, 0x69, 0xFA, 0xFF);
+  Operator              = FloatColorRGBA(0xDA, 0xDA, 0xDA, 0xFF);
+  ClassName             = FloatColorRGBA(0x98, 0x4A, 0x4A, 0xFF);
+  FunctionName          = FloatColorRGBA(0x98, 0x4A, 0x4A, 0xFF);
+  SpecialWords          = FloatColorRGBA(0xC1, 0xC1, 0x44, 0xFF);
+  Error                 = FloatColorRGBA(0xC8, 0x00, 0x00, 0xFF);
+  Whitespace            = FloatColorRGBA(0x60, 0x60, 0x60, 0xFF);
+  Gutter                = FloatColorRGBA(0x21, 0x1E, 0x1E, 0xFF);
+  GutterText            = FloatColorRGBA(0x90, 0x90, 0x90, 0xFF);
+  Link                  = FloatColorRGBA(0x64, 0x64, 0xFA, 0xFF);
+  TextMatchIndicator    = FloatColorRGBA(0x40, 0xE0, 0xD0, 0xBF);
+  TextMatchHighlight    = FloatColorRGBA(0x40, 0xE0, 0xD0, 0x32);
+  TextMatchOutlineAlpha = 0x69;
+  
 }
 
 ColorScheme::~ColorScheme()
@@ -139,6 +146,9 @@ void ColorScheme::Serialize(Serializer& stream)
   SerializeNameDefault(Gutter, Vec4::cZero);
   SerializeNameDefault(GutterText, Vec4::cZero);
   SerializeNameDefault(Link, Vec4::cZero);
+  SerializeNameDefault(TextMatchIndicator, Vec4::cZero);
+  SerializeNameDefault(TextMatchHighlight, Vec4::cZero);
+  SerializeNameDefault(TextMatchOutlineAlpha, 0.0f);
 }
 
 String ColorScheme::GetActiveScheme()

@@ -29,15 +29,6 @@ public:
   ScrollBar(BaseScrollArea* scrollparent, uint orientation);
   ~ScrollBar();
 
-  uint mOrientation;
-  bool mVisible;
-  bool mSliderVisible;
-  bool mDoNotShow;
-  BaseScrollArea* mScrollParent;
-
-private:
-  friend class BaseScrollArea;
-  
   void MouseDownSlider(MouseEvent* event);
   void MouseEnterSlider(MouseEvent* event);
   void MouseExitSlider(MouseEvent* event);
@@ -51,6 +42,13 @@ private:
   void MouseExitDown(MouseEvent* event);
 
   void OnRightMouseUp(MouseEvent* event);
+
+public:
+  uint mOrientation;
+  bool mVisible;
+  bool mSliderVisible;
+  bool mDoNotShow;
+  BaseScrollArea* mScrollParent;
 
   Element* mUp;   //up or left
   Element* mDown; //down or right
@@ -111,27 +109,37 @@ public:
   virtual Vec2 GetClientSize() = 0;
   virtual void SetClientSize(Vec2 newSize) = 0;
 
-  bool mModernStyle;
-  float mScrollSpeedScalar;
-
-protected:
-  friend struct ScrollManipulation;
-  friend class ScrollBar;
-
   virtual void UpdateArea(ScrollUpdate::Enum type) = 0;
 
   void UpdateTransform() override;
 
-  Vec2 ClampOffset(Vec2Param offset);
-  void UpdateScrollBars( );
+  bool IsModernStyle();
+  Vec2 GetSliderRoom();
+  ScrollBar* GetVerticalScrollBar();
+  float GetScrollBarWidth();
 
-  Vec2 SliderRoom() { return mScrollSlideRoom; }
-  
+  void SetScrollWellSize(int axis, float size);
+  void SetScrollSliderSize(int axis, float size);
+  void SetScrollSliderOffset(int axis, float offset);
+
+  Vec2 ClampClientOffset(Vec2Param offset);
+  void UpdateScrollBars();
+
+  bool mModernStyle;
+  float mScrollSpeedScalar;
+
+protected:
   ScrollBar* mScrollBar[2];
+
   Vec2 mScrollSlideRoom;
   Vec2 mVisibleSize;
   Vec2 mClientOffset;
   Vec2 mAnimatingToClientOffset;
+
+private:
+  Vec2 mScrollWellSize;
+  Vec2 mSliderSize;
+  Vec2 mSliderOffset;
 };
 
 //------------------------------------------------------------------ Scroll Area

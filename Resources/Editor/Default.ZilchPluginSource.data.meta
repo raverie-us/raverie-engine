@@ -7,7 +7,6 @@ DataContent
 		var ResourceId = 0x57405cf20303a395
 		var LoaderType = "ZilchPluginSource"
 		var Version = 0
-		var ShowInEditor = true
 		var SharedLibraryResourceId = 0x57405cf20303a399
 	}
 	ResourceTemplate

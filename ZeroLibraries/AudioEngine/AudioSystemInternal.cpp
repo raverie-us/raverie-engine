@@ -90,6 +90,8 @@ namespace Audio
     InputOutputInterface.OutputRingBuffer.ResetBuffer();
 
     // Start up the mix thread
+    if (Zero::ThreadingEnabled)
+    {
     MixThread.Initialize(StartMix, this, "Audio mix");
     if (!MixThread.IsValid())
     {
@@ -99,6 +101,7 @@ namespace Audio
     }
 
     ZPrint("Audio mix thread initialized\n");
+    }
 
     // Start audio streams
     InputOutputInterface.StartStreams(true, true);
@@ -174,7 +177,7 @@ namespace Audio
 #endif
     
     bool running = true;
-    while (running)
+    do
     {
 #ifdef TRACK_TIME
       clock_t time = clock();
@@ -202,9 +205,10 @@ namespace Audio
 #endif
 
       // Wait until more data is needed
-      if (running)
+      if (running && Zero::ThreadingEnabled)
         InputOutputInterface.WaitUntilOutputNeededThreaded();
-    }
+
+    } while (running && Zero::ThreadingEnabled);
 
   }
 

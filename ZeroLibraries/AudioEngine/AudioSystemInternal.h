@@ -113,6 +113,10 @@ namespace Audio
     Zero::Array<float> InputBuffer;
     // If true, will send microphone input data to external system
     bool SendMicrophoneInputData;
+    // List of decoding tasks used if the system is not threaded
+    Zero::Array<FileDecoder*> DecodingTasks;
+    // The maximum number of decoding tasks that will be processed on one update
+    static const unsigned MaxDecodingTasksToRun = 10;
     
     AudioIOInterface InputOutputInterface;
     
@@ -182,6 +186,11 @@ namespace Audio
     LockFreeQueue<Zero::Array<float>*> InputDataQueue;
     // Resampler object used to resample microphone input
     Resampler InputResampling;
+    // If true, audio will be processed normally but will not be sent to the output device
+    bool Muted;
+    bool MutedThreaded;
+    // Used to know when to set the Muted variable
+    bool MutingThreaded;
 
     // Adds current sounds into the output buffer. Will return false when the system can shut down. 
     bool MixCurrentInstancesThreaded();
@@ -201,11 +210,6 @@ namespace Audio
     void CheckForResampling();
     // Gets the current input data from the AudioIO and adjusts if necessary to match output settings
     void GetAudioInputDataThreaded(unsigned howManySamples);
-    // If true, audio will be processed normally but will not be sent to the output device
-    bool Muted;
-    bool MutedThreaded;
-    // Used to know when to set the Muted variable
-    bool MutingThreaded;
 
     friend class AudioSystemInterface;
     friend class ListenerNode;

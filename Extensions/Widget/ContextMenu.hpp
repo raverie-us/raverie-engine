@@ -161,6 +161,9 @@ public:
 
   ContextMenu* GetParentMenu();
 
+  // The menu entry that defined this menu item
+  ContextMenuEntry* mEntry;
+
 private:
   Text* mText;
   Text* mShortcut;
@@ -172,7 +175,6 @@ private:
   HandleOf<ToolTip> mToolTip;
 
   HandleOf<ContextMenu> mParentMenu;
-  ContextMenuEntry* mEntry;
 };
 
 class ContextMenuDivider : public Composite

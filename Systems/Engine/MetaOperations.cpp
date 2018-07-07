@@ -426,13 +426,6 @@ void AddRemoveComponentOperation::AddComponentFromBuffer()
   Handle object = MetaOperation::GetUndoObject();
   ReturnIf(object == nullptr, , "Invalid undo object handle.");
 
-  // Check if the component type meta is still valid
-  if (mComponentType == nullptr)
-  {
-    DoNotifyWarning("Invalid Undo/Redo Operation", "Attempting to add a component type that has been deleted from the project.");
-    return;
-  }
-
   // Create the component
   BoundType* componentType = mComponentType;
   MetaComposition* composition = mComposition;
@@ -446,7 +439,7 @@ void AddRemoveComponentOperation::AddComponentFromBuffer()
   // Unless you re-upload to Archetype, when you run the game, the instance in the game will have
   // the Dirt Material again, instead of the default it shows in the editor. Because of this,
   // instead of actually adding a new Model, we're going to revert the locally removed one.
-  if (mMode == ComponentOperation::Add && modifications->IsChildLocallyRemoved(object, componentType))
+  if (mMode == ComponentOperation::Add && componentType != nullptr && modifications->IsChildLocallyRemoved(object, componentType))
   {
     modifications->ChildAdded(object, componentType);
 

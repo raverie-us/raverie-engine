@@ -7,7 +7,6 @@ DataContent
 		var ResourceId = 0x74f23adc1a810b95
 		var LoaderType = "NetPropertyConfig"
 		var Version = 0
-		var ShowInEditor = true
 	}
 	ResourceTemplate 
 	{

@@ -279,6 +279,12 @@ ToolData* ToolObjectManager::GetObject(uint index)
 }
 
 //******************************************************************************
+ToolData* ToolObjectManager::UpdateData(StringParam objectName)
+{
+  return GetObject(objectName);
+}
+
+//******************************************************************************
 Space* ToolObjectManager::GetSpace(ToolData* object)
 {
   return object->GetSpace();

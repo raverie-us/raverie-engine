@@ -40,7 +40,7 @@ BackgroundTaskButton::BackgroundTaskButton(Composite* parent)
   : IconButton(parent)
 {
   SetIcon("TaskDownload");
-  mToolTipText = "Background Tasks";
+  SetToolTip("Background Tasks");
   mIcon->SetColor(TaskButtonUi::IconColor);
 
   mAverageProgress = new ProgressBar(this);

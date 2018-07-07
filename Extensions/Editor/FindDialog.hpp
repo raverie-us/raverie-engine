@@ -58,6 +58,8 @@ public:
   // Go into default replace all mode
   void DefaultReplaceAllSettings();
 
+  void UpdateTransform() override;
+
   // A pointer to the only instance of the find dialog
   static FindTextDialog* Instance;
 
@@ -76,6 +78,9 @@ private:
   void SubmitTextBox(KeyboardEvent* event, TextBox* textBox);
   void SubmitSearchOnFindReturn(KeyboardEvent* event);
   void SubmitSearchOnReplaceReturn(KeyboardEvent* event);
+
+  // when the find textbox is changed, this is called and will check for invalid symbols
+  void CheckForInvalidInput(ObjectEvent* event);
 
   // Occurs when we click the go button
   void StartSearch(ObjectEvent* event);
@@ -197,6 +202,9 @@ private:
 
   DocumentEditor* GetEditorForRegion(SearchRegion* region);
 
+  /// creates an error tooltip pointing to the textbox passed in
+  void CreateErrorToolTipAtTextbox(StringParam message, TextBox* textBox);
+
   // The context stores information so that when we click
   // search again we can continue from our last search
   struct Context
@@ -227,6 +235,11 @@ private:
 
   // Store the replace label
   Label* mReplaceLabel;
+
+  // tooltip for displaying errors
+  HandleOf<ToolTip> mErrorToolTip;
+
+  Status mFindTextBoxStatus;
 
   // What we want to replace 
   TextBox* mReplace;

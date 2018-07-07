@@ -26,10 +26,11 @@ public:
   ZilchDeclareType(ButtonBase, TypeCopyMode::ReferenceType);
 
   ButtonBase(Composite* parent, StringParam styleClass);
-  void SetToolTip(StringParam text) { mToolTipText = text; }
+
+  void SetToolTip(StringParam text);
 
   //ButtonBase Interface
-  virtual void SetCommand(Command* command);
+  virtual void AddCommand(Command* command);
   virtual void OnCommandStateChange(ObjectEvent* event);
   void UpdateTransform() override;
   bool TakeFocusOverride() override;
@@ -59,7 +60,7 @@ public:
   bool mMouseDown;
   bool mMouseOver;
   bool mTabFocusStop;
-  Command* mCommand;
+  Array<Command*> mCommands;
 
   /// When the button is pressed, we don't want the tooltip to be shown again
   /// until the mouse has exited and re-entered the button. This helps protect
@@ -123,7 +124,7 @@ public:
   Vec2 GetMinSize() override;
 
   //ButtonBase Interface
-  void SetCommand(Command* command) override;
+  void AddCommand(Command* command) override;
 
   virtual void UpdateIconColor();
 

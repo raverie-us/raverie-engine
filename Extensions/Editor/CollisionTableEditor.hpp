@@ -122,6 +122,9 @@ public:
   void BuildGroupListing();
   /// Registers a new group when the user selects it in the combo box.
   void OnRegisterNewGroup(ObjectEvent* event);
+
+  /// The user has requested a new CollisionGroup to be created
+  void OnAddNewCollisionGroup(Event* event);
   
 
   /// The editor for us. Used to get the resource that is being edited.
@@ -130,6 +133,8 @@ public:
   StringSource mAvailableGroups;
   /// Allows the user to register new groups to the table.
   ComboBox* mAddableGroupSelector;
+  /// Icon button to add a new collision group
+  IconButton* mAddNewGroupButton;
   /// The minimum required size to display all of our elements.
   Vec2 mMinSize;
   /// The right click context menu for the labels. Stored here since there needs

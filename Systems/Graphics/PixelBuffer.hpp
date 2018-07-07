@@ -35,6 +35,9 @@ public:
   /// Clear the pixel buffer with a gray scale color (much faster).
   void Clear(byte grayScaleColor);
 
+  /// Set a color on an area of pixels in the buffer.
+  void FillRect(Vec2Param topLeft, Vec2Param bottomRight, ByteColor color);
+
   /// Set a pixel in the buffer.
   void SetPixel(uint x, uint y, ByteColor color);
 

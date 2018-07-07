@@ -87,7 +87,6 @@ void DataBuilder::Generate(ContentInitializer& initializer)
   Name = initializer.Name;
 
   Version = 0;
-  mShowInEditor = true;
 }
 
 void DataBuilder::Serialize(Serializer& stream)
@@ -96,12 +95,6 @@ void DataBuilder::Serialize(Serializer& stream)
   SerializeNameDefault(mResourceId, ResourceId(0));
   SerializeNameDefault(LoaderType, String());
   SerializeNameDefault(Version, (uint)0);
-  SerializeNameDefault(mShowInEditor, true);
-}
-
-void DataBuilder::SetShowInEditor(bool state)
-{
-  mShowInEditor = state;
 }
 
 void DataBuilder::Rename(StringParam newName)
@@ -133,8 +126,6 @@ void DataBuilder::BuildContent(BuildOptions& buildOptions)
 
 void DataBuilder::BuildListing(ResourceListing& listing)
 {
-  this->mOwner->ShowInEditor = mShowInEditor;
-
   String destFile = GetOutputFile();
 
   uint order = Z::gContentSystem->LoadOrderMap.FindValue(LoaderType, 10);
