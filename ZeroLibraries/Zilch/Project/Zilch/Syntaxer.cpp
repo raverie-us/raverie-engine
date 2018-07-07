@@ -3369,6 +3369,30 @@ namespace Zilch
       node->ResultType = node->OperatorInfo.Result;
       node->LeftOperand->IoUsage = node->OperatorInfo.Io;
 
+      // If this is a side effect operator that writes to the left hand side, we want to check if
+      // the left hand side is a temporary returned from a property getter (the write is now an error)
+      if (node->OperatorInfo.Io & IoMode::WriteLValue)
+      {
+        // Note: We've already visited all our left hand side so all types and Io are computed
+        ExpressionNode* left = node->LeftOperand;
+        MemberAccessNode* subMemberAccess = nullptr;
+        while (MemberAccessNode* memberAccess = Type::DynamicCast<MemberAccessNode*>(left))
+        {
+          if (subMemberAccess && memberAccess->AccessedGetterSetter && Type::IsValueType(memberAccess->ResultType))
+          {
+            this->ErrorAt(
+              node,
+              ErrorCode::PropertyTemporaryNotModifiable,
+              memberAccess->Name.c_str(),
+              subMemberAccess->Name.c_str());
+            break;
+          }
+
+          subMemberAccess = memberAccess;
+          left = memberAccess->LeftOperand;
+        }
+      }
+
       // We already visited the left/right operands, which means its valid for us to generate any implicit type casts here
       // Check to see if we need to cast the left side
       if (node->OperatorInfo.CastLhsTo != nullptr)
