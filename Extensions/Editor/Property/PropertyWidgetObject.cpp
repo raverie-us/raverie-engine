@@ -822,6 +822,9 @@ void PropertyWidgetObject::AnimateRemoveSelf()
     DoNotifyWarning("Can't remove component", "No object selected. Cannot remove component.");
     return;
   }
+  // Verify the parent composition isn't null (happens on arrays right now)
+  if(mParentComposition.IsNull())
+    return;
 
   Handle parentInstance = mParentWidgetObject->mNode->mObject;
   Handle selfInstance = mNode->mObject;
