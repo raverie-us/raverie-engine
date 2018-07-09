@@ -136,6 +136,7 @@ void TreeViewSearch::CancelFilter()
   }
 
   mFiltered->SetSource(nullptr);
+
   mTreeView->ShowSelected();
 }
 

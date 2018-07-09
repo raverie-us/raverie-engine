@@ -1530,6 +1530,9 @@ void TreeView::SetRowHeight(float height)
 
 void TreeView::ShowRow(DataIndex& index)
 {
+  if(mDataSource == nullptr)
+    return;
+
   DataEntry* entry = mDataSource->ToEntry(index);
   if(entry == NULL)
     return;
