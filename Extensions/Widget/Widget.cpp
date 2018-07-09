@@ -253,6 +253,8 @@ bool Widget::IsMouseOver()
 
 void Widget::SetColor(Vec4Param color)
 {
+  if (color == mColor)
+    return;
   mColor = color;
   MarkAsNeedsUpdate();
 }

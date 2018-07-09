@@ -1,0 +1,17 @@
+///////////////////////////////////////////////////////////////////////////////
+///
+/// Authors: Trevor Sundberg
+/// Copyright 2018, DigiPen Institute of Technology
+///
+///////////////////////////////////////////////////////////////////////////////
+#include "Precompiled.hpp"
+
+namespace Zero
+{
+
+String GetCallStack(StringParam extraSymbolPath, OsHandle exceptionContext)
+{
+  return String();
+}
+
+}//namespace Zero

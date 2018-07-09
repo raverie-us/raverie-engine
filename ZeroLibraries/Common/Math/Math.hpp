@@ -72,7 +72,8 @@ ZeroShared inline Vec4 ToVector4(Vec3Param v, real w = real(0.0)){return Vec4(v.
 ZeroShared inline Vec2 ToVec2(IntVec2 v){return Vec2(real(v.x), real(v.y));}
 
 // Convert from a Vec2 to a IntVec2 standard float to int conversion
-ZeroShared inline IntVec2 ToIntVec2(Vec2 vec2){return IntVec2(int(vec2.x), int(vec2.y));}
+ZeroShared inline IntVec2 ToIntVec2(Vec2Param vec2){return IntVec2(int(vec2.x), int(vec2.y));}
+ZeroShared inline IntVec2 ToIntVec2(Vec3Param vec3){return IntVec2(int(vec3.x), int(vec3.y));}
 
 ///Converts an axis-angle pair to a 3x3 (in radians). Axis is stored in the
 ///Vector4's xyz and the angle is stored in the w. Axis is assumed to be 

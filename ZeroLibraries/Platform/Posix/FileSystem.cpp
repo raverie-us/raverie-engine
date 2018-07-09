@@ -1,43 +1,109 @@
 ///////////////////////////////////////////////////////////////////////////////
 ///
-/// \file FileSystem.cpp
-/// 
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010, DigiPen Institute of Technology
+/// Authors: Chris Peters, Trevor Sundberg
+/// Copyright 2018, DigiPen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "Platform/File.hpp"
-#include "Platform/FileSystem.hpp"
-#include "String/StringBuilder.hpp"
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <errno.h>
+
+// This is only used to make it compile for easy testing
+#if defined(PLATFORM_WINDOWS)
+#include "FileSystemWindowsEmulation.inl"
+#else
 #include <unistd.h>
 #include <dirent.h>
-#include <errno.h>
+#define ZeroAllPermissions (S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP | S_IROTH | S_IXOTH)
+#endif
 
 namespace Zero
 {
 
-const char  cDirectorySeparatorChar = '/';
-const char* cDirectorySeparatorCstr = "/";
+const Rune cDirectorySeparatorRune   = '/';
+const char cDirectorySeparatorCstr[] = "/";
+const String cDirectorySeparatorString("/");
+bool cFileSystemCaseSensitive = false;
 
+static const String cCurrentDirectory(".");
+static const String cParentDirectory("..");
 
-void InitFileSystem()
+FileSystemInitializer::FileSystemInitializer(PopulateVirtualFileSystem callback, void* userData)
 {
-
+#if defined(PLATFORM_EMSCRIPTEN)
+  // Calling this will allow the outside product to populate the
+  // virtual file system by calling 'AddVirtualFileSystemEntry'.
+  if (callback)
+    callback(userData);
+#endif
 }
 
-void ShutdownFileSystem()
+FileSystemInitializer::~FileSystemInitializer()
 {
-
 }
 
-bool CopyFileInternal(StringRef dest, StringRef source)
+void AddVirtualFileSystemEntry(StringParam absolutePath, DataBlock* stealData, TimeType modifiedTime)
+{
+  ErrorIf(!PathIsRooted(absolutePath), "The given path should have been an absolute/rooted path '%s'", absolutePath.c_str());
+  
+  // Create our entries for our files based on name, data, and modified time
+  // If the size is 0, then it's a directory
+  if (stealData == nullptr || stealData->Data == nullptr || stealData->Size == 0)
+  {
+    CreateDirectoryAndParents(absolutePath);
+  }
+  else
+  {
+    // Make sure the directory exists before we try and open a file inside of it.
+    String directory = FilePath::GetDirectoryPath(absolutePath);
+    CreateDirectoryAndParents(directory);
+    
+    // The file may already exist if it was persisted. If so, don't write over it!
+    if (!FileExists(absolutePath))
+    {
+      FILE* file = fopen(absolutePath.c_str(), "wb");
+    
+      ReturnIf(
+        !file,,
+        "Could not open file '%s', was the parent directory '%s' created? (dir exists: %d, file exists: %d)",
+        absolutePath.c_str(),
+        directory.c_str(),
+        (int)DirectoryExists(directory),
+        (int)FileExists(absolutePath));
+
+      size_t written = fwrite(stealData->Data, 1, stealData->Size, file);
+      ErrorIf(written != stealData->Size, "Could not write all data to file '%s'", absolutePath.c_str());
+
+      fclose(file);
+    }
+  }
+}
+
+bool PersistFiles()
+{
+#if defined(PLATFORM_EMSCRIPTEN)
+  EM_ASM
+  (
+    FS.syncfs(false, function(err)
+    {
+      if (err)
+        console.error(err);
+      else
+        console.log("Finished persisting files");
+    });
+  );
+  ZPrint("Persisting files...\n");
+  return true;
+#else
+  return false;
+#endif
+}
+
+bool CopyFileInternal(StringParam dest, StringParam source)
 {
   FILE* sourceFile = fopen(source.c_str(), "rb");
   if(sourceFile == NULL)
@@ -55,7 +121,7 @@ bool CopyFileInternal(StringRef dest, StringRef source)
   char buf[bufferSize];
   for(;;)
   {
-    ssize_t bytesRead = fread(buf, 1, bufferSize, sourceFile);
+    size_t bytesRead = fread(buf, 1, bufferSize, sourceFile);
     int written = fwrite(buf, bytesRead, 1, destFile);
     if (bytesRead!=bufferSize) 
       break;
@@ -79,106 +145,89 @@ bool VerifyPosix(int returnCode, cstr operation)
   }
 }
 
-bool MoveFileInternal(StringRef dest, StringRef source)
+bool MoveFileInternal(StringParam dest, StringParam source)
 {
   return  VerifyPosix(rename(source.c_str(), dest.c_str()), "MoveFile");
 }
 
-bool DeleteFileInternal(StringRef filename)
+bool DeleteFileInternal(StringParam filename)
 {
   return VerifyPosix(unlink(filename.c_str()), "DeleteFile");
 }
 
-bool DeleteDirectory(StringRef name)
+bool DeleteDirectory(StringParam name)
 {
   return VerifyPosix(rmdir(name.c_str()), "DeleteDirectory");
 }
 
-void CreateDirectory(StringRef dest)
+void CreateDirectory(StringParam dest)
 {
-  int failCode = mkdir(dest.c_str(),
-    S_IRUSR | S_IWUSR | S_IXUSR |
-    S_IRGRP | S_IWGRP | S_IXGRP |
-    S_IROTH | S_IXOTH );
+  int failCode = mkdir(dest.c_str(), ZeroAllPermissions);
 
   if(failCode != 0)
   {
     // If the error is anything except already exists
     if(errno != EEXIST)
-      ZPrint("Failed to create directory %s Error: %s\n", dest.c_str(), strerror(errno) );
+      ZPrint("Failed to create directory %s: %s\n", dest.c_str(), strerror(errno));
   }
 }
 
-void CreateDirectoryAndParents(StringRef directory)
+void CreateDirectoryAndParents(StringParam directory)
 {
-  char directoryPath[File::MaxPath];
-  ZeroStrCpy(directoryPath, File::MaxPath, directory.c_str());
-  uint size = strlen(directoryPath);
-  for(uint c=0;c<size;++c)
+  // Normalize it first to ensure we don't have any double slashes.
+  // This also ensures we don't have a trailing separator.
+  String path = FilePath::Normalize(directory);
+
+  // Copy the string (including null) to the temp buffer since we're going to modify it by adding nulls.
+  char* temp = (char*)alloca(directory.SizeInBytes() + 1);
+  memcpy(temp, directory.c_str(), directory.SizeInBytes() + 1);
+
+  // We don't want to attempt to create the root in case the path is rooted
+  // however, we always know we can at least skip the first character even if it isn't
+  // rooted because we know a directory name will have at least one character.
+  for (char* it = temp + 1; *it != 0; ++it)
   {
-    //When their is a directory separator
-    if(directoryPath[c] == cDirectorySeparatorChar && c > 0)
+    // If we hit the directory separator, temporarily substitute a null character
+    // and call make directory, then put it back and continue walking.
+    if (*it == '/')
     {
-      //Null terminate
-      directoryPath[c] = '\0';
-      //Create directory
-      CreateDirectory(directoryPath);
-      //remove null terminator
-      directoryPath[c] = cDirectorySeparatorChar;
+      *it = 0;
+      CreateDirectory(temp);
+      *it = '/';
     }
   }
 
-  // Finally create the directory
-  CreateDirectory(directoryPath);
+  // Finally make the entire directory.
+  CreateDirectory(temp);
 }
 
-
-int CheckFileTime(StringRef dest, StringRef source)
-{
-  struct stat destStat;
-  if(stat(dest.c_str(), &destStat)!=0)
-    return -1;
-
-  struct stat sourceStat;
-  if(stat(source.c_str(), &sourceStat)!=0)
-    return 1;
-
-  if(destStat.st_mtime > sourceStat.st_mtime)
-    return 1;
-
-  if(destStat.st_mtime == sourceStat.st_mtime)
-    return 0;
-  else
-    return -1;
-}
-
-time_t GetFileModifiedTime(StringRef file)
+time_t GetFileModifiedTime(StringParam file)
 {
   struct stat fileStat;
-  if(stat(file.c_str(), &fileStat)!=0)
+  if(stat(file.c_str(), &fileStat) != 0)
     return (time_t)fileStat.st_mtime;
   return 0;
 }
 
-int SetFileToCurrentTime(StringRef filename)
+bool SetFileToCurrentTime(StringParam filename)
 {
-  return VerifyPosix(utimensat(AT_FDCWD, filename.c_str(), NULL, 0), "Updating File Time");
+  return VerifyPosix(utimensat(AT_FDCWD, filename.c_str(), nullptr, 0), "Updating File Time");
 }
 
-u32 GetFileSize(StringRef fileName)
+u64 GetFileSize(StringParam fileName)
 {
   struct stat st;
   stat(fileName.c_str(), &st);
   return (uint)st.st_size;
 }
 
-bool FileExists(StringRef filePath)
+bool FileExists(StringParam filePath)
 {
   struct stat st;
   return stat(filePath.c_str(), &st) != -1;
 }
 
-bool DirectoryExists(StringRef directoryPath)
+bool DirectoryExists(StringParam directoryPath)
 {
   struct stat st;
   if(stat(directoryPath.c_str(), &st) == 0 && S_ISDIR(st.st_mode))
@@ -186,29 +235,24 @@ bool DirectoryExists(StringRef directoryPath)
   return false;
 }
 
-// Return true if it is directory path and it exists
-bool IsDirectory(StringRef directoryPath)
+String CanonicalizePath(StringParam directoryPath)
 {
-  struct stat st;
-  if(stat(directoryPath.c_str(), &st) == 0 && S_ISDIR(st.st_mode))
-    return true;
-  return false;
+  return FilePath::Normalize(directoryPath);
 }
 
-String CanonicalizePath(StringRef directoryPath)
+bool PathIsRooted(StringParam directoryPath)
 {
-  Error("CanonicalizePath not yet supported"); 
-  return directoryPath;
+  return directoryPath.StartsWith(cDirectorySeparatorString);
 }
 
-bool FileWritable(StringRef filePath)
+bool FileWritable(StringParam filePath)
 {
   return access(filePath.c_str(), R_OK) == 0;
 }
 
-String UniqueFileId(StringRef fullpath)
+String UniqueFileId(StringParam fullpath)
 {
-   char buffer[File::MaxPath] = {0};
+   char buffer[File::MaxPath + 1] = {0};
    realpath(fullpath.c_str(), buffer);
 
   //on unix the path is unique
@@ -217,12 +261,12 @@ String UniqueFileId(StringRef fullpath)
 
 String GetWorkingDirectory()
 {
-  char temp[File::MaxPath+1];
+  char temp[File::MaxPath + 1];
   getcwd(temp, File::MaxPath);
   return temp;
 }
 
-void SetWorkingDirectory(String path)
+void SetWorkingDirectory(StringParam path)
 {
   chdir(path.c_str());
 }
@@ -230,30 +274,58 @@ void SetWorkingDirectory(String path)
 String GetUserLocalDirectory()
 {
   // Use the standard ~/.cache location
-  char local[File::MaxPath+1] = {0};
-  ZeroStrCpy(local, File::MaxPath, getenv("HOME"));
+  char local[File::MaxPath + 1] = {0};
+  ZeroStrCpy(local, File::MaxPath, GetUserDocumentsDirectory().c_str());
   ZeroStrCat(local, File::MaxPath, "/.cache");
   return local;
 }
 
 String GetUserDocumentsDirectory()
 {
-  return getenv("HOME");
+  const char* home = getenv("HOME");
+  if (home && strlen(home) != 0)
+    return home;
+
+  const char* userProfile = getenv("USERPROFILE");
+  if (userProfile && strlen(userProfile) != 0)
+  {
+    String documents = FilePath::Combine(userProfile, "Documents");
+    if (DirectoryExists(documents))
+      return documents;
+  }
+
+  return "/Documents/";
 }
 
 String GetTemporaryDirectory()
 {
-  return "/tmp";
-}
+  const char* temp = getenv("TMPDIR");
+  if (temp && strlen(temp) != 0)
+    return temp;
+  
+  temp = getenv("TEMP");
+  if (temp && strlen(temp) != 0)
+    return temp;
 
-String GetApplication()
-{
-  return String();
+  temp = getenv("TMP");
+  if (temp && strlen(temp) != 0)
+    return temp;
+
+  return FilePath::GetDirectoryPath(tmpnam(nullptr));
 }
 
 String GetApplicationDirectory()
 {
-  return String();
+  // The first entry in the command line arguments should be our executable.
+  // Use the parent directory of the executable as the application directory.
+  return FilePath::GetDirectoryPath(GetApplication());
+}
+
+String GetApplication()
+{
+  // The first entry in the command line arguments should be our executable.
+  ReturnIf(gCommandLineArguments.Empty(), "/Main.app", "The command line arguments should not be empty, were they set?");
+  return gCommandLineArguments.Front();
 }
 
 struct FileRangePrivateData
@@ -262,20 +334,15 @@ struct FileRangePrivateData
   struct dirent* mEntry;
 };
 
-FileRange::FileRange(StringRef search)
+FileRange::FileRange(StringParam search) :
+  mPath(search)
 { 
   ZeroConstructPrivateData(FileRangePrivateData);
   DIR* dir = opendir(search.c_str());
-  if(dir)
-  {
-    self->mDir = dir;
-    self->mEntry = readdir(dir);
-  }
-  else
-  {
-    self->mDir = NULL;
-    self->mEntry = NULL;
-  }
+  self->mEntry = nullptr;
+  self->mDir = dir;
+
+  PopFront();
 }
 
 FileRange::~FileRange()
@@ -284,29 +351,42 @@ FileRange::~FileRange()
   closedir(self->mDir);
 }
 
-bool FileRange::empty()
+bool FileRange::Empty()
 {
   ZeroGetPrivateData(FileRangePrivateData);
-  return self->mEntry == NULL;
+  return self->mEntry == nullptr;
 }
 
-cstr FileRange::front()
+String FileRange::Front()
 {
   ZeroGetPrivateData(FileRangePrivateData);
   return self->mEntry->d_name;
 }
 
-void FileRange::popFront()
+FileEntry FileRange::FrontEntry()
 {
   ZeroGetPrivateData(FileRangePrivateData);
+  FileEntry entry;
+  entry.mFileName = self->mEntry->d_name;
+  entry.mPath = mPath;
+  entry.mSize = GetFileSize(FilePath::Combine(mPath, entry.mFileName));
+  return entry;
+}
+
+void FileRange::PopFront()
+{
+  ZeroGetPrivateData(FileRangePrivateData);
+  if (!self->mDir)
+    return;
+
   self->mEntry = readdir(self->mDir);
 
-  //Get rid of "." and ".." directory results.
-  if(!empty() && strcmp(front(), ".") == 0)
-    popFront();
+  // Get rid of "." and ".." directory results.
+  if(!Empty() && Front() == cCurrentDirectory)
+    PopFront();
 
-  if(!empty() && strcmp(front(), "..") == 0)
-    popFront();
+  if(!Empty() && Front() == cParentDirectory)
+    PopFront();
 }
 
 }//namespace Zero

@@ -553,14 +553,24 @@ void EngineLibrary::PopulateVirtualFileSystem(void* userData)
   TimerBlock startUp("Virtual File System");
 
   // It's very important that this uses C's FILE instead of our File since our File could be virtual.
-  // Attempt to load the file system either relative to our working directory or at the root.
+  // First check to see if it's in the working directory.
   FILE* file = fopen("FileSystem.zip", "rb");
+
+  // Now check to see if it's next to the executable.
+  if (!file && !gCommandLineArguments.Empty())
+  {
+    // We can't call GetApplicationDirectory because it's the emulated one by the virtual file system
+    String trueApplicationDirectory = FilePath::GetDirectoryPath(gCommandLineArguments.Front());
+    String filePath = FilePath::Combine(trueApplicationDirectory, "FileSystem.zip");
+    file = fopen(filePath.c_str(), "rb");
+  }
+
+  // Finally, check to see if it's in the root.
   if (!file)
     file = fopen("/FileSystem.zip", "rb");
 
   // If we failed to open the archive, early out...
-  if (!file)
-    return;
+  ReturnIf(!file,, "Did not find FileSystem.zip (in the working directory, next to the application, or in the root)");
 
   // We successfully opened the file so read it in as an archive.
   // Get the size of the file first.

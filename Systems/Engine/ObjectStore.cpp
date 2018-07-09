@@ -152,6 +152,7 @@ StoreResult::Enum ObjectStore::Store(StringParam name, Cog* object)
     saver.SetSerializationContext(&savingContext);
     saver.SaveFullObject(object);
     saver.Close();
+    PersistFiles();
   }
   else
   {
@@ -214,12 +215,13 @@ void ObjectStore::Erase(StringParam name)
     String fileDestination = FilePath::Combine(trashDirectory, BuildString(name, ".Data"));
 
     // Create the trash directory if it doesn't exist
-    CreateDirectory(trashDirectory);
+    CreateDirectoryAndParents(trashDirectory);
 
     // Move the file
     MoveFile(fileDestination, storeFile);
 
     mEntries.EraseValue(name);
+    PersistFiles();
   }
 }
 
@@ -231,6 +233,7 @@ void ObjectStore::ClearStore()
   String trashDirectory = FilePath::Combine(GetUserDocumentsDirectory(), "Zero", "Trash");
 
   MoveFolderContents(trashDirectory, mStorePath);
+  PersistFiles();
 }
 
 }

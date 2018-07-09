@@ -147,6 +147,7 @@ ZilchDefineStaticLibrary(NetworkingLibrary)
   ZilchInitializeType(ThreadedWebRequest);
   ZilchInitializeType(BlockingWebRequest);
   ZilchInitializeType(ConnectionData);
+  ZilchInitializeType(WebServer);
 
   // NetPeer Type Initialization
   ZilchInitializeTypeAs(BitStreamExtended, "BitStream");

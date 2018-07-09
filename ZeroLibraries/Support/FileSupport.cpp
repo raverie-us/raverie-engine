@@ -43,8 +43,6 @@ void MoveFolderContents(StringParam dest, StringParam source, FileFilter* filter
 
     if(DirectoryExists(sourceFile))
     {
-      CreateDirectory(dest);
-
       MoveFolderContents(destFile, sourceFile);
     }
     else

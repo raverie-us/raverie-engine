@@ -44,6 +44,7 @@ public:
 #include "SimpleSocket.hpp"
 #include "IrcClient.hpp"
 #include "WebRequest.hpp"
+#include "WebServer.hpp"
 
 // NetPeer Forward Declarations
 namespace Zero

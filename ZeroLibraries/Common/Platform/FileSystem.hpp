@@ -16,7 +16,7 @@ DeclareEnum4(FileSystemErrors,
   FileLocked
 );
 
-ZeroShared extern const Rune  cDirectorySeparatorRune;
+ZeroShared extern const Rune cDirectorySeparatorRune;
 ZeroShared extern const char cDirectorySeparatorCstr[];
 ZeroShared extern bool cFileSystemCaseSensitive;
 
@@ -28,12 +28,19 @@ public:
   typedef void(*PopulateVirtualFileSystem)(void* userData);
   FileSystemInitializer(PopulateVirtualFileSystem callback = nullptr, void* userData = nullptr);
   ~FileSystemInitializer();
-};;
+};
 
 /// Creates a virtual file or directory (only when running in virtual mode).
 /// An empty/0-size or null data block indicates a directory rather than a file.
 /// Only called during the PopulateVirtualFileSystem callback.
 ZeroShared void AddVirtualFileSystemEntry(StringParam absolutePath, DataBlock* stealData, TimeType modifiedTime);
+
+/// Called when we want to ensure that files that have been written are persisted/saved to a location that can be recalled.
+/// Note that not every platform or file system uses this function, and it will return false if it's unused.
+/// Files will automatically be recalled when the file system initializes.
+/// It is advised to call this in a location where mass saving occurs.
+/// NOTE: This function will automatically be called when the Common/Platform library shuts down.
+ZeroShared bool PersistFiles();
 
 /// Copies a file. Will spin lock if fails up to a max number of iterations. (Calls CopyFileInternal)
 ZeroShared bool CopyFile(StringParam dest, StringParam source);

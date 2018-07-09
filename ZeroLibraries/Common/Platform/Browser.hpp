@@ -17,6 +17,7 @@ class BrowserSetup
 public:
   String mUrl;
   IntVec2 mSize;
+  IntVec2 mClientPosition;
   bool mTransparent;
   Math::Vec4 mBackgroundColor;
   Math::Vec2 mScrollSpeed;
@@ -47,8 +48,24 @@ public:
   Browser(const BrowserSetup& setup);
   ~Browser();
 
+  /// Returns true if this browser is implemented as a browser that floats on top of everything.
+  /// If the browser is floating, it may not invoke mOnPaint as it may be painted by the operating system.
+  static bool IsFloatingOnTop();
+
+  /// Returns if this browser is considered secure which means that it follows browsing standards
+  /// for security, such as not allowing cross-origin requests unless explicitly allowed by the server.
+  static bool IsSecurityRestricted();
+
   Math::IntVec2 GetSize();
   void SetSize(Math::IntVec2Param size);
+
+  /// This is only used when the browser 'IsFloatingOnTop'.
+  Math::IntVec2 GetClientPosition();
+  void SetClientPosition(Math::IntVec2Param clientPosition);
+
+  /// This is only used when the browser 'IsFloatingOnTop'.
+  int GetZIndex();
+  void SetZIndex(int zindex);
 
   bool GetCanGoForward();
   bool GetCanGoBackward();
@@ -96,6 +113,7 @@ public:
 
   // Warning, the size may not match the last size that was sent since the data could be latent.
   // Caution to be taken to clamp the dirty rectangles within your buffer size.
+  // This method may never be called if this browser 'IsFloatingOnTop'.
   void(*mOnPaint)(BrowserColorFormat::Enum format, const byte* data, Math::IntVec2Param bufferSize, const Array<IntRect>& dirtyRectangles, Browser* browser);
 
   void(*mOnPopup)(StringParam name, StringParam url, Browser* browser);
@@ -117,6 +135,9 @@ public:
   Math::Vec4 mBackgroundColor;
   bool mTransparent;
   Math::IntVec2 mSize;
+  Math::IntVec2 mClientPosition;
+  int mZIndex;
+  bool mVisible;
 
   OsHandle mHandle;
 };

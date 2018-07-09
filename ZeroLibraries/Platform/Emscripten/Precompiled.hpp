@@ -21,3 +21,11 @@
 
 // Include OpenGl
 #include "GL/GL.h"
+
+#include <stdio.h>
+#include <emscripten.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <errno.h>

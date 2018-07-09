@@ -14,6 +14,8 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/Singleton.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Time.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Time.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ThreadableLoop.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ThreadableLoop.hpp
     ${CMAKE_CURRENT_LIST_DIR}/VirtualAny.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Containers/Algorithm.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Containers/Allocator.hpp
@@ -130,6 +132,7 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Main.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Main.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/MainLoop.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Platform/CallStack.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/ComPort.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/CrashHandler.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Debug.hpp

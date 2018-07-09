@@ -70,10 +70,10 @@ String ChooseDllPath(Zero::StringParam localDllPath, int localDllVersionId, Zero
 
 int PlatformMain(const Array<String>& arguments)
 {
+  FileSystemInitializer fileSystemInitializer(&EngineLibrary::PopulateVirtualFileSystem);
+
   int restart = 1;
   ExternalLibrary library;
-
-  FileSystemInitializer fileSystemInitializer(&EngineLibrary::PopulateVirtualFileSystem);
 
   // Register that we can be restarted. This is primarily so an installer can
   // restart the launcher if it was already running.

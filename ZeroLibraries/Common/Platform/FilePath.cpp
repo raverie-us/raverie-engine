@@ -70,7 +70,8 @@ StringRange FilePath::GetExtension(StringRange path)
 
 StringRange FilePath::GetFileName(StringRange path)
 {
-  StringRange found = path.FindLastOf(cDirectorySeparatorRune);
+  StringRange found = FindLastDirectorySeparator(path);
+
   if(found.Empty())
     return path;
 
@@ -86,7 +87,8 @@ StringRange FilePath::GetDirectoryName(StringRange path)
 {
   StringRange directoryPath = GetDirectoryPath(path);
 
-  StringRange found = directoryPath.FindLastOf(cDirectorySeparatorRune);
+  StringRange found = FindLastDirectorySeparator(directoryPath);
+
   if(found.Empty())
     return directoryPath;
 
@@ -95,7 +97,8 @@ StringRange FilePath::GetDirectoryName(StringRange path)
 
 StringRange FilePath::GetDirectoryPath(StringRange path)
 {
-  StringRange found = path.FindLastOf(cDirectorySeparatorRune);
+  StringRange found = FindLastDirectorySeparator(path);
+
   if(found.Empty())
     return StringRange();
 
@@ -149,7 +152,7 @@ FilePathInfo FilePath::GetPathInfo(StringRange path)
   FilePathInfo info;
 
   //find the directory separator
-  StringRange found = path.FindLastOf(cDirectorySeparatorRune);
+  StringRange found = FindLastDirectorySeparator(path);
   if(!found.Empty())
   {
     //extract the directory
@@ -234,6 +237,20 @@ String FilePath::Combine(const StringRange** paths, uint count, StringRange exte
   stringData[currentIndex] = 0;
 
   return String(stringData, currentIndex);
+}
+
+StringRange FilePath::FindLastDirectorySeparator(StringRange path)
+{
+  StringRange found = path.FindLastOf(cDirectorySeparatorRune);
+
+  // Look for any alternative path separators.
+  if (found.Empty() && cDirectorySeparatorRune != '/')
+    found = path.FindLastOf(Rune('/'));
+
+  if (found.Empty() && cDirectorySeparatorRune != '\\')
+    found = path.FindLastOf(Rune('\\'));
+  
+  return found;
 }
 
 }//namespace Zero

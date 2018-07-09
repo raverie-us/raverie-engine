@@ -97,18 +97,20 @@ DeclareEnum4(ReturnCode, Continue, DebugBreak, Terminate, Ignore);
 bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
 {
   // Stores the resulting quote removed message from below
-  String message;
   String expression = errorData.Expression;
 
   // Check if no message was provided
-  if (errorData.Message != nullptr)
-    message = BuildString(errorData.Message, "\n");
-  else
-    message = "No message\n";
+  const char* errorMessage = errorData.Message ? errorData.Message : "No message";
+  
+  String message = BuildString(errorMessage, "\n");
+  
+  String callStack = GetCallStack();
+  if (!callStack.Empty())
+    message = BuildString(message, callStack, "\n");
 
   Console::Print(Filter::ErrorFilter, message.c_str());
 
-  // Show a message box instead
+  // Show a message box
   message = BuildString(message, "Would you like to continue?");
   
   const SDL_MessageBoxButtonData buttons[] =

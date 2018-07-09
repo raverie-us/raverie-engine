@@ -6,9 +6,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
-// Note: How do empty directories work? Maybe an empty DataBlock?
-// Note: Need to support working directory.
-
 namespace Zero
 {
 //---------------------------------------------------------------- File System
@@ -39,9 +36,7 @@ public:
   EntryList mChildren;
   Array<byte> mFileData;
   TimeType mModifiedTime;
-
-  // This needs to actually be synchronized
-  Atomic<bool> mLocked;
+  bool mLocked;
 };
 
 class FileSystem : public ExplicitSingleton<FileSystem>
@@ -61,8 +56,7 @@ public:
 SystemEntry::SystemEntry() :
   mParent(nullptr),
   mType(EntryType::Directory),
-  mModifiedTime(Time::GetTime()),
-  mLocked(false)
+  mModifiedTime(Time::GetTime())
 {
 }
 
@@ -279,6 +273,13 @@ void AddVirtualFileSystemEntry(StringParam absolutePath, DataBlock* stealData, T
   }
 
   entry->mModifiedTime = modifiedTime;
+}
+
+bool PersistFiles()
+{
+  // The VFS has no way of perminantly persisting files, as they actual file system itself may be non-existant.
+  // In the future for platforms we could create a zip here and save it back out (or call a callback).
+  return false;
 }
 
 bool CopyFileInternal(StringParam dest, StringParam source)
@@ -533,6 +534,7 @@ bool File::Open(StringParam filePath, FileMode::Enum mode, FileAccessPattern::En
     return false;
   }
 
+  // At the moment, we never lock files.
   if (mode != FileMode::Read)
     entry->mLocked = false;
 
@@ -581,6 +583,12 @@ bool File::IsOpen()
 void File::Close()
 {
   ZeroGetPrivateData(FilePrivateData);
+
+  // Guard against closing more than once.
+  if (!self->mEntry)
+    return;
+
+  self->mEntry->mLocked = false;
   self->mEntry = nullptr;
   if (mFileMode != FileMode::Read)
     FileModifiedState::EndFileModified(mFilePath);

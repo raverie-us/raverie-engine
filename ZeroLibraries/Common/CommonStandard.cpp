@@ -28,11 +28,28 @@ void CommonLibrary::Initialize()
   // Setup keyboard enumerations
   InitializeKeyboard();
 
+  // This is printed to any log for debugging purposes.
+  ZPrint(
+    "Paths:\n"
+    "  Application: %s\n"
+    "      Working: %s\n"
+    "    Documents: %s\n"
+    "        Local: %s\n"
+    "    Temporary: %s\n",
+    GetApplication().c_str(),
+    GetWorkingDirectory().c_str(),
+    GetUserDocumentsDirectory().c_str(),
+    GetUserLocalDirectory().c_str(),
+    GetTemporaryDirectory().c_str());
 }
 
 //**************************************************************************************************
 void CommonLibrary::Shutdown()
 {
+  // For certain platforms (Emscripten) make sure that any
+  // files saved in memory are persisted for the next run.
+  PersistFiles();
+
   // Uninitialize platform socket library
   Zero::Status socketLibraryUninitStatus;
   Zero::Socket::UninitializeSocketLibrary(socketLibraryUninitStatus);

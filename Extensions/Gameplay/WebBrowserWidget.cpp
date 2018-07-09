@@ -109,7 +109,9 @@ void WebBrowserWidget::UpdateTransform()
 {
   Composite::UpdateTransform();
   IntVec2 newSize = Math::ToIntVec2(mBrowserView->GetSize());
+  IntVec2 clientPosition = Math::ToIntVec2(mBrowserView->GetScreenPosition());
   mBrowser->SetSize(newSize);
+  mBrowser->SetClientPosition(clientPosition);
 }
 
 void WebBrowserWidget::OnEngineUpdate(UpdateEvent* event)

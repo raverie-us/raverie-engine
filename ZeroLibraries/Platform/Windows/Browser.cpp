@@ -701,7 +701,10 @@ Browser::Browser(const BrowserSetup& setup) :
   mScrollSpeed(setup.mScrollSpeed),
   mBackgroundColor(setup.mBackgroundColor),
   mTransparent(setup.mTransparent),
-  mSize(setup.mSize)
+  mSize(setup.mSize),
+  mClientPosition(setup.mClientPosition),
+  mZIndex(0),
+  mVisible(true)
 {
   CefWindowInfo window;
   window.SetAsWindowless(0, setup.mTransparent);
@@ -740,6 +743,16 @@ Browser::~Browser()
   gPlatform->mIdToData.Erase(id);
 }
 
+bool Browser::IsFloatingOnTop()
+{
+  return false;
+}
+
+bool Browser::IsSecurityRestricted()
+{
+  return false;
+}
+
 Math::IntVec2 Browser::GetSize()
 {
   return mSize;
@@ -749,6 +762,26 @@ void Browser::SetSize(Math::IntVec2Param size)
 {
   mSize = size;
   gPlatform->GetCefBrowser(this)->GetHost()->WasResized();
+}
+
+Math::IntVec2 Browser::GetClientPosition()
+{
+  return mClientPosition;
+}
+
+void Browser::SetClientPosition(Math::IntVec2Param clientPosition)
+{
+  mClientPosition = clientPosition;
+}
+
+int Browser::GetZIndex()
+{
+  return mZIndex;
+}
+
+void Browser::SetZIndex(int zindex)
+{
+  mZIndex = zindex;
 }
 
 bool Browser::GetCanGoForward()
@@ -809,6 +842,8 @@ void Browser::SetVisible(bool visible)
     host->SetWindowlessFrameRate(1);
   else
     host->SetWindowlessFrameRate(60);
+
+  mVisible = visible;
 }
 
 void ReInitializeBrowser(Browser* browser)

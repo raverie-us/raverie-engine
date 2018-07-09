@@ -81,7 +81,7 @@ String GetApplicationDirectory()
 String GetApplication()
 {
   // The first entry in the command line arguments should be our executable.
-  ReturnIf(gCommandLineArguments.Empty(), "Unknown", "The command line arguments should not be empty, were they set?");
+  ReturnIf(gCommandLineArguments.Empty(), "/Main.app", "The command line arguments should not be empty, were they set?");
   return gCommandLineArguments.Front();
 }
 #endif

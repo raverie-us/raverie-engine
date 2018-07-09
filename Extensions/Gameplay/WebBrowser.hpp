@@ -53,6 +53,7 @@ public:
   (
     StringParam url = cWebBrowserDefaultUrl,
     IntVec2Param size = cWebBrowserDefaultSize,
+    IntVec2Param clientPosition = IntVec2::cZero,
     bool transparent = cWebBrowserDefaultTransparent,
     Vec4Param backgroundColor = cWebBrowserDefaultBackgroundColor,
     Vec2Param scrollSpeed = cWebBrowserDefaultScrollSpeed
@@ -60,6 +61,7 @@ public:
 
   String mUrl;
   IntVec2 mSize;
+  IntVec2 mClientPosition;
   bool mTransparent;
   Vec4 mBackgroundColor;
   Vec2 mScrollSpeed;
@@ -74,6 +76,13 @@ public:
   WebBrowser(const WebBrowserSetup& setup);
   ~WebBrowser();
 
+  /// Returns true if this browser is implemented as a browser that floats on top of everything.
+  static bool GetIsFloatingOnTop();
+
+  /// Returns if this browser is considered secure which means that it follows browsing standards
+  /// for security, such as not allowing cross-origin requests unless explicitly allowed by the server.
+  static bool GetIsSecurityRestricted();
+
   static HandleOf<WebBrowser> Create();
   static HandleOf<WebBrowser> Create(const WebBrowserSetup& setup);
 
@@ -82,6 +91,19 @@ public:
   void SetSize(IntVec2Param size);
   IntVec2 GetSize();
 
+  /// For browsers that float on top, they must be given a
+  /// client position (relative to the client area of the main window).
+  /// This is only used when the browser 'IsFloatingOnTop'.
+  Math::IntVec2 GetClientPosition();
+  void SetClientPosition(Math::IntVec2Param clientPosition);
+
+  /// For browsers that float on top, you can control how they appear on top of each other
+  /// by using the z-index (only works relative to one another). Higher values appear on top.
+  /// This is only used when the browser 'IsFloatingOnTop'.
+  int GetZIndex();
+  void SetZIndex(int zindex);
+
+  /// Get the texture created by the web browser. Note that this may not be filled out when 'IsFloatingOnTop' is set.
   Texture* GetTexture();
 
   /// The background color of the browser when no CSS background is specified or when pages are loading.

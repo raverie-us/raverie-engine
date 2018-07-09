@@ -15,12 +15,25 @@ Browser::Browser(const BrowserSetup& setup) :
   mScrollSpeed(setup.mScrollSpeed),
   mBackgroundColor(setup.mBackgroundColor),
   mTransparent(setup.mTransparent),
-  mSize(setup.mSize)
+  mSize(setup.mSize),
+  mClientPosition(setup.mClientPosition),
+  mZIndex(0),
+  mVisible(false)
 {
 }
 
 Browser::~Browser()
 {
+}
+
+bool Browser::IsFloatingOnTop()
+{
+  return false;
+}
+
+bool Browser::IsSecurityRestricted()
+{
+  return false;
 }
 
 Math::IntVec2 Browser::GetSize()
@@ -31,6 +44,26 @@ Math::IntVec2 Browser::GetSize()
 void Browser::SetSize(Math::IntVec2Param size)
 {
   mSize = size;
+}
+
+Math::IntVec2 Browser::GetClientPosition()
+{
+  return mClientPosition;
+}
+
+void Browser::SetClientPosition(Math::IntVec2Param clientPosition)
+{
+  mClientPosition = clientPosition;
+}
+
+int Browser::GetZIndex()
+{
+  return mZIndex;
+}
+
+void Browser::SetZIndex(int zindex)
+{
+  mZIndex = zindex;
 }
 
 bool Browser::GetCanGoForward()
@@ -71,6 +104,7 @@ bool Browser::GetFocus()
 
 void Browser::SetVisible(bool visible)
 {
+  // We just ignore this since we're never visible...
 }
 
 bool Browser::GetVisible()

@@ -178,10 +178,11 @@ const bool cWebBrowserDefaultTransparent(false);
 const Vec4 cWebBrowserDefaultBackgroundColor(1.0f);
 const Vec2 cWebBrowserDefaultScrollSpeed(100, 100);
 
-WebBrowserSetup::WebBrowserSetup(StringParam url, IntVec2Param size, bool transparent, Vec4Param backgroundColor, Vec2Param scrollSpeed)
+WebBrowserSetup::WebBrowserSetup(StringParam url, IntVec2Param size, IntVec2Param clientPosition, bool transparent, Vec4Param backgroundColor, Vec2Param scrollSpeed)
 {
   mUrl = url;
   mSize = size;
+  mClientPosition = clientPosition;
   mTransparent = transparent;
   mBackgroundColor = backgroundColor;
   mScrollSpeed = scrollSpeed;
@@ -204,6 +205,11 @@ ZilchDefineType(WebBrowser, builder, type)
   ZilchBindOverloadedMethod(Create, ZilchStaticOverload(HandleOf<WebBrowser>, const WebBrowserSetup&));
 
   ZilchBindGetterSetterProperty(Size);
+  ZilchBindGetterSetterProperty(ClientPosition);
+  ZilchBindGetterSetterProperty(ZIndex);
+  ZilchBindGetterProperty(IsFloatingOnTop);
+  ZilchBindGetterProperty(IsSecurityRestricted);
+
   ZilchBindGetterProperty(Texture);
   ZilchBindGetterProperty(Status);
   ZilchBindGetterProperty(Title);
@@ -248,6 +254,7 @@ BrowserSetup ConvertSetupAndEnsurePlatformInitialized(const WebBrowserSetup& set
   BrowserSetup browserSetup;
   browserSetup.mUrl = setup.mUrl;
   browserSetup.mSize = setup.mSize;
+  browserSetup.mClientPosition = setup.mClientPosition;
   browserSetup.mTransparent = setup.mTransparent;
   browserSetup.mBackgroundColor = setup.mBackgroundColor;
   browserSetup.mScrollSpeed = setup.mScrollSpeed;
@@ -287,6 +294,16 @@ WebBrowser::~WebBrowser()
 {
 }
 
+bool WebBrowser::GetIsFloatingOnTop()
+{
+  return Browser::IsFloatingOnTop();
+}
+
+bool WebBrowser::GetIsSecurityRestricted()
+{
+  return Browser::IsSecurityRestricted();
+}
+
 void WebBrowser::ExecuteScript(StringParam script)
 {
   ExecuteScriptFromLocation(script, String(), 0);
@@ -311,6 +328,26 @@ void WebBrowser::SetSize(IntVec2Param size)
 IntVec2 WebBrowser::GetSize()
 {
   return IntVec2(mBuffer.Width, mBuffer.Height);
+}
+
+Math::IntVec2 WebBrowser::GetClientPosition()
+{
+  return mBrowser.GetClientPosition();
+}
+
+void WebBrowser::SetClientPosition(Math::IntVec2Param clientPosition)
+{
+  mBrowser.SetClientPosition(clientPosition);
+}
+
+int WebBrowser::GetZIndex()
+{
+  return mBrowser.GetZIndex();
+}
+
+void WebBrowser::SetZIndex(int zindex)
+{
+  mBrowser.SetZIndex(zindex);
 }
 
 Texture* WebBrowser::GetTexture()

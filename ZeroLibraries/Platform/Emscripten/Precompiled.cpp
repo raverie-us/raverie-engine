@@ -6,20 +6,20 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
-#include "../Empty/Browser.cpp"
 #include "../Empty/ComPort.cpp"
 #include "../Empty/CrashHandler.cpp"
 #include "../Empty/Debug.cpp"
 #include "../Empty/DebugSymbolInformation.cpp"
 #include "../Empty/DirectoryWatcher.cpp"
 #include "../Empty/ExecutableResource.cpp"
-#include "../Empty/VirtualFileAndFileSystem.cpp"
 #include "../Empty/Intrinsics.cpp"
 #include "../Empty/Registry.cpp"
 #include "../Empty/Socket.cpp"
 #include "../Empty/Thread.cpp"
 #include "../Empty/ThreadSync.cpp"
+#include "../Posix/FileSystem.cpp"
 #include "../STL/Atomic.cpp"
+#include "../STL/File.cpp"
 #include "../STL/FpControl.cpp"
 #include "../STL/Process.cpp"
 #include "../SDL/Audio.cpp"
@@ -34,8 +34,6 @@
 #include "../SDL/Utilities.cpp"
 #include "../OpenGL/OpenglRenderer.cpp"
 #include "../OpenGL/OpenglRenderer.hpp"
-
-#include <emscripten.h>
 
 int vsprintf_s(char* buffer, size_t numberOfElements, const char* format, va_list args)
 {
@@ -127,37 +125,38 @@ errno_t strncpy_s(char *dest, rsize_t destsz, const char *src, rsize_t count)
 
 void glDrawBuffer(GLenum buf)
 {
-  GLenum drawBuffers[8] = { GL_NONE };
-  drawBuffers[0] = buf;
+  GLenum drawBuffers[8] = { buf, GL_NONE, GL_NONE, GL_NONE, GL_NONE, GL_NONE, GL_NONE, GL_NONE };
   glDrawBuffers(1, drawBuffers);
 }
 
+static const char* const cInvalidWebGl = "This function should not be called when running Emscripten: WebGL functionality was not properly queried";
+
 void glBlendEquationSeparatei(GLuint buf, GLenum modeRGB, GLenum modeAlpha)
 {
-  Error("This function should not be called when running the Emscripten ZeroEditor, WebGL functioanlity was not properly queried");
+  Error(cInvalidWebGl);
 };
 
 void glBlendEquationi(GLuint buf, GLenum mode)
 {
-  Error("This function should not be called when running the Emscripten ZeroEditor, WebGL functioanlity was not properly queried");
+  Error(cInvalidWebGl);
 };
 
 void glBlendFuncSeparatei(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha)
 {
-  Error("This function should not be called when running the Emscripten ZeroEditor, WebGL functioanlity was not properly queried");
+  Error(cInvalidWebGl);
 };
 
 void glBlendFunci(GLuint buf, GLenum sfactor, GLenum dfactor)
 {
-  Error("This function should not be called when running the Emscripten ZeroEditor, WebGL functioanlity was not properly queried");
+  Error(cInvalidWebGl);
 };
 
 void glEnablei(GLenum cap, GLuint index)
 {
-  Error("This function should not be called when running the Emscripten ZeroEditor, WebGL functioanlity was not properly queried");
+  Error(cInvalidWebGl);
 };
 
 void glDisablei(GLenum cap, GLuint index)
 {
-  Error("This function should not be called when running the Emscripten ZeroEditor, WebGL functioanlity was not properly queried");
+  Error(cInvalidWebGl);
 };

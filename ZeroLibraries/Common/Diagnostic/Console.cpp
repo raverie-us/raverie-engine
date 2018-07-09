@@ -27,11 +27,18 @@ void DebuggerListener::Print(FilterType filterType, cstr message)
 //-------------------------------------------------------------------StdOutListener
 void StdOutListener::Print(FilterType filterType, cstr message)
 {
-  printf("%s", message);
-
-  //// As this is used for logging primarily on the build machine make
-  //// sure to flush every time so we have an up-to-date log file.
-  fflush(stdout);
+  // As this is used for logging primarily on the build machine make
+  // sure to flush every time so we have an up-to-date log file.
+  if (filterType == Filter::ErrorFilter)
+  {
+    fprintf(stderr, "%s", message);
+    fflush(stderr);
+  }
+  else
+  {
+    fprintf(stdout, "%s", message);
+    fflush(stdout);
+  }
 }
 
 Array<ConsoleListener*> ConsoleListeners;

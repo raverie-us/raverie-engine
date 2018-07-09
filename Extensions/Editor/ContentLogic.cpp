@@ -37,7 +37,7 @@ void LoadContentConfig(Cog* configCog)
   if(contentConfig)
     librarySearchPaths.InsertAt(0, contentConfig->LibraryDirectories.All());
 
-  CreateDirectory(FilePath::Combine(appCacheDirectory, applicationName));
+  CreateDirectoryAndParents(FilePath::Combine(appCacheDirectory, applicationName));
 
   //Add application directory resources if available
   if(!applicationDirectory.Empty())

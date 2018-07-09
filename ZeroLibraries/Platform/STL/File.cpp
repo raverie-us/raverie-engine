@@ -8,9 +8,6 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "Platform/File.hpp"
-
-#pragma warning(disable: 4996)
 
 namespace Zero
 {
@@ -24,10 +21,11 @@ cstr cBadFileMessage = "The file is missing, not in that location, or is protect
 
 uint GetFileSize(FILE* file)
 {
-  int fd = fileno(file);
-  struct stat st;
-  fstat(fd, &st);
-  return (uint)st.st_size;
+  long current = ftell(file);
+  fseek(file, 0L, SEEK_END);
+  uint size = (uint)ftell(file);
+  fseek(file, current, SEEK_SET);
+  return size;
 }
 
 cstr ToFileMode(FileMode::Enum mode)
@@ -91,6 +89,20 @@ bool File::Open(StringParam filePath, FileMode::Enum mode, FileAccessPattern::En
   return true;
 }
 
+void File::Open(OsHandle handle, FileMode::Enum mode)
+{
+  // Our OsHandle would be a FILE*.
+  Status status;
+  return Open(status, (FILE*)handle, mode);
+}
+
+void File::Open(Status& status, FILE* file, FileMode::Enum mode)
+{
+  ZeroGetPrivateData(FilePrivateData);
+  self->mHandle = file;
+  self->mFileSize = GetFileSize(self->mHandle);
+}
+
 void File::Close()
 {
   ZeroGetPrivateData(FilePrivateData);
@@ -106,7 +118,6 @@ bool File::IsOpen()
   ZeroGetPrivateData(FilePrivateData);
   return self->mHandle != NULL;
 }
-    
 
 File::~File()
 {
@@ -136,7 +147,7 @@ bool File::Seek(FilePosition pos, FileOrigin::Enum origin)
 {
   ZeroGetPrivateData(FilePrivateData);
   ErrorIf(self->mHandle == NULL, "File handle is not valid.");
-  int result = fseek(self->mHandle, (long)pos, ToOrigin(origin) );
+  int result = fseek(self->mHandle, (long)pos, ToOrigin(origin));
   // A result of '0' means success
   return (result == 0);
 }
@@ -152,7 +163,15 @@ size_t File::Read(Status& status, byte* data, size_t sizeInBytes)
 {
   ZeroGetPrivateData(FilePrivateData);
   ErrorIf(self->mHandle == NULL, "File handle is not valid.");
-  return fread(data, 1, sizeInBytes, self->mHandle);
+  size_t amount = fread(data, 1, sizeInBytes, self->mHandle);
+  if (amount != sizeInBytes && ferror(self->mHandle))
+    status.SetFailed("Error reading file data.");
+  return amount;
+}
+
+bool File::HasData(Status& status)
+{
+  return (s64)Tell() < (s64)CurrentFileSize();
 }
 
 void File::Flush()
@@ -160,6 +179,36 @@ void File::Flush()
   ZeroGetPrivateData(FilePrivateData);
   ErrorIf(self->mHandle == NULL, "File handle is not valid.");
   fflush(self->mHandle);
+}
+
+void File::Duplicate(Status& status, File& destinationFile)
+{
+  ZeroGetPrivateData(FilePrivateData);
+  ZeroGetObjectPrivateData(FilePrivateData, &destinationFile, other);
+
+  if (!self->mHandle || !other->mHandle)
+  {
+    status.SetFailed("File is not valid. Open a valid file before attemping file operations.");
+    return;
+  }
+
+  // Get this files data size in bytes
+  size_t fileSizeInBytes = (size_t)CurrentFileSize();
+  byte* buffer = new byte[fileSizeInBytes];
+
+  // Read this files data
+  size_t ret = Read(status, buffer, fileSizeInBytes);
+  WarnIf(ret != fileSizeInBytes, "Failed to duplicate original file");
+  if (status.Failed())
+  {
+    delete buffer;
+    return;
+  }
+
+  // Write the duplicate data into the other file
+  ret = destinationFile.Write(buffer, fileSizeInBytes);
+  delete buffer;
+  WarnIf(ret != fileSizeInBytes, "Failed to duplicate original file");
 }
 
 }//namespace Zero

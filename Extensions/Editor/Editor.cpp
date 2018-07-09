@@ -606,7 +606,7 @@ Widget* Editor::ShowBrowser(StringParam url, StringParam tabName)
 Widget* Editor::ShowMarket()
 {
   const char* cURL = "https://market.zeroengine.io/?q=products";
-  WebBrowserSetup setup(cURL, cWebBrowserDefaultSize, false, Vec4(0.2f, 0.2f, 0.2f, 1.0f));
+  WebBrowserSetup setup(cURL, cWebBrowserDefaultSize, IntVec2::cZero, false, Vec4(0.2f, 0.2f, 0.2f, 1.0f));
 
   WebBrowserWidget* browser = new WebBrowserWidget(this, setup);
   browser->SetName("Market");
@@ -619,7 +619,7 @@ Widget* Editor::ShowMarket()
 Widget* Editor::ShowChat()
 {
   const char* cURL = "https://dev.zeroengine.io/u/chat";
-  WebBrowserSetup setup(cURL, cWebBrowserDefaultSize, false, Vec4(0.2f, 0.2f, 0.2f, 1.0f));
+  WebBrowserSetup setup(cURL, cWebBrowserDefaultSize, IntVec2::cZero, false, Vec4(0.2f, 0.2f, 0.2f, 1.0f));
 
   WebBrowserWidget* browser = new WebBrowserWidget(this, setup);
   browser->SetName("Chat");
@@ -918,6 +918,9 @@ Status Editor::SaveAll(bool showNotify)
     DoNotify("Saved", "Project and all scripts saved.", "Disk");
 
   Tweakables::Save();
+
+  // On some platforms, to make files persist between runs we need to call this function.
+  PersistFiles();
 
   return Status();
 }

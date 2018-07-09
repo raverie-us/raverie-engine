@@ -178,6 +178,46 @@
         preRun: [],
         postRun: [],
         
+        preInit: function()
+        {
+          // Pull out url parameters and use them as argv/argc.
+          // We add a '-' to each command (left hand side of the '=').
+          var url = window.location.search.split('+').join(' ');
+
+          var params = {};
+          var tokens;
+          var re = /[?&]?([^=]+)(=([^&]*))?/g;
+
+          while (tokens = re.exec(url))
+          {
+            var command = decodeURIComponent(tokens[1]);
+            var value = tokens[3] ? decodeURIComponent(tokens[3]) : null;
+            Module.arguments.push('-' + command);
+            if (value)
+              Module.arguments.push(value);
+          }
+          
+          // Mount directories using IDBFS so they persist between runs.
+          var home = '/home';
+          FS.mount(IDBFS, {}, home);
+          
+          var data = '/Data';
+          FS.mkdir(data);
+          
+          var fallback = data + '/Fallback';
+          FS.mkdir(fallback);
+          FS.mount(IDBFS, {}, fallback);
+
+          console.log("Recalling files...");
+          FS.syncfs(true, function(err)
+          {
+            if (err)
+              console.error(err);
+            else
+              console.log("Finished recalling files");
+          });
+        },
+        
         print: function(text)
         {
           if (arguments.length > 1)

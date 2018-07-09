@@ -16,9 +16,9 @@ byte* ReadFileIntoMemory(cstr filePath, size_t& fileSize, size_t extra)
   if (!file.Open(filePath, FileMode::Read, FileAccessPattern::Sequential, FileShare::Read))
     return nullptr;
 
-  size_t fileSizeInBytes = (size_t)file.CurrentFileSize();
+  fileSize = (size_t)file.CurrentFileSize();
 
-  byte* fileBuffer = (byte*)zAllocate(fileSizeInBytes + extra);
+  byte* fileBuffer = (byte*)zAllocate(fileSize + extra);
   if (fileBuffer == nullptr)
   {
     ErrorIf(fileBuffer == nullptr, "Could not allocate enough memory for file '%s' into memory.", filePath);
@@ -26,19 +26,25 @@ byte* ReadFileIntoMemory(cstr filePath, size_t& fileSize, size_t extra)
   }
   else
   {
-    fileSize = fileSizeInBytes;
-
+    byte* end = fileBuffer + fileSize;
     byte* buffer = fileBuffer;
-    while (fileSizeInBytes != 0)
+    while (buffer < end)
     {
       Status status;
-      size_t amountRead = file.Read(status, buffer, fileSizeInBytes);
+      status.AssertOnFailure();
+      size_t amountToRead = end - buffer;
+      size_t amountRead = file.Read(status, buffer, amountToRead);
 
-      if (status.Failed() || amountRead == 0)
+      if (status.Failed())
+      {
+        zDeallocate(fileBuffer);
+        return nullptr;
+      }
+
+      if (amountRead != amountToRead)
         break;
 
       buffer += amountRead;
-      fileSizeInBytes -= amountRead;
     }
   }
 

@@ -58,4 +58,6 @@ target_sources(Networking
     ${CMAKE_CURRENT_LIST_DIR}/TcpSocketNo.cpp
     ${CMAKE_CURRENT_LIST_DIR}/WebRequest.cpp
     ${CMAKE_CURRENT_LIST_DIR}/WebRequest.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/WebServer.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/WebServer.hpp
 )

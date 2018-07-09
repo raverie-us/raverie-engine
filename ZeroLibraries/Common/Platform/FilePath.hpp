@@ -39,7 +39,7 @@ public:
   static String Combine(const StringRange** paths, uint count, StringRange extension);
   static String CombineWithExtension(StringRange path, StringRange fileName, StringRange ext);
 
-  /// Remove all different slashes
+  /// Remove all different slashes and strip trailing separators
   static String Normalize(StringRange path);
   /// Get a path info object
   static FilePathInfo GetPathInfo(StringRange path);
@@ -53,6 +53,10 @@ public:
   static StringRange GetDirectoryPath(StringRange path);
   /// Returns the name of the directory "A/B/File.txt" is "B"
   static StringRange GetDirectoryName(StringRange path);
+
+  // Internal
+
+  static StringRange FindLastDirectorySeparator(StringRange path);
 };
 
 }//namespace Zero

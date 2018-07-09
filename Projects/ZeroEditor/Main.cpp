@@ -28,6 +28,8 @@ int PlatformMain(const Array<String>& arguments)
   DebuggerListener debuggerOutput;
   Zero::Console::Add(&debuggerOutput);
 
+  FileSystemInitializer fileSystemInitializer(&EngineLibrary::PopulateVirtualFileSystem);
+
   //Mirror console output to a log file
   FileListener fileListener;
   Zero::Console::Add(&fileListener);
@@ -44,8 +46,6 @@ int PlatformMain(const Array<String>& arguments)
   CrashHandler::SetLoggingCallback(Zero::CrashLoggingCallback, &fileListener);
   CrashHandler::SetSendCrashReportCallback(Zero::SendCrashReport, NULL);
   CrashHandler::SetCrashStartCallback(Zero::CrashStartCallback, NULL);
-
-  FileSystemInitializer fileSystemInitializer(&EngineLibrary::PopulateVirtualFileSystem);
 
   Importer importer;
   ImporterResult::Type importResult = importer.CheckForImport();
