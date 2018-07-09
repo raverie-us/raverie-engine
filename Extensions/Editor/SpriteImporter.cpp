@@ -424,6 +424,12 @@ SpriteSource* SpriteSheetImporter::AddSpriteResource(StringParam name, Image& ou
   addContent.OnContentFileConflict = ContentFileConflict::FindNewName;
 
   ContentItem* newContentItem = Z::gContentSystem->AddContentItemToLibrary(status, addContent);
+  if(status.Failed())
+  {
+    DoNotifyError("Sprite Import Failed", status.Message);
+    return nullptr;
+  }
+
   SpriteSourceBuilder* builder = newContentItem->has(SpriteSourceBuilder);
 
   Vec2 origin = ComputeOrigin(mOrigin, frameSize.SizeX, frameSize.SizeY);
