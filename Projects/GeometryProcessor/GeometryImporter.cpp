@@ -256,13 +256,15 @@ void GeometryImporter::SingleMeshHierarchyEntry(HierarchyData& hierarchyData, ui
 
   if (mMeshDataMap.ContainsKey(meshIndex))
   {
-    hierarchyData.mMeshName = mMeshDataMap[meshIndex].mMeshName;
+    MeshData& meshData = mMeshDataMap[meshIndex];
+    hierarchyData.mMeshName = meshData.mMeshName;
+    hierarchyData.mPhysicsMeshName = meshData.mPhysicsMeshName;
   }
   else
   {
     MeshData data;
     data.mMeshTransform = hierarchyData.mLocalTransform;
-    hierarchyData.mMeshName = data.mMeshName = hierarchyData.mNodeName;
+    hierarchyData.mPhysicsMeshName = hierarchyData.mMeshName = data.mMeshName = hierarchyData.mNodeName;
     mMeshDataMap.Insert(meshIndex, data);
   }
 }

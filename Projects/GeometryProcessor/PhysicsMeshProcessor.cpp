@@ -31,6 +31,7 @@ void PhysicsMeshProcessor::BuildPhysicsMesh(String outputPath)
     GeometryResourceEntry& entry = mBuilder->Meshes[i];
     MeshData& meshData = mMeshDataMap[i];
     String physicsMeshFile = FilePath::CombineWithExtension(outputPath, entry.mName, extension);
+    meshData.mPhysicsMeshName = physicsMeshFile;
 
     BinaryFileSaver saver;
     Status status;
