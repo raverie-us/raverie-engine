@@ -250,9 +250,10 @@ void OperationQueue::Redo()
   if(!mRedoCommands.Empty())
   {
     Operation* first = &mRedoCommands.Front();
-    first->Redo();
     mRedoCommands.Erase(first);
     mCommands.PushBack(first);
+
+    first->Redo();
 
     OperationQueueEvent event(first);
     DispatchEvent(Events::OperationRedo, &event);
