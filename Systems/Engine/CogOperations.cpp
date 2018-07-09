@@ -196,7 +196,7 @@ Archetype* UploadToArchetype(OperationQueue* queue, Cog* cog, StringParam archet
     op->Redo();
   
     // Copy over tags to the new Archetype
-    if(currentArchetype)
+    if(currentArchetype && archetype)
     {
       TagList oldTags;
       currentArchetype->GetTags(oldTags);
