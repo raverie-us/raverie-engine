@@ -395,7 +395,13 @@ Type ClosestPointOnTriangleToPoint(Vec3Param trianglePointA,
   if(vc <= real(0.0) && d1 >= real(0.0) && d3 <= real(0.0))
   {
     //Closest point has barycentric coordinates (1-v,v,0)
-    real v = d1 / (d1 - d3);
+    real denom = d1 - d3;
+    // A and B are equal. Fallback to the line segment of AC. No other edge has to be checked for
+    // degeneracy as the line AC will always be valid and the vertex cases will catch anything else.
+    if(denom == 0)
+      return ClosestPointOnSegmentToPoint(trianglePointA, trianglePointC, point);
+
+    real v = d1 / denom;
     aToB *= v;
     aToB += trianglePointA;
     *point = aToB;
