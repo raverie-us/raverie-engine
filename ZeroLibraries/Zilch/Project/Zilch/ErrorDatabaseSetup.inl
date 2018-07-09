@@ -1477,3 +1477,12 @@
 
 }
 
+// PropertyTemporaryNotModifiable
+{
+  ErrorInfo& error = this->Errors.PushBack();
+  error.Error = "The property '%s' returns a temporary. Attempting to modify '%s' (or any nested members) will not have any effect.";
+  error.Name = "PropertyTemporaryNotModifiable";
+  error.Reason = "";
+
+}
+
