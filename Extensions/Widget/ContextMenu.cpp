@@ -618,6 +618,8 @@ void ContextMenu::RebuildUi()
   {
     entry->Create(this);
   }
+  // Resize since new ContextMenuItems were just created
+  SizeToContents();
 
   mDirty = false;
 }
