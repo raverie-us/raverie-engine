@@ -138,10 +138,6 @@ namespace Audio
         mFileLength = (float)Decoder->mSamplesPerChannel / SystemSampleRate;
         mChannels = Decoder->mChannels;
         mFrameCount = Decoder->mSamplesPerChannel;
-
-        // If not streaming, make the Samples buffer big enough to hold all the audio samples
-        if (!mStreaming)
-          Samples.Reserve(mFrameCount * mChannels);
       }
     }
   }

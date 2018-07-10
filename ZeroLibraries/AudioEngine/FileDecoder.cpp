@@ -194,6 +194,25 @@ namespace Audio
       // Decode a packet and check if we should keep looping
       running = DecodePacket();
     }
+
+    // We should only reach here if we are not streaming and we are done decoding
+
+    // Destroy any alive decoders
+    for (short i = 0; i < mChannels; ++i)
+    {
+      if (Decoders[i])
+      {
+        opus_decoder_destroy(Decoders[i]);
+        Decoders[i] = nullptr;
+      }
+    }
+
+    // If there is data in the buffer, delete it
+    if (mInputFileData)
+    {
+      delete[] mInputFileData;
+      mInputFileData = nullptr;
+    }
   }
 
   //************************************************************************************************
