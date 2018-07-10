@@ -138,7 +138,9 @@ void ExportContent(ProjectSettings* project)
   editor->SaveAll(true);
   BuildContent(project);
 
-  ExportContentFolders(project->mOwner);
+  Exporter* exporter = Exporter::GetInstance();
+  exporter->mProjectCog = project->GetOwner();
+  exporter->ExportContent(exporter->mDefaultTargets);
 }
 
 void ShowProjectFolder(ProjectSettings* project)
