@@ -110,7 +110,7 @@ StreamStatus::Enum AudioInputOutput::InitializeStream(StreamTypes::Enum whichStr
   want.freq = 48000;
   want.format = AUDIO_F32;
   want.channels = 2;
-  want.samples = 512;
+  want.samples = 1024;
   want.callback = SDLCallback;
   want.userdata = &data;
 

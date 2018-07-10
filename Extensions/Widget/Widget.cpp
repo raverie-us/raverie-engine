@@ -514,6 +514,38 @@ bool Widget::GetClipping()
   return mClipping;
 }
 
+bool GetZIndexDepthFirst(Widget* widget, Widget* target, int* zindex)
+{
+  if (!widget)
+    return false;
+
+  Composite* composite = widget->GetSelfAsComposite();
+  if (composite)
+  {
+    forRange(Widget& child, composite->GetChildren())
+    {
+      if (&child == target)
+        return true;
+      else
+        ++*zindex;
+
+      // If we found the child, stop execution and return all the way up.
+      if (GetZIndexDepthFirst(&child, target, zindex))
+        return true;
+    }
+  }
+  return false;
+}
+
+int Widget::GetZIndex()
+{
+  // This is a potentially expensive function to call because it walks
+  // all widgets until we find our own widget (from the root).
+  int zindex = 0;
+  GetZIndexDepthFirst(GetRootWidget(), this, &zindex);
+  return zindex;
+}
+
 void Widget::BuildLocalMatrix(Mat4& output)
 {
   Build2dTransform(output, this->mTranslation, this->mAngle);

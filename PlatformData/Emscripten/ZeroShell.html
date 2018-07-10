@@ -171,6 +171,14 @@
         }, 1000);
       };
       
+      // We use this helper to return strings back to C++.
+      function mallocStringUTF8(string)
+      {
+        var lengthBytes = lengthBytesUTF8(string) + 1;
+        var stringOnWasmHeap = _malloc(lengthBytes);
+        return stringToUTF8(string, stringOnWasmHeap, lengthBytes);
+      }
+      
       var downloadingDataText = 'Downloading data...';
       
       var Module =
