@@ -42,6 +42,11 @@ void AddVirtualFileSystemEntry(StringParam absolutePath, DataBlock* stealData, T
 {
 }
 
+bool PersistFiles()
+{
+  return false;
+}
+
 String GetWorkingDirectory()
 {
   std::error_code error;

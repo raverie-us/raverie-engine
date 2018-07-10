@@ -108,10 +108,19 @@ WebBrowserWidget::WebBrowserWidget(Composite* composite, const WebBrowserSetup& 
 void WebBrowserWidget::UpdateTransform()
 {
   Composite::UpdateTransform();
-  IntVec2 newSize = Math::ToIntVec2(mBrowserView->GetSize());
-  IntVec2 clientPosition = Math::ToIntVec2(mBrowserView->GetScreenPosition());
-  mBrowser->SetSize(newSize);
-  mBrowser->SetClientPosition(clientPosition);
+
+  bool isVisible = GetActive() && GetVisible();
+
+  if (isVisible)
+  {
+    IntVec2 newSize = Math::ToIntVec2(mBrowserView->GetSize());
+    IntVec2 clientPosition = Math::ToIntVec2(mBrowserView->GetScreenPosition());
+    mBrowser->SetSize(newSize);
+    mBrowser->SetClientPosition(clientPosition);
+  }
+  
+  if (isVisible != mBrowser->GetVisible())
+    mBrowser->SetVisible(isVisible);
 }
 
 void WebBrowserWidget::OnEngineUpdate(UpdateEvent* event)

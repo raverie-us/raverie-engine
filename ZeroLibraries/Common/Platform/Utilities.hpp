@@ -77,6 +77,7 @@ namespace WebResponseCode
     SeeOther                      = 303,
     NotModified                   = 304,
     TemporaryRedirect             = 307,
+    PermanentRedirect             = 308,
     // Client Error:
     BadRequest                    = 400,
     AccessDenied                  = 401,

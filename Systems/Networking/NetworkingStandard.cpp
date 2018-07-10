@@ -16,6 +16,7 @@ namespace Zero
 ZilchDefineRange(EventRange);
 ZilchDefineRange(NetUserRange);
 ZilchDefineRange(NetHostRange);
+ZilchDefineRange(WebServerHeaderRange);
 
 // Enums
 ZilchDefineEnum(TcpSocketBind);
@@ -42,6 +43,7 @@ ZilchDefineEnum(DisconnectReason);
 ZilchDefineEnum(UserConnectResponse);
 ZilchDefineEnum(TransferMode);
 ZilchDefineEnum(Receipt);
+ZilchDefineEnum(WebServerRequestMethod);
 
 // Arrays
 ZeroDefineArrayType(NetPropertyInfoArray);
@@ -55,6 +57,7 @@ ZilchDefineStaticLibrary(NetworkingLibrary)
   ZilchInitializeRange(EventRange);
   ZilchInitializeRange(NetUserRange);
   ZilchInitializeRange(NetHostRange);
+  ZilchInitializeRange(WebServerHeaderRange);
 
   // Enums
   ZilchInitializeEnum(TcpSocketBind);
@@ -81,6 +84,7 @@ ZilchDefineStaticLibrary(NetworkingLibrary)
   ZilchInitializeEnum(UserConnectResponse);
   ZilchInitializeEnum(TransferMode);
   ZilchInitializeEnum(Receipt);
+  ZilchInitializeEnum(WebServerRequestMethod);
 
   // Meta Arrays
   ZeroInitializeArrayTypeAs(NetPropertyInfoArray, "NetPropertyInfos");
@@ -90,6 +94,7 @@ ZilchDefineStaticLibrary(NetworkingLibrary)
   ZilchInitializeType(ReceivedDataEvent);
   ZilchInitializeType(SendableEvent);
   ZilchInitializeType(WebResponseEvent);
+  ZilchInitializeType(WebServerRequestEvent);
   ZilchInitializeType(AcquireNetHostInfo);
   ZilchInitializeType(NetHostUpdate);
   ZilchInitializeType(NetHostListUpdate);

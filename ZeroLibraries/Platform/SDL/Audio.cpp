@@ -110,7 +110,7 @@ StreamStatus::Enum AudioInputOutput::InitializeStream(StreamTypes::Enum whichStr
   want.freq = 48000;
   want.format = AUDIO_F32;
   want.channels = 2;
-  want.samples = 4096;
+  want.samples = 512;
   want.callback = SDLCallback;
   want.userdata = &data;
 
@@ -220,7 +220,7 @@ unsigned AudioInputOutput::GetStreamSampleRate(StreamTypes::Enum whichStream)
 //**************************************************************************************************
 float AudioInputOutput::GetBufferSizeMultiplier()
 {
-  return 0.08f;
+  return 0.04f;
 }
 
 //--------------------------------------------------------------------------------------- MIDI Input
