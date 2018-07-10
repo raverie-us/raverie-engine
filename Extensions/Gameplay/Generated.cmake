@@ -52,4 +52,7 @@ target_sources(Gameplay
     ${CMAKE_CURRENT_LIST_DIR}/WebBrowserWidget.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Zero.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Zero.hpp
+#Platform Export Targets
+    ${CMAKE_CURRENT_LIST_DIR}/WindowsExportTarget.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/EmscriptenExportTarget.cpp
 )
