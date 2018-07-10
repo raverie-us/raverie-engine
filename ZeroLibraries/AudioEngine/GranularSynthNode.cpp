@@ -655,12 +655,7 @@ namespace Audio
   void GranularSynthNode::SetGrainPanningValue(float panValue)
   {
     if (!Threaded)
-    {
-      panValue = Math::Max(panValue, -1.0f);
-      panValue = Math::Min(panValue, 1.0f);
-
       AddTaskForSibling(&GranularSynthNode::SetGrainPanningValue, panValue);
-    }
 
     mGrainPanningValue = panValue;
   }

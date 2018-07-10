@@ -198,7 +198,7 @@ void SoundTag::SetVolume(float value)
 void SoundTag::InterpolateVolume(float value, float time)
 {
   if (mTagObject)
-    mTagObject->SetVolume(Math::Max(value, 0.0f), time);
+    mTagObject->SetVolume(Math::Clamp(value, 0.0f, Audio::MaxVolumeValue), Math::Max(time, 0.0f));
 }
 
 //**************************************************************************************************
@@ -220,7 +220,8 @@ void SoundTag::SetDecibels(float decibels)
 void SoundTag::InterpolateDecibels(float decibels, float interpolationTime)
 {
   if (mTagObject)
-    mTagObject->SetVolume(Z::gSound->DecibelsToVolume(decibels), interpolationTime);
+    mTagObject->SetVolume(Math::Clamp(Z::gSound->DecibelsToVolume(decibels), 0.0f, Audio::MaxVolumeValue), 
+      Math::Max(interpolationTime, 0.0f));
 }
 
 //**************************************************************************************************
@@ -236,7 +237,7 @@ float SoundTag::GetEQLowPassGain()
 void SoundTag::SetEQLowPassGain(float gain)
 {
   if (mTagObject)
-    mTagObject->SetBelow80HzGain(Math::Max(gain, 0.0f));
+    mTagObject->SetBelow80HzGain(Math::Clamp(gain, 0.0f, Audio::MaxVolumeValue));
 }
 
 //**************************************************************************************************
@@ -252,7 +253,7 @@ float SoundTag::GetEQBand1Gain()
 void SoundTag::SetEQBand1Gain(float gain)
 {
   if (mTagObject)
-    mTagObject->Set150HzGain(Math::Max(gain, 0.0f));
+    mTagObject->Set150HzGain(Math::Clamp(gain, 0.0f, Audio::MaxVolumeValue));
 }
 
 //**************************************************************************************************
@@ -268,7 +269,7 @@ float SoundTag::GetEQBand2Gain()
 void SoundTag::SetEQBand2Gain(float gain)
 {
   if (mTagObject)
-    mTagObject->Set600HzGain(Math::Max(gain, 0.0f));
+    mTagObject->Set600HzGain(Math::Clamp(gain, 0.0f, Audio::MaxVolumeValue));
 }
 
 //**************************************************************************************************
@@ -284,7 +285,7 @@ float SoundTag::GetEQBand3Gain()
 void SoundTag::SetEQBand3Gain(float gain)
 {
   if (mTagObject)
-    mTagObject->Set2500HzGain(Math::Max(gain, 0.0f));
+    mTagObject->Set2500HzGain(Math::Clamp(gain, 0.0f, Audio::MaxVolumeValue));
 }
 
 //**************************************************************************************************
@@ -300,7 +301,7 @@ float SoundTag::GetEQHighPassGain()
 void SoundTag::SetEQHighPassGain(float gain)
 {
   if (mTagObject)
-    mTagObject->SetAbove5000HzGain(Math::Max(gain, 0.0f));
+    mTagObject->SetAbove5000HzGain(Math::Clamp(gain, 0.0f, Audio::MaxVolumeValue));
 }
 
 //**************************************************************************************************
@@ -308,9 +309,10 @@ void SoundTag::EQSetAllBands(float below80Hz, float at150Hz, float at600Hz,
   float at2500Hz, float above5000Hz, float timeToInterpolate)
 {
   if (mTagObject)
-    mTagObject->InterpolateAllBands(new Audio::TagObject::GainValues(Math::Max(below80Hz, 0.0f), 
-      Math::Max(at150Hz, 0.0f), Math::Max(at600Hz, 0.0f), Math::Max(at2500Hz, 0.0f), 
-      Math::Max(above5000Hz, 0.0f)), timeToInterpolate);
+    mTagObject->InterpolateAllBands(new Audio::TagObject::GainValues(
+      Math::Clamp(below80Hz, 0.0f, Audio::MaxVolumeValue), Math::Clamp(at150Hz, 0.0f, Audio::MaxVolumeValue), 
+      Math::Clamp(at600Hz, 0.0f, Audio::MaxVolumeValue), Math::Clamp(at2500Hz, 0.0f, Audio::MaxVolumeValue),
+      Math::Clamp(above5000Hz, 0.0f, Audio::MaxVolumeValue)), Math::Max(timeToInterpolate, 0.0f));
 }
 
 //**************************************************************************************************
@@ -326,7 +328,7 @@ float SoundTag::GetCompressorThreshold()
 void SoundTag::SetCompressorThreshold(float decibels)
 {
   if (mTagObject)
-    mTagObject->SetCompressorThreshold(decibels);
+    mTagObject->SetCompressorThreshold(Math::Clamp(decibels, Audio::MinDecibelsValue, Audio::MaxDecibelsValue));
 }
 
 //**************************************************************************************************
@@ -458,7 +460,7 @@ float SoundTag::GetInstanceLimit()
 void SoundTag::SetInstanceLimit(float limit)
 {
   if (mTagObject)
-    mTagObject->SetInstanceLimit((int)limit);
+    mTagObject->SetInstanceLimit((int)Math::Max(limit, 0.0f));
 }
 
 //**************************************************************************************************

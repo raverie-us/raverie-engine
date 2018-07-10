@@ -434,7 +434,7 @@ int CustomAudioNode::GetChannels()
 //**************************************************************************************************
 void CustomAudioNode::SetChannels(int channels)
 {
-  GetNode()->SetNumberOfChannels(Math::Clamp(channels, 0, 8));
+  GetNode()->SetNumberOfChannels(Math::Clamp(channels, 0, (int)Audio::MaxChannels));
 }
 
 //**************************************************************************************************
@@ -638,7 +638,7 @@ void GeneratedWaveNode::SetVolume(float volume)
 //**************************************************************************************************
 void GeneratedWaveNode::InterpolateVolume(float volume, float time)
 {
-  mVolume = Math::Max(volume, 0.0f);
+  mVolume = Math::Clamp(volume, 0.0f, Audio::MaxVolumeValue);
 
   if (mNode)
     ((Audio::SoundInstanceNode*)mNode)->SetVolume(mVolume, time);
@@ -659,7 +659,7 @@ void GeneratedWaveNode::SetDecibels(float decibels)
 //**************************************************************************************************
 void GeneratedWaveNode::InterpolateDecibels(float decibels, float time)
 {
-  mVolume = Z::gSound->DecibelsToVolume(decibels);
+  mVolume = Math::Clamp(Z::gSound->DecibelsToVolume(decibels), 0.0f, Audio::MaxVolumeValue);
 
   if (mNode)
     ((Audio::SoundInstanceNode*)mNode)->SetVolume(mVolume, time);
@@ -809,7 +809,7 @@ void VolumeNode::SetVolume(float volume)
 //**************************************************************************************************
 void VolumeNode::InterpolateVolume(float volume, float time)
 {
-  GetNode()->SetVolume(Math::Max(volume, 0.0f), time);
+  GetNode()->SetVolume(Math::Clamp(volume, 0.0f, Audio::MaxVolumeValue), time);
 }
 
 //**************************************************************************************************
@@ -827,7 +827,7 @@ void VolumeNode::SetDecibels(float volumeDB)
 //**************************************************************************************************
 void VolumeNode::InterpolateDecibels(float volumeDB, float time)
 {
-  GetNode()->SetVolume(Z::gSound->DecibelsToVolume(volumeDB), time);
+  GetNode()->SetVolume(Math::Clamp(Z::gSound->DecibelsToVolume(volumeDB), 0.0f, Audio::MaxVolumeValue), time);
 }
 
 //**************************************************************************************************
@@ -886,7 +886,7 @@ void PanningNode::SetLeftVolume(float volume)
 //**************************************************************************************************
 void PanningNode::InterpolateLeftVolume(float volume, float time)
 {
-  GetNode()->SetLeftVolume(Math::Max(volume, 0.0f), time);
+  GetNode()->SetLeftVolume(Math::Clamp(volume, 0.0f, Audio::MaxVolumeValue), time);
 }
 
 //**************************************************************************************************
@@ -904,14 +904,14 @@ void PanningNode::SetRightVolume(float volume)
 //**************************************************************************************************
 void PanningNode::InterpolateRightVolume(float volume, float time)
 {
-  GetNode()->SetRightVolume(Math::Max(volume, 0.0f), time);
+  GetNode()->SetRightVolume(Math::Clamp(volume, 0.0f, Audio::MaxVolumeValue), time);
 }
 
 //**************************************************************************************************
 void PanningNode::InterpolateVolumes(float leftVolume, float rightVolume, float time)
 {
-  GetNode()->SetLeftVolume(Math::Max(leftVolume, 0.0f), time);
-  GetNode()->SetRightVolume(Math::Max(rightVolume, 0.0f), time);
+  GetNode()->SetLeftVolume(Math::Clamp(leftVolume, 0.0f, Audio::MaxVolumeValue), time);
+  GetNode()->SetRightVolume(Math::Clamp(rightVolume, 0.0f, Audio::MaxVolumeValue), time);
 }
 
 //**************************************************************************************************
@@ -956,7 +956,8 @@ void PitchNode::SetPitch(float pitchRatio)
 //**************************************************************************************************
 void PitchNode::InterpolatePitch(float pitchRatio, float time)
 {
-  GetNode()->SetPitch(Z::gSound->PitchToSemitones(pitchRatio), time);
+  GetNode()->SetPitch(Math::Clamp(Z::gSound->PitchToSemitones(pitchRatio), Audio::MinSemitonesValue,
+    Audio::MaxSemitonesValue), time);
 }
 
 //**************************************************************************************************
@@ -974,7 +975,7 @@ void PitchNode::SetSemitones(float pitchSemitones)
 //**************************************************************************************************
 void PitchNode::InterpolateSemitones(float pitchSemitones, float time)
 {
-  GetNode()->SetPitch(pitchSemitones, time);
+  GetNode()->SetPitch(Math::Clamp(pitchSemitones, Audio::MinSemitonesValue, Audio::MaxSemitonesValue), time);
 }
 
 //**************************************************************************************************
@@ -1136,7 +1137,7 @@ float EqualizerNode::GetLowPassGain()
 //**************************************************************************************************
 void EqualizerNode::SetLowPassGain(float gain)
 {
-  GetNode()->SetBelow80HzGain(Math::Max(gain, 0.0f));
+  GetNode()->SetBelow80HzGain(Math::Clamp(gain, 0.0f, Audio::MaxVolumeValue));
 }
 
 //**************************************************************************************************
@@ -1148,7 +1149,7 @@ float EqualizerNode::GetHighPassGain()
 //**************************************************************************************************
 void EqualizerNode::SetHighPassGain(float gain)
 {
-  GetNode()->SetAbove5000HzGain(Math::Max(gain, 0.0f));
+  GetNode()->SetAbove5000HzGain(Math::Clamp(gain, 0.0f, Audio::MaxVolumeValue));
 }
 
 //**************************************************************************************************
@@ -1160,7 +1161,7 @@ float EqualizerNode::GetBand1Gain()
 //**************************************************************************************************
 void EqualizerNode::SetBand1Gain(float gain)
 {
-  GetNode()->Set150HzGain(Math::Max(gain, 0.0f));
+  GetNode()->Set150HzGain(Math::Clamp(gain, 0.0f, Audio::MaxVolumeValue));
 }
 
 //**************************************************************************************************
@@ -1172,7 +1173,7 @@ float EqualizerNode::GetBand2Gain()
 //**************************************************************************************************
 void EqualizerNode::SetBand2Gain(float gain)
 {
-  GetNode()->Set600HzGain(Math::Max(gain, 0.0f));
+  GetNode()->Set600HzGain(Math::Clamp(gain, 0.0f, Audio::MaxVolumeValue));
 }
 
 //**************************************************************************************************
@@ -1184,15 +1185,17 @@ float EqualizerNode::GetBand3Gain()
 //**************************************************************************************************
 void EqualizerNode::SetBand3Gain(float gain)
 {
-  GetNode()->Set2500HzGain(Math::Max(gain, 0.0f));
+  GetNode()->Set2500HzGain(Math::Clamp(gain, 0.0f, Audio::MaxVolumeValue));
 }
 
 //**************************************************************************************************
 void EqualizerNode::InterpolateAllBands(float lowPass, float band1, float band2, float band3, 
   float highPass, float timeToInterpolate)
 {
-  GetNode()->InterpolateBands(Audio::EqualizerBandGains(Math::Max(lowPass, 0.0f), Math::Max(band1, 0.0f), 
-    Math::Max(band2, 0.0f), Math::Max(band3, 0.0f), Math::Max(highPass, 0.0f)), timeToInterpolate);
+  GetNode()->InterpolateBands(Audio::EqualizerBandGains(Math::Clamp(lowPass, 0.0f, Audio::MaxVolumeValue), 
+    Math::Clamp(band1, 0.0f, Audio::MaxVolumeValue), Math::Clamp(band2, 0.0f, Audio::MaxVolumeValue), 
+    Math::Clamp(band3, 0.0f, Audio::MaxVolumeValue), Math::Clamp(highPass, 0.0f, Audio::MaxVolumeValue)), 
+    timeToInterpolate);
 }
 
 //**************************************************************************************************
@@ -1232,7 +1235,7 @@ float ReverbNode::GetLength()
 //**************************************************************************************************
 void ReverbNode::SetLength(float time)
 {
-  GetNode()->SetTime(Math::Max(time, 0.0f) * 1000);
+  GetNode()->SetTime(Math::Clamp(time, 0.0f, 100.0f) * 1000);
 }
 
 //**************************************************************************************************
@@ -1708,7 +1711,7 @@ float ExpanderNode::GetInputGainDecibels()
 //**************************************************************************************************
 void ExpanderNode::SetInputGainDecibels(float dB)
 {
-  GetNode()->SetInputGain(dB);
+  GetNode()->SetInputGain(Math::Clamp(dB, Audio::MinDecibelsValue, Audio::MaxDecibelsValue));
 }
 
 //**************************************************************************************************
@@ -1720,7 +1723,7 @@ float ExpanderNode::GetThresholdDecibels()
 //**************************************************************************************************
 void ExpanderNode::SetThresholdDecibels(float dB)
 {
-  GetNode()->SetThreshold(dB);
+  GetNode()->SetThreshold(Math::Clamp(dB, Audio::MinDecibelsValue, Audio::MaxDecibelsValue));
 }
 
 //**************************************************************************************************
@@ -1756,7 +1759,7 @@ float ExpanderNode::GetRatio()
 //**************************************************************************************************
 void ExpanderNode::SetRatio(float ratio)
 {
-  GetNode()->SetRatio(ratio);
+  GetNode()->SetRatio(Math::Clamp(ratio, -10.0f, 10.0f));
 }
 
 //**************************************************************************************************
@@ -1768,7 +1771,7 @@ float ExpanderNode::GetOutputGainDecibels()
 //**************************************************************************************************
 void ExpanderNode::SetOutputGainDecibels(float dB)
 {
-  GetNode()->SetOutputGain(dB);
+  GetNode()->SetOutputGain(Math::Clamp(dB, Audio::MinDecibelsValue, Audio::MaxDecibelsValue));
 }
 
 //**************************************************************************************************
@@ -1780,7 +1783,7 @@ float ExpanderNode::GetKneeWidth()
 //**************************************************************************************************
 void ExpanderNode::SetKneeWidth(float knee)
 {
-  GetNode()->SetKneeWidth(knee);
+  GetNode()->SetKneeWidth(Math::Clamp(knee, 0.0f, 100.0f));
 }
 
 //**************************************************************************************************
@@ -1901,7 +1904,7 @@ float AddNoiseNode::GetAdditiveGain()
 //**************************************************************************************************
 void AddNoiseNode::SetAdditiveGain(float decibels)
 {
-  GetNode()->SetAdditiveNoiseGainDB(decibels);
+  GetNode()->SetAdditiveNoiseGainDB(Math::Clamp(decibels, Audio::MinDecibelsValue, Audio::MaxDecibelsValue));
 }
 
 //**************************************************************************************************
@@ -1913,7 +1916,7 @@ float AddNoiseNode::GetMultiplicativeGain()
 //**************************************************************************************************
 void AddNoiseNode::SetMultiplicativeGain(float decibels)
 {
-  GetNode()->SetMultipleNoiseGainDB(decibels);
+  GetNode()->SetMultipleNoiseGainDB(Math::Clamp(decibels, Audio::MinDecibelsValue, Audio::MaxDecibelsValue));
 }
 
 //**************************************************************************************************
@@ -2031,7 +2034,7 @@ void AdditiveSynthNode::RemoveAllHarmonics()
 //**************************************************************************************************
 void AdditiveSynthNode::NoteOn(float midiNote, float volume)
 {
-  GetNode()->NoteOn((int)midiNote, Math::Max(volume, 0.0f));
+  GetNode()->NoteOn((int)midiNote, Math::Clamp(volume, 0.0f, Audio::MaxVolumeValue));
 }
 
 //**************************************************************************************************
@@ -2155,7 +2158,7 @@ float MicrophoneInputNode::GetVolume()
 //**************************************************************************************************
 void MicrophoneInputNode::SetVolume(float volume)
 {
-  GetNode()->SetVolume(Math::Max(volume, 0.0f));
+  GetNode()->SetVolume(Math::Clamp(volume, 0.0f, Audio::MaxVolumeValue));
 }
 
 //**************************************************************************************************
@@ -2226,7 +2229,7 @@ void GranularSynthNode::Stop()
 //**************************************************************************************************
 void GranularSynthNode::SetSound(HandleOf<Sound> sound, float startTime, float stopTime)
 {
-  GetNode()->SetAsset(sound->mSoundAsset, startTime, stopTime);
+  GetNode()->SetAsset(sound->mSoundAsset, Math::Max(startTime, 0.0f), Math::Max(stopTime, 0.0f));
 }
 
 //**************************************************************************************************
@@ -2238,7 +2241,7 @@ float GranularSynthNode::GetGrainVolume()
 //**************************************************************************************************
 void GranularSynthNode::SetGrainVolume(float volume)
 {
-  GetNode()->SetGrainVolume(volume);
+  GetNode()->SetGrainVolume(Math::Clamp(volume, 0.0f, Audio::MaxVolumeValue));
 }
 
 //**************************************************************************************************
@@ -2250,7 +2253,7 @@ float GranularSynthNode::GetGrainVolumeVariance()
 //**************************************************************************************************
 void GranularSynthNode::SetGrainVolumeVariance(float variance)
 {
-  GetNode()->SetGrainVolumeVariance(variance);
+  GetNode()->SetGrainVolumeVariance(Math::Clamp(variance, 0.0f, Audio::MaxVolumeValue));
 }
 
 //**************************************************************************************************
@@ -2262,7 +2265,7 @@ int GranularSynthNode::GetGrainDelay()
 //**************************************************************************************************
 void GranularSynthNode::SetGrainDelay(int delayMS)
 {
-  GetNode()->SetGrainDelay(delayMS);
+  GetNode()->SetGrainDelay(Math::Max(delayMS, 0));
 }
 
 //**************************************************************************************************
@@ -2274,7 +2277,7 @@ int GranularSynthNode::GetGrainDelayVariance()
 //**************************************************************************************************
 void GranularSynthNode::SetGrainDelayVariance(int delayVarianceMS)
 {
-  GetNode()->SetGrainDelayVariance(delayVarianceMS);
+  GetNode()->SetGrainDelayVariance(Math::Max(delayVarianceMS, 0));
 }
 
 //**************************************************************************************************
@@ -2286,7 +2289,7 @@ int GranularSynthNode::GetGrainLength()
 //**************************************************************************************************
 void GranularSynthNode::SetGrainLength(int lengthMS)
 {
-  GetNode()->SetGrainLength(lengthMS);
+  GetNode()->SetGrainLength(Math::Max(lengthMS, 0));
 }
 
 //**************************************************************************************************
@@ -2298,7 +2301,7 @@ int GranularSynthNode::GetGrainLengthVariance()
 //**************************************************************************************************
 void GranularSynthNode::SetGrainLengthVariance(int lengthVarianceMS)
 {
-  GetNode()->SetGrainLengthVariance(lengthVarianceMS);
+  GetNode()->SetGrainLengthVariance(Math::Max(lengthVarianceMS, 0));
 }
 
 //**************************************************************************************************
@@ -2310,7 +2313,7 @@ float GranularSynthNode::GetGrainResampleRate()
 //**************************************************************************************************
 void GranularSynthNode::SetGrainResampleRate(float resampleRate)
 {
-  GetNode()->SetGrainResampleRate(resampleRate);
+  GetNode()->SetGrainResampleRate(Math::Clamp(resampleRate, -mMaxResampleValue, mMaxResampleValue));
 }
 
 //**************************************************************************************************
@@ -2322,7 +2325,7 @@ float GranularSynthNode::GetGrainResampleRateVariance()
 //**************************************************************************************************
 void GranularSynthNode::SetGrainResampleRateVariance(float resampleVariance)
 {
-  GetNode()->SetGrainResampleRateVariance(resampleVariance);
+  GetNode()->SetGrainResampleRateVariance(Math::Clamp(resampleVariance, 0.0f, mMaxResampleValue));
 }
 
 //**************************************************************************************************
@@ -2334,7 +2337,7 @@ float GranularSynthNode::GetBufferScanRate()
 //**************************************************************************************************
 void GranularSynthNode::SetBufferScanRate(float bufferRate)
 {
-  GetNode()->SetBufferScanRate(bufferRate);
+  GetNode()->SetBufferScanRate(Math::Clamp(bufferRate, -mMaxResampleValue, mMaxResampleValue));
 }
 
 //**************************************************************************************************
@@ -2346,7 +2349,7 @@ float GranularSynthNode::GetGrainPanningValue()
 //**************************************************************************************************
 void GranularSynthNode::SetGrainPanningValue(float panValue)
 {
-  GetNode()->SetGrainPanningValue(panValue);
+  GetNode()->SetGrainPanningValue(Math::Clamp(panValue, -1.0f, 1.0f));
 }
 
 //**************************************************************************************************
@@ -2358,7 +2361,7 @@ float GranularSynthNode::GetGrainPanningVariance()
 //**************************************************************************************************
 void GranularSynthNode::SetGrainPanningVariance(float panValueVariance)
 {
-  GetNode()->SetGrainPanningVariance(panValueVariance);
+  GetNode()->SetGrainPanningVariance(Math::Clamp(panValueVariance, 0.0f, 1.0f));
 }
 
 //**************************************************************************************************
@@ -2370,7 +2373,7 @@ float GranularSynthNode::GetRandomLocationValue()
 //**************************************************************************************************
 void GranularSynthNode::SetRandomLocationValue(float randomLocationValue)
 {
-  GetNode()->SetRandomLocationValue(randomLocationValue);
+  GetNode()->SetRandomLocationValue(Math::Clamp(randomLocationValue, 0.0f, 1.0f));
 }
 
 //**************************************************************************************************
@@ -2411,7 +2414,7 @@ int GranularSynthNode::GetWindowAttack()
 //**************************************************************************************************
 void GranularSynthNode::SetWindowAttack(int attackMS)
 {
-  GetNode()->SetWindowAttack(attackMS);
+  GetNode()->SetWindowAttack(Math::Max(attackMS, 0));
 }
 
 //**************************************************************************************************
@@ -2423,7 +2426,7 @@ int GranularSynthNode::GetWindowRelease()
 //**************************************************************************************************
 void GranularSynthNode::SetWindowRelease(int releaseMS)
 {
-  GetNode()->SetWindowRelease(releaseMS);
+  GetNode()->SetWindowRelease(Math::Max(releaseMS, 0));
 }
 
 //**************************************************************************************************

@@ -286,7 +286,7 @@ void SoundEmitter::SetVolume(float volume)
 //**************************************************************************************************
 void SoundEmitter::InterpolateVolume(float volume, float interpolationTime)
 {
-  mVolume = Math::Max(volume, 0.0f);
+  mVolume = Math::Clamp(volume, 0.0f, Audio::MaxVolumeValue);
 
   if (mVolumeNode)
     mVolumeNode->SetVolume(mVolume, interpolationTime);
@@ -307,7 +307,7 @@ void SoundEmitter::SetDecibels(float decibels)
 //**************************************************************************************************
 void SoundEmitter::InterpolateDecibels(float decibels, float interpolationTime)
 {
-  mVolume = Z::gSound->DecibelsToVolume(decibels);
+  mVolume = Math::Clamp(Z::gSound->DecibelsToVolume(decibels), 0.0f, Audio::MaxVolumeValue);
 
   if (mVolumeNode)
     mVolumeNode->SetVolume(mVolume, interpolationTime);
@@ -328,7 +328,7 @@ void SoundEmitter::SetPitch(float pitch)
 //**************************************************************************************************
 void SoundEmitter::InterpolatePitch(float pitch, float interpolationTime)
 {
-  mPitch = pitch;
+  mPitch = Math::Clamp(pitch, Audio::MinPitchValue, Audio::MaxPitchValue);
 
   if (mPitchNode)
     mPitchNode->SetPitch(Z::gSound->PitchToSemitones(mPitch), interpolationTime);
@@ -349,7 +349,7 @@ void SoundEmitter::SetSemitones(float pitch)
 //**************************************************************************************************
 void SoundEmitter::InterpolateSemitones(float pitch, float interpolationTime)
 {
-  mPitch = Z::gSound->SemitonesToPitch(pitch);
+  mPitch = Math::Clamp(Z::gSound->SemitonesToPitch(pitch), Audio::MinPitchValue, Audio::MaxPitchValue);
 
   if (mPitchNode)
     mPitchNode->SetPitch(pitch, interpolationTime);
@@ -446,7 +446,7 @@ float SoundEmitter::GetRearVolume()
 //**************************************************************************************************
 void SoundEmitter::SetRearVolume(float minimumVolume)
 {
-  mRearVolume = Math::Max(minimumVolume, 0.0f);
+  mRearVolume = Math::Clamp(minimumVolume, 0.0f, Audio::MaxVolumeValue);
   if (mEmitterObject)
     mEmitterObject->SetDirectionalAngle(mEmitAngle, mRearVolume);
 }

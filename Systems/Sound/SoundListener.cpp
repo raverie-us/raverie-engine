@@ -151,7 +151,7 @@ float SoundListener::GetAttenuationScale()
 void SoundListener::SetAttenuationScale(float scale)
 {
   mAttenuationScale = scale;
-  ((Audio::ListenerNode*)mSoundNode->mNode)->SetAttenuationScale(scale);
+  ((Audio::ListenerNode*)mSoundNode->mNode)->SetAttenuationScale(Math::Max(scale, 0.0f));
 }
 
 //**************************************************************************************************
