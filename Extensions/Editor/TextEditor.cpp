@@ -235,6 +235,9 @@ TextEditor::TextEditor(Composite* parent)
   mHighlightPartialTextMatch = false;
   mMinSize = Vec2(50, 50);
 
+  // Read the current config settings
+  UseTextEditorConfig();
+
   mIndicators = new PixelBuffer();
   mIndicatorDisplay = new TextureView(this);
   mIndicatorDisplay->SetTexture(mIndicators->Image);
