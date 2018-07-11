@@ -88,6 +88,7 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeType(ToolGizmoEvent);
   ZilchInitializeType(ManipulatorToolEvent);
   ZilchInitializeType(TreeEvent);
+  ZilchInitializeType(TreeViewHeaderAddedEvent);
   ZilchInitializeType(ValueEvent);
   ZilchInitializeType(ContextMenuEvent);
   ZilchInitializeType(TileViewEvent);
