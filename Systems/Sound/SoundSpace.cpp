@@ -24,6 +24,7 @@ ZilchDefineType(SoundSpace, builder, type)
   ZilchBindFieldProperty(mPitchWithTimeSpace);
   ZilchBindGetterSetter(Paused);
   ZilchBindGetterSetter(Volume);
+  ZilchBindGetterSetter(MuteAudio);
   ZilchBindGetterSetter(Decibels);
   ZilchBindGetterSetter(Pitch);
   ZilchBindGetterSetter(Semitones);
@@ -128,6 +129,24 @@ float SoundSpace::GetVolume()
 void SoundSpace::SetVolume(float value)
 {
   InterpolateVolume(value, 0.0f);
+}
+
+//**************************************************************************************************
+bool SoundSpace::GetMuteAudio()
+{
+  if (!mSoundNodeInput->mNode)
+    return false;
+
+  return ((Audio::CombineAndPauseNode*)mSoundNodeInput->mNode)->GetMuted();
+}
+
+//**************************************************************************************************
+void SoundSpace::SetMuteAudio(bool mute)
+{
+  if (!mSoundNodeInput->mNode)
+    return;
+
+  ((Audio::CombineAndPauseNode*)mSoundNodeInput->mNode)->SetMuted(mute);
 }
 
 //**************************************************************************************************
