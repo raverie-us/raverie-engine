@@ -83,6 +83,9 @@ public:
 
   void AddHiddenLibrary(StringParam libraryName);
 
+  float GetTagEditorSize(SizeAxis::Enum axis);
+  void SetTagEditorSize(SizeAxis::Enum axis, float size);
+
 private:
   void UpdateVisibleResources();
 
@@ -148,8 +151,8 @@ private:
   void OnTagEditorClose(MouseEvent* e);
   void OnTagEditorCloseHover(MouseEvent* e);
 
-  float GetTagEditorHeight();
-  void SetTagEditorHeight(float height);
+  float GetTagEditorCurrentHeight();
+  void SetTagEditorCurrentHeight(float height);
 
   void RenameAtIndex(DataIndex& dataIndex);
 
@@ -190,7 +193,8 @@ private:
   TreeView* mTreeView;
   LibraryTileView* mTileView;
 
-  float mTagEditorHeight;
+  float mTagEditorCurrentHeight;
+  float mTagEditorFinalHeight;
   Element* mTagEditorCloseButton;
   ResourceTagEditor* mTagEditor;
 };

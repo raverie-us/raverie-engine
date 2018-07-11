@@ -190,6 +190,7 @@ LibraryView* EditorMain::CreateLibraryView(bool showCore, bool autoDock)
   library->SetName("Library");
   library->SetHideOnClose(false);
   library->SetSize(Pixels(dockWidth, 280));
+  library->SetTagEditorSize(SizeAxis::X, dockWidth);
 
   // Hide core libraries
   if (!showCore)
