@@ -28,7 +28,8 @@ class WebServerRequestEvent : public Event
 public:
   ZilchDeclareType(WebServerRequestEvent, TypeCopyMode::ReferenceType);
 
-  WebServerRequestEvent();
+  WebServerRequestEvent(WebServerConnection* connection);
+
   /// Automatically generates a 404 response if no Respond has been called.
   ~WebServerRequestEvent();
 
@@ -65,7 +66,7 @@ public:
   /// Builds the response automatically with the given code, headers, and contents.
   /// The headers that are automatically generated are: Date, Content-Length.
   /// Note that extraHeaders *MUST* use \r\n to separate each header (HTTP 1.1 standard) and *MUST* end with \r\n if provided.
-  void Respond(Os::WebResponseCode::Type code, StringParam extraHeaders, StringParam contents);
+  void Respond(Os::WebResponseCode::Enum code, StringParam extraHeaders, StringParam contents);
 
   /// Builds the response automatically with the given code, headers, and contents.
   /// The headers that are automatically generated are: Date, Content-Length.
@@ -77,25 +78,21 @@ public:
   void Respond(StringParam response);
 
   // Internal
-  /// The connection that this event originated from.
+  /// The connection that this event originated from. We clear the event once we have responded.
   WebServerConnection* mConnection;
-  /// Whether we have called Respond.
-  bool mResponded;
 };
 
 class WebServerConnection
 {
 public:
+  WebServerConnection(WebServer* server);
   ~WebServerConnection();
 
-  static OsInt ReadThread(void* userData);
-  static OsInt WriteThread(void* userData);
+  static OsInt ReadWriteThread(void* userData);
 
-  Atomic<bool> mRunning;
+  WebServer* mWebServer;
   Socket mSocket;
-  WebServer* mServer;
-  Thread mReadThread;
-  Thread mWriteThread;
+  Thread mReadWriteThread;
   OsEvent mWriteSignal;
   ThreadLock mWriteLock;
   Array<byte> mWriteData;
@@ -129,7 +126,7 @@ public:
 
   /// Given a WebResponseCode return what the HTTP string would be, e.g. OK turns into "200 OK".
   /// If an invalid or unknown code is provided this will return an empty string.
-  static String GetWebResponseCodeString(Os::WebResponseCode::Type code);
+  static String GetWebResponseCodeString(Os::WebResponseCode::Enum code);
 
 protected:
   static void DoNotifyExceptionOnFail(StringParam message, const u32& context, void* userData);
@@ -141,6 +138,7 @@ protected:
   Atomic<bool> mRunning;
   ThreadLock mConnectionsLock;
   Array<WebServerConnection*> mConnections;
+  CountdownEvent mConnectionCountEvent;
 };
 
 /// A specialized WebServer that provides content from a given directory.

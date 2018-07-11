@@ -56,7 +56,7 @@ namespace WebResponseCode
 {
   enum Enum
   {
-    Error                         = -1,
+    Invalid                       = -1,
     NoServerResponse              = 0,
 
     // HTTP Log Codes:

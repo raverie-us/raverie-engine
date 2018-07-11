@@ -45,6 +45,48 @@ ZilchDefineEnum(TransferMode);
 ZilchDefineEnum(Receipt);
 ZilchDefineEnum(WebServerRequestMethod);
 
+ZilchDefineExternalBaseType(Os::WebResponseCode::Enum, TypeCopyMode::ValueType, builder, type)
+{
+  ZilchFullBindEnum(builder, type, SpecialType::Enumeration);
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::Invalid, "Invalid");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::NoServerResponse, "NoServerResponse");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::Continue, "Continue");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::SwitchingProtocols, "SwitchingProtocols");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::OK, "OK");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::Created, "Created");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::Accepted, "Accepted");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::NonauthoritativeInformation, "NonauthoritativeInformation");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::NoContent, "NoContent");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::ResetContent, "ResetContent");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::PartialContent, "PartialContent");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::MovedPermanently, "MovedPermanently");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::ObjectMovedTemporarily, "ObjectMovedTemporarily");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::SeeOther, "SeeOther");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::NotModified, "NotModified");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::TemporaryRedirect, "TemporaryRedirect");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::PermanentRedirect, "PermanentRedirect");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::BadRequest, "BadRequest");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::AccessDenied, "AccessDenied");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::Forbidden, "Forbidden");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::NotFound, "NotFound");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::HTTPVerbNotAllowed, "HTTPVerbNotAllowed");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::ClientBrowserRejectsMIME, "ClientBrowserRejectsMIME");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::ProxyAuthenticationRequired, "ProxyAuthenticationRequired");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::PreconditionFailed, "PreconditionFailed");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::RequestEntityTooLarge, "RequestEntityTooLarge");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::RequestURITooLarge, "RequestURITooLarge");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::UnsupportedMediaType, "UnsupportedMediaType");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::RequestedRangeNotSatisfiable, "RequestedRangeNotSatisfiable");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::ExecutionFailed, "ExecutionFailed");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::LockedError, "LockedError");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::InternalServerError, "InternalServerError");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::UnimplementedHeaderValueUsed, "UnimplementedHeaderValueUsed");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::GatewayProxyReceivedInvalid, "GatewayProxyReceivedInvalid");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::ServiceUnavailable, "ServiceUnavailable");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::GatewayTimedOut, "GatewayTimedOut");
+  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::HTTPVersionNotSupported, "HTTPVersionNotSupported");
+}
+
 // Arrays
 ZeroDefineArrayType(NetPropertyInfoArray);
 
@@ -85,6 +127,7 @@ ZilchDefineStaticLibrary(NetworkingLibrary)
   ZilchInitializeEnum(TransferMode);
   ZilchInitializeEnum(Receipt);
   ZilchInitializeEnum(WebServerRequestMethod);
+  ZilchInitializeEnum(Os::WebResponseCode);
 
   // Meta Arrays
   ZeroInitializeArrayTypeAs(NetPropertyInfoArray, "NetPropertyInfos");

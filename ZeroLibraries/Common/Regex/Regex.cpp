@@ -36,6 +36,7 @@ Matches::Matches()
 
 Matches::Matches(const Matches& source)
 {
+  mString = source.mString;
   mPrivate = new MatchesPrivateData(*source.mPrivate);
 }
 
@@ -44,9 +45,9 @@ Matches::~Matches()
   delete mPrivate;
 }
 
-
 void Matches::Clear()
 {
+  mString = String();
   mPrivate->InternalMatch = cmatch();
 }
 
@@ -64,34 +65,34 @@ StringRange Matches::operator[](size_t index) const
 {
   ErrorIf(index >= this->Size(), "Attempting to access an array element out of bounds");
   const std::csub_match& subMatch = mPrivate->InternalMatch[index];
-  return StringRange(subMatch.first, subMatch.first, subMatch.second);
+  return StringRange(mString, subMatch.first, subMatch.second);
 }
 
 StringRange Matches::Front() const
 {
   ErrorIf(this->Empty(), "Attempting to access an array element out of bounds");
   const std::csub_match& subMatch = mPrivate->InternalMatch[0];
-  return StringRange(subMatch.first, subMatch.first, subMatch.second);
+  return StringRange(mString, subMatch.first, subMatch.second);
 }
 
 StringRange Matches::Back() const
 {
   ErrorIf(this->Empty(), "Attempting to access an array element out of bounds");
   const std::csub_match& subMatch = mPrivate->InternalMatch[mPrivate->InternalMatch.size() - 1];
-  return StringRange(subMatch.first, subMatch.first, subMatch.second);
+  return StringRange(mString, subMatch.first, subMatch.second);
 }
 
 
 StringRange Matches::Prefix() const
 {
   const std::csub_match& subMatch = mPrivate->InternalMatch.prefix();
-  return StringRange(subMatch.first, subMatch.first, subMatch.second);
+  return StringRange(mString, subMatch.first, subMatch.second);
 }
 
 StringRange Matches::Suffix() const
 {
   const std::csub_match& subMatch = mPrivate->InternalMatch.suffix();
-  return StringRange(subMatch.first, subMatch.first, subMatch.second);
+  return StringRange(mString, subMatch.first, subMatch.second);
 }
 
 String Matches::Format(StringRange format) const
@@ -232,6 +233,7 @@ bool Regex::Validate(StringRange regexStr, RegexFlavor::Enum flavor, bool caseSe
 void Regex::Search(StringRange text, Matches& matches, RegexFlags::Type flags) const
 {
   matches.Clear();
+  matches.mString = text.mOriginalString;
 
   reg::match_flag_type translatedFlags = reg::match_default;
   if (flags & RegexFlags::MatchNotNull)

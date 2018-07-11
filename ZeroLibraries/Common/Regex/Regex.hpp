@@ -69,6 +69,8 @@ namespace Zero
     void Format(StringRange format, StringBuilder& builder) const;
 
   private:
+    String mString;
+
     // Store the private data
     MatchesPrivateData* mPrivate;
   };

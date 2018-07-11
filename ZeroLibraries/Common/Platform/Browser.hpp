@@ -63,6 +63,11 @@ public:
   Math::IntVec2 GetClientPosition();
   void SetClientPosition(Math::IntVec2Param clientPosition);
 
+  /// Sets the clipping rectangles (only used if 'IsFloatingOnTop').
+  /// These rectangles will be clipped out of the view, as if holes are being cut.
+  /// Note that this might not be supported by all platforms.
+  void SetClippingRectangles(const Array<IntRect>& rectangles);
+
   /// This is only used when the browser 'IsFloatingOnTop'.
   int GetZIndex();
   void SetZIndex(int zindex);

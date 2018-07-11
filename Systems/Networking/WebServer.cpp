@@ -26,19 +26,42 @@ static const String cMethods[] =
   "PUT",
   "DELETE",
   "TRACE",
-  "CONNECT",
-  "OTHER"
+  "CONNECT"
 };
 
 ZilchDefineType(WebServerRequestEvent, builder, type)
 {
-  ZilchBindFieldProperty(mData);
-  ZilchBindFieldProperty(mResponse);
+  ZilchBindFieldGetter(mWebServer);
+  ZilchBindFieldGetter(mMethod);
+  ZilchBindFieldGetter(mMethodString);
+  ZilchBindFieldGetter(mUri);
+  ZilchBindFieldGetter(mData);
+  ZilchBindFieldGetter(mPostData);
   ZilchBindMethod(HasHeader);
   ZilchBindMethod(GetHeaderValue);
   ZilchBindMethod(GetHeaderNames);
-  ZilchBindOverloadedMethod(Respond, ZilchInstanceOverload(void, Os::WebResponseCode::Type, StringParam, StringParam));
+  ZilchBindOverloadedMethod(Respond, ZilchInstanceOverload(void, Os::WebResponseCode::Enum, StringParam, StringParam));
   ZilchBindOverloadedMethod(Respond, ZilchInstanceOverload(void, StringParam, StringParam, StringParam));
+  ZilchBindOverloadedMethod(Respond, ZilchInstanceOverload(void, StringParam));
+}
+
+WebServerRequestEvent::WebServerRequestEvent(WebServerConnection* connection) :
+  mWebServer(connection->mWebServer),
+  mConnection(connection),
+  mMethod(WebServerRequestMethod::Other)
+{
+}
+
+WebServerRequestEvent::~WebServerRequestEvent()
+{
+  if (!mConnection)
+    return;
+
+  String contents = String::Format(
+    "404 Not Found (Timestamp: %lld, Clock: %lld)",
+    (long long)Time::GetTime(),
+    (long long)Time::Clock());
+  Respond(Os::WebResponseCode::NotFound, String(), contents);
 }
 
 bool WebServerRequestEvent::HasHeader(StringParam name)
@@ -56,7 +79,7 @@ OrderedHashMap<String, String>::KeyRange WebServerRequestEvent::GetHeaderNames()
   return mHeaders.Keys();
 }
 
-void WebServerRequestEvent::Respond(Os::WebResponseCode::Type code, StringParam extraHeaders, StringParam contents)
+void WebServerRequestEvent::Respond(Os::WebResponseCode::Enum code, StringParam extraHeaders, StringParam contents)
 {
   return Respond(WebServer::GetWebResponseCodeString(code), extraHeaders, contents);
 }
@@ -95,15 +118,35 @@ void WebServerRequestEvent::Respond(StringParam code, StringParam extraHeaders, 
 
   builder.Append(contents);
 
-  mResponse = builder.ToString();
+  Respond(builder.ToString());
+}
+
+void WebServerRequestEvent::Respond(StringParam response)
+{
+  if (!mConnection)
+  {
+    DoNotifyException("WebServerRequestEvent", "Cannot send multiple responses to a WebServer request");
+    return;
+  }
+
+  mConnection->mWriteLock.Lock();
+  mConnection->mWriteData.Insert(mConnection->mWriteData.Begin(), response.Data(), response.EndData());
+  mConnection->mWriteComplete = true;
+  mConnection->mWriteLock.Unlock();
+  mConnection->mWriteSignal.Signal();
+
+  mConnection = nullptr;
+}
+
+WebServerConnection::WebServerConnection(WebServer* server) :
+  mWebServer(server),
+  mWriteComplete(false)
+{
+  mWriteSignal.Initialize();
 }
 
 WebServerConnection::~WebServerConnection()
 {
-  // The destructor is only ever called by the WebServer, and we know mRunning on the
-  // WebServer will be set to false when closing all connections, so we can wait on our threads.
-  mReadThread.WaitForCompletion();
-  mWriteThread.WaitForCompletion();
 }
 
 // Method   : Reading GET/POST/PUT first line of the HTTP request.
@@ -112,9 +155,10 @@ WebServerConnection::~WebServerConnection()
 // PostData : Reading everything after the \r\n\r\n (should have read a content length).
 DeclareEnum4(ReadStage, Method, Headers, Content, PostData);
 
-OsInt WebServerConnection::ReadThread(void* userData)
+OsInt WebServerConnection::ReadWriteThread(void* userData)
 {
   WebServerConnection* self = (WebServerConnection*)userData;
+  WebServer* webServer = self->mWebServer;
 
   StringBuilder builder;
 
@@ -127,10 +171,9 @@ OsInt WebServerConnection::ReadThread(void* userData)
   static const Regex cHeaderRegex("^([^:]+)\\s*:\\s*([^\r\n]*)\r\n(\r\n)?");
 
   // Preemptively create the event so we can fill it out
-  WebServerRequestEvent* toSend = new WebServerRequestEvent();
-  toSend->mWebServer = self->mServer;
-  toSend->mConnection = self;
+  WebServerRequestEvent* toSend = new WebServerRequestEvent(self);
 
+  bool running = true;
   int contentLength = 0;
 
   // This designates what part of the http request we're reading.
@@ -138,20 +181,24 @@ OsInt WebServerConnection::ReadThread(void* userData)
 
   String unparsedContent;
   
-  while (self->mRunning && self->mServer->mRunning)
+  while (webServer->mRunning)
   {
     byte buffer[4096];
     Status status;
     size_t amount = self->mSocket.Receive(status, buffer, sizeof(buffer));
 
     // If the connection is gracefully closed, or we had an error, then terminate the connection.
-    if (amount == 0 || status.Failed())
+    if (amount == 0 || status.Failed() || !webServer->mRunning)
     {
+      // Mark the event's connection as null so it doesn't try to send a 404 response in it's destructor.
+      toSend->mConnection = nullptr;
+
       // Since the connection is considered terminated, we're no 
       // longer running (the write thread should also shut-down).
-      self->mRunning = false;
+      running = false;
       delete toSend;
-      return 0;
+      toSend = nullptr;
+      break;
     }
 
     builder.Append((cstr)buffer, amount);
@@ -233,8 +280,10 @@ OsInt WebServerConnection::ReadThread(void* userData)
       // If we didn't have the header, or for some reason the content length was unparsable or 0, then we're done!
       if (contentLength == 0)
       {
-        Z::gDispatch->Dispatch(self->mServer, Events::WebServerRequest, toSend);
-        return 0;
+        toSend->mData = builder.ToString();
+        Z::gDispatch->Dispatch(webServer, Events::WebServerRequest, toSend);
+        toSend = nullptr;
+        break;
       }
       else
       {
@@ -248,67 +297,72 @@ OsInt WebServerConnection::ReadThread(void* userData)
       // If we have enough data from the client to make-up all the post data, then dispatch it!
       if ((int)unparsedContent.SizeInBytes() >= contentLength)
       {
-        Z::gDispatch->Dispatch(self->mServer, Events::WebServerRequest, toSend);
-        return 0;
+        toSend->mData = builder.ToString();
+        toSend->mPostData = unparsedContent;
+        Z::gDispatch->Dispatch(webServer, Events::WebServerRequest, toSend);
+        toSend = nullptr;
+        break;
       }
     }
   }
 
-  // If we got here the server stopped running (which means we're also not running).
-  self->mRunning = false;
-  delete toSend;
-  return 0;
-}
+  ErrorIf(toSend != nullptr, "We should have sent or deleted the event by this point");
 
-OsInt WebServerConnection::WriteThread(void* userData)
-{
-  WebServerConnection* self = (WebServerConnection*)userData;
-
-  bool writeComplete = false;
-  Array<byte> writeData;
-
-  // Loop until we're no longer running, or an error occurs.
-  for (;;)
+  if (running)
   {
-    self->mWriteSignal.Wait();
+    Array<byte> writeData;
 
-    if (!self->mRunning || !self->mServer->mRunning)
-      return 0;
-
-    // Steal any data that needs to be written.
-    self->mWriteLock.Lock();
-    writeData.Swap(self->mWriteData);
-    writeComplete = self->mWriteComplete;
-    self->mWriteLock.Unlock();
-
-    byte* buffer = writeData.Data();
-    size_t size = writeData.Size();
-
-    // Write out all the data we have.
-    while (size != 0)
+    // Loop until we're no longer running, or an error occurs.
+    for (;;)
     {
-      Status status;
-      size_t amount = self->mSocket.Send(status, buffer, size);
+      self->mWriteSignal.Wait();
 
-      if (amount == 0 || status.Failed())
+      if (!webServer->mRunning)
+        break;
+
+      // Steal any data that needs to be written.
+      self->mWriteLock.Lock();
+      writeData.Swap(self->mWriteData);
+      running = !self->mWriteComplete;
+      self->mWriteLock.Unlock();
+
+      byte* buffer = writeData.Data();
+      size_t size = writeData.Size();
+
+      // Write out all the data we have.
+      while (size != 0)
       {
-        self->mRunning = false;
-        return 0;
+        Status status;
+        size_t amount = self->mSocket.Send(status, buffer, size);
+
+        if (amount == 0 || status.Failed())
+        {
+          running = false;
+          break;
+        }
+
+        size -= amount;
+        buffer += amount;
       }
 
-      size -= amount;
-      buffer += amount;
+      // Clear the data but keep the buffer allocated (this makes the swap more efficient).
+      writeData.Clear();
+
+      // If we wrote all the data, then we're done with this thread!
+      if (!running)
+        break;
     }
-
-    // Clear the data but keep the buffer allocated (this makes the swap more efficient).
-    writeData.Clear();
-
-    // If we wrote all the data, then we're done with this thread!
-    if (writeComplete)
-      return 0;
   }
 
-  self->mRunning = false;
+  // Since we got here, it's time to erase/delete this connection.
+  webServer->mConnectionsLock.Lock();
+  webServer->mConnections.EraseValue(self);
+  webServer->mConnectionCountEvent.DecrementCount();
+  webServer->mConnectionsLock.Unlock();
+  
+  // Since we're done with the connection, delete it.
+  // The server won't touch the connection.
+  delete self;
   return 0;
 }
 
@@ -373,14 +427,22 @@ void WebServer::Close()
   mAcceptThread.WaitForCompletion();
   mAcceptThread.Close();
 
-  // We don't need to synchronize on mConnections because we know the accept thread is stopped.
+  mConnectionsLock.Lock();
   forRange(WebServerConnection* connection, mConnections)
   {
-    delete connection;
+    // Close the socket to resume from any blocking reads.
+    connection->mSocket.Close();
+
+    // Signal the writes so that we'll resume from waiting.
+    connection->mWriteSignal.Signal();
   }
+  mConnectionsLock.Unlock();
+
+  // Wait until all the connections are finished.
+  mConnectionCountEvent.Wait();
 }
 
-String WebServer::GetWebResponseCodeString(Os::WebResponseCode::Type code)
+String WebServer::GetWebResponseCodeString(Os::WebResponseCode::Enum code)
 {
   switch (code)
   {
@@ -442,16 +504,14 @@ OsInt WebServer::AcceptThread(void* userData)
     // If we got a valid socket then throw it on the connections list and start up threads for the socket.
     if (status.Succeeded() && acceptedSocket.IsOpen())
     {
-      WebServerConnection* connection = new WebServerConnection();
-      connection->mRunning = true;
+      WebServerConnection* connection = new WebServerConnection(self);
       connection->mSocket = ZeroMove(acceptedSocket);
-      connection->mServer = self;
 
-      connection->mReadThread.Initialize(&WebServerConnection::ReadThread, connection, "WebServerConnectionRead");
-      connection->mWriteThread.Initialize(&WebServerConnection::WriteThread, connection, "WebServerConnectionWrite");
+      connection->mReadWriteThread.Initialize(&WebServerConnection::ReadWriteThread, connection, "WebServerConnectionReadWrite");
 
       self->mConnectionsLock.Lock();
       self->mConnections.PushBack(connection);
+      self->mConnectionCountEvent.IncrementCount();
       self->mConnectionsLock.Unlock();
     }
   }

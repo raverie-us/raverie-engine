@@ -497,6 +497,11 @@ bool StringRange::IsAllWhitespace() const
 
 StringRange StringRange::SubString(StringIterator begin, StringIterator end) const
 {
+  ErrorIf(begin.mIteratorRange.mOriginalString != end.mIteratorRange.mOriginalString,
+    "String iterators from different strings");
+  ErrorIf(begin.mIteratorRange.mOriginalString != mOriginalString,
+    "String iterators from different strings");
+
   StringIterator b = begin;
 
   if (b > End())
