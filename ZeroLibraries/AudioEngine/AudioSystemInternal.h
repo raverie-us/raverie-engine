@@ -95,6 +95,8 @@ namespace Audio
     void SetMinVolumeThresholdThreaded(const float volume);
     // Sets whether or not all audio should be muted
     void SetMutedThreaded(bool muteAudio);
+    // Starts the input stream if it is not already started. Returns false if stream could not be started.
+    bool StartInput();
     
     // Number of channels to use for calculating output. 
     unsigned SystemChannelsThreaded;
@@ -112,8 +114,6 @@ namespace Audio
     float MinimumVolumeThresholdThreaded;
     // Audio input data for the current mix, matching the current output sample rate and channels
     Zero::Array<float> InputBuffer;
-    // If true, will send microphone input data to external system
-    bool SendMicrophoneInputData;
     // List of decoding tasks used if the system is not threaded
     Zero::Array<FileDecoder*> DecodingTasks;
     // The maximum number of decoding tasks that will be processed on one update
@@ -192,6 +192,8 @@ namespace Audio
     bool MutedThreaded;
     // Used to know when to set the Muted variable
     bool MutingThreaded;
+    // If true, will send microphone input data to external system
+    bool SendMicrophoneInputData;
 
     // Adds current sounds into the output buffer. Will return false when the system can shut down. 
     bool MixCurrentInstancesThreaded();
@@ -211,6 +213,8 @@ namespace Audio
     void CheckForResampling();
     // Gets the current input data from the AudioIO and adjusts if necessary to match output settings
     void GetAudioInputDataThreaded(unsigned howManySamples);
+    // Sets whether microphone input data will be sent to the external system
+    void SetSendMicInputData(bool sendData);
 
     friend class AudioSystemInterface;
     friend class AudioInputOutput;

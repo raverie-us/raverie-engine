@@ -2147,6 +2147,9 @@ ZilchDefineType(MicrophoneInputNode, builder, type)
 MicrophoneInputNode::MicrophoneInputNode()
 {
   mNode = new Audio::MicrophoneInputNode("MicrophoneInputNode", Z::gSound->mCounter++, this);
+
+  if (!GetNode()->GetActive())
+    DoNotifyWarning("No Microphone Available", "No microphone input is available for the MicrophoneInputNode");
 }
 
 //**************************************************************************************************
@@ -2171,6 +2174,9 @@ bool MicrophoneInputNode::GetActive()
 void MicrophoneInputNode::SetActive(bool active)
 {
   GetNode()->SetActive(active);
+
+  if (active && !GetNode()->GetActive())
+    DoNotifyWarning("No Microphone Available", "No microphone input is available for the MicrophoneInputNode");
 }
 
 //**************************************************************************************************
