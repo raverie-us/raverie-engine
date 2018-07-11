@@ -18,11 +18,22 @@ DeclareEnum9(WebServerRequestMethod, Options, Get, Head, Post, Put, Delete, Trac
 typedef OrderedHashMap<String, String> WebServerHeaderMap;
 typedef WebServerHeaderMap::KeyRange WebServerHeaderRange;
 
+class WebServer;
+class WebServerConnection;
+
 /// An event that occurs when we get data from a web server (such as a request).
+/// If no Respond function is called on the event then we will automatically generate a 404 response.
 class WebServerRequestEvent : public Event
 {
 public:
   ZilchDeclareType(WebServerRequestEvent, TypeCopyMode::ReferenceType);
+
+  WebServerRequestEvent();
+  /// Automatically generates a 404 response if no Respond has been called.
+  ~WebServerRequestEvent();
+
+  /// The web server that this event originated from.
+  WebServer* mWebServer;
 
   /// What kind of request was this?
   WebServerRequestMethod::Enum mMethod;
@@ -42,12 +53,6 @@ public:
   /// Any post data submitted by the client.
   String mPostData;
 
-  /// The data we send back in response. This can be filled out manually
-  /// and must include the full headers (e.g. "HTTP/1.1 200 OK") or it can
-  /// be filled out through any automatic respond function below.
-  /// If the response is left empty, we will automatically generate a 404 response.
-  String mResponse;
-
   /// Checks if the given header exists within the request.
   bool HasHeader(StringParam name);
 
@@ -66,9 +71,17 @@ public:
   /// The headers that are automatically generated are: Date, Content-Length.
   /// Note that extraHeaders *MUST* use \r\n to separate each header (HTTP 1.1 standard) and *MUST* end with \r\n if provided.
   void Respond(StringParam code, StringParam extraHeaders, StringParam contents);
-};
 
-class WebServer;
+  /// Send a manually filled out HTTP response which includes
+  /// the status and full headers (e.g. "HTTP/1.1 200 OK").
+  void Respond(StringParam response);
+
+  // Internal
+  /// The connection that this event originated from.
+  WebServerConnection* mConnection;
+  /// Whether we have called Respond.
+  bool mResponded;
+};
 
 class WebServerConnection
 {
@@ -83,6 +96,10 @@ public:
   WebServer* mServer;
   Thread mReadThread;
   Thread mWriteThread;
+  OsEvent mWriteSignal;
+  ThreadLock mWriteLock;
+  Array<byte> mWriteData;
+  bool mWriteComplete;
 };
 
 /// Listens on a given port for incoming HTTP traffic and allows the user

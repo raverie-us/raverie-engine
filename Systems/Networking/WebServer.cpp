@@ -128,6 +128,8 @@ OsInt WebServerConnection::ReadThread(void* userData)
 
   // Preemptively create the event so we can fill it out
   WebServerRequestEvent* toSend = new WebServerRequestEvent();
+  toSend->mWebServer = self->mServer;
+  toSend->mConnection = self;
 
   int contentLength = 0;
 
@@ -261,6 +263,52 @@ OsInt WebServerConnection::ReadThread(void* userData)
 OsInt WebServerConnection::WriteThread(void* userData)
 {
   WebServerConnection* self = (WebServerConnection*)userData;
+
+  bool writeComplete = false;
+  Array<byte> writeData;
+
+  // Loop until we're no longer running, or an error occurs.
+  for (;;)
+  {
+    self->mWriteSignal.Wait();
+
+    if (!self->mRunning || !self->mServer->mRunning)
+      return 0;
+
+    // Steal any data that needs to be written.
+    self->mWriteLock.Lock();
+    writeData.Swap(self->mWriteData);
+    writeComplete = self->mWriteComplete;
+    self->mWriteLock.Unlock();
+
+    byte* buffer = writeData.Data();
+    size_t size = writeData.Size();
+
+    // Write out all the data we have.
+    while (size != 0)
+    {
+      Status status;
+      size_t amount = self->mSocket.Send(status, buffer, size);
+
+      if (amount == 0 || status.Failed())
+      {
+        self->mRunning = false;
+        return 0;
+      }
+
+      size -= amount;
+      buffer += amount;
+    }
+
+    // Clear the data but keep the buffer allocated (this makes the swap more efficient).
+    writeData.Clear();
+
+    // If we wrote all the data, then we're done with this thread!
+    if (writeComplete)
+      return 0;
+  }
+
+  self->mRunning = false;
   return 0;
 }
 
