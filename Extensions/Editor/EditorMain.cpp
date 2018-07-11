@@ -477,6 +477,11 @@ DocumentEditor* EditorMain::OpenTextString(StringParam name, StringParam text, S
     editor->SetLexer(Lexer::Zilch);
 
   AttachDocumentEditor( document->mName, editor);
+  // After the document is attached we need to re-layout the editor so that the
+  // document's size is correctly updated before any further operations. This was
+  // specifically added for text editors as the scintilla will get the wrong size otherwise.
+  this->UpdateTransform();
+
   return editor;
 }
 
