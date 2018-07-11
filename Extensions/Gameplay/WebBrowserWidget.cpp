@@ -69,6 +69,9 @@ WebBrowserWidget::WebBrowserWidget(Composite* composite, const WebBrowserSetup& 
   mBrowserView->SetDockMode(DockMode::DockFill);
   mBrowserView->SetTexture(browser->GetTexture());
 
+  // If we ever gain focus on any other widget, tell the browser it lost focus.
+  ConnectThisTo(GetRootWidget(), Events::FocusGainedHierarchy, OnRootFocusGainedHierarchy);
+
   mStatusBar = new TextBox(this);
   mStatusBar->SetEditable(false);
   mStatusBar->SetDockMode(DockMode::DockBottom);
@@ -90,8 +93,8 @@ WebBrowserWidget::WebBrowserWidget(Composite* composite, const WebBrowserSetup& 
   ConnectThisTo(browser, Events::WebBrowserConsoleMessage, OnWebBrowserConsoleMessage);
   ConnectThisTo(browser, Events::WebBrowserDownloadStarted, OnWebBrowserDownloadStarted);
   
-  ConnectThisTo(mBrowserView, Events::FocusGained, OnFocusGained);
-  ConnectThisTo(mBrowserView, Events::FocusLost, OnFocusLost);
+  ConnectThisTo(mBrowserView, Events::FocusGained, OnBrowserViewFocusGained);
+  ConnectThisTo(mBrowserView, Events::FocusLost, OnBrowserViewFocusLost);
 
   ConnectThisTo(mBrowserView, Events::KeyDown, OnKeyDown);
   ConnectThisTo(mBrowserView, Events::KeyUp, OnKeyUp);
@@ -117,6 +120,7 @@ void WebBrowserWidget::UpdateTransform()
     IntVec2 clientPosition = Math::ToIntVec2(mBrowserView->GetScreenPosition());
     mBrowser->SetSize(newSize);
     mBrowser->SetClientPosition(clientPosition);
+    mBrowser->SetZIndex(GetZIndex());
   }
   
   if (isVisible != mBrowser->GetVisible())
@@ -216,6 +220,11 @@ void WebBrowserWidget::OnAddressTextSubmit(ObjectEvent* event)
   mBrowser->SetUrl(mAddressText->GetText());
 }
 
+void WebBrowserWidget::OnRootFocusGainedHierarchy(FocusEvent* event)
+{
+  mBrowser->SetFocus(false);
+}
+
 void WebBrowserWidget::OnWebBrowserUrlChanged(WebBrowserUrlEvent* event)
 {
   if (!mAddressText->HasFocus())
@@ -307,12 +316,12 @@ void WebBrowserWidget::OnWebBrowserDownloadStarted(WebBrowserDownloadEvent* even
   }
 }
 
-void WebBrowserWidget::OnFocusGained(FocusEvent* event)
+void WebBrowserWidget::OnBrowserViewFocusGained(FocusEvent* event)
 {
   mBrowser->SetFocus(true);
 }
 
-void WebBrowserWidget::OnFocusLost(FocusEvent* event)
+void WebBrowserWidget::OnBrowserViewFocusLost(FocusEvent* event)
 {
   mBrowser->SetFocus(false);
 }
