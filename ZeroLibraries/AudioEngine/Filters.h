@@ -283,8 +283,6 @@ namespace Audio
     int WriteIndex;
     // Size of the buffers
     int BufferSize;
-    // Maximum length of delay in seconds
-    float MaxDelaySec;
 
     bool InterpolatingWetLevel;
     InterpolatingObject WetLevelInterpolator;
