@@ -34,7 +34,7 @@ namespace Audio
   class FileDecoder
   {
   public:
-    FileDecoder(Zero::Status& status, const Zero::String& fileName, const bool streaming);
+    FileDecoder(Zero::Status& status, const Zero::String& fileName, FileLoadType::Enum loadType);
     ~FileDecoder();
 
     // Returns true if it is currently streaming audio data from a file
@@ -56,6 +56,8 @@ namespace Audio
     short mChannels;
     // Number of samples per channel in the audio data
     unsigned mSamplesPerChannel;
+    // If true, streaming from disk instead of using the saved buffer
+    bool mStreaming;
 
   private:
     // The data read in from the file, if not streaming
@@ -68,8 +70,6 @@ namespace Audio
     OpusDecoder* Decoders[MaxChannels];
     // Buffers to hold the decoded data for a single packet per channel
     float DecodedPackets[MaxChannels][FileEncoder::PacketFrames];
-    // If true, streaming from disk instead of using the saved buffer
-    bool mStreaming;
     // The name of the file to use for streaming
     Zero::String mStreamingFileName;
     // The file object to use when streaming
@@ -80,9 +80,11 @@ namespace Audio
     Zero::Semaphore DecodingSemaphore;
     // Tells the decoding thread it should shut down
     AtomicType ShutDownSignal;
+    // The length of a file, in samples, at which it should stream if FileLoadType is Auto
+    const static unsigned mLengthForStreaming = SystemSampleRate * 60;
     
     // Opens a file and reads in its data
-    void OpenAndReadFile(Zero::Status& status, const Zero::String& fileName);
+    void OpenAndReadFile(Zero::Status& status, const Zero::String& fileName, FileLoadType::Enum loadType);
     // Decodes the next packet of data (assumed that this is called on a decoding thread)
     bool DecodePacket();
     // Adds decoded packets to the queue and translates the per-channel buffers to

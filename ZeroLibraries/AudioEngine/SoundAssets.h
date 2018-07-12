@@ -77,11 +77,13 @@ namespace Audio
   //-------------------------------------------------------------------------- Sound Asset From File
 
   class FileDecoder;
+
+  namespace FileLoadType { enum Enum { Auto, Streamed, Decompressed }; }
   
   class SoundAssetFromFile : public SoundAsset
   {
   public:
-    SoundAssetFromFile(Zero::Status& status, const Zero::String& fileName, const bool streaming,
+    SoundAssetFromFile(Zero::Status& status, const Zero::String& fileName, FileLoadType::Enum loadType,
       ExternalNodeInterface* externalInterface, const bool isThreaded = false);
 
     // Appends the specified number of samples to the array, starting at the specified frame index.
