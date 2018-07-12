@@ -30,6 +30,9 @@ void PhysicsQueue::Queue(MassAction& action)
 void PhysicsQueue::Queue(BroadPhaseAction& action)
 {
   mBroadPhaseAction.QueueState(action.mState);
+  // Save the newer bounding volumes
+  mBroadPhaseAction.mAabb = action.mAabb;
+  mBroadPhaseAction.mSphere = action.mSphere;
 }
 
 void PhysicsQueue::Validate()
@@ -46,7 +49,7 @@ void PhysicsQueue::Empty()
   mBroadPhaseAction.EmptyState();
 }
 
-void PhysicsQueue::ProcessQueue(BroadPhaseBatch& staticBatch, BroadPhaseBatch& dynamicBatch, Collider* collider)
+void PhysicsQueue::ProcessQueue(BroadPhaseBatch& staticBatch, BroadPhaseBatch& dynamicBatch, void* colliderKey)
 {
   typedef BroadPhaseAction BPAction;
   BPAction& action = mBroadPhaseAction;
@@ -59,7 +62,7 @@ void PhysicsQueue::ProcessQueue(BroadPhaseBatch& staticBatch, BroadPhaseBatch& d
   else if(action.IsSet(BPAction::DynamicInsert))
   {
     BroadPhaseData bpData;
-    ColliderToBroadPhaseData(collider, bpData);
+    GetBroadPhaseData(colliderKey, action, bpData);
     BroadPhaseObject bpObject(&mProxy, bpData);
     dynamicBatch.inserts.PushBack(bpObject);
   }
@@ -70,7 +73,7 @@ void PhysicsQueue::ProcessQueue(BroadPhaseBatch& staticBatch, BroadPhaseBatch& d
   else if(action.IsSet(BPAction::StaticInsert))
   {
     BroadPhaseData bpData;
-    ColliderToBroadPhaseData(collider, bpData);
+    GetBroadPhaseData(colliderKey, action, bpData);
     BroadPhaseObject bpObject(&mProxy, bpData);
     staticBatch.inserts.PushBack(bpObject);
   }
@@ -80,7 +83,7 @@ void PhysicsQueue::ProcessQueue(BroadPhaseBatch& staticBatch, BroadPhaseBatch& d
      action.IsSet(BPAction::Update))
   {
     BroadPhaseData bpData;
-    ColliderToBroadPhaseData(collider, bpData);
+    GetBroadPhaseData(colliderKey, action, bpData);
     BroadPhaseObject bpObject(&mProxy, bpData);
 
     if(action.IsSet(BPAction::CurrStateStatic))
@@ -92,11 +95,11 @@ void PhysicsQueue::ProcessQueue(BroadPhaseBatch& staticBatch, BroadPhaseBatch& d
   }
 }
 
-void PhysicsQueue::ColliderToBroadPhaseData(Collider* collider, BroadPhaseData& data)
+void PhysicsQueue::GetBroadPhaseData(void* colliderKey, BroadPhaseAction& action, BroadPhaseData& data)
 {
-  data.mAabb = collider->mAabb;
-  data.mClientData = (void*)collider;
-  data.mBoundingSphere = collider->mBoundingSphere;
+  data.mClientData = colliderKey;
+  data.mAabb = action.mAabb;
+  data.mBoundingSphere = action.mSphere;
 }
 
 void PhysicsQueue::MarkUnQueued()
