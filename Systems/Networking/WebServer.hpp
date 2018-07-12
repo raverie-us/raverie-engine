@@ -10,7 +10,15 @@ namespace Zero
 {
 namespace Events
 {
+  // This is the request that is actually sent from the thread (not exposed to script).
+  DeclareEvent(WebServerRawRequest);
+
+  // After the WebServer intercepts it it will sent it to script as this event.
+  // This occurs before the server tries to do directory or file mapping.
   DeclareEvent(WebServerRequest);
+
+  // If the users don't hand it via 'WebServerRequest', and the WebServer doesn't handle it, then this is sent one last time.
+  DeclareEvent(WebServerUnhandledRequest);
 }
 
 DeclareEnum9(WebServerRequestMethod, Options, Get, Head, Post, Put, Delete, Trace, Connect, Other);
@@ -42,17 +50,20 @@ public:
   /// The string we extracted from the method.
   String mMethodString;
 
-  /// The uri that is being requested.
-  String mUri;
+  /// The original uri that is being requested, with escaped characters such as spaces as '%20'.
+  String mOriginalUri;
+
+  /// The uri after we un-escaped the percent-encoded characters.
+  String mDecodedUri;
 
   /// Key value pair's of headers (e.g. key "Accept-Language" and value "en-us").
   WebServerHeaderMap mHeaders;
 
-  /// The full data associated with the request.
-  String mData;
-
   /// Any post data submitted by the client.
   String mPostData;
+
+  /// The full data associated with the request.
+  String mData;
 
   /// Checks if the given header exists within the request.
   bool HasHeader(StringParam name);
@@ -124,11 +135,41 @@ public:
   /// This will block until the connections are completed / all threads are shutdown.
   void Close();
 
+  /// Replaces & > < " ' characters with &amp; &lt; &gt; &quot; &#39; and returns the string.
+  static String SanitizeForHtml(StringParam text);
+
   /// Given a WebResponseCode return what the HTTP string would be, e.g. OK turns into "200 OK".
   /// If an invalid or unknown code is provided this will return an empty string.
   static String GetWebResponseCodeString(Os::WebResponseCode::Enum code);
 
-protected:
+  /// Encodes a string to be safely passed as a parameter in a url using percent-encoding.
+  static String UrlParamEncode(StringParam string);
+
+  /// Decodes a string from a url using percent-encoding.
+  static String UrlParamDecode(StringParam string);
+
+  /// Maps an extension (e.g. "html" or ".html") to a MIME type (e.g. "text/html").
+  /// This is only used when the Path is set, but can be quried by the user via 'GetMimeTypeFromExtension'.
+  /// The extension may or may not have the '.' in it. The MIME type can include
+  /// multiple parts such as "text/html; charset=utf-8".
+  /// This will overwrite a MIME type if one is already mapped for the given extension.
+  void MapExtensionToMimeType(StringParam extension, StringParam mimeType);
+
+  /// Returns a MIME type for a given extension which may include the '.' (e.g. "html" or ".html").
+  /// If the MIME type isn't known, then an empty string will be returned.
+  /// Mime types and extensions can be added via 'MapExtensionToMimeType'.
+  String GetMimeTypeFromExtension(StringParam extension);
+
+  /// Clears the map of extensions to MIME types.
+  void ClearMimeTypes();
+
+  /// A single path that we can point at on the local file system where we map requests.
+  /// The web server will first send 'WebServerRequest', then check for a file or directory within this path,
+  /// then if nothing is found (or the path is empty) the web server will send 'WebServerUnhandledRequest'.
+  String mPath;
+
+private:
+  void OnWebServerRawRequest(WebServerRequestEvent* event);
   static void DoNotifyExceptionOnFail(StringParam message, const u32& context, void* userData);
   static OsInt AcceptThread(void* userData);
 
@@ -139,6 +180,9 @@ protected:
   ThreadLock mConnectionsLock;
   Array<WebServerConnection*> mConnections;
   CountdownEvent mConnectionCountEvent;
+
+  // Maps the extension (without '.') to a MIME type.
+  HashMap<String, String> mExtensionToMimeType;
 };
 
 /// A specialized WebServer that provides content from a given directory.

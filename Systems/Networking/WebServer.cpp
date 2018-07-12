@@ -10,7 +10,9 @@ namespace Zero
 {
 namespace Events
 {
+  DefineEvent(WebServerRawRequest);
   DefineEvent(WebServerRequest);
+  DefineEvent(WebServerUnhandledRequest);
 }
 
 // HTTP explicitly uses \r\n.
@@ -34,9 +36,10 @@ ZilchDefineType(WebServerRequestEvent, builder, type)
   ZilchBindFieldGetter(mWebServer);
   ZilchBindFieldGetter(mMethod);
   ZilchBindFieldGetter(mMethodString);
-  ZilchBindFieldGetter(mUri);
-  ZilchBindFieldGetter(mData);
+  ZilchBindFieldGetter(mOriginalUri);
+  ZilchBindFieldGetter(mDecodedUri);
   ZilchBindFieldGetter(mPostData);
+  ZilchBindFieldGetter(mData);
   ZilchBindMethod(HasHeader);
   ZilchBindMethod(GetHeaderValue);
   ZilchBindMethod(GetHeaderNames);
@@ -88,13 +91,13 @@ void WebServerRequestEvent::Respond(StringParam code, StringParam extraHeaders, 
 {
   if (code.Empty())
   {
-    DoNotifyException("WebServerEvent", "A web response code was not provided (string was empty).");
+    DoNotifyException("WebServerRequestEvent", "A web response code was not provided (string was empty).");
     return;
   }
 
   if (!extraHeaders.Empty() && !extraHeaders.EndsWith(cHttpNewline))
   {
-    DoNotifyException("WebServerEvent", "The 'extraHeaders' was non-empty and must end with '\\r\\n'.");
+    DoNotifyException("WebServerRequestEvent", "The 'extraHeaders' was non-empty and must end with '\\r\\n'.");
     return;
   }
 
@@ -227,7 +230,8 @@ OsInt WebServerConnection::ReadWriteThread(void* userData)
 
         toSend->mMethod = method;
         toSend->mMethodString = methodString;
-        toSend->mUri = uri;
+        toSend->mOriginalUri = uri;
+        toSend->mDecodedUri = UrlParamDecode(uri);
 
         // Was this the last line in the header? We know this because we'll see \r\n\r\n.
         // Note that this is extremely unlikely to not get any other headers, and only the method request line.
@@ -281,7 +285,7 @@ OsInt WebServerConnection::ReadWriteThread(void* userData)
       if (contentLength == 0)
       {
         toSend->mData = builder.ToString();
-        Z::gDispatch->Dispatch(webServer, Events::WebServerRequest, toSend);
+        Z::gDispatch->Dispatch(webServer, Events::WebServerRawRequest, toSend);
         toSend = nullptr;
         break;
       }
@@ -299,7 +303,7 @@ OsInt WebServerConnection::ReadWriteThread(void* userData)
       {
         toSend->mData = builder.ToString();
         toSend->mPostData = unparsedContent;
-        Z::gDispatch->Dispatch(webServer, Events::WebServerRequest, toSend);
+        Z::gDispatch->Dispatch(webServer, Events::WebServerRawRequest, toSend);
         toSend = nullptr;
         break;
       }
@@ -369,14 +373,22 @@ OsInt WebServerConnection::ReadWriteThread(void* userData)
 ZilchDefineType(WebServer, builder, type)
 {
   ZeroBindEvent(Events::WebServerRequest, WebServerRequestEvent);
+  ZeroBindEvent(Events::WebServerUnhandledRequest, WebServerRequestEvent);
   ZilchBindMethod(Create);
   ZilchBindMethod(Host);
   ZilchBindMethod(Close);
   ZilchBindMethod(GetWebResponseCodeString);
+  ZilchBindMethod(UrlParamEncode);
+  ZilchBindMethod(UrlParamDecode);
+  ZilchBindMethod(MapExtensionToMimeType);
+  ZilchBindMethod(GetMimeTypeFromExtension);
+  ZilchBindMethod(ClearMimeTypes);
+  ZilchBindFieldProperty(mPath);
 }
 
 WebServer::WebServer()
 {
+  ConnectThisTo(this, Events::WebServerRawRequest, OnWebServerRawRequest);
 }
 
 WebServer::~WebServer()
@@ -483,6 +495,138 @@ String WebServer::GetWebResponseCodeString(Os::WebResponseCode::Enum code)
     case Os::WebResponseCode::HTTPVersionNotSupported       : return "505 HTTP Version Not Supported"; // 505
     default: return String();
   }
+}
+
+String  WebServer::UrlParamEncode(StringParam string)
+{
+  return Zero::UrlParamEncode(string);
+}
+
+String  WebServer::UrlParamDecode(StringParam string)
+{
+  return Zero::UrlParamDecode(string);
+}
+
+String StripDotFromExtension(StringParam extension)
+{
+  if (extension.StartsWith("."))
+    return extension.SubString(extension.Begin() + 1, extension.End());
+  return extension;
+}
+
+void WebServer::MapExtensionToMimeType(StringParam extension, StringParam mimeType)
+{
+  String extensionWithoutDot = StripDotFromExtension(extension);
+  mExtensionToMimeType[extensionWithoutDot] = mimeType;
+}
+
+String WebServer::GetMimeTypeFromExtension(StringParam extension)
+{
+  String extensionWithoutDot = StripDotFromExtension(extension);
+  return mExtensionToMimeType.FindValue(extensionWithoutDot, String());
+}
+
+void WebServer::ClearMimeTypes()
+{
+  mExtensionToMimeType.Clear();
+}
+
+String WebServer::SanitizeForHtml(StringParam text)
+{
+  StringBuilder builder;
+  forRange(Rune rune, text)
+  {
+    switch (rune.value)
+    {
+      case '&' : builder.Append("&amp;");  break;
+      case '<' : builder.Append("&lt;");   break;
+      case '>' : builder.Append("&gt;");   break;
+      case '"' : builder.Append("&quot;"); break;
+      case '\'': builder.Append("&#39;");  break;
+      default: builder.Append(rune); break;
+    }
+  }
+  String result = builder.ToString();
+  return result;
+}
+
+void WebServer::OnWebServerRawRequest(WebServerRequestEvent* event)
+{
+  // First let the user try and handle it.
+  DispatchEvent(Events::WebServerRequest, event);
+
+  // If the users responded to the event then the connection would be null, nothing else for us to do!
+  if (!event->mConnection)
+    return;
+
+  // If the user specified a mapped path, then look for files or directories there.
+  if (!mPath.Empty())
+  {
+    // Turn the URI into a relative file path by using an un-rooted URI and replacing the slashes with our os path separator.
+    String localPath = FilePath::Normalize(FilePath::Combine(mPath, event->mDecodedUri));
+
+    // If we have a file on disk, attempt to open it so we can send it.
+    if (FileExists(localPath))
+    {
+      String fileData = ReadFileIntoString(localPath.c_str());
+      String headers;
+      
+      // If we have a MIME type for the file, then let the requester know.
+      String mimeType = GetMimeTypeFromExtension(FilePath::GetExtension(localPath));
+      if (!mimeType.Empty())
+        headers = BuildString("Content-Type: ", mimeType, "\r\n");
+
+      event->Respond(Os::WebResponseCode::OK, headers, fileData);
+    }
+    else if (DirectoryExists(localPath))
+    {
+      String uriWithSlash = event->mDecodedUri;
+      if (!uriWithSlash.EndsWith("/"))
+        uriWithSlash = BuildString(uriWithSlash, "/");
+
+      // Build an HTML page that shows the name of the current directory and then lists all files.
+      String sanitizedServerPath = SanitizeForHtml(uriWithSlash);
+      StringBuilder builder;
+      builder.Append("<html><head><title>");
+      builder.Append(sanitizedServerPath);
+      builder.Append("</title></head><body><h1>");
+      builder.Append(sanitizedServerPath);
+      builder.Append("</h1>");
+
+      // Sort the file names so they'll be in order.
+      Array<String> sortedFileNames;
+
+      // Add this so users can go back one directory.
+      sortedFileNames.PushBack("..");
+
+      for (FileRange fileRange(localPath); !fileRange.Empty(); fileRange.PopFront())
+        sortedFileNames.PushBack(fileRange.Front());
+      Sort(sortedFileNames.All());
+      
+      // Build the listing for each file in sorted order.
+      forRange(StringParam fileName, sortedFileNames)
+      {
+        String serverPath = BuildString(uriWithSlash, fileName);
+
+        builder.Append("<a href='");
+        builder.Append(serverPath);
+        builder.Append("'>");
+        builder.Append(SanitizeForHtml(fileName));
+        builder.Append("</a><br>");
+      }
+
+      builder.Append("</body></html>");
+      String html = builder.ToString();
+      event->Respond(Os::WebResponseCode::OK, String(), html);
+    }
+  }
+
+  // If we don't have a connection, it means we responded already.
+  if (!event->mConnection)
+    return;
+
+  // One last chance for the user to handle the request before it automatically generates a 404.
+  DispatchEvent(Events::WebServerUnhandledRequest, event);
 }
 
 void WebServer::DoNotifyExceptionOnFail(StringParam message, const u32& context, void* userData)
