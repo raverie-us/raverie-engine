@@ -435,12 +435,25 @@ launcher_shared_post_build(
     ${zero_binary_dir}
 )
 
+#### BrowserSubProcess
+
 #copy_cef_bin_post_build(aTarget aZeroCoreDirectory aBuildOutputDirectory)
 copy_cef_bin_post_build(
     BrowserSubProcess
     ${zero_core_path}
     ${zero_binary_dir}
 )
+
+add_custom_command(
+    TARGET BrowserSubProcess POST_BUILD
+    # executes "cmake -E copy_if_different
+    COMMAND ${CMAKE_COMMAND} -E copy_directory  
+    # input folder
+    ${zero_binary_dir}/BrowserSubProcess                                  
+    #output folder
+    ${zero_binary_dir}/ZeroEditor
+)
+
 ####
 
 #### ZeroLauncher
