@@ -204,7 +204,7 @@ void CreateDirectoryAndParents(StringParam directory)
 time_t GetFileModifiedTime(StringParam file)
 {
   struct stat fileStat;
-  if(stat(file.c_str(), &fileStat) != 0)
+  if(stat(file.c_str(), &fileStat) == 0)
     return (time_t)fileStat.st_mtime;
   return 0;
 }
