@@ -1303,6 +1303,14 @@ DocumentationLibrary
 			}
 			var Properties = Array
 			{
+				Property
+				{
+					var Name = "StoredType"
+					var Type = "BoundType"
+					var Description = "An Archetype can be a Cog, Space, or GameSession. It's okay for this to be a raw BoundType* because native types will never be destructed."
+					var ReadOnly = false
+					var Static = false
+				}
 			}
 			var Methods = Array
 			{
@@ -1374,6 +1382,118 @@ DocumentationLibrary
 				}
 				Property
 				{
+					var Name = "LocalBottom"
+					var Type = "Real"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "LocalBottomCenter"
+					var Type = "Real2"
+					var Description = ""
+					var ReadOnly = true
+					var Static = false
+				}
+				Property
+				{
+					var Name = "LocalBottomLeft"
+					var Type = "Real2"
+					var Description = ""
+					var ReadOnly = true
+					var Static = false
+				}
+				Property
+				{
+					var Name = "LocalBottomRight"
+					var Type = "Real2"
+					var Description = ""
+					var ReadOnly = true
+					var Static = false
+				}
+				Property
+				{
+					var Name = "LocalCenter"
+					var Type = "Real2"
+					var Description = ""
+					var ReadOnly = true
+					var Static = false
+				}
+				Property
+				{
+					var Name = "LocalCenterLeft"
+					var Type = "Real2"
+					var Description = ""
+					var ReadOnly = true
+					var Static = false
+				}
+				Property
+				{
+					var Name = "LocalCenterRight"
+					var Type = "Real2"
+					var Description = ""
+					var ReadOnly = true
+					var Static = false
+				}
+				Property
+				{
+					var Name = "LocalLeft"
+					var Type = "Real"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "LocalRectangle"
+					var Type = "Rectangle"
+					var Description = "Rectangle representing the area relative to parent."
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "LocalRight"
+					var Type = "Real"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "LocalTop"
+					var Type = "Real"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "LocalTopCenter"
+					var Type = "Real2"
+					var Description = ""
+					var ReadOnly = true
+					var Static = false
+				}
+				Property
+				{
+					var Name = "LocalTopLeft"
+					var Type = "Real2"
+					var Description = ""
+					var ReadOnly = true
+					var Static = false
+				}
+				Property
+				{
+					var Name = "LocalTopRight"
+					var Type = "Real2"
+					var Description = ""
+					var ReadOnly = true
+					var Static = false
+				}
+				Property
+				{
 					var Name = "Origin"
 					var Type = "Location"
 					var Description = "Location of the Origin of the Area."
@@ -1412,6 +1532,118 @@ DocumentationLibrary
 					var ReadOnly = true
 					var Static = false
 				}
+				Property
+				{
+					var Name = "WorldBottom"
+					var Type = "Real"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "WorldBottomCenter"
+					var Type = "Real2"
+					var Description = ""
+					var ReadOnly = true
+					var Static = false
+				}
+				Property
+				{
+					var Name = "WorldBottomLeft"
+					var Type = "Real2"
+					var Description = ""
+					var ReadOnly = true
+					var Static = false
+				}
+				Property
+				{
+					var Name = "WorldBottomRight"
+					var Type = "Real2"
+					var Description = ""
+					var ReadOnly = true
+					var Static = false
+				}
+				Property
+				{
+					var Name = "WorldCenter"
+					var Type = "Real2"
+					var Description = ""
+					var ReadOnly = true
+					var Static = false
+				}
+				Property
+				{
+					var Name = "WorldCenterLeft"
+					var Type = "Real2"
+					var Description = ""
+					var ReadOnly = true
+					var Static = false
+				}
+				Property
+				{
+					var Name = "WorldCenterRight"
+					var Type = "Real2"
+					var Description = ""
+					var ReadOnly = true
+					var Static = false
+				}
+				Property
+				{
+					var Name = "WorldLeft"
+					var Type = "Real"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "WorldRectangle"
+					var Type = "Rectangle"
+					var Description = "Rectangle representing the area in world space."
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "WorldRight"
+					var Type = "Real"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "WorldTop"
+					var Type = "Real"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "WorldTopCenter"
+					var Type = "Real2"
+					var Description = ""
+					var ReadOnly = true
+					var Static = false
+				}
+				Property
+				{
+					var Name = "WorldTopLeft"
+					var Type = "Real2"
+					var Description = ""
+					var ReadOnly = true
+					var Static = false
+				}
+				Property
+				{
+					var Name = "WorldTopRight"
+					var Type = "Real2"
+					var Description = ""
+					var ReadOnly = true
+					var Static = false
+				}
 			}
 			var Methods = Array
 			{
@@ -1431,6 +1663,46 @@ DocumentationLibrary
 				}
 				Method
 				{
+					var Name = "GetLocalLocation"
+					var Description = ""
+					var ReturnType = "Real2"
+					var Parameters = "(Location location)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "location"
+							var Type = "Location"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "GetWorldLocation"
+					var Description = ""
+					var ReturnType = "Real2"
+					var Parameters = "(Location location)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "location"
+							var Type = "Location"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
 					var Name = "LocalOffsetOf"
 					var Description = "Offset of the given location in local space."
 					var ReturnType = "Real2"
@@ -1441,6 +1713,58 @@ DocumentationLibrary
 						{
 							var Name = "location"
 							var Type = "Location"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "SetLocalLocation"
+					var Description = ""
+					var ReturnType = "Void"
+					var Parameters = "(Location location, Real2 localTranslation)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "location"
+							var Type = "Location"
+							var Description = ""
+						}
+						Parameter
+						{
+							var Name = "localTranslation"
+							var Type = "Real2"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "SetWorldLocation"
+					var Description = ""
+					var ReturnType = "Void"
+					var Parameters = "(Location location, Real2 worldTranslation)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "location"
+							var Type = "Location"
+							var Description = ""
+						}
+						Parameter
+						{
+							var Name = "worldTranslation"
+							var Type = "Real2"
 							var Description = ""
 						}
 					}
@@ -26586,6 +26910,164 @@ DocumentationLibrary
 		}
 		Object
 		{
+			var Name = "ContextMenuEntry"
+			var BaseClass = "SafeId32EventObject"
+			var Library = "WidgetLibrary"
+			var Description = ""
+			var Tags = Array
+			{
+			}
+			var Properties = Array
+			{
+				Property
+				{
+					var Name = "Icon"
+					var Type = "String"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "Name"
+					var Type = "String"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
+			}
+			var Methods = Array
+			{
+				Method
+				{
+					var Name = "AddCommandByName"
+					var Description = ""
+					var ReturnType = "ContextMenuEntry"
+					var Parameters = "(String commandName)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "commandName"
+							var Type = "String"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "AddDivider"
+					var Description = ""
+					var ReturnType = "ContextMenuEntry"
+					var Parameters = "()"
+					var ParameterList = Array
+					{
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "AddEntry"
+					var Description = "Adds a new entry with the provided name with an icon if one is provided to this menu entries children."
+					var ReturnType = "ContextMenuEntry"
+					var Parameters = "(String name)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "name"
+							var Type = "String"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "ContextMenuEntry"
+					var Description = ""
+					var ReturnType = "Void"
+					var Parameters = "()"
+					var ParameterList = Array
+					{
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "Entries"
+					var Description = ""
+					var ReturnType = "ContextMenuEntryChildrenRange"
+					var Parameters = "()"
+					var ParameterList = Array
+					{
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "GetEntry"
+					var Description = "Returns the children entry with the provided name if it exists and null otherwise."
+					var ReturnType = "ContextMenuEntry"
+					var Parameters = "(String name)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "name"
+							var Type = "String"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "RemoveEntry"
+					var Description = "Remove the entry with the provided name from this menu entries children."
+					var ReturnType = "Void"
+					var Parameters = "(String name)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "name"
+							var Type = "String"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+			}
+			var EventsSent = Array
+			{
+			}
+			var ImportDocumentation = true
+		}
+		Object
+		{
 			var Name = "ConvexMesh"
 			var BaseClass = "GenericPhysicsMesh"
 			var Library = "PhysicsLibrary"
@@ -29446,6 +29928,32 @@ DocumentationLibrary
 						{
 							var Name = "ray"
 							var Type = "Ray"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "DebugLine"
+					var Description = ""
+					var ReturnType = "Void"
+					var Parameters = "(Ray ray, Real t)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "ray"
+							var Type = "Ray"
+							var Description = ""
+						}
+						Parameter
+						{
+							var Name = "t"
+							var Type = "Real"
 							var Description = ""
 						}
 					}
@@ -43624,6 +44132,14 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				}
 				Property
 				{
+					var Name = "DisabledValue"
+					var Type = "Real"
+					var Description = "A value that means a joystick axis is invalid. For example when a HAT-switch is not pressed down, it will return this value."
+					var ReadOnly = true
+					var Static = true
+				}
+				Property
+				{
 					var Name = "IsActive"
 					var Type = "Boolean"
 					var Description = "Gets whether or not the joystick is active."
@@ -43712,7 +44228,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				Method
 				{
 					var Name = "GetAxisValue"
-					var Description = "Queries an axes and returns a value between [-1, 1] The valid range of axes is between 0 and 'GetMaxAxes' If the axis is not valid, then the value returned is 0."
+					var Description = "Queries an axes and returns a value between [-1, 1]. The valid range of axes is between 0 and 'GetMaxAxes'. If the axis is not valid, then the value returned is 0. If the axis is disabled, then the value returned is Joystick.DisabledValue."
 					var ReturnType = "Real"
 					var Parameters = "(Integer index)"
 					var ParameterList = Array
@@ -43938,6 +44454,34 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				}
 				Method
 				{
+					var Name = "IsAnyKeyDown"
+					var Description = "Is any key in the 'Keys' enum down (not including 'Keys::Unknown', e.g. PrintScreen)."
+					var ReturnType = "Boolean"
+					var Parameters = "()"
+					var ParameterList = Array
+					{
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "IsAnyNonModifierDown"
+					var Description = "Excluding Ctrl, Shift, and Alt - is any key in the 'Keys' enum down (not including 'Keys::Unknown', e.g. PrintScreen)."
+					var ReturnType = "Boolean"
+					var Parameters = "()"
+					var ParameterList = Array
+					{
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
 					var Name = "KeyIsDown"
 					var Description = "Is the particular currently down."
 					var ReturnType = "Boolean"
@@ -44008,6 +44552,106 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 						{
 							var Name = "key"
 							var Type = "Keys"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "ToKey"
+					var Description = "Counterpart to 'ToSymbol'. Converts a key's name or symbol to the key value. Returns Keys::Unknown if key is not found."
+					var ReturnType = "Keys"
+					var Parameters = "(String key)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "key"
+							var Type = "String"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "ToSymbol"
+					var Description = "Convert key value to it's actual name or keyboard symbol, if it has one. Returns \"Unknown\" String if key is not found."
+					var ReturnType = "String"
+					var Parameters = "(Keys key)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "key"
+							var Type = "Keys"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "ToSymbol"
+					var Description = "Convert a key name to it's keyboard symbol, if it has one. Returns input String if key is not found."
+					var ReturnType = "String"
+					var Parameters = "(String keyName)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "keyName"
+							var Type = "String"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "Valid"
+					var Description = "Validate that the key is a Keys::Enum that is not 'Unknown', or 'None', or an integer value that doesn't map to a known Keys::Enum value."
+					var ReturnType = "Boolean"
+					var Parameters = "(Keys key)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "key"
+							var Type = "Keys"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "Valid"
+					var Description = "Validate that the input string can be mapped back to an enum."
+					var ReturnType = "Boolean"
+					var Parameters = "(String key)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "key"
+							var Type = "String"
 							var Description = ""
 						}
 					}
@@ -75063,13 +75707,19 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 					var Name = "AddObject"
 					var Description = ""
 					var ReturnType = "Void"
-					var Parameters = "(AnyHandle)"
+					var Parameters = "(AnyHandle, Boolean)"
 					var ParameterList = Array
 					{
 						Parameter
 						{
 							var Name = ""
 							var Type = "AnyHandle"
+							var Description = ""
+						}
+						Parameter
+						{
+							var Name = ""
+							var Type = "Boolean"
 							var Description = ""
 						}
 					}
@@ -75136,13 +75786,19 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 					var Name = "RemoveObject"
 					var Description = ""
 					var ReturnType = "Void"
-					var Parameters = "(AnyHandle)"
+					var Parameters = "(AnyHandle, Boolean)"
 					var ParameterList = Array
 					{
 						Parameter
 						{
 							var Name = ""
 							var Type = "AnyHandle"
+							var Description = ""
+						}
+						Parameter
+						{
+							var Name = ""
+							var Type = "Boolean"
 							var Description = ""
 						}
 					}
@@ -77328,9 +77984,17 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				}
 				Property
 				{
+					var Name = "FrictionImportance"
+					var Type = "Real"
+					var Description = "Determines which object's friction should be used. If object A's friction importance value is larger than object B's then object A's friction will be used. If both importance values are the same then the default combination logic will be used (see the description of Friction for details)."
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
 					var Name = "HighPriority"
 					var Type = "Boolean"
-					var Description = "If high priority is set, this object's restitution/friction will always be used unless the other material is also high priority. If both are high priority then the default combination logic will be used."
+					var Description = "Deprecated. Use RestitutionImportance instead."
 					var ReadOnly = false
 					var Static = false
 				}
@@ -77339,6 +78003,14 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 					var Name = "Restitution"
 					var Type = "Real"
 					var Description = "How much an object will bounce during a collision. Values should be in the range [0,1] where 0 is an inelastic collision and 1 is a fully elastic collision. Restitution is computed as the max of the two objects. Note: due to solving constraints with baumgarte, energy will not be perfectly conserved with a restitution 1."
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "RestitutionImportance"
+					var Type = "Real"
+					var Description = "Determines which object's restitution should be used. If object A's restitution importance value is larger than object B's then object A's restitution will be used. If both importance values are the same then the default combination logic will be used (see the description of Restitution for details)."
 					var ReadOnly = false
 					var Static = false
 				}
@@ -86426,27 +87098,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 		}
 		Object
 		{
-			var Name = "RegisterCppNetProperties"
-			var BaseClass = "Event"
-			var Library = "NetworkingLibrary"
-			var Description = "Dispatched while adding C++ component net properties to a NetObject."
-			var Tags = Array
-			{
-				"Event"
-			}
-			var Properties = Array
-			{
-			}
-			var Methods = Array
-			{
-			}
-			var EventsSent = Array
-			{
-			}
-			var ImportDocumentation = true
-		}
-		Object
-		{
 			var Name = "RelativeVelocityJoint"
 			var BaseClass = "Joint"
 			var Library = "PhysicsLibrary"
@@ -86678,6 +87329,14 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 			{
 				Property
 				{
+					var Name = "ChildRenderGroups"
+					var Type = "ChildRenderGroupList"
+					var Description = "For assigning child RenderGroups, making this a parent group of everything in the list."
+					var ReadOnly = true
+					var Static = false
+				}
+				Property
+				{
 					var Name = "GraphicalSortMethod"
 					var Type = "GraphicalSortMethod"
 					var Description = "Determines the order that graphicals will be drawn when processed as this RenderGroup."
@@ -86694,6 +87353,14 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				}
 				Property
 				{
+					var Name = "ParentRenderGroup"
+					var Type = "RenderGroup"
+					var Description = "RenderGroup that this is a sub group of. Also a sub group of all of its parents."
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
 					var Name = "ReferencedByList"
 					var Type = "MaterialList"
 					var Description = ""
@@ -86703,6 +87370,46 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 			}
 			var Methods = Array
 			{
+				Method
+				{
+					var Name = "IsSubRenderGroup"
+					var Description = "Returns whether or not the given RenderGroup is a sub group of this."
+					var ReturnType = "Boolean"
+					var Parameters = "(RenderGroup renderGroup)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "renderGroup"
+							var Type = "RenderGroup"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "IsSubRenderGroupOf"
+					var Description = "Returns whether or not this is a sub group of the given RenderGroup."
+					var ReturnType = "Boolean"
+					var Parameters = "(RenderGroup renderGroup)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "renderGroup"
+							var Type = "RenderGroup"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
 			}
 			var EventsSent = Array
 			{
@@ -87545,6 +88252,46 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 						{
 							var Name = "renderPass"
 							var Type = "MaterialBlock"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "AddRenderTaskSubRenderGroupPass"
+					var Description = "Renders all objects within a RenderGroup hierarchy, sorted in the order defined by the base RenderGroup, and can use unique render settings for each RenderGroup in the hierarchy."
+					var ReturnType = "Void"
+					var Parameters = "(SubRenderGroupPass subRenderGroupPass)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "subRenderGroupPass"
+							var Type = "SubRenderGroupPass"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "CreateSubRenderGroupPass"
+					var Description = "Creates the interface used to define unique render settings for a base RenderGroup and its sub RenderGroups. The given RenderGroup is used to define the hierarchy, or sub hierarchy, that should be rendered. The given RenderGroup also defines the sort order for all objects that are within its hierarchy. Returned SubRenderGroupPass is only valid during this event."
+					var ReturnType = "SubRenderGroupPass"
+					var Parameters = "(RenderGroup baseGroup)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "baseGroup"
+							var Type = "RenderGroup"
 							var Description = ""
 						}
 					}
@@ -91135,7 +91882,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "StartDistance"
 					var Type = "Real"
-					var Description = "The distance from a SoundListener at which the sound's volume begins attenuating. At shorter distances the volume will not be changed."
+					var Description = "The distance from a SoundListener at which the sound's volume begins attenuating. At shorter distances the volume will not be changed. Cannot be larger than the StopDistance."
 					var ReadOnly = false
 					var Static = false
 				}
@@ -91143,7 +91890,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "StopDistance"
 					var Type = "Real"
-					var Description = "The distance at which the attenuation reaches the minimum volume. No volume changes will happen past this distance."
+					var Description = "The distance at which the attenuation reaches the minimum volume. No volume changes will happen past this distance. Cannot be smaller than the StartDistance."
 					var ReadOnly = false
 					var Static = false
 				}
@@ -91279,6 +92026,14 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 			{
 				Property
 				{
+					var Name = "FileLoadType"
+					var Type = "AudioFileLoadType"
+					var Description = "If Streamed is selected, or if Auto is selected and the file is longer than one minute, the sound file will be streamed from disk at runtime instead of loaded into memory. Streaming files can't be played multiple times simultaneously and can't use loop tails."
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
 					var Name = "MaxVolume"
 					var Type = "Real"
 					var Description = "The volume of the sound will be altered so that the highest volume peak matches this value. All audio samples will be adjusted equally."
@@ -91298,14 +92053,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 					var Name = "Normalize"
 					var Type = "Boolean"
 					var Description = "If true, the audio will be normalized when loaded so that the highest volume peak matches the MaxVolume value."
-					var ReadOnly = false
-					var Static = false
-				}
-				Property
-				{
-					var Name = "Streamed"
-					var Type = "Boolean"
-					var Description = "If true, the sound file will be streamed from disk at runtime instead of loaded into memory. Streaming files can't be played multiple times simultaneously and can't use loop tails."
 					var ReadOnly = false
 					var Static = false
 				}
@@ -91631,7 +92378,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "EmitAngle"
 					var Type = "Real"
-					var Description = "The angle of full volume sound for a directional SoundEmitter. An angle of 90, for example, will be centered at the object's front, extending 45 degrees to the left and right."
+					var Description = "The angle of full volume sound for a directional SoundEmitter, from 1 to 360. An angle of 90, for example, will be centered at the object's front, extending 45 degrees to the left and right."
 					var ReadOnly = false
 					var Static = false
 				}
@@ -91905,7 +92652,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "EndTime"
 					var Type = "Real"
-					var Description = "The time (in seconds) at which the Sound will stop playing. Defaults to the length of the audio file."
+					var Description = "The time (in seconds) at which the Sound will stop playing. Defaults to the length of the audio file. Cannot be smaller than the StartTime."
 					var ReadOnly = false
 					var Static = false
 				}
@@ -91913,7 +92660,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "LoopEndTime"
 					var Type = "Real"
-					var Description = "The time (in seconds) from the beginning of the audio file at which a looping SoundInstance jumps back to the LoopStartTime. If it stops looping while playing it will continue to the EndTime and then stop."
+					var Description = "The time (in seconds) from the beginning of the audio file at which a looping SoundInstance jumps back to the LoopStartTime. If it stops looping while playing it will continue to the EndTime and then stop. Cannot be smaller than the LoopStartTime."
 					var ReadOnly = false
 					var Static = false
 				}
@@ -91921,7 +92668,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "LoopStartTime"
 					var Type = "Real"
-					var Description = "The time (in seconds) from the beginning of the audio file that a looping SoundInstance will jump back to after it reaches the LoopEndTime. The Sound will still start at the StartTime when it is played, but after it begins looping it will start at the LoopStartTime."
+					var Description = "The time (in seconds) from the beginning of the audio file that a looping SoundInstance will jump back to after it reaches the LoopEndTime. The Sound will still start at the StartTime when it is played, but after it begins looping it will start at the LoopStartTime. Cannot be larger than the LoopEndTime."
 					var ReadOnly = false
 					var Static = false
 				}
@@ -91945,7 +92692,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "StartTime"
 					var Type = "Real"
-					var Description = "The time (in seconds) at which the Sound will start playing. A value of 0 will start the Sound at the beginning of the audio file."
+					var Description = "The time (in seconds) at which the Sound will start playing. A value of 0 will start the Sound at the beginning of the audio file. Cannot be larger than the EndTime."
 					var ReadOnly = false
 					var Static = false
 				}
@@ -92326,7 +93073,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "AttenuationScale"
 					var Type = "Real"
-					var Description = "The scale value applied to the attenuation of sounds heard by this listener. If a sound uses a SoundAttenuator StopDistance of 20, and this value is 1.5, the attenuation will stop at 30."
+					var Description = "The scale multiplier applied to the attenuation of sounds heard by this listener. If a sound uses a SoundAttenuator StopDistance of 20, and this value is 1.5, the attenuation will stop at 30."
 					var ReadOnly = false
 					var Static = false
 				}
@@ -92605,6 +93352,14 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 					var Type = "SoundNode"
 					var Description = "DEPRECATED The SoundNodeInput property should be used instead."
 					var ReadOnly = true
+					var Static = false
+				}
+				Property
+				{
+					var Name = "MuteAudio"
+					var Type = "Boolean"
+					var Description = "Silences all audio output from this space but processes audio normally."
+					var ReadOnly = false
 					var Static = false
 				}
 				Property
@@ -94454,6 +95209,26 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 					var Parameters = "()"
 					var ParameterList = Array
 					{
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "SplineEvent"
+					var Description = ""
+					var ReturnType = "Void"
+					var Parameters = "(Spline spline)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "spline"
+							var Type = "Spline"
+							var Description = ""
+						}
 					}
 					var PossibleExceptionThrows = Array
 					{
@@ -97305,6 +98080,134 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 		}
 		Object
 		{
+			var Name = "SubRenderGroupPass"
+			var BaseClass = "SafeId32"
+			var Library = "GraphicsLibrary"
+			var Description = "Interface used to define unique render settings for a base RenderGroup and its sub RenderGroups."
+			var Tags = Array
+			{
+			}
+			var Properties = Array
+			{
+			}
+			var Methods = Array
+			{
+				Method
+				{
+					var Name = "AddSubSettings"
+					var Description = "Define the settings to use for a specific RenderGroup. Given RenderGroup must be a child of the base RenderGroup, or the base itself, that this was initialized with."
+					var ReturnType = "Void"
+					var Parameters = "(RenderSettings subSettings, RenderGroup subGroup, MaterialBlock subPass)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "subSettings"
+							var Type = "RenderSettings"
+							var Description = ""
+						}
+						Parameter
+						{
+							var Name = "subGroup"
+							var Type = "RenderGroup"
+							var Description = ""
+						}
+						Parameter
+						{
+							var Name = "subPass"
+							var Type = "MaterialBlock"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "ExcludeSubRenderGroup"
+					var Description = "Explicitely exclude a RenderGroup from rendering when there are default settings. Given RenderGroup must be a child of the base RenderGroup, or the base itself, that this was initialized with."
+					var ReturnType = "Void"
+					var Parameters = "(RenderGroup subGroup)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "subGroup"
+							var Type = "RenderGroup"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+						Exception
+						{
+							var Title = "Error"
+							var Message = "[variable]"
+						}
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "Reset"
+					var Description = "Resets interface back to the initial creation state with a given base RenderGroup."
+					var ReturnType = "Void"
+					var Parameters = "(RenderGroup baseRenderGroup)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "baseRenderGroup"
+							var Type = "RenderGroup"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
+					var Name = "SetDefaultSettings"
+					var Description = "Settings to use for the base or all sub RenderGroups that do not have specified settings. Without defaults, the base or any sub RenderGroup without settings will not render."
+					var ReturnType = "Void"
+					var Parameters = "(RenderSettings defaultSettings, MaterialBlock defaultPass)"
+					var ParameterList = Array
+					{
+						Parameter
+						{
+							var Name = "defaultSettings"
+							var Type = "RenderSettings"
+							var Description = ""
+						}
+						Parameter
+						{
+							var Name = "defaultPass"
+							var Type = "MaterialBlock"
+							var Description = ""
+						}
+					}
+					var PossibleExceptionThrows = Array
+					{
+						Exception
+						{
+							var Title = "Error"
+							var Message = "[variable]"
+						}
+					}
+					var Static = false
+				}
+			}
+			var EventsSent = Array
+			{
+			}
+			var ImportDocumentation = true
+		}
+		Object
+		{
 			var Name = "SweepResult"
 			var BaseClass = ""
 			var Library = "PhysicsLibrary"
@@ -97788,6 +98691,14 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				}
 				Property
 				{
+					var Name = "HighlightPartialTextMatch"
+					var Type = "Boolean"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
 					var Name = "KeywordAndTypeCompletion"
 					var Type = "Boolean"
 					var Description = ""
@@ -97822,6 +98733,14 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "TabWidth"
 					var Type = "TabWidth"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "TextMatchHighlighting"
+					var Type = "Boolean"
 					var Description = ""
 					var ReadOnly = false
 					var Static = false
@@ -103080,6 +103999,29 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 		}
 		Object
 		{
+			var Name = "AudioFileLoadType"
+			var EnumValues = Map
+			{
+				Object
+				{
+					var key = "Auto"
+					var value = "This will choose whether to stream a file depending on its length. Files longer than one minute will be streamed."
+				}
+				Object
+				{
+					var key = "StreamFromFile"
+					var value = "The audio data will be read from the file and decompressed as it plays. Streaming files can't be played multiple times simultaneously and can't use loop tails."
+				}
+				Object
+				{
+					var key = "Uncompressed"
+					var value = "The audio data will be decompressed and held in memory when the Sound resource is loaded."
+				}
+			}
+			var Description = "The choices for how to load and play an audio file."
+		}
+		Object
+		{
 			var Name = "AudioLatency"
 			var EnumValues = Map
 			{
@@ -103304,7 +104246,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 					var value = ""
 				}
 			}
-			var Description = "Useref\"ResourceId:Name\" String as ReplicaType? Otherwise we will use ResourceId u64 as ReplicaType (much more efficient). This impacts bandwidth performance when first spawning/cloning newreftypes to remote peers."
+			var Description = "Use Archetype \"ResourceId:Name\" String as ReplicaType? Otherwise we will use ResourceId u64 as ReplicaType (much more efficient). This impacts bandwidth performance when first spawning/cloning new NetObject types to remote peers."
 		}
 		Object
 		{
@@ -103681,7 +104623,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 					var value = "Always reject this object for testing."
 				}
 			}
-			var Description = "Controls custom cast filtering via theref. Allows custom filter logic per object."
+			var Description = "Controls custom cast filtering via the CastFilterEvent . Allows custom filter logic per object."
 		}
 		Object
 		{
@@ -103836,7 +104778,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 					var value = "Don't run collision resolution. Detection will still be run so events might be sent out."
 				}
 			}
-			var Description = "Controls what parts of collision detection/resolution are run for arefpair."
+			var Description = "Controls what parts of collision detection/resolution are run for a CollisionGroup pair."
 		}
 		Object
 		{
@@ -104083,7 +105025,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 					var value = ""
 				}
 			}
-			var Description = "StandardrefCursors."
+			var Description = "Standard Mouse Cursors."
 		}
 		Object
 		{
@@ -104428,7 +105370,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				Object
 				{
 					var key = "Custom"
-					var value = "Sets the volume reduction using a"
+					var value = "Sets the volume reduction using a SampleCurve resource."
 				}
 				Object
 				{
@@ -104762,7 +105704,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 					var value = "Uses linear ramps during attack and release times. More efficient than RaisedCosine but not as smooth."
 				}
 			}
-			var Description = "Types of windows (volume envelopes) that can be used for individual grains generated by theref."
+			var Description = "Types of windows (volume envelopes) that can be used for individual grains generated by the GranularSynthNode ."
 		}
 		Object
 		{
@@ -105498,6 +106440,11 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				}
 				Object
 				{
+					var key = "Insert"
+					var value = ""
+				}
+				Object
+				{
 					var key = "J"
 					var value = ""
 				}
@@ -106021,7 +106968,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				Object
 				{
 					var key = "InheritFromSpace"
-					var value = "Use the Mode2D state on the"
+					var value = "Use the Mode2D state on the PhysicsSpace . This allows easy changing of the entire space between 2D/3D."
 				}
 				Object
 				{
@@ -106034,7 +106981,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 					var value = "A regular 3D object (6 degrees of freedom)."
 				}
 			}
-			var Description = "Represents what dimensions arefshould operate in (how many degrees of freedom it has by default)."
+			var Description = "Represents what dimensions a RigidBody should operate in (how many degrees of freedom it has by default)."
 		}
 		Object
 		{
@@ -106945,7 +107892,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 					var value = "The sound will play once to its EndTime and then stop."
 				}
 			}
-			var Description = "Whether arefshould play once or loop continuously."
+			var Description = "Whether a SoundCue should play once or loop continuously."
 		}
 		Object
 		{
@@ -106955,15 +107902,15 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				Object
 				{
 					var key = "Random"
-					var value = "The"
+					var value = "The SoundCue will pick a Sound at random, taking into account the Weight values."
 				}
 				Object
 				{
 					var key = "Sequential"
-					var value = "Each time the"
+					var value = "Each time the SoundCue is played it will pick the next Sound in the order they are displayed."
 				}
 			}
-			var Description = "Whether arefshould pick arefto play randomly or sequentially."
+			var Description = "Whether a SoundCue should pick a Sound to play randomly or sequentially."
 		}
 		Object
 		{
@@ -107226,7 +108173,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 					var value = ""
 				}
 			}
-			var Description = "refrefrefEnums."
+			var Description = "Sprite  Particle  System Enums."
 		}
 		Object
 		{
@@ -107712,7 +108659,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 					var value = ""
 				}
 			}
-			var Description = "Block compression, lossy hardware supported formats with very high memory savings None - No compression will be used BC1 - RGB stored at 1/2 byte per pixel Used for color maps that don't need alpha, normal maps BC2 - RGB w/ low precision alpha stored at 1 byte per pixel No common usages BC3 - RGB w/ alpha stored at 1 byte per pixel Used for color maps that need alpha BC4 - R stored at 1/2 byte per pixel Used for single channel maps like height, specular, roughness BC5 - RG stored at 1 byte per pixel Used for two channel maps like normals with reconstructedrefBC6 - RGB floats stored at 1 byte per pixel Used for high dynamic range images."
+			var Description = "Block compression, lossy hardware supported formats with very high memory savings None - No compression will be used BC1 - RGB stored at 1/2 byte per pixel Used for color maps that don't need alpha, normal maps BC2 - RGB w/ low precision alpha stored at 1 byte per pixel No common usages BC3 - RGB w/ alpha stored at 1 byte per pixel Used for color maps that need alpha BC4 - R stored at 1/2 byte per pixel Used for single channel maps like height, specular, roughness BC5 - RG stored at 1 byte per pixel Used for two channel maps like normals with reconstructed Z BC6 - RGB floats stored at 1 byte per pixel Used for high dynamic range images."
 		}
 		Object
 		{
@@ -108276,6 +109223,24 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				Object
 				{
 					var key = "Right"
+					var value = ""
+				}
+			}
+			var Description = ""
+		}
+		Object
+		{
+			var Name = "UiScrollBarAxis"
+			var EnumValues = Map
+			{
+				Object
+				{
+					var key = "X"
+					var value = ""
+				}
+				Object
+				{
+					var key = "Y"
 					var value = ""
 				}
 			}
