@@ -103,6 +103,56 @@ GlTextureEnums gTextureEnums[] =
 };
 
 //**************************************************************************************************
+void WebGLConvertTextureFormat(AddTextureInfo* info)
+{
+  // 16 integer formats are unsupported, fallback to half floats to preserve data size.
+  if (IsShortColorFormat(info->mFormat))
+  {
+    switch (info->mFormat)
+    {
+      case TextureFormat::R16:    info->mFormat = TextureFormat::R16f;    break;
+      case TextureFormat::RG16:   info->mFormat = TextureFormat::RG16f;   break;
+      case TextureFormat::RGB16:  info->mFormat = TextureFormat::RGB16f;  break;
+      case TextureFormat::RGBA16: info->mFormat = TextureFormat::RGBA16f; break;
+      default: return;
+    }
+
+    uint componentCount = GetPixelSize(info->mFormat) / sizeof(u16);
+
+    for (uint i = 0; i < info->mMipCount; ++i)
+    {
+      MipHeader* mipHeader = info->mMipHeaders + i;
+      u16* imageData = (u16*)(info->mImageData + mipHeader->mDataOffset);
+      uint pixelCount = mipHeader->mWidth * mipHeader->mHeight;
+
+      for (uint p = 0; p < pixelCount * componentCount; ++p)
+      {
+        float normalized = imageData[p] / 65535.0f;
+        imageData[p] = HalfFloatConverter::ToHalfFloat(normalized);
+      }
+    }
+  }
+}
+
+//**************************************************************************************************
+void WebGLConvertRenderTargetFormat(AddTextureInfo* info)
+{
+  // For unsupported target formats, fallback to formats that do not drop any data.
+  // Formats are either converting to floats, adding an alpha channel, or both.
+  switch (info->mFormat)
+  {
+    case TextureFormat::R16:     info->mFormat = TextureFormat::R16f;     break;
+    case TextureFormat::RG16:    info->mFormat = TextureFormat::RG16f;    break;
+    case TextureFormat::RGB16:   info->mFormat = TextureFormat::RGBA16f;  break;
+    case TextureFormat::RGBA16:  info->mFormat = TextureFormat::RGBA16f;  break;
+    case TextureFormat::RGB16f:  info->mFormat = TextureFormat::RGBA16f;  break;
+    case TextureFormat::RGB32f:  info->mFormat = TextureFormat::RGBA32f;  break;
+    case TextureFormat::SRGB8:   info->mFormat = TextureFormat::SRGB8A8;  break;
+    case TextureFormat::Depth32: info->mFormat = TextureFormat::Depth32f; break;
+  }
+}
+
+//**************************************************************************************************
 GLint GlInternalFormat(TextureCompression::Enum compression)
 {
   switch (compression)
@@ -582,8 +632,8 @@ void SetMultiRenderTargets(GLuint fboId, TextureRenderData** colorTargets, Textu
 {
   glBindFramebuffer(GL_FRAMEBUFFER, fboId);
 
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 0, 0);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, 0, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
 
   GLenum drawBuffers[8];
 
@@ -1098,7 +1148,6 @@ void OpenglRenderer::AddMesh(AddMeshInfo* info)
 void OpenglRenderer::AddTexture(AddTextureInfo* info)
 {
   GlTextureRenderData* renderData = (GlTextureRenderData*)info->mRenderData;
-  GlTextureEnums glEnums = gTextureEnums[info->mFormat];
 
   if (info->mFormat == TextureFormat::None)
   {
@@ -1125,12 +1174,18 @@ void OpenglRenderer::AddTexture(AddTextureInfo* info)
     // A texture resource with uploaded data will never set data size to 0.
     if (info->mTotalDataSize == 0)
     {
+      ZeroIfGlEs(WebGLConvertRenderTargetFormat(info));
+      GlTextureEnums glEnums = gTextureEnums[info->mFormat];
+
       // Rendering to cubemap is not implemented.
       glTexImage2D(GL_TEXTURE_2D, 0, glEnums.mInternalFormat, info->mWidth, info->mHeight, 0, glEnums.mFormat, glEnums.mType, nullptr);
     }
     // Do not try to reallocate texture data if no new data is given.
     else if (info->mImageData != nullptr)
     {
+      ZeroIfGlEs(WebGLConvertTextureFormat(info));
+      GlTextureEnums glEnums = gTextureEnums[info->mFormat];
+
       for (uint i = 0; i < info->mMipCount; ++i)
       {
         MipHeader* mipHeader = info->mMipHeaders + i;
