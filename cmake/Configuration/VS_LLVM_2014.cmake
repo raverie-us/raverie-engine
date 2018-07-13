@@ -8,6 +8,7 @@ include(${cmake_compiler_dir}/Clang.cmake)
 include(${cmake_flags_dir}/MSVC_FLAGS.cmake)
 
 #add_compile_options(-FIPrecompiled.hpp)
+set(configuration VS_LLVM_2014)
 
 unset(common_flags)
 # override the flags because clangs hates some of the normal msvc flags

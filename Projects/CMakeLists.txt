@@ -154,6 +154,9 @@ target_link_libraries(ZeroLauncherSharedLibrary
 add_dependencies(ZeroLauncherSharedLibrary
     BrowserSubProcess
 )
+add_dependencies(ZeroEditor
+    BrowserSubProcess
+)
 # launcher needs the dll to run
 add_dependencies(ZeroLauncher
     ZeroLauncherSharedLibrary
