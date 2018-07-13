@@ -62,7 +62,12 @@ set(zero_unit_test_dir ${zero_core_path}/UnitTests)
 ################################################################################
 option(generate_with_unit_tests "If set to 'ON', project will be generated with the unit tests included." OFF)
 
+################################################################################
+# Define any platform options
+################################################################################
 include(${cmake_include_dir}/Platform_Options.cmake)
+
+set(zero_platform_data ${zero_core_path}/PlatformData/${platform})
 
 ################################################################################
 # Path for finding external CMake modules

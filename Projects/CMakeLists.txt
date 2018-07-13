@@ -312,7 +312,6 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         $<$<CONFIG:Release>:-"D \"NDEBUG\"">
         $<$<CONFIG:Release>:-"D \"VLD\"">
     )
-
     
 ################################################################################
 # Set linker flags
@@ -436,14 +435,6 @@ launcher_shared_post_build(
 )
 
 #### BrowserSubProcess
-
-#copy_cef_bin_post_build(aTarget aZeroCoreDirectory aBuildOutputDirectory)
-copy_cef_bin_post_build(
-    BrowserSubProcess
-    ${zero_core_path}
-    ${zero_binary_dir}
-)
-
 add_custom_command(
     TARGET BrowserSubProcess POST_BUILD
     # executes "cmake -E copy_if_different
@@ -464,17 +455,17 @@ launcher_post_build(
     ${zero_binary_dir}
 )
 
-#create_build_info(
-#    ZeroLauncher
-#    ${CurrentDirectory}/ZeroLauncher/ZeroLauncher
-#    ${zero_core_path}
-#    ${zero_binary_dir}
-#    ${zero_binary_dir}
-#)
-#
-#copy_cef_bin_post_build(
-#    ZeroLauncher
-#    ${zero_core_path}
-#    ${zero_binary_dir}
-#)
+
+#### Copy the CEF files for every project that needs them
+# first check if we need CEF for this platform, then copy cef files over
+if (${CEF_exists})
+    zero_multitarget_copy_folders_to_target_output_directories(
+        ZeroEditor
+        ZeroLauncher
+        BrowserSubProcess
+        OUTPUT_DIRECTORY ${zero_binary_dir}
+        FOLDERS_TO_COPY 
+        ${aZeroCoreDirectory}/External/CEF/bin
+    )
+endif()
 ####

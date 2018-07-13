@@ -48,12 +48,18 @@ foreach(possibleStaticLib ${AllPossibleStaticExternals})
     set(${possibleStaticLib}Static "")
     set(${possibleStaticLib}Static "" PARENT_SCOPE)
     set(${possibleStaticLib}Headers "" PARENT_SCOPE)
+
+    #variable to easily check if an external exists
+    set(${possibleStaticLib}_exists OFF)
 endforeach()
 
 foreach(possibleSharedLib ${AllPossibleSharedExternals})
-set(${possibleSharedLib}Shared "")
-set(${possibleSharedLib}Shared "" PARENT_SCOPE)
-set(${possibleSharedLib}Headers "" PARENT_SCOPE)
+    set(${possibleSharedLib}Shared "")
+    set(${possibleSharedLib}Shared "" PARENT_SCOPE)
+    set(${possibleSharedLib}Headers "" PARENT_SCOPE)
+
+    #variable to easily check if an external exists
+    set(${possibleSharedLib}_exists OFF)
 endforeach()
 
 
@@ -95,6 +101,9 @@ set(SDLPath ${CurrentDirectory}/SDL)
 ################################################################################
 
 foreach(libStatic ${StaticExternals})
+    #variable to easily check if an external exists
+    set(${libStatic}_exists ON)
+
     # get lists of libraries
     if ("${bit}" STREQUAL "")
         file(GLOB ${libStatic}StaticPath ${${libStatic}Path}/lib/${platform}/*.*)
@@ -105,8 +114,6 @@ foreach(libStatic ${StaticExternals})
         file(GLOB ${libStatic}StaticDebugPath ${${libStatic}Path}/lib/${platform}/${bit}/Debug/*.*)
         file(GLOB ${libStatic}StaticReleasePath ${${libStatic}Path}/lib/${platform}/${bit}/Release/*.*)
     endif()
-
-
 
     if ("${${libStatic}StaticPath}"        STRGREATER "" 
      OR "${${libStatic}StaticDebugPath}"   STRGREATER ""
@@ -172,6 +179,9 @@ foreach(libStatic ${StaticExternals})
 endforeach()
 
 foreach(libShared ${SharedExternals})
+    # set easy variable for seeing if a lib exists
+    set(${libShared}_exists ON)
+
     # get list of shared libraries
     file(GLOB ${libShared}SharedPath ${${libShared}Path}/bin/*.dll)
 

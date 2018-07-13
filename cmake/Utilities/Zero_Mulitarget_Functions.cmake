@@ -81,3 +81,28 @@ function(zero_multitarget_output_directories)
     endforeach()
 endfunction()
 ####
+
+#### Copies contents of given directory into the output folder of every passed target
+function(zero_multitarget_copy_folders_to_target_output_directories)
+    set(oneValueArgs OUTPUT_DIRECTORY)
+    set(multiValueArgs FOLDERS_TO_COPY)
+
+    cmake_parse_arguments(PARSED "" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    set(PARSED_TARGETS ${PARSED_UNPARSED_ARGUMENTS})
+
+    foreach(target ${PARSED_TARGETS})
+        foreach(folder ${PARSED_FOLDERS_TO_COPY})
+            add_custom_command(TARGET ${target} POST_BUILD
+                # executes "cmake -E copy_if_different
+                COMMAND ${CMAKE_COMMAND} -E copy_directory  
+                # input folder
+                ${folder}
+                #output folder
+                ${PARSED_OUTPUT_DIRECTORY}/${target}
+            )
+        endforeach()
+    endforeach()
+
+endfunction()
+####

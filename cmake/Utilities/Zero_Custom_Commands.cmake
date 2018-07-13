@@ -101,7 +101,6 @@ function(editor_post_build_step aTarget aZeroCoreDirectory aLibOutputDirectory a
         ${aBuildOutputDirectory}/${aTarget}
     )
 
-    copy_cef_bin_post_build(${aTarget} ${aZeroCoreDirectory} ${aBuildOutputDirectory})
 
 endfunction()
 ####
@@ -167,7 +166,6 @@ endfunction()
 
 #### Moves CEF binaries into the bin folder and runs Launcher postbuild script
 function(copy_launcher_files aTarget aZeroCoreDirectory aBuildOutputDirectory)
-    copy_cef_bin_post_build(${aTarget} ${aZeroCoreDirectory} ${aBuildOutputDirectory})
 
     # copy the configuration file
     add_custom_command(
