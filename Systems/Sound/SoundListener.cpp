@@ -59,13 +59,7 @@ void SoundListener::Initialize(CogInitializer& initializer)
   mPrevPosition = mTransform->GetWorldTranslation();
 
   Mat4 matrix = mTransform->GetWorldMatrix();
-  Vec4 bx = matrix.BasisX();
-  Vec4 by = matrix.BasisY();
-
-  Vec3 x = Vec3(bx.x, bx.y, bx.z);
-  Vec3 y = Vec3(by.x, by.y, by.z);
-  Vec3 forward = x.Cross(y);
-  mPrevForward = forward;
+  mPrevForward = Math::ToVector3(matrix.BasisZ());
 
   // Add a new listener to audio engine 
   SoundNode* newNode = new SoundNode();
@@ -77,8 +71,7 @@ void SoundListener::Initialize(CogInitializer& initializer)
     name = "EditorListener";
 
   mSoundNode->mNode = new Audio::ListenerNode(name, Z::gSound->mCounter++,
-    Audio::ListenerWorldPositionInfo(mTransform->GetWorldTranslation(), Math::Vec3(0, 0, 0), 
-      -forward, y), newNode);
+    Audio::ListenerWorldPositionInfo(mPrevPosition, Math::Vec3::cZero, Math::ToMatrix3(matrix)), newNode);
 
   newNode->mCanRemove = false;
   newNode->mCanReplace = false;
@@ -164,22 +157,16 @@ void SoundListener::Update(float invDt)
     velocity *= invDt;
 
     Mat4 matrix = mTransform->GetWorldMatrix();
-    Vec4 bx = matrix.BasisX();
-    Vec4 by = matrix.BasisY();
-    Vec4 bz = matrix.BasisZ();
-
-    Vec3 x = Vec3(bx.x, bx.y, bx.z);
-    Vec3 y = Vec3(by.x, by.y, by.z);
-    Vec3 forward = x.Cross(y);
+    Vec3 basisZ = Math::ToVector3(matrix.BasisZ());
 
     // Only need to set position if it's changed
-    if (mPrevPosition != position || mPrevForward != forward)
+    if (mPrevPosition != position || mPrevForward != basisZ)
     {
       mPrevPosition = position;
-      mPrevForward = forward;
+      mPrevForward = basisZ;
 
       ((Audio::ListenerNode*)mSoundNode->mNode)->SetPositionData(Audio::ListenerWorldPositionInfo
-        (position, velocity, -forward, y));
+        (position, velocity, Math::ToMatrix3(matrix)));
     }
   }
 }

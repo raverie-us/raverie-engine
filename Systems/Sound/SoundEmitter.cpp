@@ -171,15 +171,9 @@ void SoundEmitter::Initialize(CogInitializer& initializer)
     {
       mEmitterObject->SetDirectionalAngle(mEmitAngle, mRearVolume);
 
-      Mat4 matrix = mTransform->GetWorldMatrix();
-      Vec4 bx = matrix.BasisX();
-      Vec4 by = matrix.BasisY();
+      Vec4 basisZ = mTransform->GetWorldMatrix().BasisZ();
 
-      Vec3 x = Vec3(bx.x, bx.y, bx.z);
-      Vec3 y = Vec3(by.x, by.y, by.z);
-      Vec3 forward = x.Cross(y);
-
-      mEmitterObject->SetForwardDirection(forward);
+      mEmitterObject->SetForwardDirection(Vec3(basisZ.x, basisZ.y, basisZ.z));
     }
 
     // Add a new pitch node below the emitter node
