@@ -818,6 +818,8 @@ void UploadToNewArchetypeOperation::Redo()
 RevertToArchetypeOperation::RevertToArchetypeOperation(Cog* object)
 {
   Cog* archetypeContextCog = object->FindNearestArchetypeContext();
+  ReturnIf(archetypeContextCog == nullptr, ,"Cannot revert object with no archetype");
+
   Archetype* archetype = archetypeContextCog->GetArchetype();
 
   ErrorIf(archetype == nullptr, "Object doesn't have an Archetype");
