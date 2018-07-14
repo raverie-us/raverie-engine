@@ -20,7 +20,7 @@ void Sleep(uint ms)
   SDL_Delay((Uint32)ms);
 }
 
-#if !defined(ZeroPlatformNoIncompleteImplementations)
+#if !defined(ZeroPlatformNoSetTimerFrequency)
 void SetTimerFrequency(uint ms)
 {
   // Not supported by SDL.
@@ -41,7 +41,7 @@ const char* GetEnvironmentList(const char* defaultValue, const char* names[], si
   return defaultValue;
 }
 
-#if !defined(ZeroPlatformNoIncompleteImplementations)
+#if !defined(ZeroPlatformNoUserName)
 String UserName()
 {
   // There is no portable way to get the user name
@@ -50,7 +50,7 @@ String UserName()
 }
 #endif
 
-#if !defined(ZeroPlatformNoIncompleteImplementations)
+#if !defined(ZeroPlatformNoComputerName)
 String ComputerName()
 {
   // There is no portable way to get the computer/host name
@@ -59,7 +59,7 @@ String ComputerName()
 }
 #endif
 
-#if !defined(ZeroPlatformNoIncompleteImplementations)
+#if !defined(ZeroPlatformNoIsDebuggerAttached)
 bool IsDebuggerAttached()
 {
   // SDL cannot detect whether a debugger is attached.
@@ -72,7 +72,7 @@ ZeroShared void DebuggerOutput(const char* message)
   printf("%s", message);
 }
 
-#if !defined(ZeroPlatformNoIncompleteImplementations)
+#if !defined(ZeroPlatformNoGetMacAddress)
 u64 GetMacAddress()
 {
   // Not supported by SDL.
@@ -85,7 +85,7 @@ void DebugBreak()
   SDL_TriggerBreakpoint();
 }
 
-#if !defined(ZeroPlatformNoIncompleteImplementations)
+#if !defined(ZeroPlatformNoEnableMemoryLeakChecking)
 void EnableMemoryLeakChecking(int breakOnAllocation)
 {
   // Not supported by SDL.
@@ -161,7 +161,7 @@ bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
   }
 }
 
-#if !defined(ZeroPlatformNoIncompleteImplementations)
+#if !defined(ZeroPlatformNoWebRequest)
 void WebRequest(
   Status& status,
   StringParam url,
@@ -175,7 +175,7 @@ void WebRequest(
 }
 #endif
 
-#if !defined(ZeroPlatformNoIncompleteImplementations)
+#if !defined(ZeroPlatformNoSystemOpenFile)
 bool SystemOpenFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)
 {
   // Unfortunately we have no portable way of using the working directory.
@@ -185,7 +185,7 @@ bool SystemOpenFile(Status& status, cstr file, uint verb, cstr parameters, cstr 
 }
 #endif
 
-#if !defined(ZeroPlatformNoIncompleteImplementations)
+#if !defined(ZeroPlatformNoSystemOpenNetworkFile)
 bool SystemOpenNetworkFile(Status& status, cstr file, uint verb, cstr parameters, cstr workingDirectory)
 {
   return SystemOpenFile(status, file, verb, parameters, workingDirectory);
@@ -198,7 +198,7 @@ String GetEnvironmentalVariable(StringParam variable)
 }
 
 //---------------------------------------------------------------- Memory Status 
-#if !defined(ZeroPlatformNoIncompleteImplementations)
+#if !defined(ZeroPlatformNoGetMemoryStatus)
 void GetMemoryStatus(MemoryInfo& data)
 {
   // Not supported by SDL.

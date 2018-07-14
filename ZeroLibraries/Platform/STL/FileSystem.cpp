@@ -59,7 +59,7 @@ void SetWorkingDirectory(StringParam path)
   fs::current_path(fs::path(path.c_str()), error);
 }
 
-#if !defined(ZeroPlatformNoIncompleteImplementations)
+#if !defined(ZeroPlatformNoGetUserLocalDirectory)
 String GetUserLocalDirectory()
 {
   std::error_code error;
@@ -67,7 +67,7 @@ String GetUserLocalDirectory()
 }
 #endif
 
-#if !defined(ZeroPlatformNoIncompleteImplementations)
+#if !defined(ZeroPlatformNoGetUserDocumentsDirectory)
 String GetUserDocumentsDirectory()
 {
   std::error_code error;
@@ -82,7 +82,7 @@ String GetApplicationDirectory()
   return FilePath::GetDirectoryPath(GetApplication());
 }
 
-#if !defined(ZeroPlatformNoIncompleteImplementations)
+#if !defined(ZeroPlatformNoGetApplication)
 String GetApplication()
 {
   // The first entry in the command line arguments should be our executable.

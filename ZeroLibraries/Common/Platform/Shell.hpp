@@ -395,7 +395,7 @@ public:
 
   void* mUserData;
 
-  ZeroDeclarePrivateData(Shell, 16);
+  ZeroDeclarePrivateData(Shell, 32);
 };
 
 //----------------------------------------------------------------ShellWindow

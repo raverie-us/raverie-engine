@@ -134,29 +134,83 @@ static const char* const cInvalidWebGl = "This function should not be called whe
 void glBlendEquationSeparatei(GLuint buf, GLenum modeRGB, GLenum modeAlpha)
 {
   Error(cInvalidWebGl);
-};
+}
 
 void glBlendEquationi(GLuint buf, GLenum mode)
 {
   Error(cInvalidWebGl);
-};
+}
 
 void glBlendFuncSeparatei(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha)
 {
   Error(cInvalidWebGl);
-};
+}
 
 void glBlendFunci(GLuint buf, GLenum sfactor, GLenum dfactor)
 {
   Error(cInvalidWebGl);
-};
+}
 
 void glEnablei(GLenum cap, GLuint index)
 {
   Error(cInvalidWebGl);
-};
+}
 
 void glDisablei(GLenum cap, GLuint index)
 {
   Error(cInvalidWebGl);
-};
+}
+
+//EM_JS(const char*, EmscriptenShellOpenFile, (bool multiSelect, const char* accept),
+//{
+//  if (!document) return null;
+//  var input = document.createElement('input');
+//  input.type = 'file';
+//  
+//  if (multiSelect)
+//    input.multiple = true;
+//  
+//  input.accept = UTF8ToString(accept);
+//  
+//  input.onchange = function(event)
+//  {
+//     var fileList = input.files;
+//     console.log(fileList);
+//  };
+//  
+//  // Simulate clicking on the input.
+//  input.click();
+//  
+//  return mallocStringUTF8('test.png');
+//});
+//
+//bool Shell::OpenFile(FileDialogInfo& config)
+//{
+//  // We have no way of selecting a folder, so for now we just enable multi-select.
+//  bool multiSelect =
+//    config.Flags & FileDialogFlags::MultiSelect ||
+//    config.flags & FileDialogFlags::Folder;
+//  
+//  StringBuilder acceptExtensions;
+//  forRange(FileDialogFilter& filter, config.mSearchFilters)
+//  {
+//    if (acceptExtensions.GetSize() != 0)
+//      acceptExtensions.Append(',');
+//    
+//    forEach(Rune rune, filter.mFilter)
+//    {
+//      if (rune == '*')
+//        // Do nothing, we don't use wild-cards here.
+//      else if (rune == ';')
+//        acceptExtensions.Append(',');
+//      else
+//        acceptExtensions.Append(rune);
+//    }
+//  }
+//  String accept = acceptExtensions.ToString();
+//  
+//  const char* fileList = EmscriptenShellOpenFile(multiSelect, accept.c_str());
+//  ZPrint("File Open List: %s\n", fileList);
+//  free(fileList);
+//  return true;
+//}
