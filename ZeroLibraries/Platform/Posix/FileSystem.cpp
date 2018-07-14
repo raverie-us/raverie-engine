@@ -168,12 +168,15 @@ void CreateDirectory(StringParam dest)
   {
     // If the error is anything except already exists
     if(errno != EEXIST)
-      ZPrint("Failed to create directory %s: %s\n", dest.c_str(), strerror(errno));
+      ZPrint("Failed to create directory '%s': %s\n", dest.c_str(), strerror(errno));
   }
 }
 
 void CreateDirectoryAndParents(StringParam directory)
 {
+  if (directory.Empty())
+    return;
+  
   // Normalize it first to ensure we don't have any double slashes.
   // This also ensures we don't have a trailing separator.
   String path = FilePath::Normalize(directory);
@@ -204,7 +207,7 @@ void CreateDirectoryAndParents(StringParam directory)
 time_t GetFileModifiedTime(StringParam file)
 {
   struct stat fileStat;
-  if(stat(file.c_str(), &fileStat) != 0)
+  if(stat(file.c_str(), &fileStat) == 0)
     return (time_t)fileStat.st_mtime;
   return 0;
 }

@@ -443,6 +443,7 @@ void Shell::Update()
 
           window->mOnMouseDropFiles(clientPosition, info.mDropFiles, window);
           info.mDropFiles.Clear();
+          SDL_free(e.drop.file);
         }
         break;
       }

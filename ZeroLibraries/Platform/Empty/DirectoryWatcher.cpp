@@ -50,6 +50,10 @@ public:
 
 OsInt DirectoryWatcher::RunThreadEntryPoint()
 {
+  // Temporarily disabled because this fails on shutdown on SDL build.
+  if (true)
+    return 0;
+
   HashSet<TrackedFile> fileEntries;
 
   //Loop until cancel

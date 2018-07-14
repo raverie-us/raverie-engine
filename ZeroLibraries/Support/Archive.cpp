@@ -202,7 +202,7 @@ void Archive::AddFileBlock(StringParam relativeName, DataBlock sourceBlock)
 
   // Add the entry
   ArchiveEntry entry;
-  entry.Name = relativeName;
+  entry.Name = relativeName.Replace("\\", "/");
   entry.Full.Data = nullptr;
   entry.Full.Size = sourceBlock.Size;
   entry.Compressed.Size = compressedSize;
@@ -532,6 +532,11 @@ void Archive::ReadZipFileInternal(ArchiveReadFlags::Enum readFlags, Stream& file
       String extra;
       ReadString(file, localFile.Info.FileNameLength, entry.Name);
       ReadString(file, localFile.Info.ExtraFieldLength, extra);
+
+      // We want archives to be consistent, so we always have them use '/' for file systems.
+      // We could choose to use the platform's file separator, however this works for all
+      // platforms and produces consistent behavior.
+      entry.Name = entry.Name.Replace("\\", "/");
 
       entry.Offset = (uint)file.Tell();
       entry.Crc = localFile.Info.Crc;
