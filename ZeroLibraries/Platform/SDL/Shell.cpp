@@ -419,6 +419,7 @@ void Shell::Update()
 
           Array<String> files(ZeroInit, e.drop.file);
           window->mOnMouseDropFiles(clientPosition, files, window);
+          SDL_free(e.drop.file);
         }
         break;
       }

@@ -160,3 +160,48 @@ void glDisablei(GLenum cap, GLuint index)
 {
   Error(cInvalidWebGl);
 };
+
+using namespace Zero;
+
+extern "C" EMSCRIPTEN_KEEPALIVE void EmscriptenFileDropHandler(char* fileBuffer, int numStrings)
+{
+  // We're relying on the Emscripten instance only having one window with GL setup.
+  // This could be changed to get a saved id somewhere for the primary window.
+  SDL_Window* sdlWindow = SDL_GL_GetCurrentWindow();
+  ReturnIf(!sdlWindow,, "Could not get window from SDL_GL_GetCurrentWindow");
+  Uint32 windowID = SDL_GetWindowID(sdlWindow);
+
+  // Create the drop event
+  SDL_DropEvent dropEvent;
+  dropEvent.windowID = windowID;
+  dropEvent.type = SDL_DROPBEGIN;
+  dropEvent.file = nullptr;
+  SDL_PushEvent((SDL_Event*)&dropEvent);
+
+  char* curStart = fileBuffer;
+  int nullsHit = 0;
+
+  // Create an SDL_DropEvent for each file dropped
+  while(nullsHit < numStrings)
+  {
+    dropEvent.type = SDL_DROPFILE;
+    // Copy the file into a new cstr for the event, must be freed in the SDL event handler
+    size_t stringSizeInBytes = strlen(curStart) + 1;
+    char* dropFile = (char*)SDL_malloc(stringSizeInBytes);
+    memcpy(dropFile, (char*)curStart, stringSizeInBytes);
+    dropEvent.file = dropFile;
+    // Set the window id and queue the event
+    SDL_PushEvent((SDL_Event*)&dropEvent);
+
+    // +1 for the null terminator.
+    curStart += stringSizeInBytes;
+    ++nullsHit;
+  }
+
+  dropEvent.type = SDL_DROPCOMPLETE;
+  dropEvent.file = nullptr;
+  SDL_PushEvent((SDL_Event*)&dropEvent);
+
+  // The filebuffer was allocated on the heap javascript side and we need to free it
+  free(fileBuffer);
+}

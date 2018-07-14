@@ -176,9 +176,77 @@
       {
         var lengthBytes = lengthBytesUTF8(string) + 1;
         var stringOnWasmHeap = _malloc(lengthBytes);
-        return stringToUTF8(string, stringOnWasmHeap, lengthBytes);
+        stringToUTF8(string, stringOnWasmHeap, lengthBytes);
+        return stringOnWasmHeap;
       }
       
+      // File drag handler
+      function dragHandler(event)
+      {
+        // disable file drag behavior
+        event.preventDefault();
+      }
+
+      // File drop helper to upload a resource
+      function dropHandler(event)
+      {
+        // Disable the browsers default file drop event behavior
+        event.preventDefault();
+
+        var filePathList = [];
+        // check if the drop event contained a data transfer object
+        if (event.dataTransfer)
+        {
+          // get the file list of items dropped on the browser
+          var fileList = event.dataTransfer.files;
+          var totalFiles = fileList.length;
+          var loadCounter = totalFiles;
+          for (var i = 0; i < totalFiles; i++)
+          {
+            var file = fileList[i];
+            var tempFilePath = '/tmp/' + file.name;
+            filePathList[i] = tempFilePath;
+
+            // Read the file data into a format that can be written out
+            var reader = new FileReader();
+            reader.onloadend = function(event)
+            {
+              // Copy the file to our browsers local file system in the temp location
+              try
+              {
+                FS.writeFile(tempFilePath, new Uint8Array(event.target.result), function(err)
+                {
+                  if (err)
+                    console.error(err);
+                });
+              }
+              catch (err)
+              {
+                console.error(err);
+              }
+
+              --loadCounter;
+              if (loadCounter == 0)
+              {
+                var totalString = '';
+                for (var j = 0; j < totalFiles; ++j)
+                  totalString += filePathList[j] + '\0';
+
+                var utf8Str = mallocStringUTF8(totalString);
+
+                // Call C++ function drag and drop handler
+                ccall('EmscriptenFileDropHandler', null, ['number', 'number'], [utf8Str, totalFiles]);
+              }
+            }
+            reader.readAsArrayBuffer(file);
+          }
+        }
+      }
+      
+      // Set the drag and drop event handler to our custom one
+      window.addEventListener("dragover", dragHandler, false);
+      window.addEventListener("drop", dropHandler, false);
+
       var downloadingDataText = 'Downloading data...';
       
       var Module =
@@ -211,7 +279,7 @@
           
           var data = '/Data';
           FS.mkdir(data);
-          
+
           var fallback = data + '/Fallback';
           FS.mkdir(fallback);
           FS.mount(IDBFS, {}, fallback);
@@ -286,7 +354,7 @@
             setEngineLoading();
         }
       };
-      
+
       // See http://www.khronos.org/registry/webgl/specs/latest/1.0/#5.15.2
       canvasElement.addEventListener('webglcontextlost', function(e)
       {
