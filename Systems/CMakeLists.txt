@@ -49,8 +49,6 @@ target_include_directories(Content
     PUBLIC 
         ${CurrentDirectory}/Content
         ${CurrentDirectory}
-        ${AssimpHeaders}
-        ${NvttHeaders}
 
 )
 target_include_directories(Engine 
@@ -61,7 +59,6 @@ target_include_directories(Engine
 target_include_directories(Graphics
     PUBLIC 
         ${CurrentDirectory}
-        ${FreetypeHeaders}
 )
 target_include_directories(Networking 
     PUBLIC 

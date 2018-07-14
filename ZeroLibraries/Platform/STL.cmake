@@ -24,9 +24,6 @@ include(STL/CMakeLists.txt)
 target_include_directories(Platform
     PUBLIC
         ${CurrentDirectory}/STL 
-        ${WinHidHeaders}
-        ${GLEWHeaders}
-        ${CEFHeaders}
 )
 
 ################################################################################

@@ -35,9 +35,6 @@ include(BrowserSubProcess/CMakeLists.txt)
 target_include_directories(ZeroEditor 
     PUBLIC 
         ${Source_Root}
-        ${OpusHeaders}
-        ${FreetypeHeaders}
-        ${WinHidHeaders}
         ${CurrentDirectory}/ZeroEditor 
         ${CurrentDirectory}
 )
@@ -46,7 +43,6 @@ target_include_directories(ZeroLauncher
         ${CurrentDirectory}
         ${CurrentDirectory}/ZeroLauncher/ZeroLauncher
         ${CurrentDirectory}/ZeroLauncher/ZeroLauncherSharedLibrary
-        ${ZLibHeaders}
 )
 target_include_directories(ZeroLauncherSharedLibrary 
     PUBLIC 
@@ -59,7 +55,6 @@ target_include_directories(BrowserSubProcess
     PUBLIC 
         ${CurrentDirectory}/BrowserSubProcess    
         ${CurrentDirectory}
-        ${CEFHeaders}
 )
 
 ################################################################################

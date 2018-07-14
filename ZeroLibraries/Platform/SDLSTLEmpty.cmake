@@ -24,10 +24,6 @@ include(SDLSTLEmpty/CMakeLists.txt)
 target_include_directories(Platform
     PUBLIC
         ${CurrentDirectory}/SDLSTLEmpty 
-        ${WinHidHeaders}
-        ${GLEWHeaders}
-        ${CEFHeaders}
-        ${SDLHeaders}
 )
 
 ################################################################################

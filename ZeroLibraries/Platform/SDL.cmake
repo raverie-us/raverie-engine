@@ -24,9 +24,6 @@ include(SDL/CMakeLists.txt)
 target_include_directories(Platform
     PUBLIC
         ${CurrentDirectory}/SDL 
-        ${WinHidHeaders}
-        ${GLEWHeaders}
-        ${CEFHeaders}
 )
 
 ################################################################################

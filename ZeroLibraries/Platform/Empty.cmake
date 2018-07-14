@@ -24,9 +24,6 @@ include(Empty/CMakeLists.txt)
 target_include_directories(Platform
     PUBLIC
         ${CurrentDirectory}/Empty 
-        ${WinHidHeaders}
-        ${GLEWHeaders}
-        ${CEFHeaders}
 )
 
 ################################################################################

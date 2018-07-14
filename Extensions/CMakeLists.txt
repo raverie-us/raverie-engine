@@ -58,7 +58,6 @@ target_include_directories(Editor
 target_include_directories(Gameplay
     PUBLIC 
         ${CurrentDirectory}
-        ${CEFHeaders}
         Platform
         BrowserSubProcess
 )

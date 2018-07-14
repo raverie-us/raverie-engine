@@ -58,7 +58,6 @@ target_include_directories(AudioEngine
         ${CurrentDirectory}/AudioEngine 
         ${CurrentDirectory}
         ${ParentDirectory}
-        ${OpusHeaders}
 )
 target_include_directories(Common
     PUBLIC 
@@ -93,8 +92,6 @@ target_include_directories(SpatialPartition
 target_include_directories(Support
     PUBLIC
         ${CurrentDirectory}/Support
-        ${ZLibHeaders}
-        ${LibpngHeaders}
         ${CurrentDirectory}
 )
 target_include_directories(Zilch

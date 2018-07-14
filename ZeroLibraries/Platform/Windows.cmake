@@ -24,9 +24,6 @@ include(Windows/CMakeLists.txt)
 target_include_directories(Platform
     PUBLIC
         ${CurrentDirectory}/Windows 
-        ${WinHidHeaders}
-        ${GLEWHeaders}
-        ${CEFHeaders}
 )
 
 ################################################################################

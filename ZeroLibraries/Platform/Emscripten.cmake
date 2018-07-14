@@ -24,7 +24,6 @@ include(Emscripten/CMakeLists.txt)
 target_include_directories(Platform
     PUBLIC
         ${CurrentDirectory}/Emscripten 
-        ${GLEWHeaders}
 )
 
 ################################################################################

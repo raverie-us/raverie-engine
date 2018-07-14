@@ -69,13 +69,14 @@ endforeach()
 # use parent scope so the folders are accessible anywhere
 ################################################################################
 
-foreach(externLib ${AllPossibleStaticExternals})
-    set(${externLib}Headers "" PARENT_SCOPE)
-endforeach()
+#foreach(externLib ${AllPossibleStaticExternals})
+#    set(${externLib}Headers "" PARENT_SCOPE)
+#endforeach()
 
-foreach(externLib ${StaticExternals})
-  set(${externLib}Headers ${CurrentDirectory}/${externLib}/include PARENT_SCOPE)
-endforeach()
+#foreach(externLib ${StaticExternals})
+#  set(${externLib}Headers ${CurrentDirectory}/${externLib}/include PARENT_SCOPE)
+#  set_target_properties(glfwStatic PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_LIST_DIR}/include)
+#endforeach()
 
 ################################################################################
 # Set path to library folders
@@ -128,9 +129,19 @@ foreach(libStatic ${StaticExternals})
             #create library using that name
             #insert into list of libraries under this name
             add_library(${libName} STATIC IMPORTED GLOBAL) 
-            set_target_properties(${libName} PROPERTIES
+
+            set_target_properties(
+                ${libName} 
+                PROPERTIES
                 IMPORTED_LOCATION ${libPath}
             )
+
+            set_target_properties(
+                ${libName}
+                PROPERTIES 
+                INTERFACE_INCLUDE_DIRECTORIES ${CurrentDirectory}/${libStatic}/include
+            )
+
             set(${libStatic}Static ${${libStatic}Static} ${libName})
             set(${libStatic}Static ${${libStatic}Static} PARENT_SCOPE)
         endforeach()
@@ -144,9 +155,19 @@ foreach(libStatic ${StaticExternals})
             #create library using that name
             #insert into list of libraries under this name
             add_library(${libNameDebug} STATIC IMPORTED GLOBAL) 
-            set_target_properties(${libNameDebug} PROPERTIES
+
+            set_target_properties(
+                ${libNameDebug}
+                PROPERTIES
                 IMPORTED_LOCATION ${libPath}
             )
+
+            set_target_properties(
+                ${libNameDebug}
+                PROPERTIES 
+                INTERFACE_INCLUDE_DIRECTORIES ${CurrentDirectory}/${libStatic}/include
+            )
+
             set(${libStatic}Static ${${libStatic}Static} $<$<CONFIG:Debug>:${libNameDebug}>)
             set(${libStatic}Static ${${libStatic}Static} PARENT_SCOPE)
             set(${libStatic}StaticDebug ${${libStatic}StaticDebug} ${libNameDebug})
@@ -162,9 +183,20 @@ foreach(libStatic ${StaticExternals})
             #create library using that name
             #insert into list of libraries under this name
             add_library(${libNameRelease} STATIC IMPORTED GLOBAL) 
-            set_target_properties(${libNameRelease} PROPERTIES
+
+            set_target_properties(
+                ${libNameRelease} 
+                PROPERTIES
                 IMPORTED_LOCATION ${libPath}
             )
+
+            # add the include directory for the headers
+            set_target_properties(
+                ${libNameRelease}
+                PROPERTIES 
+                INTERFACE_INCLUDE_DIRECTORIES ${CurrentDirectory}/${libStatic}/include
+            )
+
             set(${libStatic}Static ${${libStatic}Static} $<$<CONFIG:Release>:${libNameRelease}>)
             set(${libStatic}Static ${${libStatic}Static} PARENT_SCOPE)
             set(${libStatic}StaticRelease ${${libStatic}StaticRelease} ${libNameRelease})
@@ -203,6 +235,14 @@ foreach(libShared ${SharedExternals})
                 ${libName} PROPERTIES
                 IMPORTED_LOCATION ${libPath}
             )
+
+            # add the include directory for the headers
+            set_target_properties(
+                ${libName}
+                PROPERTIES 
+                INTERFACE_INCLUDE_DIRECTORIES ${CurrentDirectory}/${libShared}/include
+            )
+
 
             # set the libraries that can be added by targets
             set(${libShared}Shared ${${libShared}Shared} ${libName})
