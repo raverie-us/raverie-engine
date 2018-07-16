@@ -253,6 +253,7 @@ void HeightMapImporter::GenerateHeightMap(Event* e)
     return;
 
   cog->SetName(mName);
+  cog->ClearArchetype();
   HeightMap* map = cog->has(HeightMap);
   map->SetUnitsPerPatch((float)mPatchSize);
   
