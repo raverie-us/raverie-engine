@@ -1,4 +1,4 @@
-mkdir "../BuildOutput/Out/Debug/ZeroEditor"
-cd "../BuildOutput/Out/Debug/ZeroEditor"
+mkdir "../BuildOutput/Out/Windows_Emscripten/Debug/ZeroEditor"
+cd "../BuildOutput/Out/Windows_Emscripten/Debug/ZeroEditor"
 start "" "http://localhost:8000/"
 python -m SimpleHTTPServer 8000
