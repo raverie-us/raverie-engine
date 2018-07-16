@@ -98,7 +98,7 @@ void PropertyModifiedDefault(HandleParam object, PropertyPathParam property, Any
     // Send the event to the object
     PropertyEvent eventToSend(object, property, oldValue, newValue);
     if(EventDispatcher* dispatcher = zeroObject->GetDispatcher())
-      dispatcher->Dispatch(Events::PropertyModified, &eventToSend);
+      dispatcher->Dispatch(eventId, &eventToSend);
   }
 }
 
