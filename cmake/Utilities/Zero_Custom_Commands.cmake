@@ -3,18 +3,18 @@
 # Copyright 2017, DigiPen Institute of Technology
 ################################################################################
 
-#### Post build step that copies list of dlls  to the given output directory after target is build
-function(copy_multiple_dlls)
+#### Post build step that copies list of SharedObjects  to the given output directory after target is build
+function(copy_multiple_shared_objects)
 set(oneValueArgs OUTPUT_DIRECTORY)
-set(multiValueArgs DLL_LOCATIONS)
+set(multiValueArgs SHARED_OBJECT_LOCATIONS)
 cmake_parse_arguments(PARSED "" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
 set(PARSED_TARGETS ${PARSED_UNPARSED_ARGUMENTS})
 foreach(target ${PARSED_TARGETS})
-    foreach(dll ${PARSED_DLL_LOCATIONS})
+    foreach(sharedObject ${PARSED_SHARED_OBJECT_LOCATIONS})
         add_custom_command(TARGET ${target} POST_BUILD   # Adds a post-build event to MyTest
             COMMAND ${CMAKE_COMMAND} -E copy_if_different  # which executes "cmake - E copy_if_different..."
-            ${dll}                                         # <--this is in-file
+            ${sharedObject}                                         # <--this is in-file
             ${PARSED_OUTPUT_DIRECTORY}/${target}           # <--this is out-file path
         )                 
     endforeach()
@@ -109,7 +109,7 @@ endfunction()
 function(processor_post_build)
     # parse arguments
     set(oneValueArgs ZERO_CORE_DIR PROCESSOR_OUTPUT_LOCATION CONFIGURATION)
-    set(multiValueArgs DLL_LOCATIONS)
+    set(multiValueArgs SHARED_OBJECT_LOCATIONS)
 
     cmake_parse_arguments(PARSED "" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     set(PARSED_TARGETS ${PARSED_UNPARSED_ARGUMENTS})
@@ -126,25 +126,25 @@ function(processor_post_build)
             # directory to make
             "\"${toolDir}\""
         )
-        # copy all the dlls to the tool directory
-        foreach(aDll ${PARSED_DLL_LOCATIONS})
-            # copy the dll to the output directory
+        # copy all the SharedObjects to the tool directory
+        foreach(aSharedObject ${PARSED_SHARED_OBJECT_LOCATIONS})
+            # copy the SharedObject to the output directory
             add_custom_command(
                 TARGET ${aTarget} POST_BUILD
                 # executes "cmake -E copy_if_different
                 COMMAND ${CMAKE_COMMAND} -E copy_if_different  
                 # input file
-                ${aDll}                                         
+                ${aSharedObject}                                         
                 #output file
                 ${PARSED_PROCESSOR_OUTPUT_LOCATION}/${aTarget}
             )
-            # copy the dll to the tool directory
+            # copy the SharedObject to the tool directory
             add_custom_command(
                 TARGET ${aTarget} POST_BUILD
                 # executes "cmake -E copy_if_different
                 COMMAND ${CMAKE_COMMAND} -E copy_if_different  
                 # input file
-                ${aDll}                                         
+                ${aSharedObject}                                         
                 #output file
                 ${toolDir}
             )

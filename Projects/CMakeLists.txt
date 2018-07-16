@@ -385,11 +385,11 @@ zero_subfolder_source_group(${zero_core_path} Projects BrowserSubProcess "")
 # Post build step to put all the dlls next to the executable
 ################################################################################
 #### ZeroEditor editor
-copy_multiple_dlls(
+copy_multiple_shared_objects(
     ZeroEditor
     ZeroLauncher
     OUTPUT_DIRECTORY ${zero_binary_dir}
-    DLL_LOCATIONS
+    SHARED_OBJECT_LOCATIONS
     ## setup all dll locations
     ${AssimpSharedPath}
     ${CEFSharedPath}
