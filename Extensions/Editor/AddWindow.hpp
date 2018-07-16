@@ -173,6 +173,7 @@ private:
   void OnTextTypedTag(Event*);
   void OnKeyDownNameField(KeyboardEvent* e);
   void OnKeyUpNameField(KeyboardEvent* e);
+  void OnKeyDownTagField(KeyboardEvent* e);
   bool ValidateName(bool finalValidation);
   bool ValidateTags();
   void OnCancel(Event*);
