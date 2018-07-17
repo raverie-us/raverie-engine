@@ -145,7 +145,7 @@ Image* ProjectSettings::GetScreenshot(bool forceReload)
     }
 
     Status status;
-    LoadFromPng(status, &mScreenshot, screenshotFile);
+    LoadImage(status, screenshotFile, &mScreenshot);
 
     // Store the time the file was last modified to compare the next
     // time the screen shot is used
@@ -227,7 +227,7 @@ void ProjectSettings::SaveScreenshotFromImage(Image& image)
   // Save the letter-boxed image to the file
   Status status;
   CreateDirectoryAndParents(EditorContentFolder);
-  SaveToPng(status, &subImage, GetScreenshotFile());
+  SaveImage(status, GetScreenshotFile(), &subImage);
 }
 
 //******************************************************************************

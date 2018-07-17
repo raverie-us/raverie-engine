@@ -228,24 +228,15 @@ public:
   Array<TextureToFile> mDelayedTextureToFile;
 };
 
-class SaveToPngJob : public Job
+class SaveToImageJob : public Job
 {
 public:
   int Execute() override;
   byte* mImage;
   uint mWidth;
   uint mHeight;
-  uint mBitDepth;
-  String mFilename;
-};
-
-class SaveToHdrJob : public Job
-{
-public:
-  int Execute() override;
-  byte* mImage;
-  uint mWidth;
-  uint mHeight;
+  TextureFormat::Enum mFormat;
+  ImageSaveFormat::Enum mImageType;
   String mFilename;
 };
 

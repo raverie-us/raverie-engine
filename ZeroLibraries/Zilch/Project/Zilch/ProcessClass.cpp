@@ -90,24 +90,24 @@ namespace Zilch
 
     if(info.mRedirectStandardError)
     {
-      mStandardError = ZilchAllocate(FileStream);
-      FileStream* standardError = mStandardError;
+      mStandardError = ZilchAllocate(FileStreamClass);
+      FileStreamClass* standardError = mStandardError;
       Process::OpenStandardError(standardError->InternalFile);
       standardError->Capabilities = StreamCapabilities::Read;
     }
 
     if(info.mRedirectStandardInput)
     {
-      mStandardInput = ZilchAllocate(FileStream);
-      FileStream* standardInput = mStandardInput;
+      mStandardInput = ZilchAllocate(FileStreamClass);
+      FileStreamClass* standardInput = mStandardInput;
       Process::OpenStandardIn(standardInput->InternalFile);
       standardInput->Capabilities = StreamCapabilities::Write;
     }
 
     if(info.mRedirectStandardOutput)
     {
-      mStandardOutput = ZilchAllocate(FileStream);
-      FileStream* standardOutput = mStandardOutput;
+      mStandardOutput = ZilchAllocate(FileStreamClass);
+      FileStreamClass* standardOutput = mStandardOutput;
       Process::OpenStandardOut(standardOutput->InternalFile);
       standardOutput->Capabilities = StreamCapabilities::Read;
     }
@@ -126,17 +126,17 @@ namespace Zilch
     mStandardOutput = nullptr;
   }
 
-  HandleOf<FileStream> ProcessClass::GetStandardError()
+  HandleOf<FileStreamClass> ProcessClass::GetStandardError()
   {
     return mStandardError;
   }
 
-  HandleOf<FileStream> ProcessClass::GetStandardInput()
+  HandleOf<FileStreamClass> ProcessClass::GetStandardInput()
   {
     return mStandardInput;
   }
 
-  HandleOf<FileStream> ProcessClass::GetStandardOutput()
+  HandleOf<FileStreamClass> ProcessClass::GetStandardOutput()
   {
     return mStandardOutput;
   }

@@ -235,39 +235,19 @@ void SaveImageToFileJob::ReturnExecute()
     return;
   }
 
-  if (mFormat == TextureFormat::RGBA8)
-  {
-    SaveToPngJob* job = new SaveToPngJob();
-    job->mImage = mImage;
-    job->mWidth = mWidth;
-    job->mHeight = mHeight;
-    job->mBitDepth = 8;
-    job->mFilename = mFilename;
-    Z::gJobs->AddJob(job);
-  }
-  else if (mFormat == TextureFormat::RGBA16)
-  {
-    SaveToPngJob* job = new SaveToPngJob();
-    job->mImage = mImage;
-    job->mWidth = mWidth;
-    job->mHeight = mHeight;
-    job->mBitDepth = 16;
-    job->mFilename = mFilename;
-    Z::gJobs->AddJob(job);
-  }
-  else if (mFormat == TextureFormat::RGB32f)
-  {
-    SaveToHdrJob* job = new SaveToHdrJob();
-    job->mImage = mImage;
-    job->mWidth = mWidth;
-    job->mHeight = mHeight;
-    job->mFilename = mFilename;
-    Z::gJobs->AddJob(job);
-  }
+  SaveToImageJob* job = new SaveToImageJob();
+  job->mImage = mImage;
+  job->mWidth = mWidth;
+  job->mHeight = mHeight;
+  job->mFormat = mFormat;
+  job->mFilename = mFilename;
+
+  if (mFormat == TextureFormat::RGB32f)
+    job->mImageType = ImageSaveFormat::Hdr;
   else
-  {
-    delete[] mImage;
-  }
+    job->mImageType = ImageSaveFormat::Png;
+
+  Z::gJobs->AddJob(job);
 
   delete this;
 }

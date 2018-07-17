@@ -151,7 +151,7 @@ bool BinaryFileLoader::TestForObjectEnd(BoundType** data)
     {
       //End of object
       //Move back to prevent reading the end tag
-      mFile.Seek(-(int)bytesToRead, FileOrigin::Current);
+      mFile.Seek(-(int)bytesToRead, SeekOrigin::Current);
       return false;
     }
     return true;

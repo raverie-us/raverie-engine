@@ -500,19 +500,24 @@ bool GeometryImporter::UpdateBuilderMetaData()
     {
       aiTexture* texture = textures[i];
 
-      if (!(texture->mHeight == 0 && texture->CheckFormat("png")))
+      // We actually expect a 'compressed' texture format
+      if (texture->mHeight != 0)
         continue;
 
-      GeometryResourceEntry entry;
-      entry.mName = BuildString(FilePath::GetFileNameWithoutExtension(mInputFile), ToString(i), ".png");
+      String extension = texture->achFormatHint;
+      if (IsSupportedImageLoadExtension(extension))
+      {
+        GeometryResourceEntry entry;
+        entry.mName = BuildString(FilePath::GetFileNameWithoutExtension(mInputFile), ToString(i), ".", extension);
 
-      // Get resource id if this name already had one, otherwise make a new one.
-      if (GeometryResourceEntry* previousEntry = textureContent->mTextures.FindPointer(entry))
-        entry.mResourceId = previousEntry->mResourceId;
-      else
-        entry.mResourceId = GenerateUniqueId64();
+        // Get resource id if this name already had one, otherwise make a new one.
+        if (GeometryResourceEntry* previousEntry = textureContent->mTextures.FindPointer(entry))
+          entry.mResourceId = previousEntry->mResourceId;
+        else
+          entry.mResourceId = GenerateUniqueId64();
 
-      textureEntries.PushBack(entry);
+        textureEntries.PushBack(entry);
+      }
     }
 
     if (textureContent->mTextures != textureEntries)

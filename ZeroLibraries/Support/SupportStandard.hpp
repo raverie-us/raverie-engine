@@ -10,7 +10,6 @@
 #include "Platform/PlatformStandard.hpp"
 
 #include "FileSupport.hpp"
-#include "PngSupport.hpp"
 #include "Profiler.hpp"
 #include "Rect.hpp"
 #include "NameValidation.hpp"
@@ -22,4 +21,6 @@
 #include "PartialMatch.hpp"
 #include "Archive.hpp"
 #include "FileConsoleListener.hpp"
+#include "ImageSupport.hpp"
+#include "PngSupport.hpp"
 #include "HdrSupport.hpp"

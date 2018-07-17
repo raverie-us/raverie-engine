@@ -1442,19 +1442,10 @@ void GraphicsEngine::WriteTextureToFile(HandleOf<Texture> texture, StringParam f
 }
 
 //**************************************************************************************************
-int SaveToPngJob::Execute()
+int SaveToImageJob::Execute()
 {
   Status status;
-  SaveToPng(status, mImage, mWidth, mHeight, mBitDepth, mFilename);
-  delete[] mImage;
-  return 0;
-}
-
-//**************************************************************************************************
-int SaveToHdrJob::Execute()
-{
-  Status status;
-  SaveToHdr(status, mImage, mWidth, mHeight, mFilename);
+  SaveImage(status, mFilename, mImage, mWidth, mHeight, mFormat, mImageType);
   delete[] mImage;
   return 0;
 }

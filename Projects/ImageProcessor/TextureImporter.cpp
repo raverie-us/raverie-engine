@@ -455,13 +455,7 @@ void TextureImporter::ProcessTexture(Status& status)
   }
 
   String fileType = extension;
-  String loadFormat = "";
-  switch (mLoadFormat)
-  {
-    case TextureFormat::RGBA8: loadFormat = "RGBA8"; break;
-    case TextureFormat::RGBA16: loadFormat = "RGBA16"; break;
-    case TextureFormat::RGB32f: loadFormat = "RGB32f"; break;
-  }
+  String loadFormat = TextureFormat::Names[mLoadFormat];
 
   if (mLoadFormat == TextureFormat::RGBA8)
   {
@@ -683,57 +677,38 @@ void TextureImporter::ProcessTexture(Status& status)
 void TextureImporter::LoadImageData(Status& status, StringParam extension)
 {
   File file;
-  file.Open(mInputFile.c_str(), FileMode::Read, FileAccessPattern::Sequential);
-
-  ReturnStatusIf(!file.IsOpen(), String::Format("Can't open image file '%s'", mInputFile.c_str()));
-
-  unsigned fileSize = file.Size();
-  byte* fileData = new byte[fileSize];
-  unsigned bytesRead = file.Read(status, fileData, fileSize);
-
-  if (status.Failed() || bytesRead != fileSize)
-  {
-    delete[] fileData;
-    status.SetFailed(String::Format("Can't read image file '%s'", mInputFile.c_str()));
+  if (!file.Open(mInputFile.c_str(), FileMode::Read, FileAccessPattern::Sequential, FileShare::Read, &status))
     return;
-  }
 
-  file.Close();
+  FileStream stream(file);
 
-  uint width, height, bitDepth;
+  uint width, height;
   byte* imageData = nullptr;
+  bool imageLoadAttempted = false;
 
-  // test if case matters
-  if (extension == "png")
+#ifdef ZeroCustomPngSupport
+  if (IsPng(&stream))
   {
-    LoadFromPng(status, &imageData, &width, &height, &bitDepth, fileData, fileSize);
-    mLoadFormat = bitDepth == 8 ? TextureFormat::RGBA8 : TextureFormat::RGBA16;
-  }
-  else if (extension == "hdr")
-  {
-    mLoadFormat = TextureFormat::RGB32f;
-    LoadFromHdr(status, &imageData, &width, &height, fileData, fileSize);
-  }
-  else
-  {
-    status.SetFailed(String::Format("Unknown image format '%s'", extension.c_str()));
-  }
-
-  delete[] fileData;
-
-  if (status.Failed())
+    LoadPng(status, &stream, &imageData, &width, &height, &mLoadFormat);
+    if (imageData != nullptr)
+      AddImageData(imageData, width, height);
     return;
+  }
+#endif
 
-  MipHeader header;
-  header.mFace = TextureFace::None;
-  header.mLevel = 0;
-  header.mWidth = width;
-  header.mHeight = height;
-  header.mDataOffset = 0;
-  header.mDataSize = width * height * GetPixelSize(mLoadFormat);
+#ifdef ZeroCustomHdrSupport
+  if (IsHdr(&stream))
+  {
+    LoadHdr(status, &stream, &imageData, &width, &height, &mLoadFormat);
+    if (imageData != nullptr)
+      AddImageData(imageData, width, height);
+    return;
+  }
+#endif
 
-  mMipHeaders.PushBack(header);
-  mImageData.PushBack(imageData);
+  LoadImage(status, &stream, &imageData, &width, &height, &mLoadFormat, TextureFormat::RGBA8);
+  if (imageData != nullptr)
+    AddImageData(imageData, width, height);
 }
 
 //**************************************************************************************************
@@ -788,6 +763,21 @@ void TextureImporter::WriteTextureFile(Status& status)
     for (size_t i = 0; i < mBackupMipHeaders.Size(); ++i)
       file.Write(mBackupImageData[i], mBackupMipHeaders[i].mDataSize);
   }
+}
+
+//**************************************************************************************************
+void TextureImporter::AddImageData(byte* imageData, uint width, uint height)
+{
+  MipHeader header;
+  header.mFace = TextureFace::None;
+  header.mLevel = 0;
+  header.mWidth = width;
+  header.mHeight = height;
+  header.mDataOffset = 0;
+  header.mDataSize = width * height * GetPixelSize(mLoadFormat);
+
+  mMipHeaders.PushBack(header);
+  mImageData.PushBack(imageData);
 }
 
 } // namespace Zero

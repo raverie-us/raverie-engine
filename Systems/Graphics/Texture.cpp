@@ -366,9 +366,7 @@ TextureManager::TextureManager(BoundType* resourceType)
 
   DefaultResourceName = "Grey";
   mCanAddFile = true;
-  mOpenFileFilters.PushBack(FileDialogFilter("All Images", "*.png;*.hdr"));
-  mOpenFileFilters.PushBack(FileDialogFilter("*.png"));
-  mOpenFileFilters.PushBack(FileDialogFilter("*.hdr"));
+  BuildImageFileDialogFilters(mOpenFileFilters);
   mCategory = "Graphics";
   mCanReload = true;
   mPreview = true;

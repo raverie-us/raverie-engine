@@ -50,9 +50,9 @@
   <ItemGroup>
     <ClCompile Include="Archive.cpp" />
     <ClCompile Include="HdrSupport.cpp" />
+    <ClCompile Include="ImageSupport.cpp" />
     <ClCompile Include="NameValidation.cpp" />
     <ClCompile Include="Image.cpp" />
-    <ClCompile Include="LoadHdr.cpp" />
     <ClCompile Include="PartialMatch.cpp" />
     <ClCompile Include="PngSupport.cpp">
       <ExcludedFromBuild Condition="'$(PLATFORM_NP1)'!=''">true</ExcludedFromBuild>
@@ -74,9 +74,9 @@
     <ClInclude Include="ChunkReader.hpp" />
     <ClInclude Include="FileConsoleListener.hpp" />
     <ClInclude Include="HdrSupport.hpp" />
+    <ClInclude Include="ImageSupport.hpp" />
     <ClInclude Include="NameValidation.hpp" />
     <ClInclude Include="Image.hpp" />
-    <ClInclude Include="LoadHdr.hpp" />
     <ClInclude Include="PartialMatch.hpp" />
     <ClInclude Include="PngSupport.hpp" />
     <ClInclude Include="Rect.hpp" />

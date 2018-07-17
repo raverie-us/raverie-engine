@@ -105,6 +105,7 @@
     <ClCompile Include="Utility\Misc.cpp" />
     <ClCompile Include="Utility\SpinLock.cpp" />
     <ClCompile Include="Utility\Status.cpp" />
+    <ClCompile Include="Utility\Stream.cpp" />
     <ClCompile Include="Utility\Variant.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +182,7 @@
     <ClInclude Include="Utility\Atomic.hpp" />
     <ClInclude Include="Utility\Misc.hpp" />
     <ClInclude Include="Utility\Standard.hpp" />
+    <ClInclude Include="Utility\Stream.hpp" />
     <ClInclude Include="Utility\Typedefs.hpp" />
     <ClInclude Include="StlBinding\Array.hpp" />
     <ClInclude Include="StlBinding\Associative.hpp" />
