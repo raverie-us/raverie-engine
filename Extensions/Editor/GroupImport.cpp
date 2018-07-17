@@ -105,7 +105,7 @@ void OpenGroupImport(Array<String>& files)
   }
 }
 
-void LoadFilesDroppedOnViewport(Array<HandleOfString>& files)
+void LoadDroppedFiles(Array<HandleOfString>& files)
 {
   if (files.Empty())
     return;

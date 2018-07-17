@@ -246,6 +246,7 @@ public:
   void SelectPrimary(HandleParam object);
   virtual void OnEngineUpdate(UpdateEvent* event);
   void OnResourcesUnloaded(ResourceEvent* event);
+  void OnMouseFileDrop(MouseFileDropEvent* event);
   void Update();
   void ExecuteCommand(StringParam commandName);
   Composite* OpenSearchWindow(Widget* returnFocus, bool noBorder = false);
