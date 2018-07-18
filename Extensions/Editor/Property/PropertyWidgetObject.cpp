@@ -100,11 +100,13 @@ PropertyWidgetObject::PropertyWidgetObject(PropertyWidgetInitializer& initialize
   {
     mLocalModificationIcon = CreateAttached<Element>("ObjectLocallyRemoved");
     mLocalModificationIcon->SizeToContents();
+    mLocalModificationIcon->SetInteractive(false);
   }
   else if(mLocallyAdded && mParentWidgetObject)
   {
     mLocalModificationIcon = CreateAttached<Element>("ObjectLocallyAdded");
     mLocalModificationIcon->SizeToContents();
+    mLocalModificationIcon->SetInteractive(false);
   }
 
   // If we're a removable object, add an 'X' button to remove us
