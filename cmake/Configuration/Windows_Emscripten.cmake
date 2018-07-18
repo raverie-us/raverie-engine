@@ -7,4 +7,4 @@ include(${cmake_os_dir}/Emscripten.cmake)
 include(${cmake_compiler_dir}/Clang.cmake)
 include(${cmake_flags_dir}/Emscripten_Flags.cmake)
 
-set(configuration Windows_Emscripten)
+set(configuration Emscripten)
