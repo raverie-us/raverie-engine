@@ -965,16 +965,17 @@ void LibraryView::OnDataSelectionModified(ObjectEvent* event)
     LibDataEntry* entry = (LibDataEntry*)mSource->ToEntry(dataIndex);
     if(entry->mResource)
     {
-      // Ignore all documents (scripts, shader fragments, etc...)
-      if(Type::DynamicCast<DocumentResource*>(entry->mResource))
-        continue;
-
       // Clear the editor selection first
       if(!cleared)
       {
         editorSelection->Clear();
         cleared = true;
       }
+
+      // Ignore all documents (scripts, shader fragments, etc...)
+      if(Type::DynamicCast<DocumentResource*>(entry->mResource))
+        continue;
+
       editorSelection->Add(entry->mResource, SendsEvents::False);
     }
   }
