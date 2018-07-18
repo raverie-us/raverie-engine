@@ -701,6 +701,17 @@ void ContextMenu::AddCommandByName(StringParam commandName)
   mRootEntry->AddEntry(new ContextMenuEntryCommand(commandName));
 }
 
+void ContextMenu::ShiftOntoScreen(Vec3 offset)
+{
+  // If the context menu was just created and hasn't been built yet
+  // or if the menu has been altered in some way it needs to be rebuilt
+  // so that shift screen operates on the correct dimensions
+  if (mDirty)
+    UpdateTransform();
+
+  PopUp::ShiftOntoScreen(offset);
+}
+
 void ContextMenu::OnMouseDown(MouseEvent* event)
 {
   if (!mMoved)
