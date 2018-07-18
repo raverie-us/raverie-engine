@@ -842,7 +842,7 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
   bool framebuffer_object = true;
   bool texture_compression = false;
   bool draw_buffers_blend = false;
-  bool sampler_objects = false;
+  bool sampler_objects = true;
 #else
   bool version_2_0 = glewIsSupported("GL_VERSION_2_0");
   bool framebuffer_object = glewIsSupported("GL_ARB_framebuffer_object");
