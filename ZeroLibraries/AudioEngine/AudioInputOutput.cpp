@@ -112,20 +112,12 @@ namespace Audio
   //************************************************************************************************
   void AudioInputOutput::GetMixedOutputSamples(float* outputBuffer, const unsigned howManySamples)
   {
-    // Save the number of samples available to read
-    unsigned available = OutputRingBuffer.GetReadAvailable();
-
-    // Make sure we don't try to read more samples than are available
-    unsigned samples = howManySamples;
-    if (samples > available)
-      samples = available;
-
     // Copy the samples from the OutputRingBuffer
-    OutputRingBuffer.Read((void*)outputBuffer, samples);
+    unsigned samplesRead = OutputRingBuffer.Read((void*)outputBuffer, howManySamples);
 
     // If there weren't enough available, set the rest to 0
-    if (samples < howManySamples)
-      memset(outputBuffer + samples, 0, howManySamples - samples);
+    if (samplesRead < howManySamples)
+      memset(outputBuffer + samplesRead, 0, (howManySamples - samplesRead) * sizeof(float));
 
     // Signal the semaphore for the mix thread
     MixThreadSemaphore.Increment();
