@@ -566,13 +566,13 @@ namespace Zilch
     builder.AddBoundGetterSetter(type, "Begin", iteratorType, nullptr, &StringRangeExtended::Begin, FunctionOptions::None)
       ->Description = ZilchDocumentString("Returns the RuneIterator at the start of this range.");
     ZilchFullBindMethod(builder, type, &StringRangeExtended::CompareTo, ZilchNoOverload, "CompareTo", nullptr)
-      ->Description = ZilchDocumentString("Returns if this string range is equal to the given range.");
+      ->Description = ZilchDocumentString("Compares this StringRange to the given StringRange and returns an Integer to denote their relative sort order.");
     ZilchFullBindMethod(builder, type, &StringRangeExtended::Contains, ZilchNoOverload, "Contains", nullptr)
       ->Description = ZilchDocumentString("Returns if the string Contains the specified substring.");
     builder.AddBoundGetterSetter(type, "End", iteratorType, nullptr, &StringRangeExtended::End, FunctionOptions::None)
       ->Description = ZilchDocumentString("Returns the RuneIterator at the end (one past the last Rune) of this range.");
     ZilchFullBindMethod(builder, type, &StringRangeExtended::EndsWith, ZilchNoOverload, "EndsWith", nullptr)
-      ->Description = ZilchDocumentString("Returns if the string ends with the specified substring.");
+      ->Description = ZilchDocumentString("Returns true if the string ends with the specified substring.");
     builder.AddBoundFunction(type, "FindFirstOf", &StringRangeExtended::FindFirstOf, OneParameter(type), type, FunctionOptions::None)
       ->Description = ZilchDocumentString("Returns a StringRange that Contains the first occurrence of given StringRange.");
     builder.AddBoundFunction(type, "FindLastOf", &StringRangeExtended::FindLastOf, OneParameter(type), type, FunctionOptions::None)
@@ -590,7 +590,7 @@ namespace Zilch
     builder.AddBoundFunction(type, "SubStringBytes", &StringRangeExtended::SubStringBytes, TwoParameters(integerType, "startByteIndex", "lengthInBytes"), type, FunctionOptions::None)
       ->Description = ZilchDocumentString("Constructs a substring based upon a number of bytes. WARNING: strings are UTF8 so indexing by bytes could produce unexpected results on non-ascii strings.");
     ZilchFullBindMethod(builder, type, &StringRangeExtended::StartsWith, ZilchNoOverload, "StartsWith", nullptr)
-      ->Description = ZilchDocumentString("Returns if the string ends with the specified substring.");
+      ->Description = ZilchDocumentString("Returns true if the string starts with the specified substring.");
     builder.AddBoundFunction(type, "Trim", &StringRangeExtended::Trim, ParameterArray(), type, FunctionOptions::None)
       ->Description = ZilchDocumentString("Trims all leading and trailing whitespace.");
     builder.AddBoundFunction(type, "TrimEnd", &StringRangeExtended::TrimEnd, ParameterArray(), type, FunctionOptions::None)
