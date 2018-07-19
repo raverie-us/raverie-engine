@@ -365,7 +365,6 @@ EventMetaComposition::EventMetaComposition(PropertyInterface* propertyInterface,
   MetaCompositionWrapper(typeToWrap),
   mPropertyInterface(propertyInterface)
 {
-  mSupportsComponentAddition = false;
 }
 
 //**************************************************************************************************
