@@ -231,6 +231,7 @@ TextEditor::TextEditor(Composite* parent)
   mSendEvents = true;
   mLineNumberMargin = true;
   mFolding = false;
+  mIndicatorsRequireUpdate = false;
   mTextMatchHighlighting = true;
   mHighlightPartialTextMatch = false;
   mMinSize = Vec2(50, 50);
@@ -781,10 +782,9 @@ void TextEditor::UpdateTransform()
   UpdateScrollBars();
 
   mScinWidget->SetSize( mVisibleSize );
-
   mScinWidget->mScintilla->ChangeSize();
 
-  UpdateTextMatchHighlighting();
+  mIndicatorsRequireUpdate = true;
 
   BaseScrollArea::UpdateTransform();
 }
@@ -1209,6 +1209,12 @@ void TextEditor::OnUpdate(UpdateEvent* event)
     mScintilla->Tick();
     mTickTime = 0;
   } 
+
+  if(mIndicatorsRequireUpdate)
+  {
+    mIndicatorsRequireUpdate = false;
+    UpdateTextMatchHighlighting();
+  }
 }
 
 void TextEditor::UpdateTextMatchHighlighting()
@@ -1220,7 +1226,7 @@ void TextEditor::UpdateTextMatchHighlighting()
 
   if(verticalBar->mVisible)
   {
-    mIndicators->Resize(verticalBar->mSize.x + bufferSize.x, bufferSize.y, false, false);
+    mIndicators->Resize(verticalBar->mSize.x + bufferSize.x, bufferSize.y, false, false, Color::White, false);
 
     mIndicatorDisplay->SetTranslation(Pixels(position.x + 1, position.y, position.z));
     mIndicatorDisplay->SetSize(Pixels(bufferSize.x, bufferSize.y));
