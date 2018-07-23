@@ -341,7 +341,8 @@ void MeshProcessor::WriteSingleMeshes(String outputPath)
       uint numIndices = meshData.mIndexBuffer.Size();
 
       IndexElementType::Enum indexType = DetermineIndexType(numIndices);
-      writer.Write(indexType);
+      byte indexTypeByte = (byte)indexType;
+      writer.Write(indexTypeByte);
       writer.Write(numIndices);
 
       switch (indexType)

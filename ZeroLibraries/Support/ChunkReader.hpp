@@ -14,6 +14,7 @@
 namespace Zero
 {
 
+#pragma pack(push, 4)
 struct FileChunk
 {
   //Header
@@ -24,6 +25,7 @@ struct FileChunk
   u32 StartPos;
   u32 EndPos;
 };
+#pragma pack(pop)
 
 template<typename streamType>
 class ChunkReader

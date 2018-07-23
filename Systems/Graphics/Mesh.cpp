@@ -820,10 +820,12 @@ template<typename streamType>
 void LoadIndexChunk(Mesh& mesh, streamType& file)
 {
   IndexBuffer* indexBuffer = &mesh.mIndices;
-  IndexElementType::Enum indexType;
+  byte indexTypeByte;
   uint numIndicies;
-  file.Read(indexType);
+  file.Read(indexTypeByte);
   file.Read(numIndicies);
+
+  IndexElementType::Enum indexType = (IndexElementType::Enum)indexTypeByte;
 
   uint indexBufferSize = GetIndexSize(indexType) * numIndicies;
   byte* indexBufferData = new byte[indexBufferSize];
