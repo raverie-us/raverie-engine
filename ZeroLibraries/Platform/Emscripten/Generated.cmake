@@ -10,3 +10,5 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
 )
+
+add_definitions(-DZeroPlatformNoShellOpenFile)

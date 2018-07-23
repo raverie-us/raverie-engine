@@ -39,6 +39,4 @@ ${CMAKE_CURRENT_LIST_DIR}/../STL/FpControl.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../STL/Process.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../SDL/Keys.inl
 ${CMAKE_CURRENT_LIST_DIR}/../SDL/MouseButtons.inl
-${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
-${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
 )

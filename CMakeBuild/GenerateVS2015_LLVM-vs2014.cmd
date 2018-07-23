@@ -7,6 +7,10 @@ mkdir %folder_name%
 
 cd %folder_name%
 
-cmake -G "Visual Studio 14 2015" -DVS_LLVM_2014=ON -DBits_32=ON -TLLVM-vs2014 ../..
+set config=VS_LLVM_2014
+
+cmake -E remove_directory ..\..\BuildOutput\Out\%config%
+
+cmake -G "Visual Studio 14 2015" -D%config%=ON -DBits_32=ON -TLLVM-vs2014 ../..
 
 popd

@@ -4,22 +4,22 @@
 #include "Precompiled.hpp"
 #include "OpenglRenderer.hpp"
 
-#if defined(PLATFORM_EMSCRIPTEN)
-#define ZeroGlEs
+#ifdef PLATFORM_EMSCRIPTEN
+#define ZeroWebgl
 #else
 #define ZeroGl
 #endif
 
-#if defined(ZeroGl)
+#ifdef ZeroGl
 #define ZeroIfGl(X) X
 #else
 #define ZeroIfGl(X)
 #endif
 
-#if defined(ZeroGlEs)
-#define ZeroIfGlEs(X) X
+#ifdef ZeroWebgl
+#define ZeroIfWebgl(X) X
 #else
-#define ZeroIfGlEs(X)
+#define ZeroIfWebgl(X)
 #endif
 
 // As Of NVidia Driver 302 exporting this symbol will enable GPU hardware accelerated 
@@ -103,7 +103,7 @@ GlTextureEnums gTextureEnums[] =
 };
 
 //**************************************************************************************************
-void WebGLConvertTextureFormat(AddTextureInfo* info)
+void WebglConvertTextureFormat(AddTextureInfo* info)
 {
   // 16 integer formats are unsupported, fallback to half floats to preserve data size.
   if (IsShortColorFormat(info->mFormat))
@@ -135,7 +135,7 @@ void WebGLConvertTextureFormat(AddTextureInfo* info)
 }
 
 //**************************************************************************************************
-void WebGLConvertRenderTargetFormat(AddTextureInfo* info)
+void WebglConvertRenderTargetFormat(AddTextureInfo* info)
 {
   // For unsupported target formats, fallback to formats that do not drop any data.
   // Formats are either converting to floats, adding an alpha channel, or both.
@@ -836,11 +836,20 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
     return;
   }
 
+#ifdef ZeroWebgl
+  // glewIsSupported on emscripten doesn't emulate desktop gl extension queries.
+  bool version_2_0 = true;
+  bool framebuffer_object = true;
+  bool texture_compression = false;
+  bool draw_buffers_blend = false;
+  bool sampler_objects = true;
+#else
   bool version_2_0 = glewIsSupported("GL_VERSION_2_0");
   bool framebuffer_object = glewIsSupported("GL_ARB_framebuffer_object");
   bool texture_compression = glewIsSupported("GL_ARB_texture_compression");
   bool draw_buffers_blend = glewIsSupported("GL_ARB_draw_buffers_blend");
   bool sampler_objects = glewIsSupported("GL_ARB_sampler_objects");
+#endif
 
   ZPrint("OpenGL *Required Extensions\n");
   ZPrint("OpenGL *(GL_VERSION_2_0) Shader Program support                 : %s\n", version_2_0 ? "True" : "False");
@@ -852,17 +861,15 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
 
   ZPrint("OpenGL All Extensions : %s\n", gl_extensions ? gl_extensions : "(no data)");
 
-#if !defined(ZeroGlEs)
-    // Required OpenGL extensions
-    if (!version_2_0 || !framebuffer_object)
-    {
-      String failedExtensions = BuildString(version_2_0 ? "" : "GL_VERSION_2_0, ",
-        framebuffer_object ? "" : "GL_ARB_framebuffer_object, ");
-      error = String::Format("Required OpenGL extensions: %s are unsupported by the active driver. "
-        "Please update your computer's graphics drivers or verify that your graphics card supports the listed features.", failedExtensions.c_str());
-      return;
-    }
-#endif
+  // Required OpenGL extensions
+  if (!version_2_0 || !framebuffer_object)
+  {
+    String failedExtensions = BuildString(version_2_0 ? "" : "GL_VERSION_2_0, ",
+      framebuffer_object ? "" : "GL_ARB_framebuffer_object, ");
+    error = String::Format("Required OpenGL extensions: %s are unsupported by the active driver. "
+      "Please update your computer's graphics drivers or verify that your graphics card supports the listed features.", failedExtensions.c_str());
+    return;
+  }
 
   mDriverSupport.mTextureCompression = texture_compression;
   mDriverSupport.mMultiTargetBlend = draw_buffers_blend;
@@ -880,7 +887,7 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
   glPixelStorei(GL_PACK_ALIGNMENT, 1);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-#if !defined(ZeroGlEs)
+#if !defined(ZeroWebgl)
   glEnable(GL_TEXTURE_2D);
   glEnable(GL_TEXTURE_CUBE_MAP);
 #endif
@@ -966,14 +973,14 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
 
   mStreamedVertexBuffer.Initialize();
 
-#define ZeroGlVertexIn ZeroIfGl("in") ZeroIfGlEs("attribute")
-#define ZeroGlVertexOut ZeroIfGl("out") ZeroIfGlEs("varying")
-#define ZeroGlPixelIn ZeroIfGl("in") ZeroIfGlEs("varying")
+#define ZeroGlVertexIn ZeroIfGl("in") ZeroIfWebgl("attribute")
+#define ZeroGlVertexOut ZeroIfGl("out") ZeroIfWebgl("varying")
+#define ZeroGlPixelIn ZeroIfGl("in") ZeroIfWebgl("varying")
 
   String loadingShaderVertex =
     ZeroIfGl("#version 150\n")
-    ZeroIfGlEs("#version 100\n")
-    ZeroIfGlEs("precision mediump float;\n")
+    ZeroIfWebgl("#version 100\n")
+    ZeroIfWebgl("precision mediump float;\n")
     "uniform mat4 Transform;\n"
     "uniform mat3 UvTransform;\n"
     ZeroGlVertexIn " vec3 attLocalPosition;\n"
@@ -987,8 +994,8 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
 
   String loadingShaderPixel =
     ZeroIfGl("#version 150\n")
-    ZeroIfGlEs("#version 100\n")
-    ZeroIfGlEs("precision mediump float;\n")
+    ZeroIfWebgl("#version 100\n")
+    ZeroIfWebgl("precision mediump float;\n")
     "uniform sampler2D Texture;\n"
     "uniform float Alpha;\n"
     ZeroGlPixelIn " vec2 psInUv;\n"
@@ -1174,7 +1181,7 @@ void OpenglRenderer::AddTexture(AddTextureInfo* info)
     // A texture resource with uploaded data will never set data size to 0.
     if (info->mTotalDataSize == 0)
     {
-      ZeroIfGlEs(WebGLConvertRenderTargetFormat(info));
+      ZeroIfWebgl(WebglConvertRenderTargetFormat(info));
       GlTextureEnums glEnums = gTextureEnums[info->mFormat];
 
       // Rendering to cubemap is not implemented.
@@ -1183,7 +1190,7 @@ void OpenglRenderer::AddTexture(AddTextureInfo* info)
     // Do not try to reallocate texture data if no new data is given.
     else if (info->mImageData != nullptr)
     {
-      ZeroIfGlEs(WebGLConvertTextureFormat(info));
+      ZeroIfWebgl(WebglConvertTextureFormat(info));
       GlTextureEnums glEnums = gTextureEnums[info->mFormat];
 
       for (uint i = 0; i < info->mMipCount; ++i)
