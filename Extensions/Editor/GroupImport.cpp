@@ -291,14 +291,14 @@ void GroupImportWindow::OnCancel(Event* event)
 void ImportCallback::Open()
 {
   //Open the open file dialog
-  FileDialogConfig config;
-  config.EventName = "OnFileSelected";
-  config.CallbackObject = this;
-  config.Title = "Select resource";
-  config.AddFilter("ResourceFile", "*.*");
-  config.Flags |= FileDialogFlags::MultiSelect;
+  FileDialogConfig* config = FileDialogConfig::Create();
+  config->EventName = "OnFileSelected";
+  config->CallbackObject = this;
+  config->Title = "Select resource";
+  config->AddFilter("ResourceFile", "*.*");
+  config->Flags |= FileDialogFlags::MultiSelect;
 
-  ConnectThisTo(this, config.EventName, OnFilesSelected);
+  ConnectThisTo(this, config->EventName, OnFilesSelected);
   Z::gEngine->has(OsShell)->OpenFile(config);
 }
 

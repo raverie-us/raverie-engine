@@ -265,7 +265,7 @@ namespace Audio
 
     // If there weren't enough available, set the rest to 0
     if (samples < samplesNeeded)
-      memset(outputBuffer + samples, 0, samplesNeeded - samples);
+      memset(outputBuffer + samples, 0, (samplesNeeded - samples) * sizeof(float));
 
     // Signal the semaphore for the mix thread
     MixThreadSemaphore.Increment();

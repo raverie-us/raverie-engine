@@ -41,7 +41,7 @@ public:
 };
 
 //------------------------------------------------------------------------ ImportCallback
-class ImportCallback : public EventObject
+class ImportCallback : public SafeId32EventObject
 {
 public:
   typedef ImportCallback ZilchSelf;

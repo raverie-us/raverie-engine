@@ -382,13 +382,13 @@ void UnitTestSystem::HookUpdate()
 //**************************************************************************************************
 void UnitTestSystem::RecordToZeroTestFile()
 {
-  FileDialogConfig config;
-  config.EventName = Events::UnitTestRecordFileSelected;
-  config.CallbackObject = this;
-  config.Title = "Record Unit Test File";
-  config.AddFilter("Zero Unit Test (*.zerotest)", "*.zerotest");
-  config.mDefaultSaveExtension = "zerotest";
-  config.DefaultFileName = BuildString(Z::gEngine->GetProjectSettings()->ProjectName, ".zerotest");
+  FileDialogConfig* config = FileDialogConfig::Create();
+  config->EventName = Events::UnitTestRecordFileSelected;
+  config->CallbackObject = this;
+  config->Title = "Record Unit Test File";
+  config->AddFilter("Zero Unit Test (*.zerotest)", "*.zerotest");
+  config->mDefaultSaveExtension = "zerotest";
+  config->DefaultFileName = BuildString(Z::gEngine->GetProjectSettings()->ProjectName, ".zerotest");
   Z::gEngine->has(OsShell)->SaveFile(config);
 }
 
@@ -473,11 +473,11 @@ void UnitTestSystem::RecordToZeroTestFile(StringParam zeroTestFile)
 //**************************************************************************************************
 void UnitTestSystem::PlayFromZeroTestFile()
 {
-  FileDialogConfig config;
-  config.EventName = Events::UnitTestPlayFileSelected;
-  config.CallbackObject = this;
-  config.Title = "Play Unit Test File";
-  config.AddFilter("Zero Unit Test (*.zerotest)", "*.zerotest");
+  FileDialogConfig* config = FileDialogConfig::Create();
+  config->EventName = Events::UnitTestPlayFileSelected;
+  config->CallbackObject = this;
+  config->Title = "Play Unit Test File";
+  config->AddFilter("Zero Unit Test (*.zerotest)", "*.zerotest");
   Z::gEngine->has(OsShell)->OpenFile(config);
 }
 

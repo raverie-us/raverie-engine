@@ -447,14 +447,14 @@ void ExportUI::OnSelectPath(Event* e)
     ConnectThisTo(this, CallBackEvent, OnFolderSelected);
 
   //Open the open file dialog
-  FileDialogConfig config;
-  config.EventName = CallBackEvent;
-  config.CallbackObject = this;
-  config.Title = "Select a folder";
-  config.AddFilter("Project Export Folder", "*.none");
-  config.DefaultFileName = mExportPath->GetText();
-  config.StartingDirectory = mExportPath->GetText();
-  config.Flags |= FileDialogFlags::Folder;
+  FileDialogConfig* config = FileDialogConfig::Create();
+  config->EventName = CallBackEvent;
+  config->CallbackObject = this;
+  config->Title = "Select a folder";
+  config->AddFilter("Project Export Folder", "*.none");
+  config->DefaultFileName = mExportPath->GetText();
+  config->StartingDirectory = mExportPath->GetText();
+  config->Flags |= FileDialogFlags::Folder;
   Z::gEngine->has(OsShell)->SaveFile(config);
 }
 

@@ -81,7 +81,7 @@ void BackupProject(ProjectSettings* project)
   StartArchiveJob(fullPath, false);
 }
 
-struct ArchiveProjectCallback : public EventObject
+struct ArchiveProjectCallback : public SafeId32EventObject
 {
   typedef ArchiveProjectCallback ZilchSelf;
 
@@ -90,13 +90,13 @@ struct ArchiveProjectCallback : public EventObject
     const String CallBackEvent = "ArchiveCallback"; 
     ProjectSettings* project = Z::gEditor->mProject.has(ProjectSettings);
     
-    FileDialogConfig config;
-    config.EventName = CallBackEvent;
-    config.CallbackObject = this;
-    config.Title = "Archive a project";
-    config.AddFilter("Zip", "*.zip");
-    config.DefaultFileName = BuildString(project->ProjectName, ".zip");
-    config.mDefaultSaveExtension = "zip";
+    FileDialogConfig* config = FileDialogConfig::Create();
+    config->EventName = CallBackEvent;
+    config->CallbackObject = this;
+    config->Title = "Archive a project";
+    config->AddFilter("Zip", "*.zip");
+    config->DefaultFileName = BuildString(project->ProjectName, ".zip");
+    config->mDefaultSaveExtension = "zip";
 
     ConnectThisTo(this, CallBackEvent, OnArchiveProjectFile);
     Z::gEngine->has(OsShell)->SaveFile(config);

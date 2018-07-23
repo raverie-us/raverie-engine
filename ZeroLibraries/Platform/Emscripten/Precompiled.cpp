@@ -6,6 +6,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
+#define ZeroPlatformNoShellOpenFile
+
 #include "../Empty/ComPort.cpp"
 #include "../Empty/CrashHandler.cpp"
 #include "../Empty/Debug.cpp"
@@ -34,6 +36,14 @@
 #include "../SDL/Utilities.cpp"
 #include "../OpenGL/OpenglRenderer.cpp"
 #include "../OpenGL/OpenglRenderer.hpp"
+
+namespace Zero
+{
+
+// Grab this from our SDL Shell implementation.
+extern String SDLGetClipboardTextAsString();
+
+} // namespace Zero
 
 int vsprintf_s(char* buffer, size_t numberOfElements, const char* format, va_list args)
 {
@@ -163,7 +173,7 @@ void glDisablei(GLenum cap, GLuint index)
 
 using namespace Zero;
 
-extern "C" EMSCRIPTEN_KEEPALIVE void EmscriptenFileDropHandler(char* fileBuffer, int numStrings)
+extern "C" EMSCRIPTEN_KEEPALIVE void EmscriptenFileDropHandler(char* fileBuffer)
 {
   // We're relying on the Emscripten instance only having one window with GL setup.
   // This could be changed to get a saved id somewhere for the primary window.
@@ -178,24 +188,22 @@ extern "C" EMSCRIPTEN_KEEPALIVE void EmscriptenFileDropHandler(char* fileBuffer,
   dropEvent.file = nullptr;
   SDL_PushEvent((SDL_Event*)&dropEvent);
 
-  char* curStart = fileBuffer;
-  int nullsHit = 0;
+  char* it = fileBuffer;
 
   // Create an SDL_DropEvent for each file dropped
-  while(nullsHit < numStrings)
+  while (*it != '\0')
   {
     dropEvent.type = SDL_DROPFILE;
-    // Copy the file into a new cstr for the event, must be freed in the SDL event handler
-    size_t stringSizeInBytes = strlen(curStart) + 1;
+    // Copy the file into a new cstr for the event, must be
+    // freed in the SDL event handler +1 for the null terminator.
+    size_t stringSizeInBytes = strlen(it) + 1;
     char* dropFile = (char*)SDL_malloc(stringSizeInBytes);
-    memcpy(dropFile, (char*)curStart, stringSizeInBytes);
+    memcpy(dropFile, (char*)it, stringSizeInBytes);
     dropEvent.file = dropFile;
     // Set the window id and queue the event
     SDL_PushEvent((SDL_Event*)&dropEvent);
 
-    // +1 for the null terminator.
-    curStart += stringSizeInBytes;
-    ++nullsHit;
+    it += stringSizeInBytes;
   }
 
   dropEvent.type = SDL_DROPCOMPLETE;
@@ -206,56 +214,64 @@ extern "C" EMSCRIPTEN_KEEPALIVE void EmscriptenFileDropHandler(char* fileBuffer,
   free(fileBuffer);
 }
 
-//EM_JS(const char*, EmscriptenShellOpenFile, (bool multiSelect, const char* accept),
-//{
-//  if (!document) return null;
-//  var input = document.createElement('input');
-//  input.type = 'file';
-//  
-//  if (multiSelect)
-//    input.multiple = true;
-//  
-//  input.accept = UTF8ToString(accept);
-//  
-//  input.onchange = function(event)
-//  {
-//     var fileList = input.files;
-//     console.log(fileList);
-//  };
-//  
-//  // Simulate clicking on the input.
-//  input.click();
-//  
-//  return mallocStringUTF8('test.png');
-//});
-//
-//bool Shell::OpenFile(FileDialogInfo& config)
-//{
-//  // We have no way of selecting a folder, so for now we just enable multi-select.
-//  bool multiSelect =
-//    config.Flags & FileDialogFlags::MultiSelect ||
-//    config.flags & FileDialogFlags::Folder;
-//  
-//  StringBuilder acceptExtensions;
-//  forRange(FileDialogFilter& filter, config.mSearchFilters)
-//  {
-//    if (acceptExtensions.GetSize() != 0)
-//      acceptExtensions.Append(',');
-//    
-//    forEach(Rune rune, filter.mFilter)
-//    {
-//      if (rune == '*')
-//        // Do nothing, we don't use wild-cards here.
-//      else if (rune == ';')
-//        acceptExtensions.Append(',');
-//      else
-//        acceptExtensions.Append(rune);
-//    }
-//  }
-//  String accept = acceptExtensions.ToString();
-//  
-//  const char* fileList = EmscriptenShellOpenFile(multiSelect, accept.c_str());
-//  ZPrint("File Open List: %s\n", fileList);
-//  free(fileList);
-//  return true;
-//}
+EM_JS(void, EmscriptenShellOpenFileBegin, (bool multiple, const char* accept, void* configPointer),
+{
+  if (!document) return null;
+  shellOpenFile(multiple, UTF8ToString(accept), configPointer);
+});
+
+extern "C" EMSCRIPTEN_KEEPALIVE void EmscriptenShellOpenFileEnd(char* fileBuffer, void* configPointer)
+{
+  FileDialogInfo& config = *(FileDialogInfo*)configPointer;
+
+  // Note the the 'fileBuffer' can be null if we cancelled, so we check it before iterating.
+  if (fileBuffer)
+  {
+    // Loop through all the files and add them to the config.
+    char* it = fileBuffer;
+    while (*it != '\0')
+    {
+      String file(it);
+      config.mFiles.PushBack(file);
+
+      it += file.SizeInBytes() + 1;
+    }
+    free(fileBuffer);
+  }
+
+  // Invoke the user's provided callback.
+  if (config.mCallback)
+    config.mCallback(config.mFiles, config.mUserData);
+}
+
+namespace Zero
+{
+
+void Shell::OpenFile(FileDialogInfo& config)
+{
+  // We have no way of selecting a folder, so for now we just enable multi-select.
+  bool multiple =
+    config.Flags & FileDialogFlags::MultiSelect ||
+    config.Flags & FileDialogFlags::Folder;
+
+  StringBuilder acceptExtensions;
+  forRange(FileDialogFilter& filter, config.mSearchFilters)
+  {
+    if (acceptExtensions.GetSize() != 0)
+      acceptExtensions.Append(',');
+
+    // Filter out all the wildcard stars '*' since html input does not use them.
+    forRange(Rune rune, filter.mFilter)
+    {
+      if (rune == ';')
+        acceptExtensions.Append(',');
+      else if (rune != '*')
+        acceptExtensions.Append(rune);
+    }
+  }
+
+  String accept = acceptExtensions.ToString();
+  EmscriptenShellOpenFileBegin(multiple, accept.c_str(), &config);
+}
+
+} // namespace Zero

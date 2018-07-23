@@ -136,11 +136,11 @@ void BugReporter::OnBrowse(Event* event)
   }
 
   // Open the open file dialog
-  FileDialogConfig config;
-  config.EventName = CallBackEvent;
-  config.CallbackObject = this;
-  config.Title = "Select attachment";
-  config.AddFilter("All Files (*.*)", "*.*");
+  FileDialogConfig* config = FileDialogConfig::Create();
+  config->EventName = CallBackEvent;
+  config->CallbackObject = this;
+  config->Title = "Select attachment";
+  config->AddFilter("All Files (*.*)", "*.*");
   Z::gEngine->has(OsShell)->OpenFile(config);
 }
 

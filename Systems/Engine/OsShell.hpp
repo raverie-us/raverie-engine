@@ -77,9 +77,9 @@ public:
   bool GetPrimaryMonitorImage(Image* imageBuffer);
 
   /// Use the file open dialog.
-  bool OpenFile(FileDialogConfig& config);
+  void OpenFile(FileDialogConfig* config);
   /// Use the save file dialog.
-  bool SaveFile(FileDialogConfig& config);
+  void SaveFile(FileDialogConfig* config);
   /// Message box used for critical failures.
   void ShowMessageBox(StringParam title, StringParam message);
 
@@ -117,14 +117,17 @@ public:
 //-------------------------------------------------------------------FileDialogConfig
 /// FileDialogConfig is used to configure the Open File Dialog
 /// and the Save File Dialog.
+/// Note that the config may only be used ONCE because it will be automatically
+/// deleted at the end of the OpenFile/SaveFile call.
 struct FileDialogConfig : public FileDialogInfo
 {
-  FileDialogConfig();
-
   String EventName;
-  Object* CallbackObject;
+  HandleOf<Object> CallbackObject;
+
+  static FileDialogConfig* Create();
 
 private:
+  FileDialogConfig();
   static void Callback(Array<String>& files, void* userData);
 };
 

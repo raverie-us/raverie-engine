@@ -367,10 +367,10 @@ public:
   bool GetPrimaryMonitorImage(Image* image);
 
   /// Show the file open dialog. Results are returned via mCallback or mFiles.
-  bool OpenFile(FileDialogInfo& config);
+  void OpenFile(FileDialogInfo& config);
 
   /// Show the save file dialog. Results are returned via mCallback or mFiles.
-  bool SaveFile(FileDialogInfo& config);
+  void SaveFile(FileDialogInfo& config);
 
   /// Message box used for critical failures.
   void ShowMessageBox(StringParam title, StringParam message);

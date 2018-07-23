@@ -1163,14 +1163,15 @@ void SpriteSheetImport(Editor* editor)
   SpriteSheetImporter* importer = CreateImporter();
 
   //Open the open file dialog
-  FileDialogConfig config;
-  config.EventName = "OnFileSelected";
-  config.CallbackObject = importer;
-  config.Title = "Select sprite sheet to import";
-  config.AddFilter("Png File", "*.png");
-  config.StartingDirectory = editor->GetProjectPath();
-  config.Flags |= FileDialogFlags::MultiSelect;
+  FileDialogConfig* config = FileDialogConfig::Create();
+  config->EventName = "OnFileSelected";
+  config->CallbackObject = importer;
+  config->Title = "Select sprite sheet to import";
+  config->AddFilter("Png File", "*.png");
+  config->StartingDirectory = editor->GetProjectPath();
+  config->Flags |= FileDialogFlags::MultiSelect;
   Z::gEngine->has(OsShell)->OpenFile(config);
+
 }
 
 }

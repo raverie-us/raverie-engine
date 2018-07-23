@@ -37,6 +37,23 @@ Keys::Enum SDLScancodeToKey(SDL_Scancode code)
 #include "Keys.inl"
 #undef ProcessInput
   }
+
+  switch (code)
+  {
+    // Treat the gui keys as if they are control.
+    case SDL_SCANCODE_LGUI:
+    case SDL_SCANCODE_RGUI:
+      return Keys::Control;
+
+    // Keys.inl already handles all the right versions.
+    case SDL_SCANCODE_RCTRL:
+      return Keys::Control;
+    case SDL_SCANCODE_RSHIFT:
+      return Keys::Shift;
+    case SDL_SCANCODE_RALT:
+      return Keys::Alt;
+  }
+
   return Keys::Unknown;
 }
 
@@ -59,6 +76,22 @@ Keys::Enum SDLKeycodeToKey(SDL_Keycode code)
 #include "Keys.inl"
 #undef ProcessInput
   }
+  
+  switch (code)
+  {
+    // Treat the gui keys as if they are control.
+    case SDLK_LGUI:
+    case SDLK_RGUI:
+      return Keys::Control;
+
+    // Keys.inl already handles all the right versions.
+    case SDLK_RCTRL:
+      return Keys::Control;
+    case SDLK_RSHIFT:
+      return Keys::Shift;
+    case SDLK_RALT:
+      return Keys::Alt;
+  }
   return Keys::Unknown;
 }
 
@@ -70,6 +103,7 @@ SDL_Keycode KeyToSDLKeycode(Keys::Enum key)
 #include "Keys.inl"
 #undef ProcessInput
   }
+
   return SDLK_UNKNOWN;
 }
 
@@ -233,20 +267,34 @@ void Shell::SetMouseCursor(Cursor::Enum cursor)
   SDL_SetCursor(sdlCursor);
 }
 
+#if !defined(ZeroPlatformNoShellIsClipboardText)
 bool Shell::IsClipboardText()
 {
   return SDL_HasClipboardText() == SDL_TRUE;
 }
+#endif
 
-String Shell::GetClipboardText()
+String SDLGetClipboardTextAsString()
 {
-  return SDL_GetClipboardText();
+  char* clipboardText = SDL_GetClipboardText();
+  String result = clipboardText;
+  SDL_free(clipboardText);
+  return result;
 }
 
+#if !defined(ZeroPlatformNoShellGetClipboardText)
+String Shell::GetClipboardText()
+{
+  return SDLGetClipboardTextAsString();
+}
+#endif
+
+#if !defined(ZeroPlatformNoShellSetClipboardText)
 void Shell::SetClipboardText(StringParam text)
 {
   SDL_SetClipboardText(text.c_str());
 }
+#endif
 
 #if !defined(ZeroPlatformNoShellIsClipboardImage)
 bool Shell::IsClipboardImage()
@@ -276,7 +324,7 @@ bool Shell::GetPrimaryMonitorImage(Image* image)
 
 // SDL has no open file dialog. We could maybe revert to using our own custom dialog that uses the file system API.
 // This method uses a very poor message box + clipboard approach.
-bool FileDialog(FileDialogInfo& config, bool isOpen)
+void FileDialog(Shell* shell, FileDialogInfo& config, bool isOpen)
 {
   const SDL_MessageBoxButtonData buttons[] =
   {
@@ -311,13 +359,12 @@ bool FileDialog(FileDialogInfo& config, bool isOpen)
 
   // Show the message box, and if it failed or they click cancel, early out
   if (SDL_ShowMessageBox(&messageboxdata, &buttonid) < 0 || buttonid == 0)
-    return false;
+    return;
 
-  const char* text = SDL_GetClipboardText();
-  if (text == nullptr)
-    return false;
+  String files = shell->GetClipboardText();
+  if (files.Empty())
+    return;
 
-  String files = text;
   forRange(StringRange fileRange, files.Split("\n"))
   {
     config.mFiles.PushBack(fileRange.Trim());
@@ -325,21 +372,19 @@ bool FileDialog(FileDialogInfo& config, bool isOpen)
 
   if (config.mCallback)
     config.mCallback(config.mFiles, config.mUserData);
-
-  return !config.mFiles.Empty();
 }
 
 #if !defined(ZeroPlatformNoShellOpenFile)
-bool Shell::OpenFile(FileDialogInfo& config)
+void Shell::OpenFile(FileDialogInfo& config)
 {
-  return FileDialog(config, true);
+  return FileDialog(this, config, true);
 }
 #endif
 
 #if !defined(ZeroPlatformNoShellSaveFile)
-bool Shell::SaveFile(FileDialogInfo& config)
+void Shell::SaveFile(FileDialogInfo& config)
 {
-  return FileDialog(config, false);
+  return FileDialog(this, config, false);
 }
 #endif
 
@@ -450,12 +495,17 @@ void Shell::Update()
 
       case SDL_TEXTINPUT:
       {
-        ShellWindow* window = GetShellWindowFromSDLId(e.text.windowID);
-        if (window && window->mOnTextTyped)
+        // Some platforms send SDL_TEXTINPUT even when Control/Alt are down.
+        // In Zero we ignore these because we don't want the events here.
+        if (!IsKeyDown(Keys::Control) && !IsKeyDown(Keys::Alt))
         {
-          String text = e.text.text;
-          forRange(Rune rune, text)
-            window->mOnTextTyped(rune, window);
+          ShellWindow* window = GetShellWindowFromSDLId(e.text.windowID);
+          if (window && window->mOnTextTyped)
+          {
+            String text = e.text.text;
+            forRange(Rune rune, text)
+              window->mOnTextTyped(rune, window);
+          }
         }
         break;
       }
