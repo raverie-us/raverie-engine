@@ -407,4 +407,32 @@ ZilchDefineType(LauncherProjectInfoProxy, builder, type)
   type->AddAttribute(ObjectAttributes::cCore);
 }
 
+ZilchDefineType(DebugSettings, builder, type)
+{
+  ZeroBindComponent();
+  ZeroBindDocumented();
+  ZeroBindSetup(SetupMode::DefaultSerialization);
+
+  ZilchBindGetterSetterProperty(MaxDebugObjects);
+}
+
+void DebugSettings::Serialize(Serializer& stream)
+{
+  SerializeNameDefault(mMaxDebugObjects, 5000);
+}
+
+void DebugSettings::Initialize(CogInitializer& initializer)
+{
+}
+
+int DebugSettings::GetMaxDebugObjects()
+{
+  return mMaxDebugObjects;
+}
+
+void DebugSettings::SetMaxDebugObjects(int maxDebugObjects)
+{
+  mMaxDebugObjects = Math::Max(maxDebugObjects, 0);
+}
+
 }//namespace Zero

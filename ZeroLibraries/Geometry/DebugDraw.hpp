@@ -48,7 +48,7 @@
   }                                                                \
   void Add(uint spaceId, const DebugObjectType& object)            \
   {                                                                \
-    mDebugObjects[spaceId].PushBack(DebugDrawObjectAny(object));   \
+    AddInternal(spaceId, DebugDrawObjectAny(object));              \
   }
 
 namespace Zero
@@ -634,9 +634,21 @@ public:
   DebugDrawObjectArray::range GetDebugObjects(uint spaceId);
   void ClearObjects();
 
+  void SetMaxDebugObjects(int maxDebugObjects = 5000);
+  bool MaxCountExceeded();
+
+  // Internal
+
+  void AddInternal(uint spaceId, const DebugDrawObjectAny& object);
+
+  int mMaxDebugObjects;
+  bool mFlagExceeded;
+  bool mCountExceeded;
+
   Array<uint> mSpaceIdStack;
   Array<DebugDrawObjectBase*> mDebugConfigStack;
   HashMap<uint, DebugDrawObjectArray> mDebugObjects;
+  int mDebugObjectCount;
 
   DebugDrawObjectBase mDefaultConfig;
 };
