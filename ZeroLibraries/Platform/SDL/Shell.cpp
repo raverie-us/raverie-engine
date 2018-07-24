@@ -409,11 +409,25 @@ PlatformInputDevice* PlatformInputDeviceFromSDL(SDL_JoystickID id)
   return nullptr;
 }
 
+void UpdateResize(ShellWindow* window, IntVec2Param clientSize)
+{
+  if (clientSize == window->mClientSize)
+    return;
+
+  window->mOnClientSizeChanged(clientSize, window);
+  window->mClientSize = clientSize;
+}
+
 void Shell::Update()
 {
   ZeroGetPrivateData(ShellPrivateData);
   ShellWindow* mainWindow = mMainWindow;
 
+  // Some platforms don't sent all resize events, so handle that here.
+  // For example, if you resize the window while loading in Emscripten, it misses the resize.
+  if (mainWindow)
+    UpdateResize(mainWindow, mainWindow->GetClientSize());
+  
   SDL_Event e;
   while (SDL_PollEvent(&e))
   {
@@ -444,15 +458,7 @@ void Shell::Update()
           case SDL_WINDOWEVENT_RESIZED:
           case SDL_WINDOWEVENT_SIZE_CHANGED:
             if (window->mOnClientSizeChanged)
-            {
-              IntVec2 clientSize = IntVec2(e.window.data1, e.window.data2);
-              
-              if (clientSize != window->mClientSize)
-              {
-                window->mOnClientSizeChanged(clientSize, window);
-                window->mClientSize = clientSize;
-              }
-            }
+              UpdateResize(window, IntVec2(e.window.data1, e.window.data2));
             break;
 
           case SDL_WINDOWEVENT_MINIMIZED:
