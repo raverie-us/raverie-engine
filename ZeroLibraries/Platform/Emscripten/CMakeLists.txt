@@ -13,10 +13,10 @@ ${CMAKE_CURRENT_LIST_DIR}/../Empty/DirectoryWatcher.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../Empty/ExecutableResource.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../Empty/Intrinsics.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../Empty/Registry.cpp
-${CMAKE_CURRENT_LIST_DIR}/../Empty/Socket.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../Empty/Thread.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../Empty/ThreadSync.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../Posix/FileSystem.cpp
+${CMAKE_CURRENT_LIST_DIR}/../Posix/Socket.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../STL/Atomic.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../STL/File.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../STL/FpControl.cpp

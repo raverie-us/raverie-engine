@@ -1176,13 +1176,6 @@ void Socket::Shutdown(Status& status, SocketIo::Enum io)
     return FailOnLastError(status);
 }
 
-void Socket::Close()
-{
-  // Ignore any errors that are returned
-  Status status;
-  Close(status);
-}
-
 void Socket::Close(Status& status)
 {
   if (IsOpen())

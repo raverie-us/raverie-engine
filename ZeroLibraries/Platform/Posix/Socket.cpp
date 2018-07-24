@@ -499,7 +499,7 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, SocketA
     }
 
     // Write internet protocol version
-    bitStream.WriteInRange(internetProtocol, InternetProtocolMin, InternetProtocolMax);
+    bitStream.WriteQuantized(internetProtocol, InternetProtocolMin, InternetProtocolMax);
 
     // Write IP address according to it's IP version
     switch(internetProtocol)
@@ -544,7 +544,7 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, SocketA
 
     // Read internet protocol version
     InternetProtocol::Enum internetProtocol = InternetProtocol::Unspecified;
-    bitStream.ReadInRange(internetProtocol, InternetProtocolMin, InternetProtocolMax);
+    bitStream.ReadQuantized(internetProtocol, InternetProtocolMin, InternetProtocolMax);
 
     // Translate to socket address family
     SocketAddressFamily::Enum addressFamily = SocketAddressFamily::Unspecified;
@@ -576,10 +576,10 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, SocketA
         ((SOCKET_ADDRESS_IPV4*)sockAddrStorage)->sin_family = (SOCKET_ADDRESS_FAMILY)addressFamily;
 
         // Read network-order IPv4 host address
-        ReturnIf(!bitStream.Read(((SOCKET_ADDRESS_IPV4*)sockAddrStorage)->sin_addr.s_addr), 0);
+        ReturnIf(!bitStream.Read(((SOCKET_ADDRESS_IPV4*)sockAddrStorage)->sin_addr.s_addr), 0, "Error reading IPv4 address");
 
         // Read network-order IPv4 port
-        ReturnIf(!bitStream.Read(((SOCKET_ADDRESS_IPV4*)sockAddrStorage)->sin_port), 0);
+        ReturnIf(!bitStream.Read(((SOCKET_ADDRESS_IPV4*)sockAddrStorage)->sin_port), 0, "Error reading IPv4 port");
       }
       break;
 
@@ -589,10 +589,10 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, SocketA
         ((SOCKET_ADDRESS_IPV6*)sockAddrStorage)->sin6_family = (SOCKET_ADDRESS_FAMILY)addressFamily;
 
         // Read network-order IPv6 host address
-        ReturnIf(!bitStream.Read(((SOCKET_ADDRESS_IPV6*)sockAddrStorage)->sin6_addr.s6_addr), 0);
+        ReturnIf(!bitStream.Read(((SOCKET_ADDRESS_IPV6*)sockAddrStorage)->sin6_addr.s6_addr), 0, "Error reading IPv6 address");
 
         // Read network-order IPv6 port
-        ReturnIf(!bitStream.Read(((SOCKET_ADDRESS_IPV6*)sockAddrStorage)->sin6_port), 0);
+        ReturnIf(!bitStream.Read(((SOCKET_ADDRESS_IPV6*)sockAddrStorage)->sin6_port), 0, "Error reading IPv6 port");
       }
       break;
 
@@ -735,7 +735,7 @@ Array<SocketAddress> ResolveAllSocketAddresses(Status& status, StringParam host,
     memcpy((SOCKET_ADDRESS_TYPE*)address.mPrivateData, iter->ai_addr, iter->ai_addrlen);
 
     // Push back socket address
-    addresses.push_back(address);
+    addresses.PushBack(address);
   }
 
   // Free host list
@@ -1002,14 +1002,14 @@ void Destroy(Socket& socket)
       Status status;
       socket.Shutdown(status, SocketIo::Both);
       if(status.Failed()) // Unable?
-        ZPrint("Error shutting down socket connection (%d : %s)\n", status.ExtendedErrorCode, status.Message.c_str());
+        ZPrint("Error shutting down socket connection (%d : %s)\n", status.Context, status.Message.c_str());
     }
 
     // Close socket
     Status status;
     socket.Close(status);
     if(status.Failed()) // Unable?
-      ZPrint("Error closing socket (%d : %s)\n", status.ExtendedErrorCode, status.Message.c_str());
+      ZPrint("Error closing socket (%d : %s)\n", status.Context, status.Message.c_str());
   }
 }
 

@@ -168,6 +168,7 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Resolution.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Shell.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Shell.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Platform/Socket.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Socket.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/SocketConstants.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/SocketEnums.hpp
