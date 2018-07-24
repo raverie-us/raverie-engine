@@ -158,8 +158,10 @@ public:
   void ExportApplication(HashSet<String> exportTargets);
   void ExportContent(HashSet<String> exportTargets);
 
-  void CopyContent(String outputDirectory, ExportTarget* target);
+  void CopyContent(Status& status, String outputDirectory, ExportTarget* target);
   void UpdateIcon(ProjectSettings* project, ExecutableResourceUpdater& updater);
+
+  void SaveAndBuildContent();
 
   // Project export settings
   Cog* mProjectCog;

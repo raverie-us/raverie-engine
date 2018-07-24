@@ -205,7 +205,6 @@ public:
 
   OsWindow* Window;
   IntVec2 ClientSize;
-  IntVec2 WindowSize;
 };
 
 //-------------------------------------------------------------------OsMouseEvent

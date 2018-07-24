@@ -161,7 +161,14 @@ void WindowsExportTarget::ExportContentFolders(Cog* projectCog)
   ProjectSettings* project = projectCog->has(ProjectSettings);
   String outputDirectory = FilePath::Combine(GetTemporaryDirectory(), "Windows", project->ProjectName);
 
-  mExporter->CopyContent(outputDirectory, this);
+  Status copyStatus;
+  mExporter->CopyContent(copyStatus, outputDirectory, this);
+
+  if (copyStatus.Failed())
+  {
+    DoNotifyWarning("WindowsExportTarget", copyStatus.Message);
+    return;
+  }
 
   //Copy the executable
   String outputExe = FilePath::Combine(outputDirectory, "ZeroEditor.exe");

@@ -55,11 +55,17 @@ void CreateGame(Cog* configCog, Cog* projectCog, StringParam projectFile)
   if (windowLaunch != nullptr)
     size = windowLaunch->mWindowedResolution;
 
-  WindowStyleFlags::Enum mainStyle = (WindowStyleFlags::Enum)(WindowStyleFlags::MainWindow | WindowStyleFlags::OnTaskBar | WindowStyleFlags::TitleBar | WindowStyleFlags::Close);
+  // If changes are ever made to these flags, all platforms must be considered.
+  WindowStyleFlags::Enum mainStyle = (WindowStyleFlags::Enum)(WindowStyleFlags::MainWindow | WindowStyleFlags::OnTaskBar | WindowStyleFlags::TitleBar | WindowStyleFlags::Resizable | WindowStyleFlags::Close);
 
   OsWindow* mainWindow = osShell->CreateOsWindow("MainWindow", size, position, nullptr, mainStyle);
+
+  // On Emscripten, the window full screen can only be done by a user action.
+  // Setting it on startup causes an abrupt change the first time the user click or hits a button.
+#if !defined(PLATFORM_EMSCRIPTEN)
   if (windowLaunch == nullptr || windowLaunch->mLaunchFullscreen)
     mainWindow->SetState(WindowState::Fullscreen);
+#endif
 
   //quick hack to make exports work better so they can trap the mouse
   Z::gMouse->mActiveWindow = mainWindow;

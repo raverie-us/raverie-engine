@@ -20,7 +20,7 @@ class Ssao : ZilchComponent
       return;
     
     var outputSize = lightBuffer.Texture.Size;
-    var halfOutputSize = outputSize / 2;
+    var halfOutputSize = Math.Max(outputSize / 2, Integer2(1));
     
     var occlusionBuffer = event.GetRenderTarget(outputSize, TextureFormat.R8);
     var halfResOcclusion = event.GetRenderTarget(halfOutputSize, TextureFormat.R8);

@@ -299,7 +299,7 @@ ExportUI::ExportUI(Composite* parent)
 
   mExportPath = new TextBox(pathRow);
   mExportPath->SetEditable(true);
-  mExportPath->SetText(GetUserLocalDirectory());
+  mExportPath->SetText(FilePath::Combine(GetUserDocumentsDirectory(), "ZeroExports", projectSettings->GetProjectName()));
   mExportPath->SetSizing(SizeAxis::X, SizePolicy::Flex, Pixels(200));
 
   TextButton* pathSelectButton = new TextButton(pathRow);
@@ -521,9 +521,23 @@ void Exporter::UpdateIcon(ProjectSettings* project, ExecutableResourceUpdater& u
   }
 }
 
+void BuildContent(ProjectSettings* project);
+
+void Exporter::SaveAndBuildContent()
+{
+  // Save all resources and build them so the 
+  // output directory is up to date
+  Editor* editor = Z::gEditor;
+  editor->SaveAll(true);
+  BuildContent(mProjectCog->has(ProjectSettings));
+}
+
 void Exporter::ExportApplication(HashSet<String> exportTargets)
 {
+  SaveAndBuildContent();
+
   Z::gEngine->LoadingStart();
+  CreateDirectoryAndParents(mOutputDirectory);
   forRange(ExportTarget* exportTarget, mExportTargets.Values())
   {
     if (exportTargets.Contains(exportTarget->mTargetName))
@@ -534,7 +548,10 @@ void Exporter::ExportApplication(HashSet<String> exportTargets)
 
 void Exporter::ExportContent(HashSet<String> exportTargets)
 {
+  SaveAndBuildContent();
+
   Z::gEngine->LoadingStart();
+  CreateDirectoryAndParents(mOutputDirectory);
   forRange(ExportTarget* exportTarget, mExportTargets.Values())
   {
     if (exportTargets.Contains(exportTarget->mTargetName))
@@ -544,7 +561,7 @@ void Exporter::ExportContent(HashSet<String> exportTargets)
 }
 
 
-void Exporter::CopyContent(String outputDirectory, ExportTarget* target)
+void Exporter::CopyContent(Status& status, String outputDirectory, ExportTarget* target)
 {
   Assert(target, "A valid export target should always be provided");
 
@@ -554,7 +571,12 @@ void Exporter::CopyContent(String outputDirectory, ExportTarget* target)
   MainConfig* mainConfig = configCog->has(MainConfig);
 
   // Delete the old content if it was previously exported
-  DeleteDirectoryContents(outputDirectory);
+  bool directoryDeleted = DeleteDirectoryContents(outputDirectory);
+  if (!directoryDeleted)
+  {
+    status.SetFailed("Unable to delete the output directory contents");
+    return;
+  }
   CreateDirectoryAndParents(outputDirectory);
 
   // Copy content output

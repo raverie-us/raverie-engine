@@ -441,9 +441,18 @@ void Shell::Update()
               window->mOnFocusChanged(e.window.event == SDL_WINDOWEVENT_FOCUS_GAINED, window);
             break;
 
+          case SDL_WINDOWEVENT_RESIZED:
           case SDL_WINDOWEVENT_SIZE_CHANGED:
             if (window->mOnClientSizeChanged)
-              window->mOnClientSizeChanged(IntVec2(e.window.data1, e.window.data2), window);
+            {
+              IntVec2 clientSize = IntVec2(e.window.data1, e.window.data2);
+              
+              if (clientSize != window->mClientSize)
+              {
+                window->mOnClientSizeChanged(clientSize, window);
+                window->mClientSize = clientSize;
+              }
+            }
             break;
 
           case SDL_WINDOWEVENT_MINIMIZED:
@@ -868,12 +877,12 @@ WindowState::Enum ShellWindow::GetState()
   Uint32 flags = SDL_GetWindowFlags((SDL_Window*)mHandle);
 
   // Restore is never returned.
-  if (flags & SDL_WINDOW_MINIMIZED)
-    return WindowState::Minimized;
-  if (flags & SDL_WINDOW_MAXIMIZED)
-    return WindowState::Maximized;
   if (flags & SDL_WINDOW_FULLSCREEN || flags & SDL_WINDOW_FULLSCREEN_DESKTOP)
     return WindowState::Fullscreen;
+  if (flags & SDL_WINDOW_MAXIMIZED)
+    return WindowState::Maximized;
+  if (flags & SDL_WINDOW_MINIMIZED)
+    return WindowState::Minimized;
 
   return WindowState::Windowed;
 }
