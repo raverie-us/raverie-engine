@@ -94,7 +94,7 @@ function(zero_multitarget_copy_folders_to_target_output_directories)
     foreach(target ${PARSED_TARGETS})
         foreach(folder ${PARSED_FOLDERS_TO_COPY})
             add_custom_command(TARGET ${target} POST_BUILD
-                # executes "cmake -E copy_if_different
+                # executes "cmake -E copy_directory
                 COMMAND ${CMAKE_COMMAND} -E copy_directory  
                 # input folder
                 ${folder}
