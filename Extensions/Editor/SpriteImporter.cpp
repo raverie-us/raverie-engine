@@ -170,6 +170,9 @@ void SpriteSheetImporter::UpdateTexture()
 {
   if (!mSourceTextrue)
     mSourceTextrue = Texture::CreateRuntime();
+  
+  TextureFiltering::Enum filtering = Sampling == SpriteSampling::Nearest ? TextureFiltering::Nearest : TextureFiltering::Bilinear;
+  mSourceTextrue->SetFiltering(filtering);
 
   byte* data = (byte*)mSourcePixels.Data;
   if (UseAlphaColorKey)
@@ -181,11 +184,6 @@ void SpriteSheetImporter::UpdateTexture()
   }
 
   mSourceTextrue->Upload(mSourcePixels);
-
-  //if(Smoothing)
-  //  mSourceTextrue->SetFiltering(Filtering::Bilinear);
-  //else
-  //  mSourceTextrue->SetFiltering(Filtering::Point);
 
   mSourceDisplay->SetTexture(mSourceTextrue);
 }
@@ -1130,10 +1128,9 @@ SpriteSampling::Enum SpriteSheetImporter::GetSmoothing(){return Sampling;}
 void SpriteSheetImporter::SetSmoothing(SpriteSampling::Enum sampling)
 {
   Sampling = sampling;
-  //if(Smoothing)
-  //  mSourceTextrue->SetFiltering(Filtering::Bilinear);
-  //else
-  //  mSourceTextrue->SetFiltering(Filtering::Point);
+  // When changing smoothing mode update the source texture that
+  // the preview sprite is using to display the result to the user
+  UpdateTexture();
 }
 
 //------------------------------------------------------------------------
