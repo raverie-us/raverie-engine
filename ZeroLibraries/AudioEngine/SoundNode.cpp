@@ -744,10 +744,18 @@ namespace Audio
     SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
     Paused(false),
     Pausing(false),
+    Muted(false),
+    Muting(false),
     Interpolating(false)
   {
     if (!Threaded)
       SetSiblingNodes(new CombineAndPauseNode(name, ID, extInt, true));
+  }
+
+  //************************************************************************************************
+  bool CombineAndPauseNode::GetPaused()
+  {
+    return Paused;
   }
 
   //************************************************************************************************
@@ -764,24 +772,88 @@ namespace Audio
       // If we should pause and we are currently not paused and not pausing
       if (paused && !Paused && !Pausing)
       {
+        // If we are muted we don't need to interpolate volume
+        if (Muted)
+        {
+          Paused = true;
+        }
+        else
+        {
         Pausing = true;
+
+          // Only set the interpolator if we haven't already set it for muting
+          if (!Muting)
+          {
         Interpolating = true;
         VolumeInterpolator.SetValues(1.0f, 0.0f, cPropertyChangeFrames);
+      }
+        }
       }
       // If we should un-pause and we are currently paused
       else if (!paused && Paused)
       {
         Paused = Pausing = false;
+
+        // If we are muted or muting we don't need to interpolate volume
+        if (!Muted && !Muting)
+        {
         Interpolating = true;
         VolumeInterpolator.SetValues(0.0f, 1.0f, cPropertyChangeFrames);
       }
     }
   }
+  }
 
   //************************************************************************************************
-  bool CombineAndPauseNode::GetPaused()
+  bool CombineAndPauseNode::GetMuted()
   {
-    return Paused;
+    return Muted;
+  }
+
+  //************************************************************************************************
+  void CombineAndPauseNode::SetMuted(bool muted)
+  {
+    if (!Threaded)
+    {
+      AddTaskForSibling(&CombineAndPauseNode::SetMuted, muted);
+
+      Muted = muted;
+    }
+    else
+    {
+      // If we should mute and we are currently not muted and not muting
+      if (muted && !Muted && !Muting)
+      {
+        // If we are paused we don't need to interpolate volume
+        if (Paused)
+        {
+          Muted = true;
+        }
+        else
+        {
+          Muting = true;
+
+          // Only set the interpolator if we haven't already set it for pausing
+          if (!Pausing)
+          {
+            Interpolating = true;
+            VolumeInterpolator.SetValues(1.0f, 0.0f, PropertyChangeFrames);
+          }
+        }
+      }
+      // If we should un-mute and we are currently muted
+      else if (!muted && Muted)
+      {
+        Muted = Muting = false;
+
+        // If we are paused or pausing we don't need to interpolate volume
+        if (!Paused && !Pausing)
+        {
+          Interpolating = true;
+          VolumeInterpolator.SetValues(0.0f, 1.0f, PropertyChangeFrames);
+        }
+      }
+    }
   }
 
   //************************************************************************************************
@@ -791,11 +863,16 @@ namespace Audio
     if (!Threaded)
       return false;
 
+    // Check if we are paused (don't need to process or return audio)
     if (Paused)
       return false;
 
     // Get input
     bool isThereOutput = AccumulateInputSamples(outputBuffer->Size(), numberOfChannels, listener);
+
+    // Check if we are muted (need to process audio, don't need to return any)
+    if (Muted)
+      return false;
 
     // Move input to output buffer
     if (isThereOutput)
@@ -821,6 +898,8 @@ namespace Audio
           Interpolating = false;
           if (Pausing)
             Paused = true;
+          if (Muting)
+            Muted = true;
         }
       }
 

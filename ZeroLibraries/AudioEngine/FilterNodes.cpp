@@ -462,6 +462,10 @@ namespace Audio
       FiltersPerListener[listener] = filter;
     }
 
+    // If there is no input data make sure the array is zeroed out
+    if (!isThereInput)
+      memset(InputSamples.Data(), 0, sizeof(float) * InputSamples.Size());
+
     // Apply filter
     bool outputCheck(false);
     filter->ProcessBuffer(InputSamples.Data(), outputBuffer->Data(), numberOfChannels, outputBufferSize);

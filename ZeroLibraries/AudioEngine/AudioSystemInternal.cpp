@@ -104,7 +104,7 @@ namespace Audio
     }
 
     // Start audio streams
-    InputOutputInterface.StartStreams(true, true);
+    InputOutputInterface.StartStreams(true, false);
 
     ZPrint("Audio initialization completed\n");
   }
@@ -490,6 +490,23 @@ namespace Audio
   }
 
   //************************************************************************************************
+  bool AudioSystemInternal::StartInput()
+  {
+    if (AudioIO->GetStreamInfo(StreamTypes::Input).Status == StreamStatus::Started)
+      return true;
+   
+    StreamStatus::Enum inputStatus = AudioIO->InitializeStream(StreamTypes::Input);
+    if (inputStatus != StreamStatus::Initialized)
+      return false;
+
+    inputStatus = AudioIO->StartStream(StreamTypes::Input);
+    if (inputStatus == StreamStatus::Started)
+      return true;
+    else
+      return false;
+  }
+
+  //************************************************************************************************
   void AudioSystemInternal::HandleTasksThreaded()
   {
     int counter(0);
@@ -628,6 +645,24 @@ namespace Audio
         // Swap the resampled data into the InputBuffer
         InputBuffer.Swap(resampledInput);
       }
+    }
+  }
+
+  //************************************************************************************************
+  void AudioSystemInternal::SetSendMicInputData(bool sendData)
+  {
+    if (sendData && !SendMicrophoneInputData)
+    {
+      if (!StartInput())
+        return;
+
+      AddTask(Zero::CreateFunctor(&AudioSystemInternal::SendMicrophoneInputData,
+        this, true));
+    }
+    else if (!sendData && SendMicrophoneInputData)
+    {
+      AddTask(Zero::CreateFunctor(&AudioSystemInternal::SendMicrophoneInputData,
+        this, false));
     }
   }
 

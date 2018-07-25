@@ -291,6 +291,8 @@ LibraryView::LibraryView(Composite* parent)
   mDataSelection = nullptr;
   mContentLibrary = nullptr;
   mIgnoreEditorSelectionChange = false;
+  mTagEditorCurrentHeight = 0;
+
   this->SetLayout(CreateStackLayout());
 
   mLibrariesRow = new Composite(this);
@@ -363,8 +365,6 @@ LibraryView::LibraryView(Composite* parent)
   ConnectThisTo(mTagEditorCloseButton, Events::LeftMouseDown, OnTagEditorClose);
   ConnectThisTo(mTagEditorCloseButton, Events::MouseHover, OnTagEditorCloseHover);
 
-  SetTagEditorHeight(0);
-
   ConnectThisTo(Z::gResources, Events::ResourcesLoaded, OnResourcesModified);
   ConnectThisTo(Z::gResources, Events::ResourcesUnloaded, OnResourcesModified);
   ConnectThisTo(Z::gResources, Events::ResourceTagsModified, OnResourcesModified);
@@ -387,6 +387,8 @@ LibraryView::~LibraryView()
 //******************************************************************************
 void LibraryView::UpdateTransform()
 {
+  mTagEditorCloseButton->SetTranslation(Vec3(mTagEditor->mSize.x - Pixels(18), Pixels(2), 0));
+
   Composite::UpdateTransform();
 }
 
@@ -963,16 +965,17 @@ void LibraryView::OnDataSelectionModified(ObjectEvent* event)
     LibDataEntry* entry = (LibDataEntry*)mSource->ToEntry(dataIndex);
     if(entry->mResource)
     {
-      // Ignore all documents (scripts, shader fragments, etc...)
-      if(Type::DynamicCast<DocumentResource*>(entry->mResource))
-        continue;
-
       // Clear the editor selection first
       if(!cleared)
       {
         editorSelection->Clear();
         cleared = true;
       }
+
+      // Ignore all documents (scripts, shader fragments, etc...)
+      if(Type::DynamicCast<DocumentResource*>(entry->mResource))
+        continue;
+
       editorSelection->Add(entry->mResource, SendsEvents::False);
     }
   }
@@ -1410,13 +1413,25 @@ void LibraryView::OnTagEditorCloseHover(MouseEvent* e)
 }
 
 //******************************************************************************
-float LibraryView::GetTagEditorHeight()
+float LibraryView::GetTagEditorSize(SizeAxis::Enum axis)
 {
-  return mTagEditorHeight;
+  return mTagEditor->GetAxisSize(axis);
 }
 
 //******************************************************************************
-void LibraryView::SetTagEditorHeight(float height)
+void LibraryView::SetTagEditorSize(SizeAxis::Enum axis, float size)
+{
+  mTagEditor->SetAxisSize(axis, size);
+}
+
+//******************************************************************************
+float LibraryView::GetTagEditorCurrentHeight()
+{
+  return mTagEditorCurrentHeight;
+}
+
+//******************************************************************************
+void LibraryView::SetTagEditorCurrentHeight(float height)
 {
   if(height < Pixels(1))
   {
@@ -1425,10 +1440,17 @@ void LibraryView::SetTagEditorHeight(float height)
   else
   {
     mTagEditorCloseButton->SetTranslation(Vec3(mTagEditor->mSize.x - Pixels(18), Pixels(2), 0));
-    mTagEditor->SetSize(Vec2(0, height));
+    mTagEditor->SetSize(Vec2(mTagEditor->mSize.x, height));
+    mTagEditor->SetSizing(SizeAxis::Y, mTagEditor->GetSizePolicy().YPolicy, height);
     mTagEditor->SetActive(true);
   }
-  mTagEditorHeight = height;
+
+  mTagEditorCurrentHeight = height;
+
+  // If the difference is less than 1 pixel, then the animation has finished.
+  if(Math::Abs(mTagEditorFinalHeight - height) < Pixels(1))
+    mTagEditor->SetIsAnimating(false);
+
   MarkAsNeedsUpdate();
 }
 
@@ -1451,7 +1473,7 @@ void LibraryView::RenameAtIndex(DataIndex& dataIndex)
 bool LibraryView::TagEditorIsOpen()
 {
   // When it's closed the height should be 0
-  return mTagEditorHeight != 0.0f;
+  return mTagEditorCurrentHeight != 0.0f;
 }
 
 //******************************************************************************
@@ -1476,11 +1498,13 @@ void LibraryView::EditTags(DataSelection* dataSelection)
 //******************************************************************************
 void LibraryView::OpenTagEditor()
 {
-  float height = mTagEditor->GetDesiredHeight();
+  mTagEditorFinalHeight = mTagEditor->GetDesiredHeight(mTagEditor->GetTagChain()->GetSize());
 
   ActionSequence* seq = new ActionSequence(this);
-  seq->Add(AnimatePropertyGetSet(ZilchSelf, TagEditorHeight, Ease::Quad::Out, 
-                                 this, 0.3f, height));
+  seq->Add(AnimatePropertyGetSet(ZilchSelf, TagEditorCurrentHeight, Ease::Quad::Out,
+                                 this, 0.3f, mTagEditorFinalHeight));
+
+  mTagEditor->SetIsAnimating(true);
 }
 
 //******************************************************************************
@@ -1489,11 +1513,13 @@ void LibraryView::CloseTagEditor()
   // Clean up all references to resource that the tag editor is holding onto
   mTagEditor->CleanTagEditor();
   
-  float height = 0;
+  float mTagEditorFinalHeight = 0;
 
   ActionSequence* seq = new ActionSequence(this);
-  seq->Add(AnimatePropertyGetSet(ZilchSelf, TagEditorHeight, Ease::Quad::Out, 
-                                 this, 0.3f, height));
+  seq->Add(AnimatePropertyGetSet(ZilchSelf, TagEditorCurrentHeight, Ease::Quad::Out,
+                                 this, 0.3f, mTagEditorFinalHeight));
+
+  mTagEditor->SetIsAnimating(true);
 }
 
 }// namespace Zero

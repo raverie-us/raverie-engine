@@ -52,17 +52,17 @@ DWORD ToWindowsFileMode(FileMode::Enum mode)
 }
 
 //Convert File Relative position to windows constant
-DWORD ToWindowsRelative(FileOrigin::Enum relative)
+DWORD ToWindowsRelative(SeekOrigin::Enum relative)
 {
   switch(relative)
   {
-    case FileOrigin::Begin:
+    case SeekOrigin::Begin:
       return FILE_BEGIN;
 
-    case FileOrigin::End: 
+    case SeekOrigin::End: 
       return FILE_END;
 
-    case FileOrigin::Current:
+    case SeekOrigin::Current:
       return FILE_CURRENT;
   }
   return FILE_CURRENT;
@@ -242,7 +242,7 @@ FilePosition File::Tell()
   return newPosition.QuadPart;
 }
 
-bool File::Seek(FilePosition pos, FileOrigin::Enum rel)
+bool File::Seek(FilePosition pos, SeekOrigin::Enum rel)
 {
   ZeroGetPrivateData(FilePrivateData);
   ErrorIf(self->mHandle == INVALID_HANDLE_VALUE, "File handle is not valid.");

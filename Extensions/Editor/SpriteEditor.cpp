@@ -892,7 +892,7 @@ void SpriteSourceEditor::OnExportAllFrames(Event* event)
     String name = BuildString(spriteSource->Name, "_", ToString(spriteFrame->mFrameIndex), ".png");
     String fullPath = FilePath::Combine(mEditDirectory, name);
     Status status;
-    SaveToPng(status, &buffer, fullPath);
+    SaveImage(status, fullPath, &buffer, ImageSaveFormat::Png);
   }
 
   // Open the directory we saved the sprite frames into
@@ -967,7 +967,7 @@ void SpriteSourceEditor::OnEditSpriteSheet(Event* event)
   String name = BuildString(spriteSource->Name, ".png");
   String fullPath = FilePath::Combine(mEditDirectory, name);
   Status status;
-  SaveToPng(status, &output, fullPath);
+  SaveImage(status, fullPath, &output, ImageSaveFormat::Png);
   Os::SystemOpenFile(fullPath.c_str(), Os::Verb::Edit);
 
   // Track edits
@@ -1015,7 +1015,7 @@ void SpriteSourceEditor::OnFileModified(FileEditEvent* event)
     String fullPath = FilePath::Combine(mEditDirectory, event->FileName);
     Image newImage;
     Status status;
-    LoadFromPng(status, &newImage, fullPath);
+    LoadImage(status, fullPath, &newImage);
 
     // Get the frame size
     IntRect oldFrameRect = frameEdited->mFrameRect;
@@ -1039,7 +1039,7 @@ void SpriteSourceEditor::OnFileModified(FileEditEvent* event)
     String fullPath = FilePath::Combine(mEditDirectory, event->FileName);
     Status status;
     Image newImage;
-    LoadFromPng(status, &newImage, fullPath);
+    LoadImage(status, fullPath, &newImage);
 
     // Recalculate how big it should be
     SpriteFrameLayout frameLayout(mSpriteData.Size(), mFrameSizeX, mFrameSizeY);
@@ -1086,7 +1086,7 @@ void SpriteSourceEditor::EditFrameImage(DataIndex frameIndex)
 
   // Save this file to a png file
   Status status;
-  SaveToPng(status, &buffer, fullPath.c_str());
+  SaveImage(status, fullPath, &buffer, ImageSaveFormat::Png);
 
   // Tell the Os to edit this type of file
   Os::SystemOpenFile(fullPath.c_str(), Os::Verb::Edit);
@@ -1186,7 +1186,7 @@ void SpriteSourceEditor::SaveToSpriteSource()
 
   // Overwrite the file
   Status status;
-  SaveToPng(status, &output, sourceFile);
+  SaveImage(status, sourceFile, &output, ImageSaveFormat::Png);
 
   // Check to see if the resource was renamed
   if(spriteSource->Name != mSpriteName)

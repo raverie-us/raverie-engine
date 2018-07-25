@@ -330,7 +330,7 @@ int BugReportJob::Execute()
   {
     String fileName = GenerateTempFile("ClipboardImage", ".png");
     Status status;
-    SaveToPng(status, &mClipboardImage, fileName);
+    SaveImage(status, fileName, &mClipboardImage, ImageSaveFormat::Png);
     if(status.Succeeded())
     {
       ++fileCount;
@@ -342,7 +342,7 @@ int BugReportJob::Execute()
   {
     String fileName = GenerateTempFile("Screenshot", ".png");
     Status status;
-    SaveToPng(status, &mScreenshot, fileName);
+    SaveImage(status, fileName, &mScreenshot, ImageSaveFormat::Png);
     if(status.Succeeded())
     {
       ++fileCount;

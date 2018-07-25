@@ -103,61 +103,70 @@ Material* FindMeshNodeMaterial(SceneGraphSource* source, SceneGraphNode* node)
   return NULL;
 }
 
+template <typename MeshType, typename ManagerType>
+MeshType* GetNodeMesh(StringParam sourceName, StringParam meshNodeName)
+{
+  MeshType* mesh = nullptr;
+  if(!meshNodeName.Empty())
+  {
+    String fullMeshName = BuildString(sourceName, "_", meshNodeName);
+    // Check for a name that's generated when there are multiple meshes from a scene file.
+    mesh = ManagerType::FindOrNull(fullMeshName);
+    // If that name isn't found, just check for the scene name (when there is only one mesh).
+    if(mesh == nullptr)
+      mesh = ManagerType::FindOrNull(sourceName);
+  }
+  return mesh;
+}
+
 void UpdateMeshes(SceneGraphSource* source, SceneGraphNode* sourceNode, Cog* object, UpdateFlags::Type flags)
 {
   if(!(flags & UpdateFlags::Meshes))
     return;
 
-  if (!sourceNode->MeshName.Empty())
+  // Mesh
+  Mesh* mesh = GetNodeMesh<Mesh, MeshManager>(source->Name, sourceNode->MeshName);
+  if(mesh)
   {
-    // Check for name that's generated when there are multiple meshes from a scene file.
-    Mesh* mesh = MeshManager::FindOrNull(BuildString(source->Name, "_", sourceNode->MeshName));
-    if (mesh == nullptr)
-      // If not found, check for just scene name when there is only one mesh.
-      mesh = MeshManager::FindOrNull(source->Name);
+    // Get the material for this node
+    Material* material = NULL;
 
-    if(mesh)
+    if(flags & UpdateFlags::Materials)
+      material = FindMeshNodeMaterial(source, sourceNode);
+
+    if(mesh->mBones.Empty() == false)
     {
-      // Get the material for this node
-      Material* material = NULL;
+      SkinnedModel* skinnedModel = HasOrAdd<SkinnedModel>(object);
+      skinnedModel->SetMesh(mesh);
 
-      if(flags & UpdateFlags::Materials)
-        material = FindMeshNodeMaterial(source, sourceNode);
-
-      if(mesh->mBones.Empty() == false)
-      {
-        SkinnedModel* skinnedModel = HasOrAdd<SkinnedModel>(object);
-        skinnedModel->SetMesh(mesh);
-
-        if(sourceNode->SkeletonRootNodePath.Empty() == false)
-          skinnedModel->SetSkeletonPath(sourceNode->SkeletonRootNodePath);
-        else
-          skinnedModel->SetSkeletonPath(CogPath("."));
-
-        if(material)
-          skinnedModel->SetMaterial(material);
-      }
+      if(sourceNode->SkeletonRootNodePath.Empty() == false)
+        skinnedModel->SetSkeletonPath(sourceNode->SkeletonRootNodePath);
       else
-      {
-        Model* model = HasOrAdd<Model>(object);
-        model->SetMesh(mesh);
+        skinnedModel->SetSkeletonPath(CogPath("."));
 
-        if(material)
-          model->SetMaterial(material);
-      }
+      if(material)
+        skinnedModel->SetMaterial(material);
+    }
+    else
+    {
+      Model* model = HasOrAdd<Model>(object);
+      model->SetMesh(mesh);
+
+      if(material)
+        model->SetMaterial(material);
     }
   }
 
   // Physics Mesh
-  String physicsMeshName = sourceNode->PhysicsMeshName;
-  PhysicsMesh* physicsMesh = PhysicsMeshManager::FindOrNull(physicsMeshName);
+  PhysicsMesh* physicsMesh = GetNodeMesh<PhysicsMesh, PhysicsMeshManager>(source->Name, sourceNode->PhysicsMeshName);
   if(physicsMesh)
   {
     MeshCollider* meshCollider = HasOrAdd<MeshCollider>(object);
     meshCollider->SetPhysicsMesh(physicsMesh);
   }
 
-  ConvexMesh* convexMesh = ConvexMeshManager::FindOrNull(physicsMeshName);
+  // Convex Mesh
+  ConvexMesh* convexMesh = GetNodeMesh<ConvexMesh, ConvexMeshManager>(source->Name, sourceNode->PhysicsMeshName);
   if(convexMesh)
   {
     ConvexMeshCollider* meshCollider = HasOrAdd<ConvexMeshCollider>(object);

@@ -28,6 +28,12 @@ namespace Events
   DefineEvent(SearchDataModified);
 }
 
+const float cTagHeight = Pixels(17);
+const float cTagPadding = Pixels(3);
+const float cTextBoxHeight = Pixels(20);
+const float cTextBoxPaddingY = Pixels(1);
+
+
 ZilchDefineType(TagEvent, builder, type)
 {
 }
@@ -227,10 +233,7 @@ TagChain::TagChain(Composite* parent) : TagChainBase(parent)
 //******************************************************************************
 void TagChain::UpdateTransform()
 {
-  mBackground->SetSize(mSize);
-
-  Vec3 cOffset = Pixels(3,3,0);
-
+  Vec3 cOffset = Pixels(cTagPadding, cTagPadding, 0);
   Vec3 currPos = Vec3::cZero;
 
   for(uint i = 0; i < mTags.Size(); ++i)
@@ -239,39 +242,47 @@ void TagChain::UpdateTransform()
 
     Vec2 tagSize = tag->GetDesiredSize();
 
-    if(cOffset.x + currPos.x + tagSize.x > mSize.x)
+    if(cOffset.x + currPos.x + tagSize.x > mSize.x - cTagPadding)
     {
       currPos.x = 0.0f;
-      currPos.y += Pixels(17);
+      currPos.y += cTagHeight;
     }
 
     tag->SetTranslationAndSize(cOffset + currPos, tagSize);
 
-    currPos.x += tagSize.x + Pixels(3);
+    currPos.x += tagSize.x + cTagPadding;
   }
+
+  float height = cOffset.y + currPos.y + cTagHeight;
+
+  SetSize(Vec2(mSize.x, height));
+  mBackground->SetSize(mSize);
+  
   Composite::UpdateTransform();
 }
 
 //******************************************************************************
-float TagChain::GetDesiredHeight()
+float TagChain::GetDesiredHeight(Vec2Param& sizeConstraint)
 {
-  Vec3 cOffset = Pixels(3,3,0);
+  Vec3 cOffset = Pixels(cTagPadding, cTagPadding, 0);
   Vec3 currPos = Vec3::cZero;
+
   for(uint i = 0; i < mTags.Size(); ++i)
   {
     TagLabel* tag = mTags[i];
 
     Vec2 tagSize = tag->GetDesiredSize();
 
-    if(cOffset.x + currPos.x + tagSize.x > mSize.x)
+    if(cOffset.x + currPos.x + tagSize.x > sizeConstraint.x - cTagPadding)
     {
       currPos.x = 0.0f;
-      currPos.y += Pixels(17);
+      currPos.y += cTagHeight;
     }
 
-    currPos.x += tagSize.x + Pixels(3);
+    currPos.x += tagSize.x + cTagPadding;
   }
-  return cOffset.y + currPos.y + Pixels(20);
+
+  return cOffset.y + currPos.y + cTagHeight;
 }
 
 //-------------------------------------------------------------- TagChainTextBox
@@ -342,12 +353,12 @@ void TagChainTextBox::UpdateTransform()
     if(currTagPos.x + tagSize.x > mSize.x)
     {
       currTagPos.x = 0.0f;
-      currTagPos.y += Pixels(17);
+      currTagPos.y += cTagHeight;
     }
 
     tag->SetTranslationAndSize(currTagPos, tagSize);
 
-    currTagPos.x += tagSize.x + Pixels(3);
+    currTagPos.x += tagSize.x + cTagPadding;
   }
 
   mSearchBar->mTextOffset = currTagPos.x;
@@ -532,6 +543,7 @@ void TagChainTextBox::OnSearchBoxKeyPreview(KeyboardEvent* e)
 //******************************************************************************
 TagEditor::TagEditor(Composite* parent) : Composite(parent)
 {
+  mIsAnimating = false;
   mTagChain = new TagChain(this);
   mTagChain->SetSize(Pixels(100, 60));
   mTagChain->mSorted = true;
@@ -540,7 +552,7 @@ TagEditor::TagEditor(Composite* parent) : Composite(parent)
   spacer->SetSize(Pixels(1,1));
 
   mTextBox = new TextBox(this);
-  mTextBox->SetSize(Pixels(100, 20));
+  mTextBox->SetSize(Pixels(100, cTextBoxHeight));
   mTextBox->SetEditable(true);
   mTextBox->mEditTextField->mEnterClearFocus = false;
   mTextBox->SetHintText("Add tags...");
@@ -548,31 +560,61 @@ TagEditor::TagEditor(Composite* parent) : Composite(parent)
   ConnectThisTo(mTextBox, Events::TextEnter, OnSearchBoxSubmitted);
 }
 
-const float cTextBoxSize = Pixels(20);
-
 //******************************************************************************
 void TagEditor::UpdateTransform()
 {
-  float tagChainHeight = mSize.y - cTextBoxSize - Pixels(3);
-  tagChainHeight = Math::Max(Pixels(20), tagChainHeight);
+  SetAxisSize(SizeAxis::X, mSize.x);
+
+  float tagChainHeight = mTagChain->GetDesiredHeight(mSize);
   mTagChain->SetSize(Vec2(mSize.x, tagChainHeight));
 
-  mTextBox->SetTranslation(Vec3(0, tagChainHeight + Pixels(1), 0));
-  mTextBox->SetSize(Vec2(mSize.x, cTextBoxSize));
+  mTextBox->SetTranslation(Vec3(0, tagChainHeight + cTextBoxPaddingY, 0));
+  mTextBox->SetSize(Vec2(mSize.x, cTextBoxHeight));
 
   Composite::UpdateTransform();
 }
 
 //******************************************************************************
-float TagEditor::GetDesiredHeight()
+Vec2 TagEditor::Measure(LayoutArea& data)
 {
-  return mTagChain->GetDesiredHeight() + cTextBoxSize + Pixels(1);
+  // If animating - defer to the current size rather than the desired height.
+  if(mIsAnimating)
+    return Vec2(data.Size.x, mSize.y);
+  else
+    return Vec2(data.Size.x, GetDesiredHeight(data.Size));
+}
+
+//******************************************************************************
+float TagEditor::GetDesiredHeight(Vec2Param& sizeConstraint)
+{
+  // Add height for the search-box and for padding.
+  return mTagChain->GetDesiredHeight(sizeConstraint) + cTextBoxHeight + cTextBoxPaddingY;
 }
 
 //******************************************************************************
 TagChain* TagEditor::GetTagChain()
 {
   return mTagChain;
+}
+
+//******************************************************************************
+float TagEditor::GetAxisSize(SizeAxis::Enum axis)
+{
+  return mSize[axis];
+}
+
+//******************************************************************************
+void TagEditor::SetAxisSize(SizeAxis::Enum axis, float size)
+{
+  mSize[axis] = size;
+  mTagChain->mSize[axis] = size;
+  mTextBox->mSize[axis];
+}
+
+//******************************************************************************
+void TagEditor::SetIsAnimating(bool state)
+{
+  mIsAnimating = state;
 }
 
 //******************************************************************************

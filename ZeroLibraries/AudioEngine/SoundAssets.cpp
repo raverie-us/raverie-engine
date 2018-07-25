@@ -103,11 +103,12 @@ namespace Audio
 
   //************************************************************************************************
   SoundAssetFromFile::SoundAssetFromFile(Zero::Status& status, const Zero::String& fileName, 
-    const bool streaming, ExternalNodeInterface* extInt, const bool isThreaded) :
+    FileLoadType::Enum loadType, ExternalNodeInterface* extInt, const bool isThreaded) :
     SoundAsset(extInt, isThreaded), 
     mStreaming(streaming),
     mHasStreamingInstance(false), 
     mFileLength(0),
+    mStreaming(false),
     mChannels(0),
     mFrameCount(0),
     Decoder(nullptr),
@@ -116,12 +117,13 @@ namespace Audio
   {
     if (!Threaded)
     {
-      ThreadedAsset = new SoundAssetFromFile(status, fileName, streaming, extInt, true);
+      ThreadedAsset = new SoundAssetFromFile(status, fileName, loadType, extInt, true);
       if (!status.Failed())
       {
         mFileLength = ((SoundAssetFromFile*)ThreadedAsset)->mFileLength;
         mChannels = ((SoundAssetFromFile*)ThreadedAsset)->mChannels;
         mFrameCount = ((SoundAssetFromFile*)ThreadedAsset)->mFrameCount;
+        mStreaming = ((SoundAssetFromFile*)ThreadedAsset)->mStreaming;
       }
     }
     else
@@ -129,7 +131,7 @@ namespace Audio
       // Remember that this constructor happens on the game thread
 
       // Create the decoder object
-      Decoder = new FileDecoder(status, fileName, streaming);
+      Decoder = new FileDecoder(status, fileName, loadType);
 
       // Make sure it was successful
       if (!status.Failed())
@@ -138,10 +140,7 @@ namespace Audio
         mFileLength = (float)Decoder->mSamplesPerChannel / cSystemSampleRate;
         mChannels = Decoder->mChannels;
         mFrameCount = Decoder->mSamplesPerChannel;
-
-        // If not streaming, make the Samples buffer big enough to hold all the audio samples
-        if (!mStreaming)
-          Samples.Reserve(mFrameCount * mChannels);
+        mStreaming = Decoder->mStreaming;
       }
     }
   }

@@ -25,17 +25,17 @@ namespace Zilch
     void Close();
     void CloseStreams();
 
-    HandleOf<FileStream> GetStandardError();
-    HandleOf<FileStream> GetStandardInput();
-    HandleOf<FileStream> GetStandardOutput();
+    HandleOf<FileStreamClass> GetStandardError();
+    HandleOf<FileStreamClass> GetStandardInput();
+    HandleOf<FileStreamClass> GetStandardOutput();
     
     bool mRedirectStandardError;
     bool mRedirectStandardInput;
     bool mRedirectStandardOutput;
     
-    HandleOf<FileStream> mStandardError;
-    HandleOf<FileStream> mStandardInput;
-    HandleOf<FileStream> mStandardOutput;
+    HandleOf<FileStreamClass> mStandardError;
+    HandleOf<FileStreamClass> mStandardInput;
+    HandleOf<FileStreamClass> mStandardOutput;
   };
 
 }

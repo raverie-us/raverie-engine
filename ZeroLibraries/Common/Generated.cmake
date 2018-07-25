@@ -239,6 +239,8 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/Utility/Standard.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Utility/Status.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Utility/Status.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Utility/Stream.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Utility/Stream.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Utility/TextStream.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Utility/Typedefs.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Utility/UintNType.hpp

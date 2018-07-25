@@ -55,6 +55,7 @@ public:
   {};
 
   String mMeshName;
+  String mPhysicsMeshName;
   Mat4 mMeshTransform;
 
   Aabb mAabb;
@@ -103,6 +104,7 @@ public:
 
   bool mHasMesh;
   String mMeshName;
+  String mPhysicsMeshName;
   // Information defining the necessary nodes should bones be present
   String mSkeletonRootNodePath;
   bool mIsSkeletonRoot;

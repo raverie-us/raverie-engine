@@ -26,8 +26,32 @@ namespace MainWindowUi
   Tweakable(Vec4, CloseClick, Vec4(1,1,1,1), cLocation);
 }
 
+namespace Events
+{
+DefineEvent(MainWindowTransformUpdated);
+}
+
+ZilchDefineType(MainWindowTransformEvent, builder, type)
+{
+  ZilchBindFieldGetter(mTargetWindow);
+  ZilchBindFieldGetter(mOldScreenPosition);
+  ZilchBindFieldGetter(mNewScreenPosition);
+  ZilchBindFieldGetter(mOldScreenSize);
+  ZilchBindFieldGetter(mNewScreenSize);
+}
+
+MainWindowTransformEvent::MainWindowTransformEvent(OsWindow* window,
+  Vec2Param oldScreenPosition, Vec2Param newScreenPosition,
+  Vec2Param oldScreenSize, Vec2Param newScreenSize)
+  : mTargetWindow(window),
+    mOldScreenPosition(oldScreenPosition), mNewScreenPosition(newScreenPosition),
+    mOldScreenSize(oldScreenSize), mNewScreenSize(newScreenSize)
+{
+}
+
 ZilchDefineType(MainWindow, builder, type)
 {
+  ZeroBindEvent(Events::MainWindowTransformUpdated, MainWindowTransformEvent);
 }
 
 MainWindow::MainWindow(OsWindow* window)
@@ -37,6 +61,7 @@ MainWindow::MainWindow(OsWindow* window)
   mDefSet = mDefSet->GetDefinitionSet(className);
 
   mSize = Math::ToVec2(window->GetClientSize());
+  mPreviousPosition = Math::ToVec2(window->GetPosition());
 
   mWindowWidget = new Composite(this, AttachType::Direct);
   mPopUp = new Composite(this, AttachType::Direct);
@@ -180,15 +205,21 @@ Composite* MainWindow::GetPopUp()
 
 void MainWindow::UpdateTransform()
 {
-  Vec2 size = ToVec2(GetOsWindow()->GetClientSize());
+  OsWindow* osWindow = GetOsWindow();
+  Vec2 position = Math::ToVec2(osWindow->GetMonitorClientPosition());
+  Vec2 size = ToVec2(osWindow->GetClientSize());
+
   mSizeGrips->MoveToFront();
   mPopUp->MoveToFront();
 
-  WindowState::Type windowState = GetOsWindow()->GetState();
+  WindowState::Type windowState = osWindow->GetState();
 
   // Has to be set outside of resize because maximize and fullscreen could be same size.
   mSizeGrips->SetActive(windowState == WindowState::Windowed);
   mTitleGrip->SetActive(windowState != WindowState::Fullscreen);
+
+  bool sizeUpdated = false;
+  MainWindowTransformEvent eventToSend(osWindow, position, position, size, size);
 
   // Do not resize all child widgets unless
   // a child has been added or the size of the OS window
@@ -205,6 +236,8 @@ void MainWindow::UpdateTransform()
       mMax->SetIcon("TitleRestore");
     else
       mMax->SetIcon("TitleMaximize");
+
+    Vec2 previousSize = mSize;
 
     mLayoutSize = mSize;
     mSize = size;
@@ -248,9 +281,41 @@ void MainWindow::UpdateTransform()
     WidgetListRange children = mClientWidget->GetChildren();
     if(!children.Empty())
       children.Front().SetSize(currentRect.GetSize());
+
+    float diffX = Math::Abs(previousSize.x - mSize.x);
+    float diffY = Math::Abs(previousSize.y - mSize.y);
+
+    // Size must change by at least one pixel.
+    if(diffX > 1.0f || diffY > 1.0f)
+    {
+      sizeUpdated = true;
+
+      eventToSend.mOldScreenSize = previousSize;
+      eventToSend.mNewScreenSize = mSize;
+  }
   }
 
   RootWidget::UpdateTransform();
+
+  // First check if the window position changed, must change by at least one pixel.
+  float distanceSq = (position - mPreviousPosition).LengthSq();
+  if(distanceSq > 1.0f)
+  {
+    eventToSend.mOldScreenPosition = mPreviousPosition;
+    eventToSend.mNewScreenPosition = position;
+
+    // Size changes will be included, if any.
+    Z::gEngine->DispatchEvent(Events::MainWindowTransformUpdated, &eventToSend);
+    osWindow->DispatchEvent(Events::MainWindowTransformUpdated, &eventToSend);
+
+    mPreviousPosition = position;
+}
+  // If the position didn't change, did the size?
+  else if(sizeUpdated)
+  {
+    Z::gEngine->DispatchEvent(Events::MainWindowTransformUpdated, &eventToSend);
+    osWindow->DispatchEvent(Events::MainWindowTransformUpdated, &eventToSend);
+  }
 }
 
 WindowBorderArea::Enum OsDocker::GetWindowBorderArea(Widget* widget, DockMode::Enum direction)

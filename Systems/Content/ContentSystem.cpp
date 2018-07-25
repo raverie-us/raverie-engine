@@ -364,7 +364,18 @@ ContentItem* ContentSystem::AddContentItemToLibrary(Status& status, AddContentIt
         }
         else
         {
-          status.SetFailed(String::Format("File %s exists but is not a content file.", info.FileName.c_str()));
+          String metaFilePath = BuildString(fullPath, ".meta");
+          // If we found the content file and no content item check to see if a meta file is present
+          if (FileExists(metaFilePath))
+          {
+            // If there is a meta file it is most likely corrupted or failed to load somehow
+            String metaFile = FilePath::GetFileName(metaFilePath);
+            status.SetFailed(String::Format("Meta file %s is corrupt or failed to load.", info.FileName.c_str(), metaFile.c_str()));
+          }
+          else
+          {
+            status.SetFailed(String::Format("File %s exists but is not a content file.", info.FileName.c_str()));
+          }
           return nullptr;
         } 
 

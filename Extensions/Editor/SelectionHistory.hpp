@@ -36,8 +36,6 @@ public:
   void Reselect();
   void Clear();
 
-  void OnRecent(Composite* parent);
-
   void MovedToObject(MetaSelection* selection);
 };
 

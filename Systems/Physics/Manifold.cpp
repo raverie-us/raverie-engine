@@ -60,7 +60,7 @@ void Manifold::SetPair(const ColliderPair& pair)
 {
   Objects = pair;
 
-  Restitution = Objects.GetMixedRestiution();
+  Restitution = Objects.GetMixedRestitution();
   DynamicFriction = Objects.GetMixedFriction();
 }
 

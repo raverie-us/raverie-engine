@@ -231,8 +231,9 @@ public:
   void AddZeroContextMenu(StringParam menuName);
   void AddCommand(Command* command);
   void AddCommandByName(StringParam commandName);
-
+  
   // Popup Interface
+  void ShiftOntoScreen(Vec3 offset) override;
   void OnMouseDown(MouseEvent* event) override;
   void OnAnyGained(FocusEvent* event) override;
   void OnFocusOut(FocusEvent* event)  override;

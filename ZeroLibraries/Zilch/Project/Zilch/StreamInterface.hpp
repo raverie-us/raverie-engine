@@ -31,8 +31,8 @@ namespace Zilch
     };
   }
 
-  /// When we seek in a stream, we can specifiy to seek from the start, end, etc
-  // Note: This must match up to the Zero::FileOrigin
+  /// When we seek in a stream, we can specify to seek from the start, end, etc
+  // Note: This must match up to the Zero::SeekOrigin
   namespace StreamOrigin
   {
     enum Enum

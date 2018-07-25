@@ -92,7 +92,7 @@ namespace Zilch
     codeBuilder.Write(type->Name);
     this->EndNativeLocation(type->NameLocation);
 
-    if (type->BaseType != nullptr)
+    if (type->BaseType != nullptr && !type->IsEnumOrFlags())
     {
       codeBuilder.WriteKeywordOrSymbolSpaceStyle(Grammar::Inheritance, format.SpaceStyleInheritanceColon, format.SpaceStyleGlobalDefaultColon);
       codeBuilder.Write(type->BaseType->Name);

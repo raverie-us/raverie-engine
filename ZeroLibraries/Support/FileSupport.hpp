@@ -54,7 +54,7 @@ void PeekType(bufferType& buffer, type& data)
 {
   Read(buffer, data);
   int offset = (int)sizeof(data);
-  buffer.Seek(-offset, FileOrigin::Current);
+  buffer.Seek(-offset, SeekOrigin::Current);
 }
 
 void WriteStringRangeToFile(StringParam path, StringRange range);

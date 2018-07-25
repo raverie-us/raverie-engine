@@ -895,6 +895,8 @@ public:
 
 private:
   Audio::GranularSynthNode* GetNode();
+
+  const float mMaxResampleValue = 100.0f;
 };
 
 }

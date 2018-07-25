@@ -81,7 +81,7 @@ void ContentPackage::LoadLocalTexture(StringParam location)
 {
   Image image;
   Status status;
-  LoadFromPng(status, &image, location);
+  LoadImage(status, location, &image);
 
   if(status.Failed())
     return;

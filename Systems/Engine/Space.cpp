@@ -291,7 +291,10 @@ Cog* Space::CreateAt(StringParam source, Vec3Param position)
 Cog* Space::Create(Archetype* archetype)
 {
   if(archetype == nullptr)
+  {
+    DoNotifyException("Space", "Cannot create an invalid or null Archetype.");
     return nullptr;
+  }
 
   // Space is being destroyed?
   if (this->GetMarkedForDestruction())
@@ -307,8 +310,10 @@ Cog* Space::Create(Archetype* archetype)
 Cog* Space::CreateAtPosition(Archetype* archetype, Vec3Param position)
 {
   if(archetype == nullptr)
+  {
+    DoNotifyException("Space", "Cannot create an invalid or null Archetype.");
     return nullptr;
-
+  }
   // Space is being destroyed?
   if (this->GetMarkedForDestruction())
   {

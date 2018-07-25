@@ -251,6 +251,10 @@ void GraphicsEngine::Update()
   // if done at end of update, add and remove events need to defer their operations until here
   //UpdateRenderGroups();
 
+  if (gDebugDraw->MaxCountExceeded())
+    DoNotifyWarning("Max debug object count exceeded.", "To edit the max count, open the Select menu and choose 'Select Project'. "
+                                                        "Expand the component 'DebugSettings' (or add it) and modify 'MaxDebugObjects'.");
+
   gDebugDraw->ClearObjects();
 }
 
@@ -441,6 +445,11 @@ void GraphicsEngine::OnProjectCogModified(Event* event)
     SetVerticalSync(frameRate->mVerticalSync && !frameRate->mLimitFrameRate);
   else
     SetVerticalSync(false);
+
+  if (DebugSettings* debugSettings = mProjectCog.has(DebugSettings))
+    gDebugDraw->SetMaxDebugObjects(debugSettings->GetMaxDebugObjects());
+  else
+    gDebugDraw->SetMaxDebugObjects();
 }
 
 //**************************************************************************************************
@@ -1467,19 +1476,10 @@ void GraphicsEngine::WriteTextureToFile(HandleOf<Texture> texture, StringParam f
 }
 
 //**************************************************************************************************
-int SaveToPngJob::Execute()
+int SaveToImageJob::Execute()
 {
   Status status;
-  SaveToPng(status, mImage, mWidth, mHeight, mBitDepth, mFilename);
-  delete[] mImage;
-  return 0;
-}
-
-//**************************************************************************************************
-int SaveToHdrJob::Execute()
-{
-  Status status;
-  SaveToHdr(status, mImage, mWidth, mHeight, mFilename);
+  SaveImage(status, mFilename, mImage, mWidth, mHeight, mFormat, mImageType);
   delete[] mImage;
   return 0;
 }

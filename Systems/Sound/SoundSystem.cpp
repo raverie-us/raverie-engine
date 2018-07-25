@@ -197,7 +197,7 @@ float SoundSystem::GetSystemVolume()
 //**************************************************************************************************
 void SoundSystem::SetSystemVolume(float volume)
 {
-  mAudioSystem->SetVolume(Math::Max(volume, 0.0f));
+  mAudioSystem->SetVolume(Math::Clamp(volume, 0.0f, Audio::MaxVolumeValue));
 }
 
 //**************************************************************************************************
@@ -498,7 +498,7 @@ float AudioSettings::GetSystemVolume()
 //**************************************************************************************************
 void AudioSettings::SetSystemVolume(float volume)
 {
-  mSystemVolume = Math::Max(volume, 0.0f);
+  mSystemVolume = Math::Clamp(volume, 0.0f, Audio::MaxVolumeValue);
 
   Z::gSound->mAudioSystem->SetVolume(mSystemVolume);
 }
@@ -561,7 +561,7 @@ float AudioSettings::GetMinVolumeThreshold()
 //**************************************************************************************************
 void AudioSettings::SetMinVolumeThreshold(float volume)
 {
-  mMinVolumeThreshold = Math::Max(volume, 0.0f);
+  mMinVolumeThreshold = Math::Clamp(volume, 0.0f, 0.5f);
   Z::gSound->mAudioSystem->SetMinimumVolumeThreshold(mMinVolumeThreshold);
 }
 

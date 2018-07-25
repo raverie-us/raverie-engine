@@ -130,6 +130,7 @@ public:
 #include "Utility/Determinism.hpp"
 #include "Utility/SpinLock.hpp"
 #include "Utility/Web.hpp"
+#include "Utility/Stream.hpp"
 #include "Singleton.hpp"
 
 namespace Math

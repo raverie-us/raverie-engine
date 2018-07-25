@@ -43,8 +43,8 @@ namespace Audio
   //----------------------------------------------------------------------------------- File Decoder
 
   //************************************************************************************************
-  FileDecoder::FileDecoder(Zero::Status& status, const Zero::String& fileName, const bool streaming) :
-    mStreaming(streaming),
+  FileDecoder::FileDecoder(Zero::Status& status, const Zero::String& fileName, FileLoadType::Enum loadType) :
+    mStreaming(false),
     mChannels(0),
     mSamplesPerChannel(0),
     mInputFileData(nullptr),
@@ -59,7 +59,7 @@ namespace Audio
     memset(Decoders, 0, sizeof(OpusDecoder*) * cMaxChannels);
 
     // Open the file and read in the data
-    OpenAndReadFile(status, fileName);
+    OpenAndReadFile(status, fileName, loadType);
     if (status.Failed())
       return;
 
@@ -195,10 +195,30 @@ namespace Audio
       // Decode a packet and check if we should keep looping
       running = DecodePacket();
     }
+
+    // We should only reach here if we are not streaming and we are done decoding
+
+    // Destroy any alive decoders
+    for (short i = 0; i < mChannels; ++i)
+    {
+      if (Decoders[i])
+      {
+        opus_decoder_destroy(Decoders[i]);
+        Decoders[i] = nullptr;
+      }
+    }
+
+    // If there is data in the buffer, delete it
+    if (mInputFileData)
+    {
+      delete[] mInputFileData;
+      mInputFileData = nullptr;
+    }
   }
 
   //************************************************************************************************
-  void FileDecoder::OpenAndReadFile(Zero::Status& status, const Zero::String& fileName)
+  void FileDecoder::OpenAndReadFile(Zero::Status& status, const Zero::String& fileName, 
+    FileLoadType::Enum loadType)
   {
     // Open the input file
     Zero::File inputFile;
@@ -215,44 +235,62 @@ namespace Audio
     // Check for an invalid size
     if (size < sizeof(FileHeader))
     {
+      status.SetFailed(Zero::String::Format("Unable to read audio file %s", fileName.c_str()));
+      return;
+    }
+
+    // Read the file header 
+    FileHeader header;
+    inputFile.Read(status, (byte*)&header, sizeof(FileHeader));
+
+    // If the read failed, set the status message and return
+    if (status.Failed())
+    {
       status.SetFailed(Zero::String::Format("Unable to read from audio file %s", fileName.c_str()));
       return;
     }
 
-    // Save the file size 
-    mDataSize = (unsigned)size;
+    // If this isn't the right type of file, set the failed message, delete the buffer, and return
+    if (header.Name[0] != 'Z' || header.Name[1] != 'E')
+    {
+      status.SetFailed(Zero::String::Format("Audio file %s is an incorrect format", fileName.c_str()));
+      return;
+    }
+
+    // Check if we should be streaming this file
+    if (loadType == FileLoadType::Streamed || 
+      (loadType == FileLoadType::Auto && header.SamplesPerChannel >= mLengthForStreaming))
+    {
+      mStreaming = true;
+    }
+
+    // Save the data size 
+    mDataSize = (unsigned)size - sizeof(FileHeader);
 
     // If not streaming, create a buffer for all data and read it in
     if (!mStreaming)
     {
       mInputFileData = new byte[mDataSize];
       inputFile.Read(status, mInputFileData, mDataSize);
+
+      // If the read failed, delete the buffer and return
+      if (status.Failed())
+      {
+        delete[] mInputFileData;
+        mInputFileData = nullptr;
+        return;
+      }
     }
-    // Otherwise create a buffer for the maximum packet size and read in the file header
+    // Otherwise create a buffer for the maximum packet size 
     else
     {
       mInputFileData = new byte[FileEncoder::MaxPacketSize];
-      inputFile.Read(status, mInputFileData, sizeof(FileHeader));
+      memset(mInputFileData, 0, FileEncoder::MaxPacketSize);
     }
 
     // If the read failed, delete the buffer and return
     if (status.Failed())
     {
-      delete[] mInputFileData;
-      mInputFileData = nullptr;
-      return;
-    }
-
-    // Read the file header from the input data
-    FileHeader header;
-    memcpy(&header, mInputFileData, sizeof(header));
-    // Move the index forward
-    mDataIndex += sizeof(header);
-
-    // If this isn't the right type of file, set the failed message, delete the buffer, and return
-    if (header.Name[0] != 'Z' || header.Name[1] != 'E')
-    {
-      status.SetFailed(Zero::String::Format("Audio file %s is an incorrect format", fileName.c_str()));
       delete[] mInputFileData;
       mInputFileData = nullptr;
       return;

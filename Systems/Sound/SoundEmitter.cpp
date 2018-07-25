@@ -171,15 +171,9 @@ void SoundEmitter::Initialize(CogInitializer& initializer)
     {
       mEmitterObject->SetDirectionalAngle(mEmitAngle, mRearVolume);
 
-      Mat4 matrix = mTransform->GetWorldMatrix();
-      Vec4 bx = matrix.BasisX();
-      Vec4 by = matrix.BasisY();
+      Vec4 basisZ = mTransform->GetWorldMatrix().BasisZ();
 
-      Vec3 x = Vec3(bx.x, bx.y, bx.z);
-      Vec3 y = Vec3(by.x, by.y, by.z);
-      Vec3 forward = x.Cross(y);
-
-      mEmitterObject->SetForwardDirection(forward);
+      mEmitterObject->SetForwardDirection(Vec3(basisZ.x, basisZ.y, basisZ.z));
     }
 
     // Add a new pitch node below the emitter node
@@ -286,7 +280,7 @@ void SoundEmitter::SetVolume(float volume)
 //**************************************************************************************************
 void SoundEmitter::InterpolateVolume(float volume, float interpolationTime)
 {
-  mVolume = Math::Max(volume, 0.0f);
+  mVolume = Math::Clamp(volume, 0.0f, Audio::MaxVolumeValue);
 
   if (mVolumeNode)
     mVolumeNode->SetVolume(mVolume, interpolationTime);
@@ -307,7 +301,7 @@ void SoundEmitter::SetDecibels(float decibels)
 //**************************************************************************************************
 void SoundEmitter::InterpolateDecibels(float decibels, float interpolationTime)
 {
-  mVolume = Z::gSound->DecibelsToVolume(decibels);
+  mVolume = Math::Clamp(Z::gSound->DecibelsToVolume(decibels), 0.0f, Audio::MaxVolumeValue);
 
   if (mVolumeNode)
     mVolumeNode->SetVolume(mVolume, interpolationTime);
@@ -328,7 +322,7 @@ void SoundEmitter::SetPitch(float pitch)
 //**************************************************************************************************
 void SoundEmitter::InterpolatePitch(float pitch, float interpolationTime)
 {
-  mPitch = pitch;
+  mPitch = Math::Clamp(pitch, Audio::MinPitchValue, Audio::MaxPitchValue);
 
   if (mPitchNode)
     mPitchNode->SetPitch(Z::gSound->PitchToSemitones(mPitch), interpolationTime);
@@ -349,7 +343,7 @@ void SoundEmitter::SetSemitones(float pitch)
 //**************************************************************************************************
 void SoundEmitter::InterpolateSemitones(float pitch, float interpolationTime)
 {
-  mPitch = Z::gSound->SemitonesToPitch(pitch);
+  mPitch = Math::Clamp(Z::gSound->SemitonesToPitch(pitch), Audio::MinPitchValue, Audio::MaxPitchValue);
 
   if (mPitchNode)
     mPitchNode->SetPitch(pitch, interpolationTime);
@@ -446,7 +440,7 @@ float SoundEmitter::GetRearVolume()
 //**************************************************************************************************
 void SoundEmitter::SetRearVolume(float minimumVolume)
 {
-  mRearVolume = Math::Max(minimumVolume, 0.0f);
+  mRearVolume = Math::Clamp(minimumVolume, 0.0f, Audio::MaxVolumeValue);
   if (mEmitterObject)
     mEmitterObject->SetDirectionalAngle(mEmitAngle, mRearVolume);
 }

@@ -254,7 +254,8 @@ Editor::Editor(Composite* parent)
   ConnectThisTo(this, Events::SaveCheck, OnSaveCheck);
   ConnectThisTo(Z::gEngine, Events::EngineUpdate, OnEngineUpdate);
   ConnectThisTo(Z::gResources, Events::ResourcesUnloaded, OnResourcesUnloaded);
-
+  ConnectThisTo(GetRootWidget(), Events::MouseFileDrop, OnMouseFileDrop);
+  
   BoundType* editorMeta = ZilchTypeId(Editor);
   Z::gSystemObjects->Add(this, editorMeta, ObjectCleanup::None);
 }
@@ -1155,6 +1156,11 @@ void Editor::OnResourcesUnloaded(ResourceEvent* event)
   // Don't need to call selection changed if nothing was removed.
   if (!toRemove.Empty())
     selection->FinalSelectionChanged();
+}
+
+void Editor::OnMouseFileDrop(MouseFileDropEvent* event)
+{
+  LoadDroppedFiles(event->Files->NativeArray);
 }
 
 void Editor::Update()

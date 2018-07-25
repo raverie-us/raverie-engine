@@ -21,7 +21,15 @@ namespace Audio
     CurrentVolume(1.0f)
   {
     if (!isThreaded)
+    {
       SetSiblingNodes(new MicrophoneInputNode(name, ID, nullptr, true));
+
+      if (!gAudioSystem->StartInput())
+      {
+        Active = false;
+        ((MicrophoneInputNode*)GetSiblingNode())->Active = false;
+      }
+    }
   }
 
   //************************************************************************************************
@@ -70,14 +78,17 @@ namespace Audio
         return;
 
       Active = active;
+      
+      if (Active && !gAudioSystem->StartInput())
+        Active = false;
 
       // Send task to threaded node
-      AddTaskForSiblingThreaded(&MicrophoneInputNode::SetActive, active);
+      AddTaskForSiblingThreaded(&MicrophoneInputNode::SetActive, Active);
     }
     else
     {
       // Check if we are deactivating
-      if (!active)
+      if (!active && Active)
       {
         // Mark that we are stopping
         Stopping = true;

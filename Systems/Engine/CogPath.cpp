@@ -1213,7 +1213,7 @@ ZilchDefineType(CogPathMetaComposition, builder, type)
 CogPathMetaComposition::CogPathMetaComposition()
   : MetaComposition(ZilchTypeId(Component))
 {
-
+  mSupportsComponentAddition = false;
 }
 
 Handle CogPathMetaComposition::GetComponent(HandleParam owner, BoundType* componentType)
@@ -1225,7 +1225,10 @@ Handle CogPathMetaComposition::GetComponent(HandleParam owner, BoundType* compon
 
     // If the component is null, the constructed Handle will be of type 'Component' instead of
     // the actual type we were querying. This can cause a problem when building a Zilch::Call.
-    component.StoredType = componentType;
+    // Don't do this if the component is valid though otherwise component interfaces won't
+    // work (the base class type will be set over the derived class type).
+    if(component.IsNull())
+      component.StoredType = componentType;
     return component;
   }
 

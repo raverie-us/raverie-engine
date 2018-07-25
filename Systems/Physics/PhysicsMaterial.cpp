@@ -26,7 +26,9 @@ ZilchDefineType(PhysicsMaterial, builder, type)
   ZilchBindGetterSetterProperty(Density);
   ZilchBindFieldProperty(mRestitution)->Add(new EditorSlider(0, 1, real(0.001f)));
   ZilchBindGetterSetterProperty(Friction);
-  ZilchBindFieldProperty(mHighPriority);
+  ZilchBindFieldProperty(mRestitutionImportance);
+  ZilchBindFieldProperty(mFrictionImportance);
+  ZilchBindGetterSetter(HighPriority)->AddAttribute(DeprecatedAttribute);
   ZilchBindMethod(UpdateAndNotifyIfModified);
 }
 
@@ -41,7 +43,17 @@ void PhysicsMaterial::Serialize(Serializer& stream)
   SerializeNameDefault(mStaticFriction, real(.5f));
   SerializeNameDefault(mDynamicFriction, real(.5f));
   SerializeNameDefault(mDensity, real(1.0f));
-  SerializeNameDefault(mHighPriority, false);
+  SerializeNameDefault(mRestitutionImportance, 0.0f);
+  SerializeNameDefault(mFrictionImportance, 0.0f);
+  
+  // Legacy loading for the high-priority bool (only affected restitution)
+  if(stream.GetType() != SerializerType::Binary && stream.GetMode() == SerializerMode::Loading)
+  {
+    bool highPriority;
+    stream.SerializeFieldDefault("HighPriority", highPriority, false);
+    if(highPriority)
+      mRestitutionImportance = 1.0f;
+  }
 
   SetFriction(mDynamicFriction);
   SetDensityInternal(mDensity, false);
@@ -95,13 +107,27 @@ void PhysicsMaterial::SetDensity(real density)
   SetDensityInternal(density);
 }
 
+bool PhysicsMaterial::GetHighPriority()
+{
+  return mRestitutionImportance != 0;
+}
+
+void PhysicsMaterial::SetHighPriority(bool state)
+{
+  if(state)
+    mRestitutionImportance = 1.0;
+  else
+    mRestitutionImportance = 0.0;
+}
+
 void PhysicsMaterial::CopyTo(PhysicsMaterial* destination)
 {
   destination->mRestitution = mRestitution;
   destination->mStaticFriction = mStaticFriction;
   destination->mDynamicFriction = mDynamicFriction;
   destination->mDensity = mDensity;
-  destination->mHighPriority = mHighPriority;
+  destination->mRestitutionImportance = mRestitutionImportance;
+  destination->mFrictionImportance = mFrictionImportance;
 }
 
 void PhysicsMaterial::UpdateAndNotifyIfModified()

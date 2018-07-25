@@ -3,7 +3,7 @@
 /// \file AudioContent.hpp
 /// Declaration of the Audio content classes.
 /// 
-/// Authors: Chris Peters
+/// Authors: Chris Peters, Andrea Ellinger
 /// Copyright 2012, DigiPen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
@@ -11,6 +11,12 @@
 
 namespace Zero
 {
+/// The choices for how to load and play an audio file.
+/// <param name="StreamFromFile">The audio data will be read from the file and decompressed as it plays. Streaming files can't be played multiple times simultaneously and can't use loop tails.</param>
+/// <param name="Uncompressed">The audio data will be decompressed and held in memory when the Sound resource is loaded.</param>
+/// <param name="Auto">This will choose whether to stream a file depending on its length. Files longer than one minute will be streamed.</param>
+DeclareEnum3(AudioFileLoadType, StreamFromFile, /*StreamFromMemory,*/ Uncompressed, Auto);
+
 class AudioContent : public ContentComposition
 {
 public:
@@ -26,9 +32,10 @@ class SoundBuilder : public DirectBuilderComponent
 public:
   ZilchDeclareType(SoundBuilder, TypeCopyMode::ReferenceType);
 
-  /// If true, the sound file will be streamed from disk at runtime instead of loaded into memory. 
+  /// If Streamed is selected, or if Auto is selected and the file is longer than one minute, 
+  /// the sound file will be streamed from disk at runtime instead of loaded into memory. 
   /// Streaming files can't be played multiple times simultaneously and can't use loop tails.
-  bool mStreamed;
+  AudioFileLoadType::Enum mFileLoadType;
   /// If true, the audio will be normalized when loaded so that the highest volume peak matches
   /// the MaxVolume value.
   bool mNormalize;
@@ -38,9 +45,10 @@ public:
 
   SoundBuilder() :
     DirectBuilderComponent(0, SoundExtension, "Sound"), 
-    mStreamed(false),
+    mFileLoadType(AudioFileLoadType::Auto),
     mNormalize(false),
-    mMaxVolume(0.9f)
+    mMaxVolume(0.9f),
+    mStreamed(false)
   {}
 
   //BuilderComponent Interface
@@ -50,6 +58,8 @@ public:
   bool NeedsBuilding(BuildOptions& options) override;
   void BuildListing(ResourceListing& listing) override;
 
+  // This should be removed at the next major version
+  bool mStreamed;
 };
 
 }//namespace Zero

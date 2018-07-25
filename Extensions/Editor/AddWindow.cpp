@@ -770,6 +770,7 @@ ResourceTemplateDisplay::ResourceTemplateDisplay(Composite* parent, PostAddOp& p
     mTagsBox->SetEditable(true);
 
     ConnectThisTo(mTagsBox, Events::TextTyped, OnTextTypedTag);
+    ConnectThisTo(mTagsBox, Events::KeyDown, OnKeyDownTagField);
     ConnectThisTo(mTagsBox->mEditTextField, Events::FocusGained, OnTagsFocusGained);
     ConnectThisTo(mTagsBox->mEditTextField, Events::FocusLost, OnTagsFocusLost);
   }
@@ -1030,6 +1031,13 @@ void ResourceTemplateDisplay::OnKeyUpNameField(KeyboardEvent* e)
 {
   if (e->Key != Keys::Enter)
     ValidateName(false);
+}
+
+//**************************************************************************************************
+void ResourceTemplateDisplay::OnKeyDownTagField(KeyboardEvent* e)
+{
+  if (e->Key == Keys::Enter)
+    OnCreate(nullptr);
 }
 
 //**************************************************************************************************

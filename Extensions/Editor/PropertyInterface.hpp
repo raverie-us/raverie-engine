@@ -192,7 +192,7 @@ public:
 
   // MetaComposition Interface.
   void AddComponent(HandleParam owner, BoundType* typeToAdd, int index = -1,
-                    bool ignoreDependencies = false) override;
+                    bool ignoreDependencies = false, MetaCreationContext* creationContext = nullptr) override;
   void RemoveComponent(HandleParam owner, HandleParam component,
                        bool ignoreDependencies = false) override;
   void MoveComponent(HandleParam owner, HandleParam component, uint destination) override;

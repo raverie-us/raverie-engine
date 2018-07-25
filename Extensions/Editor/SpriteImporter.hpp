@@ -96,50 +96,67 @@ public:
   void SetZoom(float zoom);
 
   // Getter/Setters
+
+  /// The width of each sprite frame in pixels located on the sprite sheet (Updates FramesPerRow)
   int GetFrameWidth();
   void SetFrameWidth(int frameSizeX);
 
+  /// The height of each sprite frame in pixels located on the sprite sheet (Updates NumberOfRows)
   int GetFrameHeight();
   void SetFrameHeight(int frameSizeY);
 
+  /// The total number of frames on the horizontal axis of the sprite sheet (Updates FrameWidth)
   int GetFramesPerRow();
   void SetFramesPerRow(int framesX);
 
+  /// The total number of frames on the vertical axis of the sprite sheet (Updates FrameHeight)
   int GetNumberOfRows();
   void SetNumberOfRows(int framesY);
 
+  /// The offset along the x-axis in pixels for the origin of the sprite sheet
   int GetOffsetX();
   void SetOffsetX(int offset);
 
+  /// The offset along the y-axis in pixels for the origin of the sprite sheet
   int GetOffsetY();
   void SetOffsetY(int offset);
 
+  /// The padding on the x-axis in pixels between each sprite frame
   int GetSpacingX();
   void SetSpacingX(int spacingX);
 
+  /// The padding on the y-axis in pixels between each sprite frame
   int GetSpacingY();
   void SetSpacingY(int spacingY);
 
+  /// The total number of frames in the resulting sprite animation
   int GetFrameCount();
 
+  /// Mode for determining which sprite frames to import
   ImportFrames::Enum GetImportFrames();
   void SetImportFrames(ImportFrames::Enum newMode);
 
+  /// Animate the preview of the generated sprite animation
   bool GetPreviewAnimate();
   void SetPreviewAnimate(bool state);
 
+  /// Frames per second for the resulting sprite animation
   float GetFrameRate();
   void SetFrameRate(float state);
 
+  /// The current frame of the sprite animation preview
   int GetPreviewFrame();
   void SetPreviewFrame(int frame);
 
+  /// Enable converting a pixel color to be transparent
   bool GetUseAlphaColorKey();
   void SetUseAlphaColorKey(bool colorKey);
 
+  /// Pixel color to be made transparent
   Vec4 GetAlphaColor();
   void SetAlphaColor(Vec4 alphaColor);
 
+  /// Texture smoothing algorithm
   SpriteSampling::Enum GetSmoothing();
   void SetSmoothing(SpriteSampling::Enum sampling);
 
@@ -154,7 +171,9 @@ public:
   HandleOf<SpriteSource> mDestination;
 
   //Settings
+  /// The name for the new SpriteSource resource
   String Name;
+  /// The local translation on the sprite considered to be 0,0
   SpriteOrigin::Enum mOrigin;
   ImportFrames::Enum mImportFrames;
 
@@ -166,14 +185,18 @@ public:
   int OffsetY;
   int SpacingX;
   int SpacingY;
-  int SourceSizeX;
-  int SourceSizeY;
+  /// The number of pixels that occupy one unit of distance in the engine's world space
   int PixelsPerUnit;
   SpriteSampling::Enum Sampling;
+  /// Create a TilePaletteSource from all the selected sprite frames
   bool CreatePalette;
   float mZoom;
 
-  //Pixel color to be made transparent
+  // The original sprite sheets dimensions in pixels
+  int SourceSizeX;
+  int SourceSizeY;
+
+  // Pixel color to be made transparent
   bool UseAlphaColorKey;
   Vec4 AlphaColor;
 

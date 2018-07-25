@@ -122,7 +122,7 @@ void AsyncProcess::Start(Status& status, ProcessStartInfo& startInfo)
   if(startInfo.mRedirectStandardInput)
   {
     mStandardInput = ZilchAllocate(FileStream);
-    FileStream* standardInput = mStandardInput;
+    FileStreamClass* standardInput = mStandardInput;
     mProcess.OpenStandardIn(standardInput->InternalFile);
     standardInput->Capabilities = StreamCapabilities::Write;
   }

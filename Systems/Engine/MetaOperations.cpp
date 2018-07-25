@@ -101,8 +101,9 @@ bool QueueAddComponent(OperationQueue* queue, HandleParam object, BoundType* com
   // Queue the operation
   AddRemoveComponentOperation* op = new AddRemoveComponentOperation(object, 
                                  componentType, ComponentOperation::Add);
-  op->Redo();
   queue->Queue(op);
+  op->Redo();
+  queue->mCreationContexts.Finalize();
   return true;
 }
 
@@ -516,9 +517,11 @@ void AddRemoveComponentOperation::AddComponentFromBuffer()
     loader.EndPolymorphic();
   }
 
+  MetaCreationContext* creationContext = mQueue->mCreationContexts.GetContext(composition);
+
   // Add the component
   bool ignoreDependencies = true;
-  composition->AddComponent(object, componentInstance, (int)mComponentIndex, ignoreDependencies);
+  composition->AddComponent(object, componentInstance, (int)mComponentIndex, ignoreDependencies, creationContext);
 
   Handle component = composition->GetComponent(object, componentType);
 

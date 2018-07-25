@@ -59,9 +59,21 @@ namespace Events
   DefineEvent(TreeKeyPress);
   DefineEvent(MouseEnterRow);
   DefineEvent(MouseExitRow);
+  DefineEvent(TreeViewHeaderAdded);
 }
 
+//------------------------------------------------------------------- Tree Event
 ZilchDefineType(TreeEvent, builder, type)
+{
+}
+
+//-------------------------------------------------- TreeView Header Added Event
+ZilchDefineType(TreeViewHeaderAddedEvent, builder, type)
+{
+}
+
+TreeViewHeaderAddedEvent::TreeViewHeaderAddedEvent(uint headerIndex, ColumnHeader* newHeader)
+  : mHeaderIndex(headerIndex), mNewHeader(newHeader)
 {
 }
 
@@ -1532,6 +1544,9 @@ void TreeView::SetRowHeight(float height)
 
 void TreeView::ShowRow(DataIndex& index)
 {
+  if(mDataSource == nullptr)
+    return;
+
   DataEntry* entry = mDataSource->ToEntry(index);
   if(entry == nullptr)
     return;
@@ -2201,11 +2216,19 @@ void TreeView::UpdateHeaders()
     if(format.HeaderName.Empty() && format.HeaderIcon.Empty())
       continue;
 
+    ColumnHeader* header;
+
     // Create a new header
     if(currHeader >= mHeaders.Size())
-      mHeaders.PushBack(new ColumnHeader(this, &format));
+    {
+      header = new ColumnHeader(this, &format);
+      mHeaders.PushBack(header);
+
+      TreeViewHeaderAddedEvent headerEvent(currHeader, header);
+      DispatchEvent(Events::TreeViewHeaderAdded, &headerEvent);
+    }
     
-    ColumnHeader* header = mHeaders[currHeader];
+    header = mHeaders[currHeader];
 
     float startPos = format.StartX;
     float extraWidth = 0.0f;

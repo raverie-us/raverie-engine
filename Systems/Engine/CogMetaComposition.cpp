@@ -12,11 +12,33 @@
 namespace Zero
 {
 
+//------------------------------------------------------------------------ Cog Meta Creation Context
+//**************************************************************************************************
+CogMetaCreationContext::~CogMetaCreationContext()
+{
+  forRange(CogInitializer* init, mInitializers.Values())
+    delete init;
+}
+
+//**************************************************************************************************
+CogInitializer* CogMetaCreationContext::GetInitializer(Space* space)
+{
+  CogInitializer* init = mInitializers.FindValue(space, nullptr);
+  if (init == nullptr)
+  {
+    init = new CogInitializer(space);
+    mInitializers[space] = init;
+  }
+
+  return init;
+}
+
+//----------------------------------------------------------------------------- Cog Meta Composition
+//**************************************************************************************************
 ZilchDefineType(CogMetaComposition, builder, type)
 {
 }
 
-//----------------------------------------------------------------------------- Cog Meta Composition
 //**************************************************************************************************
 CogMetaComposition::CogMetaComposition() : MetaComposition(ZilchTypeId(Component))
 {
@@ -89,8 +111,14 @@ BoundType* CogMetaComposition::MakeProxy(StringParam typeName, ProxyReason::Enum
 }
 
 //**************************************************************************************************
+MetaCreationContext* CogMetaComposition::GetCreationContext()
+{
+  return new CogMetaCreationContext();
+}
+
+//**************************************************************************************************
 void CogMetaComposition::AddComponent(HandleParam owner, HandleParam componentToAdd, int index,
-                                      bool ignoreDependencies)
+  bool ignoreDependencies, MetaCreationContext* creationContext)
 {
   Cog* cog = owner.Get<Cog*>(GetOptions::AssertOnNull);
 
@@ -107,22 +135,39 @@ void CogMetaComposition::AddComponent(HandleParam owner, HandleParam componentTo
   component->mOwner = cog;
 
   // Add the Component
-  if(ignoreDependencies)
+  if (ignoreDependencies)
     cog->ForceAddComponent(component, index);
   else
     cog->AddComponent(component, index);
 
+  CogInitializer defaultInit(cog->GetSpace(), cog->GetGameSession());
+  CogInitializer* init = &defaultInit;
+  if (creationContext)
+  {
+    CogMetaCreationContext* cogCreationContext = (CogMetaCreationContext*)creationContext;
+    init = cogCreationContext->GetInitializer(cog->GetSpace());
+  }
+
   // Initialize the Component
-  CogInitializer init(cog->GetSpace(), cog->GetGameSession());
-  init.mParent = cog;
-  component->ScriptInitialize(init);
+  init->mParent = cog;
+  component->ScriptInitialize(*init);
 
   // No objects were created, so instead of calling AllCreated, just send the AllObjectsInitialized
-  // event
-  init.SendAllObjectsInitialized();
+  // event. If we have a valid creation context, it will send the AllObjectsInitialized event
+  // for us once all batched operations have been completed, so defer to it.
+  if(creationContext == nullptr)
+    init->SendAllObjectsInitialized();
 
   if(Space* space = cog->GetSpace())
     space->ChangedObjects();
+}
+
+//**************************************************************************************************
+void CogMetaComposition::FinalizeCreation(MetaCreationContext* context)
+{
+  CogMetaCreationContext* cogCreationContext = (CogMetaCreationContext*)context;
+  forRange(CogInitializer* initializer, cogCreationContext->mInitializers.Values())
+    initializer->SendAllObjectsInitialized();
 }
 
 //**************************************************************************************************

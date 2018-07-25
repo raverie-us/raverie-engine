@@ -92,6 +92,9 @@ public:
 
   void RevertCog(Cog* cog, HashSet<MetaSelection*>* modifiedSelections)
   {
+    if(cog->mArchetype == nullptr)
+      return;
+
     RevertToArchetype(Z::gEditor->GetOperationQueue(), cog);
   }
 

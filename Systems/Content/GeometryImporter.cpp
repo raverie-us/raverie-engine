@@ -194,9 +194,14 @@ bool GeometryImporter::SceneEmpty()
 
 void GeometryImporter::CollectNodeData()
 {
-  // loop through the scenes nodes children and find the ones with a mesh attached and
-  // store them along with their name for process and export
   aiNode* rootNode = mScene->mRootNode;
+  // If the root scene node has 1 child, no meshes, and its transform is the identity matrix then
+  // don't include it in the model hierarchy as this is commonly a hidden node within Maya
+  if ((rootNode->mNumChildren == 1) && (rootNode->mNumMeshes == 0) && (rootNode->mTransformation.IsIdentity()))
+    rootNode = rootNode->mChildren[0];
+
+  // Set the root node name and loop through the scenes nodes children and find the ones
+  // with a mesh attached and store them along with their name for process and export
   mRootNodeName = CleanAssetName(rootNode->mName.C_Str());
   ExtractDataFromNodesRescursive(rootNode, "");
 
@@ -266,13 +271,15 @@ void GeometryImporter::SingleMeshHierarchyEntry(HierarchyData& hierarchyData, ui
 
   if (mMeshDataMap.ContainsKey(meshIndex))
   {
-    hierarchyData.mMeshName = mMeshDataMap[meshIndex].mMeshName;
+    MeshData& meshData = mMeshDataMap[meshIndex];
+    hierarchyData.mMeshName = meshData.mMeshName;
+    hierarchyData.mPhysicsMeshName = meshData.mPhysicsMeshName;
   }
   else
   {
     MeshData data;
     data.mMeshTransform = hierarchyData.mLocalTransform;
-    hierarchyData.mMeshName = data.mMeshName = hierarchyData.mNodeName;
+    hierarchyData.mPhysicsMeshName = hierarchyData.mMeshName = data.mMeshName = hierarchyData.mNodeName;
     mMeshDataMap.Insert(meshIndex, data);
   }
 }
@@ -508,11 +515,15 @@ bool GeometryImporter::UpdateBuilderMetaData()
     {
       aiTexture* texture = textures[i];
 
-      if (!(texture->mHeight == 0 && texture->CheckFormat("png")))
+      // We actually expect a 'compressed' texture format
+      if (texture->mHeight != 0)
         continue;
 
+      String extension = texture->achFormatHint;
+      if (IsSupportedImageLoadExtension(extension))
+      {
       GeometryResourceEntry entry;
-      entry.mName = BuildString(FilePath::GetFileNameWithoutExtension(mInputFile), ToString(i), ".png");
+        entry.mName = BuildString(FilePath::GetFileNameWithoutExtension(mInputFile), ToString(i), ".", extension);
 
       // Get resource id if this name already had one, otherwise make a new one.
       if (GeometryResourceEntry* previousEntry = textureContent->mTextures.FindPointer(entry))
@@ -521,6 +532,7 @@ bool GeometryImporter::UpdateBuilderMetaData()
         entry.mResourceId = GenerateUniqueId64();
 
       textureEntries.PushBack(entry);
+    }
     }
 
     if (textureContent->mTextures != textureEntries)

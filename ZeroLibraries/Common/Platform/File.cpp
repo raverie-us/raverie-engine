@@ -182,4 +182,52 @@ bool CompareFileAndString(Status& status, StringParam filePath, StringParam stri
   return true;
 }
 
+
+FileStream::FileStream(File& file) :
+  mFile(&file)
+{
+}
+
+u64 FileStream::Size()
+{
+  return (u64)mFile->CurrentFileSize();
+}
+
+bool FileStream::Seek(u64 filePosition, SeekOrigin::Enum origin)
+{
+  return mFile->Seek(filePosition, origin);
+}
+
+u64 FileStream::Tell()
+{
+  return mFile->Tell();
+}
+
+size_t FileStream::Write(byte* data, size_t sizeInBytes)
+{
+  return mFile->Write(data, sizeInBytes);
+}
+
+size_t FileStream::Read(byte* data, size_t sizeInBytes)
+{
+  Status status;
+  return mFile->Read(status, data, sizeInBytes);
+}
+
+bool FileStream::HasData()
+{
+  Status status;
+  return mFile->HasData(status);
+}
+
+bool FileStream::IsEof()
+{
+  return (u64)mFile->Tell() >= (u64)mFile->CurrentFileSize();
+}
+
+void FileStream::Flush()
+{
+  mFile->Flush();
+}
+
 }//namespace Zero

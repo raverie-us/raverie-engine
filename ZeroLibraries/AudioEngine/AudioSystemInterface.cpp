@@ -303,7 +303,7 @@ namespace Audio
     if (turnOn)
     {
       // Turn on sending input data
-      System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SendMicrophoneInputData,
+      System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SetSendMicInputData,
         System, true));
 
       // Flush the input queue
@@ -314,7 +314,7 @@ namespace Audio
       }
     }
     else
-      System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SendMicrophoneInputData,
+      System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SetSendMicInputData,
         System, false));
   }
 

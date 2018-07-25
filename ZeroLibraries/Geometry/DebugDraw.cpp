@@ -1266,6 +1266,12 @@ void DebugDraw::Shutdown()
 DebugDraw::DebugDraw()
 {
   mDebugConfigStack.PushBack(&mDefaultConfig);
+
+  SetMaxDebugObjects();
+  mFlagExceeded = true;
+  mCountExceeded = false;
+
+  mDebugObjectCount = 0;
 }
 
 DebugDrawObjectArray::range DebugDraw::GetDebugObjects(uint spaceId)
@@ -1279,6 +1285,38 @@ DebugDrawObjectArray::range DebugDraw::GetDebugObjects(uint spaceId)
 void DebugDraw::ClearObjects()
 {
   mDebugObjects.Clear();
+  mDebugObjectCount = 0;
+}
+
+void DebugDraw::SetMaxDebugObjects(int maxDebugObjects)
+{
+  mMaxDebugObjects = maxDebugObjects;
+  mFlagExceeded = true;
+}
+
+bool DebugDraw::MaxCountExceeded()
+{
+  if (mFlagExceeded && mCountExceeded)
+  {
+    // Only reports one time, reset each time max count is changed.
+    mFlagExceeded = false;
+    return true;
+  }
+
+  return false;
+}
+
+void DebugDraw::AddInternal(uint spaceId, const DebugDrawObjectAny& object)
+{
+  if (mDebugObjectCount >= mMaxDebugObjects)
+  {
+    mCountExceeded = true;
+    return;
+  }
+  mCountExceeded = false;
+
+  mDebugObjects[spaceId].PushBack(object);
+  ++mDebugObjectCount;
 }
 
 } // namespace Debug

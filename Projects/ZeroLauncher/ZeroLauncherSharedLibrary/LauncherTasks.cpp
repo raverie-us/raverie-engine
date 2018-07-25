@@ -72,7 +72,7 @@ void DownloadImageTaskJob::OnReponse(WebResponseEvent* event)
   {
     //just save the data
     Status status;
-    LoadFromPng(status, &mImage, (byte*)event->Data.Data(), event->Data.SizeInBytes());
+    LoadImage(status, (byte*)event->Data.Data(), event->Data.SizeInBytes(), &mImage);
 
     if(status.Failed())
     {
@@ -107,7 +107,7 @@ int LoadImageFromDiskTaskJob::Execute()
   }
 
   Status status;
-  LoadFromPng(status, &mImage, mPath);
+  LoadImage(status, mPath, &mImage);
 
   if(status.Failed())
   {
@@ -385,7 +385,7 @@ void DownloadTemplateTaskJob::OnReponse(WebResponseEvent* event)
   // Save the icon image
   String iconFilePath = FilePath::Combine(mTemplateInstallLocation, zeroTemplate->mIconUrl);
   Status status;
-  SaveToPng(status, &mTemplate->mIconImage, iconFilePath);
+  SaveImage(status, iconFilePath, &mTemplate->mIconImage, ImageSaveFormat::Png);
   
   mState = BackgroundTaskState::Completed;
 }

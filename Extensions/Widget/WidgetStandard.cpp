@@ -44,6 +44,7 @@ ZilchDefineStaticLibrary(WidgetLibrary)
   ZilchInitializeType(QueryModifiedSaveEvent);
   ZilchInitializeType(HandleableEvent);
   ZilchInitializeType(WindowTabEvent);
+  ZilchInitializeType(MainWindowTransformEvent);
   ZilchInitializeType(MouseDragEvent);
   ZilchInitializeType(ModalConfirmEvent);
   ZilchInitializeType(ModalButtonEvent);

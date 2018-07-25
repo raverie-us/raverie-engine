@@ -54,7 +54,7 @@ public:
   //Position the PopUp below the mouse.
   void SetBelowMouse(Mouse* mouse, Vec2 offset);
   //Shift to be visible on screen
-  void ShiftOntoScreen(Vec3 offset);
+  virtual void ShiftOntoScreen(Vec3 offset);
 
   //Events
   void OnMouseMove(MouseEvent* event);

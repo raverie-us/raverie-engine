@@ -37,12 +37,8 @@ struct ColliderPair
 
   Vec3 GetPointSeperatingVelocity(Vec3Param point) const;
 
-  real GetMixedRestiution() const;
+  real GetMixedRestitution() const;
   real GetMixedFriction() const;
-
-  real GetMinRestitution() const;
-  real GetMinStaticFriction() const;
-  real GetMinDynamicFriction() const;
 
   u64 GetId() const;
 

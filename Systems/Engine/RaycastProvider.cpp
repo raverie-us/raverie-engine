@@ -338,6 +338,7 @@ ZilchDefineType(RaycasterMetaComposition, builder, type)
 RaycasterMetaComposition::RaycasterMetaComposition() :
   MetaComposition(ZilchTypeId(RaycastProvider))
 {
+  mSupportsComponentAddition = false;
   mSupportsComponentRemoval = false;
 }
 
