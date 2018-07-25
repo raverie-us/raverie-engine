@@ -522,7 +522,7 @@ bool MultiMetaComposition::CanAddComponent(HandleParam object, BoundType* typeTo
 }
 
 //******************************************************************************
-void MultiMetaComposition::AddComponent(HandleParam object, BoundType* typeToAdd, int index, bool ignoreDependencies)
+void MultiMetaComposition::AddComponent(HandleParam object, BoundType* typeToAdd, int index, bool ignoreDependencies, MetaCreationContext* creationContext)
 {
   // Add the component to each object in the selection
   MetaSelection* selection = object.Get<MetaSelection*>();
@@ -536,7 +536,7 @@ void MultiMetaComposition::AddComponent(HandleParam object, BoundType* typeToAdd
   mOperationQueue->SetActiveBatchName(BuildString("Add '", typeToAdd->Name, "to objects"));
 
   forRange(Handle currentObject, selection->All())
-    UndoMetaComposition::AddComponent(currentObject, typeToAdd, index, ignoreDependencies);
+    UndoMetaComposition::AddComponent(currentObject, typeToAdd, index, ignoreDependencies, creationContext);
 
   mOperationQueue->EndBatch();
 }

@@ -35,7 +35,47 @@ ZilchDefineType(OperationQueueEvent, builder, type)
   ZeroBindDocumented();
 }
 
+//--------------------------------------------------- Operation Creation Context
+//******************************************************************************
+OperationCreationContext::~OperationCreationContext()
+{
+  if (mContexts.Empty() == false)
+  {
+    Error("Finalize was not called");
+
+    forRange(MetaCreationContext* context, mContexts.Values())
+      delete context;
+    mContexts.Clear();
+  }
+}
+
+//******************************************************************************
+MetaCreationContext* OperationCreationContext::GetContext(MetaComposition* composition)
+{
+  MetaCreationContext* creationContext = mContexts.FindValue(composition, nullptr);
+  if (creationContext == nullptr)
+  {
+    creationContext = composition->GetCreationContext();
+    mContexts.Insert(composition, creationContext);
+  }
+
+  return creationContext;
+}
+
+//******************************************************************************
+void OperationCreationContext::Finalize()
+{
+  forRange(ContextMap::range::FrontResult entry, mContexts.All())
+  {
+    entry.first->FinalizeCreation(entry.second);
+    delete entry.second;
+  }
+
+  mContexts.Clear();
+}
+
 //-------------------------------------------------------------------- Operation
+//******************************************************************************
 ZilchDefineType(Operation, builder, type)
 {
   ZilchBindFieldGetter(mParent);
@@ -195,6 +235,9 @@ void OperationQueue::Undo()
 
   Operation* last = &mCommands.Back();
   last->Undo();
+
+  mCreationContexts.Finalize();
+
   mCommands.Erase(last);
   mRedoCommands.PushFront(last);
 
@@ -241,6 +284,8 @@ bool OperationQueue::Undo(Operation* allbeforeThis)
     mRedoCommands.PushFront(toErase[i]);
   }
 
+  mCreationContexts.Finalize();
+
   return operationFound;
 }
 
@@ -250,6 +295,9 @@ void OperationQueue::Redo()
   if(!mRedoCommands.Empty())
   {
     Operation* first = &mRedoCommands.Front();
+
+    mCreationContexts.Finalize();
+
     mRedoCommands.Erase(first);
     mCommands.PushBack(first);
 
@@ -348,6 +396,8 @@ OperationListRange OperationQueue::GetRedoCommands()
 //******************************************************************************
 void OperationQueue::Queue(Operation* command)
 {
+  command->mQueue = this;
+
   if(ActiveBatch)
   {
     ActiveBatch->BatchedCommands.PushBack(command);

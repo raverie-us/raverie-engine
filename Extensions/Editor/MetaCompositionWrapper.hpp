@@ -75,14 +75,15 @@ public:
     return mContainedComposition->MakeObject(typeToCreate);
   }
 
-  void AddComponent(HandleParam owner, HandleParam component, int index = -1, bool ignoreDependencies = false) override
+  void AddComponent(HandleParam owner, HandleParam component, int index = -1,
+                    bool ignoreDependencies = false, MetaCreationContext* creationContext = nullptr) override
   {
-    mContainedComposition->AddComponent(owner, component, index, ignoreDependencies);
+    mContainedComposition->AddComponent(owner, component, index, ignoreDependencies, creationContext);
   }
 
-  void AddComponent(HandleParam owner, BoundType* componentType, int index = -1, bool ignoreDependencies = false) override
+  void AddComponent(HandleParam owner, BoundType* componentType, int index = -1, bool ignoreDependencies = false, MetaCreationContext* creationContext = nullptr) override
   {
-    mContainedComposition->AddComponent(owner, componentType, index, ignoreDependencies);
+    mContainedComposition->AddComponent(owner, componentType, index, ignoreDependencies, creationContext);
   }
 
   bool CanRemoveComponent(HandleParam owner, HandleParam component, String& reason) override

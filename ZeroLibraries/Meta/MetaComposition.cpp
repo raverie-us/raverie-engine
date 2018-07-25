@@ -360,18 +360,29 @@ BoundType* MetaComposition::MakeProxy(StringParam typeName, ProxyReason::Enum re
 }
 
 //**************************************************************************************************
+MetaCreationContext* MetaComposition::GetCreationContext()
+{
+  return nullptr;
+}
+
+//**************************************************************************************************
 void MetaComposition::AddComponent(HandleParam owner, HandleParam component, int index,
-                                   bool ignoreDependencies)
+                                   bool ignoreDependencies, MetaCreationContext* creationContext)
 {
   Error("Not implemented");
 }
 
 //**************************************************************************************************
 void MetaComposition::AddComponent(HandleParam owner, BoundType* typeToAdd, int index,
-                                   bool ignoreDependencies)
+                                   bool ignoreDependencies, MetaCreationContext* creationContext)
 {
   Handle component = MakeObject(typeToAdd);
   AddComponent(owner, component, index, ignoreDependencies);
+}
+
+//**************************************************************************************************
+void MetaComposition::FinalizeCreation(MetaCreationContext* context)
+{
 }
 
 //**************************************************************************************************

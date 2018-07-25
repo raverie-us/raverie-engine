@@ -75,7 +75,7 @@ public:
   }
 
   void AddComponent(HandleParam owner, HandleParam component, int index = -1,
-                    bool ignoreDependencies = false) override
+                    bool ignoreDependencies = false, MetaCreationContext* creationContext = nullptr) override
   {
     // Add the block to the filter
     ResourceType* resource = owner.Get<ResourceType*>(GetOptions::AssertOnNull);

@@ -62,7 +62,7 @@ Handle ContentMetaComposition::MakeObject(BoundType* typeToCreate)
 }
 
 void ContentMetaComposition::AddComponent(HandleParam owner, HandleParam componentToAdd, int index,
-                                          bool ignoreDependencies)
+                                          bool ignoreDependencies, MetaCreationContext* creationContext)
 {
   ContentComposition* cc = owner.Get<ContentComposition*>(GetOptions::AssertOnNull);
   ContentComponent* component = componentToAdd.Get<ContentComponent*>();
