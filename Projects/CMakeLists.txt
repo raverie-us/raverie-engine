@@ -402,6 +402,47 @@ copy_multiple_shared_objects(
     ${SDLSharedPath}
 )
 
+if("${platform}" STREQUAL "Emscripten")
+    message("should be calling zip directory")
+    multitarget_zip_directory(
+        ZeroEditor 
+        FOLDERS_TO_ZIP
+        "Resources/Loading"
+        "Resources/FragmentCore"
+        "Resources/ZeroCore"
+        "Resources/Editor"
+        "Resources/EditorUi"
+        "Resources/UiWidget"
+        "PrebuiltZeroContent"
+        "Tools/SpriteVersion.txt"
+        "Data/ColorSchemes"
+        "Data/Fallback"
+        "Data/Licenses"
+        "Data/ZilchFragmentSettings"
+        "Data/*.*"
+        OUTPUT_FILE
+        "BuildOutput/ZeroEditorFileSystem.zip"
+    )
+    multitarget_zip_directory(
+        ZeroLauncher 
+        FOLDERS_TO_ZIP
+        "Resources/Loading"
+        "Resources/FragmentCore"
+        "Resources/ZeroCore"
+        "Resources/ZeroLauncherResources"
+        "PrebuiltZeroContent"
+        "Tools/SpriteVersion.txt"
+        "Data/ColorSchemes"
+        "Data/Fallback"
+        "Data/Licenses"
+        "Data/ZilchFragmentSettings"
+        "Data/*.*"
+        OUTPUT_FILE
+        "BuildOutput/ZeroLauncherFileSystem.zip"
+    )
+endif()
+
+
 #function(create_build_info aTarget aSourceDir aBuildOutDir aOutputLocation)
 create_build_info(
     ZeroEditor

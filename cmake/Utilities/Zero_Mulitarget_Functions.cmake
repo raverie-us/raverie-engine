@@ -7,6 +7,7 @@
 # Includes for any other functions used in this file
 ################################################################################
 include(${cmake_utilities_dir}/zero_target_precompiled_headers.cmake)
+include(${cmake_utilities_dir}/Helper_Functions.cmake)
 
 ################################################################################
 # Functions
@@ -106,3 +107,21 @@ function(zero_multitarget_copy_folders_to_target_output_directories)
 
 endfunction()
 ####
+
+
+#### multitarget version of zip directory, probably the easier one to use
+function(multitarget_zip_directory)
+    set(oneValueArgs OUTPUT_FILE)
+    # empty since we leave targets as "unparsed" for consistancy
+    set(multiValueArgs FOLDERS_TO_ZIP)
+
+    cmake_parse_arguments(PARSED "" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    set(PARSED_TARGETS ${PARSED_UNPARSED_ARGUMENTS})
+
+    # assign this zip directory command to each target that was passsed
+    foreach(target ${PARSED_TARGETS})
+        zip_directory(${target} "${PARSED_FOLDERS_TO_ZIP}" "${PARSED_OUTPUT_FILE}")
+    endforeach()
+
+endfunction()

@@ -17,4 +17,4 @@ popd
 
 popd
 
-MakeFileSystemZip.bat
+REM MakeFileSystemZip.bat
