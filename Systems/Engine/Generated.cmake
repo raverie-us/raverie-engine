@@ -24,7 +24,6 @@ target_sources(Engine
     ${CMAKE_CURRENT_LIST_DIR}/BasicActions.cpp
     ${CMAKE_CURRENT_LIST_DIR}/BuildVersion.cpp
     ${CMAKE_CURRENT_LIST_DIR}/BuildVersion.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/BuildVersion.inl
     ${CMAKE_CURRENT_LIST_DIR}/Cog.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Cog.hpp
     ${CMAKE_CURRENT_LIST_DIR}/CogHelpers.cpp
