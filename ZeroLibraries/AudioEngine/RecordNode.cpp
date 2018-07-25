@@ -115,8 +115,8 @@ namespace Audio
             16, // fmt chunk size
             1, // audio format
             (unsigned short)Channels, // number of channels
-            cSystemSampleRate, // sampling rate
-            cSystemSampleRate * Channels * 16 / 8, // bytes per second
+            SystemSampleRate, // sampling rate
+            SystemSampleRate * Channels * 16 / 8, // bytes per second
             2 * 16 / 8, // bytes per sample
             16, // bits per sample
             { 'd', 'a', 't', 'a' },

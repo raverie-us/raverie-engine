@@ -149,7 +149,7 @@ public:
 /// A new ColumnHeader was constructed.
 class TreeViewHeaderAddedEvent : public Event
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(TreeViewHeaderAddedEvent, TypeCopyMode::ReferenceType);
 
   TreeViewHeaderAddedEvent(uint headerIndex, ColumnHeader* newHeader);
 

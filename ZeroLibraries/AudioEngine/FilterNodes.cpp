@@ -905,8 +905,8 @@ namespace Audio
       SetSiblingNodes(new AddNoiseNode(name, ID, nullptr, true));
     else
     {
-      AddPeriod = cSystemSampleRate * 0.5f / AdditiveNoiseCutoffHz;
-      MultiplyPeriod = cSystemSampleRate * 0.5f / MultipleNoiseCutoffHz;
+      AddPeriod = SystemSampleRate * 0.5f / AdditiveNoiseCutoffHz;
+      MultiplyPeriod = SystemSampleRate * 0.5f / MultipleNoiseCutoffHz;
       AddGain = Math::Pow(10.0f, 0.05f * AdditiveNoiseDB);
       MultiplyGain = Math::Pow(10.0f, 0.05f * MultipleNoiseDB);
     }
@@ -954,7 +954,7 @@ namespace Audio
     if (!Threaded)
       AddTaskForSibling(&AddNoiseNode::SetAdditiveCutoffHz, cutoff);
     else
-      AddPeriod = cSystemSampleRate * 0.5f / AdditiveNoiseCutoffHz;
+      AddPeriod = SystemSampleRate * 0.5f / AdditiveNoiseCutoffHz;
   }
 
   //************************************************************************************************
@@ -971,7 +971,7 @@ namespace Audio
     if (!Threaded)
       AddTaskForSibling(&AddNoiseNode::SetMultipleCutoffHz, cutoff);
     else
-      MultiplyPeriod = cSystemSampleRate * 0.5f / MultipleNoiseCutoffHz;
+      MultiplyPeriod = SystemSampleRate * 0.5f / MultipleNoiseCutoffHz;
   }
 
   //************************************************************************************************

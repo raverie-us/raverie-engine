@@ -785,7 +785,7 @@ namespace Audio
           if (!Muting)
           {
         Interpolating = true;
-        VolumeInterpolator.SetValues(1.0f, 0.0f, cPropertyChangeFrames);
+        VolumeInterpolator.SetValues(1.0f, 0.0f, PropertyChangeFrames);
       }
         }
       }
@@ -798,7 +798,7 @@ namespace Audio
         if (!Muted && !Muting)
         {
         Interpolating = true;
-        VolumeInterpolator.SetValues(0.0f, 1.0f, cPropertyChangeFrames);
+        VolumeInterpolator.SetValues(0.0f, 1.0f, PropertyChangeFrames);
       }
     }
   }

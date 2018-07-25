@@ -122,11 +122,11 @@ namespace Audio
       Normalize(data.BuffersPerChannel, data.SamplesPerChannel, data.Channels, maxVolume);
 
     // If the sample rate of the file is different from the system's sample rate, resample the audio
-    if (data.SampleRate != cSystemSampleRate)
+    if (data.SampleRate != SystemSampleRate)
     {
       data.SamplesPerChannel = Resample(data.SampleRate, data.Channels, data.SamplesPerChannel, 
         data.BuffersPerChannel);
-      data.SampleRate = cSystemSampleRate;
+      data.SampleRate = SystemSampleRate;
     }
 
     // Encode the file and write it out
@@ -354,7 +354,7 @@ namespace Audio
     float**& buffersPerChannel)
   {
     // Get the factor to use while resampling
-    double resampleFactor = (double)fileSampleRate / (double)cSystemSampleRate;
+    double resampleFactor = (double)fileSampleRate / (double)SystemSampleRate;
 
     unsigned newFrames(0);
     Zero::Array<float> newSamples;
@@ -422,7 +422,7 @@ namespace Audio
     OpusEncoder** encodersPerChannel = new OpusEncoder*[data.Channels];
     for (unsigned i = 0; i < data.Channels; ++i)
     {
-      encodersPerChannel[i] = opus_encoder_create(cSystemSampleRate, 1,
+      encodersPerChannel[i] = opus_encoder_create(SystemSampleRate, 1,
         OPUS_APPLICATION_AUDIO, &error);
 
       // If there was an error creating the encoder, set the failed message and return
@@ -498,7 +498,7 @@ namespace Audio
       opus_encoder_destroy(Encoder);
 
     int error;
-    Encoder = opus_encoder_create(cSystemSampleRate, Channels,
+    Encoder = opus_encoder_create(SystemSampleRate, Channels,
       OPUS_APPLICATION_VOIP, &error);
   }
 

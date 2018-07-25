@@ -16,7 +16,7 @@ namespace Audio
     mFading(false),
     mFrameIndex(0),
     mStartFrame(0),
-    mDefaultFrames(cPropertyChangeFrames),
+    mDefaultFrames(PropertyChangeFrames),
     mCrossFade(false),
     mAsset(nullptr)
   {
@@ -35,8 +35,8 @@ namespace Audio
     VolumeInterpolator.SetValues(startingVolume, 0.0f, fadeFrames);
 
     // We can only get a second of samples at a time (will get the rest later)
-    if (fadeFrames > cSystemSampleRate)
-      fadeFrames = cSystemSampleRate;
+    if (fadeFrames > SystemSampleRate)
+      fadeFrames = SystemSampleRate;
 
     asset->AppendSamples(&FadeSamples, startingIndex, fadeFrames * asset->GetChannels());
   }
@@ -86,7 +86,7 @@ namespace Audio
   void AudioFadeObject::GetMoreSamples()
   {
     // Get another second of samples
-    unsigned newFramesToGet = cSystemSampleRate;
+    unsigned newFramesToGet = SystemSampleRate;
     // If this would be more than we need, adjust the amount
     if (mFrameIndex + newFramesToGet > VolumeInterpolator.GetTotalFrames())
       newFramesToGet -= mFrameIndex + newFramesToGet - VolumeInterpolator.GetTotalFrames();
@@ -225,9 +225,9 @@ namespace Audio
     mPaused(startPaused), 
     mCurrentTime(0),
     mStartTime(0),
-    mEndTime((float)parentAsset->GetNumberOfFrames() / cSystemSampleRate),
+    mEndTime((float)parentAsset->GetNumberOfFrames() / SystemSampleRate),
     mLoopStartTime(0),
-    mLoopEndTime((float)parentAsset->GetNumberOfFrames() / cSystemSampleRate),
+    mLoopEndTime((float)parentAsset->GetNumberOfFrames() / SystemSampleRate),
     mLoopTailTime(0),
     mCrossFadeTail(false),
     mNotifyTime(0),
@@ -274,8 +274,8 @@ namespace Audio
       {
         InstanceVolumeModifier *volumeMod = GetAvailableVolumeMod();
         if (volumeMod)
-          volumeMod->Reset(0.0f, 1.0f, cPropertyChangeFrames,
-            cPropertyChangeFrames);
+          volumeMod->Reset(0.0f, 1.0f, PropertyChangeFrames,
+            PropertyChangeFrames);
 
         ResetMusicBeats();
       }
@@ -314,12 +314,12 @@ namespace Audio
       {
         mPausing = true;
         mStopFrameCount = 0;
-        mStopFramesToWait = cPropertyChangeFrames + 10;
+        mStopFramesToWait = PropertyChangeFrames + 10;
         InstanceVolumeModifier* mod = GetAvailableVolumeMod();
         if (mod)
         {
-          mod->Reset(1.0f, 0.0f, cPropertyChangeFrames,
-            cPropertyChangeFrames);
+          mod->Reset(1.0f, 0.0f, PropertyChangeFrames,
+            PropertyChangeFrames);
           PausingModifier = mod;
         }
       }
@@ -330,8 +330,8 @@ namespace Audio
         mPausing = false;
         InstanceVolumeModifier* mod = GetAvailableVolumeMod();
         if (mod)
-          mod->Reset(0.0f, 1.0f, cPropertyChangeFrames, 
-            cPropertyChangeFrames);
+          mod->Reset(0.0f, 1.0f, PropertyChangeFrames, 
+            PropertyChangeFrames);
 
         if (mCurrentTime == 0)
           ResetMusicBeats();
@@ -351,11 +351,11 @@ namespace Audio
     {
       mStopping = true;
       mStopFrameCount = 0;
-      mStopFramesToWait = cPropertyChangeFrames + 10;
+      mStopFramesToWait = PropertyChangeFrames + 10;
       InstanceVolumeModifier* mod = GetAvailableVolumeMod();
       if (mod)
-        mod->Reset(1.0f, 0.0f, cPropertyChangeFrames,
-          cPropertyChangeFrames);
+        mod->Reset(1.0f, 0.0f, PropertyChangeFrames,
+          PropertyChangeFrames);
     }
   }
 
@@ -386,14 +386,14 @@ namespace Audio
     if (!Threaded)
     {
       mStartTime = startTime;
-      if (mStartTime < 0.0f || mStartTime * cSystemSampleRate >= Asset->GetNumberOfFrames())
+      if (mStartTime < 0.0f || mStartTime * SystemSampleRate >= Asset->GetNumberOfFrames())
         mStartTime = 0.0f;
 
       AddTaskForSibling(&SoundInstanceNode::SetStartTime, mStartTime);
     }
     else
     {
-      mStartFrame = (unsigned)(startTime * cSystemSampleRate);
+      mStartFrame = (unsigned)(startTime * SystemSampleRate);
 
       if (mFrameIndex < mStartFrame)
         mFrameIndex = mStartFrame;
@@ -414,14 +414,14 @@ namespace Audio
       mEndTime = endTime;
 
       // If the end time is at zero or past the end of the file, set it to the length of the file
-      if (mEndTime <= 0.0f || mEndTime * cSystemSampleRate >= Asset->GetNumberOfFrames())
-        mEndTime = (float)Asset->GetNumberOfFrames() / (float)cSystemSampleRate;
+      if (mEndTime <= 0.0f || mEndTime * SystemSampleRate >= Asset->GetNumberOfFrames())
+        mEndTime = (float)Asset->GetNumberOfFrames() / (float)SystemSampleRate;
 
       AddTaskForSibling(&SoundInstanceNode::SetEndTime, mEndTime);
     }
     else
     {
-      mEndFrame = (unsigned)(endTime * cSystemSampleRate);
+      mEndFrame = (unsigned)(endTime * SystemSampleRate);
       if (mEndFrame >= Asset->GetNumberOfFrames())
         mEndFrame = Asset->GetNumberOfFrames() - 1;
     }
@@ -439,7 +439,7 @@ namespace Audio
     if (!Threaded)
     {
       mLoopStartTime = time;
-      if (mLoopStartTime < 0.0f || mLoopStartTime * cSystemSampleRate 
+      if (mLoopStartTime < 0.0f || mLoopStartTime * SystemSampleRate 
           >= Asset->GetNumberOfFrames())
         mLoopStartTime = 0.0f;
 
@@ -447,7 +447,7 @@ namespace Audio
     }
     else
     {
-      mLoopStartFrame = (unsigned)(time *cSystemSampleRate);
+      mLoopStartFrame = (unsigned)(time *SystemSampleRate);
     }
   }
 
@@ -465,14 +465,14 @@ namespace Audio
       mLoopEndTime = time;
 
       // If the end time is at zero or past the end of the file, set it to the length of the file
-      if (mLoopEndTime <= 0.0f || mLoopEndTime * cSystemSampleRate >= Asset->GetNumberOfFrames())
-        mLoopEndTime = (float)Asset->GetNumberOfFrames() / (float)cSystemSampleRate;
+      if (mLoopEndTime <= 0.0f || mLoopEndTime * SystemSampleRate >= Asset->GetNumberOfFrames())
+        mLoopEndTime = (float)Asset->GetNumberOfFrames() / (float)SystemSampleRate;
 
       AddTaskForSibling(&SoundInstanceNode::SetLoopEndTime, mLoopEndTime);
     }
     else
     {
-      mLoopEndFrame = (unsigned)(time * cSystemSampleRate);
+      mLoopEndFrame = (unsigned)(time * SystemSampleRate);
     }
   }
 
@@ -495,7 +495,7 @@ namespace Audio
     }
     else
     {
-      mLoopTailFrames = (unsigned)(time * cSystemSampleRate);
+      mLoopTailFrames = (unsigned)(time * SystemSampleRate);
     }
   }
 
@@ -548,7 +548,7 @@ namespace Audio
           time = 0.02f;
 
         VolumeInterpolator.SetValues(mVolume, newVolume, 
-          (unsigned)(time * cSystemSampleRate));
+          (unsigned)(time * SystemSampleRate));
       }
     }
   }
@@ -609,13 +609,13 @@ namespace Audio
       if (mFrameIndex > mStartFrame)
         Fade.StartFade(mVolume, mFrameIndex, Fade.mDefaultFrames, Asset, true);
 
-      mFrameIndex = (unsigned)(seconds * cSystemSampleRate);
+      mFrameIndex = (unsigned)(seconds * SystemSampleRate);
       if (mFrameIndex > mEndFrame)
         mFrameIndex = mEndFrame;
       else if (mFrameIndex < mStartFrame)
         mFrameIndex = mStartFrame;
 
-      mCurrentTime = mFrameIndex * cSystemTimeIncrement;
+      mCurrentTime = mFrameIndex * SystemTimeIncrement;
       ResetMusicBeats();
     }
   }
@@ -957,7 +957,7 @@ namespace Audio
     }
 
     // Advance time and handle music notifications
-    mCurrentTime = mFrameIndex * cSystemTimeIncrement;
+    mCurrentTime = mFrameIndex * SystemTimeIncrement;
     MusicNotifications();
   }
 
@@ -992,7 +992,7 @@ namespace Audio
 
     // Reset variables
     mFrameIndex = mLoopStartFrame;
-    mCurrentTime = mFrameIndex * cSystemTimeIncrement;
+    mCurrentTime = mFrameIndex * SystemTimeIncrement;
     ResetMusicBeats();
 
     // If streaming, reset to the beginning of the file

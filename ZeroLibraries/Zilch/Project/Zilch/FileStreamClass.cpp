@@ -108,7 +108,7 @@ namespace Zilch
   {
     // Duplicate the file handle
     Status status;
-    const_cast<FileStream&>(stream).InternalFile.Duplicate(status, InternalFile);
+    const_cast<FileStreamClass&>(stream).InternalFile.Duplicate(status, InternalFile);
 
     Capabilities = stream.Capabilities;
   }

@@ -20,7 +20,7 @@ DeclareEvent(MainWindowTransformUpdated);
 class MainWindowTransformEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(MainWindowTransformEvent, TypeCopyMode::ReferenceType);
 
   MainWindowTransformEvent(OsWindow* window = nullptr,
                            Vec2Param oldScreenPosition = Vec2::cZero,

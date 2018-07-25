@@ -67,9 +67,9 @@ namespace Audio
     // The size of the file data
     unsigned mDataSize;
     // Opus decoders for each channel
-    OpusDecoder* Decoders[cMaxChannels];
+    OpusDecoder* Decoders[MaxChannels];
     // Buffers to hold the decoded data for a single packet per channel
-    float DecodedPackets[cMaxChannels][FileEncoder::PacketFrames];
+    float DecodedPackets[MaxChannels][FileEncoder::PacketFrames];
     // The name of the file to use for streaming
     Zero::String mStreamingFileName;
     // The file object to use when streaming

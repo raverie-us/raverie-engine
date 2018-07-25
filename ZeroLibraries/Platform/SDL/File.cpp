@@ -134,7 +134,7 @@ FilePosition File::Tell()
   return SDL_RWtell(self->mFileData);
 }
 
-bool File::Seek(FilePosition pos, FileOrigin::Enum rel)
+bool File::Seek(FilePosition pos, SeekOrigin::Enum rel)
 {
   ZeroGetPrivateData(FilePrivateData);
   if (!self->IsValidFile())
@@ -143,11 +143,11 @@ bool File::Seek(FilePosition pos, FileOrigin::Enum rel)
   int sdlWhence;
   switch (rel)
   {
-    case FileOrigin::Begin: sdlWhence = RW_SEEK_SET;
+    case SeekOrigin::Begin: sdlWhence = RW_SEEK_SET;
       break;
-    case FileOrigin::Current: sdlWhence = RW_SEEK_CUR;
+    case SeekOrigin::Current: sdlWhence = RW_SEEK_CUR;
       break;
-    case FileOrigin::End: sdlWhence = RW_SEEK_END;
+    case SeekOrigin::End: sdlWhence = RW_SEEK_END;
       break;
     default: return false;
   }

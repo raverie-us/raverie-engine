@@ -54,7 +54,7 @@ namespace Audio
 
       unsigned mInterpolationFramesProcessed;
       bool mInterpolating;
-      float LastSamples[cMaxChannels];
+      float LastSamples[MaxChannels];
       double mPitchFrameIndex;
       double mBufferSizeFraction;
     };

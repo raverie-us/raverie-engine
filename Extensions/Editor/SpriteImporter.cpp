@@ -1173,7 +1173,7 @@ void SpriteSheetImport(Editor* editor)
   config->EventName = "OnFileSelected";
   config->CallbackObject = importer;
   config->Title = "Select sprite sheet to import";
-  BuildImageFileDialogFilters(config.mSearchFilters);
+  BuildImageFileDialogFilters(config->mSearchFilters);
   config->StartingDirectory = editor->GetProjectPath();
   config->Flags |= FileDialogFlags::MultiSelect;
   Z::gEngine->has(OsShell)->OpenFile(config);

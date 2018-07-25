@@ -58,7 +58,7 @@ namespace Audio
       // Don't change volume if we are currently not active or deactivating
       if (Active && !Stopping)
         VolumeInterpolator.SetValues(CurrentVolume, newVolume,
-          cPropertyChangeFrames);
+          PropertyChangeFrames);
     }
   }
 
@@ -94,7 +94,7 @@ namespace Audio
         Stopping = true;
         // Interpolate volume to 0
         VolumeInterpolator.SetValues(CurrentVolume, 0.0f,
-          cPropertyChangeFrames);
+          PropertyChangeFrames);
       }
       // Activating
       else
@@ -104,7 +104,7 @@ namespace Audio
         Stopping = false;
         // Interpolate volume to its previous setting
         VolumeInterpolator.SetValues(CurrentVolume, Volume,
-          cPropertyChangeFrames);
+          PropertyChangeFrames);
       }
     }
   }

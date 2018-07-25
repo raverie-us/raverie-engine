@@ -61,7 +61,7 @@ MainWindow::MainWindow(OsWindow* window)
   mDefSet = mDefSet->GetDefinitionSet(className);
 
   mSize = Math::ToVec2(window->GetClientSize());
-  mPreviousPosition = Math::ToVec2(window->GetPosition());
+  mPreviousPosition = Math::ToVec2(window->GetMonitorClientPosition());
 
   mWindowWidget = new Composite(this, AttachType::Direct);
   mPopUp = new Composite(this, AttachType::Direct);

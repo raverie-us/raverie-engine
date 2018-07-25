@@ -31,20 +31,20 @@ namespace Audio
       DirectionalVolume(1.0f),
       UseLowPass(false)
     {
-      memset(PreviousGains, 0, sizeof(float) * cMaxChannels);
+      memset(PreviousGains, 0, sizeof(float) * MaxChannels);
     }
 
     // Low pass filter for sounds behind listener
     LowPassFilter LowPass;
     // Previous gain values
-    float PreviousGains[cMaxChannels];
+    float PreviousGains[MaxChannels];
     // The previous relative position of this listener
     Math::Vec3 PreviousRelativePosition;
 
     // These values are only re-calculated when the relative position changes
     float DirectionalVolume;
     bool UseLowPass;
-    float GainValues[cMaxChannels];
+    float GainValues[MaxChannels];
   };
 
   //----------------------------------------------------------------------------------- Emitter Node
@@ -94,7 +94,7 @@ namespace Audio
       if (!Paused && !Pausing)
       {
         Pausing = true;
-        VolumeInterpolator.SetValues(1.0f, 0.0f, cPropertyChangeFrames);
+        VolumeInterpolator.SetValues(1.0f, 0.0f, PropertyChangeFrames);
       }
     }
   }
@@ -113,7 +113,7 @@ namespace Audio
         Paused = false;
         Pausing = false;
         VolumeInterpolator.SetValues(VolumeInterpolator.GetCurrentValue(), 1.0f, 
-          cPropertyChangeFrames);
+          PropertyChangeFrames);
       }
     }
   }
@@ -254,7 +254,7 @@ namespace Audio
 
     // If gain values changed, copy new ones to previous values
     if (valuesChanged)
-      memcpy(listenerData.PreviousGains, listenerData.GainValues, sizeof(float) * cMaxChannels);
+      memcpy(listenerData.PreviousGains, listenerData.GainValues, sizeof(float) * MaxChannels);
 
     AddBypass(outputBuffer);
 

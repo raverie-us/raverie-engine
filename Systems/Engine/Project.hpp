@@ -197,7 +197,7 @@ public:
 class DebugSettings : public Component
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(DebugSettings, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;

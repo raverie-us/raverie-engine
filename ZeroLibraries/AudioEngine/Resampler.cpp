@@ -18,7 +18,7 @@ namespace Audio
     InputFrames(0),
     InputChannels(0)
   {
-    memset(PreviousFrame, 0, sizeof(float) * cMaxChannels);
+    memset(PreviousFrame, 0, sizeof(float) * MaxChannels);
   }
 
   //************************************************************************************************

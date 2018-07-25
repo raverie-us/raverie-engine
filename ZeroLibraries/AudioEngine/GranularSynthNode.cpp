@@ -483,8 +483,8 @@ namespace Audio
       mSampleChannels = asset->GetChannels();
 
       // Translate the start and stop times to frame numbers
-      int start = Math::Max((int)(startTime * cSystemSampleRate), 0);
-      int stop = Math::Min((int)(stopTime * cSystemSampleRate),
+      int start = Math::Max((int)(startTime * SystemSampleRate), 0);
+      int stop = Math::Min((int)(stopTime * SystemSampleRate),
         (int)asset->GetNumberOfFrames());
       if (stop == 0)
         stop = (int)asset->GetNumberOfFrames();

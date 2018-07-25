@@ -104,8 +104,7 @@ namespace Audio
   //************************************************************************************************
   SoundAssetFromFile::SoundAssetFromFile(Zero::Status& status, const Zero::String& fileName, 
     FileLoadType::Enum loadType, ExternalNodeInterface* extInt, const bool isThreaded) :
-    SoundAsset(extInt, isThreaded), 
-    mStreaming(streaming),
+    SoundAsset(extInt, isThreaded),
     mHasStreamingInstance(false), 
     mFileLength(0),
     mStreaming(false),
@@ -137,7 +136,7 @@ namespace Audio
       if (!status.Failed())
       {
         // Set the variables
-        mFileLength = (float)Decoder->mSamplesPerChannel / cSystemSampleRate;
+        mFileLength = (float)Decoder->mSamplesPerChannel / SystemSampleRate;
         mChannels = Decoder->mChannels;
         mFrameCount = Decoder->mSamplesPerChannel;
         mStreaming = Decoder->mStreaming;
@@ -456,7 +455,7 @@ namespace Audio
 
     for (unsigned i = startingIndex; i < startingIndex + numberOfSamples; ++i)
     {
-      (*buffer)[i] = WaveData->GetNextSample() * cGeneratedWaveVolume;
+      (*buffer)[i] = WaveData->GetNextSample() * GeneratedWaveVolume;
 
       if (!FrequencyInterpolator.Finished())
       {
@@ -469,7 +468,7 @@ namespace Audio
   //************************************************************************************************
   unsigned GeneratedWaveSoundAsset::GetNumberOfFrames()
   {
-    return cSystemSampleRate;
+    return SystemSampleRate;
   }
 
   //************************************************************************************************
@@ -503,7 +502,7 @@ namespace Audio
       }
       else
         FrequencyInterpolator.SetValues(mFrequency, newFrequency,
-          (unsigned)(time * cSystemSampleRate));
+          (unsigned)(time * SystemSampleRate));
     }
   }
 

@@ -322,7 +322,7 @@ namespace Audio
   {
     SetCutoffValues();
 
-    for (unsigned i = 0; i < cMaxChannels; ++i)
+    for (unsigned i = 0; i < MaxChannels; ++i)
       BiQuadsPerChannel[i].FlushDelays();
   }
 
@@ -330,7 +330,7 @@ namespace Audio
   void LowPassFilter::SetCutoffValues()
   {
     // LP coefficients
-    float tanValue = Math::cPi * CutoffFrequency / cSystemSampleRate;
+    float tanValue = Math::cPi * CutoffFrequency / SystemSampleRate;
     if (tanValue >= HalfPI)
       tanValue = HalfPI - 0.001f;
 
@@ -341,7 +341,7 @@ namespace Audio
     float beta1 = 2.0f * alpha * (1.0f - Csq);
     float beta2 = alpha * (1.0f - (SqRoot2 * C) + Csq);
 
-    for (unsigned i = 0; i < cMaxChannels; ++i)
+    for (unsigned i = 0; i < MaxChannels; ++i)
       BiQuadsPerChannel[i].SetValues(alpha, 2.0f * alpha, alpha, beta1, beta2);
   }
 
@@ -355,7 +355,7 @@ namespace Audio
   //************************************************************************************************
   void LowPassFilter::MergeWith(LowPassFilter& otherFilter)
   {
-    for (int i = 0; i < cMaxChannels; ++i)
+    for (int i = 0; i < MaxChannels; ++i)
     {
       BiQuadsPerChannel[i].AddHistoryTo(otherFilter.BiQuadsPerChannel[i]);
     }
@@ -405,14 +405,14 @@ namespace Audio
   {
     SetCutoffValues();
 
-    for (unsigned i = 0; i < cMaxChannels; ++i)
+    for (unsigned i = 0; i < MaxChannels; ++i)
       BiQuadsPerChannel[i].FlushDelays();
   }
 
   //************************************************************************************************
   void HighPassFilter::SetCutoffValues()
   {
-    float tanValue = Math::cPi * CutoffFrequency / cSystemSampleRate;
+    float tanValue = Math::cPi * CutoffFrequency / SystemSampleRate;
     if (tanValue >= HalfPI)
       tanValue = HalfPI - 0.001f;
 
@@ -423,7 +423,7 @@ namespace Audio
     float beta1 = 2.0f * alpha * (Csq - 1.0f);
     float beta2 = alpha * (1.0f - (SqRoot2 * C) + Csq);
 
-    for (unsigned i = 0; i < cMaxChannels; ++i)
+    for (unsigned i = 0; i < MaxChannels; ++i)
       BiQuadsPerChannel[i].SetValues(alpha, -2.0f * alpha, alpha, beta1, beta2);
   }
 
@@ -437,7 +437,7 @@ namespace Audio
   //************************************************************************************************
   void HighPassFilter::MergeWith(HighPassFilter& otherFilter)
   {
-    for (int i = 0; i < cMaxChannels; ++i)
+    for (int i = 0; i < MaxChannels; ++i)
     {
       BiQuadsPerChannel[i].AddHistoryTo(otherFilter.BiQuadsPerChannel[i]);
     }
@@ -464,9 +464,9 @@ namespace Audio
   {
     ResetFrequencies();
 
-    memset(PreviousInput, 0, sizeof(float) * cMaxChannels);
-    memset(PreviousOutput1, 0, sizeof(float) * cMaxChannels);
-    memset(PreviousOutput2, 0, sizeof(float) * cMaxChannels);
+    memset(PreviousInput, 0, sizeof(float) * MaxChannels);
+    memset(PreviousOutput1, 0, sizeof(float) * MaxChannels);
+    memset(PreviousOutput2, 0, sizeof(float) * MaxChannels);
   }
 
   //************************************************************************************************
@@ -488,7 +488,7 @@ namespace Audio
   //************************************************************************************************
   void BandPassFilter::MergeWith(BandPassFilter& otherFilter)
   {
-    for (int i = 0; i < cMaxChannels; ++i)
+    for (int i = 0; i < MaxChannels; ++i)
     {
       otherFilter.PreviousInput[i] += PreviousInput[i];
       otherFilter.PreviousOutput1[i] += PreviousOutput1[i];
@@ -521,10 +521,10 @@ namespace Audio
     else
       LowPassCutoff = 0.0f;
 
-    AlphaLP = cSystemSampleRate / ((LowPassCutoff * 2.0f * Math::cPi) + 
-      cSystemSampleRate);
-    AlphaHP = cSystemSampleRate / ((HighPassCutoff * 2.0f * Math::cPi) + 
-      cSystemSampleRate);
+    AlphaLP = SystemSampleRate / ((LowPassCutoff * 2.0f * Math::cPi) + 
+      SystemSampleRate);
+    AlphaHP = SystemSampleRate / ((HighPassCutoff * 2.0f * Math::cPi) + 
+      SystemSampleRate);
   }
 
   //------------------------------------------------------------------------------------- Oscillator
@@ -539,7 +539,7 @@ namespace Audio
     mNoteOn(false),
     mSquareWavePositiveFraction(0.5f)
   {
-    mIncrement = ArraySize * mFrequency / (float)cSystemSampleRate;
+    mIncrement = ArraySize * mFrequency / (float)SystemSampleRate;
     SetType(OscillatorTypes::Sine);
   }
 
@@ -565,7 +565,7 @@ namespace Audio
       return 0.0f;
 
     if (mType == OscillatorTypes::Noise)
-      return RandomObject.FloatRange(-1.0f, 1.0f) * cGeneratedWaveVolume;
+      return RandomObject.FloatRange(-1.0f, 1.0f) * GeneratedWaveVolume;
 
     int readIndexInt = (int)mReadIndex;
 
@@ -597,7 +597,7 @@ namespace Audio
   void Oscillator::SetFrequency(const float frequency)
   {
     mFrequency = frequency;
-    mIncrement = ArraySize * mFrequency / cSystemSampleRate;
+    mIncrement = ArraySize * mFrequency / SystemSampleRate;
   }
 
   //************************************************************************************************
@@ -683,7 +683,7 @@ namespace Audio
 
   //************************************************************************************************
   DelayLine::DelayLine() : 
-    DelayInSamples(100.0f * cSystemSampleRate / 1000.0f),
+    DelayInSamples(100.0f * SystemSampleRate / 1000.0f),
     Feedback(0),
     WetLevel(0.5f),
     ReadIndex(0), 
@@ -691,13 +691,13 @@ namespace Audio
     BufferSize(0),
     InterpolatingWetLevel(false)
   {
-    memset(BuffersPerChannel, 0, sizeof(float) * cMaxChannels);
+    memset(BuffersPerChannel, 0, sizeof(float) * MaxChannels);
     }
 
   //************************************************************************************************
   DelayLine::~DelayLine()
   {
-    for (unsigned i = 0; i < cMaxChannels; ++i)
+    for (unsigned i = 0; i < MaxChannels; ++i)
     {
       if (BuffersPerChannel[i])
       delete[] BuffersPerChannel[i];
@@ -781,7 +781,7 @@ namespace Audio
   //************************************************************************************************
   void DelayLine::SetDelayMSec(float delay)
   {
-    DelayInSamples = delay * cSystemSampleRate / 1000.0f;
+    DelayInSamples = delay * SystemSampleRate / 1000.0f;
 
     if (BufferSize != (int)DelayInSamples + 1)
     {
@@ -803,7 +803,7 @@ namespace Audio
   //************************************************************************************************
   float DelayLine::GetDelayMSec()
   {
-    return DelayInSamples / cSystemSampleRate * 1000.0f;
+    return DelayInSamples / SystemSampleRate * 1000.0f;
   }
 
   //************************************************************************************************
@@ -825,7 +825,7 @@ namespace Audio
   {
     InterpolatingWetLevel = true;
     WetLevelInterpolator.SetValues(WetLevel, newValue, 
-      (unsigned)(time * cSystemSampleRate));
+      (unsigned)(time * SystemSampleRate));
   }
 
   //------------------------------------------------------------------------------ Envelope Detector
@@ -837,7 +837,7 @@ namespace Audio
     mReleaseTime(0.0f),
     mAttackTimeMSec(0.0f),
     mReleaseTimeMSec(0.0f), 
-    mSampleRate((float)cSystemSampleRate), 
+    mSampleRate((float)SystemSampleRate), 
     mEnvelope(0.0f),
     mDetectMode(DetectModes::Peak), 
     mAnalogTC(false), 
@@ -972,7 +972,7 @@ namespace Audio
     mCompressorRatio = 1.0f / mRatio;
     mExpanderRatio = mCompressorRatio - 1.0f;
 
-    for (unsigned i = 0; i < cMaxChannels; ++i)
+    for (unsigned i = 0; i < MaxChannels; ++i)
       Detectors[i].Initialize(mAttackMSec, mReleaseMSec, mAnalog, EnvelopeDetector::RMS, true);
   }
 
@@ -994,7 +994,7 @@ namespace Audio
     mCompressorRatio = 1.0f / mRatio;
     mExpanderRatio = mCompressorRatio - 1.0f;
 
-    for (unsigned i = 0; i < cMaxChannels; ++i)
+    for (unsigned i = 0; i < MaxChannels; ++i)
       Detectors[i].Initialize(mAttackMSec, mReleaseMSec, mAnalog, EnvelopeDetector::RMS, true);
   }
 
@@ -1097,7 +1097,7 @@ namespace Audio
   {
     mAttackMSec = attack;
 
-    for (unsigned i = 0; i < cMaxChannels; ++i)
+    for (unsigned i = 0; i < MaxChannels; ++i)
       Detectors[i].SetAttackTime(attack);
   }
 
@@ -1106,7 +1106,7 @@ namespace Audio
   {
     mReleaseMSec = release;
 
-    for (unsigned i = 0; i < cMaxChannels; ++i)
+    for (unsigned i = 0; i < MaxChannels; ++i)
       Detectors[i].SetReleaseTime(release);
   }
 
@@ -1323,15 +1323,15 @@ namespace Audio
     const float at2500Hz, const float above5000Hz, const float timeToInterpolate)
   {
     LowPassInterpolator.SetValues(mLowPassGain, below80Hz, (unsigned)(timeToInterpolate * 
-      cSystemSampleRate));
+      SystemSampleRate));
     Band1Interpolator.SetValues(mBand1Gain, at150Hz, (unsigned)(timeToInterpolate * 
-      cSystemSampleRate));
+      SystemSampleRate));
     Band2Interpolator.SetValues(mBand2Gain, at600Hz, (unsigned)(timeToInterpolate *
-      cSystemSampleRate));
+      SystemSampleRate));
     Band3Interpolator.SetValues(mBand3Gain, at2500Hz, (unsigned)(timeToInterpolate * 
-      cSystemSampleRate));
+      SystemSampleRate));
     HighPassInterpolator.SetValues(mHighPassGain, above5000Hz, (unsigned)(timeToInterpolate * 
-      cSystemSampleRate));
+      SystemSampleRate));
   }
 
   //************************************************************************************************
@@ -1361,14 +1361,14 @@ namespace Audio
 
   //************************************************************************************************
   ReverbData::ReverbData() :
-    PreDelay(0.5f, cSystemSampleRate),
-    InputAP_1(0.5f, cSystemSampleRate),
-    InputAP_2(0.5f, cSystemSampleRate),
-    Comb_1(0.5f, cSystemSampleRate),
-    Comb_2(0.5f, cSystemSampleRate),
-    LPComb_1(0.5f, cSystemSampleRate),
-    LPComb_2(0.5f, cSystemSampleRate),
-    OutputAP(0.5f, cSystemSampleRate)
+    PreDelay(0.5f, SystemSampleRate),
+    InputAP_1(0.5f, SystemSampleRate),
+    InputAP_2(0.5f, SystemSampleRate),
+    Comb_1(0.5f, SystemSampleRate),
+    Comb_2(0.5f, SystemSampleRate),
+    LPComb_1(0.5f, SystemSampleRate),
+    LPComb_2(0.5f, SystemSampleRate),
+    OutputAP(0.5f, SystemSampleRate)
   {
   
   }
@@ -1503,7 +1503,7 @@ namespace Audio
   void Reverb::InterpolateWetLevel(const float newWetLevel, const float time)
   {
     WetValueInterpolator.SetValues(WetValue, newWetLevel, (unsigned)(time *
-      cSystemSampleRate));
+      SystemSampleRate));
   }
 
   //************************************************************************************************
@@ -1983,7 +1983,7 @@ namespace Audio
       break;
     }
 
-    mCurrentTime += (float)cSystemTimeIncrement;
+    mCurrentTime += (float)SystemTimeIncrement;
     mLastAmplitude = amplitude;
 
     return amplitude;
@@ -2045,9 +2045,9 @@ namespace Audio
     float value = (mVolume/* * Envelope()*/) * Math::Sin((Math::cTwoPi * mFrequency * (float)mTime) + phi);
 
     if (mPitchOffset != 0.0f)
-      mTime += cSystemTimeIncrement * mPitchOffset;
+      mTime += SystemTimeIncrement * mPitchOffset;
     else
-      mTime += cSystemTimeIncrement;
+      mTime += SystemTimeIncrement;
 
     return value;
   }

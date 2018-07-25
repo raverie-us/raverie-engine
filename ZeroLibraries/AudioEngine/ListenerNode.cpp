@@ -177,7 +177,7 @@ namespace Audio
         ThreadedData->Deactivating = true;
         ThreadedData->InterpolatingVolume = true;
         ThreadedData->VolumeInterpolator.SetValues(ThreadedData->VolumeInterpolator.GetCurrentValue(),
-          0.0f, cPropertyChangeFrames);
+          0.0f, PropertyChangeFrames);
       }
       // If currently not active and setting to active
       else if ((!Active || ThreadedData->Deactivating) && active)
@@ -186,7 +186,7 @@ namespace Audio
         Active = true;
         ThreadedData->InterpolatingVolume = true;
         ThreadedData->VolumeInterpolator.SetValues(ThreadedData->VolumeInterpolator.GetCurrentValue(),
-          1.0f, cPropertyChangeFrames);
+          1.0f, PropertyChangeFrames);
       }
     }
   }
