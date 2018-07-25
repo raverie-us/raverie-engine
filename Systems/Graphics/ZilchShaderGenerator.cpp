@@ -88,15 +88,11 @@ void ZilchShaderGenerator::Initialize()
   String settingsDir = FilePath::Combine(mainConfig->DataDirectory, "ZilchFragmentSettings");
   settingsLoader.LoadSettings(settings, settingsDir);
 
-  settings->mShaderDefinitionSettings.SetMaxSimultaneousRenderTargets(8);
+  settings->mShaderDefinitionSettings.SetMaxSimultaneousRenderTargets(4);
   settings->mShaderDefinitionSettings.SetRenderTargetName("Target0", 0);
   settings->mShaderDefinitionSettings.SetRenderTargetName("Target1", 1);
   settings->mShaderDefinitionSettings.SetRenderTargetName("Target2", 2);
   settings->mShaderDefinitionSettings.SetRenderTargetName("Target3", 3);
-  settings->mShaderDefinitionSettings.SetRenderTargetName("Target4", 4);
-  settings->mShaderDefinitionSettings.SetRenderTargetName("Target5", 5);
-  settings->mShaderDefinitionSettings.SetRenderTargetName("Target6", 6);
-  settings->mShaderDefinitionSettings.SetRenderTargetName("Target7", 7);
   
   // Built-in inputs
 

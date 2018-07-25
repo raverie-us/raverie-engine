@@ -96,6 +96,7 @@ ShaderTranslationDebugHelper::ShaderTranslationDebugHelper(Composite* parent)
   // Set our allowed translation languages
   mLanguages.PushBack(ShaderLanguageEntry(new Glsl130Translator()));
   mLanguages.PushBack(ShaderLanguageEntry(new Glsl150Translator()));
+  mLanguages.PushBack(ShaderLanguageEntry(new Glsl300EsTranslator()));
 
   // Create the root as a row layout
   SetLayout(CreateRowLayout());

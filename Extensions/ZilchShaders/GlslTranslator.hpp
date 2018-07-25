@@ -9,6 +9,19 @@
 namespace Zero
 {
 
+//-------------------------------------------------------------------GlslBackendSettings
+/// Shared settings for glsl translation
+struct GlslBackendSettings
+{
+  GlslBackendSettings()
+  {
+    mLegacyMode = false;
+    mSupportsBools = true;
+  }
+  bool mLegacyMode;
+  bool mSupportsBools;
+};
+
 //-------------------------------------------------------------------BaseGlslTranslator
 /// Common logic for all glsl translators
 class BaseGlslTranslator : public ZilchShaderTranslator
@@ -18,6 +31,8 @@ public:
   void SetupShaderLanguage() override;
   void WriteGeometryOutputVariableDeclaration(Zilch::LocalVariableNode*& node, ShaderType* variableShaderType, ZilchShaderTranslatorContext* context) override;
   void WriteMainForClass(Zilch::SyntaxNode* node, ShaderType* currentType, ShaderFunction* function, ZilchShaderTranslatorContext* context) override;
+
+  virtual GlslBackendSettings GetSettings() { return GlslBackendSettings(); }
 
   static String mLanguageName;
   // @JoshD: Types that need to have the flat attribute auto-appended to them. This should be

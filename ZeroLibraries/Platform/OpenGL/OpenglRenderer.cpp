@@ -4,6 +4,8 @@
 #include "Precompiled.hpp"
 #include "OpenglRenderer.hpp"
 
+#define ZeroExtraGlDebug
+
 #ifdef PLATFORM_EMSCRIPTEN
 #define ZeroWebgl
 #else
@@ -21,6 +23,8 @@
 #else
 #define ZeroIfWebgl(X)
 #endif
+
+static const size_t cMaxDrawBuffers = 4;
 
 // As Of NVidia Driver 302 exporting this symbol will enable GPU hardware accelerated 
 // graphics when using Optimus (Laptop NVidia gpu / Intel HD auto switching). 
@@ -493,7 +497,7 @@ void SetRenderSettings(const RenderSettings& renderSettings, bool drawBuffersBle
   }
   else
   {
-    for (uint i = 0; i < 8; ++i)
+    for (uint i = 0; i < cMaxDrawBuffers; ++i)
     {
       const BlendSettings& blendSettings = renderSettings.mBlendSettings[i];
       switch (blendSettings.mBlendMode)
@@ -635,9 +639,9 @@ void SetMultiRenderTargets(GLuint fboId, TextureRenderData** colorTargets, Textu
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
 
-  GLenum drawBuffers[8];
+  GLenum drawBuffers[cMaxDrawBuffers];
 
-  for (uint i = 0; i < 8; ++i)
+  for (uint i = 0; i < cMaxDrawBuffers; ++i)
   {
     GlTextureRenderData* colorRenderData = (GlTextureRenderData*)colorTargets[i];
     if (colorRenderData != nullptr)
@@ -653,7 +657,7 @@ void SetMultiRenderTargets(GLuint fboId, TextureRenderData** colorTargets, Textu
   }
 
   // Set active buffers, some drivers do not work correctly if all are always active
-  glDrawBuffers(8, drawBuffers);
+  glDrawBuffers(cMaxDrawBuffers, drawBuffers);
 
   GlTextureRenderData* depthRenderData = (GlTextureRenderData*)depthTarget;
   if (depthRenderData != nullptr)
@@ -2209,6 +2213,22 @@ void OpenglRenderer::CreateShader(StringParam vertexSource, StringParam geometry
     GLchar* strInfoLog = (GLchar*)alloca(infoLogLength + 1);
     glGetProgramInfoLog(program, infoLogLength, NULL, strInfoLog);
     ZPrint("Link Error\n%s\n", strInfoLog);
+
+#ifdef ZeroExtraGlDebug
+    static size_t sMaxPrints = 4;
+    if (sMaxPrints > 0)
+    {
+      ZPrint(
+        "\n************************************************************VERTEX\n%s"
+        "\n************************************************************GEOMETRY\n%s"
+        "\n************************************************************PIXEL\n%s"
+        "\n************************************************************\n",
+        vertexSource.c_str(),
+        geometrySource.c_str(),
+        pixelSource.c_str());
+      --sMaxPrints;
+    }
+#endif
   }
   else
   {
