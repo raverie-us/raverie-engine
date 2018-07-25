@@ -197,6 +197,7 @@ public:
 
   // Only called once all libraries within Zero are fully compiled
   // Turns each pending library into the current library
+  void PreCommitUnload();
   void Commit();
   
   /// Name of the resource package from which this set was loaded.
