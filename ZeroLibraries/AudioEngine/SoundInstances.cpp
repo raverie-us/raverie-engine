@@ -867,8 +867,22 @@ namespace Audio
     // Check if we will reach the end of the audio
     else if (mFrameIndex >= mEndFrame)
     {
-      // Get the available samples
-      if (startingFrameIndex < mEndFrame)
+      // Determine how many frames are available
+      int framesAvailable = mEndFrame - startingFrameIndex;
+
+      // If the end frame is not the end of the asset, fade out
+      if (mEndFrame < Asset->GetNumberOfFrames())
+      {
+        InstanceVolumeModifier* mod = GetAvailableVolumeMod();
+        if (mod)
+          mod->Reset(1.0f, 0.0f, inputFrames, inputFrames);
+
+        // Use the full number of frames regardless of the EndFrame value
+        framesAvailable = inputFrames;
+      }
+
+      // If there are frames available, get them
+      if (framesAvailable > 0)
         Asset->AppendSamples(&samples, startingFrameIndex,
         (inputFrames - (mFrameIndex - mEndFrame)) * inputChannels);
 
