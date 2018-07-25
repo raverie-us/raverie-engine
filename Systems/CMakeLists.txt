@@ -256,3 +256,16 @@ zero_subfolder_source_group(${zero_core_path} Systems Physics "")
 zero_subfolder_source_group(${zero_core_path} Systems Sound "")
 zero_subfolder_source_group(${zero_core_path} Systems Startup "")
 zero_subfolder_source_group(${zero_core_path} Systems ZilchScript "")
+
+################################################################################
+# Post build steps
+################################################################################
+add_custom_command(
+    TARGET Engine PRE_BUILD    
+    COMMAND ${CMAKE_COMMAND} 
+    # options
+    -DZERO_CORE_ROOT="${zero_core_path}"
+    # command
+    -P ${cmake_utilities_dir}/Update_Build_Version_Script.cmake
+)
+

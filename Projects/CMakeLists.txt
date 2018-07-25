@@ -382,7 +382,7 @@ zero_subfolder_source_group(${zero_core_path} Projects BrowserSubProcess "")
 
 
 ################################################################################
-# Post build step to put all the dlls next to the executable
+# Post build steps
 ################################################################################
 #### ZeroEditor editor
 copy_multiple_shared_objects(
@@ -435,7 +435,7 @@ launcher_shared_post_build(
 #### BrowserSubProcess
 add_custom_command(
     TARGET BrowserSubProcess POST_BUILD
-    # executes "cmake -E copy_if_different
+    # executes "cmake -E copy_directory
     COMMAND ${CMAKE_COMMAND} -E copy_directory  
     # input folder
     ${zero_binary_dir}/BrowserSubProcess                                  
