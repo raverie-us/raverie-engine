@@ -48,15 +48,15 @@ cstr ToFileMode(FileMode::Enum mode)
 }
 
 //Convert File Relative position to windows constant
-uint ToOrigin(FileOrigin::Enum origin)
+uint ToOrigin(SeekOrigin::Enum origin)
 {
   switch(origin)
   {
-  case FileOrigin::Begin:
+  case SeekOrigin::Begin:
     return SEEK_SET;
-  case FileOrigin::End: 
+  case SeekOrigin::End: 
     return SEEK_END;
-  case FileOrigin::Current:
+  case SeekOrigin::Current:
     return SEEK_CUR;
   }
   return SEEK_CUR;
@@ -143,7 +143,7 @@ long long File::CurrentFileSize()
   return GetFileSize(self->mHandle);
 }
 
-bool File::Seek(FilePosition pos, FileOrigin::Enum origin)
+bool File::Seek(FilePosition pos, SeekOrigin::Enum origin)
 {
   ZeroGetPrivateData(FilePrivateData);
   ErrorIf(self->mHandle == NULL, "File handle is not valid.");

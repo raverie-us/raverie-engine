@@ -329,6 +329,10 @@ DWORD Win32StyleFromWindowStyle(WindowStyleFlags::Enum styleFlags)
   // The buttons interfere with input on some drivers, even when border is disabled.
   if (styleFlags & WindowStyleFlags::Close && !(styleFlags & WindowStyleFlags::ClientOnly))
     win32Style |= WS_SYSMENU | WS_MINIMIZEBOX;
+  // Removing the caption flag causes a border flicker sometimes when the application gains focus.
+  // However, not removing it causes an incorrect window size sometimes when toggling between windowed/maximized.
+  if(styleFlags & WindowStyleFlags::ClientOnly)
+    win32Style &= ~WS_CAPTION;
   return win32Style;
 }
 

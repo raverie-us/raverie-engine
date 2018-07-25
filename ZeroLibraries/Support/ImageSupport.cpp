@@ -10,6 +10,7 @@
 #define STBI_FAILURE_USERMSG
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
+#define STB_IMAGE_STATIC
 #include "stb_image.h"
 #include "stb_image_write.h"
 
