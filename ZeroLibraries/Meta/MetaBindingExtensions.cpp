@@ -17,6 +17,7 @@ namespace ObjectAttributes
 
 const String cHidden("Hidden");
 const String cDocumented("Documented");
+const String cDoNotDocument("DoNotDocument");
 const String cExpanded("Expanded");
 const String cCore("Core");
 const String cStoreLocalModifications("StoreLocalModifications");

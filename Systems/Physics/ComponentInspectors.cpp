@@ -21,6 +21,7 @@ ZilchDefineType(ColliderInspector, builder, type)
   ZilchBindMethod(GetLocalInverseInertiaTensorRow0);
   ZilchBindMethod(GetLocalInverseInertiaTensorRow1);
   ZilchBindMethod(GetLocalInverseInertiaTensorRow2);
+  type->AddAttribute(::Zero::ObjectAttributes::cDoNotDocument);
 }
 
 Vec3 ColliderInspector::GetColliderLocalCenterOfMass() const

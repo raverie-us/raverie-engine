@@ -17,6 +17,8 @@ namespace ObjectAttributes
 extern const String cHidden;
 /// Object has documentation
 extern const String cDocumented;
+/// Object should explicitly not be documented
+extern const String cDoNotDocument;
 /// Object is always expanded in the property grid
 extern const String cExpanded;
 /// Core objects can not be removed from owner or added to new owner
