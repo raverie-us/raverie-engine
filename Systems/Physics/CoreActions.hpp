@@ -108,14 +108,10 @@ struct BroadPhaseAction
   bool IsInDynamicBroadPhase() const;
   //returns the enum value of DynamicRemoval, StaticRemoval or 0 (not in a broadphase)
   uint BroadPhaseToRemoveFrom() const;
-  // Stores data from the collider so that queues are safe even if the collider is destroyed.
-  void StoreColliderData(Collider* collider);
 
   void Validate();
 
   byte mState;
-  Aabb mAabb;
-  Sphere mSphere;
 };
 
 }//namespace Physics

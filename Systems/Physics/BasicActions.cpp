@@ -227,8 +227,6 @@ void InsertIntoBroadPhase(Collider* collider)
   PhysicsNode* node = collider->mPhysicsNode;
 
   BroadPhaseAction bpAction;
-  bpAction.StoreColliderData(collider);
-
   //if we have a direct body then we go into dynamic
   if(collider->mDirectRigidBody)
     bpAction.QueueState(BroadPhaseAction::DynamicInsert);

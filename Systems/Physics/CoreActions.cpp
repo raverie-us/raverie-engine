@@ -118,7 +118,6 @@ void BroadPhaseAction::PushAction(byte state)
 
 void BroadPhaseAction::InsertAction(Collider* collider)
 {
-  StoreColliderData(collider);
   if(collider->InDynamicBroadPhase())
     PushAction(DynamicInsert);
   else
@@ -127,7 +126,6 @@ void BroadPhaseAction::InsertAction(Collider* collider)
 
 void BroadPhaseAction::RemoveAction(Collider* collider)
 {
-  StoreColliderData(collider);
   if(collider->InDynamicBroadPhase())
     PushAction(DynamicRemoval);
   else
@@ -136,7 +134,6 @@ void BroadPhaseAction::RemoveAction(Collider* collider)
 
 void BroadPhaseAction::UpdateAction(Collider* collider)
 {
-  StoreColliderData(collider);
   PushAction(Update);
 }
 
@@ -257,12 +254,6 @@ uint BroadPhaseAction::BroadPhaseToRemoveFrom() const
     return DynamicRemoval;
 
   return 0;
-}
-
-void BroadPhaseAction::StoreColliderData(Collider* collider)
-{
-  mAabb = collider->mAabb;
-  mSphere = collider->mBoundingSphere;
 }
 
 void BroadPhaseAction::Validate()
