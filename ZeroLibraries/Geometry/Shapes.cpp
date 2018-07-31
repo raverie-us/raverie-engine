@@ -439,7 +439,7 @@ Cylinder Cylinder::Transform(Mat4Param transformation) const
   Cylinder ret;
   ret.PointA = Math::TransformPoint(transformation,PointA);
   ret.PointB = Math::TransformPoint(transformation,PointB);
-  ret.Radius = scale.x;
+  ret.Radius = Math::Max(Math::Max(scale.x, scale.y), scale.z);
   return ret;
 }
 
@@ -492,7 +492,7 @@ Capsule Capsule::Transform(Mat4Param transformation) const
   Capsule ret;
   ret.PointA = Math::TransformPoint(transformation,PointA);
   ret.PointB = Math::TransformPoint(transformation,PointB);
-  ret.Radius = scale.x;
+  ret.Radius = Math::Max(Math::Max(scale.x, scale.y), scale.z);
   return ret;
 }
 
