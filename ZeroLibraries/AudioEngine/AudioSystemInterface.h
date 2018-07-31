@@ -30,6 +30,9 @@
 #include "CustomDataNode.h"
 #include "Emitter.h"
 #include "Attenuator.h"
+#include "FileEncoder.h"
+#include "FileDecoder.h"
+#include "LockFreeQueue.hpp"
 #include "SoundAssets.h"
 #include "SoundInstances.h"
 #include "Tags.h"
@@ -184,7 +187,7 @@ namespace Audio
 
   //--------------------------------------------------------------------------- Audio Stream Decoder
 
-  class PacketDecoder;
+  class SingleChannelPacketDecoder;
 
   class AudioStreamDecoder
   {
@@ -196,7 +199,7 @@ namespace Audio
       float*& decodedSamples, unsigned& sampleCount);
 
   private:
-    PacketDecoder* Decoder;
+    SingleChannelPacketDecoder* Decoder;
   };
 }
 

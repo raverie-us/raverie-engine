@@ -37,7 +37,7 @@ namespace Audio
     {
       for (unsigned i = 0; i < System->MaxDecodingTasksToRun && !System->DecodingTasks.Empty(); ++i)
       {
-        System->DecodingTasks.Front()->DecodePacket();
+        System->DecodingTasks.Front()->RunDecodingTask();
         System->DecodingTasks.PopFront();
       }
 
@@ -381,7 +381,7 @@ namespace Audio
   //************************************************************************************************
   AudioStreamDecoder::AudioStreamDecoder()
   {
-    Decoder = new PacketDecoder();
+    Decoder = new SingleChannelPacketDecoder();
     Decoder->InitializeDecoder();
   }
 

@@ -58,15 +58,38 @@ Sound::~Sound()
 void Sound::CreateAsset(Status& status, StringParam assetName, StringParam fileName, 
   AudioFileLoadType::Enum loadType)
 {
-  Audio::FileLoadType::Enum audioLoadType;
-  if (loadType == AudioFileLoadType::StreamFromFile)
-    audioLoadType = Audio::FileLoadType::Streamed;
-  else if (loadType == AudioFileLoadType::Uncompressed)
-    audioLoadType = Audio::FileLoadType::Decompressed;
-  else
-    audioLoadType = Audio::FileLoadType::Auto;
+  // If the load type is set to auto, determine the type based on the length of the file
+  if (loadType == AudioFileLoadType::Auto)
+  {
+    // Open the audio file
+    File audioFile;
+    audioFile.Open(fileName, FileMode::Read, FileAccessPattern::Sequential);
+    if (audioFile.IsOpen())
+    {
+      // Read in the header data
+      Audio::FileHeader header;
+      Status tempStatus;
+      audioFile.Read(tempStatus, (byte*)&header, sizeof(header));
+      // Close the file so it doesn't interfere with creating the asset
+      audioFile.Close();
 
-  mSoundAsset = new Audio::SoundAssetFromFile(status, fileName, audioLoadType, this);
+      float fileLength = (float)header.SamplesPerChannel / (float)Audio::SystemSampleRate;
+
+      if (fileLength < mStreamFromMemoryLength)
+        loadType = AudioFileLoadType::Uncompressed;
+      else if (fileLength < mStreamFromFileLength)
+        loadType = AudioFileLoadType::StreamFromMemory;
+      else
+        loadType = AudioFileLoadType::StreamFromFile;
+    }
+  }
+
+  if (loadType == AudioFileLoadType::StreamFromFile)
+    mSoundAsset = new Audio::StreamingSoundAsset(status, fileName, Audio::FileLoadType::StreamedFromFile, this);
+  else if (loadType == AudioFileLoadType::StreamFromMemory)
+    mSoundAsset = new Audio::StreamingSoundAsset(status, fileName, Audio::FileLoadType::StreamedFromMemory, this);
+  else
+    mSoundAsset = new Audio::DecompressedSoundAsset(status, fileName, this);
   
   if (status.Succeeded())
   {

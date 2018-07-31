@@ -358,25 +358,25 @@ void BuildSoundCues(ResourcePackage* package, AudioOptions* options)
     for(uint i = 0; i < resources.Size(); ++i)
     {
       ResourceEntry& entry = resources[i];
-      if(entry.Type != "Sound")
-        continue;
-
-      // Attempt to create a new sound cue
-      ResourceAdd resourceAdd;
-      resourceAdd.Library = Z::gEditor->mProjectLibrary;
-      resourceAdd.Name = entry.Name;
-      AddNewResource(SoundCueManager::GetInstance(), resourceAdd);
-
-      // If it was successfully created, add the sound entry
-      if(resourceAdd.WasSuccessful())
+      if (entry.Type == "Sound" || entry.Type == "StreamedSound" || entry.Type == "AutoStreamedSound")
       {
-        SoundCue* cue = (SoundCue*)(resourceAdd.SourceResource);
+        // Attempt to create a new sound cue
+        ResourceAdd resourceAdd;
+        resourceAdd.Library = Z::gEditor->mProjectLibrary;
+        resourceAdd.Name = entry.Name;
+        AddNewResource(SoundCueManager::GetInstance(), resourceAdd);
 
-        // Add the sound
-        Sound* sound = SoundManager::GetInstance()->Find(entry.mResourceId);
-        cue->AddSoundEntry(sound, 1.0f);
-        if(cue->mContentItem)
-          cue->mContentItem->SaveContent();
+        // If it was successfully created, add the sound entry
+        if (resourceAdd.WasSuccessful())
+        {
+          SoundCue* cue = (SoundCue*)(resourceAdd.SourceResource);
+
+          // Add the sound
+          Sound* sound = SoundManager::GetInstance()->Find(entry.mResourceId);
+          cue->AddSoundEntry(sound, 1.0f);
+          if (cue->mContentItem)
+            cue->mContentItem->SaveContent();
+        }
       }
     }
   }
@@ -395,12 +395,12 @@ void BuildSoundCues(ResourcePackage* package, AudioOptions* options)
       for(uint i = 0; i < resources.Size(); ++i)
       {
         ResourceEntry& entry = resources[i];
-        if(entry.Type != "Sound")
-          continue;
-
-        // Add the sound
-        Sound* sound = SoundManager::GetInstance()->Find(entry.mResourceId);
-        cue->AddSoundEntry(sound, 1.0f);
+        if (entry.Type == "Sound" || entry.Type == "StreamedSound" || entry.Type == "AutoStreamedSound")
+        {
+          // Add the sound
+          Sound* sound = SoundManager::GetInstance()->Find(entry.mResourceId);
+          cue->AddSoundEntry(sound, 1.0f);
+        }
       }
 
       if (cue->mContentItem)

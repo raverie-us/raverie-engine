@@ -491,7 +491,7 @@ namespace Audio
 
       // Get the audio samples from the asset
       Samples.Clear();
-      asset->AppendSamples(&Samples, start, (stop - start) * mSampleChannels);
+      asset->AppendSamples(&Samples, start, (stop - start) * mSampleChannels, NodeID);
 
       ValidateLengths();
     }

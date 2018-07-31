@@ -20,7 +20,7 @@ namespace Audio
   class AudioFadeObject
   {
   public:
-    AudioFadeObject();
+    AudioFadeObject(unsigned instanceID);
 
     void StartFade(float startingVolume, unsigned startingIndex, unsigned fadeFrames, 
       SoundAsset* asset, bool crossFade);
@@ -44,6 +44,8 @@ namespace Audio
     BufferType FadeSamples;
     // Number of frames to use for default fade
     unsigned mDefaultFrames;
+    // The ID of the parent instance
+    unsigned mInstanceID;
   };
 
   //---------------------------------------------------------------------- Music Notification Object

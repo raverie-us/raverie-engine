@@ -12,13 +12,14 @@ namespace Audio
   //------------------------------------------------------------------------------ Cross Fade Object
 
   //************************************************************************************************
-  AudioFadeObject::AudioFadeObject() :
+  AudioFadeObject::AudioFadeObject(unsigned instanceID) :
     mFading(false),
     mFrameIndex(0),
     mStartFrame(0),
     mDefaultFrames(PropertyChangeFrames),
     mCrossFade(false),
-    mAsset(nullptr)
+    mAsset(nullptr),
+    mInstanceID(instanceID)
   {
     VolumeInterpolator.SetCurve(CurveTypes::Squared);
   }
@@ -38,7 +39,7 @@ namespace Audio
     if (fadeFrames > SystemSampleRate)
       fadeFrames = SystemSampleRate;
 
-    asset->AppendSamples(&FadeSamples, startingIndex, fadeFrames * asset->GetChannels());
+    asset->AppendSamples(&FadeSamples, startingIndex, fadeFrames * asset->GetChannels(), mInstanceID);
   }
 
   //************************************************************************************************
@@ -92,7 +93,8 @@ namespace Audio
       newFramesToGet -= mFrameIndex + newFramesToGet - VolumeInterpolator.GetTotalFrames();
 
     // Add the new samples to the end of the sample array
-    mAsset->AppendSamples(&FadeSamples, mStartFrame + mFrameIndex, newFramesToGet * mAsset->GetChannels());
+    mAsset->AppendSamples(&FadeSamples, mStartFrame + mFrameIndex, 
+      newFramesToGet * mAsset->GetChannels(), mInstanceID);
   }
   
   //---------------------------------------------------------------------- Music Notification Object
@@ -218,6 +220,7 @@ namespace Audio
       SoundAsset* parentAsset, const bool looping, const bool startPaused, 
       ExternalNodeInterface* extInt, const bool isThreaded) :
     SimpleCollapseNode(name, ID, extInt, false, true, isThreaded), 
+    Fade(ID),
     Asset(parentAsset), 
     mVolume(0.8f), 
     mFinished(false), 
@@ -250,19 +253,10 @@ namespace Audio
   {
     if (!Threaded)
     {
-      if (parentAsset->AddReference())
-      {
-        SetSiblingNodes(new SoundInstanceNode(status, name, ID, parentAsset->ThreadedAsset, looping, 
-          startPaused, nullptr, true));
-      }
-      // Couldn't attach to this asset
-      else
-      {
-        status.SetFailed(Zero::String::Format(
-          "Unable to play instance from asset %s. Usually caused by trying to play an already playing streaming file.", 
-          Asset->mName.c_str()));
-        Asset = nullptr;
-      }
+      SetSiblingNodes(new SoundInstanceNode(status, name, ID, parentAsset->ThreadedAsset, looping, 
+        startPaused, nullptr, true));
+
+      Asset->AddReference(NodeID);
     }
     else
     {
@@ -279,6 +273,9 @@ namespace Audio
 
         ResetMusicBeats();
       }
+
+      // This needs to be done as a task since this constructor happens on the main thread
+      gAudioSystem->AddTask(Zero::CreateFunctor(&SoundAsset::AddReference, Asset, NodeID));
     }
   }
 
@@ -289,8 +286,8 @@ namespace Audio
     forRange(TagObject* tag, TagList.All())
       tag->RemoveInstanceFromLists(this);
 
-    if (!Threaded && Asset)
-      Asset->ReleaseReference();
+    if (Asset)
+      Asset->ReleaseReference(NodeID);
   }
 
   //************************************************************************************************
@@ -850,7 +847,7 @@ namespace Audio
         // Save the number of frames in the first section
         sectionFrames = inputFrames - (mFrameIndex - Math::Min(mLoopEndFrame, mEndFrame));
         // Get the samples from the asset
-        Asset->AppendSamples(&samples, startingFrameIndex, sectionFrames * inputChannels);
+        Asset->AppendSamples(&samples, startingFrameIndex, sectionFrames * inputChannels, NodeID);
       }
 
       // Reset back to the loop start frame
@@ -859,7 +856,7 @@ namespace Audio
       // Save the number of frames in the second section
       sectionFrames = inputFrames - sectionFrames;
       // Get the samples from the asset
-      Asset->AppendSamples(&samples, mFrameIndex, sectionFrames * inputChannels);
+      Asset->AppendSamples(&samples, mFrameIndex, sectionFrames * inputChannels, NodeID);
 
       // Move frame index forward
       mFrameIndex += sectionFrames;
@@ -884,7 +881,7 @@ namespace Audio
       // If there are frames available, get them
       if (framesAvailable > 0)
         Asset->AppendSamples(&samples, startingFrameIndex,
-        (inputFrames - (mFrameIndex - mEndFrame)) * inputChannels);
+        (inputFrames - (mFrameIndex - mEndFrame)) * inputChannels, NodeID);
 
       // Resize the array to full size, setting the rest of the samples to 0
       samples.Resize(inputFrames * inputChannels, 0.0f);
@@ -894,7 +891,7 @@ namespace Audio
     // Otherwise, no need to adjust anything
     else
     {
-      Asset->AppendSamples(&samples, startingFrameIndex, inputFrames * inputChannels);
+      Asset->AppendSamples(&samples, startingFrameIndex, inputFrames * inputChannels, NodeID);
     }
 
     // Apply fading if needed
@@ -1011,7 +1008,7 @@ namespace Audio
 
     // If streaming, reset to the beginning of the file
     if (Asset->GetStreaming())
-      Asset->ResetStreamingFile();
+      Asset->ResetStreamingFile(NodeID);
   }
 
   //************************************************************************************************
@@ -1044,14 +1041,23 @@ namespace Audio
 
     mFinished = true;
 
-    if (Threaded && GetSiblingNode())
+    if (Threaded)
     {
-      // Send notification that this instance is finished
-      AddTaskForSiblingThreaded(&SoundNode::SendEventToExternalData, AudioEventTypes::InstanceFinished);
+      if (Asset)
+      {
+        Asset->ReleaseReference(NodeID);
+        Asset = nullptr;
+      }
 
-      // Call the non-threaded versions of the clean-up functions
-      AddTaskForSiblingThreaded(&SoundInstanceNode::FinishedCleanUp);
-      AddTaskForSiblingThreaded(&SoundInstanceNode::RemoveFromAllTags);
+      if (GetSiblingNode()) 
+      {
+        // Send notification that this instance is finished
+        AddTaskForSiblingThreaded(&SoundNode::SendEventToExternalData, AudioEventTypes::InstanceFinished);
+
+        // Call the non-threaded versions of the clean-up functions
+        AddTaskForSiblingThreaded(&SoundInstanceNode::FinishedCleanUp);
+        AddTaskForSiblingThreaded(&SoundInstanceNode::RemoveFromAllTags);
+      }
     }
     // If not threaded and no external interface, can delete
     else if (!Threaded && !GetExternalInterface())
