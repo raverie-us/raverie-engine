@@ -334,6 +334,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(WindowLaunchSettings);
   ZilchInitializeType(FrameRateSettings);
   ZilchInitializeType(DebugSettings);
+  ZilchInitializeType(ExportSettings);
   ZilchInitializeType(ContentConfig);
   ZilchInitializeType(UserConfig);
   ZilchInitializeType(DeveloperConfig);

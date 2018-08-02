@@ -208,4 +208,15 @@ public:
   int mMaxDebugObjects;
 };
 
+class ExportSettings : public Component
+{
+public:
+  ZilchDeclareType(ExportSettings, TypeCopyMode::ReferenceType);
+
+  void Serialize(Serializer& stream) override;
+
+  //String mOutputDirectory;
+  HashSet<String> mActiveTargets;
+};
+
 }//namespace Zero

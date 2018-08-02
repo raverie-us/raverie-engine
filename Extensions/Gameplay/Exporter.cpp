@@ -275,6 +275,45 @@ struct ExportTargetSource : public DataSource
   }
 };
 
+//-------------------------------------------------------------------- ExportTargetList
+ExportTargetList::ExportTargetList()
+{
+}
+
+
+ExportTargetList::~ExportTargetList()
+{
+  DeleteObjectsInContainer(SortedEntries);
+}
+
+
+void ExportTargetList::AddEntry(ExportTargetEntry* entry)
+{
+  Entries.Insert(entry->TargetName, entry);
+  SortedEntries.PushBack(entry);
+}
+
+
+void ExportTargetList::SetActiveTargets(HashSet<String>& activeTargets)
+{
+  forRange(ExportTargetEntry* entry, SortedEntries)
+  {
+    if (activeTargets.Contains(entry->TargetName))
+      entry->Export = true;
+  }
+}
+
+HashSet<String> ExportTargetList::GetActiveTargets()
+{
+  HashSet<String> activeTargets;
+  forRange(ExportTargetEntry* entry, SortedEntries)
+  {
+    if (entry->Export)
+      activeTargets.Insert(entry->TargetName);
+  }
+  return activeTargets;
+}
+
 //-------------------------------------------------------------------- ExportUI
 
 ExportUI::ExportUI(Composite* parent)
@@ -287,7 +326,9 @@ ExportUI::ExportUI(Composite* parent)
   mApplicationName = new TextBox(this);
   mApplicationName->SetEditable(true);
 
+  Cog* projectCog = Z::gEditor->GetProjectCog();
   ProjectSettings* projectSettings = Z::gEngine->GetProjectSettings();
+  ExportSettings* exportSettings = HasOrAdd<ExportSettings>(projectCog);
   if (projectSettings)
     mApplicationName->SetText(projectSettings->GetProjectName());
 
@@ -390,8 +431,11 @@ void ExportUI::OpenExportWindow()
   forRange(StringParam target, exporter->mExportTargets.Keys())
     targets.Insert(target);
 
-  exportUi->SetAvailableTargets(targets);
+  Cog* projectCog = Z::gEditor->GetProjectCog();
+  ExportSettings* exportSettings = HasOrAdd<ExportSettings>(projectCog);
 
+  exportUi->SetAvailableTargets(targets);
+  exportUi->SetActiveTargets(exportSettings->mActiveTargets);
 
   window->MoveToFront();
 }
@@ -406,7 +450,9 @@ void ExportUI::OnExportApplication(Event* e)
     exporter->mApplicationName = mApplicationName->GetText();
     exporter->mOutputDirectory = mExportPath->GetText();
     // Export to all to selected targets
-    exporter->ExportApplication(targetList->GetActiveTargets());
+    HashSet<String> activeTargets = targetList->GetActiveTargets();
+    SaveActiveTargets(activeTargets);
+    exporter->ExportApplication(activeTargets);
     // Close the export window
     CloseTabContaining(this);
     return;
@@ -425,7 +471,9 @@ void ExportUI::OnExportContentFolder(Event* e)
     exporter->mApplicationName = mApplicationName->GetText();
     exporter->mOutputDirectory = mExportPath->GetText();
     // Export to all to selected targets
-    exporter->ExportContent(targetList->GetActiveTargets());
+    HashSet<String> activeTargets = targetList->GetActiveTargets();
+    SaveActiveTargets(activeTargets);
+    exporter->ExportContent(activeTargets);
     // Close the export window
     CloseTabContaining(this);
     return;
@@ -467,7 +515,7 @@ void ExportUI::OnFolderSelected(OsFileSelection* e)
   }
 }
 
-void ExportUI::SetAvailableTargets(HashSet<String> targets)
+void ExportUI::SetAvailableTargets(HashSet<String>& targets)
 {
   forRange(StringParam target, targets)
   {
@@ -475,6 +523,20 @@ void ExportUI::SetAvailableTargets(HashSet<String> targets)
     mTargetList.AddEntry(entry);
   }
   mTreeView->Refresh();
+}
+
+
+void ExportUI::SetActiveTargets(HashSet<String>& targets)
+{
+  mTargetList.SetActiveTargets(targets);
+  mTreeView->Refresh();
+}
+
+void ExportUI::SaveActiveTargets(HashSet<String>& targets)
+{
+  Cog* projectCog = Z::gEditor->GetProjectCog();
+  if (ExportSettings* exportSettings = HasOrAdd<ExportSettings>(projectCog))
+    exportSettings->mActiveTargets = targets;
 }
 
 //--------------------------------------------------------------------- Exporter
