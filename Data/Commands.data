@@ -373,6 +373,22 @@ Commands commands =
 		string Tags = "Windows",
 	},
 
+  Command =
+  {
+    string Name = "ShowConsole",
+    string Description = "Show the Console Window",
+    string IconName = "Console",
+    string Tags = "Windows",
+  },
+
+  Command =
+  {
+    string Name = "HideConsole",
+    string Description = "Hide the Console Window",
+    string IconName = "Console",
+    string Tags = "Windows",
+  },
+
 	Command =
 	{
 		string Name = "Browser",

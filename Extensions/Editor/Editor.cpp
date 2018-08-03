@@ -576,6 +576,11 @@ Widget* Editor::ShowConsole()
   return ShowWindow("Console");
 }
 
+Widget* Editor::HideConsole()
+{
+  return HideWindow("Console");
+}
+
 Widget* Editor::ToggleConsole()
 {
   return mManager->ToggleWidget("Console");
@@ -639,6 +644,13 @@ Widget* Editor::ShowWindow(StringParam name)
 {
   return mManager->ShowWidget(name);
 }
+
+Widget* Editor::HideWindow(StringParam name)
+{
+  return mManager->HideWidget(name);
+}
+
+
 
 Window* Editor::AddManagedWidget(Widget* widget, DockArea::Enum dockArea, bool visible)
 {

@@ -243,6 +243,16 @@ void EditorMain::ToggleConsole(CommandEvent* event)
   Editor::ToggleConsole();
 }
 
+void EditorMain::ShowConsole(CommandEvent* event)
+{
+  Editor::ShowConsole();
+}
+
+void EditorMain::HideConsole(CommandEvent* event)
+{
+  Editor::HideConsole();
+}
+
 void EditorMain::ShowBrowser(CommandEvent* event)
 {
   Editor::ShowBrowser();
@@ -931,6 +941,8 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
     BindCommand("SelectProject", ShowProject);
     BindCommand("Library", ShowLibrary);
     BindCommand("Console", ToggleConsole);
+    BindCommand("ShowConsole", ShowConsole);
+    BindCommand("HideConsole", HideConsole)
     BindCommand("Browser", ShowBrowser);
     BindCommand("Market", ShowMarket);
     BindCommand("Chat", ShowChat);

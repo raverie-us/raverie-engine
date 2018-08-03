@@ -63,6 +63,7 @@ public:
   Widget* ShowWidgetWith(HandleParam searchObject);
 
   Widget* ToggleWidget(StringParam name);
+  Widget* HideWidget(StringParam name);
 
   // Find a managed widget
   Widget* FindWidget(StringParam name);

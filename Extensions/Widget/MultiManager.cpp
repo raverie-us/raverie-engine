@@ -139,7 +139,14 @@ Widget* MultiManager::ToggleWidget(StringParam name)
   return nullptr;
 }
 
-void MultiManager::Destroyed(Widget* widget)
+Widget* MultiManager::HideWidget(StringParam name)
+{
+  if (Widget* widget = FindWidget(name))
+    Zero::CloseTabContaining(widget);
+  return nullptr;
+}
+
+  void MultiManager::Destroyed(Widget* widget)
 {
   ManagedWidgets.Erase(widget);
 }

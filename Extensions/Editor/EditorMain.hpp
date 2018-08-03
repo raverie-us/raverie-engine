@@ -27,6 +27,8 @@ public:
   void ShowTools(CommandEvent* event);
   void ShowLibrary(CommandEvent* event);
   void ToggleConsole(CommandEvent* event);
+  void ShowConsole(CommandEvent* event);
+  void HideConsole(CommandEvent* event);
   void ShowBrowser(CommandEvent* event);
   void ShowMarket(CommandEvent* event);
   void ShowChat(CommandEvent* event);

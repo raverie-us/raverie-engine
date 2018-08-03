@@ -91,6 +91,7 @@ public:
   Level* GetStartingLevel();
 
   Widget* ShowConsole();
+  Widget* HideConsole();
   Widget* ToggleConsole();
   Widget* ShowBrowser();
   Widget* ShowBrowser(StringParam url, StringParam tabName);
@@ -111,6 +112,7 @@ public:
   MainWindow* mMainWindow;
 
   Widget* ShowWindow(StringParam name);
+  Widget* HideWindow(StringParam name);
   Window* AddManagedWidget(Widget* widget, DockArea::Enum dockArea, bool visible = true);
 
   void CreateDockableWindow(StringParam windowName, CameraViewport* cameraViewport,
