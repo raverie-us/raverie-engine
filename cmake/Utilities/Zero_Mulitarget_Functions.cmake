@@ -46,15 +46,17 @@ function(zero_multitarget_output_settings)
     set(PARSED_TARGETS ${PARSED_UNPARSED_ARGUMENTS})
 
     foreach(target ${PARSED_TARGETS})
-        set(intOutputDirectory ${PARSED_BASEPATH}/Int/${PARSED_PLATFORM}/${PARSED_BITS}${CONFIGS}/${target})
-        set_target_properties(${target}
-        PROPERTIES
-        $<$<CONFIG:Debug>:CMAKE_COMPILE_PDB_OUTPUT_DIRECTORY ${intOutputDirectory}>
-        $<$<CONFIG:Debug>:COMPILE_PDB_NAME ${target}${CONFIGS}${PARSED_TOOLSET}>
+        set(intOutputDirectory "${PARSED_BASEPATH}/Int/${PARSED_PLATFORM}/${PARSED_BITS}${CONFIGS}/${target}")
+        
+        set_target_properties(
+            ${target}
+            PROPERTIES
+            CMAKE_COMPILE_PDB_OUTPUT_DIRECTORY $<$<CONFIG:Debug>:${intOutputDirectory}>
+            $<$<CONFIG:Debug>:COMPILE_PDB_NAME ${target}${CONFIGS}${PARSED_TOOLSET}>
         )
         # if we were passed values for the precompiled headers, set the target precompiled headers
         if (NOT ("${PARSED_PRECOMPILED_HEADER_NAME}" STREQUAL ""))
-            zero_target_precompiled_headers(${target} ${intOutputDirectory} ${PARSED_PRECOMPILED_HEADER_NAME} ${PARSED_PRECOMPILED_SOURCE_NAME} "${PARSED_TARGET_SUBFOLDER}" ${PARSED_IGNORE_TARGET})
+            zero_target_precompiled_headers(${target} "${intOutputDirectory}" ${PARSED_PRECOMPILED_HEADER_NAME} ${PARSED_PRECOMPILED_SOURCE_NAME} "${PARSED_TARGET_SUBFOLDER}" ${PARSED_IGNORE_TARGET})
         else()
             message("<><><> Skipped precompiled for target: ${target}\n")
         endif()
