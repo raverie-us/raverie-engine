@@ -264,19 +264,26 @@ StringRange StringRange::FindLastByBytes(cstr buffer, uint valueSizeInBytes) con
   if (!valueSizeInBytes || valueSizeInBytes > rangeSize)
     return StringRange();
 
+  size_t i = 0;
   size_t last = rangeSize - valueSizeInBytes;
-
-  for (size_t i = 0; i <= last; i += UTF8::EncodedCodepointLength(mBegin[i]))
+  while(i <= last)
   {
     size_t j;
+    size_t runePointIndex = last - i;
     for (j = 0; j < valueSizeInBytes; ++j)
     {
-      if (mBegin[last - i + j] != buffer[j])
+      if (mBegin[runePointIndex + j] != buffer[j])
         break;
     }
 
     if (j == valueSizeInBytes)
-      return StringRange(mOriginalString, mBegin + (last - i), mBegin + (last - i + j));
+      return StringRange(mOriginalString, mBegin + runePointIndex, mBegin + (runePointIndex + j));
+
+    do
+    {
+      --runePointIndex;
+      ++i;
+    } while (IsContinuationByte(&mBegin[runePointIndex]) && runePointIndex > 0);
   }
 
   return StringRange();

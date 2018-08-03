@@ -607,8 +607,11 @@ void TextEditor::InsertAutoCompleteText(const char* text, int length, int remove
 void TextEditor::UseTextEditorConfig()
 {
   TextEditorConfig* config = GetConfig();
-  ConnectThisTo(config, Events::PropertyModified, OnConfigChanged);
-  this->UpdateConfig(config);
+  if (config)
+  {
+    ConnectThisTo(config, Events::PropertyModified, OnConfigChanged);
+    this->UpdateConfig(config);
+  }
 }
 
 void TextEditor::OnConfigChanged(PropertyEvent* event)
@@ -645,9 +648,14 @@ void TextEditor::OnColorSchemeChanged(ObjectEvent* event)
 
 TextEditorConfig* TextEditor::GetConfig()
 {
-  auto config = Z::gEditor->mConfig->has(TextEditorConfig);
-  ErrorIf(config == nullptr, "The config should always have a TextEditorConfig component");
-  return config;
+  // Check if the editor is present for when this is called from the launcher
+  if (Z::gEditor)
+  {
+    auto config = Z::gEditor->mConfig->has(TextEditorConfig);
+    ErrorIf(config == nullptr, "The config should always have a TextEditorConfig component");
+    return config;
+  }
+  return nullptr;
 }
 
 void TextEditor::UpdateConfig(TextEditorConfig* textConfig)
