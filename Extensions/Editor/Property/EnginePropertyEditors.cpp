@@ -774,44 +774,10 @@ public:
     }
   }
 
-  bool AreTwoNamesTheSame(Cog* test)
-  {
-    String name = test->GetName();
-
-    Cog* parent = test->GetParent();
-    if(parent)
-    {
-      size_t childCount = RangeCount(parent->FindAllChildrenByName(name));
-      return childCount != 1;
-    }
-    else
-    {
-      // Check to see if there are multiple objects within the same space that have the same name
-      Space* toSpace = test->GetSpace();
-      if (toSpace != nullptr)
-      {
-        forRange(Cog& cog, toSpace->FindAllObjectsByName(name))
-        {
-          if (&cog != test && cog.GetName() == name)
-            return true;
-        }
-      }
-    }
-    return false;
-  }
-
   void SetReferencedCog(Cog* to)
   {
     if(to != nullptr)
     {
-      if(AreTwoNamesTheSame(to))
-        DoNotifyWarning("Cog Path", "Two objects have the same name (in the same space or under the same parent) so the CogPath may resolve to an incorrect object");
-
-      //mValue.SetCog(to);
-
-      //Variant result(mValue);
-      //CommitValue(result);
-
       Handle rootInstance;
       PropertyPath propertyPath;
       BuildPath(mNode, rootInstance, propertyPath);
