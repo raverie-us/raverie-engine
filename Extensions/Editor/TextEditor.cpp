@@ -973,8 +973,14 @@ void TextEditor::OnKeyDown(KeyboardEvent* event)
     event->Handled = true;
 
   if (event->Key == Keys::D && event->ShiftPressed && event->CtrlPressed)
+  {
     mScintilla->WndProc(SCI_LINEDUPLICATE, 0, 0);
-
+    // Get the current caret position and find the line that was just duplicated
+    int line = GetLineFromPosition(mScintilla->SelectionStart().Position());
+    // If that line duplicated is not in view scroll it into view
+    MakeLineVisible(line);
+  }
+  
   if (event->Key == Keys::Down && event->ShiftPressed && event->CtrlPressed)
     mScintilla->WndProc(SCI_MOVESELECTEDLINESDOWN, 0, 0);
 
@@ -1779,6 +1785,11 @@ void TextEditor::OnNotify(Scintilla::SCNotification& notify)
 
     if (shouldSendEvent)
     {
+      // We have to get the line from the current caret position because some Scintilla
+      // on notify messages do not fill out the position/line modified causing incorrect
+      // behavior when attempting to scroll off screen modification into view
+      MakeLineVisible(GetLineFromPosition(mScintilla->SelectionStart().Position()));
+
       Event event;
       this->GetDispatcher()->Dispatch(Events::TextEditorModified, &event);
     }
