@@ -249,4 +249,27 @@ public:
   String mInstallerPath;
 };
 
+//-------------------------------------------------------------------BackupProjectJob
+// A job to backup a user's project to a directory.
+class BackupProjectJob : public BackgroundTaskJob
+{
+public:
+  typedef BackupProjectJob ZilchSelf;
+  BackupProjectJob(StringParam projectPath, StringParam destPath);
+
+  /// Job Interface.
+  int Execute() override;
+
+  struct ArchiveData
+  {
+    String mFullFilePath;
+    String mRelativePath;
+  };
+  void GetFileList(StringParam path, StringParam parentPath, Array<ArchiveData>& fileList);
+
+  String mProjectPath;
+  String mDestinationFilePath;
+  bool mOpenDirectoryOnCompletion;
+};
+
 }//namespace Zero

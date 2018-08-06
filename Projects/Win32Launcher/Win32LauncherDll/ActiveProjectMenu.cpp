@@ -142,7 +142,14 @@ ActiveProjectMenu::ActiveProjectMenu(Composite* parent, LauncherWindow* launcher
     Composite* buildRow = new Composite(textArea);
     buildRow->SetLayout(CreateRowLayout());
     {
-      // Push everything to the right
+      mBackupProjectButton = new TextButton(buildRow);
+      mBackupProjectButton->SetStyle(TextButtonStyle::Modern);
+      mBackupProjectButton->SetText("Backup Project");
+      mBackupProjectButton->mTextColor = Vec4(0.5f, 0.5f, 0.5f, 1);
+      mBackupProjectButton->mTextHoverColor = Vec4(0.660000026f, 0.660000026f, 0.660000026f, 1);
+      mBackupProjectButton->mTextClickedColor = Vec4(0.330000013f, 0.330000013f, 0.330000013f, 1);
+      ConnectThisTo(mBackupProjectButton, Events::ButtonPressed, OnBackupProject);
+
       new Spacer(buildRow, SizePolicy::Flex, Vec2(1));
 
       // If we are to run with the debugger (zero is currently in visual studio with the
@@ -484,6 +491,35 @@ void ActiveProjectMenu::OnProjectRenameConfirmed(ModalButtonEvent* e)
   SelectProject(mCachedProject);
 
   mLauncher->AddToRecentProjects(mCachedProject);
+}
+
+//******************************************************************************
+void ActiveProjectMenu::OnBackupProject(Event* e)
+{
+  String projectDirectory = mCachedProject->GetProjectFolder();
+  String projectName = mCachedProject->GetProjectName();
+
+  // Build the backup's file path based upon the project name and the current time date stamp.
+  String backupDirectory = FilePath::Combine(GetUserDocumentsDirectory(), "ZeroProjects", "Backups");
+  String timeStamp = GetTimeAndDateStamp();
+  String backupName = BuildString(projectName, timeStamp);
+  String backupFilePath = FilePath::CombineWithExtension(backupDirectory, backupName, ".zip");
+
+  // Create the task to backup the project (this can take
+  // a while in large projects, mainly with dll plugins)
+  BackupProjectJob* job = new BackupProjectJob(projectDirectory, backupFilePath);
+  job->mOpenDirectoryOnCompletion = true;
+  BackgroundTask* task = Z::gBackgroundTasks->CreateTask(job);
+  task->mName = "Backup Project";
+
+  // Create a modal to notify the user of progress
+  ModalBackgroundTaskProgessBar* modal = new ModalBackgroundTaskProgessBar(GetRootWidget(), "Archiving", task);
+  modal->mCloseOnBackgroundClicked = false;
+  mLauncher->mActiveModal = modal;
+
+  ZPrint("Backing up project '%s' to location '%s'.", projectDirectory.c_str(), backupFilePath.c_str());
+
+  task->Execute();
 }
 
 //******************************************************************************
