@@ -373,6 +373,7 @@ namespace Zilch
     this->TypeToCppName.Insert(ZilchTypeId(EventsClass), NativeName("EventsClass", "const Zilch::EventsClass&", "Zilch::EventsClass"));
     this->TypeToCppName.Insert(ZilchTypeId(FilePathClass), NativeName("FilePathClass", "const Zilch::FilePathClass&", "Zilch::FilePathClass"));
     this->TypeToCppName.Insert(ZilchTypeId(IStreamClass), NativeName("IStreamClass", "const Zilch::IStreamClass&", "Zilch::IStreamClass"));
+    this->TypeToCppName.Insert(ZilchTypeId(FileStreamClass), NativeName("FileStreamClass", "const Zilch::FileStreamClass&", "Zilch::FileStreamClass"));
     this->TypeToCppName.Insert(ZilchTypeId(StringBuilderExtended), NativeName("StringBuilderExtended", "const Zilch::StringBuilderExtended&", "Zilch::StringBuilderExtended"));
     this->TypeToCppName.Insert(ZilchTypeId(StringRangeExtended), NativeName("StringRangeExtended", "const Zilch::StringRangeExtended&", "Zilch::StringRangeExtended"));
     this->TypeToCppName.Insert(ZilchTypeId(StringSplitRangeExtended), NativeName("StringSplitRangeExtended", "const Zilch::StringSplitRangeExtended&", "Zilch::StringSplitRangeExtended"));
