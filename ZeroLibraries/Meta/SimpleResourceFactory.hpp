@@ -71,7 +71,7 @@ public:
 
   BoundType* MakeProxy(StringParam typeName, ProxyReason::Enum reason) override
   {
-    return ProxyObject<BlockType>::CreateProxyMetaFromFile(typeName, reason);
+    return ProxyObject<BlockType>::CreateProxyType(typeName, reason);
   }
 
   void AddComponent(HandleParam owner, HandleParam component, int index = -1,

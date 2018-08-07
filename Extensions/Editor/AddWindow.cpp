@@ -14,12 +14,23 @@ namespace Events
   DefineEvent(AddWindowCancelled);
   DefineEvent(ResourceTypeSelected);
   DefineEvent(ResourceTemplateSelected);
+  DefineEvent(PostAddResource);
+}
+
+//------------------------------------------------------------------------------ Post Add Resource Event
+ZilchDefineType(PostAddResourceEvent, builder, type)
+{
+}
+
+PostAddResourceEvent::PostAddResourceEvent(PostAddOp& postAdd, ResourceAdd* resource)
+  : mPostAdd(postAdd), mResourceAdd(resource)
+{
 }
 
 const String cFilesSelected = "cFilesSelected";
 
 //**************************************************************************************************
-AddResourceWindow* OpenAddWindow(BoundType* resourceType, Window** window)
+AddResourceWindow* OpenAddWindow(BoundType* resourceType, Window** window, StringParam resourceName)
 {
   Composite* parent = Z::gEditor;
   Window* addWindow = new Window(parent);
@@ -55,6 +66,8 @@ AddResourceWindow* OpenAddWindow(BoundType* resourceType, Window** window)
     *window = addWindow;
 
   addDialog->TakeFocus();
+  addDialog->SetResourceNameField(resourceName);
+
   return addDialog;
 }
 
@@ -133,6 +146,15 @@ void AddResourceWindow::OnKeyDown(KeyboardEvent* e)
   // close the add window when escape is pressed
   if (e->Key == Keys::Escape)
     CloseAddWindow(this);
+}
+
+//**************************************************************************************************
+void AddResourceWindow::SetResourceNameField(StringParam resourceName)
+{
+  mResourceTemplateDisplay->mNameField->SetText(resourceName);
+  mResourceTemplateDisplay->ValidateName(false);
+
+  mResourceTemplateDisplay->mNameField->TakeFocus();
 }
 
 //**************************************************************************************************
@@ -1194,6 +1216,9 @@ void ResourceTemplateDisplay::OnCreate(Event*)
     e.EventResource = resourceTemplate;
     resourceTemplate->GetManager()->DispatchEvent(Events::ResourceTagsModified, &e);
     Z::gResources->DispatchEvent(Events::ResourceTagsModified, &e);
+
+    PostAddResourceEvent eventToSend(mPostAdd, &resourceAdd);
+    DispatchBubble(Events::PostAddResource, &eventToSend);
   }
 
   Z::gEditor->GetCenterWindow()->TryTakeFocus();

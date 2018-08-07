@@ -28,6 +28,7 @@ namespace Events
   DeclareEvent(SearchCanceled);
   DeclareEvent(SearchPreview);
   DeclareEvent(SearchCompleted);
+  DeclareEvent(AlternateSearchCompleted);
 }
 
 /// Event Sent by the search view..
@@ -38,6 +39,15 @@ public:
 
   SearchView* View;
   SearchViewResult* Element;
+};
+
+/// Sent when alternate conditions to a completed search have triggered.
+class AlternateSearchCompletedEvent : public Event
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+
+  String mSearchText;
 };
 
 // Boost priority to make differing result types appear above other result types.
@@ -102,7 +112,7 @@ public:
 };
 
 /// Interface to providing search elements and execute matching.
-class SearchProvider
+class SearchProvider : public EventObject
 {
 public:
   SearchProvider(StringParam providerType = "TypeInvalid") : mFilter(nullptr), mProviderType(providerType) {}
@@ -122,7 +132,11 @@ public:
   //Run auto completed command
   virtual void RunCommand(SearchView* searchView, SearchViewResult& element){};
   //Create a preview widget
-  virtual Composite* CreatePreview(Composite* parent, SearchViewResult& element){return NULL;}
+  virtual Composite* CreatePreview(Composite* parent, SearchViewResult& element){return nullptr;}
+  //Add a widget to the SearchView's TextBox preview widget stack.
+  virtual bool AddToAlternatePreview(SearchData* search, Composite* searchPreviewWidget) { return false; }
+  //Execute functionality hinted at the by the SearchPreview ToolTip.
+  virtual void AttemptAlternateSearchCompleted() {}
 
   virtual bool FilterResult(SearchViewResult& result);
 
@@ -220,10 +234,16 @@ public:
 
 private:
   void UpdateTransform() override;
+
+  WidgetRect GetToolTipRect();
   void PositionToolTip();
+  void PositionAlternateToolTip();
+
+  void ResolveVerticalToolTipOverlap();
 
   void OnSearchDataModified(Event* e);
   void OnSearchKeyPreview(KeyboardEvent* e);
+  void ClearToolTips();
   void Canceled();
   void Selected();
   void BuildResults();
@@ -231,13 +251,14 @@ private:
   void SetSelection(int index);
   void OnEnter(ObjectEvent* event);
   void OnKeyPressed(KeyboardEvent* event);
+  void OnSearchTipCommand(KeyboardEvent* event);
   void OnScrollUpdated(Event* e);
 
   //Active Elements
   Array<SearchViewElement*> mElements;
   //Current Preview Object
   HandleOf<ToolTip> mToolTip;
-  void* mPreviewData;
+  HandleOf<ToolTip> mAlternateToolTip;
   uint mSelectedIndex;
   // Searching Text Box
   TagChainTextBox* mSearchBar;

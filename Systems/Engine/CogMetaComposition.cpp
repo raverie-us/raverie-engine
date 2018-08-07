@@ -107,7 +107,7 @@ Handle CogMetaComposition::MakeObject(BoundType* typeToCreate)
 //**************************************************************************************************
 BoundType* CogMetaComposition::MakeProxy(StringParam typeName, ProxyReason::Enum reason)
 {
-  return ProxyObject<Component>::CreateProxyMetaFromFile(typeName, reason);
+  return ProxyObject<Component>::CreateProxyType(typeName, reason);
 }
 
 //**************************************************************************************************

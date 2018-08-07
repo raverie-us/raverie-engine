@@ -343,15 +343,19 @@ String ObjectSearchProvider::GetElementType(SearchViewResult& element)
 }
 
 //-------------------------------------------------- ComponentSearchProvider ---
-ComponentSearchProvider::ComponentSearchProvider() : SearchProvider("Component")
+ComponentSearchProvider::ComponentSearchProvider(HandleParam object, HandleOf<MetaComposition>& composition)
+  : SearchProvider("Component"), mObject(object), mComposition(composition)
 {
+  mResultsContainExactMatch = false;
 }
 
 void ComponentSearchProvider::Search(SearchData& search)
 {
-  //Deference the handle and get the object
+  // Dereference the handle and get the object
   if(mObject.IsNull())
     return;
+
+  mResultsContainExactMatch = false;
 
   // Enumerate all possible types that can be added to this composition
   Array<BoundType*> types;
@@ -365,7 +369,9 @@ void ComponentSearchProvider::Search(SearchData& search)
       int priority = PartialMatch(search.SearchString.All(), boundType->Name.All(), CaseInsensitiveCompare);
       if (priority != cNoMatch)
       {
-        //Add a match
+        mResultsContainExactMatch |= (priority == cExactMatch);
+
+        // Add a match
         SearchViewResult& result = search.Results.PushBack();
         result.Data = (void*)boundType;
         result.Interface = this;
@@ -408,12 +414,10 @@ Composite* ComponentSearchProvider::CreatePreview(Composite* parent, SearchViewR
       if(text != nullptr)
         text->mBorder->SetVisible(false);
 
-      // Gray-scale with less alpha to inherit some of the parent's display color.
-      Vec4 overlayColor(1, 1, 1, 0.35f);
-
       if(text = (MultiLineText*)CreateTextPreview(group, description))
       {
-        text->mTextField->SetColor(overlayColor);
+        // Gray-scale with less alpha to inherit some of the parent's display color.
+        text->mTextField->SetColor(Vec4(1, 1, 1, 0.35f));
         // Defer border-display to the parent's border.
         text->mBorder->SetVisible(false);
       }
@@ -425,14 +429,56 @@ Composite* ComponentSearchProvider::CreatePreview(Composite* parent, SearchViewR
       return CreateTextPreview(parent, description);
     }
   }
-  else  // No class documentation.
+  // No class documentation.  So, only create a text preview if there's a
+  // valid 'failed' message to display.
+  else if(element.mStatus.Failed())
   {
-    // Only create a text preview if there's a valid 'failed' message to display.
-    if(element.mStatus.Failed())
-      return CreateTextPreview(parent, element.mStatus.Message);
-
-    return NULL;
+    return CreateTextPreview(parent, element.mStatus.Message);
   }
+
+  return nullptr;
+}
+
+bool ComponentSearchProvider::AddToAlternatePreview(SearchData* search, Composite* searchPreviewWidget)
+{
+  mSearchType.Clear();
+
+  // Cannot offer to create a ZilchComponent if there is already a component
+  // with a name that matches the 'SearchString'.
+  if(mResultsContainExactMatch)
+    return false;
+
+  mSearchType = search->SearchString;
+
+  String message = BuildString("Component '", mSearchType, "' could not be found. Press Alt + Enter to create it.");
+  MultiLineText* text = (MultiLineText*)CreateTextPreview(searchPreviewWidget, message);
+
+  // Defer border-display to the parent's border.
+  if(text != nullptr)
+    text->mBorder->SetVisible(false);
+
+  return true;
+}
+
+void ComponentSearchProvider::AttemptAlternateSearchCompleted()
+{
+  // Cannot create a ZilchComponent if there is already a component with
+  // a name that matches the search or if there is no search string.
+  if(mResultsContainExactMatch || mSearchType.Empty())
+    return;
+
+  bool altPressed = Keyboard::Instance->KeyIsDown(Keys::Alt);
+  bool ctrlPressed = Keyboard::Instance->KeyIsDown(Keys::Control);
+  bool shiftPressed = Keyboard::Instance->KeyIsDown(Keys::Shift);
+
+  // Alt is the only modifier key allowed for the command 
+  if(!altPressed || ctrlPressed || shiftPressed)
+    return;
+
+  AlternateSearchCompletedEvent eventToSend;
+  eventToSend.mSearchText = mSearchType;
+
+  DispatchEvent(Events::AlternateSearchCompleted, &eventToSend);
 }
 
 //------------------------------------------------------------------ Helpers ---
@@ -453,10 +499,7 @@ SearchProvider* GetResourceSearchProvider(ResourceLibrary* resourceLibrary, bool
 
 SearchProvider* GetFactoryProvider(HandleParam object, HandleOf<MetaComposition>& composition)
 {
-  ComponentSearchProvider* provider = new ComponentSearchProvider();
-  provider->mObject = object;
-  provider->mComposition = composition;
-  return provider;
+  return new ComponentSearchProvider(object, composition);
 }
 
 void AddEditorProviders(SearchData& search)

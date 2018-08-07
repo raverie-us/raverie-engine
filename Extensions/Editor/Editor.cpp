@@ -1504,7 +1504,7 @@ void Editor::AddResource()
   AddResourceType(nullptr);
 }
 
-void Editor::AddResourceType(BoundType* resourceType)
+void Editor::AddResourceType(BoundType* resourceType, StringParam resourceName)
 {
   if(!mProject)
   {
@@ -1512,7 +1512,7 @@ void Editor::AddResourceType(BoundType* resourceType)
     return;
   }
 
-  OpenAddWindow(resourceType);
+  OpenAddWindow(resourceType, nullptr, resourceName);
 }
 
 void Editor::EditResource(Resource* resource)

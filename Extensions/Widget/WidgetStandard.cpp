@@ -49,6 +49,7 @@ ZilchDefineStaticLibrary(WidgetLibrary)
   ZilchInitializeType(ModalConfirmEvent);
   ZilchInitializeType(ModalButtonEvent);
   ZilchInitializeType(SearchViewEvent);
+  ZilchInitializeType(AlternateSearchCompletedEvent);
   ZilchInitializeType(TagEvent);
   ZilchInitializeType(ContextMenuEvent);
 

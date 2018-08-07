@@ -481,7 +481,7 @@ void AddRemoveComponentOperation::AddComponentFromBuffer()
       loader.OpenBuffer(status, mSerializationBuffer);
 
       // We want to grab the first polymorphic node off the top
-      // because the CreateProxyMetaFromFile function expects the Serializer
+      // because the CreateProxyType function expects the Serializer
       // to have already entered the object
       PolymorphicNode componentNode;
       loader.GetPolymorphic(componentNode);

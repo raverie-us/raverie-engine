@@ -275,7 +275,7 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
           }
 
           // Create a Proxy to be used for this component
-          componentMeta = ProxyObject<Component>::CreateProxyMetaFromFile(componentNode.TypeName, ProxyReason::TypeDidntExist);
+          componentMeta = ProxyObject<Component>::CreateProxyType(componentNode.TypeName, ProxyReason::TypeDidntExist);
           if(componentMeta == nullptr)
           {
             Error("Could not create proxy meta");
@@ -325,7 +325,7 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
             // under the proxy
             if(component == nullptr && componentMeta->HasAttribute(ObjectAttributes::cProxy) == false)
             {
-              componentMeta = ProxyObject<Component>::CreateProxyMetaFromFile(componentNode.TypeName, ProxyReason::AllocationException);
+              componentMeta = ProxyObject<Component>::CreateProxyType(componentNode.TypeName, ProxyReason::AllocationException);
               component = ZilchAllocate(Component, componentMeta, HeapFlags::NonReferenceCounted);
             }
 

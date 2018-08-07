@@ -95,7 +95,7 @@ void Material::SerializeMaterialBlocks(Serializer& stream)
       if(materialNodeType == nullptr)
       {
         // Create a proxy component
-        BoundType* proxyType = ProxyObject<MaterialBlock>::CreateProxyMetaFromFile(materialNode.TypeName, ProxyReason::TypeDidntExist);
+        BoundType* proxyType = ProxyObject<MaterialBlock>::CreateProxyType(materialNode.TypeName, ProxyReason::TypeDidntExist);
         block = ZilchAllocate(MaterialBlock, proxyType);
 
         EngineLibraryExtensions::FindProxiedTypeOrigin(proxyType);

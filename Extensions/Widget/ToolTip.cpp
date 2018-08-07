@@ -101,6 +101,9 @@ void ToolTip::Initialize(Widget* source)
   // Store the source
   mSource = source;
 
+  mBestFitText = false;
+  mMaxBestFitTextWidth = 0.0f;
+
   // The default border color
   SetColorScheme(ToolTipColorScheme::Default);
 
@@ -228,16 +231,7 @@ void ToolTip::SizeToContents()
     break;
   }
 
-  // The size of the content
-  Vec2 contentSize = Vec2::cZero;
-  if (mContent)
-    contentSize = mContent->GetMinSize();
-
-  // The accumulated margins
-  Vec2 padding(mContentPadding.Left + mContentPadding.Right,
-    mContentPadding.Top + mContentPadding.Bottom);
-
-  mSize = arrowSize + contentSize + padding;
+  mSize = arrowSize + GetPaddedContentSize();
 
   // Must be large enough for at least the arrow to fit
   float arrowWidth = mArrow->GetSize().y;
@@ -247,6 +241,57 @@ void ToolTip::SizeToContents()
   // arrow can be perfectly centered
   if (((int)mSize.y % 2) != 0)
     mSize.y += Pixels(1);
+}
+
+//******************************************************************************
+void ToolTip::ForceBestFitText(Composite* composite, Vec2 padding)
+{
+  if(composite == nullptr)
+    return;
+
+  if(Layout* layout = composite->GetLayout())
+  {
+    FilterLayoutChildren children(composite);
+    forRange(Widget& child, children)
+    {
+      ForceBestFitText(child.GetSelfAsComposite(), padding + layout->Padding.SizeX());
+    }
+  }
+
+  MultiLineText* text = Type::DynamicCast<MultiLineText*>(composite);
+  if(text == nullptr)
+    return;
+
+  float textWidthNoPadding = mMaxBestFitTextWidth;
+  textWidthNoPadding -= text->mPadding.Left + padding.x;
+  textWidthNoPadding -= text->mPadding.Right + padding.y;
+
+  text->mBestFitText = true;
+  text->mMaxBestFitTextWidth = textWidthNoPadding;
+}
+
+//******************************************************************************
+void ToolTip::SetContent(Widget* content)
+{
+  // Destroy the old contexts if they exist.
+  SafeDestroy(mContent);
+  SafeDestroy(mTextStack);
+
+  // Attach it to ourself
+  AttachChildWidget(content);
+
+  mContent = content;
+
+  // Make all multi line text objects in the ToolTip's content-hierarchy conform
+  // to the ToolTip's max best fit width, if applicable.
+  if(mBestFitText)
+    ForceBestFitText(mContent->GetSelfAsComposite(), mContentPadding.SizeX());
+
+  // Update the size based on the new content
+  SizeToContents();
+
+  UpdateTransform();
+  MarkAsNeedsUpdate();
 }
 
 //******************************************************************************
@@ -278,7 +323,10 @@ Text* ToolTip::AddText(StringParam text, Vec4Param color)
   MultiLineText* textObject = (MultiLineText*)CreateTextPreview(mTextStack, text);
   if(textObject != nullptr)
   {
-    textObject->mTextField->FitToWidth(ToolTipUi::ToolTipWrapWidth, Pixels(1000));
+    if(mBestFitText)
+      ForceBestFitText(textObject, mContentPadding.SizeX());
+    else
+      textObject->mTextField->FitToWidth(ToolTipUi::ToolTipWrapWidth, Pixels(1000));
 
     // Defer border-display to this tooltip's border.
     textObject->mBorder->SetVisible(false);
@@ -316,25 +364,6 @@ void ToolTip::SetTextAndPlace(StringParam text, RectParam placementRect)
     IndicatorSide::Bottom, IndicatorSide::Top);
 
   SetArrowTipTranslation(placement);
-}
-
-//******************************************************************************
-void ToolTip::SetContent(Widget* content)
-{
-  // Destroy the old contexts if they exist.
-  SafeDestroy(mContent);
-  SafeDestroy(mTextStack);
-
-  // Attach it to ourself
-  AttachChildWidget(content);
-
-  mContent = content;
-
-  // Update the size based on the new content
-  SizeToContents();
-
-  UpdateTransform();
-  MarkAsNeedsUpdate();
 }
 
 //******************************************************************************
@@ -502,6 +531,75 @@ void ToolTip::SetColorScheme(ToolTipColorScheme::Enum color)
     mBorderColor = FloatColorRGBA(192, 104, 51, 255);
   }
   MarkAsNeedsUpdate();
+}
+
+//******************************************************************************
+bool ToolTip::TranslateArrowOffset(Vec2Param translation)
+{
+  mArrowOffset += translation;
+  
+  // Either edge of the arrow must be inside the bounds of the ToolTip's size.
+  Vec2 offsetBounds = Math::Ceil(0.5f * mSize) - Math::Ceil(0.5f * mArrow->mSize);
+  // Either edge of the arrow must also be within a minimum of two pixels
+  // from the ToolTip rect's edges.
+  offsetBounds -= Vec2(2.0f, 2.0f);
+
+  if(mSide == IndicatorSide::Left || mSide == IndicatorSide::Right)
+  {
+    if(mArrowOffset.y < -offsetBounds.y || mArrowOffset.y > offsetBounds.y)
+    {
+      mArrow->SetVisible(false);
+      mArrowBorder->SetVisible(false);
+    }
+    else
+    {
+      mArrow->SetVisible(true);
+      mArrowBorder->SetVisible(true);
+    }
+  }
+  else if(mSide == IndicatorSide::Top || mSide == IndicatorSide::Bottom)
+  {
+    if(mArrowOffset.x < -offsetBounds.x || mArrowOffset.x > offsetBounds.x)
+    {
+      mArrow->SetVisible(false);
+      mArrowBorder->SetVisible(false);
+    }
+    else
+    {
+      mArrow->SetVisible(true);
+      mArrowBorder->SetVisible(true);
+    }
+  }
+
+  return mArrow->GetVisible();
+}
+
+//******************************************************************************
+Vec2 ToolTip::GetArrowOffset()
+{
+  return mArrowOffset;
+}
+
+//******************************************************************************
+Vec2 ToolTip::GetContentSize()
+{
+  if(mContent)
+    return mContent->GetMinSize();
+
+  return Vec2::cZero;
+}
+
+//******************************************************************************
+Vec2 ToolTip::GetPaddedContentSize()
+{
+  return ExpandSizeByThickness(mContentPadding, GetContentSize());
+}
+
+//******************************************************************************
+void ToolTip::BestFitTextToMaxWidth(bool enabled, float maxBestFitTextWidth)
+{
+  mBestFitText = enabled;
+  mMaxBestFitTextWidth = maxBestFitTextWidth;
 }
 
 //******************************************************************************

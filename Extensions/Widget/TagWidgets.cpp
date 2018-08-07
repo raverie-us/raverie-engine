@@ -513,8 +513,6 @@ void TagChainTextBox::OnSearchBoxKeyPreview(KeyboardEvent* e)
   }
   else if(mAddTagsOnEnter && e->Key == Keys::Enter)
   {
-    String text = mSearchBar->GetText();
-
     if(!mSearch.Results.Empty())
     {
       // I cannot assume the search index is valid until the tile view
