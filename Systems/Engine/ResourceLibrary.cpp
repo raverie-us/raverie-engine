@@ -12,15 +12,9 @@ namespace Zero
 namespace Events
 {
 DefineEvent(PreScriptCompile);
-DefineEvent(PreScriptSetCompile);
 DefineEvent(CompileZilchFragments);
+DefineEvent(ResourceLibraryConstructed);
 }//namespace Events
-
-//--------------------------------------------------------------------- Zilch Compile Fragment Event
-ZilchDefineType(ZilchPreCompilationEvent, builder, type)
-{
-
-}
 
 ZilchDefineType(ZilchCompiledEvent, builder, type)
 {
@@ -207,6 +201,9 @@ ResourceLibrary::ResourceLibrary()
   EventConnect(&mScriptProject, Zilch::Events::TypeParsed, &EngineLibraryExtensions::TypeParsedCallback);
 
   ZilchManager::GetInstance()->mDebugger.AddProject(&mScriptProject);
+
+  ObjectEvent toSend(this);
+  Z::gResources->DispatchEvent(Events::ResourceLibraryConstructed, &toSend);
 }
 
 //**************************************************************************************************
@@ -548,12 +545,6 @@ bool ResourceLibrary::CompileScripts(HashSet<ResourceLibrary*>& modifiedLibrarie
 
   // Clear the project out since it may have files from before
   mScriptProject.Clear();
-
-  // Dispatch an event allowing specific resource managers to do whatever they want with the project
-  // This was added so that ZilchPlugins can listen for compilation errors 
-  ZilchPreCompilationEvent e;
-  e.mProject = &mScriptProject;
-  Z::gResources->DispatchEvent(Events::PreScriptSetCompile, &e);
 
   // Add all scripts
   forRange(ZilchDocumentResource* script, mScripts)

@@ -50,7 +50,7 @@ public:
   String GetTemplateSourceFile(ResourceAdd& resourceAdd) override;
 
   //Internals
-  void OnPreZilchProjectCompilation(ZilchPreCompilationEvent* e);
+  void OnResourceLibraryConstructed(ObjectEvent* e);
 
   static void DispatchScriptError(StringParam eventId, StringParam shortMessage, StringParam fullMessage, const CodeLocation& location);
   static void DispatchZeroZilchError(const CodeLocation& location, StringParam message, Project* buildingProject);
