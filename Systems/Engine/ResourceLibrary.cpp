@@ -623,7 +623,9 @@ bool ResourceLibrary::CompilePlugins(HashSet<ResourceLibrary*>& modifiedLibrarie
 
       swapPlugin.mPendingLibrary = Plugin::LoadFromFile(status, pluginDependencies, pluginPath, origin);
 
-      if (status.Failed())
+      // If the status failed, it could just be because the plugin was empty (we're in progress compiling it).
+      // Note: We'll get a separate error if the plugin fails to compile or if we can't find the compiler.
+      if (status.Failed() && status.Context != Plugin::StatusContextEmpty)
       {
         Console::Print(Filter::DefaultFilter, "Plugin Error (%s): %s\n", libraryResource->Name.c_str(), status.Message.c_str());
       }

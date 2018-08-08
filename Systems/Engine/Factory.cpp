@@ -258,12 +258,15 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
         // Handle missing components
         if(componentMeta == nullptr && !subtractiveNode)
         {
-          String message = String::Format("Could not find component '%s'. "\
-            "Creating proxy.\n", componentNode.TypeName.Data());
-
+          // If Zilch hasn't fully compiled due to script errors or
+          // because it's waiting on plugins then don't emit proxy errors.
+          bool compileSuccess = ZilchManager::GetInstance()->mLastCompileResult == CompileResult::CompilationSucceeded;
           bool proxyComponentsExpected = context->Flags & CreationFlags::ProxyComponentsExpected;
-          if(!proxyComponentsExpected)
+          if(!proxyComponentsExpected && compileSuccess)
           {
+            String message = String::Format("Could not find component '%s'. "\
+              "Creating proxy.\n", componentNode.TypeName.Data());
+
             // In the editor throw an error in
             // the exported version just log and continue so
             // missing component do not create errors in export
