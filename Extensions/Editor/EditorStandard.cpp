@@ -88,6 +88,7 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeType(BackgroundTaskEvent);
   ZilchInitializeType(EditorEvent);
   ZilchInitializeType(MetaDropEvent);
+  ZilchInitializeType(PostAddResourceEvent);
   ZilchInitializeType(TreeEvent);
   ZilchInitializeType(TreeViewHeaderAddedEvent);
   ZilchInitializeType(ValueEvent);
