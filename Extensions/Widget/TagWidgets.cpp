@@ -511,7 +511,7 @@ void TagChainTextBox::OnSearchBoxKeyPreview(KeyboardEvent* e)
       e->Handled = true;
     }
   }
-  else if(mAddTagsOnEnter && e->Key == Keys::Enter)
+  else if(mAddTagsOnEnter && e->Key == Keys::Enter && !e->GetModifierPressed())
   {
     if(!mSearch.Results.Empty())
     {
