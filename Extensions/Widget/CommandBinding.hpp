@@ -14,7 +14,7 @@ inline void CommandFailed(Command* command, BoundType* contextType)
   if(false)
   {
     String message = String::Format("There is no '%s' available to run the command '%s'",
-                                    contextType->Name.c_str(), command->DisplayName.c_str() );
+                                    contextType->Name.c_str(), command->GetDisplayName().c_str() );
     DoNotifyWarning("Command Not Run", message);
   }
 }
@@ -123,6 +123,19 @@ public:
   {
     mDelegate.Invoke();
   }
+};
+
+//--------------------------------------------------- MetaScriptTagAttribute ---
+class MetaScriptTagAttribute : public MetaAttribute
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  MetaScriptTagAttribute();
+
+  void PostProcess(Status& status, ReflectionObject* owner) override;
+
+  String mTags;
+  OrderedHashSet<String> mTagSet;
 };
 
 }

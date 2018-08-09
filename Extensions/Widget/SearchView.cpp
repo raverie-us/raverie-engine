@@ -589,29 +589,6 @@ bool SearchView::TakeFocusOverride()
   return true;
 }
 
-bool CheckTags(HashSet<String>& testTags, HashSet<String>& tags)
-{
-  //No tags always accept
-  if(testTags.Empty())
-    return true;
-
-  //Tags and no tags on this always false
-  if(!testTags.Empty() && tags.Empty())
-    return false;
-
-  //There must be no tag that rejects
-  //this object
-  uint foundTags = 0;
-
-  forRange(String str, tags.All())
-  {
-    if(testTags.Contains(str))
-      ++foundTags;
-  }
-
-  return !(testTags.Size() > foundTags);
-}
-
 bool CheckTags(HashSet<String>& testTags, BoundType* type)
 {
   forRange(CogComponentMeta* metaComponent, type->HasAll<CogComponentMeta>())
@@ -620,19 +597,13 @@ bool CheckTags(HashSet<String>& testTags, BoundType* type)
       return true;
   }
 
-  return false;
-}
-
-bool CheckAndAddTags(SearchData& search, HashSet<String>& tags)
-{
-  if(CheckTags(search.ActiveTags, tags))
+  if(MetaScriptTagAttribute* tagAttribute = type->HasInherited<MetaScriptTagAttribute>())
   {
-    forRange(String& tag, tags.All())
-      search.AvailableTags.Insert(tag);
-    return true;
+    if(CheckTags(testTags, tagAttribute->mTagSet))
+      return true;
   }
-  else
-    return false;
+
+  return false;
 }
 
 bool CheckAndAddTags(SearchData& search, BoundType* type)
@@ -644,10 +615,19 @@ bool CheckAndAddTags(SearchData& search, BoundType* type)
       forRange(String& tag, metaComponent->mTags.All())
         search.AvailableTags.Insert(tag);
     }
+
+    if(MetaScriptTagAttribute* tagAttribute = type->HasInherited<MetaScriptTagAttribute>())
+    {
+      forRange(String& tag, tagAttribute->mTagSet.All())
+        search.AvailableTags.Insert(tag);
+    }
+
     return true;
   }
   else
+  {
     return false;
+  }
 }
 
 bool CheckAndAddSingleTag(SearchData& search, StringParam tag)

@@ -159,6 +159,18 @@ void ContentItem::SetTags(HashSet<String>& tags)
   }
 }
 
+void ContentItem::RemoveTags(HashSet<String>& tags)
+{
+  ContentTags* contentTags = this->has(ContentTags);
+  if(contentTags == nullptr)
+    return;
+
+  forRange(String& tag, tags.All())
+  {
+    contentTags->mTags.Erase(tag);
+  }
+}
+
 bool ContentItem::HasTag(StringParam tag)
 {
   ContentTags* contentTags = this->has(ContentTags);

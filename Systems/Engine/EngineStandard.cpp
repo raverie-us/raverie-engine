@@ -400,8 +400,8 @@ bool EngineLibrary::Initialize(ZeroStartupSettings& settings)
   MetaDatabase::GetInstance()->AddNativeLibrary(GetLibrary());
 
   RegisterClassAttribute(ObjectAttributes::cRunInEditor)->TypeMustBe(Component);
-  RegisterClassAttributeType(ObjectAttributes::cTool, MetaEditorScriptObject)->TypeMustBe(Component);
   RegisterClassAttributeType(ObjectAttributes::cCommand, MetaEditorScriptObject)->TypeMustBe(Component);
+  RegisterClassAttributeType(ObjectAttributes::cTool, MetaEditorScriptObject)->TypeMustBe(Component);
   RegisterClassAttributeType(ObjectAttributes::cGizmo, MetaEditorGizmo)->TypeMustBe(Component);
   RegisterClassAttributeType(ObjectAttributes::cComponentInterface, MetaInterface)->TypeMustBe(Component);
 

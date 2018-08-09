@@ -163,6 +163,9 @@
       <Filter>Widgets</Filter>
     </ClCompile>
     <ClCompile Include="WidgetStandard.cpp" />
+    <ClCompile Include="CommandBinding.cpp">
+      <Filter>Command</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Composite.hpp">

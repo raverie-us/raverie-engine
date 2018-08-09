@@ -99,8 +99,12 @@ public:
 
   virtual void Execute();
 
+  StringParam GetDisplayName();
+  /// Separates whole-words for the DisplayName.
+  void SetDisplayName(StringParam name);
+
   /// Sets the ToolTip member value.
-  void Format();
+  void FillOutToolTip();
   
   /// Sends out that the state of this command changed
   void ChangeState();
@@ -199,10 +203,14 @@ public:
   /// Check to see if command has already registered a valid shortcut by string.
   bool IsShortcutReserved(StringParam validShortcut);
 
+  bool UpdateCommandTags(StringParam commandName, StringParam tags, bool sendEvents = false);
+  bool UpdateCommandTags(Command* command, StringParam tags, bool sendEvents = false);
+
   SearchProvider* GetCommandSearchProvider();
   
-  /// Process all loaded commands to find tags, shortcuts, etc...
-  void ScanCommands();
+  /// Process a command's tag field and separate each tag into a list item.
+  void BuildTagList(Command* command);
+  /// After all commands are loaded, make sure their executors are setup properly.
   void ValidateCommands();
 
   typedef HashMap<String, Handle> ContextMapType;

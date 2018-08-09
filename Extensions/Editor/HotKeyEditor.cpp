@@ -865,19 +865,27 @@ bool HotKeyCommands::SetData(DataEntry* dataEntry, AnyParam variant, StringParam
 /******************************************************************************/
 bool HotKeyCommands::Remove(DataEntry* dataEntry)
 {
+  // Probably won't happen, as the root cannot be selected, but protect against
+  // removal of the entire data source.
+  DataEntry* root = &mCommand;
+  if(dataEntry == root)
+    return false;
+
   CommandEntry *row = ((CommandEntry *)dataEntry);
 
+  // Index must be recorded before removing the entry from the DataSource.
   DataEvent e;
   e.Index = row->mIndex;
-  this->DispatchEvent(Events::DataRemoved, &e);
 
+  mCommand.Erase(row);
+
+  this->DispatchEvent(Events::DataRemoved, &e);
   return true;
 }
 
 //------------------------------------------------------------- HotKeyEditor ---
 ZilchDefineType(HotKeyEditor, builder, type)
 {
-  
 }
 
 HashMap<unsigned, String> HotKeyEditor::sKeyMap;
@@ -918,13 +926,13 @@ HotKeyEditor::HotKeyEditor(Composite* parent)
 
     // Search must be declared before the TreeView so that it shows up in the
     // layout before the TreeView.
-  TreeViewSearch* search = new TreeViewSearchHotKeys(this);
-  search->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(20));
+  mSearch = new TreeViewSearchHotKeys(this);
+  mSearch->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(20));
 
   mTreeView = new TreeView(this);
   mTreeView->SetSelection(new CogCommandSelection(selection, mHotKeys));
 
-  search->mTreeView = mTreeView;
+  mSearch->mTreeView = mTreeView;
 
   ConnectThisTo(mTreeView, Events::TreeViewHeaderAdded, OnTreeViewHeaderAdded);
 
@@ -1142,7 +1150,7 @@ void HotKeyEditor::UpdateTransform()
 /******************************************************************************/
 void HotKeyEditor::Refresh()
 {
-  mTreeView->ClearAllRows();
+  mSearch->CancelFilter();
   mTreeView->SetDataSource(mHotKeys);
 }
 
@@ -1217,9 +1225,8 @@ void HotKeyEditor::OnCommandDelete(ObjectEvent* event)
 {
   TreeRow* row = mTreeView->FindRowByIndex(mRightClickedRowIndex);
   row->Remove();  // dispatch event
-  
-  mHotKeys->mCommand.EraseAt((unsigned)mRightClickedRowIndex.Id);
-  mTreeView->mRows.EraseAt((unsigned)mRightClickedRowIndex.Id);
+
+  mTreeView->mRows.EraseValue(row);
 
   Sort(false);
 
@@ -1246,9 +1253,7 @@ void HotKeyEditor::OnCommandDelete(ObjectEvent* event)
     toErase.PushBack((unsigned)selection);
   }
 
-  size = (int)mHotKeys->mCommand.Size();
-  for(int i = 0; i < size; ++i)
-    mHotKeys->mCommand[i].mIndex = i;
+  UpdateIndexes();
 
     // deselect UI elements
   data->mSelection.Clear();
@@ -1268,6 +1273,14 @@ void HotKeyEditor::OnCommandRightClick(TreeEvent* event)
   ConnectMenu(menu, "Rename", OnCommandRename);
   ConnectMenu(menu, "Rebind", OnCommandRebind);
   ConnectMenu(menu, "Delete", OnCommandDelete);
+}
+
+/******************************************************************************/
+void HotKeyEditor::UpdateIndexes(int start)
+{
+  int size = (int)mHotKeys->mCommand.Size();
+  for(int i = start; i < size; ++i)
+    mHotKeys->mCommand[i].mIndex = i;
 }
 
 /******************************************************************************/
@@ -1310,12 +1323,8 @@ void HotKeyEditor::Sort(bool updateIndexes, CommandCompare::Enum sortBy)
 
   mTreeView->mArea->SetScrolledPercentage(Vec2(0, 0));
 
-  if(!updateIndexes)
-    return;
-
-  int size = (int)set.Size();
-  for(; i < size; ++i)
-    set[i].mIndex = i;
+  if(updateIndexes)
+    UpdateIndexes(i);
 }
 
 /******************************************************************************/
@@ -1506,11 +1515,11 @@ void HotKeyEditor::OnGlobalCommandRemoved(CommandUpdateEvent* event)
   TreeRow* row = mTreeView->FindRowByIndex(i);
 
     // Dispatch data source remove event.
-  row->Remove();  
+  row->Remove();
+  UpdateIndexes();
 
-  mHotKeys->mCommand.EraseAt((size_t)i.Id);
-  mTreeView->mRows.EraseAt((size_t)i.Id);
-
+    // Don't need to delete the row from the TreeView, as 'Refresh' will cause
+    // the TreeView's UI elements [ie, TreeRows] to update.
   Refresh();
 }
 
@@ -1519,13 +1528,13 @@ void HotKeyEditor::OnGlobalCommandUpdated(CommandUpdateEvent* event)
 {
   int index = mHotKeys->mCommand.FindIndex(*event->mCommand);
 
-  if(index != CommandSet::InvalidIndex)
+  if(index == CommandSet::InvalidIndex)
     return;
 
   CopyCommand(mHotKeys->mCommand[index], event->mCommand);
 
-    // Sortcut or Tags could have changed.  If the commands are sorted by either
-    // of theose, then a resort needs to occur.
+    // Shortcut or Tags could have changed.  If the commands are sorted by either
+    // of these, then a resort needs to occur.
   if(mCurrentSort != CommandCompare::None)
     Sort(true, mCurrentSort);
 
@@ -1547,10 +1556,7 @@ void HotKeyEditor::OnAddCommand(MouseEvent* event)
   mHotKeys->mCommand[0].mBindingStr = cDefaultBindingString;
   
   //Sort(mHotKeys->mCommand.All());
-  int size = (int)mHotKeys->mCommand.Size();
-  for(int i = 0; i < size; ++i)
-    mHotKeys->mCommand[i].mIndex = i;
-
+  UpdateIndexes();
   Refresh();
 
   MetaOperations::NotifyObjectModified(mHotKeys->mCommand);

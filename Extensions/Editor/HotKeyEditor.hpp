@@ -137,6 +137,7 @@ public:
   void OnCommandDelete(ObjectEvent* event);
   void OnCommandRightClick(TreeEvent* event);
 
+  void UpdateIndexes(int start = 0);
   void Sort(bool updateIndexes, CommandCompare::Enum sortBy = CommandCompare::CommandName);
 
   void OnCogCommandSort(MouseEvent* event);
@@ -177,6 +178,7 @@ public:
 
   DataIndex mRightClickedRowIndex;
 
+  TreeViewSearch* mSearch;
   TreeView* mTreeView;
   TextButton* mAddCommand;
   ComboBox* mHotKeySetDropdown;

@@ -39,7 +39,10 @@ extern const String cResourceInterface;
 extern const String cComponentInterface;
 /// Used to specify that this component has a gizmo (via the archetype parameter)
 extern const String cGizmo;
+/// Used to specify that a script component is a Command.
 extern const String cCommand;
+/// Specify Tags for a script component and its associated Resource.
+extern const String cTags;
 extern const String cTool;
 
 }//namespace ObjectFlags

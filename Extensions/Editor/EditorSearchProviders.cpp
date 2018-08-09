@@ -363,7 +363,6 @@ void ComponentSearchProvider::Search(SearchData& search)
 
   forRange(BoundType* boundType, types.All())
   {
-    // Match valid tags
     if (CheckAndAddTags(search, boundType))
     {
       int priority = PartialMatch(search.SearchString.All(), boundType->Name.All(), CaseInsensitiveCompare);

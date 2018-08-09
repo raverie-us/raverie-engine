@@ -162,6 +162,15 @@ public:
     return true;
   }
 
+  bool Remove(DataEntry* dataEntry) override
+  {
+    // 'this' is not a valid entry 'mSource' would recognize.
+    if(dataEntry == this)
+      return false;
+
+    return mSource->Remove(dataEntry);
+  }
+
 };
 
 }

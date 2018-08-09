@@ -28,6 +28,7 @@ const String cResourceInterface("ResourceInterface");
 const String cComponentInterface("ComponentInterface");
 const String cGizmo("Gizmo");
 const String cCommand("Command");
+const String cTags("Tags");
 const String cTool("Tool");
 
 }//namespace ObjectFlags

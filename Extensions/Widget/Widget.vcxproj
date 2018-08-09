@@ -48,6 +48,7 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="CheckBox.cpp" />
     <ClCompile Include="Command.cpp" />
+    <ClCompile Include="CommandBinding.cpp" />
     <ClCompile Include="Composite.cpp" />
     <ClCompile Include="Constants.cpp" />
     <ClCompile Include="ContextMenu.cpp" />

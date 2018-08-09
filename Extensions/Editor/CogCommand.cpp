@@ -22,7 +22,7 @@ CogCommand::CogCommand(Archetype* archetype) :
   mArchetype(archetype),
   mScriptComponentType(nullptr)
 {
-  DisplayName = archetype->Name;
+  SetDisplayName(archetype->Name);
   Name = archetype->Name;
 }
 
@@ -30,9 +30,18 @@ CogCommand::CogCommand(Archetype* archetype) :
 CogCommand::CogCommand(BoundType* componentType) :
   mScriptComponentType(componentType)
 {
-  DisplayName = componentType->Name;
+  SetDisplayName(componentType->Name);
   Name = componentType->Name;
+
   Description = componentType->Description;
+
+  MetaScriptTagAttribute* tagAttribute =
+    componentType->HasInherited<MetaScriptTagAttribute>();
+
+  if(tagAttribute == nullptr)
+    return;
+
+  Tags = tagAttribute->mTags;
 }
 
 //******************************************************************************
@@ -102,6 +111,14 @@ CogCommand* CogCommandManager::UpdateData(StringParam objectName)
 
   BoundType* componentType = MetaDatabase::GetInstance()->FindType(objectName);
   command->Description = componentType->Description;
+
+  MetaScriptTagAttribute* tagAttribute =
+    componentType->HasInherited<MetaScriptTagAttribute>();
+
+  if(tagAttribute != nullptr)
+    mCommands->UpdateCommandTags(command, tagAttribute->mTags);
+  else
+    mCommands->UpdateCommandTags(command, ""); // Tag attribute removed.
 
   CommandUpdateEvent eventToSend(command);
   mCommands->DispatchEvent(Events::CommandUpdated, &eventToSend);

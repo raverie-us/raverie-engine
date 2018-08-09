@@ -273,11 +273,9 @@ private:
 };
 
 /// Returns true if there are any tags that would reject this entry.
-bool CheckTags(HashSet<String>& testTags, HashSet<String>& tags);
 bool CheckTags(HashSet<String>& testTags, BoundType* type);
 
 /// Check tags and if passes add all other tags.
-bool CheckAndAddTags(SearchData& search, HashSet<String>& tags);
 bool CheckAndAddTags(SearchData& search, BoundType* type);
 
 /// Logic for simple filter if the tag is present or there
@@ -286,5 +284,44 @@ bool CheckAndAddSingleTag(SearchData& search, StringParam tag);
 
 //Create a simple text box preview.
 Composite* CreateTextPreview(Composite* parent, StringParam text);
+
+/// Returns true if there are any tags that would reject this entry.
+template <typename StringContainer>
+bool CheckTags(HashSet<String>& testTags, StringContainer& tags)
+{
+  //No tags always accept
+  if(testTags.Empty())
+    return true;
+
+  //Tags and no tags on this always false
+  if(!testTags.Empty() && tags.Empty())
+    return false;
+
+  //There must be no tag that rejects
+  //this object
+  uint foundTags = 0;
+
+  forRange(String str, tags.All())
+  {
+    if(testTags.Contains(str))
+      ++foundTags;
+  }
+
+  return !(testTags.Size() > foundTags);
+}
+
+/// Check tags and if passes add all other tags.
+template <typename StringContainer>
+bool CheckAndAddTags(SearchData& search, StringContainer& tags)
+{
+  if(CheckTags<StringContainer>(search.ActiveTags, tags))
+  {
+    forRange(String& tag, tags.All())
+      search.AvailableTags.Insert(tag);
+    return true;
+  }
+  else
+    return false;
+}
 
 }

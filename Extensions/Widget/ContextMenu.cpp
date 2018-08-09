@@ -501,7 +501,7 @@ void ContextMenuItem::SetName(StringParam name, StringParam icon)
 
 void ContextMenuItem::SetCommand(Command* command)
 {
-  SetName(command->DisplayName);
+  SetName(command->GetDisplayName());
   mShortcut->SetText(command->Shortcut);
   mCommand = command;
   mEnabled = command->IsEnabled();
