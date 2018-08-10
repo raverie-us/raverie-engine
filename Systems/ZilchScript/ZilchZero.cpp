@@ -54,7 +54,9 @@ void RestoreCogPathLinks(HandleParam object, Cog* owner, CogInitializer& initial
         else
         {
           // We set the cog path here because we always expect cog paths to be non-null.
-          property->SetValue(object, CogPath());
+          CogPath path;
+          path.SetRelativeTo(owner);
+          property->SetValue(object, path);
         }
       }
       else
