@@ -761,8 +761,32 @@ public:
     mActiveSearch.SafeDestroy();
   }
 
+  Cog* FindRelativeToCog()
+  {
+    ObjectPropertyNode* node = mNode;
+    while (node)
+    {
+      BoundType* type = node->mObject.StoredType;
+      if (type && type->IsA(ZilchTypeId(Cog)))
+        if (Cog* cog = (Cog*)node->mObject.Dereference())
+          return cog;
+
+      node = node->mParent;
+    }
+
+    return nullptr;
+  }
+
+  void EnsureCogPathIsRelativeTo()
+  {
+    Cog* relativeTo = mValue.GetRelativeTo();
+    if (!relativeTo)
+      mValue.SetRelativeTo(FindRelativeToCog());
+  }
+
   void ValidateSelection(Status& status, Cog* test)
   {
+    EnsureCogPathIsRelativeTo();
     CogPath::ComputePath(status, mValue.GetRelativeTo(), test, mValue.GetPathPreference0(), mValue.GetPathPreference1(), mValue.GetPathPreference2());
     if (status.Failed())
       return;
@@ -782,6 +806,7 @@ public:
       PropertyPath propertyPath;
       BuildPath(mNode, rootInstance, propertyPath);
 
+      EnsureCogPathIsRelativeTo();
       Property* prop = ZilchTypeId(CogPath)->GetProperty("Cog");
       propertyPath.AddPropertyToPath(prop);
 
@@ -799,7 +824,7 @@ public:
     PropertyPath propertyPath;
     BuildPath(mNode, rootInstance, propertyPath);
 
-    
+    EnsureCogPathIsRelativeTo();
     Property* prop = ZilchTypeId(CogPath)->GetProperty("Path");
     propertyPath.AddPropertyToPath(prop);
 
