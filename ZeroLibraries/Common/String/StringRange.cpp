@@ -47,6 +47,8 @@ StringRange::StringRange(StringIterator pbegin, StringIterator pend)
     mBegin(pbegin.Data()),
     mEnd(pend.Data())
 {
+  ErrorIf(pbegin.mIteratorRange.mOriginalString != pend.mIteratorRange.mOriginalString,
+    "Got two iterators from different strings");
 }
 
 StringRange::StringRange(StringIterator pbegin, size_t sizeInBytes)
@@ -616,6 +618,18 @@ bool StringRange::ValidateByte(cstr byte) const
 bool StringRange::IsValid()
 {
   return ValidateByte(mBegin);
+}
+
+bool StringRange::ValidateRange() const
+{
+  return
+    mBegin &&
+    mEnd &&
+    mBegin >= mOriginalString.Data() &&
+    mBegin <= mOriginalString.EndData() &&
+    mEnd >= mOriginalString.Data() &&
+    mEnd <= mOriginalString.EndData() &&
+    mBegin <= mEnd;
 }
 
 bool StringRange::IsContinuationByte(cstr byte) const
