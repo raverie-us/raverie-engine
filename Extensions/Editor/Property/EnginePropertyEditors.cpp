@@ -1030,7 +1030,7 @@ void CogPickerManipulation<PropertyEditor>::OnUpdate(UpdateEvent* event)
     if (status.Failed())
     {
       selectText = BuildString(selectText, "\n", status.Message);
-      mToolTip->SetColorScheme(ToolTipColorScheme::Red);
+      mToolTip->SetColorScheme(ToolTipColorScheme::Yellow);
     }
     
     mToolTip->SetText(selectText);
