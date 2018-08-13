@@ -938,6 +938,28 @@ DocumentationLibrary
 		}
 		Object
 		{
+			var Name = "AlternateSearchCompletedEvent"
+			var BaseClass = "Event"
+			var Library = "WidgetLibrary"
+			var Description = ""
+			var Tags = Array
+			{
+				"Event"
+			}
+			var Properties = Array
+			{
+			}
+			var Methods = Array
+			{
+			}
+			var EventsSent = Array
+			{
+			}
+			var ImportDocumentation = true
+			var DevOnly = false
+		}
+		Object
+		{
 			var Name = "AnchoringSubTool"
 			var BaseClass = "PointMassSelectorSubTool"
 			var Library = "EditorLibrary"
@@ -37843,13 +37865,19 @@ DocumentationLibrary
 					var Name = "AddResourceType"
 					var Description = ""
 					var ReturnType = "Void"
-					var Parameters = "(BoundType p0)"
+					var Parameters = "(BoundType p0, String p1)"
 					var ParameterList = Array
 					{
 						Parameter
 						{
 							var Name = "p0"
 							var Type = "BoundType"
+							var Description = ""
+						}
+						Parameter
+						{
+							var Name = "p1"
+							var Type = "String"
 							var Description = ""
 						}
 					}
@@ -55587,7 +55615,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				}
 				Property
 				{
-					var Name = "ModififierPressed"
+					var Name = "ModifierPressed"
 					var Type = "Boolean"
 					var Description = ""
 					var ReadOnly = true
@@ -56711,8 +56739,32 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 			{
 				Property
 				{
+					var Name = "DuplicateOnCtrlDrag"
+					var Type = "Boolean"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
 					var Name = "GrabMode"
 					var Type = "GizmoGrab"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "HoverColor"
+					var Type = "Real4"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "IncludeMode"
+					var Type = "IncludeMode"
 					var Description = ""
 					var ReadOnly = false
 					var Static = false
@@ -56737,6 +56789,14 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "Snapping"
 					var Type = "Boolean"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "ToolColor"
+					var Type = "Real4"
 					var Description = ""
 					var ReadOnly = false
 					var Static = false
@@ -56996,7 +57056,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 		Object
 		{
 			var Name = "MaterialBlock"
-			var BaseClass = ""
+			var BaseClass = "Object"
 			var Library = "GraphicsLibrary"
 			var Description = ""
 			var Tags = Array
@@ -80230,6 +80290,20 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				}
 				Method
 				{
+					var Name = "RuntimeClone"
+					var Description = "Creates a clone of this Mesh. As a clone is expected to be modified, an upload function must be called before this mesh can be used."
+					var ReturnType = "Mesh"
+					var Parameters = "()"
+					var ParameterList = Array
+					{
+					}
+					var PossibleExceptionThrows = Array
+					{
+					}
+					var Static = false
+				}
+				Method
+				{
 					var Name = "Upload"
 					var Description = "Upload vertex buffer and index buffer data to the gpu. This will also build the aabb and information needed for raycasting."
 					var ReturnType = "Void"
@@ -81466,6 +81540,88 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 			}
 			var Properties = Array
 			{
+			}
+			var Methods = Array
+			{
+			}
+			var EventsSent = Array
+			{
+			}
+			var ImportDocumentation = true
+			var DevOnly = false
+		}
+		Object
+		{
+			var Name = "MetaScriptShortcutAttribute"
+			var BaseClass = "MetaAttribute"
+			var Library = "WidgetLibrary"
+			var Description = ""
+			var Tags = Array
+			{
+			}
+			var Properties = Array
+			{
+				Property
+				{
+					var Name = "Alt"
+					var Type = "Boolean"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "Ctrl"
+					var Type = "Boolean"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "Key"
+					var Type = "String"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
+				Property
+				{
+					var Name = "Shift"
+					var Type = "Boolean"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
+			}
+			var Methods = Array
+			{
+			}
+			var EventsSent = Array
+			{
+			}
+			var ImportDocumentation = true
+			var DevOnly = false
+		}
+		Object
+		{
+			var Name = "MetaScriptTagAttribute"
+			var BaseClass = "MetaAttribute"
+			var Library = "WidgetLibrary"
+			var Description = ""
+			var Tags = Array
+			{
+			}
+			var Properties = Array
+			{
+				Property
+				{
+					var Name = "Tags"
+					var Type = "String"
+					var Description = ""
+					var ReadOnly = false
+					var Static = false
+				}
 			}
 			var Methods = Array
 			{
@@ -96344,6 +96500,28 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 		}
 		Object
 		{
+			var Name = "PostAddResourceEvent"
+			var BaseClass = "Event"
+			var Library = "EditorLibrary"
+			var Description = ""
+			var Tags = Array
+			{
+				"Event"
+			}
+			var Properties = Array
+			{
+			}
+			var Methods = Array
+			{
+			}
+			var EventsSent = Array
+			{
+			}
+			var ImportDocumentation = true
+			var DevOnly = false
+		}
+		Object
+		{
 			var Name = "PreSolveBlock"
 			var BaseClass = "CollisionFilterBlock"
 			var Library = "PhysicsLibrary"
@@ -106634,6 +106812,27 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 					}
 					var Static = false
 				}
+			}
+			var EventsSent = Array
+			{
+			}
+			var ImportDocumentation = true
+			var DevOnly = false
+		}
+		Object
+		{
+			var Name = "RenderGroupHierarchies"
+			var BaseClass = "Composite"
+			var Library = "EditorLibrary"
+			var Description = ""
+			var Tags = Array
+			{
+			}
+			var Properties = Array
+			{
+			}
+			var Methods = Array
+			{
 			}
 			var EventsSent = Array
 			{
@@ -131741,12 +131940,17 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				Object
 				{
 					var key = "Auto"
-					var value = "This will choose whether to stream a file depending on its length. Files longer than one minute will be streamed."
+					var value = "This will choose whether to stream a file depending on its length. Files longer than 30 seconds will be streamed from memory, and those longer than 1 minute will be streamed from file."
 				}
 				Object
 				{
 					var key = "StreamFromFile"
-					var value = "The audio data will be read from the file and decompressed as it plays. Streaming files can't be played multiple times simultaneously and can't use loop tails."
+					var value = "The audio data will be read from the file and decompressed as it plays."
+				}
+				Object
+				{
+					var key = "StreamFromMemory"
+					var value = "The compressed audio data will be read into memory when the Sound resource is loaded and will be decompressed as it plays."
 				}
 				Object
 				{
@@ -133638,6 +133842,24 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				Object
 				{
 					var key = "MaintainAspectRatio"
+					var value = ""
+				}
+			}
+			var Description = ""
+		}
+		Object
+		{
+			var Name = "IncludeMode"
+			var EnumValues = Map
+			{
+				Object
+				{
+					var key = "Children"
+					var value = ""
+				}
+				Object
+				{
+					var key = "OnlyRoot"
 					var value = ""
 				}
 			}
