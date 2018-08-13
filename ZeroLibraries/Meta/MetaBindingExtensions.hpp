@@ -43,6 +43,8 @@ extern const String cGizmo;
 extern const String cCommand;
 /// Specify Tags for a script component and its associated Resource.
 extern const String cTags;
+/// Specify a keyboard shortcut for a script component with the Command attribute.
+extern const String cShortcut;
 extern const String cTool;
 
 }//namespace ObjectFlags

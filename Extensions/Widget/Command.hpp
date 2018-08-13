@@ -197,11 +197,19 @@ public:
   Handle GetContextFromTypeName(StringParam typeName);
   void SetContext(HandleParam object, BoundType* overrideType = nullptr);
   void ClearContext(BoundType* boundType);
+
+  String BuildShortcutString(bool ctrl, bool alt, bool shift, StringParam key);
   
   /// Check to see if a command's shortcut hot-key has been pressed.
   bool TestCommandKeyboardShortcuts(KeyboardEvent* event);
   /// Check to see if command has already registered a valid shortcut by string.
   bool IsShortcutReserved(StringParam validShortcut);
+  bool IsShortcutReserved(bool ctrl, bool alt, bool shift, StringParam validKey, Command** out);
+
+  bool ClearCommandShortcut(Command* command, bool sendEvents = false);
+
+  bool UpdateCommandShortcut(StringParam commandName, bool ctrl, bool alt, bool shift, StringParam key, bool sendEvents = false);
+  bool UpdateCommandShortcut(Command* command, bool ctrl, bool alt, bool shift, StringParam key, bool sendEvents = false);
 
   bool UpdateCommandTags(StringParam commandName, StringParam tags, bool sendEvents = false);
   bool UpdateCommandTags(Command* command, StringParam tags, bool sendEvents = false);

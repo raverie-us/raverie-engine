@@ -471,7 +471,7 @@ Commands commands =
 		string Name = "Commands",
 		string Description = "Show the Command List Viewer",
 		string IconName = "Commands",
-		string Shortcut = "Alt+Shift+H",
+		string Shortcut = "Ctrl+Shift+C",
 		string Tags = "Windows",
 	},
 	

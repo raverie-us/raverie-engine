@@ -42,6 +42,16 @@ CogCommand::CogCommand(BoundType* componentType) :
     return;
 
   Tags = tagAttribute->mTags;
+
+  MetaScriptShortcutAttribute* shortcut =
+    componentType->HasInherited<MetaScriptShortcutAttribute>();
+
+  if(shortcut == nullptr)
+    return;
+
+  CommandManager* commandManager = CommandManager::GetInstance();
+  Shortcut = commandManager->BuildShortcutString(shortcut->mCtrl,
+               shortcut->mAlt, shortcut->mShift, shortcut->mKey);
 }
 
 //******************************************************************************
@@ -65,7 +75,6 @@ ZilchDefineType(CogCommandManager, builder, type)
 CogCommandManager::CogCommandManager() :
   EditorScriptObjects<CogCommand>(ObjectAttributes::cCommand)
 {
-  mCommandsModified = false;
   mCommands = CommandManager::GetInstance();
 }
 
@@ -112,16 +121,27 @@ CogCommand* CogCommandManager::UpdateData(StringParam objectName)
   BoundType* componentType = MetaDatabase::GetInstance()->FindType(objectName);
   command->Description = componentType->Description;
 
-  MetaScriptTagAttribute* tagAttribute =
-    componentType->HasInherited<MetaScriptTagAttribute>();
+  bool commandModified = false;
 
+  // Update command tags, if possible.
+  MetaScriptTagAttribute* tagAttribute = componentType->HasInherited<MetaScriptTagAttribute>();
   if(tagAttribute != nullptr)
-    mCommands->UpdateCommandTags(command, tagAttribute->mTags);
+    commandModified |= mCommands->UpdateCommandTags(command, tagAttribute->mTags);
   else
-    mCommands->UpdateCommandTags(command, ""); // Tag attribute removed.
+    commandModified |= mCommands->UpdateCommandTags(command, ""); // Tag attribute removed.
 
-  CommandUpdateEvent eventToSend(command);
-  mCommands->DispatchEvent(Events::CommandUpdated, &eventToSend);
+  // Update command shortcut, if possible.
+  MetaScriptShortcutAttribute* sc = componentType->HasInherited<MetaScriptShortcutAttribute>();
+  if(sc != nullptr)
+    commandModified |= mCommands->UpdateCommandShortcut(command, sc->mCtrl, sc->mAlt, sc->mShift, sc->mKey);
+  else
+    commandModified |= mCommands->ClearCommandShortcut(command);
+
+  if(commandModified)
+  {
+    CommandUpdateEvent eventToSend(command);
+    mCommands->DispatchEvent(Events::CommandUpdated, &eventToSend);
+  }
 
   return command;
 }

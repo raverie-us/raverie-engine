@@ -138,4 +138,19 @@ public:
   OrderedHashSet<String> mTagSet;
 };
 
+//---------------------------------------------- MetaScriptShortcutAttribute ---
+class MetaScriptShortcutAttribute : public MetaAttribute
+{
+public:
+  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  MetaScriptShortcutAttribute();
+
+  void PostProcess(Status& status, ReflectionObject* owner) override;
+
+  bool mCtrl;
+  bool mAlt;
+  bool mShift;
+  String mKey;
+};
+
 }

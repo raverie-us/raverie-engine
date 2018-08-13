@@ -94,6 +94,7 @@ ZilchDefineStaticLibrary(WidgetLibrary)
   ZilchInitializeType(CommandExecuter);
   ZilchInitializeType(CommandManager);
   ZilchInitializeType(MetaScriptTagAttribute);
+  ZilchInitializeType(MetaScriptShortcutAttribute);
   ZilchInitializeType(Spacer);
   ZilchInitializeType(Splitter);
   ZilchInitializeType(TabArea);
@@ -120,6 +121,7 @@ void WidgetLibrary::Initialize()
   MetaDatabase::GetInstance()->AddNativeLibrary(GetLibrary());
 
   RegisterClassAttributeType(ObjectAttributes::cTags, MetaScriptTagAttribute)->TypeMustBe(Component);
+  RegisterClassAttributeType(ObjectAttributes::cShortcut, MetaScriptShortcutAttribute)->TypeMustBe(Component);
 
   WidgetManager::Initialize();
   CommandManager::Initialize();

@@ -462,26 +462,33 @@ void CommandManager::ClearContext(BoundType* boundType)
 }
 
 //******************************************************************************
+String CommandManager::BuildShortcutString(bool ctrl, bool alt, bool shift, StringParam key)
+{
+  StringBuilder builder;
+
+  if(ctrl)
+    builder << "Ctrl+";
+  if(alt)
+    builder << "Alt+";
+  if(shift)
+    builder << "Shift+";
+
+  builder << key;
+  return builder.ToString();
+}
+
+//******************************************************************************
 bool CommandManager::TestCommandKeyboardShortcuts(KeyboardEvent* event)
 {
   // Do not process handled keyboard events
   if(event->Handled || event->Key == Keys::Unknown)
     return false;
 
-  StringBuilder builder;
-
-  if(event->CtrlPressed)
-    builder << "Ctrl+";
-  if(event->AltPressed)
-    builder << "Alt+";
-  if(event->ShiftPressed)
-    builder << "Shift+";
-
-  builder << event->mKeyboard->ToSymbol(event->Key);
-  String shortcutString = builder.ToString();
+  String shortcut = BuildShortcutString(event->CtrlPressed, event->AltPressed,
+                      event->ShiftPressed, event->mKeyboard->ToSymbol(event->Key));
 
   // ZPrint("Shortcut %s\n", shortcutString.c_str());
-  Command* command = mShortcuts.FindValue(shortcutString, nullptr);
+  Command* command = mShortcuts.FindValue(shortcut, nullptr);
   if(command == nullptr)
     return false;
 
@@ -495,6 +502,65 @@ bool CommandManager::TestCommandKeyboardShortcuts(KeyboardEvent* event)
 bool CommandManager::IsShortcutReserved(StringParam validShortcut)
 {
   return mShortcuts.FindValue(validShortcut, nullptr) != nullptr;
+}
+
+//******************************************************************************
+bool CommandManager::IsShortcutReserved(bool ctrl, bool alt, bool shift, StringParam validKey, Command** out)
+{
+  String shortcut = BuildShortcutString(ctrl, alt, shift, validKey);
+
+  *out = mShortcuts.FindValue(shortcut, nullptr);
+  return (*out != nullptr);
+}
+
+//******************************************************************************
+bool CommandManager::ClearCommandShortcut(Command* command, bool sendEvents)
+{
+  if(command->Shortcut.Empty())
+    return false;
+
+  mShortcuts.Erase(command->Shortcut);
+  command->Shortcut.Clear();
+
+  if(sendEvents)
+  {
+    CommandUpdateEvent eventToSend(command);
+    DispatchEvent(Events::CommandUpdated, &eventToSend);
+  }
+
+  return true;
+}
+
+//******************************************************************************
+bool CommandManager::UpdateCommandShortcut(StringParam commandName, bool ctrl, bool alt, bool shift, StringParam key, bool sendEvents)
+{
+  if(Command* command = mNamedCommands.FindValue(commandName, nullptr))
+    return UpdateCommandShortcut(command, ctrl, alt, shift, key, sendEvents);
+
+  return false;
+}
+
+//******************************************************************************
+bool CommandManager::UpdateCommandShortcut(Command* command, bool ctrl, bool alt, bool shift, StringParam key, bool sendEvents)
+{
+  String shortcut = BuildShortcutString(ctrl, alt, shift, key);
+
+  // Supplied shortcut is already set on this command, do nothing.
+  if(command->Shortcut == shortcut)
+    return false;
+
+  mShortcuts.Erase(command->Shortcut);
+
+  command->Shortcut = shortcut;
+  mShortcuts.Insert(shortcut, command);
+
+  if(sendEvents)
+  {
+    CommandUpdateEvent eventToSend(command);
+    DispatchEvent(Events::CommandUpdated, &eventToSend);
+  }
+
+  return true;
 }
 
 //******************************************************************************
