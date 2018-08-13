@@ -369,6 +369,8 @@ AddRemoveComponentOperation::AddRemoveComponentOperation(HandleParam object,
   mComponentType(componentType),
   mRemovedObjectState(nullptr)
 {
+  mNotifyModified = true;
+
   if(mode == ComponentOperation::Add)
     mName = BuildString("Add '", componentType->Name, "' to '", GetNameFromHandle(object), "'");
   else
@@ -406,7 +408,8 @@ void AddRemoveComponentOperation::Undo()
   else
     SaveComponentToBuffer();
 
-  MetaOperation::Undo();
+  if (mNotifyModified)
+    MetaOperation::Undo();
 }
 
 //******************************************************************************
@@ -417,7 +420,8 @@ void AddRemoveComponentOperation::Redo()
   else
     AddComponentFromBuffer();
 
-  MetaOperation::Redo();
+  if (mNotifyModified)
+    MetaOperation::Redo();
 }
 
 //******************************************************************************
@@ -592,7 +596,8 @@ void AddRemoveComponentOperation::ComponentAdded(HandleParam object)
   ObjectState::ChildId childId(mComponentType->Name);
   modifications->ChildAdded(object, childId);
 
-  MetaOperations::NotifyComponentsModified(object);
+  if (mNotifyModified)
+    MetaOperations::NotifyComponentsModified(object);
 }
 
 //******************************************************************************
@@ -606,7 +611,8 @@ void AddRemoveComponentOperation::ComponentRemoved(HandleParam object)
   ObjectState::ChildId childId(mComponentType->Name);
   modifications->ChildRemoved(object, childId);
 
-  MetaOperations::NotifyComponentsModified(object);
+  if (mNotifyModified)
+    MetaOperations::NotifyComponentsModified(object);
 }
 
 //----------------------------------------------------- Move Component Operation

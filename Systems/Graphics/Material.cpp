@@ -6,6 +6,8 @@
 namespace Zero
 {
 
+bool Material::sNotifyModified = true;
+
 //**************************************************************************************************
 ZilchDefineType(CompositionLabelExtension, builder, type)
 {
@@ -128,32 +130,10 @@ void Material::Initialize()
 //**************************************************************************************************
 void Material::Unload()
 {
+  forRange (HandleOf<MaterialBlock> handle, mMaterialBlocks.All())
+    handle.Delete();
+
   mMaterialBlocks.Clear();
-}
-
-//**************************************************************************************************
-void Material::ReInitialize()
-{
-  TextSaver saver;
-  saver.OpenBuffer();
-  {
-    saver.StartPolymorphic("Dummy");
-    SerializeMaterialBlocks(saver);
-    saver.EndPolymorphic();
-  }
-  
-  // MaterialBlocks are reference counted, so we don't need to explicitly delete them
-  mMaterialBlocks.Clear();
-
-  DataTreeLoader loader;
-  Status status;
-  loader.OpenBuffer(status, saver.GetString());
-  {
-    PolymorphicNode dummyNode;
-    loader.GetPolymorphic(dummyNode);
-
-    SerializeMaterialBlocks(loader);
-  }
 }
 
 //**************************************************************************************************
@@ -235,7 +215,8 @@ void Material::Add(MaterialBlockHandle blockHandle, int index)
 
   block->mOwner = this;
   mCompositionChanged = true;
-  SendModified();
+  if (sNotifyModified)
+    SendModified();
 }
 
 //**************************************************************************************************
@@ -245,9 +226,11 @@ bool Material::Remove(MaterialBlockHandle block)
   if (index >= mMaterialBlocks.Size())
     return false;
 
+  mMaterialBlocks[index].Delete();
   mMaterialBlocks.EraseAt(index);
   mCompositionChanged = true;
-  SendModified();
+  if (sNotifyModified)
+    SendModified();
   return true;
 }
 
@@ -386,6 +369,42 @@ void MaterialManager::ResourceDuplicated(Resource* resource, Resource* duplicate
   }
 
   dupMaterial->mContentItem->SaveContent();
+}
+
+//**************************************************************************************************
+void MaterialManager::ReInitializeRemoveComponents()
+{
+  Material::sNotifyModified = false;
+
+  mReInitializeQueue.BeginBatch();
+
+  forRange (Resource* resource, AllResources())
+  {
+    Material* material = (Material*)resource;
+    Material::MaterialBlockArray::range range = material->mMaterialBlocks.All();
+    while (!range.Empty())
+    {
+      MaterialBlock* materialBlock = range.Back();
+      BoundType* blockType = ZilchVirtualTypeId(materialBlock);
+
+      AddRemoveComponentOperation* op = new AddRemoveComponentOperation(material, blockType, ComponentOperation::Remove);
+      op->mNotifyModified = false;
+      op->Redo();
+      mReInitializeQueue.Queue(op);
+
+      range.PopBack();
+    }
+  }
+
+  mReInitializeQueue.EndBatch();
+}
+
+//**************************************************************************************************
+void MaterialManager::ReInitializeAddComponents()
+{
+  mReInitializeQueue.Undo();
+  mReInitializeQueue.ClearAll();
+  Material::sNotifyModified = true;
 }
 
 } // namespace Zero

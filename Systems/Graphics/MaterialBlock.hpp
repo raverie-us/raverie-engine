@@ -7,7 +7,7 @@ namespace Zero
 {
 
 /// Represents meta data of shader fragment types that can be composited together on Materials.
-class MaterialBlock : public IZilchObject
+class MaterialBlock : public Object
 {
 public:
   ZilchDeclareInheritableType(TypeCopyMode::ReferenceType);
@@ -15,7 +15,7 @@ public:
   MaterialBlock();
   virtual ~MaterialBlock() {}
 
-  virtual void Serialize(Serializer& stream);
+  void Serialize(Serializer& stream) override;
 
   Material* mOwner;
 

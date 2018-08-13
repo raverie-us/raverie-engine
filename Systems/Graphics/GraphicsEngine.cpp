@@ -1270,6 +1270,8 @@ void GraphicsEngine::OnScriptsCompiledPrePatch(ZilchCompileEvent* event)
 
   mRemovedFragmentFiles.Clear();
   mModifiedFragmentFiles.Clear();
+
+  MaterialManager::GetInstance()->ReInitializeRemoveComponents();
 }
 
 //**************************************************************************************************
@@ -1289,6 +1291,8 @@ void GraphicsEngine::OnScriptsCompiledCommit(ZilchCompileEvent* event)
 //**************************************************************************************************
 void GraphicsEngine::OnScriptsCompiledPostPatch(ZilchCompileEvent* event)
 {
+  MaterialManager::GetInstance()->ReInitializeAddComponents();
+
   // Don't do anything if no new fragment libraries were made
   if (mNewLibrariesCommitted == false)
     return;
@@ -1297,11 +1301,10 @@ void GraphicsEngine::OnScriptsCompiledPostPatch(ZilchCompileEvent* event)
 
   MaterialFactory::GetInstance()->UpdateRestrictedComponents(mShaderGenerator->mCurrentToInternal, mShaderGenerator->mFragmentTypes);
 
-  // Re-Initialize after new types have been committed
+  // Re-Initialize composites after new types have been committed
   forRange (Resource* resource, MaterialManager::GetInstance()->AllResources())
   {
     Material* material = (Material*)resource;
-    material->ReInitialize();
 
     if (mAddedMaterialsForComposites.Contains(material))
       UpdateUniqueComposites(material, UniqueCompositeOp::Add);
