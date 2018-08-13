@@ -273,6 +273,7 @@ MetaTransformInstance CogMetaTransform::GetInstance(HandleParam object)
       instance.mParentInstance = parentTransform;
       BoundType* t = ZilchTypeId(Transform);
       instance.mParentWorldMatrix = t->GetProperty("WorldMatrix");
+      instance.mParentLocalMatrix = t->GetProperty("LocalMatrix");
     }
   }
   return instance;

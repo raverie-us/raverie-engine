@@ -14,6 +14,7 @@ ZilchDefineEnum(GizmoGrab);
 ZilchDefineEnum(GizmoBasis);
 ZilchDefineEnum(GizmoPivot);
 ZilchDefineEnum(UpdateMode);
+ZilchDefineEnum(IncludeMode);
 ZilchDefineEnum(GizmoDragMode);
 ZilchDefineEnum(GizmoGrabMode);
 ZilchDefineEnum(GizmoSnapMode);
@@ -58,6 +59,7 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeEnum(GizmoBasis);
   ZilchInitializeEnum(GizmoPivot);
   ZilchInitializeEnum(UpdateMode);
+  ZilchInitializeEnum(IncludeMode);
   ZilchInitializeEnum(GizmoDragMode);
   ZilchInitializeEnum(GizmoGrabMode);
   ZilchInitializeEnum(GizmoSnapMode);

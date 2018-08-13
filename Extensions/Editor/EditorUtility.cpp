@@ -13,13 +13,13 @@ namespace Zero
 {
 
 // Get the text drawing position for a given object
-Vec3 GetObjectTextPosition(Cog* object)
+Vec3 GetObjectTextPosition(Cog* cog)
 {
   // Offset the position upward to handle text being centered
   const Vec3 OffsetUp(0.0f, 1.0f, 0.0f);
 
   // If the object is valid...
-  if (object != NULL)
+  if (cog != NULL)
   {
     //// Does the object have a model?
     //Model* model = object->has(Model);
@@ -35,7 +35,7 @@ Vec3 GetObjectTextPosition(Cog* object)
     //}
 
     // Does the object have a collider?
-    Collider* collider = object->has(Collider);
+    Collider* collider = cog->has(Collider);
 
     // If we have a collider...
     if (collider != NULL)
@@ -48,7 +48,7 @@ Vec3 GetObjectTextPosition(Cog* object)
     }
 
     // Attempt to get the object's transform component
-    Transform* transform = object->has(Transform);
+    Transform* transform = cog->has(Transform);
 
     // If the object has a transform...
     if (transform)
@@ -110,26 +110,26 @@ void DisplayCodeDefinition(CodeDefinition& definition)
   }
 }
 
-Aabb GetAabb(Cog* object, IncludeMode::Type includeMode)
+Aabb GetAabb(Cog* cog, IncludeMode::Type includeMode, bool world)
 {
-  if(object == NULL)
+  if(cog == NULL)
     return Aabb(Vec3::cZero, Vec3::cZero);
 
   Vec3 center = Vec3::cZero;
 
-  if(Transform* tx = object->has(Transform))
+  if(Transform* tx = cog->has(Transform))
     center = tx->GetWorldTranslation();
 
-  ObjectLink* link = object->has(ObjectLink);
+  ObjectLink* link = cog->has(ObjectLink);
   if(link != NULL)
     center = link->GetWorldPosition();
 
   Aabb aabb(center, Vec3::cZero);
-  ExpandAabb(object, aabb, includeMode);
+  ExpandAabb(cog, aabb, includeMode, world);
   return aabb;
 }
 
-Aabb GetAabb(HandleParam instance, IncludeMode::Type includeMode)
+Aabb GetAabb(HandleParam instance, IncludeMode::Type includeMode, bool world)
 {
   if(instance.IsNull())
     return Aabb(Vec3::cZero, Vec3::cZero);
@@ -153,8 +153,8 @@ Aabb GetAabb(HandleParam instance, IncludeMode::Type includeMode)
   }
 
 
-  Aabb aabb(center, Vec3::cZero);
-  ExpandAabb(instance, aabb, includeMode);
+  Aabb aabb;
+  ExpandAabb(instance, aabb, includeMode, world);
   return aabb;
 }
 
@@ -163,94 +163,121 @@ Aabb GetAabb(MetaSelection* selection, IncludeMode::Type includeMode)
   return GetAabbFromObjects(selection->All(), includeMode);
 }
 
-void ExpandAabb(Cog* object, Aabb& aabb, IncludeMode::Type includeMode, bool world)
+void ExpandAabb(Cog* cog, Aabb& aabb, IncludeMode::Type includeMode, bool world, bool toParent, bool expandTransform)
 {
-  if(Transform* tx = object->has(Transform))
-  {
-    if(Graphical* graphical = object->has(Graphical))
-    {
-      Aabb subAabb;
-      if(world)
-        subAabb = graphical->GetWorldAabb();
-      else
-        subAabb = graphical->GetLocalAabb();
-      aabb.Combine(subAabb);
-    }
-
-    if(Area* area = object->has(Area))
-    {
-      Aabb subAabb;
-      if(world)
-        subAabb = area->GetAabb();
-      else
-        subAabb = area->GetLocalAabb();
-      aabb.Combine(subAabb);
-    }
-
-    if(Collider* collider = object->has(Collider))
-    {
-      Aabb subAabb = collider->GetWorldAabb();
-      aabb.Combine(subAabb);
-    }
-
-    if(includeMode == IncludeMode::Children)
-    {
-      if(Hierarchy* hierarchy = object->has(Hierarchy))
-      {
-        HierarchyList::range r = hierarchy->GetChildren( );
-        forRange(Cog& child, r)
-        {
-          ExpandAabb(&child, aabb, includeMode);
-        }
-      }
-    }
-  }
-}
-
-void ExpandAabb(HandleParam instance, Aabb& aabb, IncludeMode::Type includeMode, bool world)
-{
-  MetaTransform* mt = instance.StoredType->HasInherited<MetaTransform>();
-  if(mt == nullptr)
+  Transform* tx = cog->has(Transform);
+  if(tx == nullptr)
     return;
 
-  MetaTransformInstance transform = mt->GetInstance(instance);
+  bool invalid = true;
+  Mat4 m = tx->GetLocalMatrix();
 
-  if(Cog* cog = instance.Get<Cog*>())
+  if(Graphical* graphical = cog->has(Graphical))
   {
-    if(Graphical* graphical = cog->has(Graphical))
+    Aabb subAabb;
+    if(world)
     {
-      Aabb subAabb;
-      if(world)
-        subAabb = graphical->GetWorldAabb();
-      else
-        subAabb = graphical->GetLocalAabb();
+      subAabb = graphical->GetWorldAabb();
+    }
+    else
+    {
+      subAabb = graphical->GetLocalAabb();
 
-      aabb.Combine(subAabb);
+      if(toParent)
+        subAabb = subAabb.TransformAabb(m);
     }
 
-    if(Collider* collider = cog->has(Collider))
+    invalid &= !subAabb.Valid();
+    aabb.Combine(subAabb);
+  }
+
+  if(Area* area = cog->has(Area))
+  {
+    Aabb subAabb;
+    if(world)
     {
-      Aabb subAabb = collider->mAabb;
-      aabb.Combine(subAabb);
+      subAabb = area->GetAabb();
+    }
+    else
+    {
+      subAabb = area->GetLocalAabb();
+
+      if(toParent)
+        subAabb = subAabb.TransformAabb(m);
     }
 
-    if(includeMode == IncludeMode::Children)
-    {
-      if(Hierarchy* hierarchy = cog->has(Hierarchy))
-      {
-        HierarchyList::range r = hierarchy->GetChildren();
+    invalid &= !subAabb.Valid();
+    aabb.Combine(subAabb);
+  }
 
-        forRange(Cog& child, r)
-          ExpandAabb(&child, aabb, includeMode);
-      }
+  if(Collider* collider = cog->has(Collider))
+  {
+    // Colliders do not have a way to obtain a local aabb.
+    if(world)
+    {
+      Aabb subAabb = collider->GetWorldAabb();
+      invalid &= !subAabb.Valid();
+
+      aabb.Combine(subAabb);
     }
   }
-  // Otherwise, take whatever aabb came back from the meta transform (temporary). This was initialized to an
-  // invalid aabb so if this was never by the MetaTransform then expanding won't affect our current aabb.
-  else
+
+  if(invalid && expandTransform)
   {
+    if(world)
+      aabb.Expand(tx->GetWorldTranslation());
+    else if(toParent && tx->TransformParent != nullptr)
+      aabb.Expand(Math::TransformPoint(tx->TransformParent->GetLocalMatrix(), tx->GetLocalTranslation()));
+    else
+      aabb.Expand(tx->GetLocalTranslation());
+  }
+
+  if(includeMode != IncludeMode::Children)
+    return;
+
+  forRange(Cog& child, cog->GetChildren())
+    ExpandAabb(&child, aabb, includeMode, world, !world);
+}
+
+void ExpandAabb(HandleParam instance, Aabb& aabb, IncludeMode::Type includeMode, bool world, bool toParent, bool expandTransform)
+{
+  Cog* cog = instance.Get<Cog*>();
+
+  // Try the MetaTransform if no cog is available.  And, since MetaTransfrom
+  // initializes its aabb to invalid - expanding won't affect the input aabb.
+  if(cog == nullptr)
+  {
+    MetaTransform* mt = instance.StoredType->HasInherited<MetaTransform>();
+    if(mt == nullptr)
+      return;
+
+    MetaTransformInstance transform = mt->GetInstance(instance);
     aabb.Combine(transform.mAabb);
+
+    if(!transform.mAabb.Valid() && expandTransform)
+    {
+      if(world)
+        aabb.Expand(transform.GetWorldTranslation());
+      else if(toParent)
+        aabb.Expand(transform.ToParent(transform.GetLocalTranslation()));
+      else
+        aabb.Expand(transform.GetLocalTranslation());
+    }
+
+    return;
   }
+
+  ExpandAabb(cog, aabb, includeMode, world, toParent, expandTransform);
+}
+
+void ExpandAabbChildrenOnly(HandleParam instance, Aabb& aabb, bool world, bool expandTransform)
+{
+  Cog* cog = instance.Get<Cog*>();
+  if(cog == nullptr)
+    return;
+
+  forRange(Cog& child, cog->GetChildren())
+    ExpandAabb(&child, aabb, IncludeMode::Children, world, !world, expandTransform);
 }
 
 }//namespace Zero

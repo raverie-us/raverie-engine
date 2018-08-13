@@ -1296,7 +1296,7 @@ void RotateGizmo::OnGizmoModified(RingGizmoEvent* e)
     }
     else
     {
-      delta= 0.0f;
+      delta = 0.0f;
       mPreviousSnap = rotation;
       return;
     }

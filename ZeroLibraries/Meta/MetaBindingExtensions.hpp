@@ -278,7 +278,8 @@ public:
     mWorldTranslation(nullptr),
     mWorldRotation(nullptr),
     mWorldScale(nullptr),
-    mParentWorldMatrix(nullptr)
+    mParentWorldMatrix(nullptr),
+    mParentLocalMatrix(nullptr)
   {
     // Initialize the aabb to an invalid one so that we can take any other aabb
     // and combine with this without anything being affected.
@@ -305,6 +306,11 @@ public:
 
   // World Matrix
   Mat4 GetParentWorldMatrix();
+  // Local Matrix
+  Mat4 GetParentLocalMatrix();
+
+  // Transform a local space point to parent space.
+  Vec3 ToParent(Vec3Param local);
 
   // Transform for Cog, object instance for GeoElement, etc...
   Handle mInstance;
@@ -326,6 +332,7 @@ public:
   // Used to get the parents world matrix (your local space)
   Handle mParentInstance;
   Property* mParentWorldMatrix;
+  Property* mParentLocalMatrix;
 
   // Used to get a size for focusing. Potentially remove and refactor later.
   Aabb mAabb;

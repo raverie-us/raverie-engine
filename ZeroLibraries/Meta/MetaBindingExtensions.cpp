@@ -406,6 +406,22 @@ Mat4 MetaTransformInstance::GetParentWorldMatrix()
   return Mat4::cIdentity;
 }
 
+//**************************************************************************************************
+Mat4 MetaTransformInstance::GetParentLocalMatrix()
+{
+  if(mParentLocalMatrix)
+    return mParentLocalMatrix->GetValue(mParentInstance).Get<Mat4>();
+  return Mat4::cIdentity;
+}
+
+//**************************************************************************************************
+Vec3 MetaTransformInstance::ToParent(Vec3Param local)
+{
+  if(mParentLocalMatrix)
+    return Math::TransformPoint(mParentLocalMatrix->GetValue(mParentInstance).Get<Mat4>(), local);
+  return local;
+}
+
 //----------------------------------------------------------------------------------- Meta Attribute
 ZilchDefineType(MetaAttribute, builder, type)
 {
