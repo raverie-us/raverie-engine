@@ -342,6 +342,8 @@ void BindCreationCommands(Cog* configCog, CommandManager* commands)
   commands->AddCommand("CreateDirectionalLight", new EditorCreateObjectCommand(CoreArchetypes::DirectionalLight));
   commands->AddCommand("CreateDirectionalLightShadows", new EditorCreateObjectCommand(CoreArchetypes::DirectionalLightShadows));
   commands->AddCommand("CreatePointLight", new EditorCreateObjectCommand(CoreArchetypes::PointLight));
+  commands->AddCommand("CreateSpotLight", new EditorCreateObjectCommand(CoreArchetypes::SpotLight));
+  commands->AddCommand("CreateSpotLightShadows", new EditorCreateObjectCommand(CoreArchetypes::SpotLightShadows));
 
   commands->AddCommand("CreateCube", new EditorCreateObjectCommand(CoreArchetypes::Cube));
   commands->AddCommand("CreateSphere", new EditorCreateObjectCommand(CoreArchetypes::Sphere));

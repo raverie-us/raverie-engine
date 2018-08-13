@@ -15,7 +15,7 @@ class DirectionalLight : ZilchComponent
     set { this.LightColorValue = value.XYZ; }
   }
   
-  // Arbitrary scaler for the resultant lighting calculations.
+  // Arbitrary scalar for the resultant lighting calculations.
   [Property][ShaderInput("DirectionalLightFragment")] var LightIntensity : Real
   {
     get { return this.LightIntensityValue; }
@@ -40,7 +40,7 @@ class DirectionalLight : ZilchComponent
   function DebugDraw()
   {
     var position = this.Transform.WorldTranslation;
-    var direction = this.Transform.TransformNormal(-Real3.ZAxis);
+    var direction = Math.Normalize(this.Transform.TransformNormal(-Real3.ZAxis));
     var arrow = DebugLine(position, position + direction * 5.0, 1.0) {Color = Real4(1.0, 1.0, 0.0, 1.0)};
     DebugDraw.Add(arrow);
   }

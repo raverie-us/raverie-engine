@@ -1,0 +1,21 @@
+[Version:1]
+Material 
+{
+	var RenderGroups = Array
+	{
+		"581a791e8fa9287a:Lights"
+	}
+	GeometryInput 
+	{
+		var GeometryBuffer0 = "null"
+		var GeometryBuffer1 = "null"
+	}
+	SpotLightFragment 
+	{
+		var FalloffRadius = 1
+		var SpotAngles = Real2{0.5, 0.5}
+		var LightIntensity = 1
+		var LightRadius = 0
+		var LightDirection = Real3{0, -1, 0}
+	}
+}
