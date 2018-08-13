@@ -66,7 +66,9 @@ AddResourceWindow* OpenAddWindow(BoundType* resourceType, Window** window, Strin
     *window = addWindow;
 
   addDialog->TakeFocus();
-  addDialog->SetResourceNameField(resourceName);
+
+  if(!resourceName.Empty())
+    addDialog->SetResourceNameField(resourceName);
 
   return addDialog;
 }
