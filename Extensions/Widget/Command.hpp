@@ -191,13 +191,6 @@ public:
   /// Checks the command-line arguments to see if any match a command.
   void RunParsedCommands();
 
-  // Context functions
-  template<typename ContextType>
-  ContextType* GetContext();
-  Handle GetContextFromTypeName(StringParam typeName);
-  void SetContext(HandleParam object, BoundType* overrideType = nullptr);
-  void ClearContext(BoundType* boundType);
-
   String BuildShortcutString(bool ctrl, bool alt, bool shift, StringParam key);
   
   /// Check to see if a command's shortcut hot-key has been pressed.
@@ -221,8 +214,8 @@ public:
   /// After all commands are loaded, make sure their executors are setup properly.
   void ValidateCommands();
 
-  typedef HashMap<String, Handle> ContextMapType;
-  ContextMapType mContextMap;
+  Context* GetContext();
+  Context mContext;
 
   typedef HashMap<String, Command*> CommandMapType;
   Array<Command*> mCommands;
@@ -231,12 +224,6 @@ public:
   CommandMapType mNamedCommands;
   CommandMapType mShortcuts;
 };
-
-template<typename ContextType>
-ContextType* CommandManager::GetContext()
-{
-  return GetContextFromTypeName(ZilchTypeId(ContextType)->Name).Get<ContextType*>();
-}
 
 //------------------------------------------------ Command Capture Context Event
 class CommandCaptureContextEvent : public Event

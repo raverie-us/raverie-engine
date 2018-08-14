@@ -79,7 +79,7 @@ CommandEvent::CommandEvent(Object* source, CommandManager* manager) :
 //******************************************************************************
 Space* CommandEvent::GetSpace()
 {
-  return mManager->GetContext<Space>();
+  return mManager->GetContext()->Get<Space>();
 }
 
 //-------------------------------------------------------------------CommandExecuter
@@ -441,27 +441,6 @@ void CommandManager::RunParsedCommands()
 }
 
 //******************************************************************************
-Handle CommandManager::GetContextFromTypeName(StringParam typeName)
-{
-  return mContextMap.FindValue(typeName, Handle());
-}
-
-//******************************************************************************
-void CommandManager::SetContext(HandleParam context, BoundType* overrideType)
-{
-  if(overrideType)
-    mContextMap[overrideType->Name] = context;
-  else
-    mContextMap[context.StoredType->Name] = context;
-}
-
-//******************************************************************************
-void CommandManager::ClearContext(BoundType* boundType)
-{
-  mContextMap.Erase(boundType->Name);
-}
-
-//******************************************************************************
 String CommandManager::BuildShortcutString(bool ctrl, bool alt, bool shift, StringParam key)
 {
   StringBuilder builder;
@@ -631,6 +610,11 @@ void CommandManager::ValidateCommands()
 
     ErrorIf(true, "Command not valid %s", command->Name.c_str());
   }
+}
+
+Context* CommandManager::GetContext()
+{
+  return &mContext;
 }
 
 //-------------------------------------------------------------------CommandCaptureContextEvent

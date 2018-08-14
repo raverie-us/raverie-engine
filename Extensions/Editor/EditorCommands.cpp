@@ -1153,6 +1153,12 @@ void GoToDefinition(Editor* editor)
   DisplayCodeDefinition(definition);
 }
 
+void Add(Editor* editor)
+{
+  ContentLibrary* library = CommandManager::GetInstance()->GetContext()->Get<ContentLibrary>();
+  editor->AddResourceType(nullptr, library);
+}
+
 void EditCommands(Editor* editor)
 {
   if(editor->ShowWindow("Commands"))
@@ -1277,6 +1283,7 @@ void BindEditorCommands(Cog* configCog, CommandManager* commands)
   commands->AddCommand("DisableAutoProjectScreenshot", BindCommandFunction(DisableAutoProjectScreenshot));
 
   commands->AddCommand("GoToDefinition", BindCommandFunction(GoToDefinition));
+  commands->AddCommand("Add", BindCommandFunction(Add));
 
   if(DeveloperConfig* config = configCog->has(DeveloperConfig))
   {

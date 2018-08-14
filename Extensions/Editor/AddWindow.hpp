@@ -64,6 +64,9 @@ public:
   /// Shows template's for the given resource type.
   void SelectResourceType(BoundType* resourceType);
 
+  /// Sets the library that the new Resource will be created in.
+  void SetLibrary(ContentLibrary* library);
+
   /// Used to hide the Resource type search on the left.
   void ShowResourceTypeSearch(bool state);
 

@@ -167,6 +167,18 @@ void AddResourceWindow::SelectResourceType(BoundType* resourceType)
 }
 
 //**************************************************************************************************
+void AddResourceWindow::SetLibrary(ContentLibrary* library)
+{
+  if (library)
+  {
+    StringComboBox* comboBox = mResourceTemplateDisplay->mLibrarySelect;
+    int index = comboBox->GetIndexOfItem(library->Name);
+    if (index != -1)
+      comboBox->SetSelectedItem(index, true);
+  }
+}
+
+//**************************************************************************************************
 void AddResourceWindow::ShowResourceTypeSearch(bool state)
 {
   mResourceTypeSearch->SetActive(state);

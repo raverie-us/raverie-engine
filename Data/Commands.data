@@ -84,7 +84,6 @@ Commands commands =
 		string Description = "Add a new content item to the project",
 		string IconName = "AddResource",
 		string Shortcut = "Ctrl+N",
-		string Function = "Editor.AddResource",
 		string Tags = "Editor",
 	},
 

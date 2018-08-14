@@ -196,7 +196,7 @@ public:
   void AddResource();
 
   // Add a new resource type of given type
-  void AddResourceType(BoundType* resourceType, StringParam resourceName = "");
+  void AddResourceType(BoundType* resourceType, ContentLibrary* library = nullptr, StringParam resourceName = "");
 
   // Open a text file if it is a resource it will open as that resource
   virtual DocumentEditor* OpenTextFileAuto(StringParam file) = 0;

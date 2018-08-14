@@ -520,7 +520,7 @@ void GameWidget::OnDestroy()
 //******************************************************************************
 bool GameWidget::TakeFocusOverride()
 {
-  CommandManager::GetInstance()->ClearContext(ZilchTypeId(Space));
+  CommandManager::GetInstance()->GetContext()->Remove(ZilchTypeId(Space));
 
   this->HardTakeFocus();
   return true;

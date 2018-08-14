@@ -776,6 +776,8 @@ void LibraryView::OnRightMouseUp(MouseEvent* event)
     return;
 
   ContextMenu* menu = new ContextMenu(this);
+  menu->mRootEntry->mContext.Add(mContentLibrary);
+
   // When in the context of a specific resource search show an "Add 'resourceType'" option
   forRange(String& tag, mSearchBox->mSearch.ActiveTags.All())
   {
@@ -1236,9 +1238,9 @@ void LibraryView::OnAddTagToSearch(ObjectEvent* event)
 }
 
 //******************************************************************************
-bool LibraryView::AddResourceOptionsToMenu(ContextMenu* menu, StringParam resouceName, bool addDivider)
+bool LibraryView::AddResourceOptionsToMenu(ContextMenu* menu, StringParam resouceTypeName, bool addDivider)
 {
-  BoundType* boundType = MetaDatabase::GetInstance()->FindType(resouceName);
+  BoundType* boundType = MetaDatabase::GetInstance()->FindType(resouceTypeName);
 
   // Attempt to get bound type for the tag and if we have a type is it a resource
   if (boundType && boundType->IsA(ZilchTypeId(Resource)))
@@ -1256,7 +1258,7 @@ bool LibraryView::AddResourceOptionsToMenu(ContextMenu* menu, StringParam resouc
 
       ContextMenuEntry* entry = menu->AddEntry(buttonTitle.ToString());
       ConnectThisTo(entry, Zero::Events::MenuItemSelected, OnAddResource);
-      entry->mContextData = Any(static_cast<ReflectionObject*>(boundType));
+      entry->mContext.Add(boundType);
       return true;
      }
    }
@@ -1271,10 +1273,10 @@ void LibraryView::OnAddResource(ObjectEvent* event)
   ContextMenuEntry* entry = item->mEntry;
 
   AddResourceWindow* resourceWindow = OpenAddWindow(nullptr);
-  if (entry->mContextData.IsNotNull())
+  resourceWindow->SetLibrary(mContentLibrary);
+  if (BoundType* resourceType = entry->mContext.Get<BoundType>())
   {
-    BoundType* resource = entry->mContextData.Get<BoundType*>();
-    resourceWindow->SelectResourceType(resource);
+    resourceWindow->SelectResourceType(resourceType);
 
     TagList tags = mSearch->ActiveTags;
     // The library view has an implicit "Resources" tag and we don't want to add this to

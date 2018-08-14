@@ -297,7 +297,7 @@ void Editor::SetEditSpace(Space* space)
   if(mObjectView)
     mObjectView->SetSpace(space);
 
-  CommandManager::GetInstance()->SetContext(space);
+  CommandManager::GetInstance()->GetContext()->Add(space);
 }
 
 void Editor::SetEditorViewportSpace(Space* space)
@@ -487,7 +487,7 @@ void Editor::ProjectLoaded()
   mLibrary->View(mProjectLibrary, project->ProjectResourceLibrary);
 
   // Set the project so project commands will work
-  CommandManager::GetInstance()->SetContext(project);
+  CommandManager::GetInstance()->GetContext()->Add(project);
 
   SafeDelete(mProjectDirectoryWatcher);
   mProjectDirectoryWatcher = new EventDirectoryWatcher(mProjectLibrary->SourcePath);
@@ -1249,7 +1249,7 @@ void Editor::ExecuteCommand(StringParam commandName)
 
 void Editor::OnCaptureContext(CommandCaptureContextEvent* event)
 {
-  event->ActiveSet->SetContext(this);
+  event->ActiveSet->GetContext()->Add(this);
 }
 
 
@@ -1504,15 +1504,18 @@ void Editor::AddResource()
   AddResourceType(nullptr);
 }
 
-void Editor::AddResourceType(BoundType* resourceType, StringParam resourceName)
+void Editor::AddResourceType(BoundType* resourceType, ContentLibrary* library, StringParam resourceName)
 {
-  if(!mProject)
+  // We don't need a project as long as another ContentLibrary is specified to add the new
+  // Resource to
+  if (library == nullptr && !mProject)
   {
     DoNotifyError("No project to add resources", "Need a project to add resources");\
     return;
   }
 
-  OpenAddWindow(resourceType, nullptr, resourceName);
+  AddResourceWindow* addWindow = OpenAddWindow(resourceType, nullptr, resourceName);
+  addWindow->SetLibrary(library);
 }
 
 void Editor::EditResource(Resource* resource)

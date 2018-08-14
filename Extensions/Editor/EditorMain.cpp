@@ -882,7 +882,7 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
 
   SetupTools(editorMain);
 
-  commands->SetContext(editorMain, ZilchTypeId(Editor));
+  commands->GetContext()->Add(editorMain, ZilchTypeId(Editor));
   rootWidget->LoadMenu("Main");
 
   Connect(Z::gEngine, Events::Notify, editorMain, &EditorMain::OnNotifyEvent);
