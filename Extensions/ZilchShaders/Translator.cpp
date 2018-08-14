@@ -425,7 +425,10 @@ void ZilchShaderTranslator::BuildFunctionCodeTranslationHelper(ShaderCodeBuilder
 
   // Write all comments out above the function declaration
   for(size_t i = 0; i < shaderFunction->mComments.Size(); ++i)
-    finalBuilder << "//" << shaderFunction->mComments[i] << finalBuilder.EmitLineReturn();
+  {
+    String comment = shaderFunction->mComments[i];
+    WriteComment(finalBuilder, comment);
+  }
 
   // Write out the beginning of the function declaration
   finalBuilder << shaderFunction->mShaderReturnType << " " << shaderFunction->mShaderName;
@@ -491,6 +494,37 @@ void ZilchShaderTranslator::BuildFunctionCodeTranslation(ShaderCodeBuilder& fina
   }
 }
 
+void ZilchShaderTranslator::WriteComment(ShaderCodeBuilder& builder, StringParam comment)
+{
+  // See if there's a newline in the comment. If so this is a multi-line comment
+  bool isMultiLine = false;
+  for(StringRange range = comment.All(); !range.Empty(); range.PopFront())
+  {
+    Rune rune = range.Front();
+    if(rune.value == '\r' || rune.value == '\n')
+    {
+      isMultiLine = true;
+      break;
+    }
+  }
+
+  // If this is multi-line then emit an actual multi-line comment
+  if(isMultiLine)
+  {
+    builder.WriteIndentation();
+    builder.Write("/*");
+    builder.Write(comment);
+    builder.WriteLine("*/");
+  }
+  // Otherwise emit a single-line comment
+  else
+  {
+    builder.WriteIndentation();
+    builder.Write("//");
+    builder.WriteLine(comment);
+  }
+}
+
 void ZilchShaderTranslator::FormatCommentsAndLines(Zilch::SyntaxNode*& node, ZilchShaderTranslatorContext* context)
 {
   context->Flags = Zilch::WalkerFlags::ChildrenNotHandled;
@@ -551,34 +585,7 @@ void ZilchShaderTranslator::FormatCommentsAndLines(Zilch::SyntaxNode*& node, Zil
   for(uint i = 0; i < node->Comments.Size(); ++i)
   {
     String comment = node->Comments[i];
-
-    // See if there's a newline in the comment. If so this is a multi-line comment
-    bool isMultiLine = false;
-    for(StringRange range = comment.All(); !range.Empty(); range.PopFront())
-    {
-      Rune rune = range.Front();
-      if(rune.value == '\r' || rune.value == '\n')
-      {
-        isMultiLine = true;
-        break;
-      }
-    }
-
-    // If this is multi-line then emit an actual multi-line comment
-    if(isMultiLine)
-    {
-      builder.WriteIndentation();
-      builder.Write("/*");
-      builder.Write(comment);
-      builder.WriteLine("*/");
-    }
-    // Otherwise emit a single-line comment
-    else
-    {
-      builder.WriteIndentation();
-      builder.Write("//");
-      builder.WriteLine(comment);
-    }
+    WriteComment(builder, comment);
   }
 
   // If this node is a statement (and not the root if not) then add indentation for the line

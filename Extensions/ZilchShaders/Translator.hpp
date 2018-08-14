@@ -53,6 +53,7 @@ public:
   void BuildFunctionCodeTranslationHelper(ShaderCodeBuilder& finalBuilder, ShaderType* shaderType, ShaderFunction* shaderFunction, ScopedRangeMapping& typeCodeRange, bool generateRanges);
   void BuildFunctionCodeTranslation(ShaderCodeBuilder& finalBuilder, Array<ShaderType*>& dependencies, ShaderType* mainType, CodeRangeMapping* rootRange);
 
+  void WriteComment(ShaderCodeBuilder& builder, StringParam comment);
   void FormatCommentsAndLines(Zilch::SyntaxNode*& node, ZilchShaderTranslatorContext* context);
   void FormatStatement(Zilch::StatementNode*& node, ZilchShaderTranslatorContext* context);
 
