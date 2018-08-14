@@ -312,6 +312,7 @@ TextEditor::TextEditor(Composite* parent)
 TextEditor::~TextEditor()
 {
   DeleteObjectsInContainer(mHotspots);
+  SafeDelete(mIndicators);
 }
 
 void TextEditor::SetLexer(uint lexer)
