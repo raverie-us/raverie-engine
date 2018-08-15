@@ -55,11 +55,8 @@ class SpotLight : ZilchComponent
     set
     {
       this.InnerAngleValue = Math.Clamp(value, 10.0, 170.0);
-      this.OuterAngleValue = Math.Max(this.InnerAngleValue, this.OuterAngleValue);
+      this.InnerAngleValue = Math.Min(this.InnerAngleValue, this.OuterAngleValue);
       this.SetSpotAngles();
-      
-      if (this.Owner != null && this.Owner.Camera != null)
-        this.Owner.Camera.FieldOfView = this.OuterAngleValue;
     }
   }
   
@@ -74,7 +71,7 @@ class SpotLight : ZilchComponent
     set
     {
       this.OuterAngleValue = Math.Clamp(value, 10.0, 170.0);
-      this.InnerAngleValue = Math.Min(this.InnerAngleValue, this.OuterAngleValue);
+      this.OuterAngleValue = Math.Max(this.InnerAngleValue, this.OuterAngleValue);
       this.SetSpotAngles();
       
       if (this.Owner != null && this.Owner.Camera != null)
