@@ -145,7 +145,7 @@ namespace Audio
       || chunkHeader.chunk_name[2] != 't')
     {
       // Skip over this chunk
-      file.Seek(chunkHeader.chunk_size, Zero::FileOrigin::Current);
+      file.Seek(chunkHeader.chunk_size, Zero::SeekOrigin::Current);
       // Read in the next chunk header
       file.Read(status, (byte*)(&chunkHeader), sizeof(chunkHeader));
 
@@ -159,7 +159,7 @@ namespace Audio
 
     // If the chunk size is larger than the WavFmtData struct, skip ahead
     if (chunkHeader.chunk_size > sizeof(fmtChunkData))
-      file.Seek(chunkHeader.chunk_size - sizeof(fmtChunkData), Zero::FileOrigin::Current);
+      file.Seek(chunkHeader.chunk_size - sizeof(fmtChunkData), Zero::SeekOrigin::Current);
 
     // Get the data chunk header
     file.Read(status, (byte*)(&chunkHeader), sizeof(chunkHeader));
@@ -168,7 +168,7 @@ namespace Audio
       || chunkHeader.chunk_name[2] != 't')
     {
       // Skip over this chunk
-      file.Seek(chunkHeader.chunk_size, Zero::FileOrigin::Current);
+      file.Seek(chunkHeader.chunk_size, Zero::SeekOrigin::Current);
       // Read in the next chunk header
       file.Read(status, (byte*)(&chunkHeader), sizeof(chunkHeader));
 

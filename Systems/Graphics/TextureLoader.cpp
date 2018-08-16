@@ -33,7 +33,7 @@ void LoadTexture(StringParam filename, Texture* texture)
     // If a texture is compressed, the data file will have an uncompressed version of the texture
     // after the compressed data, including a separate file header
     uint dataSizeToSkip = header.mMipCount * sizeof(MipHeader) + header.mTotalDataSize;
-    file.Seek(dataSizeToSkip, FileOrigin::Current);
+    file.Seek(dataSizeToSkip, SeekOrigin::Current);
 
     // Read new header
     header.mFileId = 0;

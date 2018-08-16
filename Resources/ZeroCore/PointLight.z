@@ -45,7 +45,7 @@ class PointLight : ZilchComponent
   }
   
   [ShaderInput("LightPass", "LightColor")] var LightColorValue : Real3 = Real3(1.0);
-  var LightIntensityValue : Real = 1.0;
+  var LightIntensityValue : Real = 20.0;
   var FalloffRadiusValue : Real = 10.0;
   var LightRadiusValue : Real = 0.0;
   

@@ -11,6 +11,15 @@ namespace Zero
 
 class AttributeExtension;
 
+//--------------------------------------------------------------------------------- Attribute Status
+class AttributeStatus : public Status
+{
+public:
+  void SetFailed(CodeLocation& location, StringParam message);
+  
+  CodeLocation mLocation;
+};
+
 //----------------------------------------------------------------------------- Attribute Extensions
 /// Processes all supported attributes and attribute parameters.
 class AttributeExtensions : public ExplicitSingleton<AttributeExtensions>
@@ -23,7 +32,7 @@ public:
   /// fragment libraries. Fragments have a lot of extra parameters that aren't registered here that
   /// we would otherwise throw an unknown attribute error. If the systems were combined, we could
   /// remove this extra flag.
-  void ProcessType(BoundType* type, Project* buildingProject, bool ignoreUnkownAttributes = false);
+  void ProcessType(AttributeStatus& status, BoundType* type, bool ignoreUnkownAttributes = false);
 
   bool IsValidClassAttribute(StringParam name);
   bool IsValidPropertyAttribute(StringParam name);
@@ -33,7 +42,7 @@ public:
   typedef HashMap<String, AttributeExtension*> ExtensionMap;
   
   /// Validates all attributes on the given object.
-  void ProcessObject(ReflectionObject* object, ExtensionMap& extensionMap, Project* buildingProject,
+  void ProcessObject(AttributeStatus& status, ReflectionObject* object, ExtensionMap& extensionMap,
                      bool ignoreUnkownAttributes);
 
   AttributeExtension* RegisterClassExtension(AttributeExtension* extension);

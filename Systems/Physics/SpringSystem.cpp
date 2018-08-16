@@ -809,6 +809,8 @@ ZilchDefineType(DecorativeCloth, builder, type)
   ZilchBindGetterSetterProperty(ConnectivityCounter);
 
   ZilchBindMethodProperty(ResetMeshPositions);
+
+  type->AddAttribute(::Zero::ObjectAttributes::cDoNotDocument);
 }
 
 void DecorativeCloth::Serialize(Serializer& stream)
@@ -1057,6 +1059,8 @@ ZilchDefineType(DecorativeRope, builder, type)
   ZilchBindFieldProperty(mErrorCorrection);
   ZilchBindFieldProperty(mAnchorA);
   ZilchBindFieldProperty(mAnchorB);
+
+  type->AddAttribute(::Zero::ObjectAttributes::cDoNotDocument);
 }
 
 void DecorativeRope::Serialize(Serializer& stream)

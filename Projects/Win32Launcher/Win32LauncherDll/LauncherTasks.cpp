@@ -72,7 +72,7 @@ void DownloadImageTaskJob::OnReponse(WebResponseEvent* event)
   {
     //just save the data
     Status status;
-    LoadFromPng(status, &mImage, (byte*)event->Data.Data(), event->Data.SizeInBytes());
+    LoadImage(status, (byte*)event->Data.Data(), event->Data.SizeInBytes(), &mImage);
 
     if(status.Failed())
     {
@@ -107,7 +107,7 @@ int LoadImageFromDiskTaskJob::Execute()
   }
 
   Status status;
-  LoadFromPng(status, &mImage, mPath);
+  LoadImage(status, mPath, &mImage);
 
   if(status.Failed())
   {
@@ -385,7 +385,7 @@ void DownloadTemplateTaskJob::OnReponse(WebResponseEvent* event)
   // Save the icon image
   String iconFilePath = FilePath::Combine(mTemplateInstallLocation, zeroTemplate->mIconUrl);
   Status status;
-  SaveToPng(status, &mTemplate->mIconImage, iconFilePath);
+  SaveImage(status, iconFilePath, &mTemplate->mIconImage, ImageSaveFormat::Png);
   
   mState = BackgroundTaskState::Completed;
 }
@@ -581,6 +581,73 @@ void DownloadLauncherMajorInstallerJob::OnReponse(WebResponseEvent* event)
 
   WriteToFile(mInstallerPath.c_str(), (byte*)data.c_str(), data.SizeInBytes());
   mState = BackgroundTaskState::Completed;
+}
+
+//-------------------------------------------------------------------BackupProjectJob
+BackupProjectJob::BackupProjectJob(StringParam projectPath, StringParam destFilePath)
+{
+  mOpenDirectoryOnCompletion = true;
+  mProjectPath = projectPath;
+  mDestinationFilePath = destFilePath;
+}
+
+int BackupProjectJob::Execute()
+{
+  String targetDirector = FilePath::GetDirectoryPath(mDestinationFilePath);
+  CreateDirectoryAndParents(targetDirector);
+
+  // Collect all of the files to archive
+  Array<ArchiveData> files;
+  GetFileList(mProjectPath, String(), files);
+
+  // Add each file to the archive, sending out progress events every so often
+  Archive projectArchive(ArchiveMode::Compressing);
+  for(size_t i = 0; i < files.Size(); ++i)
+  {
+    ArchiveData& data = files[i];
+    projectArchive.AddFile(data.mFullFilePath, data.mRelativePath);
+
+    if(i % 5)
+      UpdateProgress("ArchivingProject", i / (float)files.Size());
+  }
+
+  // Write the zip to the final file location
+  projectArchive.WriteZipFile(mDestinationFilePath);
+
+  // Mark that we've finished
+  mState = BackgroundTaskState::Completed;
+  UpdateProgress("ArchivingProject", 1.0f);
+
+  // If requested, open the target directory on completion.
+  if(mOpenDirectoryOnCompletion)
+    Os::SystemOpenFile(targetDirector.c_str());
+
+  return 0;
+}
+
+void BackupProjectJob::GetFileList(StringParam path, StringParam parentPath, Array<ArchiveData>& fileList)
+{
+  FileRange fileRange(path);
+  for(; !fileRange.Empty(); fileRange.PopFront())
+  {
+    String localPath = fileRange.Front();
+    String fullPath = FilePath::Combine(path, fileRange.Front());
+    String relativePath = FilePath::Combine(parentPath, localPath);
+
+    // Recurse down directories
+    if(IsDirectory(fullPath))
+    {
+      String subPath = FilePath::Combine(path, localPath);
+      GetFileList(subPath, relativePath, fileList);
+    }
+    // Add files (need relative path for archive)
+    else
+    {
+      ArchiveData& data = fileList.PushBack();
+      data.mFullFilePath = fullPath;
+      data.mRelativePath = relativePath;
+    }
+  }
 }
 
 }//namespace Zero

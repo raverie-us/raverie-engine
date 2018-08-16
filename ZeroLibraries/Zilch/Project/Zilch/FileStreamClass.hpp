@@ -46,16 +46,16 @@ namespace Zilch
   }
 
   // A generic interface for reading and writing data to a stream (file, network, etc)
-  class ZeroShared FileStream : public IStreamClass
+  class ZeroShared FileStreamClass : public IStreamClass
   {
   public:
     ZilchDeclareType(TypeCopyMode::ReferenceType);
 
     // Constructor
-    FileStream(StringParam filePath, FileMode::Enum mode);
-    FileStream();
-    FileStream(const FileStream& stream);
-    ~FileStream();
+    FileStreamClass(StringParam filePath, FileMode::Enum mode);
+    FileStreamClass();
+    FileStreamClass(const FileStreamClass& stream);
+    ~FileStreamClass();
 
     // IStreamClass interface
     StreamCapabilities::Enum GetCapabilities() override;

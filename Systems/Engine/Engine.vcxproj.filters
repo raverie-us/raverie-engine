@@ -674,6 +674,9 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="Rectangle.hpp" />
+    <ClInclude Include="ResourceListOperation.hpp">
+      <Filter>Operation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="PropertyTrack.inl">

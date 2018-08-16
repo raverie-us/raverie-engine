@@ -26,7 +26,7 @@ public:
   ~PixelBuffer();
 
   /// Resizes the pixel buffer (specifying whether we want to copy the old data)
-  void Resize(uint width, uint height, bool copyOldContents = true, bool clearNewContents = true, ByteColor clearColor = Color::White);
+  void Resize(uint width, uint height, bool copyOldContents = true, bool clearNewContents = true, ByteColor clearColor = Color::White, bool Upload = true);
 
   /// Clear the pixel buffer.
   void Clear(ByteColor color);

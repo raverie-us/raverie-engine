@@ -72,6 +72,10 @@ namespace Zilch
       }
     }
 
+    Any(cstr value, ExecutableState* state = nullptr) : Any(String(value), state)
+    {
+    }
+
     template <typename T>
     T Get(GetOptions::Enum options = GetOptions::ReturnDefaultOrNull) const
     {

@@ -43,6 +43,63 @@ namespace Events
   DefineEvent(ContextMenuCreated);
 }
 
+
+//------------------------------------------------------------------------------------------ Context
+//**************************************************************************************************
+void Context::Add(HandleParam object)
+{
+  mContextMap[object.StoredType->Name] = object;
+}
+
+//**************************************************************************************************
+void Context::Add(HandleParam object, BoundType* overrideType)
+{
+  Add(object, overrideType->Name);
+}
+
+//**************************************************************************************************
+void Context::Add(HandleParam object, StringParam overrideName)
+{
+  mContextMap[overrideName] = object;
+}
+
+//**************************************************************************************************
+void Context::Add(const Context& context)
+{
+  forRange(ContextMap::value_type entry, context.mContextMap.All())
+    Add(entry.second, entry.first);
+}
+
+//**************************************************************************************************
+void Context::Remove(BoundType* boundType)
+{
+  Remove(boundType->Name);
+}
+
+//**************************************************************************************************
+void Context::Remove(StringParam typeName)
+{
+  mContextMap.Erase(typeName);
+}
+
+//**************************************************************************************************
+Handle Context::Get(BoundType* boundType)
+{
+  return Get(boundType->Name);
+}
+
+//**************************************************************************************************
+Handle Context::Get(StringParam typeName)
+{
+  return mContextMap.FindValue(typeName, Handle());
+}
+
+//**************************************************************************************************
+void Context::Clear()
+{
+  mContextMap.Clear();
+}
+
 //------------------------------------------------------------ ContextMenuEvent
 ZilchDefineType(ContextMenuEvent, builder, type)
 {
@@ -80,9 +137,10 @@ ZilchDefineType(ContextMenuEntry, builder, type)
 }
 
 ContextMenuEntry::ContextMenuEntry(StringParam name, StringParam icon)
-  : mName(name),
-    mIcon(icon),
-    mEnabled(true)
+  : mName(name)
+  , mIcon(icon)
+  , mEnabled(true)
+  , mParent(nullptr)
 {
   ConnectThisTo(this, Events::MenuItemSelected, OnItemSelected);
   ConnectThisTo(this, Events::MenuItemHover, OnItemHover);
@@ -129,6 +187,7 @@ void ContextMenuEntry::SetEnabled(bool state, String disabledText)
 
 void ContextMenuEntry::AddEntry(ContextMenuEntry* entry)
 {
+  entry->mParent = this;
   mChildren.PushBack(entry);
   Event event;
   this->DispatchEvent(Events::MenuEntryModified, &event);
@@ -501,7 +560,7 @@ void ContextMenuItem::SetName(StringParam name, StringParam icon)
 
 void ContextMenuItem::SetCommand(Command* command)
 {
-  SetName(command->DisplayName);
+  SetName(command->GetDisplayName());
   mShortcut->SetText(command->Shortcut);
   mCommand = command;
   mEnabled = command->IsEnabled();
@@ -516,8 +575,24 @@ void ContextMenuItem::OnLeftClick(MouseEvent* event)
   ObjectEvent eventToSend(this);
   mEntry->DispatchEvent(Events::MenuItemSelected, &eventToSend);
 
-  if(mCommand)
+  if (mCommand)
+  {
+    Context& commandContext = CommandManager::GetInstance()->mContext;
+
+    Context recover = commandContext;
+
+    // Add all menu contexts
+    ContextMenuEntry* current = mEntry;
+    while (current)
+    {
+      commandContext.Add(current->mContext);
+      current = current->mParent;
+    }
+
     mCommand->Execute();
+
+    commandContext = recover;
+  }
 
   // If this item isn't a sub context menu close the context menu
   if (mEntry->mChildren.Empty())
@@ -618,6 +693,8 @@ void ContextMenu::RebuildUi()
   {
     entry->Create(this);
   }
+  // Resize since new ContextMenuItems were just created
+  SizeToContents();
 
   mDirty = false;
 }
@@ -697,6 +774,17 @@ void ContextMenu::AddCommand(Command* command)
 void ContextMenu::AddCommandByName(StringParam commandName)
 {
   mRootEntry->AddEntry(new ContextMenuEntryCommand(commandName));
+}
+
+void ContextMenu::ShiftOntoScreen(Vec3 offset)
+{
+  // If the context menu was just created and hasn't been built yet
+  // or if the menu has been altered in some way it needs to be rebuilt
+  // so that shift screen operates on the correct dimensions
+  if (mDirty)
+    UpdateTransform();
+
+  PopUp::ShiftOntoScreen(offset);
 }
 
 void ContextMenu::OnMouseDown(MouseEvent* event)

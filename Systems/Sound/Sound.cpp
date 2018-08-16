@@ -55,14 +55,45 @@ Sound::~Sound()
 }
 
 //**************************************************************************************************
-void Sound::CreateAsset(Status& status, StringParam assetName, StringParam fileName, bool streaming)
+void Sound::CreateAsset(Status& status, StringParam assetName, StringParam fileName, 
+  AudioFileLoadType::Enum loadType)
 {
-  mSoundAsset = new Audio::SoundAssetFromFile(status, fileName, streaming, this);
+  // If the load type is set to auto, determine the type based on the length of the file
+  if (loadType == AudioFileLoadType::Auto)
+  {
+    // Open the audio file
+    File audioFile;
+    audioFile.Open(fileName, FileMode::Read, FileAccessPattern::Sequential);
+    if (audioFile.IsOpen())
+    {
+      // Read in the header data
+      Audio::FileHeader header;
+      Status tempStatus;
+      audioFile.Read(tempStatus, (byte*)&header, sizeof(header));
+      // Close the file so it doesn't interfere with creating the asset
+      audioFile.Close();
+
+      float fileLength = (float)header.SamplesPerChannel / (float)Audio::SystemSampleRate;
+
+      if (fileLength < mStreamFromMemoryLength)
+        loadType = AudioFileLoadType::Uncompressed;
+      else if (fileLength < mStreamFromFileLength)
+        loadType = AudioFileLoadType::StreamFromMemory;
+      else
+        loadType = AudioFileLoadType::StreamFromFile;
+    }
+  }
+
+  if (loadType == AudioFileLoadType::StreamFromFile)
+    mSoundAsset = new Audio::StreamingSoundAsset(status, fileName, Audio::FileLoadType::StreamedFromFile, this);
+  else if (loadType == AudioFileLoadType::StreamFromMemory)
+    mSoundAsset = new Audio::StreamingSoundAsset(status, fileName, Audio::FileLoadType::StreamedFromMemory, this);
+  else
+    mSoundAsset = new Audio::DecompressedSoundAsset(status, fileName, this);
   
   if (status.Succeeded())
   {
     mSoundAsset->mName = assetName;
-    mStreaming = streaming;
   }
   else
   {
@@ -97,7 +128,10 @@ int Sound::GetChannels()
 //**************************************************************************************************
 bool Sound::GetStreaming()
 {
-  return mStreaming;
+  if (mSoundAsset)
+    return mSoundAsset->GetStreaming();
+  else
+    return false;
 }
 
 //------------------------------------------------------------------------------------- Sound Loader
@@ -141,7 +175,7 @@ void SoundLoader::ReloadFromFile(Resource* resource, ResourceEntry& entry)
 bool SoundLoader::LoadSound(Sound* sound, ResourceEntry& entry)
 {
   Zero::Status status;
-  sound->CreateAsset(status, entry.Name, entry.FullPath.c_str(), mStreamed);
+  sound->CreateAsset(status, entry.Name, entry.FullPath.c_str(), mLoadType);
 
   if (status.Failed())
   {
@@ -160,13 +194,13 @@ ImplementResourceManager(SoundManager, Sound);
 SoundManager::SoundManager(BoundType* resourceType)
   :ResourceManager(resourceType)
 {
-  AddLoader("Sound", new SoundLoader(false));
-  AddLoader("StreamedSound", new SoundLoader(true));
+  AddLoader("Sound", new SoundLoader(AudioFileLoadType::Uncompressed));
+  AddLoader("StreamedSound", new SoundLoader(AudioFileLoadType::StreamFromFile));
+  AddLoader("AutoStreamedSound", new SoundLoader(AudioFileLoadType::Auto));
   mCategory = "Sound";
   mCanAddFile = true;
-  mOpenFileFilters.PushBack(FileDialogFilter("All Sounds", "*.wav;*.wv;*.ogg"));
+  mOpenFileFilters.PushBack(FileDialogFilter("All Sounds", "*.wav;*.ogg"));
   mOpenFileFilters.PushBack(FileDialogFilter("*.wav"));
-  mOpenFileFilters.PushBack(FileDialogFilter("*.wv"));
   mOpenFileFilters.PushBack(FileDialogFilter("*.ogg"));
   mCanReload = true;
   DefaultResourceName = "DefaultSound";

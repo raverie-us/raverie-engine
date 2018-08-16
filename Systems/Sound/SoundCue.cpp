@@ -50,12 +50,12 @@ ZilchDefineType(SoundEntry, builder, type)
   type->HandleManager = ZilchManagerId(PointerManager);
 
   ZilchBindGetterSetterProperty(Sound);
-  ZilchBindFieldProperty(mWeight);
-  ZilchBindFieldProperty(mStartTime);
+  ZilchBindGetterSetterProperty(Weight);
+  ZilchBindGetterSetterProperty(StartTime);
   ZilchBindGetterSetterProperty(EndTime);
-  ZilchBindFieldProperty(mLoopStartTime);
+  ZilchBindGetterSetterProperty(LoopStartTime);
   ZilchBindGetterSetterProperty(LoopEndTime);
-  ZilchBindFieldProperty(mLoopTailLength);
+  ZilchBindGetterSetterProperty(LoopTailLength);
   ZilchBindFieldProperty(mCrossFadeLoopTail);
   ZilchBindMethodProperty(Preview);
   ZilchBindMethodProperty(StopPreview);
@@ -113,6 +113,18 @@ void SoundEntry::SetSound(Sound* sound)
 }
 
 //**************************************************************************************************
+float SoundEntry::GetWeight()
+{
+  return mWeight;
+}
+
+//**************************************************************************************************
+void SoundEntry::SetWeight(float weight)
+{
+  mWeight = Math::Clamp(weight, 0.0f, 100.0f);
+}
+
+//**************************************************************************************************
 void SoundEntry::Preview()
 {
   Z::gSound->StopPreview();
@@ -146,6 +158,18 @@ void SoundEntry::StopPreview()
 }
 
 //**************************************************************************************************
+float SoundEntry::GetStartTime()
+{
+  return mStartTime;
+}
+
+//**************************************************************************************************
+void SoundEntry::SetStartTime(float time)
+{
+  mStartTime = Math::Clamp(time, 0.0f, mEndTime);
+}
+
+//**************************************************************************************************
 float SoundEntry::GetEndTime()
 {
   return mEndTime;
@@ -154,10 +178,24 @@ float SoundEntry::GetEndTime()
 //**************************************************************************************************
 void SoundEntry::SetEndTime(float time)
 {
+  time = Math::Max(time, mStartTime);
+
   if (mSound && (time == 0.0f || time > mSound->GetLength()))
     mEndTime = mSound->GetLength();
   else
     mEndTime = time;
+}
+
+//**************************************************************************************************
+float SoundEntry::GetLoopStartTime()
+{
+  return mLoopStartTime;
+}
+
+//**************************************************************************************************
+void SoundEntry::SetLoopStartTime(float time)
+{
+  mLoopStartTime = Math::Clamp(time, 0.0f, mEndTime);
 }
 
 //**************************************************************************************************
@@ -169,10 +207,24 @@ float SoundEntry::GetLoopEndTime()
 //**************************************************************************************************
 void SoundEntry::SetLoopEndTime(float time)
 {
+  time = Math::Max(time, mLoopStartTime);
+
   if (mSound && (time == 0.0f || time > mSound->GetLength()))
     mLoopEndTime = mSound->GetLength();
   else
     mLoopEndTime = time;
+}
+
+//**************************************************************************************************
+float SoundEntry::GetLoopTailLength()
+{
+  return mLoopTailLength;
+}
+
+//**************************************************************************************************
+void SoundEntry::SetLoopTailLength(float time)
+{
+  mLoopTailLength = Math::Clamp(time, 0.0f, 30.0f);
 }
 
 //---------------------------------------------------------------------------------- Sound Tag Entry 
@@ -269,22 +321,22 @@ ZilchDefineType(SoundCue, builder, type)
   ZilchBindGetterSetterProperty(Volume)->Add(new EditorSlider(0.0f, 2.0f, 0.01f));
   ZilchBindGetterSetterProperty(Decibels)->Add(new EditorSlider(-32.0f, 6.0f, 0.1f));
   ZilchBindFieldProperty(mUseDecibelVariation)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindFieldProperty(mVolumeVariation)->Add(new EditorSlider(0.0f, 1.0f, 0.01f))->
+  ZilchBindGetterSetterProperty(VolumeVariation)->Add(new EditorSlider(0.0f, 1.0f, 0.01f))->
     ZeroFilterNotBool(mUseDecibelVariation);
-  ZilchBindFieldProperty(mDecibelVariation)->Add(new EditorSlider(0.0f, 6.0f, 0.1f))->
+  ZilchBindGetterSetterProperty(DecibelVariation)->Add(new EditorSlider(0.0f, 6.0f, 0.1f))->
     ZeroFilterBool(mUseDecibelVariation);
   ZilchBindGetterSetterProperty(Pitch)->Add(new EditorSlider(-2.0f, 2.0f, 0.1f));
   ZilchBindGetterSetterProperty(Semitones)->Add(new EditorSlider(-24.0f, 24.0f, 0.1f));
   ZilchBindFieldProperty(mUseSemitoneVariation)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindFieldProperty(mPitchVariation)->Add(new EditorSlider(0.0f, 1.0f, 0.1f))->
+  ZilchBindGetterSetterProperty(PitchVariation)->Add(new EditorSlider(0.0f, 1.0f, 0.1f))->
     ZeroFilterNotBool(mUseSemitoneVariation);
-  ZilchBindFieldProperty(mSemitoneVariation)->Add(new EditorSlider(0.0f, 12.0f, 0.1f))->
+  ZilchBindGetterSetterProperty(SemitoneVariation)->Add(new EditorSlider(0.0f, 12.0f, 0.1f))->
     ZeroFilterBool(mUseSemitoneVariation);
   ZilchBindGetterSetterProperty(Attenuator);
   ZilchBindFieldProperty(mShowMusicOptions)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindFieldProperty(mBeatsPerMinute)->ZeroFilterBool(mShowMusicOptions);
-  ZilchBindFieldProperty(mTimeSigBeats)->ZeroFilterBool(mShowMusicOptions);
-  ZilchBindFieldProperty(mTimeSigValue)->ZeroFilterBool(mShowMusicOptions);
+  ZilchBindGetterSetterProperty(BeatsPerMinute)->ZeroFilterBool(mShowMusicOptions);
+  ZilchBindGetterSetterProperty(TimeSigBeats)->ZeroFilterBool(mShowMusicOptions);
+  ZilchBindGetterSetterProperty(TimeSigValue)->ZeroFilterBool(mShowMusicOptions);
 
   ZilchBindMethodProperty(Preview);
   ZilchBindMethodProperty(StopPreview);
@@ -394,7 +446,7 @@ float SoundCue::GetVolume()
 //**************************************************************************************************
 void SoundCue::SetVolume(float newVolume)
 {
-  mVolume = Math::Max(newVolume, 0.0f);
+  mVolume = Math::Clamp(newVolume, 0.0f, Audio::MaxVolumeValue);
 }
 
 //**************************************************************************************************
@@ -406,7 +458,33 @@ float SoundCue::GetDecibels()
 //**************************************************************************************************
 void SoundCue::SetDecibels(float newDecibels)
 {
+  newDecibels = Math::Clamp(newDecibels, Audio::MinDecibelsValue, Audio::MaxDecibelsValue);
+
   mVolume = Z::gSound->DecibelsToVolume(newDecibels);
+}
+
+//**************************************************************************************************
+float SoundCue::GetVolumeVariation()
+{
+  return mVolumeVariation;
+}
+
+//**************************************************************************************************
+void SoundCue::SetVolumeVariation(float variation)
+{
+  mVolumeVariation = Math::Clamp(variation, 0.0f, Audio::MaxVolumeValue);
+}
+
+//**************************************************************************************************
+float SoundCue::GetDecibelVariation()
+{
+  return mDecibelVariation;
+}
+
+//**************************************************************************************************
+void SoundCue::SetDecibelVariation(float variation)
+{
+  mDecibelVariation = Math::Clamp(variation, Audio::MinDecibelsValue, Audio::MaxDecibelsValue);
 }
 
 //**************************************************************************************************
@@ -418,7 +496,7 @@ float SoundCue::GetPitch()
 //**************************************************************************************************
 void SoundCue::SetPitch(float newPitch)
 {
-  mPitch = newPitch;
+  mPitch = Math::Clamp(newPitch, Audio::MinPitchValue, Audio::MaxPitchValue);
 }
 
 //**************************************************************************************************
@@ -430,7 +508,67 @@ float SoundCue::GetSemitones()
 //**************************************************************************************************
 void SoundCue::SetSemitones(float newSemitones)
 {
-  mPitch = Z::gSound->SemitonesToPitch(newSemitones);
+  mPitch = Math::Clamp(Z::gSound->SemitonesToPitch(newSemitones), Audio::MinPitchValue, Audio::MaxPitchValue);
+}
+
+//**************************************************************************************************
+float SoundCue::GetPitchVariation()
+{
+  return mPitchVariation;
+}
+
+//**************************************************************************************************
+void SoundCue::SetPitchVariation(float variation)
+{
+  mPitchVariation = Math::Clamp(variation, 0.0f, Audio::MaxPitchValue);
+}
+
+//**************************************************************************************************
+float SoundCue::GetSemitoneVariation()
+{
+  return mSemitoneVariation;
+}
+
+//**************************************************************************************************
+void SoundCue::SetSemitoneVariation(float variation)
+{
+  mSemitoneVariation = Math::Clamp(variation, 0.0f, Audio::MaxSemitonesValue);
+}
+
+//**************************************************************************************************
+float SoundCue::GetBeatsPerMinute()
+{
+  return mBeatsPerMinute;
+}
+
+//**************************************************************************************************
+void SoundCue::SetBeatsPerMinute(float bpm)
+{
+  mBeatsPerMinute = Math::Clamp(bpm, 0.0f, 500.0f);
+}
+
+//**************************************************************************************************
+float SoundCue::GetTimeSigBeats()
+{
+  return mTimeSigBeats;
+}
+
+//**************************************************************************************************
+void SoundCue::SetTimeSigBeats(float beats)
+{
+  mTimeSigBeats = Math::Clamp(beats, 0.0f, 100.0f);
+}
+
+//**************************************************************************************************
+float SoundCue::GetTimeSigValue()
+{
+  return mTimeSigValue;
+}
+
+//**************************************************************************************************
+void SoundCue::SetTimeSigValue(float value)
+{
+  mTimeSigValue = Math::Clamp(value, 0.0f, 64.0f);
 }
 
 //**************************************************************************************************
@@ -450,7 +588,7 @@ void SoundCue::AddSoundEntry(Sound* sound, float weight)
 {
   SoundEntry& soundEntry = Sounds.PushBack();
   soundEntry.SetSound(sound);
-  soundEntry.mWeight = weight;
+  soundEntry.SetWeight(weight);
 
 }
 
@@ -528,7 +666,7 @@ HandleOf<SoundInstance> SoundCue::PlayCue(SoundSpace* space, Audio::SoundNode* o
     // (doing this every time because there isn't an easy way right now to update as sounds are added and removed)
     Math::WeightedProbabilityTable<SoundEntry*> weightedtable;
     for (unsigned i = 0; i < Sounds.Size(); ++i)
-      weightedtable.AddItem(&Sounds[i], Sounds[i].mWeight);
+      weightedtable.AddItem(&Sounds[i], Sounds[i].GetWeight());
     weightedtable.BuildTable();
     entry = weightedtable.Sample(gRandom);
   }
@@ -561,13 +699,13 @@ HandleOf<SoundInstance> SoundCue::PlayCue(SoundSpace* space, Audio::SoundNode* o
 
   // Set the time settings on the instance
   Audio::SoundInstanceNode* instanceNode = (Audio::SoundInstanceNode*)instance->mSoundNode->mNode;
-  instanceNode->SetStartTime(entry->mStartTime);
+  instanceNode->SetStartTime(entry->GetStartTime());
   instanceNode->SetEndTime(entry->GetEndTime());
   if (mPlayMode == SoundPlayMode::Looping)
   {
-    instanceNode->SetLoopStartTime(entry->mLoopStartTime);
+    instanceNode->SetLoopStartTime(entry->GetLoopStartTime());
     instanceNode->SetLoopEndTime(entry->GetLoopEndTime());
-    instanceNode->SetLoopTailTime(entry->mLoopTailLength);
+    instanceNode->SetLoopTailTime(entry->GetLoopTailLength());
     instanceNode->SetCrossFadeTail(entry->mCrossFadeLoopTail);
   }
 

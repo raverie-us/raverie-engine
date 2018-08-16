@@ -56,17 +56,17 @@ ContentItem* MakeImageContentItem(ContentInitializer& initializer)
 
   if (isSprite)
   {
-    PngInfo pngInfo;
+    ImageInfo imageInfo;
 
-    bool readPng = ReadPngInfo(fullPath, pngInfo);
-    if(!readPng)
+    bool reaImage = ReadImageInfo(fullPath, imageInfo);
+    if(!reaImage)
     {
       initializer.Success = false;
-      initializer.Message = "Invalid png file.";
+      initializer.Message = "Invalid image file.";
       return content;
     }
 
-    if(pngInfo.Width > cMaxSpriteSize ||  pngInfo.Height > cMaxSpriteSize)
+    if(imageInfo.Width > cMaxSpriteSize || imageInfo.Height > cMaxSpriteSize)
     {
       initializer.Success = false;
       initializer.Message = "Sprite is too large, must be within 4096x4096.";
@@ -77,11 +77,11 @@ ContentItem* MakeImageContentItem(ContentInitializer& initializer)
     builder->Generate(initializer);
 
     // Default frame size to image size
-    builder->FrameSizeX = pngInfo.Width;
-    builder->FrameSizeY = pngInfo.Height;
+    builder->FrameSizeX = imageInfo.Width;
+    builder->FrameSizeY = imageInfo.Height;
     // Default origin to center
-    builder->OriginX = float(pngInfo.Width / 2);
-    builder->OriginY = float(pngInfo.Height / 2);
+    builder->OriginX = float(imageInfo.Width / 2);
+    builder->OriginY = float(imageInfo.Height / 2);
 
     content->AddComponent(builder);
   }
@@ -111,12 +111,25 @@ void CreateImageContent(ContentSystem* system)
 
   ContentTypeEntry imageContent(ZilchTypeId(ImageContent), MakeImageContentItem);
 
-  system->CreatorsByExtension["png"] = imageContent;
-  system->CreatorsByExtension["hdr"] = imageContent;
-  //system->CreatorsByExtension["tga"] = imageContent;
-  //system->CreatorsByExtension["tif"] = imageContent;
-  //system->CreatorsByExtension["psd"] = imageContent;
-  //system->CreatorsByExtension["jpg"] = imageContent;
+  // The extensions returned are always without the '.', e.g. "png"
+  forRange(StringParam extension, GetSupportedImageLoadExtensions())
+    system->CreatorsByExtension[extension] = imageContent;
+}
+
+void BuildImageFileDialogFilters(Array<FileDialogFilter>& filters)
+{
+  StringBuilder builder;
+  forRange(StringParam extension, GetSupportedImageLoadExtensions())
+  {
+    builder.Append("*.");
+    builder.Append(extension);
+    builder.Append(';');
+  }
+
+  filters.PushBack(FileDialogFilter("All Images", builder.ToString()));
+
+  forRange(StringParam extension, GetSupportedImageLoadExtensions())
+    filters.PushBack(FileDialogFilter(BuildString("*.", extension)));
 }
 
 }//namespace Zero

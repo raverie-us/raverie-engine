@@ -144,8 +144,6 @@ namespace Audio
     float FeedbackValue;
     // Wet level value (0 - 1.0)
     float WetValue;
-    // Will be true if there was recent input
-    bool HasHadInput;
     // The filter used for calculations
     typedef Zero::HashMap<ListenerNode*, DelayLine*> FilterMapType;
     FilterMapType FiltersPerListener;

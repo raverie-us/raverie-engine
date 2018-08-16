@@ -35,9 +35,6 @@ DeclareBitField4(FileShare, Read, Write, Delete, Unspecified);
 // Position in file
 typedef u64 FilePosition;
 
-// Used in file Seek
-DeclareEnum3(FileOrigin, Current, Begin, End);
-
 ZeroShared byte* ReadFileIntoMemory(cstr path, size_t& fileSize, size_t extra = 0);
 ZeroShared DataBlock ReadFileIntoDataBlock(cstr path);
 ZeroShared String ReadFileIntoString(StringParam path);
@@ -75,7 +72,7 @@ public:
   FilePosition Tell();
   
   /// Move the read write position to a new filePosition relative to origin
-  bool Seek(FilePosition filePosition, FileOrigin::Enum origin = FileOrigin::Begin);
+  bool Seek(FilePosition filePosition, SeekOrigin::Enum origin = SeekOrigin::Begin);
   
   /// Write data to the file
   size_t Write(byte* data, size_t sizeInBytes);
@@ -109,6 +106,24 @@ private:
 
   String mFilePath;
   FileMode::Enum mFileMode;
+};
+
+class FileStream : public Stream
+{
+public:
+  FileStream(File& file);
+
+  u64 Size() override;
+  bool Seek(u64 filePosition, SeekOrigin::Enum origin = SeekOrigin::Begin) override;
+  u64 Tell() override;
+  size_t Write(byte* data, size_t sizeInBytes) override;
+  size_t Read(byte* data, size_t sizeInBytes) override;
+  bool HasData() override;
+  bool IsEof() override;
+  void Flush() override;
+
+private:
+  File* mFile;
 };
 
 }//namespace Zero

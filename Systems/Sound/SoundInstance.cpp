@@ -120,7 +120,7 @@ void SoundInstance::SetVolume(float newVolume)
 //**************************************************************************************************
 void SoundInstance::InterpolateVolume(float newVolume, float interpolationTime)
 {
-  GetNode()->SetVolume(Math::Max(newVolume, 0.0f), interpolationTime);
+  GetNode()->SetVolume(Math::Clamp(newVolume, 0.0f, Audio::MaxVolumeValue), Math::Max(interpolationTime, 0.0f));
 }
 
 //**************************************************************************************************
@@ -138,7 +138,8 @@ void SoundInstance::SetDecibels(float decibels)
 //**************************************************************************************************
 void SoundInstance::InterpolateDecibels(float decibels, float interpolationTime)
 {
-  GetNode()->SetVolume(Z::gSound->DecibelsToVolume(decibels), interpolationTime);
+  GetNode()->SetVolume(Math::Clamp(Z::gSound->DecibelsToVolume(decibels), 0.0f, Audio::MaxVolumeValue), 
+    Math::Max(interpolationTime, 0.0f));
 }
 
 //**************************************************************************************************
@@ -156,7 +157,8 @@ void SoundInstance::SetPitch(float newPitch)
 //**************************************************************************************************
 void SoundInstance::InterpolatePitch(float newPitch, float interpolationTime)
 {
-  GetNode()->SetPitch(Z::gSound->PitchToSemitones(newPitch), interpolationTime);
+  GetNode()->SetPitch(Math::Clamp(Z::gSound->PitchToSemitones(newPitch), Audio::MinSemitonesValue, 
+    Audio::MaxSemitonesValue), Math::Max(interpolationTime, 0.0f));
 }
 
 //**************************************************************************************************
@@ -174,7 +176,8 @@ void SoundInstance::SetSemitones(float newSemitones)
 //**************************************************************************************************
 void SoundInstance::InterpolateSemitones(float newSemitones, float interpolationTime)
 {
-  GetNode()->SetPitch(newSemitones, interpolationTime);
+  GetNode()->SetPitch(Math::Clamp(newSemitones, Audio::MinSemitonesValue, Audio::MaxSemitonesValue),
+    Math::Max(interpolationTime, 0.0f));
 }
 
 //**************************************************************************************************
@@ -228,13 +231,13 @@ float SoundInstance::GetTime()
 //**************************************************************************************************
 void SoundInstance::SetTime(float seconds)
 {
-  GetNode()->JumpTo(seconds);
+  GetNode()->JumpTo(Math::Max(seconds, 0.0f));
 }
 
 //**************************************************************************************************
 float SoundInstance::GetFileLength()
 {
-  return ((Audio::SoundAssetFromFile*)mAssetObject)->GetLengthOfFile();
+  return mAssetObject->GetLengthOfFile();
 }
 
 //**************************************************************************************************
@@ -246,39 +249,31 @@ float SoundInstance::GetEndTime()
 //**************************************************************************************************
 void SoundInstance::SetEndTime(float seconds)
 {
-  GetNode()->SetEndTime(seconds);
+  GetNode()->SetEndTime(Math::Max(seconds, 0.0f));
 }
 
 //**************************************************************************************************
 float SoundInstance::GetLoopStartTime()
 {
-  if (mSoundNode->mNode)
-    return ((Audio::SoundInstanceNode*)mSoundNode->mNode)->GetLoopStartTime();
-  else
-    return 0.0f;
+  return GetNode()->GetLoopStartTime();
 }
 
 //**************************************************************************************************
 void SoundInstance::SetLoopStartTime(float seconds)
 {
-  if (mSoundNode->mNode)
-    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->SetLoopStartTime(seconds);
+  GetNode()->SetLoopStartTime(Math::Max(seconds, 0.0f));
 }
 
 //**************************************************************************************************
 float SoundInstance::GetLoopEndTime()
 {
-  if (mSoundNode->mNode)
-    return ((Audio::SoundInstanceNode*)mSoundNode->mNode)->GetLoopEndTime();
-  else
-    return 0.0f;
+  return GetNode()->GetLoopEndTime();
 }
 
 //**************************************************************************************************
 void SoundInstance::SetLoopEndTime(float seconds)
 {
-  if (mSoundNode->mNode)
-    ((Audio::SoundInstanceNode*)mSoundNode->mNode)->SetLoopEndTime(seconds);
+  GetNode()->SetLoopEndTime(Math::Max(seconds, 0.0f));
 }
 
 //**************************************************************************************************
@@ -290,7 +285,7 @@ float SoundInstance::GetBeatsPerMinute()
 //**************************************************************************************************
 void SoundInstance::SetBeatsPerMinute(float beats)
 {
-  GetNode()->SetBeatsPerMinute(beats);
+  GetNode()->SetBeatsPerMinute(Math::Clamp(beats, 0.0f, 500.0f));
 }
 
 //**************************************************************************************************
@@ -308,7 +303,7 @@ float SoundInstance::GetCustomEventTime()
 //**************************************************************************************************
 void SoundInstance::SetCustomEventTime(float seconds)
 {
-  GetNode()->SetCustomNotifyTime(seconds);
+  GetNode()->SetCustomNotifyTime(Math::Max(seconds, 0.0f));
 }
 
 //**************************************************************************************************

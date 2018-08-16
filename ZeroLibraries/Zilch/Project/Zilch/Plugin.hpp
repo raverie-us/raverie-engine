@@ -89,6 +89,12 @@ namespace Zilch
     static LibraryRef LoadFromFile(Status& status, Module& dependencies, StringParam filePath, void* userData = nullptr);
     static void LoadFromDirectory(Status& status, Module& dependencies, Array<LibraryRef>& pluginsOut, StringParam directory, void* userData = nullptr);
 
+    // Contexts values that are returned from a status when failing to load a plugin.
+    static const u32 StatusContextEmpty = 1;
+    static const u32 StatusContextNotValid = 2;
+    static const u32 StatusContextNoCreateZilchPlugin = 3;
+    static const u32 StatusContextNullCreateZilchPlugin = 4;
+
   public:
 
     // Initializes the plugin (safe to call more than once)

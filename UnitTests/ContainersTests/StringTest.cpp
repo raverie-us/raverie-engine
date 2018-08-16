@@ -706,35 +706,34 @@ TEST(UnicodeCompare)
 TEST(UnicodeFindFirstOf)
 {
   WindowsDebugTimer timer("UnicodeFindFirstOf");
-  //                           0000000000111111111122222222223333333333444
-  //                           0123458901234567890123456789012345678901234
-  String text = Zero::Narrow(L"ąčę ėįšų ū ςερτυ θιοπα σδφγηξκλ΄ζχψωβνμ αω");
+
+  String text = Zero::Narrow(L"ąॐ𐋆čቹę ėįᚫš𐋉ų 𐌞ū ςॐ𐋍ερቹτυ θιοॐπα σδ𐌲φγηॐ𐋎ξκλ΄ζχॐ𐌑ψωβᚫνμ αक़𐌕ω𐌚");
   StringRange textRange(text);
 
-  String first = Zero::Narrow(L"ėįšų");
+  String first = Zero::Narrow(L"ėįᚫš𐋉ų");
   StringRange firstRange = text.FindFirstOf(first);
-  StringIterator startPos = textRange.Begin() + 4;
-  StringIterator endPos = textRange.Begin() + 8;
+  StringIterator startPos = textRange.Begin() + 7;
+  StringIterator endPos = textRange.Begin() + 13;
   CHECK(firstRange.Begin() == startPos);
   CHECK(firstRange.End() == endPos);
 
-  String second = Zero::Narrow(L"ςερτυ");
+  String second = Zero::Narrow(L"ςॐ𐋍ερቹτυ");
   StringRange secondRange = text.FindFirstOf(second);
-  startPos = textRange.Begin() + 11;
-  endPos = textRange.Begin() + 16;
+  startPos = textRange.Begin() + 17;
+  endPos = textRange.Begin() + 25;
   CHECK(secondRange.Begin() == startPos);
   CHECK(secondRange.End() == endPos);
 
-  String third = Zero::Narrow(L"σδφγηξκλ");
+  String third = Zero::Narrow(L"σδ𐌲φγηॐ𐋎ξκλ");
   StringRange thirdRange = text.FindFirstOf(third);
-  startPos = textRange.Begin() + 23;
-  endPos = textRange.Begin() + 31;
+  startPos = textRange.Begin() + 33;
+  endPos = textRange.Begin() + 44;
   CHECK(thirdRange.Begin() == startPos);
   CHECK(thirdRange.End() == endPos);
 
-  String fourth = Zero::Narrow(L"αω");
+  String fourth = Zero::Narrow(L"αक़𐌕ω𐌚");
   StringRange fourthRange = text.FindFirstOf(fourth);
-  startPos = textRange.Begin() + 40;
+  startPos = textRange.Begin() + 56;
   endPos = textRange.End();
   CHECK(fourthRange.Begin() == startPos);
   CHECK(fourthRange.End() == endPos);
@@ -743,35 +742,34 @@ TEST(UnicodeFindFirstOf)
 TEST(UnicodeFindLastOf)
 {
   WindowsDebugTimer timer("UnicodeFindLastOf");
-  //                           0000000000111111111122222222223333333333444
-  //                           0123456789012345678901234567890123456789012
-  String text = Zero::Narrow(L"ąčę ėįšų ū ςερτυ θιοπα σδφγηξκλ΄ζχψωβνμ αω");
+
+  String text = Zero::Narrow(L"ąॐ𐋆čቹę ėįᚫš𐋉ų 𐌞ū ςॐ𐋍ερቹτυ θιοॐπα σδ𐌲φγηॐ𐋎ξκλ΄ζχॐ𐌑ψωβᚫνμ αक़𐌕ω𐌚");
   StringRange textRange(text);
 
-  String first = Zero::Narrow(L"ėįšų");
+  String first = Zero::Narrow(L"ėįᚫš𐋉ų");
   StringRange firstRange = text.FindLastOf(first);
-  StringIterator startPos = textRange.Begin() + 4;
-  StringIterator endPos = textRange.Begin() + 8;
+  StringIterator startPos = textRange.Begin() + 7;
+  StringIterator endPos = textRange.Begin() + 13;
   CHECK(firstRange.Begin() == startPos);
   CHECK(firstRange.End() == endPos);
 
-  String second = Zero::Narrow(L"ςερτυ");
+  String second = Zero::Narrow(L"ςॐ𐋍ερቹτυ");
   StringRange secondRange = text.FindLastOf(second);
-  startPos = textRange.Begin() + 11;
-  endPos = textRange.Begin() + 16;
+  startPos = textRange.Begin() + 17;
+  endPos = textRange.Begin() + 25;
   CHECK(secondRange.Begin() == startPos);
   CHECK(secondRange.End() == endPos);
 
-  String third = Zero::Narrow(L"σδφγηξκλ");
+  String third = Zero::Narrow(L"σδ𐌲φγηॐ𐋎ξκλ");
   StringRange thirdRange = text.FindLastOf(third);
-  startPos = textRange.Begin() + 23;
-  endPos = textRange.Begin() + 31;
+  startPos = textRange.Begin() + 33;
+  endPos = textRange.Begin() + 44;
   CHECK(thirdRange.Begin() == startPos);
   CHECK(thirdRange.End() == endPos);
 
-  String fourth = Zero::Narrow(L"αω");
+  String fourth = Zero::Narrow(L"αक़𐌕ω𐌚");
   StringRange fourthRange = text.FindLastOf(fourth);
-  startPos = textRange.Begin() + 40;
+  startPos = textRange.Begin() + 56;
   endPos = textRange.End();
   CHECK(fourthRange.Begin() == startPos);
   CHECK(fourthRange.End() == endPos);

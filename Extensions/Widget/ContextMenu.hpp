@@ -32,6 +32,35 @@ namespace MenuUi
   DeclareTweakable(Vec4, GutterColor);
 }
 
+//------------------------------------------------------------------------------------------ Context
+class Context
+{
+public:
+  void Add(HandleParam object);
+  void Add(HandleParam object, BoundType* overrideType);
+  void Add(HandleParam object, StringParam name);
+  void Add(const Context& context);
+
+  void Remove(BoundType* boundType);
+  void Remove(StringParam name);
+
+  Handle Get(BoundType* boundType);
+  Handle Get(StringParam typeName);
+
+  template<typename ContextType>
+  ContextType* Get();
+
+  /// Clears all context.
+  void Clear();
+
+  typedef HashMap<String, Handle> ContextMap;
+  ContextMap mContextMap;
+};
+
+typedef Context& ContextRef;
+typedef const Context& ContextParam;
+
+//------------------------------------------------------------------------------- Context Menu Event
 class ContextMenuEvent : public Event
 {
   ZilchDeclareType(TypeCopyMode::ReferenceType);
@@ -89,10 +118,12 @@ public:
 
   String mName;
   String mIcon;
+
+  ContextMenuEntry* mParent;
   ContextMenuEntryChildren mChildren;
 
   // Used to store any specific context information for use by selecting a menu item
-  Any mContextData;
+  Context mContext;
   
   // Used to disable a menu item from being selectable and greys out the item text
   bool mEnabled;
@@ -231,8 +262,9 @@ public:
   void AddZeroContextMenu(StringParam menuName);
   void AddCommand(Command* command);
   void AddCommandByName(StringParam commandName);
-
+  
   // Popup Interface
+  void ShiftOntoScreen(Vec3 offset) override;
   void OnMouseDown(MouseEvent* event) override;
   void OnAnyGained(FocusEvent* event) override;
   void OnFocusOut(FocusEvent* event)  override;
@@ -303,5 +335,13 @@ public:
 
 #define ConnectMenu(menu, optionName, function)                    \
   { ContextMenuEntry* entry = menu->AddEntry(String(optionName)); \
-   ConnectThisTo(entry, Zero::Events::MenuItemSelected, function); } 
+   ConnectThisTo(entry, Zero::Events::MenuItemSelected, function); }
+
+//**************************************************************************************************
+template<typename ContextType>
+ContextType* Context::Get()
+{
+  return Get(ZilchTypeId(ContextType)).Get<ContextType*>();
 }
+
+}//namespace Zero

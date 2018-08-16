@@ -24,6 +24,7 @@ ZilchDefineType(SoundSpace, builder, type)
   ZilchBindFieldProperty(mPitchWithTimeSpace);
   ZilchBindGetterSetter(Paused);
   ZilchBindGetterSetter(Volume);
+  ZilchBindGetterSetter(MuteAudio);
   ZilchBindGetterSetter(Decibels);
   ZilchBindGetterSetter(Pitch);
   ZilchBindGetterSetter(Semitones);
@@ -131,12 +132,30 @@ void SoundSpace::SetVolume(float value)
 }
 
 //**************************************************************************************************
+bool SoundSpace::GetMuteAudio()
+{
+  if (!mSoundNodeInput->mNode)
+    return false;
+
+  return ((Audio::CombineAndPauseNode*)mSoundNodeInput->mNode)->GetMuted();
+}
+
+//**************************************************************************************************
+void SoundSpace::SetMuteAudio(bool mute)
+{
+  if (!mSoundNodeInput->mNode)
+    return;
+
+  ((Audio::CombineAndPauseNode*)mSoundNodeInput->mNode)->SetMuted(mute);
+}
+
+//**************************************************************************************************
 void SoundSpace::InterpolateVolume(float value, float interpolationTime)
 {
-  mVolume = Math::Max(value, 0.0f);
+  mVolume = Math::Clamp(value, 0.0f, Audio::MaxVolumeValue);
 
   if (mVolumeNode)
-    mVolumeNode->SetVolume(mVolume, interpolationTime);
+    mVolumeNode->SetVolume(mVolume, Math::Max(interpolationTime, 0.0f));
 }
 
 //**************************************************************************************************
@@ -154,10 +173,10 @@ void SoundSpace::SetDecibels(float decibels)
 //**************************************************************************************************
 void SoundSpace::InterpolateDecibels(float decibels, float interpolationTime)
 {
-  mVolume = Z::gSound->DecibelsToVolume(decibels);
+  mVolume = Math::Clamp(Z::gSound->DecibelsToVolume(decibels), 0.0f, Audio::MaxVolumeValue);
 
   if (mVolumeNode)
-    mVolumeNode->SetVolume(mVolume, interpolationTime);
+    mVolumeNode->SetVolume(mVolume, Math::Max(interpolationTime, 0.0f));
 }
 
 //**************************************************************************************************
@@ -175,7 +194,7 @@ void SoundSpace::SetPitch(float pitch)
 //**************************************************************************************************
 void SoundSpace::InterpolatePitch(float pitch, float time)
 {
-  mPitch = pitch;
+  mPitch = Math::Clamp(pitch, Audio::MinPitchValue, Audio::MaxPitchValue);
 
   if (!mPitchNode)
   {
@@ -183,7 +202,7 @@ void SoundSpace::InterpolatePitch(float pitch, float time)
     mSoundNodeInput->mNode->InsertNodeAfter(mPitchNode);
   }
 
-  mPitchNode->SetPitch(Z::gSound->PitchToSemitones(mPitch), time);
+  mPitchNode->SetPitch(Z::gSound->PitchToSemitones(mPitch), Math::Max(time, 0.0f));
 }
 
 //**************************************************************************************************
@@ -201,6 +220,8 @@ void SoundSpace::SetSemitones(float pitch)
 //**************************************************************************************************
 void SoundSpace::InterpolateSemitones(float semitones, float time)
 {
+  semitones = Math::Clamp(semitones, Audio::MinSemitonesValue, Audio::MaxSemitonesValue);
+
   mPitch = Z::gSound->SemitonesToPitch(semitones);
 
   if (!mPitchNode)
@@ -209,7 +230,7 @@ void SoundSpace::InterpolateSemitones(float semitones, float time)
     mSoundNodeInput->mNode->InsertNodeAfter(mPitchNode);
   }
 
-  mPitchNode->SetPitch(semitones, time);
+  mPitchNode->SetPitch(semitones, Math::Max(time, 0.0f));
 }
 
 //**************************************************************************************************

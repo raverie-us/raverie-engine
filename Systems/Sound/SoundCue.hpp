@@ -37,36 +37,46 @@ public:
   /// The weighted randomization value for this particular SoundEntry to be chosen to play.
   /// The values of all SoundEntries are considered: two SoundEntries with weights of 1 and 1
   /// will each play 50 percent of the time, as will weights of 10 and 10.
-  float mWeight;
+  float GetWeight();
+  void SetWeight(float weight);
   /// Preview this sound with no SoundCue settings.
   void Preview();
   /// Stop previewing this sound.
   void StopPreview();
-  /// The time (in seconds) at which the Sound will start playing. 
-  /// A value of 0 will start the Sound at the beginning of the audio file.
-  float mStartTime;
+  /// The time (in seconds) at which the Sound will start playing. A value of 0 will start the Sound 
+  /// at the beginning of the audio file. Cannot be larger than the EndTime.
+  float GetStartTime();
+  void SetStartTime(float time);
   /// The time (in seconds) at which the Sound will stop playing. Defaults to the length of the audio file.
+  /// Cannot be smaller than the StartTime.
   float GetEndTime();
   void SetEndTime(float time);
   /// The time (in seconds) from the beginning of the audio file that a looping SoundInstance will jump back to 
   /// after it reaches the LoopEndTime. The Sound will still start at the StartTime when it is played, 
-  /// but after it begins looping it will start at the LoopStartTime. 
-  float mLoopStartTime;
+  /// but after it begins looping it will start at the LoopStartTime. Cannot be larger than the LoopEndTime.
+  float GetLoopStartTime();
+  void SetLoopStartTime(float time);
   /// The time (in seconds) from the beginning of the audio file at which a looping SoundInstance 
-  /// jumps back to the LoopStartTime. If it stops looping while playing it will continue to the EndTime and then stop. 
+  /// jumps back to the LoopStartTime. If it stops looping while playing it will continue to the 
+  /// EndTime and then stop. Cannot be smaller than the LoopStartTime.
   float GetLoopEndTime();
   void SetLoopEndTime(float time);
   /// The length (in seconds) of the tail, from the LoopEndTime, which will continue to play 
   /// after the Sound jumps back to the LoopStartTime. The loop tail will fade out smoothly.
-  float mLoopTailLength;
+  float GetLoopTailLength();
+  void SetLoopTailLength(float time);
   /// If false, the loop tail will be added to the audio and will fade out over the specified time.
   /// If true, the audio will be cross-faded, so the beginning of the loop will fade in as the tail fades out.
   bool mCrossFadeLoopTail;
 
 private:
   HandleOf<Sound> mSound;
+  float mWeight;
+  float mStartTime;
   float mEndTime;
   float mLoopEndTime;
+  float mLoopStartTime;
+  float mLoopTailLength;
 };
 
 class SoundEntryDisplay : public MetaDisplay
@@ -155,10 +165,12 @@ public:
   bool mUseDecibelVariation;
   /// Sets how much the Volume will be randomized every time the SoundCue plays. If Volume is 1, 
   /// and VolumeVariation is 0.5, the volume adjustment will be chosen randomly between 0.5 and 1.5. 
-  float mVolumeVariation;
+  float GetVolumeVariation();
+  void SetVolumeVariation(float variation);
   /// Sets how much the Decibels will be randomized every time the SoundCue plays. If Decibels is 0, 
   /// and DecibelVariation is 4, the volume adjustment will be chosen randomly between -4 and 4. 
-  float mDecibelVariation;
+  float GetDecibelVariation();
+  void SetDecibelVariation(float variation);
   /// This property affects both the pitch and speed of the sound played by the SoundCue. 
   /// A value of 0 will do nothing, 1 will raise the pitch by an octave and speed up the sound, 
   /// -1 will lower the sound by an octave and slow it down. 
@@ -176,18 +188,23 @@ public:
   bool mUseSemitoneVariation;
   /// Sets how much the pitch will be randomized every time the SoundCue plays. If Pitch is 0, 
   /// and PitchVariation is 0.3, the pitch of the sound will be chosen randomly between -0.3 and 0.3.
-  float mPitchVariation;
+  float GetPitchVariation();
+  void SetPitchVariation(float variation);
   /// Sets how much the pitch will be randomized every time the SoundCue plays. If Semitones is 0, 
   /// and SemitoneVariation is 5, the pitch of the sound will be chosen randomly between -5 and 5.
-  float mSemitoneVariation;
+  float GetSemitoneVariation();
+  void SetSemitoneVariation(float variation);
   /// If true, the music options will be shown. If false, they will be hidden.
   bool mShowMusicOptions;
   /// The speed of the music, using beats per minute.
-  float mBeatsPerMinute;
+  float GetBeatsPerMinute();
+  void SetBeatsPerMinute(float bpm);
   /// The top number of the music's time signature (beats per measure).
-  float mTimeSigBeats;
+  float GetTimeSigBeats();
+  void SetTimeSigBeats(float beats);
   /// The bottom number of the music's time signature (which type of note has the beat).
-  float mTimeSigValue;
+  float GetTimeSigValue();
+  void SetTimeSigValue(float value);
   /// If a SoundAttenuator resource is selected, it will be applied to reduce the sound's volume 
   /// with distance when played through a SoundEmitter. If DefaultNoAttenuation is selected on the SoundCue 
   /// and a different SoundAttenuator is selected on the SoundEmitter, the SoundEmitter's settings will be applied.
@@ -216,6 +233,13 @@ private:
   float mVolume;
   float mPitch;
   int mSoundIndex;
+  float mVolumeVariation;
+  float mDecibelVariation;
+  float mPitchVariation;
+  float mSemitoneVariation;
+  float mBeatsPerMinute;
+  float mTimeSigBeats;
+  float mTimeSigValue;
 };
 
 //-------------------------------------------------------------------------------- Sound Cue Manager

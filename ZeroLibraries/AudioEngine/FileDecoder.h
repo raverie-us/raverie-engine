@@ -17,8 +17,9 @@ namespace Audio
 
   //--------------------------------------------------------------------------------- Decoded Packet
 
-  struct DecodedPacket
+  class DecodedPacket
   {
+  public:
     DecodedPacket() {}
     DecodedPacket(unsigned bufferSize);
     DecodedPacket(const DecodedPacket& copy);
@@ -26,87 +27,16 @@ namespace Audio
     DecodedPacket& operator=(const DecodedPacket& other);
 
     // The buffer of samples for this channel
-    Zero::Array<float> Samples;
+    BufferType mSamples;
   };
 
-  //----------------------------------------------------------------------------------- File Decoder
+  //------------------------------------------------------------------ Single Channel Packet Decoder
 
-  class FileDecoder
+  class SingleChannelPacketDecoder
   {
   public:
-    FileDecoder(Zero::Status& status, const Zero::String& fileName, const bool streaming);
-    ~FileDecoder();
-
-    // Returns true if it is currently streaming audio data from a file
-    bool StreamIsOpen();
-    // Resets the streaming file to the beginning (if stream is open)
-    void ResetStream();
-    // Closes the streaming file (if stream is open)
-    void CloseStream();
-    // Opens the streaming file (if the decoder was created for streaming)
-    void OpenStream();
-    // Tells the decoder to start decoding another packet from a streaming file
-    void DecodeStreamingPacket();
-    // Should only be called when starting the decoding thread
-    void DecodingLoop();
-
-    // List of decoded packets
-    LockFreeQueue<DecodedPacket> DecodedPacketQueue;
-    // Number of channels of audio
-    short mChannels;
-    // Number of samples per channel in the audio data
-    unsigned mSamplesPerChannel;
-
-  private:
-    // The data read in from the file, if not streaming
-    byte* mInputFileData;
-    // The current read position for the file data
-    unsigned mDataIndex;
-    // The size of the file data
-    unsigned mDataSize;
-    // Opus decoders for each channel
-    OpusDecoder* Decoders[MaxChannels];
-    // Buffers to hold the decoded data for a single packet per channel
-    float DecodedPackets[MaxChannels][FileEncoder::PacketFrames];
-    // If true, streaming from disk instead of using the saved buffer
-    bool mStreaming;
-    // The name of the file to use for streaming
-    Zero::String mStreamingFileName;
-    // The file object to use when streaming
-    Zero::File mStreamingInputFile;
-    // Thread for decoding tasks
-    Zero::Thread DecodeThread;
-    // Tells the decoding thread it should decode another packet
-    Zero::Semaphore DecodingSemaphore;
-    // Tells the decoding thread it should shut down
-    AtomicType ShutDownSignal;
-    
-    // Opens a file and reads in its data
-    void OpenAndReadFile(Zero::Status& status, const Zero::String& fileName);
-    // Decodes the next packet of data (assumed that this is called on a decoding thread)
-    bool DecodePacket();
-    // Adds decoded packets to the queue and translates the per-channel buffers to
-    // an interleaved buffer
-    void QueueDecodedPackets(unsigned numberOfFrames);
-    // Triggers a new decoding task 
-    void AddDecodingTask();
-    // Starts up the decoding thread, and starts a decoding tasks if decodeNow is True
-    void StartDecodingThread(bool decodeNow);
-    // Stops and shuts down the decoding thread
-    void StopDecodingThread();
-
-    friend class AudioSystemInterface;
-  };
-
-  Zero::OsInt StartThreadForDecoding(void* data);
-
-  //--------------------------------------------------------------------------------- Packet Decoder
-
-  class PacketDecoder
-  {
-  public:
-    PacketDecoder() : Decoder(nullptr) {}
-    ~PacketDecoder();
+    SingleChannelPacketDecoder() : mDecoder(nullptr) {}
+    ~SingleChannelPacketDecoder();
 
     // Initializes decoder for use with DecodePacket. 
     // If the decoder already exists, it will be destroyed and re-created.
@@ -117,7 +47,158 @@ namespace Audio
 
   private:
     // Used for repeated calls to DecodePacket
-    OpusDecoder* Decoder;
+    OpusDecoder* mDecoder;
+  };
+
+  //--------------------------------------------------------------------------------- Packet Decoder
+
+  class PacketDecoder
+  {
+  public:
+    // Decodes the provided packet and returns the number of samples
+    // Allocates memory for the decoded data
+    static int DecodePacket(const byte* packetData, unsigned dataSize, OpusDecoder* decoder,
+      float** decodedData);
+    // Decodes the provided packet and returns the number of samples
+    // Assumes the memory for the decoded data is already allocated
+    static int DecodePacket(const byte* packetData, unsigned dataSize, OpusDecoder* decoder,
+      float* decodedData);
+    // Reads the header from the provided buffer and returns the size of the associated data,
+    // or -1 if there is an error
+    static int GetPacketDataSize(const byte* packetHeader);
+    // Reads the header data of the file into the object and returns the size of the file's data
+    static unsigned OpenAndReadHeader(Zero::Status& status, const Zero::String& fileName, 
+      Zero::File* file, FileHeader* header);
+    // Creates the requested number of opus decoders, returns false if unsuccessful
+    static bool CreateDecoders(Zero::Status& status, OpusDecoder** decoderArray, int howMany);
+    // Destroys the requested number of opus decoders, setting the pointers to null
+    static void DestroyDecoders(OpusDecoder** decoderArray, int howMany);
+    // Fills in the provided buffer with the next packet data from a buffer of data. 
+    // Returns -1 if getting packet fails or if the end of the data was reached.
+    static int GetPacketFromMemory(byte* packetDataToWrite, const byte* inputData, unsigned inputDataSize,
+      unsigned* dataIndex);
+    // Fills in the provided buffer with the next packet data from a file.
+    // Returns -1 if getting packet fails or if the end of the data was reached.
+    static int GetPacketFromFile(byte* packetDataToWrite, Zero::File* inputFile, 
+      Zero::FilePosition* filePosition, Zero::ThreadLock* lockObject);
+  };
+
+  //----------------------------------------------------------------------------------- File Decoder
+
+  typedef void (*FileDecoderCallback)(DecodedPacket*, void* data);
+
+  class FileDecoder
+  {
+  public:
+    FileDecoder(int channels, unsigned samplesPerChannel, FileDecoderCallback callback, void* callbackData);
+    virtual ~FileDecoder();
+
+    // Should only be called when starting the decoding thread 
+    virtual void DecodingLoopThreaded() = 0;
+    // Fills in the provided buffer with the next packet data. Returns -1 if getting packet
+    // fails or if the end of the data was reached.
+    virtual int GetNextPacket(byte* packetData) = 0;
+    // Called to decode the next packet when the system is not threaded
+    virtual void RunDecodingTask() = 0;
+    // Requests the next chunk of decoded data
+    void DecodeNextSection();
+
+    // Number of channels of audio
+    int mChannels;
+    // Number of samples per channel in the audio data
+    unsigned mSamplesPerChannel;
+
+  protected:
+    // Decodes the next packet of data (assumed that this is called on a decoding thread)
+    bool DecodePacketThreaded();
+    // Starts up the decoding thread 
+    void StartDecodingThread();
+    // Stops and shuts down the decoding thread
+    void StopDecodingThread();
+    // Destroys the decoders
+    virtual void ClearData();
+
+    // The callback function that will be used to hand off decoded packets
+    FileDecoderCallback mCallback;
+    // The callback data to pass through
+    void* mCallbackData;
+    // Opus decoders for each channel
+    OpusDecoder* mDecoders[MaxChannels];
+    // Thread for decoding tasks
+    Zero::Thread DecodeThread;
+    // Tells the decoding thread it should shut down
+    AtomicType mShutDownSignal;
+    // Tells the decoding thread it should decode another packet
+    Zero::Semaphore DecodingSemaphore;
+  };
+
+  //--------------------------------------------------------------------------- Decompressed Decoder
+
+  class DecompressedDecoder : public FileDecoder
+  {
+  public:
+    DecompressedDecoder(Zero::Status& status, const Zero::String& fileName, FileDecoderCallback callback,
+      void* callbackData);
+    ~DecompressedDecoder();
+
+    // Should only be called when starting the decoding thread 
+    void DecodingLoopThreaded() override;
+    // Fills in the provided buffer with the next packet data. Returns -1 if getting packet
+    // fails or if the end of the data was reached.
+    int GetNextPacket(byte* packetData) override;
+    // Called to decode the next packet when the system is not threaded
+    void RunDecodingTask() override;
+
+  private:
+    // Opens a file and reads in its data
+    void OpenAndReadFile(Zero::Status& status, const Zero::String& fileName);
+    // Destroys decoders and deletes input data
+    void ClearData() override;
+
+    // The data read in from the file 
+    byte* mCompressedData;
+    // The current read position for the compressed data
+    unsigned mDataIndex;
+    // The size of the compressed data
+    unsigned mDataSize;
+  };
+
+  //------------------------------------------------------------------------------ Streaming Decoder
+
+  class StreamingDecoder : public FileDecoder
+  {
+  public:
+    // The file object must be already open, and will not be closed by this decoder
+    StreamingDecoder(Zero::Status& status, Zero::File* inputFile, Zero::ThreadLock* lock, 
+      unsigned channels, unsigned frames, FileDecoderCallback callback, void* callbackData);
+    // The input data buffer must already exist, and will not be deleted by this decoder
+    StreamingDecoder(Zero::Status& status, byte* inputData, unsigned dataSize, unsigned channels, 
+      unsigned frames, FileDecoderCallback callback, void* callbackData);
+
+    // Should only be called when starting the decoding thread 
+    void DecodingLoopThreaded() override;
+    // Fills in the provided buffer with the next packet data. Returns -1 if getting packet
+    // fails or if the end of the data was reached.
+    int GetNextPacket(byte* packetData) override;
+    // Called to decode the next packet when the system is not threaded
+    void RunDecodingTask() override;
+    // Resets streaming decoding to the beginning
+    void Reset();
+
+  private:
+    // The data read in from the file, if streaming from memory (will not be deleted)
+    byte* mCompressedData;
+    // The current read position for the compressed data, if streaming from memory
+    unsigned mDataIndex;
+    // The size of the compressed data, if streaming from memory
+    unsigned mDataSize;
+
+    // The file to read the data from (does not own this file and will not close it)
+    Zero::File* mInputFile;
+    // The current read position in the file, if streaming from file
+    Zero::FilePosition mFilePosition;
+    // Used to lock when reading from the file, if streaming from file
+    Zero::ThreadLock* mLock;
   };
 }
 

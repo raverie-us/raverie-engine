@@ -342,8 +342,17 @@ void FindTextDialog::SplitActiveCursorRegion()
       }
 
       // Get the two split string ranges
-      StringRange topSplit(region->RegionText.Begin(), region->RegionText.Begin() + region->CursorPos);
-      StringRange bottomSplit(region->RegionText.Begin() + region->CursorPos, region->RegionText.End());
+      StringParam regionString = region->RegionText.mOriginalString;
+      cstr regionBegin = region->RegionText.mBegin;
+      StringRange topSplit(regionString, regionBegin, regionBegin + region->CursorPos);
+      StringRange bottomSplit(regionString, regionBegin + region->CursorPos, region->RegionText.mEnd);
+
+      // Validate both of the ranges.
+      if (!topSplit.ValidateRange() || !bottomSplit.ValidateRange())
+      {
+        Error("The split ranges were not valid");
+        continue;
+      }
     
       // Create the next region that we're going to split
       SearchRegion* topRegion = region;
@@ -1035,6 +1044,12 @@ void FindTextDialog::DoSearchAndGetContext()
 
     // Store the current sub-region (this will change below)
     StringRange subRegion = region->RegionText;
+    if (!subRegion.ValidateRange())
+    {
+      Error("The sub-region to search was invalid");
+      regions.PopFront();
+      continue;
+    }
 
     // Loop until we get no more matches
     inifinite_loop
@@ -1049,6 +1064,8 @@ void FindTextDialog::DoSearchAndGetContext()
         // The search result
         SearchResult* result = new SearchResult();
         StringRange matchSub = subRegion.FindFirstOf(matches.Front());
+        ReturnIf(matchSub.Empty() || !matchSub.IsValid(),,
+          "Unable to find sub-match in the sub-region");
         // Count the number of lines until the text that we found (+1 since line numbers are actually 0 based)
         result->Line = CountLines(StringRange(region->WholeText.Begin(), matchSub.Begin())) + 1;
 
@@ -1056,8 +1073,8 @@ void FindTextDialog::DoSearchAndGetContext()
         result->WholeLine = GetWholeLine(region->WholeText, matchSub.Data());
 
         // Get the offset into the whole text that the character exists at
-        result->PositionBegin = matchSub.Begin() - region->WholeText.Begin();
-        result->PositionEnd   = matchSub.End()   - region->WholeText.Begin();
+        result->PositionBegin = matchSub.mBegin - region->WholeText.mBegin;
+        result->PositionEnd   = matchSub.mEnd   - region->WholeText.mBegin;
 
         // We found another result...
         ++mContext->TotalResults;

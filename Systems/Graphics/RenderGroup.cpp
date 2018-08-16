@@ -49,6 +49,8 @@ RenderGroup::RenderGroup()
 
   ConnectThisTo(&mChildRenderGroups, Events::ResourceListItemAdded, OnChildListItemAdded);
   ConnectThisTo(&mChildRenderGroups, Events::ResourceListItemRemoved, OnChildListItemRemoved);
+
+  ConnectThisTo(this, Events::ObjectModified, OnObjectModified);
 }
 
 //**************************************************************************************************
@@ -92,6 +94,12 @@ void RenderGroup::OnChildListItemRemoved(ResourceListEvent* event)
   RenderGroup* renderGroup = RenderGroupManager::Instance->FindOrNull(event->mResourceIdName);
   if (renderGroup != nullptr && IsSubRenderGroup(renderGroup))
     renderGroup->SetParentInternal(nullptr);
+}
+
+//**************************************************************************************************
+void RenderGroup::OnObjectModified(ObjectEvent* event)
+{
+  SendModified();
 }
 
 //**************************************************************************************************

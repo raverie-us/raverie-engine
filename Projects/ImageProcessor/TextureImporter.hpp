@@ -23,6 +23,9 @@ public:
 
   void WriteTextureFile(Status& status);
 
+  // Internal
+  void AddImageData(byte* imageData, uint width, uint height);
+
   String mInputFile;
   String mOutputFile;
   String mMetaFile;

@@ -224,6 +224,8 @@ public:
   HandleOf<CogPathNode> mSharedNode;
 };
 
+bool AreTwoNamesTheSame(Cog* test);
+
 template<typename type>
 inline type* CogPath::Has()
 {

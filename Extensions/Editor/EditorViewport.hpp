@@ -121,7 +121,6 @@ public:
   void OnRightMouseUp(MouseEvent* e);
   void OnMouseScroll(MouseEvent* e);
   void OnMetaDrop(MetaDropEvent* e);
-  void OnMouseFileDrop(MouseFileDropEvent* e);
   void OnKeyDown(KeyboardEvent* e);
   void OnKeyUp(KeyboardEvent* e);
   void OnFocusLost(FocusEvent* focusEvent);

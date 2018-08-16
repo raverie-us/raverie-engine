@@ -324,7 +324,8 @@ void OrientationBasisGizmo::OnRotationBasisGizmoModified(Event* e)
 
 void OrientationBasisGizmo::OnRotationBasisGizmoEnd(Event* e)
 {
-  if(mCogs.Empty())
+  // If listening for side effects is false then we're in the middle of an undo/redo
+  if(mCogs.Empty() || !OperationQueue::IsListeningForSideEffects())
     return;
 
   // Revert all cogs back to their initial rotation so we can properly queue undos
@@ -548,7 +549,8 @@ void PhysicsCarWheelBasisGizmo::OnRotationBasisGizmoModified(Event* e)
 
 void PhysicsCarWheelBasisGizmo::OnRotationBasisGizmoEnd(Event* e)
 {
-  if(mCogs.Empty())
+  // If listening for side effects is false then we're in the middle of an undo/redo
+  if(mCogs.Empty() || !OperationQueue::IsListeningForSideEffects())
     return;
 
   // Revert all cogs back to their initial rotation so we can properly queue undos
@@ -727,7 +729,8 @@ void RevoluteBasisGizmo::OnRotationBasisGizmoModified(Event* e)
 
 void RevoluteBasisGizmo::OnRotationBasisGizmoEnd(Event* e)
 {
-  if(mCogs.Empty())
+  // If listening for side effects is false then we're in the middle of an undo/redo
+  if(mCogs.Empty() || !OperationQueue::IsListeningForSideEffects())
     return;
 
   // Revert all cogs back to their initial rotation so we can properly queue undos

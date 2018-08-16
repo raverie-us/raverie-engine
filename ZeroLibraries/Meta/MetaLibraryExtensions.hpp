@@ -26,7 +26,7 @@ public:
   // Called after each type is parsed (only called for Resource Libraries)
   static void TypeParsedCallback(Zilch::ParseEvent* e, void* userData);
 
-private:
+  // Internal
 
   // For types that have a meta composition, we want to add getters that return the component types
   // e.g. For Cogs, we want all Components to show up on the Cog type in script so that accessing

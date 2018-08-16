@@ -54,3 +54,4 @@
 #undef MoveFile
 #undef DeleteFile
 #undef CreateDirectory
+#undef LoadImage

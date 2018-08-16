@@ -54,9 +54,6 @@ private:
   void OnSelectionChanged(Event* event);
   void OnMouseEnterRow(TreeEvent* e);
   void OnMouseExitRow(TreeEvent* e);
-  // Event handlers for object view create sub-menu
-  void OnMenuMouseEnter(MouseEvent* event);
-  void OnMenuFocusLost(FocusEvent* event);
 
   TreeViewSearch* mSearch;
   TreeView* mTree;

@@ -105,6 +105,7 @@ public:
 
   CodeRangeMapping mPreInitRange;
   Zilch::CodeLocation mSourceLocation;
+  Zilch::CodeLocation mNameLocation;
 
   // The type that owns this field
   ShaderType* mOwner;
@@ -154,6 +155,7 @@ public:
 
   // Where in the original zilch script this function came from. Not all of this information is needed, so maybe remove it later?
   Zilch::CodeLocation mSourceLocation;
+  Zilch::CodeLocation mNameLocation;
 
   CodeRangeMapping mBodyRange;
   CodeRangeMapping mSignatureRange;
@@ -294,6 +296,7 @@ public:
   ShaderType* mOutputType;
 
   Zilch::CodeLocation mSourceLocation;
+  Zilch::CodeLocation mNameLocation;
   // Any user data that cant simply be represented by a pointer
   // Data can be written to the buffer and will be properly destructed
   // when this object is destroyed (must be read in the order it's written)

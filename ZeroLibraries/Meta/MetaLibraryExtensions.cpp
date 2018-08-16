@@ -47,7 +47,10 @@ void MetaLibraryExtensions::TypeParsedCallback(Zilch::ParseEvent* e, void* userD
 {
   BoundType* type = e->Type;
 
-  AttributeExtensions::GetInstance()->ProcessType(type, e->BuildingProject);
+  AttributeStatus status;
+  AttributeExtensions::GetInstance()->ProcessType(status, type);
+  if (status.Failed())
+    e->BuildingProject->Raise(status.mLocation, ErrorCode::GenericError, status.Message.c_str());
 
   ProcessComponent(*e->Builder, type);
 

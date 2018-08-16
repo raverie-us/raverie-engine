@@ -1,0 +1,15 @@
+[Version:1]
+DataContent 
+{
+	DataBuilder 
+	{
+		var Name = "SpotLightShadows"
+		var ResourceId = 0x5b3cf9a9e5d99896
+		var LoaderType = "Material"
+		var Version = 0
+	}
+	ContentEditorOptions 
+	{
+		var ShowInEditor = true
+	}
+}

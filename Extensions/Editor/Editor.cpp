@@ -254,7 +254,8 @@ Editor::Editor(Composite* parent)
   ConnectThisTo(this, Events::SaveCheck, OnSaveCheck);
   ConnectThisTo(Z::gEngine, Events::EngineUpdate, OnEngineUpdate);
   ConnectThisTo(Z::gResources, Events::ResourcesUnloaded, OnResourcesUnloaded);
-
+  ConnectThisTo(GetRootWidget(), Events::MouseFileDrop, OnMouseFileDrop);
+  
   BoundType* editorMeta = ZilchTypeId(Editor);
   Z::gSystemObjects->Add(this, editorMeta, ObjectCleanup::None);
 }
@@ -296,7 +297,7 @@ void Editor::SetEditSpace(Space* space)
   if(mObjectView)
     mObjectView->SetSpace(space);
 
-  CommandManager::GetInstance()->SetContext(space);
+  CommandManager::GetInstance()->GetContext()->Add(space);
 }
 
 void Editor::SetEditorViewportSpace(Space* space)
@@ -486,7 +487,7 @@ void Editor::ProjectLoaded()
   mLibrary->View(mProjectLibrary, project->ProjectResourceLibrary);
 
   // Set the project so project commands will work
-  CommandManager::GetInstance()->SetContext(project);
+  CommandManager::GetInstance()->GetContext()->Add(project);
 
   SafeDelete(mProjectDirectoryWatcher);
   mProjectDirectoryWatcher = new EventDirectoryWatcher(mProjectLibrary->SourcePath);
@@ -575,6 +576,11 @@ Widget* Editor::ShowConsole()
   return ShowWindow("Console");
 }
 
+Widget* Editor::HideConsole()
+{
+  return HideWindow("Console");
+}
+
 Widget* Editor::ToggleConsole()
 {
   return mManager->ToggleWidget("Console");
@@ -638,6 +644,13 @@ Widget* Editor::ShowWindow(StringParam name)
 {
   return mManager->ShowWidget(name);
 }
+
+Widget* Editor::HideWindow(StringParam name)
+{
+  return mManager->HideWidget(name);
+}
+
+
 
 Window* Editor::AddManagedWidget(Widget* widget, DockArea::Enum dockArea, bool visible)
 {
@@ -1154,6 +1167,11 @@ void Editor::OnResourcesUnloaded(ResourceEvent* event)
     selection->FinalSelectionChanged();
 }
 
+void Editor::OnMouseFileDrop(MouseFileDropEvent* event)
+{
+  LoadDroppedFiles(event->Files->NativeArray);
+}
+
 void Editor::Update()
 {
   //Debug::DefaultConfig config;
@@ -1231,7 +1249,7 @@ void Editor::ExecuteCommand(StringParam commandName)
 
 void Editor::OnCaptureContext(CommandCaptureContextEvent* event)
 {
-  event->ActiveSet->SetContext(this);
+  event->ActiveSet->GetContext()->Add(this);
 }
 
 
@@ -1486,15 +1504,18 @@ void Editor::AddResource()
   AddResourceType(nullptr);
 }
 
-void Editor::AddResourceType(BoundType* resourceType)
+void Editor::AddResourceType(BoundType* resourceType, ContentLibrary* library, StringParam resourceName)
 {
-  if(!mProject)
+  // We don't need a project as long as another ContentLibrary is specified to add the new
+  // Resource to
+  if (library == nullptr && !mProject)
   {
     DoNotifyError("No project to add resources", "Need a project to add resources");\
     return;
   }
 
-  OpenAddWindow(resourceType);
+  AddResourceWindow* addWindow = OpenAddWindow(resourceType, nullptr, resourceName);
+  addWindow->SetLibrary(library);
 }
 
 void Editor::EditResource(Resource* resource)

@@ -231,9 +231,13 @@ TextEditor::TextEditor(Composite* parent)
   mSendEvents = true;
   mLineNumberMargin = true;
   mFolding = false;
+  mIndicatorsRequireUpdate = false;
   mTextMatchHighlighting = true;
   mHighlightPartialTextMatch = false;
   mMinSize = Vec2(50, 50);
+
+  // Read the current config settings
+  UseTextEditorConfig();
 
   mIndicators = new PixelBuffer();
   mIndicatorDisplay = new TextureView(this);
@@ -308,6 +312,7 @@ TextEditor::TextEditor(Composite* parent)
 TextEditor::~TextEditor()
 {
   DeleteObjectsInContainer(mHotspots);
+  SafeDelete(mIndicators);
 }
 
 void TextEditor::SetLexer(uint lexer)
@@ -603,8 +608,11 @@ void TextEditor::InsertAutoCompleteText(const char* text, int length, int remove
 void TextEditor::UseTextEditorConfig()
 {
   TextEditorConfig* config = GetConfig();
-  ConnectThisTo(config, Events::PropertyModified, OnConfigChanged);
-  this->UpdateConfig(config);
+  if (config)
+  {
+    ConnectThisTo(config, Events::PropertyModified, OnConfigChanged);
+    this->UpdateConfig(config);
+  }
 }
 
 void TextEditor::OnConfigChanged(PropertyEvent* event)
@@ -641,9 +649,14 @@ void TextEditor::OnColorSchemeChanged(ObjectEvent* event)
 
 TextEditorConfig* TextEditor::GetConfig()
 {
-  auto config = Z::gEditor->mConfig->has(TextEditorConfig);
-  ErrorIf(config == nullptr, "The config should always have a TextEditorConfig component");
-  return config;
+  // Check if the editor is present for when this is called from the launcher
+  if (Z::gEditor)
+  {
+    auto config = Z::gEditor->mConfig->has(TextEditorConfig);
+    ErrorIf(config == nullptr, "The config should always have a TextEditorConfig component");
+    return config;
+  }
+  return nullptr;
 }
 
 void TextEditor::UpdateConfig(TextEditorConfig* textConfig)
@@ -778,10 +791,9 @@ void TextEditor::UpdateTransform()
   UpdateScrollBars();
 
   mScinWidget->SetSize( mVisibleSize );
-
   mScinWidget->mScintilla->ChangeSize();
 
-  UpdateTextMatchHighlighting();
+  mIndicatorsRequireUpdate = true;
 
   BaseScrollArea::UpdateTransform();
 }
@@ -962,8 +974,14 @@ void TextEditor::OnKeyDown(KeyboardEvent* event)
     event->Handled = true;
 
   if (event->Key == Keys::D && event->ShiftPressed && event->CtrlPressed)
+  {
     mScintilla->WndProc(SCI_LINEDUPLICATE, 0, 0);
-
+    // Get the current caret position and find the line that was just duplicated
+    int line = GetLineFromPosition(mScintilla->SelectionStart().Position());
+    // If that line duplicated is not in view scroll it into view
+    MakeLineVisible(line);
+  }
+  
   if (event->Key == Keys::Down && event->ShiftPressed && event->CtrlPressed)
     mScintilla->WndProc(SCI_MOVESELECTEDLINESDOWN, 0, 0);
 
@@ -1206,6 +1224,12 @@ void TextEditor::OnUpdate(UpdateEvent* event)
     mScintilla->Tick();
     mTickTime = 0;
   } 
+
+  if(mIndicatorsRequireUpdate)
+  {
+    mIndicatorsRequireUpdate = false;
+    UpdateTextMatchHighlighting();
+  }
 }
 
 void TextEditor::UpdateTextMatchHighlighting()
@@ -1217,7 +1241,7 @@ void TextEditor::UpdateTextMatchHighlighting()
 
   if(verticalBar->mVisible)
   {
-    mIndicators->Resize(verticalBar->mSize.x + bufferSize.x, bufferSize.y, false, false);
+    mIndicators->Resize(verticalBar->mSize.x + bufferSize.x, bufferSize.y, false, false, Color::White, false);
 
     mIndicatorDisplay->SetTranslation(Pixels(position.x + 1, position.y, position.z));
     mIndicatorDisplay->SetSize(Pixels(bufferSize.x, bufferSize.y));
@@ -1762,6 +1786,11 @@ void TextEditor::OnNotify(Scintilla::SCNotification& notify)
 
     if (shouldSendEvent)
     {
+      // We have to get the line from the current caret position because some Scintilla
+      // on notify messages do not fill out the position/line modified causing incorrect
+      // behavior when attempting to scroll off screen modification into view
+      MakeLineVisible(GetLineFromPosition(mScintilla->SelectionStart().Position()));
+
       Event event;
       this->GetDispatcher()->Dispatch(Events::TextEditorModified, &event);
     }

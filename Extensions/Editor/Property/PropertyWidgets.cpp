@@ -103,6 +103,8 @@ FloatingSearchView* AddObjectWidget::OpenSearch(Vec3 position)
   searchView->TakeFocus();
 
   mActiveSearch = viewPopUp;
+
+  ConnectThisTo(provider, Events::AlternateSearchCompleted, OnAlternateSearchCompleted);
   ConnectThisTo(searchView, Events::SearchCompleted, OnSearchCompleted);
 
   return viewPopUp;
@@ -128,6 +130,49 @@ void AddObjectWidget::OnLeftClick(MouseEvent* event)
 }
 
 //******************************************************************************
+void AddObjectWidget::OnPostResourceAdded(PostAddResourceEvent* event)
+{
+  Resource* resource = event->mResourceAdd->SourceResource;
+  BoundType* resourceType = ZilchVirtualTypeId(resource);
+
+  // If a cog, or selection of cogs, invoked the add resource dialog to create
+  // a ZilchComponent - then add that new component to those compositions.
+  if(resourceType == ZilchTypeId(ZilchScript))
+  {
+    String componentName = event->mResourceAdd->Name;
+    
+    // This should never return a valid type. When scripts are added, we do not
+    // compile until the next update; however to future proof it incase we
+    // ever change it - first search for the type, then create a proxy
+    // if it doesn't exist.
+    BoundType* componentType = MetaDatabase::FindType(componentName);
+
+    if(componentType == nullptr)
+    {
+      // Create a Proxy to be used for this component
+      componentType = ProxyObject<Component>::CreateProxyType(componentName, ProxyReason::TypeDidntExist);
+      if(componentType == nullptr)
+      {
+        Error("Could not create proxy type");
+        return;
+      }
+
+      MetaResource* metaResource = componentType->HasOrAdd<MetaResource>();
+      metaResource->SetResource(resource);
+    }
+
+    mComposition->AddComponent(mObject, componentType);
+  }
+}
+
+//******************************************************************************
+void AddObjectWidget::OnAlternateSearchCompleted(AlternateSearchCompletedEvent* event)
+{
+  AddResourceWindow* addDialog = OpenAddWindow(ZilchTypeId(ZilchScript), nullptr, event->mSearchText);
+  ConnectThisTo(addDialog, Events::PostAddResource, OnPostResourceAdded);
+}
+
+//******************************************************************************
 void AddObjectWidget::OnSearchCompleted(SearchViewEvent* event)
 {
   BoundType* boundType = (BoundType*)event->Element->Data;
@@ -139,9 +184,6 @@ void AddObjectWidget::OnSearchCompleted(SearchViewEvent* event)
     return;
 
   mComposition->AddComponent(parentObject, boundType);
-
-  // The object has changed, so we need to rebuild the property grid
-  mParentWidgetObject->mGrid->Invalidate();
 }
 
 //******************************************************************************

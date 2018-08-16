@@ -79,6 +79,10 @@ public:
   void GetTags(HashSet<String>& tags);
   void SetTag(StringParam tag);
   void SetTags(HashSet<String>& tags);
+
+  /// If applicable, remove all tags in the given set from this content item.
+  void RemoveTags(HashSet<String>& tags);
+
   bool HasTag(StringParam tag);
 
   // Content Item Interface

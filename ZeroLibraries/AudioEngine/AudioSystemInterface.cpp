@@ -37,7 +37,7 @@ namespace Audio
     {
       for (unsigned i = 0; i < System->MaxDecodingTasksToRun && !System->DecodingTasks.Empty(); ++i)
       {
-        System->DecodingTasks.Front()->DecodePacket();
+        System->DecodingTasks.Front()->RunDecodingTask();
         System->DecodingTasks.PopFront();
       }
 
@@ -303,7 +303,7 @@ namespace Audio
     if (turnOn)
     {
       // Turn on sending input data
-      System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SendMicrophoneInputData,
+      System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SetSendMicInputData,
         System, true));
 
       // Flush the input queue
@@ -314,7 +314,7 @@ namespace Audio
       }
     }
     else
-      System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SendMicrophoneInputData,
+      System->AddTask(Zero::CreateFunctor(&AudioSystemInternal::SetSendMicInputData,
         System, false));
   }
 
@@ -381,7 +381,7 @@ namespace Audio
   //************************************************************************************************
   AudioStreamDecoder::AudioStreamDecoder()
   {
-    Decoder = new PacketDecoder();
+    Decoder = new SingleChannelPacketDecoder();
     Decoder->InitializeDecoder();
   }
 

@@ -34,7 +34,7 @@ ZilchDefineType(CustomConstraintInfo, builder, type)
   ZilchBindFieldProperty(mLinear1);
   ZilchBindFieldProperty(mAngular1);
 
-  ZilchBindFieldProperty(mEffectiveMass);
+  ZilchBindGetterSetterProperty(EffectiveMass);
   ZilchBindFieldProperty(mGamma);
   ZilchBindFieldProperty(mBias);
   ZilchBindFieldProperty(mMinImpulse);
@@ -59,6 +59,7 @@ CustomConstraintInfo::CustomConstraintInfo()
   mLinear0 = mLinear1 = mAngular0 = mAngular1 = Vec3::cZero;
 
   mEffectiveMass = 0;
+  mInvEffectiveMass = 0;
   mGamma = 0;
   mBias = 0;
   mMinImpulse = -Math::PositiveMax();
@@ -90,7 +91,8 @@ void CustomConstraintInfo::SetJacobian(Vec3Param linear0, Vec3Param angular0, Ve
   // Compute the effective mass if the constraint (J^T * M * J)
   Jacobian jacobian;
   jacobian.Set(mLinear0, mAngular0, mLinear1, mAngular1);
-  mEffectiveMass = jacobian.ComputeMass(masses);
+  real effectiveMass = jacobian.ComputeMass(masses);
+  SetEffectiveMass(effectiveMass);
 }
 
 void CustomConstraintInfo::SetErrorAndBias(real error)
@@ -105,11 +107,16 @@ void CustomConstraintInfo::ComputeSpring(float frequencyHz, float dampRatio)
   float dt = 1.0f / 60.0f;
   CustomJoint* joint = mOwner;
   // Get dt from the space if we have it
-  if(joint == nullptr)
+  if(joint != nullptr && joint->mSpace != nullptr)
     dt = joint->mSpace->mIterationDt;
 
   // Update the mass, bias, and gamma
-  SoftConstraintFragment(mEffectiveMass, mError, mBias, mGamma, frequencyHz, dampRatio, mBaumgarte, dt);
+  SoftConstraintFragment(mInvEffectiveMass, mError, mBias, mGamma, frequencyHz, dampRatio, mBaumgarte, dt);
+  // Re-compute the effective mass afterwards (in case someone wants to read and mutate it)
+  if(mInvEffectiveMass < Math::PositiveMin())
+    mEffectiveMass = 0;
+  else
+    mEffectiveMass = 1 / mInvEffectiveMass;
 
   // We can't solve position anymore
   mSolvePosition = false;
@@ -125,10 +132,25 @@ void CustomConstraintInfo::ComputeMotor(float targetSpeed, float minImpulse, flo
   mSolvePosition = false;
 }
 
+real CustomConstraintInfo::GetEffectiveMass()
+{
+  return mEffectiveMass;
+}
+
+void CustomConstraintInfo::SetEffectiveMass(real effectiveMass)
+{
+  mEffectiveMass = effectiveMass;
+  if(effectiveMass < Math::PositiveMin())
+    mInvEffectiveMass = 0;
+  else
+    mInvEffectiveMass = 1.0f / mEffectiveMass;
+}
+
 void CustomConstraintInfo::Reset()
 {
   mGamma = 0.0f;
   mEffectiveMass = 0.0f;
+  mInvEffectiveMass = 0.0f;
   mBias = 0.0f;
 }
 
@@ -400,13 +422,7 @@ void CustomJoint::ConstraintInfoToMolecule(CustomConstraintInfo* constraint, Con
   molecule.mJacobian.Angular[0] = constraint->mAngular0;
   molecule.mJacobian.Angular[1] = constraint->mAngular1;
 
-  molecule.mMass = constraint->mEffectiveMass;
-  // For efficient computations store the effective mass as the inverse effective mass
-  if(molecule.mMass < Math::PositiveMin())
-    molecule.mMass = real(0.0);
-  else
-    molecule.mMass = real(1.0) / molecule.mMass;
-
+  molecule.mMass = constraint->mInvEffectiveMass;
   molecule.mGamma = constraint->mGamma;
   molecule.mBias = constraint->mBias;
   molecule.mMinImpulse = constraint->mMinImpulse;

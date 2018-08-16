@@ -170,6 +170,9 @@ void SpriteSheetImporter::UpdateTexture()
 {
   if (!mSourceTextrue)
     mSourceTextrue = Texture::CreateRuntime();
+  
+  TextureFiltering::Enum filtering = Sampling == SpriteSampling::Nearest ? TextureFiltering::Nearest : TextureFiltering::Bilinear;
+  mSourceTextrue->SetFiltering(filtering);
 
   byte* data = (byte*)mSourcePixels.Data;
   if (UseAlphaColorKey)
@@ -181,11 +184,6 @@ void SpriteSheetImporter::UpdateTexture()
   }
 
   mSourceTextrue->Upload(mSourcePixels);
-
-  //if(Smoothing)
-  //  mSourceTextrue->SetFiltering(Filtering::Bilinear);
-  //else
-  //  mSourceTextrue->SetFiltering(Filtering::Point);
 
   mSourceDisplay->SetTexture(mSourceTextrue);
 }
@@ -203,7 +201,7 @@ void SpriteSheetImporter::LoadImages(Array<String>& files)
     Image& frameImage = images[i];
 
     Status status;
-    LoadFromPng(status, &frameImage, files[i]);
+    Zero::LoadImage(status, files[i], &frameImage);
     if (!status)
     {
       DoNotifyStatus(status);
@@ -258,7 +256,7 @@ void SpriteSheetImporter::LoadSprite(SpriteSource* spriteSource)
   }
 
   Status status;
-  LoadFromPng(status, &mSourcePixels, spriteSource->mContentItem->GetFullPath());
+  Zero::LoadImage(status, spriteSource->mContentItem->GetFullPath(), &mSourcePixels);
   if (!status)
   {
     DoNotifyStatus(status);
@@ -275,7 +273,7 @@ void SpriteSheetImporter::LoadSprite(SpriteSource* spriteSource)
 void SpriteSheetImporter::LoadImage(StringParam filename)
 {
   Status status;
-  LoadFromPng(status, &mSourcePixels, filename);
+  Zero::LoadImage(status, filename, &mSourcePixels);
   if (!status)
   {
     DoNotifyStatus(status);
@@ -408,7 +406,7 @@ SpriteSource* SpriteSheetImporter::AddSpriteResource(StringParam name, Image& ou
   String fileName = FilePath::Combine(GetTemporaryDirectory(), "SpriteTemp.png");
 
   Status status;
-  SaveToPng(status, &output, fileName);
+  Zero::SaveImage(status, fileName, &output, ImageSaveFormat::Png);
 
   if (!status)
   {
@@ -424,6 +422,12 @@ SpriteSource* SpriteSheetImporter::AddSpriteResource(StringParam name, Image& ou
   addContent.OnContentFileConflict = ContentFileConflict::FindNewName;
 
   ContentItem* newContentItem = Z::gContentSystem->AddContentItemToLibrary(status, addContent);
+  if(status.Failed())
+  {
+    DoNotifyError("Sprite Import Failed", status.Message);
+    return nullptr;
+  }
+
   SpriteSourceBuilder* builder = newContentItem->has(SpriteSourceBuilder);
 
   Vec2 origin = ComputeOrigin(mOrigin, frameSize.SizeX, frameSize.SizeY);
@@ -1124,10 +1128,9 @@ SpriteSampling::Enum SpriteSheetImporter::GetSmoothing(){return Sampling;}
 void SpriteSheetImporter::SetSmoothing(SpriteSampling::Enum sampling)
 {
   Sampling = sampling;
-  //if(Smoothing)
-  //  mSourceTextrue->SetFiltering(Filtering::Bilinear);
-  //else
-  //  mSourceTextrue->SetFiltering(Filtering::Point);
+  // When changing smoothing mode update the source texture that
+  // the preview sprite is using to display the result to the user
+  UpdateTexture();
 }
 
 //------------------------------------------------------------------------
@@ -1167,7 +1170,7 @@ void SpriteSheetImport(Editor* editor)
   config.EventName = "OnFileSelected";
   config.CallbackObject = importer;
   config.Title = "Select sprite sheet to import";
-  config.AddFilter("Png File", "*.png");
+  BuildImageFileDialogFilters(config.mSearchFilters);
   config.StartingDirectory = editor->GetProjectPath();
   config.Flags |= FileDialogFlags::MultiSelect;
   Z::gEngine->has(OsShell)->OpenFile(config);

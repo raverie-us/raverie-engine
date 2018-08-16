@@ -689,30 +689,45 @@ namespace Audio
     ReadIndex(0), 
     WriteIndex(0), 
     BufferSize(0),
-    MaxDelaySec(2.0f),
     InterpolatingWetLevel(false)
   {
-    BufferSize = (int)(MaxDelaySec * SystemSampleRate);
-    for (unsigned i = 0; i < MaxChannels; ++i)
-    {
-      BuffersPerChannel[i] = new float[BufferSize];
-      memset(BuffersPerChannel[i], 0, sizeof(float) * BufferSize);
-    }
-
-    ReadIndex = (int)(BufferSize - DelayInSamples);
+    memset(BuffersPerChannel, 0, sizeof(float) * MaxChannels);
   }
 
   //************************************************************************************************
   DelayLine::~DelayLine()
   {
     for (unsigned i = 0; i < MaxChannels; ++i)
-      delete[] BuffersPerChannel[i];
+    {
+      if (BuffersPerChannel[i])
+        delete[] BuffersPerChannel[i];
+    }
   }
 
   //************************************************************************************************
   void DelayLine::ProcessBuffer(const float* input, float* output, const unsigned numberOfChannels, 
     const unsigned bufferSize)
   {
+    // If there is no delay, simply copy input into output
+    if (DelayInSamples == 0.0f)
+    {
+      memcpy(output, input, sizeof(float) * bufferSize);
+      return;
+    }
+
+    // Check if we need to allocate buffers
+    if (!BuffersPerChannel[numberOfChannels - 1])
+    {
+      for (unsigned i = 0; i < numberOfChannels; ++i)
+      {
+        if (!BuffersPerChannel[i])
+        {
+          BuffersPerChannel[i] = new float[BufferSize];
+          memset(BuffersPerChannel[i], 0, sizeof(float) * BufferSize);
+        }
+      }
+    }
+
     for (unsigned frameIndex = 0; frameIndex < bufferSize; frameIndex += numberOfChannels)
     {
       for (unsigned channel = 0; channel < numberOfChannels && channel < 
@@ -721,28 +736,23 @@ namespace Audio
         // Read input for this channel
         float inputSample = input[frameIndex + channel];
         float delayedSample;
-        // If no delay, delayed sample is just input
-        if (DelayInSamples == 0)
+
+        // If delay is less than 1 sample, interpolate between input(n) and input(n-1)
+        if (ReadIndex == WriteIndex && DelayInSamples < 1.0f)
           delayedSample = inputSample;
-        // Otherwise, get interpolated delayed sample 
+        // Otherwise, get delayed sample from buffer
         else
-        {
-          // If delay is less than 1 sample, interpolate between input(n) and input(n-1)
-          if (ReadIndex == WriteIndex && DelayInSamples < 1.0f)
-            delayedSample = inputSample;
-          // Otherwise, get delayed sample from buffer
-          else
-            delayedSample = BuffersPerChannel[channel][ReadIndex];
+          delayedSample = BuffersPerChannel[channel][ReadIndex];
 
-          // Read previous delayed sample
-          int readIndex_1 = ReadIndex - 1;
-          if (readIndex_1 < 0)
-            readIndex_1 = BufferSize - 1;
-          float delayedSample_1 = BuffersPerChannel[channel][readIndex_1];
+        // Read previous delayed sample
+        int readIndex_1 = ReadIndex - 1;
+        if (readIndex_1 < 0)
+          readIndex_1 = BufferSize - 1;
+        float delayedSample_1 = BuffersPerChannel[channel][readIndex_1];
 
-           delayedSample = delayedSample_1 + ((DelayInSamples - (int)DelayInSamples) * 
-             (delayedSample - delayedSample_1));
-        }
+        // Interpolate between the two samples
+        delayedSample = delayedSample_1 + ((DelayInSamples - (int)DelayInSamples) * 
+          (delayedSample - delayedSample_1));
 
         // Write input to delay buffer
         BuffersPerChannel[channel][WriteIndex] = inputSample + (Feedback * delayedSample);
@@ -771,14 +781,23 @@ namespace Audio
   //************************************************************************************************
   void DelayLine::SetDelayMSec(float delay)
   {
-    if (delay > MaxDelaySec * 1000)
-      delay = MaxDelaySec * 1000;
-
     DelayInSamples = delay * SystemSampleRate / 1000.0f;
 
-    ReadIndex = WriteIndex - (int)DelayInSamples;
-    while (ReadIndex < 0)
-      ReadIndex += BufferSize;
+    if (BufferSize != (int)DelayInSamples + 1)
+    {
+      BufferSize = (int)DelayInSamples + 1;
+      WriteIndex = 0;
+      ReadIndex = 1;
+
+      for (unsigned i = 0; i < MaxChannels; ++i)
+      {
+        if (BuffersPerChannel[i])
+        {
+          delete[] BuffersPerChannel[i];
+          BuffersPerChannel[i] = nullptr;
+        }
+      }
+    }
   }
 
   //************************************************************************************************
@@ -807,6 +826,27 @@ namespace Audio
     InterpolatingWetLevel = true;
     WetLevelInterpolator.SetValues(WetLevel, newValue, 
       (unsigned)(time * SystemSampleRate));
+  }
+
+  //************************************************************************************************
+  bool DelayLine::IsDataInBuffer()
+  {
+    for (unsigned i = 0; i < MaxChannels; ++i)
+    {
+      // Check if this buffer exists
+      if (!BuffersPerChannel[i])
+        continue;
+
+      // If there is any value in this buffer, return true
+      for (int j = 0; j < BufferSize; ++j)
+      {
+        if (BuffersPerChannel[i][j] != 0)
+          return true;
+      }
+    }
+
+    // No values other than zero were found, so return false
+    return false;
   }
 
   //------------------------------------------------------------------------------ Envelope Detector

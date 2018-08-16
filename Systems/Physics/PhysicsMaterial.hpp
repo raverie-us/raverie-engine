@@ -41,6 +41,10 @@ public:
   real GetDensity();
   void SetDensity(real density);
 
+  /// Deprecated. Use RestitutionImportance instead.
+  bool GetHighPriority();
+  void SetHighPriority(bool state);
+
   //-------------------------------------------------------------------Internal
   void CopyTo(PhysicsMaterial* destination);
   /// After modifying this resource, notify anyone using it to update
@@ -58,10 +62,16 @@ public:
   real mDynamicFriction;
   real mDensity;
 
-  /// If high priority is set, this object's restitution/friction will always be used
-  /// unless the other material is also high priority. If both are high
-  /// priority then the default combination logic will be used.
-  bool mHighPriority;
+  /// Determines which object's restitution should be used. If object A's restitution
+  /// importance value is larger than object B's then object A's restitution will be used.
+  /// If both importance values are the same then the default combination logic will be used
+  /// (see the description of Restitution for details).
+  real mRestitutionImportance;
+  /// Determines which object's friction should be used. If object A's friction
+  /// importance value is larger than object B's then object A's friction will be used.
+  /// If both importance values are the same then the default combination logic will be used
+  /// (see the description of Friction for details).
+  real mFrictionImportance;
 
   bool mModified;
 };

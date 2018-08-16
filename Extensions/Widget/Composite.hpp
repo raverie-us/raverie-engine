@@ -13,9 +13,25 @@ namespace Zero
 {
 
 typedef InList<Widget, &Widget::mWidgetLink> WidgetList;
+typedef WidgetList::range WidgetListRange;
+
+//------------------------------------------------------- Filter Layout Children
+struct FilterLayoutChildren
+{
+  WidgetListRange mChildren;
+
+  FilterLayoutChildren(Composite* widget);
+
+  Widget& Front();
+  WidgetListRange All();
+  bool Empty();
+  void PopFront();
+
+  void SkipInvalid();
+};
 
 //-------------------------------------------------------------------- Composite
-typedef WidgetList::range WidgetListRange;
+
 
 ///Composite is a widget that Contains children.
 ///Base class for all widgets that have children.

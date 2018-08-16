@@ -28,7 +28,7 @@ ZilchDefineType(EventBundleMetaComposition, builder, type)
 EventBundleMetaComposition::EventBundleMetaComposition() :
   MetaComposition(ZilchTypeId(Event))
 {
-
+  mSupportsComponentAddition = false;
 }
 
 /// "Component" Instance Management
@@ -70,7 +70,7 @@ uint EventBundleMetaComposition::GetComponentIndex(HandleParam instance, BoundTy
   return eventBundle->GetEventIndexByType(boundType);
 }
 
-void EventBundleMetaComposition::AddComponent(HandleParam instance, HandleParam subObject, int index, bool ignoreDependencies)
+void EventBundleMetaComposition::AddComponent(HandleParam instance, HandleParam subObject, int index, bool ignoreDependencies, MetaCreationContext* creationContext)
 {
   // Get event bundle instance
   EventBundle* eventBundle = instance.Get<EventBundle*>();

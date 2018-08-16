@@ -38,11 +38,19 @@ ModalBackgroundTaskProgessBar::ModalBackgroundTaskProgessBar(Composite* parent, 
   // Spacer
   new Spacer(mStripArea);
   ConnectThisTo(progressListener, Events::BackgroundTaskUpdated, OnProgressUpdated);
+  ConnectThisTo(progressListener, Events::BackgroundTaskCompleted, OnTaskEnded);
+  ConnectThisTo(progressListener, Events::BackgroundTaskFailed, OnTaskEnded);
 }
 
 void ModalBackgroundTaskProgessBar::OnProgressUpdated(BackgroundTaskEvent* e)
 {
   UpdateProgress(e->PercentComplete);
+}
+
+void ModalBackgroundTaskProgessBar::OnTaskEnded(BackgroundTaskEvent* e)
+{
+  if(mCloseOnComplete)
+    Close();
 }
 
 void ModalBackgroundTaskProgessBar::UpdateProgress(float percentComplete)

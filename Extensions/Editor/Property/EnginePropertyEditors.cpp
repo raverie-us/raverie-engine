@@ -92,6 +92,9 @@ public:
 
   void RevertCog(Cog* cog, HashSet<MetaSelection*>* modifiedSelections)
   {
+    if(cog->mArchetype == nullptr)
+      return;
+
     RevertToArchetype(Z::gEditor->GetOperationQueue(), cog);
   }
 
@@ -758,8 +761,32 @@ public:
     mActiveSearch.SafeDestroy();
   }
 
+  Cog* FindRelativeToCog()
+  {
+    ObjectPropertyNode* node = mNode;
+    while (node)
+    {
+      BoundType* type = node->mObject.StoredType;
+      if (type && type->IsA(ZilchTypeId(Cog)))
+        if (Cog* cog = (Cog*)node->mObject.Dereference())
+          return cog;
+
+      node = node->mParent;
+    }
+
+    return nullptr;
+  }
+
+  void EnsureCogPathIsRelativeTo()
+  {
+    Cog* relativeTo = mValue.GetRelativeTo();
+    if (!relativeTo)
+      mValue.SetRelativeTo(FindRelativeToCog());
+  }
+
   void ValidateSelection(Status& status, Cog* test)
   {
+    EnsureCogPathIsRelativeTo();
     CogPath::ComputePath(status, mValue.GetRelativeTo(), test, mValue.GetPathPreference0(), mValue.GetPathPreference1(), mValue.GetPathPreference2());
     if (status.Failed())
       return;
@@ -771,48 +798,15 @@ public:
     }
   }
 
-  bool AreTwoNamesTheSame(Cog* test)
-  {
-    String name = test->GetName();
-
-    Cog* parent = test->GetParent();
-    if(parent)
-    {
-      size_t childCount = RangeCount(parent->FindAllChildrenByName(name));
-      return childCount != 1;
-    }
-    else
-    {
-      // Check to see if there are multiple objects within the same space that have the same name
-      Space* toSpace = test->GetSpace();
-      if (toSpace != nullptr)
-      {
-        forRange(Cog& cog, toSpace->FindAllObjectsByName(name))
-        {
-          if (&cog != test && cog.GetName() == name)
-            return true;
-        }
-      }
-    }
-    return false;
-  }
-
   void SetReferencedCog(Cog* to)
   {
     if(to != nullptr)
     {
-      if(AreTwoNamesTheSame(to))
-        DoNotifyWarning("Cog Path", "Two objects have the same name (in the same space or under the same parent) so the CogPath may resolve to an incorrect object");
-
-      //mValue.SetCog(to);
-
-      //Variant result(mValue);
-      //CommitValue(result);
-
       Handle rootInstance;
       PropertyPath propertyPath;
       BuildPath(mNode, rootInstance, propertyPath);
 
+      EnsureCogPathIsRelativeTo();
       Property* prop = ZilchTypeId(CogPath)->GetProperty("Cog");
       propertyPath.AddPropertyToPath(prop);
 
@@ -830,7 +824,7 @@ public:
     PropertyPath propertyPath;
     BuildPath(mNode, rootInstance, propertyPath);
 
-    
+    EnsureCogPathIsRelativeTo();
     Property* prop = ZilchTypeId(CogPath)->GetProperty("Path");
     propertyPath.AddPropertyToPath(prop);
 
@@ -1061,7 +1055,7 @@ void CogPickerManipulation<PropertyEditor>::OnUpdate(UpdateEvent* event)
     if (status.Failed())
     {
       selectText = BuildString(selectText, "\n", status.Message);
-      mToolTip->SetColorScheme(ToolTipColorScheme::Red);
+      mToolTip->SetColorScheme(ToolTipColorScheme::Yellow);
     }
     
     mToolTip->SetText(selectText);
@@ -2201,75 +2195,6 @@ public:
   {
     mBackground->SetSize(mSize);
     Composite::UpdateTransform();
-  }
-};
-
-template <typename ResourceList>
-class ResourceListOperation : public Operation
-{
-public:
-  UndoHandle mObjectHandle;
-  // Storing a pointer to this is safe because it only ever points to native types, which never
-  // get destructed
-  BoundTypeHandle mMeta;
-  String mResourceIdName;
-  uint mIndex;
-  bool mAddOp;
-
-  ResourceListOperation(HandleParam object, StringParam resourceIdName, uint index = -1, bool addOp = true)
-    : mResourceIdName(resourceIdName)
-    , mIndex(index)
-    , mAddOp(addOp)
-    , mObjectHandle(object)
-  {
-    mName = "Removed resource";
-    if(mAddOp)
-      mName = "Added resource";
-
-    if(Resource* resource = GetResourceList( )->mOwner)
-      BuildString(mName, ": ", resource->Name);
-    
-    mMeta = object.StoredType;
-  }
-
-  void Undo() override
-  {
-    if (mAddOp)
-      RemoveResource();
-    else
-      AddResource();
-  }
-
-  void Redo() override
-  {
-    if (mAddOp)
-      AddResource();
-    else
-      RemoveResource();
-  }
-
-  void AddResource()
-  {
-    GetResourceList()->AddResource(mResourceIdName, mIndex);
-    SendPropertyEvent();
-  }
-
-  void RemoveResource()
-  {
-    GetResourceList()->RemoveResource(mResourceIdName);
-    SendPropertyEvent();
-  }
-
-  ResourceList* GetResourceList()
-  {
-    return mObjectHandle.Get<ResourceList*>();
-  }
-
-  void SendPropertyEvent()
-  {
-    Resource* resource = GetResourceList()->mOwner;
-
-    MetaOperations::NotifyComponentsModified(resource);
   }
 };
 

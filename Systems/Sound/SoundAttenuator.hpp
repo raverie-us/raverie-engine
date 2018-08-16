@@ -51,11 +51,11 @@ public:
   void Unload() override;
 
   /// The distance from a SoundListener at which the sound's volume begins attenuating. 
-  /// At shorter distances the volume will not be changed.
+  /// At shorter distances the volume will not be changed. Cannot be larger than the StopDistance.
   float GetStartDistance();
   void SetStartDistance(float value);
   /// The distance at which the attenuation reaches the minimum volume.
-  /// No volume changes will happen past this distance.
+  /// No volume changes will happen past this distance. Cannot be smaller than the StartDistance.
   float GetStopDistance();
   void SetStopDistance(float value);
   /// The lowest volume that the attenuation will reach. 

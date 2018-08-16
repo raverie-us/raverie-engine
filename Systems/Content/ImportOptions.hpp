@@ -108,6 +108,7 @@ public:
 
   AudioCueImport::Enum mGenerateCue;
   String mGroupCueName;
+  AudioFileLoadType::Enum mStreamingMode;
   ImportOptions* mOwner;
 };
 

@@ -452,11 +452,12 @@ void EditText::OnKeyDown(KeyboardEvent* keyboardEvent)
   // Process control keys
   switch(key)
   {
-
+    // Enter key
     case Keys::Enter:
     {
-      // Enter key
-      DispatchBubble(Events::TextEnter, &objectEvent);
+      if(!keyboardEvent->GetModifierPressed())
+        DispatchBubble(Events::TextEnter, &objectEvent);
+
       if(mEnterClearFocus)
         StopEdit();
       keyboardEvent->Handled = true;

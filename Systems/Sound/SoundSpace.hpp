@@ -30,6 +30,9 @@ public:
   /// A value of 1 does nothing, 2 will double the volume, 0.5 will halve it.
   float GetVolume();
   void SetVolume(float value);
+  /// Silences all audio output from this space but processes audio normally.
+  bool GetMuteAudio();
+  void SetMuteAudio(bool mute);
   /// Interpolates the SoundSpace's Volume property from its current value to the value 
   /// passed in as the first parameter, over the number of seconds passed in as the second parameter.
   void InterpolateVolume(float value, float interpolationTime);

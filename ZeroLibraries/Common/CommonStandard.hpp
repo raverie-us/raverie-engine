@@ -120,4 +120,5 @@ public:
 #include "Utility/Variant.hpp"
 #include "Utility/Determinism.hpp"
 #include "Utility/SpinLock.hpp"
+#include "Utility/Stream.hpp"
 #include "Singleton.hpp"

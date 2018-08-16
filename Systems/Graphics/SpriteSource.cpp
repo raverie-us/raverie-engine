@@ -44,7 +44,7 @@ public:
   {
     Status status;
     Image image;
-    LoadFromPng(status, &image, block.Data, block.Size);
+    LoadImage(status, block.Data, block.Size, &image);
 
     if (image.Data == nullptr)
     {
@@ -150,7 +150,7 @@ void SpriteSource::LoadSourceImage(Status& status, Image* image)
 
   DataBlock block = ReadFileIntoDataBlock(fullPath.c_str());
 
-  LoadFromPng(status, image, block.Data, block.Size);
+  LoadImage(status, block.Data, block.Size, image);
 
   FreeBlock(block);
 }
@@ -183,7 +183,7 @@ SpriteSourceManager::SpriteSourceManager(BoundType* resourceType)
   AddLoader("SpriteSource", new SpriteSourceLoader());
   mCategory = "Graphics";
   mCanAddFile = true;
-  mOpenFileFilters.PushBack(FileDialogFilter("*.png"));
+  BuildImageFileDialogFilters(mOpenFileFilters);
   DefaultResourceName = "SquareBordered";
   mPreview = true;
   mCanReload = true;

@@ -28,8 +28,10 @@ int main(int argc, char** argv)
   Zero::Console::Add(&stdListener);
   ZPrint("Running Geometry Processor\n");
 
+  int numArguments = 0;
+  wchar_t** commandLineArgs = CommandLineToArgvW(GetCommandLineW(), &numArguments);
   Array<String> commandLine;
-  CommandLineToStringArray(commandLine, (cstr*)argv, argc);
+  CommandLineToStringArray(commandLine, commandLineArgs, numArguments);
 
   Environment environment;
   environment.ParseCommandArgs(commandLine);

@@ -491,7 +491,7 @@ namespace Audio
 
       // Get the audio samples from the asset
       Samples.Clear();
-      asset->AppendSamples(&Samples, start, (stop - start) * mSampleChannels);
+      asset->AppendSamples(&Samples, start, (stop - start) * mSampleChannels, NodeID);
 
       ValidateLengths();
     }
@@ -655,12 +655,7 @@ namespace Audio
   void GranularSynthNode::SetGrainPanningValue(float panValue)
   {
     if (!Threaded)
-    {
-      panValue = Math::Max(panValue, -1.0f);
-      panValue = Math::Min(panValue, 1.0f);
-
       AddTaskForSibling(&GranularSynthNode::SetGrainPanningValue, panValue);
-    }
 
     mGrainPanningValue = panValue;
   }

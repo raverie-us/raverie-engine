@@ -84,7 +84,7 @@ void EditorMain::OnKeyDown(KeyboardEvent* keyEvent)
 
   // Tools
   uint keyPressed = keyEvent->Key;
-  if(keyPressed >= '0' && keyPressed <= '9' && keyEvent->GetModififierPressed() == false)
+  if(keyPressed >= '0' && keyPressed <= '9' && keyEvent->GetModifierPressed() == false)
   {
     if(keyPressed == '0') keyPressed += 10;
     uint toolIndex = keyPressed - '0' - 1;
@@ -190,6 +190,7 @@ LibraryView* EditorMain::CreateLibraryView(bool showCore, bool autoDock)
   library->SetName("Library");
   library->SetHideOnClose(false);
   library->SetSize(Pixels(dockWidth, 280));
+  library->SetTagEditorSize(SizeAxis::X, dockWidth);
 
   // Hide core libraries
   if (!showCore)
@@ -240,6 +241,16 @@ LibraryView* EditorMain::CreateLibraryView(bool showCore, bool autoDock)
 void EditorMain::ToggleConsole(CommandEvent* event)
 {
   Editor::ToggleConsole();
+}
+
+void EditorMain::ShowConsole(CommandEvent* event)
+{
+  Editor::ShowConsole();
+}
+
+void EditorMain::HideConsole(CommandEvent* event)
+{
+  Editor::HideConsole();
 }
 
 void EditorMain::ShowBrowser(CommandEvent* event)
@@ -447,6 +458,21 @@ void EditorMain::ShowSoundNodeGraph(CommandEvent* event)
   CreateDockableWindow("SoundNodeGraphWindow", cameraViewport, Vec2(700, 500), true);
 }
 
+void EditorMain::ShowRenderGroupHierarchies(CommandEvent* event)
+{
+  // Just show current window if it already exists.
+  if (Widget* widget = mManager->FindWidget("RenderGroupHierarchies"))
+  {
+    Zero::ShowWidget(widget);
+    return;
+  }
+
+  RenderGroupHierarchies* hierarchies = new RenderGroupHierarchies(this);
+  hierarchies->SetName("RenderGroupHierarchies");
+  hierarchies->SetSize(Pixels(280, 400));
+  AddManagedWidget(hierarchies, DockArea::Floating, true);
+}
+
 void EditorMain::AttachDocumentEditor(StringParam name, DocumentEditor* docEditor)
 {
   docEditor->SetName(name);
@@ -477,6 +503,11 @@ DocumentEditor* EditorMain::OpenTextString(StringParam name, StringParam text, S
     editor->SetLexer(Lexer::Zilch);
 
   AttachDocumentEditor( document->mName, editor);
+  // After the document is attached we need to re-layout the editor so that the
+  // document's size is correctly updated before any further operations. This was
+  // specifically added for text editors as the scintilla will get the wrong size otherwise.
+  this->UpdateTransform();
+
   return editor;
 }
 
@@ -851,7 +882,7 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
 
   SetupTools(editorMain);
 
-  commands->SetContext(editorMain, ZilchTypeId(Editor));
+  commands->GetContext()->Add(editorMain, ZilchTypeId(Editor));
   rootWidget->LoadMenu("Main");
 
   Connect(Z::gEngine, Events::Notify, editorMain, &EditorMain::OnNotifyEvent);
@@ -925,6 +956,8 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
     BindCommand("SelectProject", ShowProject);
     BindCommand("Library", ShowLibrary);
     BindCommand("Console", ToggleConsole);
+    BindCommand("ShowConsole", ShowConsole);
+    BindCommand("HideConsole", HideConsole)
     BindCommand("Browser", ShowBrowser);
     BindCommand("Market", ShowMarket);
     BindCommand("Chat", ShowChat);
@@ -932,6 +965,7 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
     BindCommand("BroadPhaseTracker", ShowBroadPhaseTracker);
     BindCommand("VolumeMeter", ShowVolumeMeter);
     BindCommand("SoundNodeGraph", ShowSoundNodeGraph);
+    BindCommand("RenderGroupHierarchies", ShowRenderGroupHierarchies);
     BindCommand("EditColorScheme", EditColorScheme);
     BindCommand("ClearConsole", ClearConsole);
     BindCommand("ShowCoreLibrary", ShowCoreLibrary);

@@ -556,7 +556,7 @@ void Archive::ReadZipFileInternal(ArchiveReadFlags::Enum readFlags, Stream& file
       else
       {
         //Seek past the entry
-        file.Seek( localFile.Info.CompressedSize, FileOrigin::Current);
+        file.Seek( localFile.Info.CompressedSize, SeekOrigin::Current);
       }
     }
     else if(signature == CentralHeader)
@@ -596,7 +596,7 @@ void Archive::Extract(File& file, StringParam name, StringParam destfile)
     {
       Status status;
       byte* buffer = (byte*)zAllocate(entry.Compressed.Size);
-      file.Seek(entry.Offset, FileOrigin::Begin);
+      file.Seek(entry.Offset, SeekOrigin::Begin);
       file.Read(status, buffer, entry.Compressed.Size);
       entry.Compressed.Data = buffer;
       DecompressEntry(entry);
@@ -646,7 +646,7 @@ template<typename Stream>
 void Archive::DecompressEntryInternal(ArchiveEntry& entry, Stream& file)
 {
   // Seek to the start of the entry
-  file.Seek(entry.Offset, FileOrigin::Begin);
+  file.Seek(entry.Offset, SeekOrigin::Begin);
 
   // Read the compressed data into a heap allocated block
   byte* buffer = (byte*)zAllocate(entry.Compressed.Size);

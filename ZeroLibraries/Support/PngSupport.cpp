@@ -5,10 +5,6 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "Image.hpp"
-#include "Utility/Status.hpp"
-#include "PngSupport.hpp"
-#include "Platform/File.hpp"
 
 #include "png.h"
 #ifdef ZeroDebug
@@ -20,48 +16,45 @@
 namespace Zero
 {
 
-const uint PngHeaderSize = 8;
+const uint PngSignatureSize = 8;
 
-// Read data from any source
-template<typename readerType>
-void CustomReadData(png_structp pngPtr, png_bytep data, png_size_t length)
-{
-  Status status;
-  png_voidp ioPtr = png_get_io_ptr(pngPtr);
-  readerType* reader = (readerType*)ioPtr;
-  reader->Read(status, data, length);
-}
-
-// Write data from any source
-template<typename readerType>
-void CustomWriteData(png_structp pngPtr, png_bytep data, png_size_t length)
+// Read data from any Stream
+static void StreamReadData(png_structp pngPtr, png_bytep data, png_size_t length)
 {
   png_voidp ioPtr = png_get_io_ptr(pngPtr);
-  readerType* reader = (readerType*)ioPtr;
-  reader->Write(data, length);
+  Stream* stream = (Stream*)ioPtr;
+  stream->Read(data, length);
 }
 
-void CustomFlush(png_structp pngPtr)
+// Write data to any Stream
+static void StreamWriteData(png_structp pngPtr, png_bytep data, png_size_t length)
 {
-  // Do nothing
+  png_voidp ioPtr = png_get_io_ptr(pngPtr);
+  Stream* stream = (Stream*)ioPtr;
+  stream->Write(data, length);
 }
 
-bool ReadPngInfo(StringParam filename, PngInfo& info)
+static void CustomFlush(png_structp pngPtr)
 {
-  Status status;
-  File file;
-  file.Open(filename.c_str(), FileMode::Read, FileAccessPattern::Sequential);
+  png_voidp ioPtr = png_get_io_ptr(pngPtr);
+  Stream* stream = (Stream*)ioPtr;
+  stream->Flush();
+}
 
-  if (!file.IsOpen())
-    return false;
-
+bool IsPng(Stream* stream)
+{
   // Read the png header
-  png_byte pngHeader[PngHeaderSize];
-  file.Read(status, pngHeader, PngHeaderSize);
-
+  png_byte pngSignature[PngSignatureSize];
+  stream->Read(pngSignature, PngSignatureSize);
+  stream->Seek(0);
   // Is this a valid png file?
-  int isPng = png_check_sig(pngHeader, PngHeaderSize);
-  if (!isPng)
+  return png_check_sig(pngSignature, PngSignatureSize) != 0;
+}
+
+bool ReadPngInfo(Stream* stream, ImageInfo& info)
+{
+  // Read the png signature (this moves the stream forward!)
+  if (!IsPng(stream))
     return false;
 
   png_structp pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
@@ -70,14 +63,15 @@ bool ReadPngInfo(StringParam filename, PngInfo& info)
   if (setjmp(png_jmpbuf(pngPtr)))
   {
     png_destroy_read_struct(&pngPtr, &infoPtr, png_infopp_NULL);
+    stream->Seek(0);
     return false;
   }
 
   // Set up custom read to read from the file object
-  png_set_read_fn(pngPtr, (png_voidp)&file, CustomReadData<File>);
+  png_set_read_fn(pngPtr, (png_voidp)stream, StreamReadData);
 
   // Move paste the png header that was read above
-  png_set_sig_bytes(pngPtr, PngHeaderSize);
+  png_set_sig_bytes(pngPtr, PngSignatureSize);
 
   // Read the png info data
   png_read_info(pngPtr, infoPtr);
@@ -85,19 +79,37 @@ bool ReadPngInfo(StringParam filename, PngInfo& info)
   // Load the data into the structure
   info.Width =  png_get_image_width(pngPtr, infoPtr);
   info.Height = png_get_image_height(pngPtr, infoPtr);
-  info.BitDepth = png_get_bit_depth(pngPtr, infoPtr);
+  int bitDepth = png_get_bit_depth(pngPtr, infoPtr);
+
+  if (bitDepth == 16)
+    info.Format = TextureFormat::RGBA16;
+  else
+    info.Format = TextureFormat::RGBA8;
+
   png_uint_32 color_type = png_get_color_type(pngPtr, infoPtr);
 
   png_destroy_read_struct(&pngPtr, &infoPtr, png_infopp_NULL);
-
+  stream->Seek(0);
   return true;
 }
 
-void LoadFromPng(Status& status, byte** output, uint* width, uint* height, uint* bitDepth, const byte* data, uint size, bool stripBitDepth)
+bool IsPngLoadFormat(TextureFormat::Enum format)
 {
-  if (data == nullptr || size == 0)
+  return format == TextureFormat::None || IsPngSaveFormat(format);
+}
+
+bool IsPngSaveFormat(TextureFormat::Enum format)
+{
+  return
+    format == TextureFormat::RGBA8 ||
+    format == TextureFormat::RGBA16;
+}
+
+void LoadPng(Status& status, Stream* stream, byte** output, uint* width, uint* height, TextureFormat::Enum* format, TextureFormat::Enum requireFormat)
+{
+  if (!IsPngLoadFormat(requireFormat))
   {
-    status.SetFailed("Can not read png file");
+    status.SetFailed("Png only supports the formats RGBA8 and RGBA16");
     return;
   }
 
@@ -140,11 +152,11 @@ void LoadFromPng(Status& status, byte** output, uint* width, uint* height, uint*
   }
 
   // If you are using replacement read functions, instead of calling png_init_io()
-  ByteBufferBlock bufferBlock(const_cast<byte*>(data), size, false);
-  png_set_read_fn(pngPtr, (png_voidp)&bufferBlock, CustomReadData<ByteBufferBlock>);
+  png_set_read_fn(pngPtr, (png_voidp)stream, StreamReadData);
 
   // The call to png_read_info() gives us all of the information from the
   // PNG file before the first IDAT (image data chunk).  REQUIRED
+  // This reads the header, and if it fails it will jump back to the setjmp point.
   png_read_info(pngPtr, infoPtr);
 
   png_uint_32 readWidth, readHeight;
@@ -152,7 +164,7 @@ void LoadFromPng(Status& status, byte** output, uint* width, uint* height, uint*
   png_get_IHDR(pngPtr, infoPtr, &readWidth, &readHeight, &readDepth, &colorType, &interlaceType, nullptr, nullptr);
 
   // Strip 16 bits/color files down to 8 bits/color.
-  if (stripBitDepth)
+  if (requireFormat == TextureFormat::RGBA8)
   {
     png_set_strip_16(pngPtr);
     readDepth = 8;
@@ -193,6 +205,12 @@ void LoadFromPng(Status& status, byte** output, uint* width, uint* height, uint*
   // Allocate space for image
   imageData = (byte*)zAllocate(imageSize);
 
+  if (!imageData)
+  {
+    status.SetFailed("Failed to allocate memory for the Png output image");
+    return;
+  }
+
   // Set up row pointers to point directly into allocated image
   png_bytep* rowPointers = (png_bytep*)alloca(readHeight * sizeof(byte*));
   for (uint i = 0; i < readHeight; ++i)
@@ -210,70 +228,24 @@ void LoadFromPng(Status& status, byte** output, uint* width, uint* height, uint*
   *output = imageData;
   *width = readWidth;
   *height = readHeight;
-  *bitDepth = readDepth;
+
+  if (readDepth == 16)
+    *format = TextureFormat::RGBA16;
+  else
+    *format = TextureFormat::RGBA8;
 }
 
-void LoadFromPng(Status& status, Image* image, const byte* data, uint size)
+void SavePng(Status& status, Stream* stream, const byte* image, uint width, uint height, TextureFormat::Enum format)
 {
-  byte* output = nullptr;
-  uint width, height, bitDepth;
-  LoadFromPng(status, &output, &width, &height, &bitDepth, data, size, true);
-  if (output && status.Succeeded())
-    image->Set((ImagePixel*)output, width, height);
-}
-
-void LoadFromPng(Status& status, Image* buffer, StringParam filename)
-{
-  File file;
-  file.Open(filename.c_str(), FileMode::Read, FileAccessPattern::Sequential);
-
-  if (!file.IsOpen())
+  if (!IsPngSaveFormat(format))
   {
-    status.SetFailed("Can not open png file");
+    status.SetFailed("Png only supports the formats RGBA8 and RGBA16");
     return;
   }
 
-  uint fileSize = file.Size();
-  byte* fileData = new byte[fileSize];
-  uint bytesRead = file.Read(status, fileData, fileSize);
-
-  if (status.Failed())
-  {
-    delete[] fileData;
-    status.SetFailed("Can not read png file");
-    return;
-  }
-
-  LoadFromPng(status, buffer, fileData, fileSize);
-
-  delete[] fileData;
-}
-
-void SaveToPng(Status& status, Image* image, StringParam filename)
-{
-  SaveToPng(status, (byte*)image->Data, image->Width, image->Height, 8, filename);
-}
-
-void SaveToPng(Status& status, byte* image, uint width, uint height, uint bitDepth, StringParam filename)
-{
   if (image == nullptr || width == 0 || height == 0)
   {
     status.SetFailed("Empty Image");
-    return;
-  }
-
-  if (bitDepth != 8 && bitDepth != 16)
-  {
-    status.SetFailed("Invalid bit depth");
-    return;
-  }
-
-  File file;
-  file.Open(filename.c_str(), FileMode::Write, FileAccessPattern::Sequential, FileShare::Write);
-
-  if (!file.IsOpen())
-  {
-    status.SetFailed(String::Format("Can not open png file '%s' for writing", filename.c_str()));
     return;
   }
 
@@ -291,6 +263,10 @@ void SaveToPng(Status& status, byte* image, uint width, uint height, uint bitDep
     return;
   }
 
+  int bitDepth = 8;
+  if (format == TextureFormat::RGBA16)
+    bitDepth = 16;
+
   // Set image attributes
   png_set_IHDR(png_ptr,
     pngInfo,
@@ -302,7 +278,7 @@ void SaveToPng(Status& status, byte* image, uint width, uint height, uint bitDep
     PNG_COMPRESSION_TYPE_DEFAULT,
     PNG_FILTER_TYPE_DEFAULT);
 
-  png_set_write_fn(png_ptr, (png_voidp)&file, CustomWriteData<File>, CustomFlush);
+  png_set_write_fn(png_ptr, (png_voidp)stream, StreamWriteData, CustomFlush);
 
   // Initialize rows of PNG.
   uint pixelSize = bitDepth / 2;

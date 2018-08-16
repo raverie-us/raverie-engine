@@ -339,6 +339,10 @@ public:
   bool mBreakpoints;
   //Folding margin
   bool mFolding;
+  //Several code paths (per frame) can cause indicators to update.
+  //But, it only needs to happen once per frame as updating indicators
+  //requires a texture upload.
+  bool mIndicatorsRequireUpdate;
   //Highlight all instances of text matching the current selection.
   bool mTextMatchHighlighting;
   //Highlight mode is either partial text, or whole text.

@@ -190,13 +190,22 @@ Archetype* UploadToArchetype(OperationQueue* queue, Cog* cog, StringParam archet
   {
     // Create a new Archetype if it didn't exist
     archetype = manager->MakeNewArchetypeWith(cog, archetypeName, 0, baseArchetype);
+
+    // If we didn't create a new archetype, then it failed
+    // and in most cases already emitted an error message.
+    if (!archetype)
+    {
+      delete op;
+      return nullptr;
+    }
+
     op->mUploadedToNewArchetype = true;
     op->mNewArchetype = archetype;
 
     op->Redo();
   
     // Copy over tags to the new Archetype
-    if(currentArchetype)
+    if(currentArchetype && archetype)
     {
       TagList oldTags;
       currentArchetype->GetTags(oldTags);
@@ -818,6 +827,8 @@ void UploadToNewArchetypeOperation::Redo()
 RevertToArchetypeOperation::RevertToArchetypeOperation(Cog* object)
 {
   Cog* archetypeContextCog = object->FindNearestArchetypeContext();
+  ReturnIf(archetypeContextCog == nullptr, ,"Cannot revert object with no archetype");
+
   Archetype* archetype = archetypeContextCog->GetArchetype();
 
   ErrorIf(archetype == nullptr, "Object doesn't have an Archetype");

@@ -12,8 +12,10 @@
 namespace Zero
 {
 
+class PostAddResourceEvent;
 class ResourceLibrary;
 class PropertyInterface;
+class AddObjectWidget;
 
 
 //--------------------------------------------------- ResourceSearchProvider ---
@@ -84,12 +86,19 @@ public:
   HandleOf<MetaComposition> mComposition;
   Handle mObject;
 
-  ComponentSearchProvider();
+  String mSearchType;
+
+  bool mResultsContainExactMatch;
+ 
+  ComponentSearchProvider(HandleParam object, HandleOf<MetaComposition>& composition);
 
   void Search(SearchData& search) override;
 
   String GetElementType(SearchViewResult& element) override;
   Composite* CreatePreview(Composite* parent, SearchViewResult& element) override;
+
+  bool AddToAlternatePreview(SearchData* search, Composite* searchPreviewWidget) override;
+  void AttemptAlternateSearchCompleted() override;
 };
 
 //------------------------------------------------------------------ Helpers ---

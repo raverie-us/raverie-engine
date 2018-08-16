@@ -365,15 +365,14 @@ EventMetaComposition::EventMetaComposition(PropertyInterface* propertyInterface,
   MetaCompositionWrapper(typeToWrap),
   mPropertyInterface(propertyInterface)
 {
-
 }
 
 //**************************************************************************************************
 void EventMetaComposition::AddComponent(HandleParam owner, BoundType* typeToAdd, int index,
-                                        bool ignoreDependencies)
+                                        bool ignoreDependencies, MetaCreationContext* creationContext)
 {
   MetaComposition* composition = owner.StoredType->HasInherited<MetaComposition>();
-  composition->AddComponent(owner, typeToAdd, index, ignoreDependencies);
+  composition->AddComponent(owner, typeToAdd, index, ignoreDependencies, creationContext);
 
   // Send events on both the object and the property grid
   MetaOperations::NotifyComponentsModified(owner);

@@ -24,6 +24,9 @@ void Component::operator delete(void* pMem, size_t size){return sHeap->Deallocat
 Handle ComponentGetOwner(HandleParam object)
 {
   Component* component = object.Get<Component*>();
+  if(component == nullptr)
+    return nullptr;
+
   return component->GetOwner();
 }
 

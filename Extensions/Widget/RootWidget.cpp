@@ -654,78 +654,129 @@ Widget* RootWidget::UpdateMousePosition(OsMouseEvent* osmouseEvent)
 }
 
 // Get the previous sibling in the tree
-Widget* PreviousSibling(Widget* object)
+Widget* PreviousSibling(Widget* object, bool ignoreInactive)
 {
+  // If there is no parent, there is no sibling
   Composite* parent = object->GetParent();
+  if (!parent)
+    return nullptr;
+
   Widget* prev = (Widget*)WidgetList::Prev(object);
-  if(parent && prev != parent->mChildren.End())
+
+  // If we're ignoring inactive objects, keep looking while the previous sibling is inactive
+  while (ignoreInactive && prev != parent->mChildren.End() && !prev->mActive)
+    prev = (Widget*)WidgetList::Prev(prev);
+
+  if(prev != parent->mChildren.End())
     return prev;
-  return NULL;
+
+  return nullptr;
 }
 
 // Get the next sibling in the tree
-Widget* NextSibling(Widget* object)
+Widget* NextSibling(Widget* object, bool ignoreInactive)
 {
+  // If there is no parent, there is no sibling
   Composite* parent = object->GetParent();
+  if (!parent)
+    return nullptr;
+
   Widget* next = (Widget*)WidgetList::Next(object);
-  if(parent && next != parent->mChildren.End())
+
+  // If we're ignoring inactive objects, keep looking while the next sibling is inactive
+  while (ignoreInactive && next != parent->mChildren.End() && !next->mActive)
+    next = (Widget*)WidgetList::Next(next);
+
+  if (next != parent->mChildren.End())
     return next;
-  return NULL;
+
+  return nullptr;
 }
 
-Widget* GetLastChild(Widget* object)
+Widget* GetLastChild(Widget* object, bool ignoreInactive)
 {
   Composite* c = object->GetSelfAsComposite();
-  if(c && !c->mChildren.Empty())
-    return GetLastChild(&c->mChildren.Back());
+  if (c && !c->mChildren.Empty())
+  {
+    // If not ignoring inactive objects, return the last child of the last child
+    if (!ignoreInactive)
+      return GetLastChild(&c->mChildren.Back(), false);
+    else
+    {
+      // Get this object's last child
+      Widget* lastChild = &c->mChildren.Back();
+      // If it's not active, look for a previous active sibling
+      if (!lastChild->mActive)
+        lastChild = PreviousSibling(lastChild, true);
+      // If there are no active children, return this object
+      if (!lastChild)
+        return object;
+      // Return the last child's last child (will always be active)
+      return GetLastChild(lastChild, true);
+    }
+  }
   else
     return object;
 }
 
-Widget* GetPrevious(Widget* object)
+Widget* GetPrevious(Widget* object, bool ignoreInactive)
 {
-  // get prev sibling if there is one
-  Widget* prevSibling = PreviousSibling(object);
-  Widget* parent = object->GetParent();
-  // If this is first node of a child it is previous node
-  if(prevSibling == NULL)
+  // Get prev sibling if there is one
+  Widget* prevSibling = PreviousSibling(object, ignoreInactive);
+
+  // If this is the first child (or first active child), get the parent
+  // (parent shouldn't be inactive if this is being called on a child)
+  if (!prevSibling)
     return object->GetParent();
 
-  // return the last child of the sibling
-  return GetLastChild(prevSibling);
+  // Return the last child of the sibling
+  return GetLastChild(prevSibling, ignoreInactive);
 }
 
-Widget* GetNext(Widget* object)
+Widget* GetNext(Widget* object, bool ignoreInactive)
 {
-  // If this object has children return the first child
+  // If this object has children return the first child (or first active child)
   Composite* c = object->GetSelfAsComposite();
-  if(c && !c->mChildren.Empty())
-    return &c->mChildren.Front();
+  if (c && !c->mChildren.Empty())
+  {
+    // If not ignoring inactive objects or the first child is active, return the first child
+    if (!ignoreInactive || c->mChildren.Front().mActive)
+      return &c->mChildren.Front();
+    else
+    {
+      // Return the first active child
+      forRange(Widget& child, c->mChildren.All())
+      {
+        if (child.mActive)
+          return &child;
+      }
+    }
+  }
 
   // Return next sibling if there is one
-  Widget* nextSibling = NextSibling(object);
-  if(nextSibling)
+  Widget* nextSibling = NextSibling(object, ignoreInactive);
+  if (nextSibling)
     return nextSibling;
 
-  // Loop until the root or a parent has a
-  // sibling
+  // Loop until the root or a parent has a sibling
   Widget* parent = object->GetParent();
-  while(parent != NULL)
+  while(parent != nullptr)
   {
-    Widget* parentSibling = NextSibling(parent);
+    Widget* parentSibling = NextSibling(parent, ignoreInactive);
     if(parentSibling)
       return parentSibling;
     else
       parent = parent->GetParent();
   }
-  return NULL;
+
+  return nullptr;
 }
 
 void FindNextFocus(Widget* object, FocusDirection::Enum direction)
 {
-  while(object != NULL)
+  while(object != nullptr)
   {
-    object = direction == FocusDirection::Forward ? GetNext(object) : GetPrevious(object);
+    object = direction == FocusDirection::Forward ? GetNext(object, true) : GetPrevious(object, true);
 
     if(object && object->mActive)
     {

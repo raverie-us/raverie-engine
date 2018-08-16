@@ -302,8 +302,10 @@ namespace Audio
     CombineAndPauseNode(Zero::StringParam name, unsigned ID, ExternalNodeInterface* extInt, 
       bool isThreaded = false);
 
-    void SetPaused(const bool paused);
     bool GetPaused();
+    void SetPaused(const bool paused);
+    bool GetMuted();
+    void SetMuted(bool muted);
 
   private:
     ~CombineAndPauseNode() {}
@@ -312,6 +314,8 @@ namespace Audio
 
     bool Paused;
     bool Pausing;
+    bool Muted;
+    bool Muting;
     InterpolatingObject VolumeInterpolator;
     bool Interpolating;
   };

@@ -20,9 +20,9 @@ namespace Events
 {
 // Sent out before scripts are compiled
 DeclareEvent(PreScriptCompile);
-// Sent out before Scripts are compiled per ResourceLibrary
-DeclareEvent(PreScriptSetCompile);
 DeclareEvent(CompileZilchFragments);
+// Sent out on the Z::gResources in the constructor of ResourceLibrary (no resources added/loaded yet).
+DeclareEvent(ResourceLibraryConstructed);
 }//namespace Events
 
 
@@ -31,15 +31,6 @@ DeclareEnum2(ZilchCompileStatus,
   Modified, // Scripts have been modified and will not match what is in library
   Compiled  // All scripts compiled and project library is up to date
 );
-
- //------------------------------------------------------------------ Zilch Project Compilation Event
-class ZilchPreCompilationEvent : public Event
-{
-public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
-
-  Project* mProject;
-};
 
 //----------------------------------------------------------------------------- Zilch Compiled Event
 class ZilchCompiledEvent : public Event
@@ -197,6 +188,7 @@ public:
 
   // Only called once all libraries within Zero are fully compiled
   // Turns each pending library into the current library
+  void PreCommitUnload();
   void Commit();
   
   /// Name of the resource package from which this set was loaded.

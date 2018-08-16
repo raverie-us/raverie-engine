@@ -287,6 +287,7 @@ FontRasterizer::~FontRasterizer()
   FT_Done_Face(mData->FontFace);
   FT_Done_FreeType(mData->Library);
   SafeDelete(mData);
+  SafeDelete(mFontSource.Data);
 }
 
 RenderFont* FontRasterizer::RasterNewFont(int fontHeight)
@@ -379,13 +380,13 @@ void FontRasterizer::LoadFontFace(int fontHeight)
   //Always face index zero for now.
   uint faceIndex = 0;
 
-  //Load the font from the font file
-  int errorCode = FT_New_Face(mData->Library, mFontObject->LoadPath.c_str(), faceIndex, &mData->FontFace);
-
+  //Load the font from the font file into memory
+  mFontSource = ReadFileIntoDataBlock(mFontObject->LoadPath.c_str());
+  // Create the font face from the file data now stored in memory
+  int errorCode = FT_New_Memory_Face(mData->Library, mFontSource.Data, mFontSource.Size, faceIndex, &mData->FontFace);
+  
   ErrorIf(errorCode == FT_Err_Unknown_File_Format, nullptr, "File is not a valid font file.");
   ErrorIf(errorCode != 0, nullptr, "Bad file or path.");
-
-  //mGlyphSlot = mFontFace->glyph;
 
   errorCode = FT_Set_Pixel_Sizes(mData->FontFace, 0, fontHeight);
   ErrorIf(errorCode != 0, nullptr, "Pixel size failed for some reason.");

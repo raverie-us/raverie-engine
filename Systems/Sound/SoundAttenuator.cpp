@@ -129,7 +129,7 @@ float SoundAttenuator::GetStartDistance()
 //**************************************************************************************************
 void SoundAttenuator::SetStartDistance(float value)
 {
-  mStartDistance = value;
+  mStartDistance = Math::Clamp(value, 0.0f, mStopDistance);
 
   // Update the attenuation information on all existing nodes
   for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty(); nodes.PopFront())
@@ -146,7 +146,7 @@ float SoundAttenuator::GetStopDistance()
 //**************************************************************************************************
 void SoundAttenuator::SetStopDistance(float value)
 {
-  mStopDistance = value;
+  mStopDistance = Math::Max(value, mStartDistance);
 
   // Update the attenuation information on all existing nodes
   for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty(); nodes.PopFront())
@@ -163,7 +163,7 @@ float SoundAttenuator::GetMinAttenuatedVolume()
 //**************************************************************************************************
 void SoundAttenuator::SetMinAttenuatedVolume(float value)
 {
-  mMinAttenuatedVolume = value;
+  mMinAttenuatedVolume = Math::Clamp(value, 0.0f, Audio::MaxVolumeValue);
 
   // Update the attenuation information on all existing nodes
   for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty(); nodes.PopFront())
@@ -276,7 +276,7 @@ float SoundAttenuator::GetLowPassStartDistance()
 //**************************************************************************************************
 void SoundAttenuator::SetLowPassStartDistance(float distance)
 {
-  mLowPassStartDistance = distance;
+  mLowPassStartDistance = Math::Max(distance, 0.0f);
 
   // Update all existing nodes
   for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty(); nodes.PopFront())
@@ -292,7 +292,7 @@ float SoundAttenuator::GetLowPassCutoffFreq()
 //**************************************************************************************************
 void SoundAttenuator::SetLowPassCutoffFreq(float frequency)
 {
-  mLowPassCutoffFreq = frequency;
+  mLowPassCutoffFreq = Math::Clamp(frequency, 0.0f, 20000.0f);
 
   // Update all existing nodes
   for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty(); nodes.PopFront())

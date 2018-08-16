@@ -92,8 +92,25 @@ void DeleteSelectedObjects(Editor* editor, Space* space)
 {
   MetaSelection* selection = editor->GetSelection();
 
-  Array<Cog*> cogs;
-  FilterChildrenAndProtected(cogs, selection);
+  Array<Cog*> cogs, filteredCogs;
+  FilterChildrenAndProtected(cogs, selection, &filteredCogs);
+
+  StringBuilder builder;
+  forRange(Cog* object, filteredCogs.All())
+  {
+    if (object->mFlags.IsSet(CogFlags::Protected)) 
+    {
+      if (builder.GetSize() == 0)
+        builder.Append(object->GetName());
+      else
+        builder.AppendFormat(", %s", object->GetName().c_str());
+    }
+  }
+  if (builder.GetSize() > 0)
+  {
+    DoNotifyWarning("Cannot Delete Object", 
+      String::Format("Cannot delete the following objects because they are protected: %s", builder.ToString().c_str()));
+  }
 
   OperationQueue* queue = editor->GetOperationQueue();
   queue->BeginBatch();
@@ -1023,41 +1040,38 @@ void ResetCamera(Editor* editor)
   }
 }
 
-void AlignCameraToCamera(Editor* editor, Cog* fromCog, Cog* toCog)
+void AlignCogs(Editor* editor, Cog* fromCog, Cog* toCog)
 {
-  if (fromCog->has(Camera) && toCog->has(Camera))
-  {
-    Transform* fromCamT = fromCog->has(Transform);
-    Transform* toCamT = toCog->has(Transform);
+  Transform* fromTransform = fromCog->has(Transform);
+  Transform* toTransform = toCog->has(Transform);
 
-    OperationQueue* opQueue = editor->GetOperationQueue();
-    opQueue->BeginBatch();
+  OperationQueue* opQueue = editor->GetOperationQueue();
+  opQueue->BeginBatch();
 
-    String batchName = BuildString("Align '", CogDisplayName(fromCog),
-      "' to '", CogDisplayName(toCog), "'");
+  String batchName = BuildString("Align '", CogDisplayName(fromCog),
+    "' to '", CogDisplayName(toCog), "'");
 
-    opQueue->SetActiveBatchName(batchName);
+  opQueue->SetActiveBatchName(batchName);
 
-    BoundType* transformMeta = ZilchTypeId(Transform);
+  BoundType* transformMeta = ZilchTypeId(Transform);
 
-    // Queue the translation change
-    Property* translationProp = transformMeta->GetProperty("Translation");
-    Any newTranslation = toCamT->GetLocalTranslation();
-    ChangeAndQueueProperty(opQueue, fromCamT, translationProp, newTranslation);
+  // Queue the translation change
+  Property* translationProp = transformMeta->GetProperty("Translation");
+  Any newTranslation = toTransform->GetLocalTranslation();
+  ChangeAndQueueProperty(opQueue, fromTransform, translationProp, newTranslation);
 
-    // Queue the rotation change
-    Property* rotationProp = transformMeta->GetProperty("Rotation");
-    Any newRotation = toCamT->GetLocalRotation();
-    ChangeAndQueueProperty(opQueue, fromCamT, rotationProp, newRotation);
+  // Queue the rotation change
+  Property* rotationProp = transformMeta->GetProperty("Rotation");
+  Any newRotation = toTransform->GetLocalRotation();
+  ChangeAndQueueProperty(opQueue, fromTransform, rotationProp, newRotation);
 
-    // Queue the scale change
-    Property* scaleProp = transformMeta->GetProperty("Scale");
-    Any newScale = toCamT->GetLocalScale();
-    ChangeAndQueueProperty(opQueue, fromCamT, scaleProp, newScale);
+  // Queue the scale change
+  Property* scaleProp = transformMeta->GetProperty("Scale");
+  Any newScale = toTransform->GetLocalScale();
+  ChangeAndQueueProperty(opQueue, fromTransform, scaleProp, newScale);
 
-    // End the batch
-    opQueue->EndBatch();
-  }
+  // End the batch
+  opQueue->EndBatch();
 }
 
 void AlignSelectedCameraToCamera(Editor* editor)
@@ -1071,7 +1085,7 @@ void AlignSelectedCameraToCamera(Editor* editor)
     return;
 
   if(Cog* selected = editor->mSelection->GetPrimaryAs<Cog>())
-    AlignCameraToCamera(editor, selected, editorCamera);
+    AlignCogs(editor, selected, editorCamera);
 }
 
 void AlignCameraToSelectedCamera(Editor* editor)
@@ -1137,6 +1151,12 @@ void GoToDefinition(Editor* editor)
   codeInspector->AttemptGetDefinition(codeEditor, codeEditor->GetCaretPosition(), definition);
   
   DisplayCodeDefinition(definition);
+}
+
+void Add(Editor* editor)
+{
+  ContentLibrary* library = CommandManager::GetInstance()->GetContext()->Get<ContentLibrary>();
+  editor->AddResourceType(nullptr, library);
 }
 
 void EditCommands(Editor* editor)
@@ -1263,6 +1283,7 @@ void BindEditorCommands(Cog* configCog, CommandManager* commands)
   commands->AddCommand("DisableAutoProjectScreenshot", BindCommandFunction(DisableAutoProjectScreenshot));
 
   commands->AddCommand("GoToDefinition", BindCommandFunction(GoToDefinition));
+  commands->AddCommand("Add", BindCommandFunction(Add));
 
   if(DeveloperConfig* config = configCog->has(DeveloperConfig))
   {

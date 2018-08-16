@@ -12,6 +12,9 @@ class Material : public DataResource
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
+  // Flag for disabling SendModified() during reinitialization.
+  static bool sNotifyModified;
+
   Material();
   ~Material();
 
@@ -78,6 +81,15 @@ public:
   MaterialManager(BoundType* resourceType);
 
   void ResourceDuplicated(Resource* resource, Resource* duplicate) override;
+
+  // Must be called during pre patch.
+  void ReInitializeRemoveComponents();
+  // Must be called during post patch.
+  void ReInitializeAddComponents();
+
+private:
+  // Using an operation queue to reinitialize materials so that the types associated with undo map id's are fixed.
+  OperationQueue mReInitializeQueue;
 };
 
 class CompositionLabelExtension : public EditorPropertyExtension

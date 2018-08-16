@@ -339,8 +339,7 @@ namespace Audio
     SimpleCollapseNode(name, ID, extInt, false, false, isThreaded),
     DelayMSec(100.0f), 
     FeedbackValue(0),
-    WetValue(0.5f),
-    HasHadInput(false)
+    WetValue(0.5f)
   {
     if (!Threaded)
       SetSiblingNodes(new DelayNode(name, ID, extInt, true));
@@ -447,10 +446,6 @@ namespace Audio
     // Get input
     bool isThereInput = AccumulateInputSamples(outputBufferSize, numberOfChannels, listener);
 
-    // If no input and delayed output is done, return
-    if (!isThereInput && !HasHadInput)
-      return false;
-
     // Check if the listener is in the map
     DelayLine* filter = FiltersPerListener.FindValue(listener, nullptr);
     if (!filter)
@@ -462,22 +457,16 @@ namespace Audio
       FiltersPerListener[listener] = filter;
     }
 
+    // If no input and delayed output is done, return
+    if (!isThereInput && !filter->IsDataInBuffer())
+      return false;
+
+    // If there is no input data make sure the array is zeroed out
+    if (!isThereInput)
+      memset(InputSamples.Data(), 0, sizeof(float) * InputSamples.Size());
+
     // Apply filter
-    bool outputCheck(false);
     filter->ProcessBuffer(InputSamples.Data(), outputBuffer->Data(), numberOfChannels, outputBufferSize);
-
-    // Check for samples that are not zero
-    for (BufferRange outputRange = outputBuffer->All(); !outputRange.Empty() && !outputCheck; 
-      outputRange.PopFront())
-    {
-      if (outputRange.Front() != 0.0f)
-        outputCheck = true;
-    }
-
-    if (!outputCheck && !isThereInput)
-      HasHadInput = false;
-    else
-      HasHadInput = true;
 
     AddBypass(outputBuffer);
 

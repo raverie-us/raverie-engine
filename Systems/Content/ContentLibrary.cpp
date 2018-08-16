@@ -13,6 +13,7 @@ namespace Zero
 {
 ZilchDefineType(ContentLibrary, builder, type)
 {
+  type->HandleManager = ZilchManagerId(PointerManager);
 }
 
 ContentLibrary::ContentLibrary()

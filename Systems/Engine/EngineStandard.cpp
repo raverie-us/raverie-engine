@@ -213,7 +213,6 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(TextErrorEvent);
   ZilchInitializeType(ProgressEvent);
   ZilchInitializeType(OsFileSelection);
-  ZilchInitializeType(ZilchPreCompilationEvent);
   ZilchInitializeType(ZilchCompiledEvent);
   ZilchInitializeType(ZilchCompileFragmentEvent);
   ZilchInitializeType(ZilchCompileEvent);
@@ -328,6 +327,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(EditorConfig);
   ZilchInitializeType(WindowLaunchSettings);
   ZilchInitializeType(FrameRateSettings);
+  ZilchInitializeType(DebugSettings);
   ZilchInitializeType(ContentConfig);
   ZilchInitializeType(UserConfig);
   ZilchInitializeType(DeveloperConfig);
@@ -399,8 +399,8 @@ bool EngineLibrary::Initialize(ZeroStartupSettings& settings)
   MetaDatabase::GetInstance()->AddNativeLibrary(GetLibrary());
 
   RegisterClassAttribute(ObjectAttributes::cRunInEditor)->TypeMustBe(Component);
-  RegisterClassAttributeType(ObjectAttributes::cTool, MetaEditorScriptObject)->TypeMustBe(Component);
   RegisterClassAttributeType(ObjectAttributes::cCommand, MetaEditorScriptObject)->TypeMustBe(Component);
+  RegisterClassAttributeType(ObjectAttributes::cTool, MetaEditorScriptObject)->TypeMustBe(Component);
   RegisterClassAttributeType(ObjectAttributes::cGizmo, MetaEditorGizmo)->TypeMustBe(Component);
   RegisterClassAttributeType(ObjectAttributes::cComponentInterface, MetaInterface)->TypeMustBe(Component);
 
