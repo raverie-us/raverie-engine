@@ -145,7 +145,10 @@ Frustum CameraViewport::GetFrustum()
 {
   Camera* camera = GetCamera();
   if (!camera)
+  {
     DoNotifyException("CameraViewport", "The Camera was null so we could not create a Frustum");
+    return Frustum();
+  }
 
   return camera->GetFrustum(GetAspectRatio());
 }

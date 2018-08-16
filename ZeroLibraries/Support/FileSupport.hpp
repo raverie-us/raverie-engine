@@ -93,7 +93,7 @@ public:
 };
 
 // Move the contents of a folder.
-void MoveFolderContents(StringParam dest, StringParam source, FileFilter* filter = 0);
+bool MoveFolderContents(StringParam dest, StringParam source, FileFilter* filter = 0);
 
 // Copy the contents of a folder.
 void CopyFolderContents(StringParam dest, StringParam source, FileFilter* filter = 0);

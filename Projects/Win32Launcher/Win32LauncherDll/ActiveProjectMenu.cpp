@@ -487,7 +487,18 @@ void ActiveProjectMenu::OnProjectRenameConfirmed(ModalButtonEvent* e)
   mLauncher->RemoveFromRecentProjects(mCachedProject);
 
   String newProjectName = mProjectName->GetText();
-  mCachedProject->RenameAndMoveProject(newProjectName);
+  Status status;
+  mCachedProject->RenameAndMoveProject(status, newProjectName);
+
+  // Report failure via a modal
+  if(status.Failed())
+  {
+    // Ideally this should use the status' error message, but there's word-wrap issues with modals right now.
+    String msg = String::Format("Cannot rename project to '%s'", newProjectName.c_str());
+    ModalButtonsAction* modal = new ModalButtonsAction(mLauncher, "Invalid Rename", "Close", msg);
+    mLauncher->mActiveModal = modal;
+  }
+
   SelectProject(mCachedProject);
 
   mLauncher->AddToRecentProjects(mCachedProject);

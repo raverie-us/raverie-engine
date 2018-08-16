@@ -19,13 +19,14 @@ void WriteStringRangeToFile(StringParam path, StringRange range)
   WriteToFile(path.c_str(), (byte*)range.Data(), range.SizeInBytes());
 }
 
-void MoveFolderContents(StringParam dest, StringParam source, FileFilter* filter)
+bool MoveFolderContents(StringParam dest, StringParam source, FileFilter* filter)
 {
-  ReturnIf(source.Empty(), , "Cannot copy from an empty directory/path string (working directory as empty string not supported)");
-  ReturnIf(dest.Empty(), , "Cannot copy to an empty directory/path string (working directory as empty string not supported)");
+  ReturnIf(source.Empty(), false, "Cannot copy from an empty directory/path string (working directory as empty string not supported)");
+  ReturnIf(dest.Empty(), false, "Cannot copy to an empty directory/path string (working directory as empty string not supported)");
 
   CreateDirectoryAndParents(dest);
 
+  bool success = true;
   FileRange files(source);
   for(; !files.Empty(); files.PopFront())
   {
@@ -45,14 +46,14 @@ void MoveFolderContents(StringParam dest, StringParam source, FileFilter* filter
     {
       CreateDirectory(dest);
 
-      MoveFolderContents(destFile, sourceFile);
+      success &= MoveFolderContents(destFile, sourceFile);
     }
     else
     {
-      MoveFile(destFile, sourceFile);
+      success &= MoveFile(destFile, sourceFile);
     }
-
   }
+  return success;
 }
 
 void CopyFolderContents(StringParam dest, StringParam source, FileFilter* filter)

@@ -198,18 +198,28 @@ String CachedProject::GetProjectName()
   return GetProjectPropertyValue("ProjectName");
 }
 
-void CachedProject::RenameAndMoveProject(StringParam newProjectName)
+bool CachedProject::RenameAndMoveProject(Status& status, StringParam newProjectName)
 {
   // Rename the zeroproj file in the old location (avoid calling delete where possible)
   String renamedZeroProjPath = FilePath::CombineWithExtension(mProjectFolder, newProjectName, ".zeroproj");
-  MoveFile(renamedZeroProjPath, mProjectPath);
+  ZPrint("Moving and renaming project '%s' to '%s'.\n", mProjectPath.c_str(), renamedZeroProjPath.c_str());
+
+  bool success = MoveFile(renamedZeroProjPath, mProjectPath);
   
   String parentDirectory = FilePath::GetDirectoryPath(mProjectFolder);
   String newFolder = FilePath::Combine(parentDirectory, newProjectName);
   // Move the project's folder
-  MoveFolderContents(newFolder, mProjectFolder);
+  success &= MoveFolderContents(newFolder, mProjectFolder);
+  if(!success)
+  {
+    String msg = String::Format("Failed to move project from '%s' to '%s'", mProjectFolder.c_str(), newFolder.c_str());
+    DoNotifyError("Failed to move project", msg);
+    status.SetFailed(msg);
+    return success;
+  }
+
   // Move folder doesn't delete empty directories, so delete the old path
-  DeleteDirectory(mProjectFolder);
+  DeleteEmptyDirectoriesRecursively(mProjectFolder);
 
   // Update the project path and the project name in the zeroproj
   SetProjectPropertyValue("ProjectName", newProjectName);
@@ -219,6 +229,30 @@ void CachedProject::RenameAndMoveProject(StringParam newProjectName)
 
   // Save out the new zeroproj file that should have up-to-date properties
   Save(false);
+
+  status.SetSucceeded();
+  return true;
+}
+
+void CachedProject::DeleteEmptyDirectoriesRecursively(StringParam path)
+{
+  // Only process directories
+  if(!IsDirectory(path))
+    return;
+
+  // Try to remove all empty child directories first
+  FileRange firstRange(path);
+  for(; !firstRange.Empty(); firstRange.PopFront())
+  {
+    String subPath = firstRange.frontEntry().GetFullPath();
+    DeleteEmptyDirectoriesRecursively(subPath);
+  }
+
+  // If this directory is empty then we can remove it,
+  // otherwise something still exists so do nothing.
+  FileRange secondRange(path);
+  if(secondRange.Empty())
+    DeleteDirectory(path);
 }
 
 void CachedProject::GetTags(HashSet<String>& tags)
