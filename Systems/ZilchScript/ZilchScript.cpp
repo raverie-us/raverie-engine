@@ -184,7 +184,7 @@ ZilchScriptManager::ZilchScriptManager(BoundType* resourceType)
   Zilch::EventConnect(ExecutableState::CallingState, Zilch::Events::UnhandledException, ZeroZilchExceptionCallback);
   Zilch::EventConnect(ExecutableState::CallingState, Zilch::Events::FatalError, ZeroZilchFatalErrorCallback);
 
-  ConnectThisTo(Z::gResources, Events::PreScriptSetCompile, OnPreZilchProjectCompilation);
+  ConnectThisTo(Z::gResources, Events::ResourceLibraryConstructed, OnResourceLibraryConstructed);
 }
 
 void ZilchScriptManager::ValidateName(Status& status, StringParam name)
@@ -225,9 +225,10 @@ String ZilchScriptManager::GetTemplateSourceFile(ResourceAdd& resourceAdd)
   return sourceFile;
 }
 
-void ZilchScriptManager::OnPreZilchProjectCompilation(ZilchPreCompilationEvent* e)
+void ZilchScriptManager::OnResourceLibraryConstructed(ObjectEvent* e)
 {
-  EventConnect(e->mProject, Zilch::Events::CompilationError, ZeroZilchErrorCallback);
+  ResourceLibrary* library = (ResourceLibrary*)e->Source;
+  EventConnect(&library->mScriptProject, Zilch::Events::CompilationError, ZeroZilchErrorCallback);
 }
 
 void ZilchScriptManager::DispatchScriptError(StringParam eventId, StringParam shortMessage, StringParam fullMessage, const CodeLocation& location)

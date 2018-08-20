@@ -86,11 +86,12 @@ void ContentMetaComposition::AddComponent(HandleParam owner, HandleParam compone
 void ContentMetaComposition::RemoveComponent(HandleParam owner, HandleParam componentToRemove,
                                              bool ignoreDependencies)
 {
-  ContentComposition* comp = owner.Get<ContentComposition*>(GetOptions::AssertOnNull);
+  ContentComposition* cc = owner.Get<ContentComposition*>(GetOptions::AssertOnNull);
   ContentComponent* component = componentToRemove.Get<ContentComponent*>();
-  ReturnIf(component->mOwner != comp, , "Component belongs to different owner");
-  comp->mComponents.EraseValue(component);
-  comp->mComponentMap.EraseEqualValues(component);
+  ReturnIf(component->mOwner != cc, , "Component belongs to different owner");
+  cc->Builders.EraseValue(component);
+  cc->mComponents.EraseValue(component);
+  cc->mComponentMap.EraseEqualValues(component);
 }
 
 ContentComposition::ContentComposition()

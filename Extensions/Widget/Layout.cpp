@@ -45,52 +45,6 @@ int GetSign(DockArea::Enum dockArea)
   }
 }
 
-bool NeedsLayout(Widget& widget)
-{
-  return widget.mActive && !widget.mNotInLayout;
-}
-
-struct FilteredChildren
-{
-  WidgetListRange mChildren;
-
-  FilteredChildren(Composite* widget)
-  {
-    // Remove all invalid children from the end
-    WidgetListRange children = widget->GetChildren();
-    while(!children.Empty() && !NeedsLayout(children.Back()))
-      children.PopBack();
-    mChildren = children;
-    SkipInvalid();
-  }
-
-  Widget& Front()
-  {
-    return mChildren.Front();
-  }
-
-  bool Empty()
-  {
-    return mChildren.Empty();
-  }
-
-  void PopFront()
-  {
-    mChildren.PopFront();
-    SkipInvalid();
-  }
-
-  void SkipInvalid()
-  {
-    while(!mChildren.Empty())
-    {
-      if(NeedsLayout(mChildren.Front()))
-        return;
-      mChildren.PopFront();
-    }
-  }
-};
-
 void UpdateNotInLayout(Composite* widget)
 {
   WidgetListRange children = widget->GetChildren();
@@ -116,7 +70,7 @@ LayoutResult AspectLayout(Vec2 aspect, Vec2 size)
 Vec2 MaxMeasure(Composite* widget, LayoutArea data)
 {
   Vec2 neededSize = Vec2(0,0);
-  FilteredChildren children(widget);
+  FilterLayoutChildren children(widget);
   while(!children.Empty())
   {
     Widget& child = children.Front();
@@ -300,7 +254,7 @@ Vec2 StackLayout::Measure(Composite* widget, LayoutArea data)
 
   Vec2 neededSize = Vec2(0,0);
 
-  FilteredChildren children(widget);
+  FilterLayoutChildren children(widget);
   while(!children.Empty())
   {
     Widget& child = children.Front();
@@ -343,7 +297,7 @@ Vec2 StackLayout::DoLayout(Composite* widget, LayoutArea data)
   // Get all children of the widget
   UpdateNotInLayout(widget);
 
-  FilteredChildren children(widget);
+  FilterLayoutChildren children(widget);
     
   // Axis of Stacking 
   int stackAxis = GetAxis((DockArea::Enum)Direction);
@@ -359,7 +313,7 @@ Vec2 StackLayout::DoLayout(Composite* widget, LayoutArea data)
   float totalFlex = 0.0f;
   float flexMinSize = 0.f;
 
-  FilteredChildren firstPass(widget);
+  FilterLayoutChildren firstPass(widget);
   while(!firstPass.Empty())
   {
     Widget& child = firstPass.Front();
@@ -503,7 +457,7 @@ Vec2 EdgeDockLayout::DoLayout(Composite* widget, LayoutArea data)
 {
   UpdateNotInLayout(widget);
 
-  FilteredChildren children(widget);
+  FilterLayoutChildren children(widget);
 
   Vec4 area = Vec4(data.Offset.x, data.Offset.y, 
                     data.Size.x, data.Size.y);
@@ -564,7 +518,7 @@ Vec2 DockLayout::DoLayout(Composite* widget, LayoutArea data)
 {
   UpdateNotInLayout(widget);
 
-  FilteredChildren children(widget);    
+  FilterLayoutChildren children(widget);    
 
   ApplyPadding(Padding, data);
   Vec3 offset = data.Offset;

@@ -12,15 +12,9 @@ namespace Zero
 namespace Events
 {
 DefineEvent(PreScriptCompile);
-DefineEvent(PreScriptSetCompile);
 DefineEvent(CompileZilchFragments);
+DefineEvent(ResourceLibraryConstructed);
 }//namespace Events
-
-//--------------------------------------------------------------------- Zilch Compile Fragment Event
-ZilchDefineType(ZilchPreCompilationEvent, builder, type)
-{
-
-}
 
 ZilchDefineType(ZilchCompiledEvent, builder, type)
 {
@@ -160,7 +154,8 @@ void SwapLibrary::Commit()
     ErrorIf(mCompileStatus != ZilchCompileStatus::Compiled,
       "When committing and we have a pending library the compile status should have already been set to Compiled");
 
-    Unload();
+    // Verify mCurrentLibrary was unloaded.
+    ErrorIf(mCurrentLibrary != nullptr, "The current library must be unloaded before committing a pending library.");
 
     MetaDatabase::GetInstance()->AddLibrary(mPendingLibrary, true);
     mCurrentLibrary = mPendingLibrary;
@@ -181,6 +176,8 @@ void SwapLibrary::Unload()
     if (mCurrentLibrary->Plugin)
       mCurrentLibrary->Plugin->UninitializeSafe();
   }
+
+  mCurrentLibrary = nullptr;
 }
 
 //--------------------------------------------------------------------------------- Resource Library
@@ -204,6 +201,9 @@ ResourceLibrary::ResourceLibrary()
   EventConnect(&mScriptProject, Zilch::Events::TypeParsed, &EngineLibraryExtensions::TypeParsedCallback);
 
   ZilchManager::GetInstance()->mDebugger.AddProject(&mScriptProject);
+
+  ObjectEvent toSend(this);
+  Z::gResources->DispatchEvent(Events::ResourceLibraryConstructed, &toSend);
 }
 
 //**************************************************************************************************
@@ -546,12 +546,6 @@ bool ResourceLibrary::CompileScripts(HashSet<ResourceLibrary*>& modifiedLibrarie
   // Clear the project out since it may have files from before
   mScriptProject.Clear();
 
-  // Dispatch an event allowing specific resource managers to do whatever they want with the project
-  // This was added so that ZilchPlugins can listen for compilation errors 
-  ZilchPreCompilationEvent e;
-  e.mProject = &mScriptProject;
-  Z::gResources->DispatchEvent(Events::PreScriptSetCompile, &e);
-
   // Add all scripts
   forRange(ZilchDocumentResource* script, mScripts)
   {
@@ -629,7 +623,9 @@ bool ResourceLibrary::CompilePlugins(HashSet<ResourceLibrary*>& modifiedLibrarie
 
       swapPlugin.mPendingLibrary = Plugin::LoadFromFile(status, pluginDependencies, pluginPath, origin);
 
-      if (status.Failed())
+      // If the status failed, it could just be because the plugin was empty (we're in progress compiling it).
+      // Note: We'll get a separate error if the plugin fails to compile or if we can't find the compiler.
+      if (status.Failed() && status.Context != Plugin::StatusContextEmpty)
       {
         Console::Print(Filter::DefaultFilter, "Plugin Error (%s): %s\n", libraryResource->Name.c_str(), status.Message.c_str());
       }
@@ -651,11 +647,27 @@ bool ResourceLibrary::CompilePlugins(HashSet<ResourceLibrary*>& modifiedLibrarie
 }
 
 //**************************************************************************************************
+void ResourceLibrary::PreCommitUnload()
+{
+  // These unload calls are for removing types from the meta database before committing
+  // any pending types in order to prevent any type discrepancies or issues.
+  // Do NOT unload types unless there is actually a new library pending commit.
+  if (mSwapFragment.mPendingLibrary)
+    mSwapFragment.Unload();
+
+  forRange(SwapLibrary& swapPlugin, mSwapPlugins.Values())
+    if (swapPlugin.mPendingLibrary)
+      swapPlugin.Unload();
+
+  if (mSwapScript.mPendingLibrary)
+    mSwapScript.Unload();
+}
+
+//**************************************************************************************************
 void ResourceLibrary::Commit()
 {
   // Replace the fragment library
   mSwapFragment.Commit();
-
 
   forRange(SwapLibrary& swapPlugin, mSwapPlugins.Values())
   {

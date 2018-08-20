@@ -114,6 +114,10 @@ void ZilchManager::InternalCompile()
   // Library commits must happen after all systems have handle PrePatch
   this->DispatchEvent(Events::ScriptsCompiledCommit, &compileEvent);
 
+  // Unload ALL affected libraries before committing any of them.
+  forRange(ResourceLibrary* resourceLibrary, compileEvent.mModifiedLibraries.All())
+    resourceLibrary->PreCommitUnload();
+
   forRange(ResourceLibrary* resourceLibrary, compileEvent.mModifiedLibraries.All())
     resourceLibrary->Commit();
 

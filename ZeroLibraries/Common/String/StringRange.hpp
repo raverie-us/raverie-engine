@@ -100,6 +100,8 @@ public:
 
   bool ValidateByte(cstr byte) const;
   bool IsValid();
+
+  bool ValidateRange() const;
   
   bool IsContinuationByte(cstr byte) const;
   bool IsCurrentRuneWhitespace() const;

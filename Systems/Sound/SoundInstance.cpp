@@ -237,7 +237,7 @@ void SoundInstance::SetTime(float seconds)
 //**************************************************************************************************
 float SoundInstance::GetFileLength()
 {
-  return ((Audio::SoundAssetFromFile*)mAssetObject)->GetLengthOfFile();
+  return mAssetObject->GetLengthOfFile();
 }
 
 //**************************************************************************************************

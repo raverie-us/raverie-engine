@@ -30,7 +30,7 @@ String ReplaceTypeIfTemplated(StringParam typeString)
   }
   else if (typeString.Contains("["))
   {
-    if (!typeString.Contains("any"))
+    if (!typeString.Contains("any") || !typeString.Contains("Type"))
     {
       return String();
     }
@@ -535,7 +535,7 @@ template<> struct Zero::Serialization::Trait<ClassDoc>
   static inline cstr TypeName() { return "ClassDoc"; }
 };
 
-ClassDoc::ClassDoc() : mBaseClassPtr(nullptr), mImportDocumentation(true)
+ClassDoc::ClassDoc() : mBaseClassPtr(nullptr), mImportDocumentation(true), mDevOnly(false)
 {
 }
 
@@ -568,6 +568,7 @@ void ClassDoc::Serialize(Serializer& stream)
   SerializeName(mMethods);
   SerializeName(mEventsSent);
   SerializeName(mImportDocumentation);
+  SerializeName(mDevOnly);
 }
 
 void ClassDoc::BuildMapsAndArrays()
@@ -855,14 +856,11 @@ void DocumentationLibrary::LoadDocumentation(StringParam fileName)
 
     forRange(BoundType* type, lib->BoundTypes.Values())
     {
-      if (type->HasAttribute(ObjectAttributes::cDocumented)
-        || type->HasAttribute(ImportDocumentation))
+      ClassDoc* classDoc = GetClassDoc(type);
+      if (classDoc)
       {
         // Add Descriptions to all types, methods, and properties
-        if (ClassDoc* classDoc = GetClassDoc(type))
-        {
-          classDoc->FillDocumentation(type);
-        }
+        classDoc->FillDocumentation(type);
       }
       // Add Description to enum and flag types
       else if (mEnumAndFlagMap.ContainsKey(type->Name))
@@ -1000,16 +998,14 @@ ClassDoc *DocumentationLibrary::CreateClassDocFromBoundType(BoundType *type, Typ
   bool exportDoc = type->HasAttribute(ExportDocumentation);
 
   // check for enum types
-  if (type->SpecialType != SpecialType::Standard)
+  if (type->IsEnumOrFlags())
   {
     CreateFlagOrEnumDocFromBoundType(type, exportDoc);
+    return nullptr;
   }
 
-  // If the type is not documented and is not from a core library or template library, just skip it
-  Zilch::Library* owningLibrary = type->SourceLibrary;
-  if (!exportDoc
-    && !type->HasAttribute(ObjectAttributes::cDocumented)
-    && !type->HasAttribute(ImportDocumentation))
+  if (type->HasAttribute(ObjectAttributes::cDoNotDocument) 
+    || (!type->Location.IsNative && !exportDoc))
   {
     return nullptr;
   }

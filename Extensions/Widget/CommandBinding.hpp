@@ -14,7 +14,7 @@ inline void CommandFailed(Command* command, BoundType* contextType)
   if(false)
   {
     String message = String::Format("There is no '%s' available to run the command '%s'",
-                                    contextType->Name.c_str(), command->DisplayName.c_str() );
+                                    contextType->Name.c_str(), command->GetDisplayName().c_str() );
     DoNotifyWarning("Command Not Run", message);
   }
 }
@@ -34,13 +34,13 @@ public:
 
   bool IsEnabled(Command* command, CommandManager* manager) override
   {
-    return manager->GetContext<pt0>()!=NULL  &&  manager->GetContext<pt1>()!=NULL;
+    return manager->GetContext()->Get<pt0>() != nullptr && manager->GetContext()->Get<pt1>() != nullptr;
   }
 
   void Execute(Command* command, CommandManager* manager) override
   {
-    pt0* param0 = manager->GetContext<pt0>();
-    pt1* param1 = manager->GetContext<pt1>();
+    pt0* param0 = manager->GetContext()->Get<pt0>();
+    pt1* param1 = manager->GetContext()->Get<pt1>();
 
     if(param0 == NULL)
       return CommandFailed(command, ZilchTypeId(pt0));
@@ -72,14 +72,13 @@ public:
 
   bool IsEnabled(Command* command, CommandManager* manager) override
   {
-    return manager->GetContext<pt0>() != NULL;
+    return manager->GetContext()->Get<pt0>() != nullptr;
   }
 
   void Execute(Command* command, CommandManager* manager) override
   {
-    pt0* param0 = manager->GetContext<pt0>();
-
-    if(param0 == NULL)
+    pt0* param0 = manager->GetContext()->Get<pt0>();
+    if (param0 == nullptr)
       return CommandFailed(command, ZilchTypeId(pt0));
 
     mFunction(param0);
@@ -123,6 +122,34 @@ public:
   {
     mDelegate.Invoke();
   }
+};
+
+//--------------------------------------------------- MetaScriptTagAttribute ---
+class MetaScriptTagAttribute : public MetaAttribute
+{
+public:
+  ZilchDeclareType(MetaScriptTagAttribute, TypeCopyMode::ReferenceType);
+  MetaScriptTagAttribute();
+
+  void PostProcess(Status& status, ReflectionObject* owner) override;
+
+  String mTags;
+  OrderedHashSet<String> mTagSet;
+};
+
+//---------------------------------------------- MetaScriptShortcutAttribute ---
+class MetaScriptShortcutAttribute : public MetaAttribute
+{
+public:
+  ZilchDeclareType(MetaScriptShortcutAttribute, TypeCopyMode::ReferenceType);
+  MetaScriptShortcutAttribute();
+
+  void PostProcess(Status& status, ReflectionObject* owner) override;
+
+  bool mCtrl;
+  bool mAlt;
+  bool mShift;
+  String mKey;
 };
 
 }

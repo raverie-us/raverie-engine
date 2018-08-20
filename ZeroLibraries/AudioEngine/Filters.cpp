@@ -828,6 +828,27 @@ namespace Audio
       (unsigned)(time * SystemSampleRate));
   }
 
+  //************************************************************************************************
+  bool DelayLine::IsDataInBuffer()
+  {
+    for (unsigned i = 0; i < MaxChannels; ++i)
+    {
+      // Check if this buffer exists
+      if (!BuffersPerChannel[i])
+        continue;
+
+      // If there is any value in this buffer, return true
+      for (int j = 0; j < BufferSize; ++j)
+      {
+        if (BuffersPerChannel[i][j] != 0)
+          return true;
+      }
+    }
+
+    // No values other than zero were found, so return false
+    return false;
+  }
+
   //------------------------------------------------------------------------------ Envelope Detector
 
   //************************************************************************************************

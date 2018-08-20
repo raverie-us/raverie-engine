@@ -22,7 +22,7 @@ CogCommand::CogCommand(Archetype* archetype) :
   mArchetype(archetype),
   mScriptComponentType(nullptr)
 {
-  DisplayName = archetype->Name;
+  SetDisplayName(archetype->Name);
   Name = archetype->Name;
 }
 
@@ -30,9 +30,28 @@ CogCommand::CogCommand(Archetype* archetype) :
 CogCommand::CogCommand(BoundType* componentType) :
   mScriptComponentType(componentType)
 {
-  DisplayName = componentType->Name;
+  SetDisplayName(componentType->Name);
   Name = componentType->Name;
+
   Description = componentType->Description;
+
+  MetaScriptTagAttribute* tagAttribute =
+    componentType->HasInherited<MetaScriptTagAttribute>();
+
+  if(tagAttribute == nullptr)
+    return;
+
+  Tags = tagAttribute->mTags;
+
+  MetaScriptShortcutAttribute* shortcut =
+    componentType->HasInherited<MetaScriptShortcutAttribute>();
+
+  if(shortcut == nullptr)
+    return;
+
+  CommandManager* commandManager = CommandManager::GetInstance();
+  Shortcut = commandManager->BuildShortcutString(shortcut->mCtrl,
+               shortcut->mAlt, shortcut->mShift, shortcut->mKey);
 }
 
 //******************************************************************************
@@ -56,7 +75,6 @@ ZilchDefineType(CogCommandManager, builder, type)
 CogCommandManager::CogCommandManager() :
   EditorScriptObjects<CogCommand>(ObjectAttributes::cCommand)
 {
-  mCommandsModified = false;
   mCommands = CommandManager::GetInstance();
 }
 
@@ -103,8 +121,27 @@ CogCommand* CogCommandManager::UpdateData(StringParam objectName)
   BoundType* componentType = MetaDatabase::GetInstance()->FindType(objectName);
   command->Description = componentType->Description;
 
-  CommandUpdateEvent eventToSend(command);
-  mCommands->DispatchEvent(Events::CommandUpdated, &eventToSend);
+  bool commandModified = false;
+
+  // Update command tags, if possible.
+  MetaScriptTagAttribute* tagAttribute = componentType->HasInherited<MetaScriptTagAttribute>();
+  if(tagAttribute != nullptr)
+    commandModified |= mCommands->UpdateCommandTags(command, tagAttribute->mTags);
+  else
+    commandModified |= mCommands->UpdateCommandTags(command, ""); // Tag attribute removed.
+
+  // Update command shortcut, if possible.
+  MetaScriptShortcutAttribute* sc = componentType->HasInherited<MetaScriptShortcutAttribute>();
+  if(sc != nullptr)
+    commandModified |= mCommands->UpdateCommandShortcut(command, sc->mCtrl, sc->mAlt, sc->mShift, sc->mKey);
+  else
+    commandModified |= mCommands->ClearCommandShortcut(command);
+
+  if(commandModified)
+  {
+    CommandUpdateEvent eventToSend(command);
+    mCommands->DispatchEvent(Events::CommandUpdated, &eventToSend);
+  }
 
   return command;
 }

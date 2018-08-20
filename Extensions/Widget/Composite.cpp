@@ -12,6 +12,61 @@
 namespace Zero
 {
 
+bool NeedsLayout(Widget& widget)
+{
+  return widget.mActive && !widget.mNotInLayout;
+
+}
+//------------------------------------------------------- Filter Layout Children
+//******************************************************************************
+FilterLayoutChildren::FilterLayoutChildren(Composite* widget)
+{
+  // Remove all invalid children from the end
+  WidgetListRange children = widget->GetChildren();
+  while(!children.Empty() && !NeedsLayout(children.Back()))
+    children.PopBack();
+
+  mChildren = children;
+  SkipInvalid();
+}
+
+//******************************************************************************
+Widget& FilterLayoutChildren::Front()
+{
+  return mChildren.Front();
+}
+
+//******************************************************************************
+WidgetListRange FilterLayoutChildren::All()
+{
+  return mChildren;
+}
+
+//******************************************************************************
+bool FilterLayoutChildren::Empty()
+{
+  return mChildren.Empty();
+}
+
+//******************************************************************************
+void FilterLayoutChildren::PopFront()
+{
+  mChildren.PopFront();
+  SkipInvalid();
+}
+
+//******************************************************************************
+void FilterLayoutChildren::SkipInvalid()
+{
+  while(!mChildren.Empty())
+  {
+    if(NeedsLayout(mChildren.Front()))
+      return;
+
+    mChildren.PopFront();
+  }
+}
+
 //-------------------------------------------------------------------- Composite
 ZilchDefineType(Composite, builder, type)
 {

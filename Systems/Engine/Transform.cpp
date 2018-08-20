@@ -55,6 +55,7 @@ MetaTransformInstance TransformMetaTransform::BuildInstance(Transform* transform
   {
     instance.mParentInstance = t->GetProperty("Parent");
     instance.mParentWorldMatrix = t->GetProperty("WorldMatrix");
+    instance.mParentLocalMatrix = t->GetProperty("LocalMatrix");
   }
 
   return instance;

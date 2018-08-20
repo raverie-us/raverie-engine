@@ -48,6 +48,8 @@ public:
   void OnProjectRenameCanceled(Event* e);
   /// The user has confirmed if they want to rename their project file
   void OnProjectRenameConfirmed(ModalButtonEvent* e);
+  /// The user has requested that their project be backed-up
+  void OnBackupProject(Event* e);
 
   /// Update the project size text as the size is calculated.
   void OnSizeTaskUpdate(BackgroundTaskEvent* e);
@@ -79,6 +81,7 @@ public:
   IconButton* mEditProjectNameIconButton;  
   IconButton* mInstallBuild;
   TextButton* mRunWithDebugger;
+  TextButton* mBackupProjectButton;
 
   Widget* mNoScreenshotImage;
   TextureView* mProjectImage;

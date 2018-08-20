@@ -38,9 +38,6 @@ void DetachSelected(Editor* editor, Space* space);
 /// Detaches all child objects of the selected object
 void FlattenTree(Editor* editor, Space* space);
 
-void FilterChildrenAndProtected(Array<Cog*>& cog, MetaSelection* selection);
-void FilterChildrenAndProtected(const Array<CogId>& cogsIn, Array<Cog*>& cogsOut);
-
 void ClearObjectStore();
 
 void EnableFpuExceptions();

@@ -37,6 +37,8 @@
 #include "Attenuator.h"
 #include "MicrophoneInputNode.h"
 #include "CustomDataNode.h"
+#include "FileEncoder.h"
+#include "FileDecoder.h"
 #include "SoundAssets.h"
 #include "SoundInstances.h"
 #include "Tags.h"
@@ -44,8 +46,6 @@
 #include "AudioInputOutput.h"
 
 #include "Modifiers.h"
-#include "FileEncoder.h"
-#include "FileDecoder.h"
 #include "AudioSystemInterface.h"
 #include "AudioSystemInternal.h"
 

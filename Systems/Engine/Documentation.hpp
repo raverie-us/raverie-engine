@@ -293,6 +293,8 @@ namespace Zero
     ClassDoc* mBaseClassPtr;
 
     bool mImportDocumentation;
+
+    bool mDevOnly;
   };
 
   class EnumDoc : public Object

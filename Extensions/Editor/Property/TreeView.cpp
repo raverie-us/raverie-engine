@@ -1517,7 +1517,7 @@ void TreeView::SetFormat(TreeFormatting& format)
     header->Destroy();
   }
   auto resizers = mHeaderResizers.All();
-  while(!headers.Empty())
+  while(!resizers.Empty())
   {
     ColumnResizer* resizer = resizers.Front().second;
     resizers.PopFront();
@@ -2232,6 +2232,8 @@ void TreeView::UpdateHeaders()
 
     float startPos = format.StartX;
     float extraWidth = 0.0f;
+    if (mArea->IsScrollBarVisible(1))
+      extraWidth += mArea->GetScrollBarSize();
 
     // We want to walk left and keep pushing the start of the header left
     // to eat any columns that don't have a header

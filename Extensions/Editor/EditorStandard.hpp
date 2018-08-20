@@ -170,6 +170,7 @@ public:
 #include "ConsoleUi.hpp"
 #include "UiLegacyToolTip.hpp"
 #include "PreviewWidgets.hpp"
+#include "RenderGroupHierarchies.hpp"
 
 // Animator
 #include "AnimationEditorData.hpp"

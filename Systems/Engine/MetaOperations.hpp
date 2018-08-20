@@ -117,6 +117,9 @@ public:
   void ComponentAdded(HandleParam object);
   void ComponentRemoved(HandleParam object);
 
+  // Temporary, for use in Material re-initialization. Should not be used elsewhere.
+  bool mNotifyModified;
+
 private:
   /// The meta of the component we're adding/removing.
   BoundTypeHandle mComponentType;

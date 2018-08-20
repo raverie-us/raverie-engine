@@ -61,6 +61,8 @@ struct Thickness
   float Bottom;
 
   Vec2 Size() const { return Vec2(Width(), Height()); }
+  Vec2 SizeX() const { return Vec2(Left, Right); }
+  Vec2 SizeY() const { return Vec2(Top, Bottom); }
   Vec2 TopLeft() const { return Vec2(Left, Top); }
   Vec2 TopRight() const { return Vec2(Right, Top); }
   Vec2 BottomLeft() const { return Vec2(Left, Bottom); }

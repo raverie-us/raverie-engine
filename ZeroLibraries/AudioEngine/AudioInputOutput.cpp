@@ -247,36 +247,25 @@ namespace Audio
   }
 
   //************************************************************************************************
-  void AudioIOInterface::GetMixedOutputSamples(float* outputBuffer, const unsigned frames)
+  void AudioIOInterface::GetMixedOutputSamples(float* outputBuffer, const unsigned howManySamples)
   {
-    // Note: remember this function is called asynchronously from the audio device thread
-
-    // Save the number of samples available to read
-    unsigned available = OutputRingBuffer.GetReadAvailable();
-
-    // Make sure we don't try to read more samples than are available
-    unsigned samplesNeeded = frames * StreamInfoList[StreamTypes::Output].mChannels;
-    unsigned samples = samplesNeeded;
-    if (samples > available)
-      samples = available;
-
     // Copy the samples from the OutputRingBuffer
-    OutputRingBuffer.Read((void*)outputBuffer, samples);
+    unsigned samplesRead = OutputRingBuffer.Read((void*)outputBuffer, howManySamples);
 
     // If there weren't enough available, set the rest to 0
-    if (samples < samplesNeeded)
-      memset(outputBuffer + samples, 0, (samplesNeeded - samples) * sizeof(float));
+    if (samplesRead < howManySamples)
+      memset(outputBuffer + samplesRead, 0, (howManySamples - samplesRead) * sizeof(float));
 
     // Signal the semaphore for the mix thread
     MixThreadSemaphore.Increment();
   }
 
   //************************************************************************************************
-  void AudioIOInterface::SaveInputSamples(const float* inputBuffer, unsigned frames)
+  void AudioIOInterface::SaveInputSamples(const float* inputBuffer, unsigned howManySamples)
   {
     // Note: remember this function is called asynchronously from the audio device thread
 
-    InputRingBuffer.Write(inputBuffer, frames * StreamInfoList[StreamTypes::Input].mChannels);
+    InputRingBuffer.Write(inputBuffer, howManySamples);
   }
 
   //------------------------------------------------------------------------------------------------
@@ -284,10 +273,14 @@ namespace Audio
   //************************************************************************************************
   void IOCallback(float* outputBuffer, float* inputBuffer, unsigned framesPerBuffer, void* data)
   {
+    AudioIOInterface* io = ((AudioIOInterface*)data);
+
     if (outputBuffer)
-      ((AudioIOInterface*)data)->GetMixedOutputSamples(outputBuffer, framesPerBuffer);
+      io->GetMixedOutputSamples(outputBuffer, framesPerBuffer *
+        io->GetStreamChannels(StreamTypes::Output));
     if (inputBuffer)
-      ((AudioIOInterface*)data)->SaveInputSamples(inputBuffer, framesPerBuffer);
+      io->SaveInputSamples(inputBuffer, framesPerBuffer *
+        io->GetStreamChannels(StreamTypes::Input));
   }
 
 

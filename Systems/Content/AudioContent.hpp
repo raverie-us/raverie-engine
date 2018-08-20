@@ -12,10 +12,13 @@
 namespace Zero
 {
 /// The choices for how to load and play an audio file.
-/// <param name="StreamFromFile">The audio data will be read from the file and decompressed as it plays. Streaming files can't be played multiple times simultaneously and can't use loop tails.</param>
+/// <param name="StreamFromFile">The audio data will be read from the file and decompressed as it plays.</param>
+/// <param name="StreamFromMemory">The compressed audio data will be read into memory when the 
+/// Sound resource is loaded and will be decompressed as it plays.</param>
 /// <param name="Uncompressed">The audio data will be decompressed and held in memory when the Sound resource is loaded.</param>
-/// <param name="Auto">This will choose whether to stream a file depending on its length. Files longer than one minute will be streamed.</param>
-DeclareEnum3(AudioFileLoadType, StreamFromFile, /*StreamFromMemory,*/ Uncompressed, Auto);
+/// <param name="Auto">This will choose whether to stream a file depending on its length. Files longer 
+/// than 30 seconds will be streamed from memory, and those longer than 1 minute will be streamed from file.</param>
+DeclareEnum4(AudioFileLoadType, StreamFromFile, StreamFromMemory, Uncompressed, Auto);
 
 class AudioContent : public ContentComposition
 {

@@ -580,4 +580,69 @@ void DownloadLauncherMajorInstallerJob::OnReponse(WebResponseEvent* event)
   mState = BackgroundTaskState::Completed;
 }
 
+//-------------------------------------------------------------------BackupProjectJob
+BackupProjectJob::BackupProjectJob(StringParam projectPath, StringParam destFilePath)
+{
+  mOpenDirectoryOnCompletion = true;
+  mProjectPath = projectPath;
+  mDestinationFilePath = destFilePath;
+}
+
+void BackupProjectJob::Execute()
+{
+  String targetDirector = FilePath::GetDirectoryPath(mDestinationFilePath);
+  CreateDirectoryAndParents(targetDirector);
+
+  // Collect all of the files to archive
+  Array<ArchiveData> files;
+  GetFileList(mProjectPath, String(), files);
+
+  // Add each file to the archive, sending out progress events every so often
+  Archive projectArchive(ArchiveMode::Compressing);
+  for(size_t i = 0; i < files.Size(); ++i)
+  {
+    ArchiveData& data = files[i];
+    projectArchive.AddFile(data.mFullFilePath, data.mRelativePath);
+
+    if(i % 5)
+      UpdateProgress("ArchivingProject", i / (float)files.Size());
+  }
+
+  // Write the zip to the final file location
+  projectArchive.WriteZipFile(mDestinationFilePath);
+
+  // Mark that we've finished
+  mState = BackgroundTaskState::Completed;
+  UpdateProgress("ArchivingProject", 1.0f);
+
+  // If requested, open the target directory on completion.
+  if(mOpenDirectoryOnCompletion)
+    Os::SystemOpenFile(targetDirector.c_str());
+}
+
+void BackupProjectJob::GetFileList(StringParam path, StringParam parentPath, Array<ArchiveData>& fileList)
+{
+  FileRange fileRange(path);
+  for(; !fileRange.Empty(); fileRange.PopFront())
+  {
+    String localPath = fileRange.Front();
+    String fullPath = FilePath::Combine(path, fileRange.Front());
+    String relativePath = FilePath::Combine(parentPath, localPath);
+
+    // Recurse down directories
+    if(DirectoryExists(fullPath))
+    {
+      String subPath = FilePath::Combine(path, localPath);
+      GetFileList(subPath, relativePath, fileList);
+    }
+    // Add files (need relative path for archive)
+    else
+    {
+      ArchiveData& data = fileList.PushBack();
+      data.mFullFilePath = fullPath;
+      data.mRelativePath = relativePath;
+    }
+  }
+}
+
 }//namespace Zero

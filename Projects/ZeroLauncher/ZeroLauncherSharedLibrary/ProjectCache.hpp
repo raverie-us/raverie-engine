@@ -66,7 +66,10 @@ public:
   String GetProjectName();
   /// Rename this project to the given name. Also renames the folder containing the
   /// zeroproj to the new name (assumes the user has checked for existing folders/files of the new name).
-  void RenameAndMoveProject(StringParam newProjectName);
+  bool RenameAndMoveProject(Status& status, StringParam newProjectName);
+  /// Removes all empty directories in a path. Helper used by RenameAndMoveProject
+  /// to clean up empty folders after moving file contents.
+  void DeleteEmptyDirectoriesRecursively(StringParam path);
 
   void GetTags(HashSet<String>& tags);
   String GetTagsDisplayString(StringParam separator = " / ");

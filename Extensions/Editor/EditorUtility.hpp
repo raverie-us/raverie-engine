@@ -14,20 +14,22 @@ namespace Zero
 
 class Cog;
 
-// Get the text drawing position for a given object
-Vec3 GetObjectTextPosition(Cog* object);
+// Get the text drawing position for a given cog
+Vec3 GetObjectTextPosition(Cog* cog);
 
 DeclareEnum2(IncludeMode, OnlyRoot, Children);
-// Get an Aabb for an object and its children
-Aabb GetAabb(Cog* object, IncludeMode::Type includeMode = IncludeMode::Children);
-Aabb GetAabb(HandleParam metaObject, IncludeMode::Type includeMode = IncludeMode::Children);
+// Get an Aabb for a cog and its children
+Aabb GetAabb(Cog* cog, IncludeMode::Type includeMode = IncludeMode::Children, bool world = true);
+Aabb GetAabb(HandleParam metaObject, IncludeMode::Type includeMode = IncludeMode::Children, bool world = true);
 
 // Get an Aabb for selection
 Aabb GetAabb(MetaSelection* selection, IncludeMode::Type includeMode = IncludeMode::Children);
 
 // Expand the aabb by this object size
-void ExpandAabb(Cog* object, Aabb& aabb, IncludeMode::Type includeMode= IncludeMode::Children, bool world = true);
-void ExpandAabb(HandleParam metaObject, Aabb& aabb, IncludeMode::Type includeMode = IncludeMode::Children, bool world = true);
+void ExpandAabb(Cog* cog, Aabb& aabb, IncludeMode::Type includeMode = IncludeMode::Children, bool world = true, bool toParent = false, bool expandTransform = false);
+void ExpandAabb(HandleParam metaObject, Aabb& aabb, IncludeMode::Type includeMode = IncludeMode::Children, bool world = true, bool toParent = false, bool expandTransform = false);
+// Expand the aabb by this object's childrens' sizes only, but not the object's size itself.
+void ExpandAabbChildrenOnly(HandleParam instance, Aabb& aabb, bool world = true, bool expandTransform = false);
 
 // Get distance needed to full view an Aabb
 float GetViewDistance(Aabb& aabb);

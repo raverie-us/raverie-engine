@@ -1001,11 +1001,11 @@ void Circle::GetVertices(const DebugViewData& viewData, DebugVertexArray& vertic
 
   if (GetViewAligned())
     if (viewData.mOrthographic)
-      AddCircle(vertices, mColor, position, radius, viewData.mEyeDirection);
+      AddCircle(vertices, mColor, position, radius, viewData.mEyeDirection, GetFilled());
     else
       AddHorizonCircle(vertices, mColor, position, radius, position - viewData.mEyePosition);
   else
-    AddCircle(vertices, mColor, position, radius, mAxis);
+    AddCircle(vertices, mColor, position, radius, mAxis, GetFilled());
 }
 
 void Cone::GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices)

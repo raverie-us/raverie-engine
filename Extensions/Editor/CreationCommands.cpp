@@ -33,14 +33,14 @@ public:
 
   bool IsEnabled(Command* command, CommandManager* commandManager) override
   {
-    return commandManager->GetContext<Space>() != nullptr;
+    return commandManager->GetContext()->Get<Space>() != nullptr;
   }
 };
 
 
 void EditorCreateObjectCommand::Execute(Command* command, CommandManager* manager)
 {
-  Space* space = manager->GetContext<Space>();
+  Space* space = manager->GetContext()->Get<Space>();
   if(space == nullptr)
     return CommandFailed(command, ZilchTypeId(Space));
 
@@ -67,7 +67,7 @@ void EditorCreateObjectCommand::Execute(Command* command, CommandManager* manage
 
   // If a cog command context has been set attach the new cog as a child
   CommandManager* commandManager = CommandManager::GetInstance();
-  if (Cog* selectedCog = commandManager->GetContext<Cog>())
+  if (Cog* selectedCog = commandManager->GetContext()->Get<Cog>())
   {
     // Preserve local so that it is created under the parent
     cog->AttachToPreserveLocal(selectedCog);
@@ -113,12 +113,12 @@ public:
 
   bool IsEnabled(Command* command, CommandManager* commandManager) override
   {
-    return commandManager->GetContext<Space>() != nullptr;
+    return commandManager->GetContext()->Get<Space>() != nullptr;
   }
 
   void Execute(Command* command, CommandManager* manager)
   {
-    Space* space = manager->GetContext<Space>();
+    Space* space = manager->GetContext()->Get<Space>();
     if(space == nullptr)
       return CommandFailed(command, ZilchTypeId(Space));
 
@@ -342,6 +342,8 @@ void BindCreationCommands(Cog* configCog, CommandManager* commands)
   commands->AddCommand("CreateDirectionalLight", new EditorCreateObjectCommand(CoreArchetypes::DirectionalLight));
   commands->AddCommand("CreateDirectionalLightShadows", new EditorCreateObjectCommand(CoreArchetypes::DirectionalLightShadows));
   commands->AddCommand("CreatePointLight", new EditorCreateObjectCommand(CoreArchetypes::PointLight));
+  commands->AddCommand("CreateSpotLight", new EditorCreateObjectCommand(CoreArchetypes::SpotLight));
+  commands->AddCommand("CreateSpotLightShadows", new EditorCreateObjectCommand(CoreArchetypes::SpotLightShadows));
 
   commands->AddCommand("CreateCube", new EditorCreateObjectCommand(CoreArchetypes::Cube));
   commands->AddCommand("CreateSphere", new EditorCreateObjectCommand(CoreArchetypes::Sphere));

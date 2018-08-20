@@ -68,7 +68,14 @@ DocumentManager::DocumentManager()
 
 DocumentManager::~DocumentManager()
 {
-
+  // Delete all documents we still own. Due to order of destruction,
+  // scripts can still exist in this map when this type is destructed.
+  for(auto range = Documents.Values(); !range.Empty(); range.PopFront())
+  {
+    Document* document = range.Front();
+    delete document;
+  }
+  Documents.Clear();
 }
 
 void DocumentManager::AddDocument(Document* document)

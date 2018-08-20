@@ -10,9 +10,14 @@ struct PointLightFragment
   [FragmentInput] var GeoNormal : Real3;
   [FragmentInput] var GeoPosition : Real3;
   
+  // Distance at which the light's effect is completely faded.
+  // Does not affect apparent brightness of the light.
   [Input] var FalloffRadius : Real = 1.0;
   
+  // Combined with area light falloff and represents total emittance of the light.
   [Input][Output] var LightIntensity : Real = 1.0;
+  // Physical radius of the sphere of light.
+  // Affects the shape of specular reflection.
   [Input][Output] var LightRadius : Real = 0.0;
   [Output] var LightDirection : Real3;
   [Output] var LightDistance : Real;
@@ -25,7 +30,7 @@ struct PointLightFragment
     
     var reflection = Math.ReflectAcrossVector(viewDirection, this.GeoNormal);
     var toLight = lightPosition - viewPosition;
-    var centerToRay = reflection * Math.Dot(toLight, reflection) - toLight;
+    var centerToRay = Math.ProjectOnVector(toLight, reflection) - toLight;
     var closestPoint = toLight + centerToRay * Math.Saturate(this.LightRadius / Math.Length(centerToRay));
     
     var falloffDistance = Math.Length(toLight);
@@ -39,15 +44,74 @@ struct PointLightFragment
   }
 }
 
+// Outputs lighting values used by LightPass for a spot light source.
+[Pixel]
+struct SpotLightFragment
+{
+  [BuiltInInput] var WorldToView : Real4x4;
+  [BuiltInInput] var ObjectWorldPosition : Real3;
+  
+  [StageInput] var PerspectivePosition : Real4;
+  
+  [FragmentInput] var GeoNormal : Real3;
+  [FragmentInput] var GeoPosition : Real3;
+  
+  [FragmentInput] var ShadowFactor : Real = 1.0;
+  
+  // Distance at which the light's effect is completely faded.
+  // Does not affect apparent brightness of the light.
+  [Input] var FalloffRadius : Real = 1.0;
+  // Precalculated cosines of spot light angles. (cos(outer/2), cos(inner/2) - cos(outer/2)).
+  [Input] var SpotAngles : Real2 = Real2(0.5);
+  
+  // Combined with area light falloff and represents total emittance of the light.
+  [Input][Output] var LightIntensity : Real = 1.0;
+  // Physical radius of the sphere of light.
+  // Affects the shape of specular reflection.
+  [Input][Output] var LightRadius : Real = 0.0;
+  // Direction the light is facing, given in world space.
+  [Input][Output] var LightDirection : Real3 = Real3(0.0 , -1.0, 0.0);
+  [Output] var LightDistance : Real;
+  
+  function Main()
+  {
+    var viewPosition = this.GeoPosition;
+    var viewDirection = Math.Normalize(-viewPosition);
+    var lightPosition = Math.MultiplyPoint(this.WorldToView, this.ObjectWorldPosition);
+    
+    var reflection = Math.ReflectAcrossVector(viewDirection, this.GeoNormal);
+    var toLight = lightPosition - viewPosition;
+    var centerToRay = Math.ProjectOnVector(toLight, reflection) - toLight;
+    var closestPoint = toLight + centerToRay * Math.Saturate(this.LightRadius / Math.Length(centerToRay));
+    
+    var falloffDistance = Math.Length(toLight);
+    var falloff = Math.Saturate(1.0 - Math.Pow(falloffDistance / this.FalloffRadius, 4.0));
+    falloff = (falloff * falloff) / (falloffDistance * falloffDistance + 1.0);
+    
+    var lightDir = Math.Normalize(Math.MultiplyNormal(this.WorldToView, this.LightDirection));
+    var cosAngle = Math.Saturate(Math.Dot(Math.Normalize(-toLight), lightDir));
+    var spotFalloff = Math.Pow(Math.Saturate((cosAngle - this.SpotAngles.X) / this.SpotAngles.Y), 2.0);
+    
+    falloff *= spotFalloff;
+    
+    this.LightDirection = Math.Normalize(closestPoint);
+    this.LightIntensity *= falloff * this.ShadowFactor;
+    
+    this.LightDistance = Math.Length(closestPoint);
+  }
+}
+
 // Outputs lighting values used by LightPass for a directional light source.
 [Pixel]
 struct DirectionalLightFragment
 {
   [BuiltInInput] var WorldToView : Real4x4;
   
-  [Input] var ShadowFactor : Real = 1.0;
+  [FragmentInput] var ShadowFactor : Real = 1.0;
   
+  // Arbitrary scalar for the resultant lighting calculations.
   [Input][Output] var LightIntensity : Real = 1.0;
+  // Direction the light is facing, given in world space.
   [Input][Output] var LightDirection : Real3 = Real3(0.0 , -1.0, 0.0);
   
   function Main()

@@ -348,8 +348,8 @@ LibraryRef BuildWrapperLibrary(ZilchShaderLibraryRef fragmentsLibrary)
         getterSetter->Get->UserData = (void*)shaderProperty.mMemberOffset;
         getterSetter->Set->UserData = (void*)shaderProperty.mMemberOffset;
         // Currently just setting the type location, a more specific location for properties still needs to be added.
-        getterSetter->NameLocation = shaderType->mSourceLocation;
-        getterSetter->Location = shaderType->mSourceLocation;
+        getterSetter->NameLocation = shaderProperty.mShaderField->mNameLocation;
+        getterSetter->Location = shaderProperty.mShaderField->mSourceLocation;
 
         // Mark all bound getter/setters as property.
         getterSetter->AddAttribute(PropertyAttributes::cProperty);
@@ -366,7 +366,7 @@ LibraryRef BuildWrapperLibrary(ZilchShaderLibraryRef fragmentsLibrary)
       }
 
       // Set file location for this type.
-      boundType->NameLocation = shaderType->mSourceLocation;
+      boundType->NameLocation = shaderType->mNameLocation;
       boundType->Location = shaderType->mSourceLocation;
     }
   }

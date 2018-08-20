@@ -92,8 +92,25 @@ void DeleteSelectedObjects(Editor* editor, Space* space)
 {
   MetaSelection* selection = editor->GetSelection();
 
-  Array<Cog*> cogs;
-  FilterChildrenAndProtected(cogs, selection);
+  Array<Cog*> cogs, filteredCogs;
+  FilterChildrenAndProtected(cogs, selection, &filteredCogs);
+
+  StringBuilder builder;
+  forRange(Cog* object, filteredCogs.All())
+  {
+    if (object->mFlags.IsSet(CogFlags::Protected)) 
+    {
+      if (builder.GetSize() == 0)
+        builder.Append(object->GetName());
+      else
+        builder.AppendFormat(", %s", object->GetName().c_str());
+    }
+  }
+  if (builder.GetSize() > 0)
+  {
+    DoNotifyWarning("Cannot Delete Object", 
+      String::Format("Cannot delete the following objects because they are protected: %s", builder.ToString().c_str()));
+  }
 
   OperationQueue* queue = editor->GetOperationQueue();
   queue->BeginBatch();
@@ -1136,6 +1153,12 @@ void GoToDefinition(Editor* editor)
   DisplayCodeDefinition(definition);
 }
 
+void Add(Editor* editor)
+{
+  ContentLibrary* library = CommandManager::GetInstance()->GetContext()->Get<ContentLibrary>();
+  editor->AddResourceType(nullptr, library);
+}
+
 void EditCommands(Editor* editor)
 {
   if(editor->ShowWindow("Commands"))
@@ -1260,6 +1283,7 @@ void BindEditorCommands(Cog* configCog, CommandManager* commands)
   commands->AddCommand("DisableAutoProjectScreenshot", BindCommandFunction(DisableAutoProjectScreenshot));
 
   commands->AddCommand("GoToDefinition", BindCommandFunction(GoToDefinition));
+  commands->AddCommand("Add", BindCommandFunction(Add));
 
   if(DeveloperConfig* config = configCog->has(DeveloperConfig))
   {

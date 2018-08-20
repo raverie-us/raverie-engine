@@ -2,12 +2,11 @@
 Cog 
 {
 	var Name = "DirectionalLight"
-	var LinkId = 1
 	Transform 
 	{
 		var Translation = Real3{0, 0, 0}
 		var Scale = Real3{1, 1, 1}
-		var Rotation = Quaternion{0, 0, 0, 1}
+		var Rotation = Quaternion{-0.707106829, 0, 0, 0.707106829}
 	}
 	SelectionIcon 
 	{

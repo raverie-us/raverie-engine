@@ -35,7 +35,7 @@ public:
   UiStackLayoutDirection::Enum GetStackDirection();
   void SetStackDirection(UiStackLayoutDirection::Enum direction);
 
-  /// The amount of pixels in between each child Widget.
+  /// The amount of space, in pixels, between each child Widget.
   Vec2 GetSpacing();
   void SetSpacing(Vec2Param spacing);
   

@@ -26,6 +26,27 @@ namespace Tags
   DefineTag(Command);
 }//namespace Tags
 
+
+String SeperateWords(StringParam sourceString)
+{
+  if(sourceString.Empty())
+    return sourceString;
+
+  StringBuilder output;
+  StringRange str = sourceString.All();
+  // Always take the start of the string
+  output.Append(str.Front());
+  str.PopFront();
+  while(!str.Empty())
+  {
+    if(str.IsCurrentRuneUpper())
+      output.Append(' ');
+    output.Append(str.Front());
+    str.PopFront();
+  }
+  return output.ToString();
+}
+
 //--------------------------------------------------------- Command Update Event
 //******************************************************************************
 ZilchDefineType(CommandUpdateEvent, builder, type)
@@ -58,7 +79,7 @@ CommandEvent::CommandEvent(Object* source, CommandManager* manager) :
 //******************************************************************************
 Space* CommandEvent::GetSpace()
 {
-  return mManager->GetContext<Space>();
+  return mManager->GetContext()->Get<Space>();
 }
 
 //-------------------------------------------------------------------CommandExecuter
@@ -168,7 +189,18 @@ void Command::Execute()
 }
 
 //******************************************************************************
-void Command::Format()
+StringParam Command::GetDisplayName()
+{
+  return DisplayName;
+}
+
+void Command::SetDisplayName(StringParam name)
+{
+  DisplayName = SeperateWords(name);
+}
+
+//******************************************************************************
+void Command::FillOutToolTip()
 {
   // Assumes all commands must have names.
   if(Name.Empty())
@@ -196,23 +228,6 @@ void Command::ChangeState()
 {
   ObjectEvent toSend = ObjectEvent(this);
   this->GetDispatcher()->Dispatch(Events::CommandStateChange, &toSend);
-}
-
-String SeperateWords(StringParam sourceString)
-{
-  StringBuilder output;
-  StringRange str = sourceString.All();
-  // Always take the start of the string
-  output.Append(str.Front());
-  str.PopFront();
-  while(!str.Empty())
-  {
-    if(str.IsCurrentRuneUpper())
-      output.Append(' ');
-    output.Append(str.Front());
-    str.PopFront();
-  }
-  return output.ToString();
 }
 
 //-------------------------------------------------------------------CommandSearchProvider
@@ -314,10 +329,8 @@ void CommandManager::LoadCommands(StringParam filename)
     LoadPolymorphicSerialize("Commands", "commands", *stream, commands, this);
     forRange(Command* command, commands.All())
     {
-      command->Format();
       AddCommand(command);
     }
-    ScanCommands();
   }
   else
   {
@@ -364,7 +377,6 @@ Command* CommandManager::AddCommand(StringParam commandName, CommandExecuter* ex
   Command* command = new Command();
   command->Name = commandName;
   command->mExecuter = executer;
-  command->DisplayName = SeperateWords(commandName);
 
   if(command->Description.Empty())
     command->Description = executer->GetDescription();
@@ -379,8 +391,17 @@ void CommandManager::AddCommand(Command* command)
   mNamedCommands[command->Name] = command;
   mCommands.PushBack(command);
 
+  command->SetDisplayName(command->Name);
+  command->FillOutToolTip();
+
+  BuildTagList(command);
+
   if(!command->Shortcut.Empty() && !IsShortcutReserved(command->Shortcut))
     mShortcuts.Insert(command->Shortcut, command);
+
+  // Build command executer from meta, if applicable.
+  if(!command->Function.Empty())
+    command->mExecuter = BuildMetaCommandExecuter(command->Function);
 
   CommandUpdateEvent eventToSend(command);
   DispatchEvent(Events::CommandAdded, &eventToSend);
@@ -420,24 +441,19 @@ void CommandManager::RunParsedCommands()
 }
 
 //******************************************************************************
-Handle CommandManager::GetContextFromTypeName(StringParam typeName)
+String CommandManager::BuildShortcutString(bool ctrl, bool alt, bool shift, StringParam key)
 {
-  return mContextMap.FindValue(typeName, Handle());
-}
+  StringBuilder builder;
 
-//******************************************************************************
-void CommandManager::SetContext(HandleParam context, BoundType* overrideType)
-{
-  if(overrideType)
-    mContextMap[overrideType->Name] = context;
-  else
-    mContextMap[context.StoredType->Name] = context;
-}
+  if(ctrl)
+    builder << "Ctrl+";
+  if(alt)
+    builder << "Alt+";
+  if(shift)
+    builder << "Shift+";
 
-//******************************************************************************
-void CommandManager::ClearContext(BoundType* boundType)
-{
-  mContextMap.Erase(boundType->Name);
+  builder << key;
+  return builder.ToString();
 }
 
 //******************************************************************************
@@ -447,20 +463,11 @@ bool CommandManager::TestCommandKeyboardShortcuts(KeyboardEvent* event)
   if(event->Handled || event->Key == Keys::Unknown)
     return false;
 
-  StringBuilder builder;
-
-  if(event->CtrlPressed)
-    builder << "Ctrl+";
-  if(event->AltPressed)
-    builder << "Alt+";
-  if(event->ShiftPressed)
-    builder << "Shift+";
-
-  builder << event->mKeyboard->ToSymbol(event->Key);
-  String shortcutString = builder.ToString();
+  String shortcut = BuildShortcutString(event->CtrlPressed, event->AltPressed,
+                      event->ShiftPressed, event->mKeyboard->ToSymbol(event->Key));
 
   // ZPrint("Shortcut %s\n", shortcutString.c_str());
-  Command* command = mShortcuts.FindValue(shortcutString, nullptr);
+  Command* command = mShortcuts.FindValue(shortcut, nullptr);
   if(command == nullptr)
     return false;
 
@@ -475,6 +482,101 @@ bool CommandManager::IsShortcutReserved(StringParam validShortcut)
 {
   return mShortcuts.FindValue(validShortcut, nullptr) != nullptr;
 }
+
+//******************************************************************************
+bool CommandManager::IsShortcutReserved(bool ctrl, bool alt, bool shift, StringParam validKey, Command** out)
+{
+  String shortcut = BuildShortcutString(ctrl, alt, shift, validKey);
+
+  *out = mShortcuts.FindValue(shortcut, nullptr);
+  return (*out != nullptr);
+}
+
+//******************************************************************************
+bool CommandManager::ClearCommandShortcut(Command* command, bool sendEvents)
+{
+  if(command->Shortcut.Empty())
+    return false;
+
+  mShortcuts.Erase(command->Shortcut);
+  command->Shortcut.Clear();
+
+  if(sendEvents)
+  {
+    CommandUpdateEvent eventToSend(command);
+    DispatchEvent(Events::CommandUpdated, &eventToSend);
+  }
+
+  return true;
+}
+
+//******************************************************************************
+bool CommandManager::UpdateCommandShortcut(StringParam commandName, bool ctrl, bool alt, bool shift, StringParam key, bool sendEvents)
+{
+  if(Command* command = mNamedCommands.FindValue(commandName, nullptr))
+    return UpdateCommandShortcut(command, ctrl, alt, shift, key, sendEvents);
+
+  return false;
+}
+
+//******************************************************************************
+bool CommandManager::UpdateCommandShortcut(Command* command, bool ctrl, bool alt, bool shift, StringParam key, bool sendEvents)
+{
+  String shortcut = BuildShortcutString(ctrl, alt, shift, key);
+
+  // Supplied shortcut is already set on this command, do nothing.
+  if(command->Shortcut == shortcut)
+    return false;
+
+  mShortcuts.Erase(command->Shortcut);
+
+  command->Shortcut = shortcut;
+  mShortcuts.Insert(shortcut, command);
+
+  if(sendEvents)
+  {
+    CommandUpdateEvent eventToSend(command);
+    DispatchEvent(Events::CommandUpdated, &eventToSend);
+  }
+
+  return true;
+}
+
+//******************************************************************************
+bool CommandManager::UpdateCommandTags(StringParam commandName, StringParam tags, bool sendEvents)
+{
+  if(Command* command = mNamedCommands.FindValue(commandName, nullptr))
+    return UpdateCommandTags(command, tags);
+
+  return false;
+}
+
+//******************************************************************************
+bool CommandManager::UpdateCommandTags(Command* command, StringParam tags, bool sendEvents)
+{
+  if(command->Tags == tags)
+    return false;
+
+  command->Tags = tags;
+  command->TagList.Clear();
+
+  // Build all tags for this command
+  StringTokenRange tokens(command->Tags.c_str(), ' ');
+  for(; !tokens.Empty(); tokens.PopFront())
+  {
+    String tag = tokens.Front();
+    command->TagList.Insert(tag);
+  }
+
+  if(sendEvents)
+  {
+    CommandUpdateEvent eventToSend(command);
+    DispatchEvent(Events::CommandUpdated, &eventToSend);
+  }
+
+  return true;
+}
+
 //******************************************************************************
 SearchProvider* CommandManager::GetCommandSearchProvider()
 {
@@ -484,27 +586,14 @@ SearchProvider* CommandManager::GetCommandSearchProvider()
 }
 
 //******************************************************************************
-void CommandManager::ScanCommands()
+void CommandManager::BuildTagList(Command* command)
 {
-  forRange(Command* command, mCommands.All())
+  // Build all tags for this command
+  StringTokenRange tokens(command->Tags.c_str(), ' ');
+  for(; !tokens.Empty(); tokens.PopFront())
   {
-    // Build all tags for this command
-    StringTokenRange tokens(command->Tags.c_str(), ' ');
-    for(; !tokens.Empty(); tokens.PopFront())
-    {
-      String tag = tokens.Front();
-      command->TagList.Insert(tag);
-    }
-
-    // Add shortcut if provided
-    if(!command->Shortcut.Empty() && !IsShortcutReserved(command->Shortcut))
-      mShortcuts.Insert(command->Shortcut, command);
-
-    // Build command executer from meta
-    if(!command->Function.Empty())
-      command->mExecuter = BuildMetaCommandExecuter(command->Function);
-
-    command->DisplayName = SeperateWords(command->Name);
+    String tag = tokens.Front();
+    command->TagList.Insert(tag);
   }
 }
 
@@ -521,6 +610,11 @@ void CommandManager::ValidateCommands()
 
     ErrorIf(true, "Command not valid %s", command->Name.c_str());
   }
+}
+
+Context* CommandManager::GetContext()
+{
+  return &mContext;
 }
 
 //-------------------------------------------------------------------CommandCaptureContextEvent

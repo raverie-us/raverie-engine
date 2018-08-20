@@ -21,7 +21,7 @@ public:
   ZilchDeclareInheritableType(ProxyObject, TypeCopyMode::ReferenceType);
 
   // Creates a type 
-  static BoundType* CreateProxyMetaFromFile(StringParam typeName, ProxyReason::Enum reason);
+  static BoundType* CreateProxyType(StringParam typeName, ProxyReason::Enum reason);
    
   ProxyObject();
   ~ProxyObject();
@@ -32,7 +32,7 @@ public:
 
 //**************************************************************************************************
 template <typename ComponentType>
-BoundType* ProxyObject<ComponentType>::CreateProxyMetaFromFile(StringParam typeName, ProxyReason::Enum reason)
+BoundType* ProxyObject<ComponentType>::CreateProxyType(StringParam typeName, ProxyReason::Enum reason)
 {
   // Build the new type
   LibraryBuilder builder(typeName);

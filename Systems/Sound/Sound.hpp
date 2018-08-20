@@ -29,7 +29,9 @@ public:
   bool GetStreaming();
 
 // Internals
-  Audio::SoundAssetFromFile* mSoundAsset;
+  Audio::SoundAsset* mSoundAsset;
+  const float mStreamFromMemoryLength = 30.0f;
+  const float mStreamFromFileLength = 60.0f;
 
   void CreateAsset(Status& status, StringParam assetName, StringParam fileName, 
     AudioFileLoadType::Enum loadType);

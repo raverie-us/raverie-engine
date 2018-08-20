@@ -22,6 +22,9 @@ public:
   void OnChildListItemAdded(ResourceListEvent* event);
   void OnChildListItemRemoved(ResourceListEvent* event);
 
+  // Needed for sending resource modified event when properties are modified.
+  void OnObjectModified(ObjectEvent* event);
+
   // Appends to set all associated Materials of this RenderGroup and all its sub groups.
   void GetMaterials(HashSet<Material*>& materials);
   // Adds to array this RenderGroup and all sub groups.

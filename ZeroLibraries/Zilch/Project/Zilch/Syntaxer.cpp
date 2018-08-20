@@ -598,14 +598,9 @@ namespace Zilch
     // If we have an extra context of what class we're inside of, then its very possible
     // that the user was trying to implicitly access a member without 'this.', which is not legal in Zilch (but exists in C++)
     // Try to provide better error information for these cases
-    bool hasInstanceMember = false;
-    if (classWeAreInsideOf != nullptr)
-    {
-      hasInstanceMember =
-        classWeAreInsideOf->InstanceFields.ContainsKey(typeName)        ||
-        classWeAreInsideOf->InstanceFunctions.ContainsKey(typeName)     ||
-        classWeAreInsideOf->InstanceGetterSetters.ContainsKey(typeName);
-    }
+    bool hasInstanceMember =
+      classWeAreInsideOf &&
+      classWeAreInsideOf->GetMember(typeName, Members::InheritedInstanceExtension) != nullptr;
     
     // Can we provide better error messages?
     if (hasInstanceMember)

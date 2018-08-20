@@ -1276,26 +1276,6 @@ void ObjectView::OnKeyDown(KeyboardEvent* event)
   ExecuteShortCuts(mSpace, nullptr, event);
 }
 
-void ObjectView::OnMenuMouseEnter(MouseEvent* event)
-{
-  Object* object = (Object*)mSource->ToEntry(mCommandIndex);
-  if (Cog* cog = Type::DynamicCast<Cog*>(object))
-  {
-    // Set what cog is selected for the creation of new objects as children
-    // when using the right click create menu
-    CommandManager* commandManager = CommandManager::GetInstance();
-    commandManager->SetContext(cog, ZilchTypeId(Cog));
-  }
-}
-
-void ObjectView::OnMenuFocusLost(FocusEvent* event)
-{
-  // Clear the context so we don't accidentally create new objects
-  // as children of the last selected cog
-  CommandManager* commandManager = CommandManager::GetInstance();
-  commandManager->ClearContext(ZilchTypeId(Cog));
-}
-
 void ObjectView::ShowObject(Cog* cog)
 {
   if (!mSource)
@@ -1483,24 +1463,19 @@ void ObjectView::OnTreeRightClick(TreeEvent* event)
   Object* object = (Object*)mSource->ToEntry(mCommandIndex);
   if(Cog* cog = Type::DynamicCast<Cog*>(object))
   {
+    // Set the parent Cog as a context so that all commands can use it (e.g. creation commands
+    // will attach to this cog)
+    menu->mRootEntry->mContext.Add(cog);
+
     ConnectMenu(menu, "Rename", OnRename);
     ConnectMenu(menu, "Delete", OnDelete);
     if(LocalModifications::GetInstance()->IsChildOrderModified(cog->has(Hierarchy)))
       ConnectMenu(menu, "Restore Child Order", OnRestoreChildOrder);
 
-
     menu->AddDivider();
     // Set our icon to the arrow indicating a sub menu
     ContextMenuEntry* createSubMenu = menu->AddEntry("Create");
     createSubMenu->AddEntry(new ContextMenuEntryMenu("Create"));
-
-    MetaSelection* selection = Z::gEditor->GetSelection();
-    // Don't create objects as children if multiple objects are selected
-    if (selection->Count() == 1)
-    {
-      ConnectThisTo(createSubMenu, Events::MouseEnter, OnMenuMouseEnter);
-      ConnectThisTo(createSubMenu, Events::FocusLost, OnMenuFocusLost);
-    }
 
     // Send out the ContextMenuEntry tree root to potentially alter the context menus structure/items
     ContextMenuEvent event(menu->GetRootEntry());

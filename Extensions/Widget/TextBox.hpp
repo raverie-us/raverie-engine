@@ -116,6 +116,16 @@ public:
   void SetText(StringParam text);
   String GetText();
 
+  static const float cDefaultLineWidth;
+  static const Thickness cDefaultPadding;
+
+  /// If the text wraps, then the width of this composite will never be more or
+  /// less than the best fit width.
+  /// If the text doesn't wrap, then the width of this composite can be less-than
+  /// or equal to the best fit width.
+  bool mBestFitText;
+  float mMaxBestFitTextWidth;
+
   float mMaxLineWidth;
   Thickness mPadding;
   Text* mTextField;

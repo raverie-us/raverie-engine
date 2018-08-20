@@ -312,6 +312,7 @@ TextEditor::TextEditor(Composite* parent)
 TextEditor::~TextEditor()
 {
   DeleteObjectsInContainer(mHotspots);
+  SafeDelete(mIndicators);
 }
 
 void TextEditor::SetLexer(uint lexer)
@@ -607,8 +608,11 @@ void TextEditor::InsertAutoCompleteText(const char* text, int length, int remove
 void TextEditor::UseTextEditorConfig()
 {
   TextEditorConfig* config = GetConfig();
-  ConnectThisTo(config, Events::PropertyModified, OnConfigChanged);
-  this->UpdateConfig(config);
+  if (config)
+  {
+    ConnectThisTo(config, Events::PropertyModified, OnConfigChanged);
+    this->UpdateConfig(config);
+  }
 }
 
 void TextEditor::OnConfigChanged(PropertyEvent* event)
@@ -645,9 +649,14 @@ void TextEditor::OnColorSchemeChanged(ObjectEvent* event)
 
 TextEditorConfig* TextEditor::GetConfig()
 {
-  auto config = Z::gEditor->mConfig->has(TextEditorConfig);
-  ErrorIf(config == nullptr, "The config should always have a TextEditorConfig component");
-  return config;
+  // Check if the editor is present for when this is called from the launcher
+  if (Z::gEditor)
+  {
+    auto config = Z::gEditor->mConfig->has(TextEditorConfig);
+    ErrorIf(config == nullptr, "The config should always have a TextEditorConfig component");
+    return config;
+  }
+  return nullptr;
 }
 
 void TextEditor::UpdateConfig(TextEditorConfig* textConfig)
@@ -965,8 +974,14 @@ void TextEditor::OnKeyDown(KeyboardEvent* event)
     event->Handled = true;
 
   if (event->Key == Keys::D && event->ShiftPressed && event->CtrlPressed)
+  {
     mScintilla->WndProc(SCI_LINEDUPLICATE, 0, 0);
-
+    // Get the current caret position and find the line that was just duplicated
+    int line = GetLineFromPosition(mScintilla->SelectionStart().Position());
+    // If that line duplicated is not in view scroll it into view
+    MakeLineVisible(line);
+  }
+  
   if (event->Key == Keys::Down && event->ShiftPressed && event->CtrlPressed)
     mScintilla->WndProc(SCI_MOVESELECTEDLINESDOWN, 0, 0);
 
@@ -1772,6 +1787,11 @@ void TextEditor::OnNotify(Scintilla::SCNotification& notify)
 
     if (shouldSendEvent)
     {
+      // We have to get the line from the current caret position because some Scintilla
+      // on notify messages do not fill out the position/line modified causing incorrect
+      // behavior when attempting to scroll off screen modification into view
+      MakeLineVisible(GetLineFromPosition(mScintilla->SelectionStart().Position()));
+
       Event event;
       this->GetDispatcher()->Dispatch(Events::TextEditorModified, &event);
     }

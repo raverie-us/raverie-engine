@@ -29,26 +29,38 @@ void RestoreCogPathLinks(HandleParam object, Cog* owner, CogInitializer& initial
   BoundType* cogPathType = ZilchTypeId(CogPath);
   BoundType* objectType = object.StoredType;
 
-  // Cog paths and some certain properties need to have a special resolve phase called on them
-  forRange (Property* property, objectType->GetProperties())
+  // Cog paths and some certain properties need to have a special resolve phase called on them.
+  // We only loop over fields because properties could have side effects (get/set) and generally
+  // always have a backing field, unless they are generating a temporary, in which case a temporary
+  // CogPath doesn't make sense to restore links on.
+  forRange (Field* field, objectType->GetFields())
   {
-    BoundType* propertyType = Type::DirectDynamicCast<BoundType*>(property->PropertyType);
+    BoundType* propertyType = Type::DirectDynamicCast<BoundType*>(field->PropertyType);
 
     if (propertyType == nullptr || propertyType->CopyMode != TypeCopyMode::ReferenceType)
       continue;
 
-    if(property->HasAttribute(PropertyAttributes::cProperty)           ||
-       property->HasAttribute(PropertyAttributes::cDisplay)            ||
-       property->HasAttribute(PropertyAttributes::cDeprecatedEditable) ||
-       property->HasAttribute(PropertyAttributes::cSerialize)          ||
-       property->HasAttribute(PropertyAttributes::cDeprecatedSerialized))
+    if(field->HasAttribute(PropertyAttributes::cProperty)           ||
+       field->HasAttribute(PropertyAttributes::cDisplay)            ||
+       field->HasAttribute(PropertyAttributes::cDeprecatedEditable) ||
+       field->HasAttribute(PropertyAttributes::cSerialize)          ||
+       field->HasAttribute(PropertyAttributes::cDeprecatedSerialized))
     {
-      Any value = property->GetValue(object);
+      Any value = field->GetValue(object);
       if(propertyType == cogPathType)
       {
         CogPath* cogPath = value.Get<CogPath*>();
-        if(cogPath != nullptr)
-          cogPath->RestoreLink(initializer, owner, property->Name);
+        if (cogPath != nullptr)
+        {
+          cogPath->RestoreLink(initializer, owner, field->Name);
+        }
+        else
+        {
+          // We set the cog path here because we always expect cog paths to be non-null.
+          CogPath path;
+          path.SetRelativeTo(owner);
+          field->SetValue(object, path);
+        }
       }
       else
       {

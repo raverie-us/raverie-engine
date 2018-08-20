@@ -452,8 +452,8 @@ void EditorViewport::OnResourceModified(ResourceEvent* event)
 
 void EditorViewport::OnCaptureContext(CommandCaptureContextEvent* event)
 {
-  event->ActiveSet->SetContext(this);
-  event->ActiveSet->SetContext((Space*)mEditSpace);
+  event->ActiveSet->GetContext()->Add(this);
+  event->ActiveSet->GetContext()->Add((Space*)mEditSpace);
 }
 
 void EditorViewport::OnObjectPoll(ObjectPollEvent* event)

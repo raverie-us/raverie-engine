@@ -66,8 +66,6 @@ public:
 
 
 public:
-  bool mCommandsModified;
-
   /// All command objects will be created in this space.
   HandleOf<Space> mCommandSpace;
 

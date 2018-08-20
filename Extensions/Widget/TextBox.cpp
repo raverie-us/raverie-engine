@@ -330,6 +330,9 @@ void TextBoxButton::UpdateTransform()
 }
 
 //---------------------------------------------------------------- MultiLineText
+const float MultiLineText::cDefaultLineWidth = 300.0f;
+const Thickness MultiLineText::cDefaultPadding = Thickness(2, 2, 2, 2);
+
 ZilchDefineType(MultiLineText, builder, type)
 {
 }
@@ -354,8 +357,23 @@ MultiLineText::MultiLineText(Composite* parent, StringParam font, uint fontSize)
 
 Vec2 MultiLineText::GetMinSize()
 {
-  Vec2 minSize = mTextField->GetBoundedSize(mMaxLineWidth, 10000);
-  return ExpandSizeByThickness(mPadding, minSize);
+  float width = mMaxLineWidth;
+  Vec2 minSize = mTextField->GetBoundedSize(width, 10000);
+
+  if(mBestFitText)
+  {
+    width = mMaxBestFitTextWidth;
+
+    // Remeasure if MaxLineWidth wasn't a fit for the max fit width.
+    if(minSize.x > width)
+      minSize = mTextField->GetBoundedSize(width, 10000);
+
+    // Must cap based on max fit width.
+    minSize.x = Math::Max(width, minSize.x);
+  }
+
+  mSize = ExpandSizeByThickness(mPadding, minSize);
+  return mSize;
 }
 
 void MultiLineText::UpdateTransform()
@@ -383,7 +401,7 @@ void MultiLineText::Initialize(Text* textObject)
 {
   mDefSet = mDefSet->GetDefinitionSet(TextBoxClass);
 
-  mPadding = Thickness(2, 2, 2, 2);
+  mPadding = cDefaultPadding;
   mBackground = CreateAttached<Element>(cWhiteSquare);
   mBorder = CreateAttached<Element>(cWhiteSquareBorder);
   mBorder->SetInteractive(false);
@@ -401,7 +419,9 @@ void MultiLineText::Initialize(Text* textObject)
   mBackground->SetColor(TextBoxUi::BackgroundColor);
   mBorder->SetColor(TextBoxUi::BorderColor);
 
-  mMaxLineWidth = 300;
+  mBestFitText = false;
+  mMaxBestFitTextWidth = 0.0f;
+  mMaxLineWidth = cDefaultLineWidth;
 }
 
 }

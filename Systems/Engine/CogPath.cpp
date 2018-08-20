@@ -958,6 +958,9 @@ void CogPath::SetPath(StringParam path)
 {
   CogPathNode* node = mSharedNode;
 
+  if (AreTwoNamesTheSame(CogPath::Resolve(node->mRelativeTo, path)))
+    DoNotifyWarning("Cog Path", "Two objects have the same name (in the same space or under the same parent) so the CogPath may resolve to an incorrect object");
+
   // Don't do anything if the path is already set. If you have duplicate names, this could cause
   // the cog path to resolve to the wrong object
   if (node->mPath == path)
@@ -1131,6 +1134,35 @@ bool CogPath::RefreshIfNull()
   Cog* oldCog = mSharedNode->mResolvedCog;
   Cog* newCog = GetCog();
   return newCog != oldCog;
+}
+
+bool AreTwoNamesTheSame(Cog* test)
+{
+  if (!test)
+    return false;
+
+  String name = test->GetName();
+
+  Cog* parent = test->GetParent();
+  if (parent)
+  {
+    size_t childCount = RangeCount(parent->FindAllChildrenByName(name));
+    return childCount != 1;
+  }
+  else
+  {
+    // Check to see if there are multiple objects within the same space that have the same name
+    Space* toSpace = test->GetSpace();
+    if (toSpace != nullptr)
+    {
+      forRange(Cog& cog, toSpace->FindAllObjectsByName(name))
+      {
+        if (&cog != test && cog.GetName() == name)
+          return true;
+      }
+    }
+  }
+  return false;
 }
 
 ZilchDefineType(CogPathEvent, builder, type)

@@ -19,6 +19,9 @@ namespace Events
   DeclareEvent(ExitViewAll);
 }
 
+static float cMinimumBoundingSize = 0.01f;
+static float cMinimumBoundingHalfSize = cMinimumBoundingSize * 0.5f;
+
 void MakeLocalToViewAligned(Mat4& localToView, Mat4Param localToWorld, Mat4Param worldToView, Vec3Param translation);
 
 class PropertyShaderInput

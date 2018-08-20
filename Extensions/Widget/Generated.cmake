@@ -11,6 +11,7 @@ target_sources(Widget
     ${CMAKE_CURRENT_LIST_DIR}/Command.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Command.hpp
     ${CMAKE_CURRENT_LIST_DIR}/CommandBinding.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/CommandBinding.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Composite.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Composite.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Constants.cpp

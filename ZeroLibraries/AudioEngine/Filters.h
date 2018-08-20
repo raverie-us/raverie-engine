@@ -267,6 +267,8 @@ namespace Audio
     float GetWetLevel() { return WetLevel; }
     // Changes the wet level value over time
     void InterpolateWetLevel(const float newValue, const float time);
+    // Returns true if there is any audio data in the delay buffers
+    bool IsDataInBuffer();
 
   private:
     // Length of delay in samples
