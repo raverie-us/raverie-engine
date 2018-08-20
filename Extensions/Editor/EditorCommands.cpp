@@ -795,6 +795,14 @@ void CameraFocusSpace(Space* space, Cog* cameraObject, EditFocusMode::Enum focus
     return;
 
   Aabb aabb = GetAabb(&transformObjects);
+
+  // Impose a minimum size for the aabb so that when focusing on a point, it doesn't zoom all the
+  // way inside the point. This way we can still see the point
+  const Vec3 cMinFocusHalfSize(0.025f);
+  Vec3 halfExtents = aabb.GetHalfExtents();
+  halfExtents = Math::Max(cMinFocusHalfSize, halfExtents);
+  aabb.SetHalfExtents(halfExtents);
+
   CameraFocusSpace(space, cameraObject, aabb, focusMode);
 }
 
