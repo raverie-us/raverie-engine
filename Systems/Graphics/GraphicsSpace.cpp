@@ -215,16 +215,6 @@ void GraphicsSpace::OnFrameUpdate(float frameDt)
       rangeStart = rangeEnd;
     }
   }
-
-  QueueVisibilityEvents(mGraphicals);
-  QueueVisibilityEvents(mGraphicalsNeverCulled);
-  QueueVisibilityEvents(mGraphicalsAlwaysCulled);
-
-  SendVisibilityEvents();
-
-  forRange (Camera& camera, mRemovedCameras.All())
-    UnregisterVisibility(&camera);
-  mRemovedCameras.Clear();
 }
 
 //**************************************************************************************************
@@ -390,6 +380,15 @@ void GraphicsSpace::RenderQueuesUpdate(RenderTasks& renderTasks, RenderQueues& r
       node.Extract(viewBlock, frameBlock);
     }
   }
+
+  // Waiting to send these events until after render data is collected
+  // to make sure that the list of cameras that are processed for broadphase
+  // is not modified before getting render data.
+  QueueVisibilityEvents(mGraphicals);
+  QueueVisibilityEvents(mGraphicalsNeverCulled);
+  QueueVisibilityEvents(mGraphicalsAlwaysCulled);
+
+  SendVisibilityEvents();
 }
 
 //**************************************************************************************************
@@ -635,6 +634,8 @@ void GraphicsSpace::QueueVisibilityEvents(GraphicalList& graphicals, Camera* cam
       event.mName = Events::ExitView;
 
       mVisibilityEvents.PushBack(event);
+
+      graphical.mLastVisibleFlags.ClearFlag(visibilityId);
     }
   }
 }
@@ -642,15 +643,17 @@ void GraphicsSpace::QueueVisibilityEvents(GraphicalList& graphicals, Camera* cam
 //**************************************************************************************************
 void GraphicsSpace::SendVisibilityEvents()
 {
+  // Copy events locally to prevent duplicates caused by responses to events.
+  VisibilityEventList visibilityEvents = mVisibilityEvents;
+  mVisibilityEvents.Clear();
+
   GraphicalEvent graphicalEvent;
 
-  forRange (VisibilityEvent& event, mVisibilityEvents.All())
+  forRange (VisibilityEvent& event, visibilityEvents.All())
   {
     graphicalEvent.mViewingObject = event.mViewingObject;
     event.mVisibleObject->DispatchEvent(event.mName, &graphicalEvent);
   }
-
-  mVisibilityEvents.Clear();
 }
 
 } // namespace Zero
