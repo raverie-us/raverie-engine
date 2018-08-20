@@ -39,6 +39,7 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/ThreadSync.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Timer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Utilities.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/WebRequest.cpp
     ${CMAKE_CURRENT_LIST_DIR}/WindowsError.cpp
     ${CMAKE_CURRENT_LIST_DIR}/WindowsError.hpp
     ${CMAKE_CURRENT_LIST_DIR}/WinUtility.cpp

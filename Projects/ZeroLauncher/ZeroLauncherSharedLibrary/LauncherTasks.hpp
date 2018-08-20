@@ -19,7 +19,7 @@ public:
   GetVersionListingTaskJob(StringParam url);
 
   /// Job Interface.
-  int Execute() override;
+  void Execute() override;
   void OnReponse(WebResponseEvent* event);
 
   void PopulatePackageList();
@@ -36,7 +36,7 @@ public:
   DownloadImageTaskJob(StringParam url);
 
   /// Job Interface.
-  int Execute() override;
+  void Execute() override;
   void OnReponse(WebResponseEvent* event);
 
   Image mImage;
@@ -51,7 +51,7 @@ public:
   LoadImageFromDiskTaskJob(StringParam path);
 
   /// Job Interface.
-  int Execute() override;
+  void Execute() override;
 
   String mPath;
 };
@@ -66,7 +66,7 @@ public:
   GetDataTaskJob(StringParam url);
 
   /// Job Interface.
-  int Execute() override;
+  void Execute() override;
   void OnReponse(WebResponseEvent* event);
 
   String mData;
@@ -82,7 +82,7 @@ public:
   DownloadStandaloneTaskJob(StringParam url);
 
   /// Job Interface.
-  int Execute() override;
+  void Execute() override;
   void OnReponse(WebResponseEvent* event);
 
   String mInstallLocation;
@@ -99,7 +99,7 @@ public:
   void LoadFromFile(StringParam filePath);
 
   /// Job Interface.
-  int Execute() override;
+  void Execute() override;
   void InstallBuild();
 
   String mData;
@@ -118,7 +118,7 @@ public:
   DeleteDirectoryJob(StringParam directory, StringParam rootDirectory, bool recursivelyDeleteEmpty);
 
   /// Job Interface.
-  int Execute() override;
+  void Execute() override;
 
   String mDirectory;
   String mRootDirectory;
@@ -135,7 +135,7 @@ public:
   GetTemplateListingTaskJob(StringParam url);
 
   /// Job Interface.
-  int Execute() override;
+  void Execute() override;
   void OnReponse(WebResponseEvent* event);
 
   void PopulateTemplateList();
@@ -152,7 +152,7 @@ public:
   DownloadTemplateTaskJob(StringParam templateUrl, TemplateProject* project);
 
   /// Job Interface.
-  int Execute() override;
+  void Execute() override;
   void OnReponse(WebResponseEvent* event);
 
   TemplateProject* mTemplate;
@@ -172,7 +172,7 @@ public:
   DownloadAndCreateTemplateTaskJob(StringParam templateUrl, TemplateProject* project);
 
   /// Job Interface.
-  int Execute() override;
+  void Execute() override;
   void OnReponse(WebResponseEvent* event);
 
   // Creating a project currently involves serialization which is not thread safe, this must be called on the main thread.
@@ -204,7 +204,7 @@ public:
   DownloadLauncherPatchInstallerJob(StringParam url, StringParam rootDownloadLocation);
 
   /// Job Interface.
-  int Execute() override;
+  void Execute() override;
   void OnReponse(WebResponseEvent* event);
 
   // Extract the patch id of this build from the given archive
@@ -224,7 +224,7 @@ public:
   CheckForLauncherMajorInstallerJob(StringParam url);
 
   /// Job Interface.
-  int Execute() override;
+  void Execute() override;
   void OnReponse(WebResponseEvent* event);
 
   /// Is there a new major-version installer for the launcher available?
@@ -240,7 +240,7 @@ public:
   DownloadLauncherMajorInstallerJob(StringParam url);
 
   /// Job Interface.
-  int Execute() override;
+  void Execute() override;
   void OnReponse(WebResponseEvent* event);
 
   /// Is there a new major-version installer for the launcher available?

@@ -93,7 +93,6 @@ private:
   PropertyView* mPropertyView;
 
   Array<ContentItem*> mContentItems;
-  ThreadedWebRequest mContentListRequest;
   ContentPackage mTempPackage;
 
   /// When there are no objects in the tile view, this will give them a hint

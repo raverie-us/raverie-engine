@@ -23,23 +23,22 @@ public:
   DownloadTaskJob(StringParam url);
 
   /// Job Interface.
-  int Execute() override;
+  void Execute() override;
   int Cancel() override;
 
   float GetPercentageComplete();
+  String GetData();
 
   String mName;
-  String mData;
   String mFileName;
 
 protected:
-  void OnPartialWebResponse(WebResponseEvent* e);
-  void OnWebResponse(WebResponseEvent* e);
+  void OnWebResponsePartialData(WebResponseEvent* e);
+  void OnWebResponseComplete(WebResponseEvent* e);
   void UpdateDownloadProgress();
 
   String mDownloadedLocation;
-  u64 mBytesDownloaded, mTotalBytes;
-  BlockingWebRequest mRequest;
+  HandleOf<AsyncWebRequest> mRequest;
 };
 
 }//namespace Zero

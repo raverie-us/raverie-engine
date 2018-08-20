@@ -40,6 +40,7 @@ ZilchDefineEnum(KeyState);
 ZilchDefineEnum(LauncherAutoRunMode);
 ZilchDefineEnum(Math::CurveType);
 ZilchDefineEnum(MouseButtons);
+ZilchDefineEnum(ProgressType);
 ZilchDefineEnum(SplineType);
 ZilchDefineEnum(StoreResult);
 ZilchDefineEnum(StreamType);
@@ -146,6 +147,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeEnum(Location);
   ZilchInitializeEnumAs(Math::CurveType, "CurveType");
   ZilchInitializeEnum(MouseButtons);
+  ZilchInitializeEnum(ProgressType);
   ZilchInitializeEnum(SplineType);
   ZilchInitializeEnum(StoreResult);
   ZilchInitializeEnum(StreamType);
@@ -459,10 +461,11 @@ bool EngineLibrary::Initialize(ZeroStartupSettings& settings)
   InitializeResourceManager(TextBlockManager);
   InitializeResourceManager(HeightMapSourceManager);
 
-  StartThreadSystem();
-
   //Create the engine.
   Engine* engine = new Engine();
+
+  // This must be called right after the engine is created because it connects to the engine.
+  StartThreadSystem();
 
   Keyboard::Initialize();
   Mouse::Initialize();

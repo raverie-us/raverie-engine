@@ -59,65 +59,55 @@ BackgroundTask* DownloadTaskJob::DownloadToBuffer(StringParam url,
 //******************************************************************************
 DownloadTaskJob::DownloadTaskJob(StringParam url)
 {
-  mRequest.mUrl = url;
-  mBytesDownloaded = 0;
-  mTotalBytes = 0;
+  mRequest = AsyncWebRequest::Create();
+  AsyncWebRequest* request = mRequest;
+
+  // For platforms that support threading, we want to continue the web
+  // response on a thread so it acts the same as a continued job.
+  request->mSendEventsOnRequestThread = true;
+
+  request->mUrl = url;
+  ConnectThisTo(request, Events::WebResponsePartialData, OnWebResponsePartialData);
+  ConnectThisTo(request, Events::WebResponseComplete, OnWebResponseComplete);
 }
 
 //******************************************************************************
-int DownloadTaskJob::Execute()
+void DownloadTaskJob::Execute()
 {
-  ConnectThisTo(&mRequest, Events::PartialWebResponse, OnPartialWebResponse);
-  ConnectThisTo(&mRequest, Events::WebResponse, OnWebResponse);
-  mRequest.Run();
-  return 1;
+  mRequest->Run();
 }
 
 //******************************************************************************
 int DownloadTaskJob::Cancel()
 {
   BackgroundTaskJob::Cancel();
-  mRequest.Cancel();
+  mRequest->Cancel();
   return 0;
 }
 
 //******************************************************************************
 float DownloadTaskJob::GetPercentageComplete()
 {
-  return float(mBytesDownloaded) / float(mTotalBytes);
+  return mRequest->mProgress;
 }
 
 //******************************************************************************
-void DownloadTaskJob::OnPartialWebResponse(WebResponseEvent* e)
+String DownloadTaskJob::GetData()
 {
-  mData = e->Data;
+  return mRequest->GetData();
+}
 
-  // Add to the amount of data download
-  mBytesDownloaded += mData.SizeInBytes();
-
-  // Find the total bytes being sent from the headers
-  forRange(String header, e->ResponseHeaders.All())
-  {
-    StringTokenRange r(header, ':');
-    if(r.Front() == "Content-Length")
-    {
-      r.PopFront();
-      StringRange rest = r.Front();
-      u32 tempVal;
-      ToValue(rest, tempVal);
-      mTotalBytes = (u64)tempVal;
-      break;
-    }
-  }
-
+//******************************************************************************
+void DownloadTaskJob::OnWebResponsePartialData(WebResponseEvent* e)
+{
   UpdateDownloadProgress();
 }
 
 //******************************************************************************
-void DownloadTaskJob::OnWebResponse(WebResponseEvent* e)
+void DownloadTaskJob::OnWebResponseComplete(WebResponseEvent* e)
 {
   // The download failed if we didn't get the OK response
-  if(e->ResponseCode != Os::WebResponseCode::OK)
+  if(e->mResponseCode != WebResponseCode::OK)
   {
     Failed();
     UpdateDownloadProgress();
@@ -129,16 +119,14 @@ void DownloadTaskJob::OnWebResponse(WebResponseEvent* e)
 
   // Let them know we completed
   UpdateDownloadProgress();
-
-  mData = e->Data;
 }
 
 //******************************************************************************
 void DownloadTaskJob::UpdateDownloadProgress()
 {
   float percentComplete = GetPercentageComplete();
-  String downloaded = HumanReadableFileSize(mBytesDownloaded);
-  String total = HumanReadableFileSize(mTotalBytes);
+  String downloaded = HumanReadableFileSize(mRequest->mTotalDownloaded);
+  String total = HumanReadableFileSize(mRequest->mTotalExpected);
   String progressText = String::Format("%0.0f%% (%s/%s)", percentComplete * 100.0f,
                                        downloaded.c_str(), total.c_str());
   UpdateProgress(mName, percentComplete, progressText);

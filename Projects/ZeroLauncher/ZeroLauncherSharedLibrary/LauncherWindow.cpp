@@ -573,7 +573,7 @@ void LauncherWindow::OnCheckForLauncherPatch(BackgroundTaskEvent* e)
   // Load the available builds into the version selector
   DownloadTaskJob* job = (DownloadTaskJob*)e->mTask->GetFinishedJob();
   int serverVersionId;
-  ToValue(job->mData.c_str(), serverVersionId);
+  ToValue(job->GetData().c_str(), serverVersionId);
 
   // Load the id of the current running dll
   MainConfig* mainConfig = mConfigCog->has(MainConfig);

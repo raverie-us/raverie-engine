@@ -278,7 +278,7 @@ void OnPackageDownloadCallback(BackgroundTask* task, Job* job)
 {
   DownloadTaskJob* downloadJob = (DownloadTaskJob*)job;
   String location = FilePath::Combine(GetTemporaryDirectory(), downloadJob->mName);
-  WriteStringRangeToFile(location, downloadJob->mData);
+  WriteStringRangeToFile(location, downloadJob->GetData());
 
   ContentImporter::OpenImportWindow(location);
 }
@@ -287,7 +287,7 @@ void OnGenericDownloadCallback(BackgroundTask* task, Job* job)
 {
   DownloadTaskJob* downloadJob = (DownloadTaskJob*)job;
   String location = FilePath::Combine(GetTemporaryDirectory(), downloadJob->mName);
-  WriteStringRangeToFile(location, downloadJob->mData);
+  WriteStringRangeToFile(location, downloadJob->GetData());
   Os::SystemOpenFile(location.c_str());
 }
 

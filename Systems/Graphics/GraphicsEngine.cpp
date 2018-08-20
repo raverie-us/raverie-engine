@@ -1476,12 +1476,11 @@ void GraphicsEngine::WriteTextureToFile(HandleOf<Texture> texture, StringParam f
 }
 
 //**************************************************************************************************
-int SaveToImageJob::Execute()
+void SaveToImageJob::Execute()
 {
   Status status;
   SaveImage(status, mFilename, mImage, mWidth, mHeight, mFormat, mImageType);
   delete[] mImage;
-  return 0;
 }
 
 } // namespace Zero

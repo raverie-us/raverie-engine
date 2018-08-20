@@ -112,8 +112,6 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeType(ToolGizmoEvent);
   ZilchInitializeType(ManipulatorToolEvent);
   ZilchInitializeType(SelectToolFrustumEvent);
-  // Event Responses
-  ZilchInitializeType(BugReporterResponse);
 
   ZilchInitializeType(BugReporter);
   ZilchInitializeType(MetaPropertyEditor);

@@ -231,7 +231,7 @@ public:
 class SaveToImageJob : public Job
 {
 public:
-  int Execute() override;
+  void Execute() override;
   byte* mImage;
   uint mWidth;
   uint mHeight;

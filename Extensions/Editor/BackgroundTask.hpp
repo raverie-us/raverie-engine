@@ -74,8 +74,9 @@ protected:
   /// given to a different thread.
   void SendMainThreadEvent(StringParam eventId, Event* e);
 
-  /// Simply set the state and return from the job. The gBackgroundTasks will
-  /// automatically send the appropriate completion event based on this state.
+  /// Set the state then call UpdateProgress once.
+  /// The gBackgroundTasks will automatically send the
+  /// appropriate completion event based on this state.
   BackgroundTaskState::Type mState;
 
 private:
@@ -153,7 +154,7 @@ private:
 
   /// The job should not be accessed while it's still running (other than
   /// canceling the job).
-  Job* mJob;
+  HandleOf<BackgroundTaskJob> mJob;
 };
 
 //------------------------------------------------------------- Background Tasks

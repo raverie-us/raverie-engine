@@ -20,7 +20,7 @@ public:
   DirectorySizeJob(StringParam directory);
 
   /// Job Interface.
-  int Execute() override;
+  void Execute() override;
   void ComputeSizeRecursive(StringParam dir);
 
   String mDirectory;
@@ -40,7 +40,7 @@ public:
   ExecuteProcessTaskJob(StringParam process);
 
   /// Job Interface.
-  int Execute() override;
+  void Execute() override;
 
   String mProcess;
   int mExitCode;

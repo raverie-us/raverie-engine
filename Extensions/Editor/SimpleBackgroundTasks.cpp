@@ -19,12 +19,11 @@ DirectorySizeJob::DirectorySizeJob(StringParam directory)
 }
 
 //******************************************************************************
-int DirectorySizeJob::Execute()
+void DirectorySizeJob::Execute()
 {
   ComputeSizeRecursive(mDirectory);
   mState = BackgroundTaskState::Completed;
   UpdateProgress(GetName(), 1.0, HumanReadableFileSize(mCurrentSize));
-  return 1;
 }
 
 //******************************************************************************
@@ -64,7 +63,7 @@ ExecuteProcessTaskJob::ExecuteProcessTaskJob(StringParam process)
 }
 
 //******************************************************************************
-int ExecuteProcessTaskJob::Execute()
+void ExecuteProcessTaskJob::Execute()
 {
   TextStreamDebugPrint debugPrint;
   SimpleProcess process;
@@ -76,8 +75,6 @@ int ExecuteProcessTaskJob::Execute()
 
   mState = BackgroundTaskState::Completed;
   UpdateProgress(name, 1.0f);
-
-  return 0;
 }
 
 }//namespace Zero

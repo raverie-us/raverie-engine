@@ -61,7 +61,7 @@ public:
 private:
   void OnWebResponse(WebResponseEvent* e);
 
-  ThreadedWebRequest mRequest;
+  HandleOf<AsyncWebRequest> mRequest;
 };
 
 }//namespace Zero

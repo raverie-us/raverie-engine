@@ -16,23 +16,13 @@ ZilchDefineType(Job, builder, type)
 {
 }
 
-Job::Job()
+Job::Job() :
+  mRunCount(0)
 {
-  mDeletedOnCompletion = true;
-  mOsEvent = nullptr;
 }
 
 Job::~Job()
 {
-  SafeDelete(mOsEvent);
-}
-
-OsEvent* Job::InitializeOsEvent()
-{
-  mOsEvent = new OsEvent();
-  mOsEvent->Initialize();
-  mDeletedOnCompletion = false;
-  return mOsEvent;
 }
 
 //-----------------------------------------------------------------------------
@@ -43,16 +33,14 @@ namespace Z
 
 JobSystem::JobSystem()
 {
-  mWorkerThreadsActive = true;
-
   if (ThreadingEnabled)
   {
-    Workers.Resize(10);
+    mWorkers.Resize(10);
 
-    for (uint i = 0; i < Workers.Size(); ++i)
+    for (uint i = 0; i < mWorkers.Size(); ++i)
     {
-      Workers[i] = new Thread();
-      Thread& thread = *Workers[i];
+      mWorkers[i] = new Thread();
+      Thread& thread = *mWorkers[i];
       thread.Initialize(&Thread::ObjectEntryCreator<JobSystem, &JobSystem::WorkerThreadEntry>, this, "Background");
     }
   }
@@ -60,47 +48,36 @@ JobSystem::JobSystem()
 
 JobSystem::~JobSystem()
 {
-  mWorkerThreadsActive = false;
-
+  // Cancel all active Jobs.
   mLock.Lock();
-
-  //Cancel all active Jobs
-
-  //Active job range is safe because of the lock.
-  forRange(Job& job, ActiveJobs.All())
+  // Active job range is safe because of the lock.
+  forRange(Job& job, mActiveJobs.All())
     job.Cancel();
 
-  // Delete all pending jobs that we own. 
-  // if a job is marked to not be deleted on completion then it's likely a background task. 
-  // Leave this to the background task manager to delete otherwise a double deletion will happen.
-  while(!PendingJobs.Empty())
-  {
-    Job* job = &PendingJobs.Front();
-    PendingJobs.PopFront();
-    if(job->mDeletedOnCompletion)
-    {
-      SafeDelete(job);
-    }
-  }
-
+  // Release all active and pending job references that we own (this may delete the jobs).
+  mPendingJobs.Clear();
   mLock.Unlock();
 
-  //increment the counter but push no jobs
-  //allowing each background thread to unblock
-  for(uint i=0;i<Workers.Size();++i)
-  {
+  // Increment the counter but push no jobs
+  // allowing each background thread to unblock.
+  for (uint i = 0; i < mWorkers.Size(); ++i)
     mJobCounter.Increment();
-  }
 
-  //Wait for each thread to shutdown
-  for(uint i=0;i<Workers.Size();++i)
+  // Wait for each thread to shutdown.
+  for (uint i = 0; i < mWorkers.Size(); ++i)
   {
-    Thread& thread = *Workers[i];
+    Thread& thread = *mWorkers[i];
     thread.WaitForCompletion();
   }
 
-  //delete all threads
-  DeleteObjectsInContainer(Workers);
+  // Clear all active jobs now that all threads have stopped (may release the memory for jobs).
+  // There should be no more threads running, but we lock just to be safe.
+  mLock.Lock();
+  mActiveJobs.Clear();
+  mLock.Unlock();
+
+  // Delete all threads.
+  DeleteObjectsInContainer(mWorkers);
 }
 
 Job* JobSystem::GetNextJob()
@@ -109,29 +86,18 @@ Job* JobSystem::GetNextJob()
 
   //Locked pop front
   mLock.Lock();
-  if(!PendingJobs.Empty())
+  if (!mPendingJobs.Empty())
   {
-    job = &PendingJobs.Front();
-    PendingJobs.Erase(PendingJobs.Begin());
-    ActiveJobs.PushBack(job);
+    HandleOf<Job> jobHandle = mPendingJobs.Back();
+    job = jobHandle;
+    mPendingJobs.PopBack();
+    mActiveJobs.PushBack(jobHandle);
   }
   mLock.Unlock();
 
+  // We don't need to return a handle because the job will
+  // be kept alive by being inside of mActiveJobs.
   return job;
-}
-
-void JobSystem::JobFinished(Job* job)
-{
-  mLock.Lock();
-  ActiveJobs.Erase(job);
-  mLock.Unlock();
-
-  if(job->mOsEvent)
-    job->mOsEvent->Signal();
-
-  // Only delete the job if specified
-  if(job->mDeletedOnCompletion)
-    delete job;
 }
 
 OsInt JobSystem::WorkerThreadEntry()
@@ -141,35 +107,53 @@ OsInt JobSystem::WorkerThreadEntry()
     mJobCounter.WaitAndDecrement();
     Job* job = GetNextJob();
 
-    //No jobs and Semaphore release
-    //that means we are shutting down.
+    // No jobs and Semaphore release
+    // that means we are shutting down.
     if(job == nullptr)
       return 0;
 
-    //Run the job
-    job->Execute();
-
-    //Finish the job
-    JobFinished(job);
+    RunJob(job);
   }
 }
 
 void JobSystem::AddJob(Job* job)
 {
-  if(!ThreadingEnabled)
-  {
-    job->Execute();
-    return;
-  }
-  
-  //lock push a job
   mLock.Lock();
-  PendingJobs.PushBack(job);
+  if (job->mRunCount == 0)
+    mPendingJobs.PushBack(job);
+  ++job->mRunCount;
   mLock.Unlock();
 
-  //Signal that a job has been added 
-  //unblocking workers
-  mJobCounter.Increment();
+  if (!ThreadingEnabled)
+  {
+    // Run the job on the main thread.
+    RunJob(job);
+  }
+  else
+  {
+    // Signal that a job has been added, which will unblock the waiting workers.
+    mJobCounter.Increment();
+  }
+}
+
+void JobSystem::RunJob(Job* job)
+{
+  bool completed = false;
+  do
+  {
+    job->Execute();
+
+    mLock.Lock();
+    --job->mRunCount;
+    completed = (job->mRunCount == 0);
+    if (completed)
+    {
+      HandleOf<Job> jobHandle = job;
+      mActiveJobs.EraseValue(jobHandle);
+    }
+    mLock.Unlock();
+  }
+  while (!completed);
 }
 
 }//zero

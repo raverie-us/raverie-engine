@@ -235,5 +235,6 @@ namespace Zero
 #include "Platform/Renderer.hpp"
 #include "Platform/Audio.hpp"
 #include "Platform/CallStack.hpp"
+#include "Platform/WebRequest.hpp"
 
 #include "ThreadableLoop.hpp"

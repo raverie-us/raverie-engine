@@ -326,7 +326,7 @@ void DiscoverMenu::OnDeveloperNotesDownloaded(BackgroundTaskEvent* e)
     Status status;
     //load the data into an array
     DataTreeLoader loader;
-    loader.OpenBuffer(status, job->mData);
+    loader.OpenBuffer(status, job->GetData());
     loader.SerializeFieldDefault("DevUpdates", DevUpdates, DevUpdates);
 
     for(uint i = 0; i < DevUpdates.Size(); ++i)

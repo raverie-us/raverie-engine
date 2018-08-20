@@ -18,15 +18,6 @@ ZilchDefineType(BugReporter, builder, type)
 
 ZilchDefineType(BugReporterResponse, builder, type)
 {
-	ZilchBindFieldProperty(mResponse);
-}
-
-BugReporterResponse::BugReporterResponse() : mResponse()
-{
-}
-
-BugReporterResponse::BugReporterResponse(String response) : mResponse(response)
-{
 }
 
 BugReporter::BugReporter(Composite* parent) :
@@ -91,7 +82,6 @@ BugReporter::BugReporter(Composite* parent) :
   ConnectThisTo(mSend, Events::ButtonPressed, OnSend);
   ConnectThisTo(mBrowse, Events::ButtonPressed, OnBrowse);
   ConnectThisTo(GetRootWidget(), Events::WidgetUpdate, OnUpdate);
-  ConnectThisTo(this, Events::BugReporterResponse, OnBugReporterResponse);
 }
 
 BugReporter::~BugReporter()
@@ -178,48 +168,6 @@ String GenerateTempFile(StringParam name, StringParam extension)
   return FilePath::Combine(directory, fileName);
 }
 
-void BugReporter::OnBugReporterResponse(BugReporterResponse* event)
-{
-	// Check if http response indicates fail or success.
-	// Waypoint returns the following on success of both filing the task and uploading associated files:
-	// "Success: T%taskId% | %Title% successfully added to phabricator"
-	// Waypoint returns the following on failure of either filing the task or uploading associated files:
-	// "HTTP %ErrorCode% Upload Failed: %Error Message%"
-	String response = event->mResponse;
-	if (response.StartsWith("Success:"))
-	{
-		// Extract the task ID
-		Regex taskIdRegex("T\\d+");
-		Matches taskIdMatches;
-		taskIdRegex.Search(response, taskIdMatches);
-
-		// If there are no task Id's in the response then direct to user to the latest bug reports
-		if (taskIdMatches.Empty())
-		{
-			DoNotifyWarning("Bug Reporter", "ZeroHub returned success, but did not include a TaskID. Please visit https://dev.zeroengine.io/u/latestbugs to find your task, or contact a ZeroHub administrator.");
-			return;
-		}
-
-		// Build the notify message
-		String taskId = taskIdMatches.Front();
-		StringBuilder notifyBuilder;
-		notifyBuilder.Append(response);
-		notifyBuilder.Append("Bug URL: https://dev.zeroengine.io/");
-		notifyBuilder.Append(taskId);
-
-		// Notify the user that their bug was submitted successfully
-		DoNotify("Bug Reporter", notifyBuilder.ToString(), "Disk");
-	}
-	// If the response does not start with "Success:" then it failed, in which case the server response is returned to the user.
-	else
-	{
-		DoNotifyWarning("Bug Reporter", response);
-
-		// Open the browser to the bug report form if the bug reporter failed to file the bug from the editor
-		Z::gEditor->ShowBrowser("https://dev.zeroengine.io/u/BugReport", "Bug Report Form");
-	}
-}
-
 void BugReporter::OnSend(Event* event)
 {
   // Verify that the user entered a title
@@ -275,19 +223,21 @@ void BugReporter::OnSend(Event* event)
     Z::gEditor->SaveAll(true);
   }
 
-  //Z::gEngine->LoadingStart();
+  // Start the blocking here (we end it in the web request).
+  // There should never be any code path where we don't hit the web response / end.
+  SendBlockingTaskStart("Reporting");
   Z::gJobs->AddJob(job);
 
   mSent = true;
   CloseTabContaining(this);
 }
 
-int BugReportJob::Execute()
+void BugReportJob::Execute()
 {
-  SendBlockingTaskStart("Reporting");
-
+  BugReporterResponse* eventToSend = new BugReporterResponse();
+  eventToSend->mRequest = AsyncWebRequest::Create();
   size_t fileCount = 0;
-  BlockingWebRequest request;
+  AsyncWebRequest& request = *eventToSend->mRequest.Dereference();
   String response;
 
   StringBuilder bugReportUrl;
@@ -350,17 +300,61 @@ int BugReportJob::Execute()
     }
   }
 
-  // File the bug
   request.mUrl = bugReportUrl.ToString();
-  response = request.Run();
 
-  // Pipe the http response back to the BugReporter
-  BugReporterResponse* eventToSend = new BugReporterResponse(response);
-  Z::gDispatch->Dispatch(Z::gEditor->mBugReporter, Events::BugReporterResponse, eventToSend);
+  ConnectThisTo(&request, Events::WebResponseComplete, OnWebResponseComplete);
+  request.Run();
 
+  // Keep the BugReportJob alive until we get the web response.
+  AddReference();
+}
 
+void BugReportJob::OnWebResponseComplete(WebResponseEvent* event)
+{
   SendBlockingTaskFinish();
-  return true;
+
+  // Check if http response indicates fail or success.
+  // Waypoint returns the following on success of both filing the task and uploading associated files:
+  // "Success: T%taskId% | %Title% successfully added to phabricator"
+  // Waypoint returns the following on failure of either filing the task or uploading associated files:
+  // "HTTP %ErrorCode% Upload Failed: %Error Message%"
+  String response = event->mData;
+  if (response.StartsWith("Success:"))
+  {
+    // Extract the task ID
+    Regex taskIdRegex("T\\d+");
+    Matches taskIdMatches;
+    taskIdRegex.Search(response, taskIdMatches);
+
+    // If there are no task Id's in the response then direct to user to the latest bug reports
+    if (taskIdMatches.Empty())
+    {
+      DoNotifyWarning("Bug Reporter", "ZeroHub returned success, but did not include a TaskID. Please visit https://dev.zeroengine.io/u/latestbugs to find your task, or contact a ZeroHub administrator.");
+      return;
+    }
+
+    // Build the notify message
+    String taskId = taskIdMatches.Front();
+    StringBuilder notifyBuilder;
+    notifyBuilder.Append(response);
+    notifyBuilder.Append("Bug URL: https://dev.zeroengine.io/");
+    notifyBuilder.Append(taskId);
+
+    // Notify the user that their bug was submitted successfully
+    DoNotify("Bug Reporter", notifyBuilder.ToString(), "Disk");
+  }
+  // If the response does not start with "Success:" then it failed, in which case the server response is returned to the user.
+  else
+  {
+    DoNotifyWarning("Bug Reporter", response);
+
+    // Open the browser to the bug report form if the bug reporter failed to file the bug from the editor
+    Z::gEditor->ShowBrowser("https://dev.zeroengine.io/u/BugReport", "Bug Report Form");
+  }
+
+  // We kept ourselves alive until the request was done by adding a reference count.
+  // Free that count here now since the request is done. (See the end of Execute).
+  Release();
 }
 
 

@@ -43,7 +43,7 @@ public:
 #include "TcpSocket.hpp"
 #include "SimpleSocket.hpp"
 #include "IrcClient.hpp"
-#include "WebRequest.hpp"
+#include "WebRequester.hpp"
 #include "WebServer.hpp"
 
 // NetPeer Forward Declarations

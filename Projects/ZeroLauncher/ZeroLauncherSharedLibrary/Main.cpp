@@ -48,18 +48,6 @@ extern "C" ZeroShared int RunZeroLauncher(const char* dllPath)
 
   ZPrint("Loading ZeroLauncher %d.0.\n", GetLauncherMajorVersion());
 
-  // For some reason, old launcher exes will have a giant hang on load with newer dlls
-  // unless a webrequest successfully runs first. No idea why this happens but this at
-  // least fixes it for now...
-  {
-    String majorVersionIdStr = ToString(GetLauncherMajorVersion());
-    String url = BuildString("https://builds.zeroengine.io?Commands=CheckPatchId&MajorId=", majorVersionIdStr);
-    BlockingWebRequest request;
-    request.mUrl = url;
-    request.mSendEvent = false;
-    String serverDllDate = request.Run();
-  }
-
   Environment* environment = Environment::GetInstance();
   environment->ParseCommandArgs(gCommandLineArguments);
 

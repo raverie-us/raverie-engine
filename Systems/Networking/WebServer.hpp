@@ -11,7 +11,7 @@ namespace Zero
 namespace Events
 {
   // This is the request that is actually sent from the thread (not exposed to script).
-  DeclareEvent(WebServerRawRequest);
+  DeclareEvent(WebServerRequestRaw);
 
   // After the WebServer intercepts it it will sent it to script as this event.
   // This occurs before the server tries to do directory or file mapping.
@@ -77,7 +77,7 @@ public:
   /// Builds the response automatically with the given code, headers, and contents.
   /// The headers that are automatically generated are: Date, Content-Length.
   /// Note that extraHeaders *MUST* use \r\n to separate each header (HTTP 1.1 standard) and *MUST* end with \r\n if provided.
-  void Respond(Os::WebResponseCode::Enum code, StringParam extraHeaders, StringParam contents);
+  void Respond(WebResponseCode::Enum code, StringParam extraHeaders, StringParam contents);
 
   /// Builds the response automatically with the given code, headers, and contents.
   /// The headers that are automatically generated are: Date, Content-Length.
@@ -140,7 +140,7 @@ public:
 
   /// Given a WebResponseCode return what the HTTP string would be, e.g. OK turns into "200 OK".
   /// If an invalid or unknown code is provided this will return an empty string.
-  static String GetWebResponseCodeString(Os::WebResponseCode::Enum code);
+  static String GetWebResponseCodeString(WebResponseCode::Enum code);
 
   /// Encodes a string to be safely passed as a parameter in a url using percent-encoding.
   static String UrlParamEncode(StringParam string);
@@ -169,7 +169,7 @@ public:
   String mPath;
 
 private:
-  void OnWebServerRawRequest(WebServerRequestEvent* event);
+  void OnWebServerRequestRaw(WebServerRequestEvent* event);
   static void DoNotifyExceptionOnFail(StringParam message, const u32& context, void* userData);
   static OsInt AcceptThread(void* userData);
 

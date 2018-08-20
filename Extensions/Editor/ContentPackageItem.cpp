@@ -35,12 +35,13 @@ ContentPackage::ContentPackage()
   mVersionBuilt = 0;
   mLocal = true;
   mPreview = nullptr;
+  mRequest = AsyncWebRequest::Create();
 }
 
 //******************************************************************************
 ContentPackage::~ContentPackage()
 {
-  mRequest.Cancel();
+  mRequest->Cancel();
 }
 
 //******************************************************************************
@@ -71,9 +72,10 @@ void ContentPackage::Serialize(Serializer& stream)
 void ContentPackage::LoadStreamedTexture(StringParam url)
 {
   // Start the web request
-  ConnectThisTo(&mRequest, Events::WebResponse, OnWebResponse);
-  mRequest.mUrl = url;
-  mRequest.Run();
+  AsyncWebRequest* request = mRequest;
+  ConnectThisTo(request, Events::WebResponseComplete, OnWebResponse);
+  request->mUrl = url;
+  request->Run();
 }
 
 //******************************************************************************
@@ -93,11 +95,11 @@ void ContentPackage::LoadLocalTexture(StringParam location)
 //******************************************************************************
 void ContentPackage::OnWebResponse(WebResponseEvent* e)
 {
-  if(e->ResponseCode != Os::WebResponseCode::OK)
+  if(e->mResponseCode != WebResponseCode::OK)
     return;
 
   String location = FilePath::Combine(GetTemporaryDirectory(), "StreamedImage.png");
-  WriteStringRangeToFile(location, e->Data);
+  WriteStringRangeToFile(location, e->mData);
 
   LoadLocalTexture(location);
 

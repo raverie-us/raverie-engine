@@ -20,29 +20,13 @@ void ArchiveProjectFile(Cog* projectCog, StringParam filename)
   projectArchive.WriteZipFile(filename);
 }
 
-void UploadToDevelopers(StringParam projectName, StringParam filename)
-{
-  BlockingWebRequest request;
-  request.AddFile("userfile", filename);
-  request.AddField("project_name", projectName);
-  request.mUrl = "https://uploadproject.zeroengine.io";
-  String response = request.Run();
-
-  if(response == "success")
-    DoNotify("Success", "Uploaded Project", "Disk");
-  else
-    DoNotifyError("Failed to upload", "Failed to upload project. Project is too large or no network access");
-
-}
-
 class ArchiveProjectJob : public Job
 {
 public:
-  bool mUpload;
   String mFileName;
   Cog* mProject;
 
-  int Execute()
+  void Execute()
   {
     SendBlockingTaskStart("Archiving");
 
@@ -50,23 +34,17 @@ public:
 
     ArchiveProjectFile(mProject, mFileName);
 
-    if(mUpload)
-      UploadToDevelopers(project->ProjectName, mFileName);
-
     SendBlockingTaskFinish();
-
-    return true;
   }
 };
 
-void StartArchiveJob(StringParam filename, bool upload = false)
+void StartArchiveJob(StringParam filename)
 {
   Cog* projectCog = Z::gEditor->mProject;
   Z::gEditor->SaveAll(true);
 
   ArchiveProjectJob* job = new ArchiveProjectJob();
   job->mProject = projectCog;
-  job->mUpload = upload;
   job->mFileName = filename;
   Z::gJobs->AddJob(job);
 }
@@ -78,7 +56,7 @@ void BackupProject(ProjectSettings* project)
   String timeStamp = GetTimeAndDateStamp();
   String fileName = BuildString(project->ProjectName, timeStamp, ".zip");
   String fullPath = FilePath::Combine(backupDirectory, fileName);
-  StartArchiveJob(fullPath, false);
+  StartArchiveJob(fullPath);
 }
 
 struct ArchiveProjectCallback : public SafeId32EventObject

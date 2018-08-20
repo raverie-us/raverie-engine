@@ -783,7 +783,7 @@ public:
     return 0;
   }
 
-  int Execute() override
+  void Execute() override
   {
     Z::gContentSystem->SetupOptions(library, buildOptions);
     ResourcePackage* package = new ResourcePackage();
@@ -793,7 +793,6 @@ public:
     event->mLibrary = library;
     event->mPackage = package;
     Z::gDispatch->Dispatch(Z::gContentSystem, Events::PackageBuilt, event);
-    return 0;
   }
 
 };

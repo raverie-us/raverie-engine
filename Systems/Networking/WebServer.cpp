@@ -10,7 +10,7 @@ namespace Zero
 {
 namespace Events
 {
-  DefineEvent(WebServerRawRequest);
+  DefineEvent(WebServerRequestRaw);
   DefineEvent(WebServerRequest);
   DefineEvent(WebServerUnhandledRequest);
 }
@@ -43,7 +43,7 @@ ZilchDefineType(WebServerRequestEvent, builder, type)
   ZilchBindMethod(HasHeader);
   ZilchBindMethod(GetHeaderValue);
   ZilchBindMethod(GetHeaderNames);
-  ZilchBindOverloadedMethod(Respond, ZilchInstanceOverload(void, Os::WebResponseCode::Enum, StringParam, StringParam));
+  ZilchBindOverloadedMethod(Respond, ZilchInstanceOverload(void, WebResponseCode::Enum, StringParam, StringParam));
   ZilchBindOverloadedMethod(Respond, ZilchInstanceOverload(void, StringParam, StringParam, StringParam));
   ZilchBindOverloadedMethod(Respond, ZilchInstanceOverload(void, StringParam));
 }
@@ -64,7 +64,7 @@ WebServerRequestEvent::~WebServerRequestEvent()
     "404 Not Found (Timestamp: %lld, Clock: %lld)",
     (long long)Time::GetTime(),
     (long long)Time::Clock());
-  Respond(Os::WebResponseCode::NotFound, String(), contents);
+  Respond(WebResponseCode::NotFound, String(), contents);
 }
 
 bool WebServerRequestEvent::HasHeader(StringParam name)
@@ -82,7 +82,7 @@ OrderedHashMap<String, String>::KeyRange WebServerRequestEvent::GetHeaderNames()
   return mHeaders.Keys();
 }
 
-void WebServerRequestEvent::Respond(Os::WebResponseCode::Enum code, StringParam extraHeaders, StringParam contents)
+void WebServerRequestEvent::Respond(WebResponseCode::Enum code, StringParam extraHeaders, StringParam contents)
 {
   return Respond(WebServer::GetWebResponseCodeString(code), extraHeaders, contents);
 }
@@ -285,7 +285,7 @@ OsInt WebServerConnection::ReadWriteThread(void* userData)
       if (contentLength == 0)
       {
         toSend->mData = builder.ToString();
-        Z::gDispatch->Dispatch(webServer, Events::WebServerRawRequest, toSend);
+        Z::gDispatch->Dispatch(webServer, Events::WebServerRequestRaw, toSend);
         toSend = nullptr;
         break;
       }
@@ -303,7 +303,7 @@ OsInt WebServerConnection::ReadWriteThread(void* userData)
       {
         toSend->mData = builder.ToString();
         toSend->mPostData = unparsedContent;
-        Z::gDispatch->Dispatch(webServer, Events::WebServerRawRequest, toSend);
+        Z::gDispatch->Dispatch(webServer, Events::WebServerRequestRaw, toSend);
         toSend = nullptr;
         break;
       }
@@ -388,7 +388,7 @@ ZilchDefineType(WebServer, builder, type)
 
 WebServer::WebServer()
 {
-  ConnectThisTo(this, Events::WebServerRawRequest, OnWebServerRawRequest);
+  ConnectThisTo(this, Events::WebServerRequestRaw, OnWebServerRequestRaw);
 }
 
 WebServer::~WebServer()
@@ -454,45 +454,45 @@ void WebServer::Close()
   mConnectionCountEvent.Wait();
 }
 
-String WebServer::GetWebResponseCodeString(Os::WebResponseCode::Enum code)
+String WebServer::GetWebResponseCodeString(WebResponseCode::Enum code)
 {
   switch (code)
   {
-    case Os::WebResponseCode::Continue                      : return "100 Continue"; // 100
-    case Os::WebResponseCode::SwitchingProtocols            : return "101 Switching Protocols"; // 101
-    case Os::WebResponseCode::OK                            : return "200 OK"; // 200
-    case Os::WebResponseCode::Created                       : return "201 Created"; // 201
-    case Os::WebResponseCode::Accepted                      : return "202 Accepted"; // 202
-    case Os::WebResponseCode::NonauthoritativeInformation   : return "203 Non-Authoritative Information"; // 203
-    case Os::WebResponseCode::NoContent                     : return "204 No Content"; // 204
-    case Os::WebResponseCode::ResetContent                  : return "205 Reset Content"; // 205
-    case Os::WebResponseCode::PartialContent                : return "206 Partial Content"; // 206
-    case Os::WebResponseCode::MovedPermanently              : return "301 Moved Permanently"; // 301
-    case Os::WebResponseCode::ObjectMovedTemporarily        : return "302 Found"; // 302
-    case Os::WebResponseCode::SeeOther                      : return "303 See Other"; // 303
-    case Os::WebResponseCode::NotModified                   : return "304 Not Modified"; // 304
-    case Os::WebResponseCode::TemporaryRedirect             : return "307 Temporary Redirect"; // 307
-    case Os::WebResponseCode::PermanentRedirect             : return "308 Permanent Redirect"; // 308
-    case Os::WebResponseCode::BadRequest                    : return "400 Bad Request"; // 400
-    case Os::WebResponseCode::AccessDenied                  : return "401 Unauthorized"; // 401
-    case Os::WebResponseCode::Forbidden                     : return "403 Forbidden"; // 403
-    case Os::WebResponseCode::NotFound                      : return "404 Not Found"; // 404
-    case Os::WebResponseCode::HTTPVerbNotAllowed            : return "405 Method Not Allowed"; // 405
-    case Os::WebResponseCode::ClientBrowserRejectsMIME      : return "406 Not Acceptable"; // 406
-    case Os::WebResponseCode::ProxyAuthenticationRequired   : return "407 Proxy Authentication Required"; // 407
-    case Os::WebResponseCode::PreconditionFailed            : return "412 Precondition Failed"; // 412
-    case Os::WebResponseCode::RequestEntityTooLarge         : return "413 Payload Too Large"; // 413
-    case Os::WebResponseCode::RequestURITooLarge            : return "414 URI Too Long"; // 414
-    case Os::WebResponseCode::UnsupportedMediaType          : return "415 Unsupported Media Type"; // 415
-    case Os::WebResponseCode::RequestedRangeNotSatisfiable  : return "416 Requested Range Not Satisfiable"; // 416
-    case Os::WebResponseCode::ExecutionFailed               : return "417 Expectation Failed"; // 417
-    case Os::WebResponseCode::LockedError                   : return "423 Locked"; // 423
-    case Os::WebResponseCode::InternalServerError           : return "500 Internal Server Error"; // 500
-    case Os::WebResponseCode::UnimplementedHeaderValueUsed  : return "501 Not Implemented"; // 501
-    case Os::WebResponseCode::GatewayProxyReceivedInvalid   : return "502 Bad Gateway"; // 502
-    case Os::WebResponseCode::ServiceUnavailable            : return "503 Service Unavailable"; // 503
-    case Os::WebResponseCode::GatewayTimedOut               : return "504 Gateway Timeout"; // 504
-    case Os::WebResponseCode::HTTPVersionNotSupported       : return "505 HTTP Version Not Supported"; // 505
+    case WebResponseCode::Continue                      : return "100 Continue"; // 100
+    case WebResponseCode::SwitchingProtocols            : return "101 Switching Protocols"; // 101
+    case WebResponseCode::OK                            : return "200 OK"; // 200
+    case WebResponseCode::Created                       : return "201 Created"; // 201
+    case WebResponseCode::Accepted                      : return "202 Accepted"; // 202
+    case WebResponseCode::NonauthoritativeInformation   : return "203 Non-Authoritative Information"; // 203
+    case WebResponseCode::NoContent                     : return "204 No Content"; // 204
+    case WebResponseCode::ResetContent                  : return "205 Reset Content"; // 205
+    case WebResponseCode::PartialContent                : return "206 Partial Content"; // 206
+    case WebResponseCode::MovedPermanently              : return "301 Moved Permanently"; // 301
+    case WebResponseCode::ObjectMovedTemporarily        : return "302 Found"; // 302
+    case WebResponseCode::SeeOther                      : return "303 See Other"; // 303
+    case WebResponseCode::NotModified                   : return "304 Not Modified"; // 304
+    case WebResponseCode::TemporaryRedirect             : return "307 Temporary Redirect"; // 307
+    case WebResponseCode::PermanentRedirect             : return "308 Permanent Redirect"; // 308
+    case WebResponseCode::BadRequest                    : return "400 Bad Request"; // 400
+    case WebResponseCode::AccessDenied                  : return "401 Unauthorized"; // 401
+    case WebResponseCode::Forbidden                     : return "403 Forbidden"; // 403
+    case WebResponseCode::NotFound                      : return "404 Not Found"; // 404
+    case WebResponseCode::HTTPVerbNotAllowed            : return "405 Method Not Allowed"; // 405
+    case WebResponseCode::ClientBrowserRejectsMIME      : return "406 Not Acceptable"; // 406
+    case WebResponseCode::ProxyAuthenticationRequired   : return "407 Proxy Authentication Required"; // 407
+    case WebResponseCode::PreconditionFailed            : return "412 Precondition Failed"; // 412
+    case WebResponseCode::RequestEntityTooLarge         : return "413 Payload Too Large"; // 413
+    case WebResponseCode::RequestURITooLarge            : return "414 URI Too Long"; // 414
+    case WebResponseCode::UnsupportedMediaType          : return "415 Unsupported Media Type"; // 415
+    case WebResponseCode::RequestedRangeNotSatisfiable  : return "416 Requested Range Not Satisfiable"; // 416
+    case WebResponseCode::ExecutionFailed               : return "417 Expectation Failed"; // 417
+    case WebResponseCode::LockedError                   : return "423 Locked"; // 423
+    case WebResponseCode::InternalServerError           : return "500 Internal Server Error"; // 500
+    case WebResponseCode::UnimplementedHeaderValueUsed  : return "501 Not Implemented"; // 501
+    case WebResponseCode::GatewayProxyReceivedInvalid   : return "502 Bad Gateway"; // 502
+    case WebResponseCode::ServiceUnavailable            : return "503 Service Unavailable"; // 503
+    case WebResponseCode::GatewayTimedOut               : return "504 Gateway Timeout"; // 504
+    case WebResponseCode::HTTPVersionNotSupported       : return "505 HTTP Version Not Supported"; // 505
     default: return String();
   }
 }
@@ -550,7 +550,7 @@ String WebServer::SanitizeForHtml(StringParam text)
   return result;
 }
 
-void WebServer::OnWebServerRawRequest(WebServerRequestEvent* event)
+void WebServer::OnWebServerRequestRaw(WebServerRequestEvent* event)
 {
   // First let the user try and handle it.
   DispatchEvent(Events::WebServerRequest, event);
@@ -576,7 +576,7 @@ void WebServer::OnWebServerRawRequest(WebServerRequestEvent* event)
       if (!mimeType.Empty())
         headers = BuildString("Content-Type: ", mimeType, "\r\n");
 
-      event->Respond(Os::WebResponseCode::OK, headers, fileData);
+      event->Respond(WebResponseCode::OK, headers, fileData);
     }
     else if (DirectoryExists(localPath))
     {
@@ -617,7 +617,7 @@ void WebServer::OnWebServerRawRequest(WebServerRequestEvent* event)
 
       builder.Append("</body></html>");
       String html = builder.ToString();
-      event->Respond(Os::WebResponseCode::OK, String(), html);
+      event->Respond(WebResponseCode::OK, String(), html);
     }
   }
 
