@@ -92,27 +92,15 @@ struct ExportTargetEntry
 //-------------------------------------------------------------------- ExportTargetList
 struct ExportTargetList
 {
-  ExportTargetList() {}
-  ~ExportTargetList() { DeleteObjectsInContainer(SortedEntries); }
+  ExportTargetList();
+  ~ExportTargetList();
 
-  void AddEntry(ExportTargetEntry* entry)
-  {
-    Entries.Insert(entry->TargetName, entry);
-    SortedEntries.PushBack(entry);
-  }
+  void AddEntry(ExportTargetEntry* entry);
+  void SetActiveTargets(HashSet<String>& activeTargets);
+  HashSet<String> GetActiveTargets();
 
   HashMap<String, ExportTargetEntry*> Entries;
   Array<ExportTargetEntry*> SortedEntries;
-  HashSet<String> GetActiveTargets()
-  {
-    HashSet<String> activeTargets;
-    forRange(ExportTargetEntry* entry, SortedEntries)
-    {
-      if (entry->Export)
-        activeTargets.Insert(entry->TargetName);
-    }
-    return activeTargets;
-  }
 };
 
 //-------------------------------------------------------------------- ExportUI
@@ -135,7 +123,9 @@ public:
   void OnSelectPath(Event* e);
   void OnFolderSelected(OsFileSelection* e);
 
-  void SetAvailableTargets(HashSet<String> targets);
+  void SetAvailableTargets(HashSet<String>& targets);
+  void SetActiveTargets(HashSet<String>& targets);
+  void SaveActiveTargets(HashSet<String>& targets);
 
   TextBox* mApplicationName;
   TextBox* mExportPath;

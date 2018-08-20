@@ -202,7 +202,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         ZeroLauncher 
         ZeroLauncherSharedLibrary
         CONFIGS ${supported_configs}
-        BASEPATH ${zero_build_out}
+        BASEPATH "${zero_build_out}"
         PLATFORM ${platform}
         BITS ${bit}
         TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET}

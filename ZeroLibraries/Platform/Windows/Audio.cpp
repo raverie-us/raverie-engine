@@ -556,7 +556,7 @@ void WasapiDevice::GetOutput()
     result = RenderClient->GetBuffer(frames, &data);
 
     // If successful, call the client callback function
-    if (result == S_OK && data)
+    if (result == S_OK && frames > 0 && data)
       (*ClientCallback)((float*)data, nullptr, frames, ClientData);
 
     // Release the buffer

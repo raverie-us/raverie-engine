@@ -401,12 +401,14 @@ void FrameRateSettings::SetFrameRate(int frameRate)
   mFrameRate = Math::Max(frameRate, 1);
 }
 
+//------------------------------------------------------------ LauncherProjectInfoProxy
 ZilchDefineType(LauncherProjectInfoProxy, builder, type)
 {
   ZeroBindComponent();
   type->AddAttribute(ObjectAttributes::cCore);
 }
 
+//------------------------------------------------------------ DebugSettings
 ZilchDefineType(DebugSettings, builder, type)
 {
   ZeroBindComponent();
@@ -433,6 +435,19 @@ int DebugSettings::GetMaxDebugObjects()
 void DebugSettings::SetMaxDebugObjects(int maxDebugObjects)
 {
   mMaxDebugObjects = Math::Max(maxDebugObjects, 0);
+}
+
+//------------------------------------------------------------ ExportSettings
+ZilchDefineType(ExportSettings, builder, type)
+{
+  ZeroBindComponent();
+  ZeroBindDocumented();
+  ZeroBindSetup(SetupMode::DefaultSerialization);
+}
+
+void ExportSettings::Serialize(Serializer& stream)
+{
+  SerializeNameDefault(mActiveTargets, HashSet<String>());
 }
 
 }//namespace Zero
