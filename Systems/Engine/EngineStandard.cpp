@@ -76,6 +76,7 @@ ZeroDefineArrayType(Array<ContentLibraryReference>);
 // The keys enum has to be declared special since it skips values
 ZilchDefineExternalBaseType(Keys::Enum, TypeCopyMode::ValueType, builder, type)
 {
+  SetUpKeyNames();
   ZilchFullBindEnum(builder, type, SpecialType::Enumeration);
 
   // For now, just iterate over all keys in the name map and if there was no saved name then
