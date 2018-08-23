@@ -35,7 +35,7 @@ endfunction()
 function(zero_multitarget_output_settings)
 
     # set arguments
-    set(oneValueArgs CONFIGS BASEPATH PLATFORM BITS TOOLSET PRECOMPILED_HEADER_NAME PRECOMPILED_SOURCE_NAME TARGET_SUBFOLDER IGNORE_TARGET)
+    set(oneValueArgs CONFIGS BASEPATH PLATFORM BITS TOOLSET PRECOMPILED_HEADER_NAME PRECOMPILED_SOURCE_NAME TARGET_SUBFOLDER IGNORE_TARGET CONFIG)
     cmake_parse_arguments(PARSED "" "${oneValueArgs}" "" ${ARGN})
 
     if("${PARSED_IGNORE_TARGET}" STREQUAL "")
@@ -46,7 +46,12 @@ function(zero_multitarget_output_settings)
     set(PARSED_TARGETS ${PARSED_UNPARSED_ARGUMENTS})
 
     foreach(target ${PARSED_TARGETS})
-        set(intOutputDirectory "${PARSED_BASEPATH}/Int/${PARSED_PLATFORM}/${PARSED_BITS}${CONFIGS}/${target}")
+        # if we were passed a config, seperate our intermediate files by config instead of platform
+        if(PARSED_CONFIG)
+          set(intOutputDirectory "${PARSED_BASEPATH}/Int/${PARSED_CONFIG}/${PARSED_BITS}${CONFIGS}/${target}")
+        else()
+          set(intOutputDirectory "${PARSED_BASEPATH}/Int/${PARSED_PLATFORM}/${PARSED_BITS}${CONFIGS}/${target}")
+        endif()
         
         set_target_properties(
             ${target}

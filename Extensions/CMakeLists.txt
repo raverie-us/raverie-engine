@@ -137,6 +137,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         CONFIGS ${supported_configs}
         BASEPATH ${zero_build_out}
         PLATFORM ${platform}
+        CONFIG ${configuration}
         BITS ${bit}
         TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET}
         PRECOMPILED_HEADER_NAME "Precompiled.hpp"
