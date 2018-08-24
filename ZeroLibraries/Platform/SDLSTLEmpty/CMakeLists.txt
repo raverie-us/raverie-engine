@@ -33,10 +33,10 @@ ${CMAKE_CURRENT_LIST_DIR}/../SDL/Thread.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../SDL/ThreadSync.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../SDL/Timer.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../SDL/Utilities.cpp
+${CMAKE_CURRENT_LIST_DIR}/../SDL/Keys.inl
+${CMAKE_CURRENT_LIST_DIR}/../SDL/MouseButtons.inl
 ${CMAKE_CURRENT_LIST_DIR}/../STL/Atomic.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../STL/FileSystem.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../STL/FpControl.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../STL/Process.cpp
-${CMAKE_CURRENT_LIST_DIR}/../SDL/Keys.inl
-${CMAKE_CURRENT_LIST_DIR}/../SDL/MouseButtons.inl
 )

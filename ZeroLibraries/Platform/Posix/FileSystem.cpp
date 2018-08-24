@@ -122,8 +122,16 @@ bool CopyFileInternal(StringParam dest, StringParam source)
   for(;;)
   {
     size_t bytesRead = fread(buf, 1, bufferSize, sourceFile);
+    if (ferror(sourceFile))
+      return false;
+    
     int written = fwrite(buf, bytesRead, 1, destFile);
-    if (bytesRead!=bufferSize) 
+    if (!written)
+      return false;
+    if (ferror(destFile))
+      return false;
+    
+    if (bytesRead != bufferSize) 
       break;
   }
 

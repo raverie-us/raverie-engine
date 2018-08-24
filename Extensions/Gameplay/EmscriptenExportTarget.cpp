@@ -34,8 +34,6 @@ EmscriptenExportTarget::EmscriptenExportTarget(Exporter* exporter, String target
 
 void EmscriptenExportTarget::ExportApplication()
 {
-  SendBlockingTaskStart("Exporting for Web");
-
   {
     TimerBlock block("Exported Project");
     String outputDirectory = FilePath::Combine(GetTemporaryDirectory(), "Web", "ZeroExport");
@@ -44,7 +42,7 @@ void EmscriptenExportTarget::ExportApplication()
     mExporter->CopyContent(status, outputDirectory, this);
     if (status.Failed())
     {
-      DoNotifyWarning("WindowsExportTarget", status.Message);
+      DoNotifyWarning("Web Build", status.Message);
       return;
     }
 
@@ -55,15 +53,25 @@ void EmscriptenExportTarget::ExportApplication()
 
     if (status.Failed())
     {
-      DoNotifyError("Web export failed %s\n", status.Message);
-      SendBlockingTaskFinish();
+      DoNotifyError("Web Build", status.Message);
       return;
     }
 
     // TODO: Select web build version and copy out that version for export
     // Copy the web build of Zero Engine to the the specified export folder location
     // Update this string to your web-build location for testing.
-    String webBuildPath = FilePath::Combine(GetApplicationDirectory(), "../../../../../", "WebBuild");
+    Cog* configCog = Z::gEngine->GetConfigCog();
+    ReturnIf(!configCog,, "Unable to get the config cog");
+    MainConfig* mainConfig = configCog->has(MainConfig);
+    ReturnIf(!mainConfig,, "Unable to get the MainConfig on the config cog");
+    String webBuildPath = FilePath::Combine(mainConfig->DataDirectory, "WebBuild");
+
+    if (!DirectoryExists(webBuildPath))
+    {
+      DoNotifyError("Web Build", "The WebBuild directory does not exist inside the Data directory.");
+      return;
+    }
+
     FileRange webBuildFiles(webBuildPath);
 
     while (!webBuildFiles.Empty())
@@ -93,7 +101,7 @@ void EmscriptenExportTarget::ExportApplication()
 
     if (fileContent.Empty())
     {
-      DoNotifyWarning("File Read Error", "Failed to read ZeroEditor.js, aborting export");
+      DoNotifyWarning("Web Build", "Failed to read ZeroEditor.js, aborting export");
       return;
     }
 
@@ -125,9 +133,6 @@ void EmscriptenExportTarget::ExportApplication()
 
     outputFile.Write((byte*)outputZeroJsFile.Data(), outputZeroJsFile.SizeInBytes());
     outputFile.Close();
-
-    // Fin?
-    SendBlockingTaskFinish();
   }
   
   DoNotify("Exported", "Project has been exported for the Web.", "Disk");

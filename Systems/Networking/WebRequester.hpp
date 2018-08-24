@@ -29,8 +29,6 @@ class WebResponseEvent;
 /// To run multiple requests at a time, create multiple AsyncWebRequests.
 /// The WebResponseComplete event will be sent at the end of a request (even if it fails or errors),
 /// however it may not be sent if Cancel is called.
-/// Note that an AsyncWebRequest will keep itself alive while a request is running
-/// (until it sends the complete event or is cancelled).
 class AsyncWebRequest : public ReferenceCountedThreadSafeId32EventObject
 {
 public:
@@ -47,11 +45,20 @@ public:
   /// it will return the entire response as a string (if not it will be empty).
   void Run();
 
+  /// Returns if the web request is currently running.
+  bool GetIsRunning();
+
   /// Cancels the web request.
   void Cancel();
 
-  /// Clears any stored data, post data (including files), headers, url, response code, etc.
-  void Clear();
+  /// Clears all request and response data.
+  void ClearAll();
+
+  /// Clears all request data (url, post data, additional headers, etc).
+  void ClearRequestData();
+
+  /// Clears any data that was gotten from a response (headers, stored data, progress, etc).
+  void ClearResponseData();
 
   /// Add a header to the web request .
   void AddHeader(StringParam name, StringParam data);
@@ -61,6 +68,9 @@ public:
 
   /// Add a field to a post request.
   void AddField(StringParam name, StringParam content);
+ 
+  /// This should only be called when shutting down the program.
+  static void CancelAllActiveRequests();
 
   /// Return the buffer of stored data (only valid if StoredData is true).
   /// Note that if this is called in the middle of a partial data event,
@@ -103,6 +113,10 @@ public:
   /// so we don't know how much we have to download.
   ProgressType::Enum mProgressType;
 
+  /// A human readable error message if any occurred.
+  /// This will be an empty string if there was no error.
+  String mError;
+
   /// If this option is set, it means we send events on
   /// the web request thread (during the web request callbacks).
   /// Set this option before running the request and do not change it afterwards.
@@ -115,12 +129,15 @@ public:
 private:
   AsyncWebRequest();
 
+  // Cancels the async web request when there is no dispatch object (we're shutting down).
+  void CancelIfNoThreadDispatch();
+
   // Occurs when we receive http headers.
   static void OnHeadersReceived(const Array<String>& headers, WebResponseCode::Enum code, WebRequest* request);
   void OnWebResponseHeadersInternal(WebResponseEvent* event);
 
   // Occurs when we receive data.
-  static void OnDataReceived(const byte* data, size_t size, WebRequest* request);
+  static void OnDataReceived(const byte* data, size_t size, u64 totalDownloaded, WebRequest* request);
   void OnWebResponsePartialDataInternal(WebResponseEvent* event);
 
   // Occurs when the web request is complete (can be due to an error).
@@ -132,6 +149,14 @@ private:
   /// Every time a request is cancelled we increment the version
   /// on the AsyncWebRequest to ensure we don't receive old events.
   Atomic<uint> mVersion;
+
+  /// We need an intrusive list of all web requests so that when the engine shuts down we can
+  /// cancel all of them (because otheriwse they will keep running and try to use the Z::gDispatch).
+  IntrusiveLink(AsyncWebRequest, link);
+
+  /// All living / active AsyncWebRequests (and a thread lock to go with it).
+  static InList<AsyncWebRequest> mActiveRequests;
+  static ThreadLock mActiveRequestsLock;
 };
 
 /// An event that occurs when we get data back from a web request.
@@ -171,6 +196,10 @@ public:
   /// so we don't know how much we have to download.
   ProgressType::Enum mProgressType;
 
+  /// A human readable error message if any occurred.
+  /// This will be an empty string if there was no error.
+  String mError;
+
   StringParam GetHeader(uint index);
   uint GetHeaderCount();
 
@@ -187,6 +216,9 @@ class WebRequester : public Component
 public:
   ZilchDeclareType(WebRequester, TypeCopyMode::ReferenceType);
 
+  WebRequester();
+  ~WebRequester();
+
   /// Component Interface.
   void Initialize(CogInitializer& initializer) override;
   void Serialize(Serializer& stream) override;
@@ -196,10 +228,15 @@ public:
   void SetUrl(StringParam url);
 
   /// Runs and returns an asynchronous web request.
+  /// The WebRequester guarantees it will keep the AsyncWebRequest alive
+  /// until the request is completed or cancelled.
   HandleOf<AsyncWebRequest> Run();
 
   /// Clears any stored data, post data (including files), headers, url, response code, etc.
   void Clear();
+
+  /// Cancels all active requests.
+  void CancelActiveRequests();
 
   /// Add a header to the web request .
   void AddHeader(StringParam name, StringParam data);
@@ -219,9 +256,26 @@ private:
   /// Returns the previous AsyncWebRequest handle.
   HandleOf<AsyncWebRequest> ReplaceRequest();
 
+  /// Walk the active requests and cleanup those that are no longer active.
+  void CleanDeadRequests();
+
+  /// Keep all the active requests alive so we can get events from them.
+  Array<HandleOf<AsyncWebRequest>> mActiveRequests;
+
   /// Note that the request is always valid. One is created in the constructor
   /// and each time we run another one is created in it's place.
   HandleOf<AsyncWebRequest> mRequest;
+
+  /// We can't immediately create the request so we need
+  /// to serialize the url using our own data member.
+  /// Do NOT use this to set the url!
+  String mSerializedUrl;
+
+  /// Does the WebRequester cancel all active
+  /// requests that it created upon its destruction?
+  /// If this is set to false, the user can keep
+  /// AsyncWebRequests alive by holding a reference to them.
+  bool mCancelOnDestruction;
 };
 
 } // namespace Zero

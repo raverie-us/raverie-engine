@@ -235,6 +235,8 @@ void NetworkingLibrary::Initialize()
 //**************************************************************************************************
 void NetworkingLibrary::Shutdown()
 {
+  AsyncWebRequest::CancelAllActiveRequests();
+
   GetLibrary()->ClearComponents();
 }
 

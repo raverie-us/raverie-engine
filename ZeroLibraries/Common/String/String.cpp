@@ -109,7 +109,6 @@ String::String(const_pointer cstring)
   }
   else
   {
-    //Error("Construction of a string from a NULL pointer is not valid");
     initializeToDefault();
   }
 }
@@ -334,6 +333,15 @@ public:
 
 void String::Assign(const_pointer data, size_type size)
 {
+  // If we're given a null pointer, create the empty string.
+  if (!data)
+  {
+    data = "";
+    ErrorIf(size != 0,
+      "When given a null pointer to construct an empty string, the size must also be 0!");
+    size = 0;
+  }
+
   size_t hash = HashString(data, size);
 
 #if defined(ZeroStringPooling)

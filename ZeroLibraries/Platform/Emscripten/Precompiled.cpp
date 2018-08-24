@@ -177,7 +177,8 @@ extern "C" EMSCRIPTEN_KEEPALIVE void EmscriptenFileDropHandler(char* fileBuffer)
 
 EM_JS(void, EmscriptenShellOpenFileBegin, (bool multiple, const char* accept, void* configPointer),
 {
-  if (!document) return null;
+  if (!document)
+    return;
   shellOpenFile(multiple, UTF8ToString(accept), configPointer);
 });
 

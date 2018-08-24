@@ -31,20 +31,29 @@ ZilchDefineType(AsyncWebRequest, builder, type)
   ZilchBindField(mUrl);
   ZilchBindMethod(Run);
   ZilchBindMethod(Cancel);
-  ZilchBindMethod(Clear);
+  ZilchBindMethod(ClearAll);
+  ZilchBindMethod(ClearRequestData);
+  ZilchBindMethod(ClearResponseData);
   ZilchBindMethod(AddHeader);
   ZilchBindMethod(AddFile);
   ZilchBindMethod(AddField);
+  ZilchBindGetterProperty(IsRunning);
 
   ZilchBindMethod(Create);
+
+  ZilchBindFieldGetterProperty(mStoreData);
 
   ZilchBindFieldGetterProperty(mTotalDownloaded);
   ZilchBindFieldGetterProperty(mTotalExpected);
   ZilchBindFieldGetterProperty(mProgress);
   ZilchBindFieldGetterProperty(mProgressType);
+  ZilchBindFieldGetterProperty(mError);
 }
 
 //--------------------------------------------------------------------BlockingWebRequest
+InList<AsyncWebRequest> AsyncWebRequest::mActiveRequests;
+ThreadLock AsyncWebRequest::mActiveRequestsLock;
+
 AsyncWebRequest* AsyncWebRequest::Create()
 {
   return new AsyncWebRequest();
@@ -52,6 +61,9 @@ AsyncWebRequest* AsyncWebRequest::Create()
 
 AsyncWebRequest::~AsyncWebRequest()
 {
+  mActiveRequestsLock.Lock();
+  mActiveRequests.Erase(this);
+  mActiveRequestsLock.Unlock();
 }
 
 void AsyncWebRequest::AddHeader(StringParam name, StringParam data)
@@ -81,6 +93,24 @@ void AsyncWebRequest::AddField(StringParam formFieldName, StringParam content)
   data.mValue.SetData(copy, content.SizeInBytes(), true);
 }
 
+void AsyncWebRequest::CancelAllActiveRequests()
+{
+  // Make a copy of the list so we don't need to worry about
+  // the destructor locking the list.
+  Array<HandleOf<AsyncWebRequest>> requestsToCancel;
+  mActiveRequestsLock.Lock();
+  forRange(AsyncWebRequest& request, mActiveRequests)
+    requestsToCancel.PushBack(&request);
+  mActiveRequestsLock.Unlock();
+
+  // Iterate through the list and cancel each request.
+  forRange(HandleOf<AsyncWebRequest>& request, requestsToCancel)
+    request->Cancel();
+
+  // Destructing the temporary array should release the last handles to the requests.
+  // If any others are still being held onto, they at least should not be running.
+}
+
 String AsyncWebRequest::GetData()
 {
   return mStoredData.ToString();
@@ -92,19 +122,19 @@ void AsyncWebRequest::Run()
   Cancel();
 
   // Clear stored data and progress.
-  mStoredData.Deallocate();
-  mProgress = 0.0f;
-  mProgressType = ProgressType::None;
+  ClearResponseData();
 
   // This data is immutable while running the request. We should never modify it.
   mRequest.mUrl = mUrl;
   mRequest.mPostData = mPostData;
   mRequest.mAdditionalRequestHeaders = mAdditionalRequestHeaders;
 
-  // Keep ourselves alive while we run the request.
-  AddReference();
-
   mRequest.Run();
+}
+
+bool AsyncWebRequest::GetIsRunning()
+{
+  return mRequest.IsRunning();
 }
 
 void AsyncWebRequest::Cancel()
@@ -114,24 +144,31 @@ void AsyncWebRequest::Cancel()
   
   mRequest.Cancel();
   ++mVersion;
-
-  // Since we were running a request, but are no longer then release our own reference.
-  // This might destruct the class upon this call.
-  Release();
 }
 
-void AsyncWebRequest::Clear()
+void AsyncWebRequest::ClearAll()
+{
+  ClearRequestData();
+  ClearResponseData();
+}
+
+void AsyncWebRequest::ClearRequestData()
+{
+  mUrl.Clear();
+  mAdditionalRequestHeaders.Clear();
+  mPostData.Clear();
+}
+
+void AsyncWebRequest::ClearResponseData()
 {
   mResponseCode = WebResponseCode::NoServerResponse;
   mStoredData.Deallocate();
-  mUrl.Clear();
-  mAdditionalRequestHeaders.Clear();
   mResponseHeaders.Clear();
-  mPostData.Clear();
   mTotalDownloaded = 0;
   mTotalExpected = 0;
   mProgress = 0.0f;
   mProgressType = ProgressType::None;
+  mError = String();
 }
 
 AsyncWebRequest::AsyncWebRequest() :
@@ -144,6 +181,10 @@ AsyncWebRequest::AsyncWebRequest() :
   mVersion(0),
   mSendEventsOnRequestThread(false)
 {
+  mActiveRequestsLock.Lock();
+  mActiveRequests.PushBack(this);
+  mActiveRequestsLock.Unlock();
+
   mRequest.mUserData = this;
   mRequest.mOnHeadersReceived = &OnHeadersReceived;
   mRequest.mOnDataReceived = &OnDataReceived;
@@ -159,14 +200,17 @@ void AsyncWebRequest::OnHeadersReceived(const Array<String>& headers, WebRespons
   // This can be called within a thread!
   AsyncWebRequest* self = (AsyncWebRequest*)request->mUserData;
 
+  Matches matches;
   u64 totalBytesExpected = 0;
   forRange(StringParam header, headers)
   {
-    static const String cContentLength("Content-Length: ");
-    if (header.StartsWith(cContentLength))
+    // Create a case insensitive regex to search for content length.
+    static const Regex cContentLengthRegex("content-length:\\s*([0-9]*)\\s*", RegexFlavor::EcmaScript, false);
+    
+    cContentLengthRegex.Search(header, matches);
+    if (matches.Size() == 2)
     {
-      cstr lengthStr = header.Data() + cContentLength.SizeInBytes();
-      totalBytesExpected = (u64)atoll(lengthStr);
+      totalBytesExpected = (u64)atoll(matches[1].mBegin);
       break;
     }
   }
@@ -203,7 +247,7 @@ void AsyncWebRequest::OnWebResponseHeadersInternal(WebResponseEvent* event)
   DispatchEvent(Events::WebResponseHeaders, event);
 }
 
-void AsyncWebRequest::OnDataReceived(const byte* data, size_t size, WebRequest* request)
+void AsyncWebRequest::OnDataReceived(const byte* data, size_t size, u64 totalDownloaded, WebRequest* request)
 {
   // This can be called within a thread!
   AsyncWebRequest* self = (AsyncWebRequest*)request->mUserData;
@@ -216,6 +260,11 @@ void AsyncWebRequest::OnDataReceived(const byte* data, size_t size, WebRequest* 
   toSend->mAsyncWebRequest = self;
   toSend->mVersion = self->mVersion;
   toSend->mData = strData;
+
+  // We always get total downloaded from the callback because in some implementations (Emscripten)
+  // we don't support partial binary downloads (only get the entire buffer at the end) but it does at least
+  // give us the total downloaded amount.
+  toSend->mTotalDownloaded = totalDownloaded;
 
   if (self->mSendEventsOnRequestThread)
     self->DispatchEvent(Events::WebResponsePartialDataInternal, toSend);
@@ -232,8 +281,9 @@ void AsyncWebRequest::OnWebResponsePartialDataInternal(WebResponseEvent* event)
   event->mResponseCode = mResponseCode;
   event->mResponseHeaders = mResponseHeaders;
 
-  mTotalDownloaded += event->mData.SizeInBytes();
-  event->mTotalDownloaded = mTotalDownloaded;
+  // We can't just accumulate mData.SizeInBytes() because we may not actually get partial data
+  // on some platforms (however we are guaranteed to get the total downloaded amount as a number on all platforms).
+  mTotalDownloaded = event->mTotalDownloaded;
   event->mTotalExpected = mTotalExpected;
 
   mProgress = mTotalExpected ? (float)(mTotalDownloaded / (double)mTotalExpected) : 0.0f;
@@ -256,6 +306,7 @@ void AsyncWebRequest::OnComplete(Status& status, WebRequest* request)
   toSend->mAsyncWebRequest = self;
   toSend->mVersion = self->mVersion;
   toSend->mProgress = 1.0f;
+  toSend->mError = status.Message;
 
   if (self->mSendEventsOnRequestThread)
     self->DispatchEvent(Events::WebResponseCompleteInternal, toSend);
@@ -281,14 +332,14 @@ void AsyncWebRequest::OnWebResponseCompleteInternal(WebResponseEvent* event)
   if (mStoreData)
     event->mData = mStoredData.ToString();
 
-  DispatchEvent(Events::WebResponseComplete, event);
+  mError = event->mError;
 
-  // Since we completed the request, release our own reference.
-  Release();
+  DispatchEvent(Events::WebResponseComplete, event);
 }
 
 ZilchDefineType(WebResponseEvent, builder, type)
 {
+  ZilchBindField(mAsyncWebRequest);
   ZilchBindFieldProperty(mResponseCode);
   ZilchBindFieldProperty(mData);
   ZilchBindGetterProperty(HeaderCount);
@@ -297,6 +348,7 @@ ZilchDefineType(WebResponseEvent, builder, type)
   ZilchBindFieldGetterProperty(mTotalExpected);
   ZilchBindFieldGetterProperty(mProgress);
   ZilchBindFieldGetterProperty(mProgressType);
+  ZilchBindFieldGetterProperty(mError);
 }
 
 WebResponseEvent::WebResponseEvent() :
@@ -332,19 +384,35 @@ ZilchDefineType(WebRequester, builder, type)
   ZilchBindGetterSetterProperty(Url);
   ZilchBindMethod(Run);
   ZilchBindMethod(Clear);
+  ZilchBindMethod(CancelActiveRequests);
   ZilchBindMethod(AddHeader);
   ZilchBindMethod(AddFile);
   ZilchBindMethod(AddField);
+
+  ZilchBindMemberProperty(mCancelOnDestruction);
+}
+
+WebRequester::WebRequester() :
+  mCancelOnDestruction(true)
+{
+}
+
+WebRequester::~WebRequester()
+{
+  if (mCancelOnDestruction)
+    CancelActiveRequests();
 }
 
 void WebRequester::Initialize(CogInitializer& initializer)
 {
   ReplaceRequest();
+  mRequest->mUrl = mSerializedUrl;
 }
 
 void WebRequester::Serialize(Serializer& stream)
 {
-  stream.SerializeFieldDefault("Url", mRequest->mUrl, String("http://www.w3.org/"));
+  stream.SerializeFieldDefault("Url", mSerializedUrl, String("http://www.w3.org/"));
+  SerializeNameDefault(mCancelOnDestruction, true);
 }
 
 HandleOf<AsyncWebRequest> WebRequester::Run()
@@ -363,11 +431,20 @@ String WebRequester::GetUrl()
 void WebRequester::SetUrl(StringParam url)
 {
   mRequest->mUrl = url;
+  mSerializedUrl = url;
 }
 
 void WebRequester::Clear()
 {
-  mRequest->Clear();
+  mRequest->ClearAll();
+}
+
+void WebRequester::CancelActiveRequests()
+{
+  // Cancel all active web requests.
+  forRange(HandleOf<AsyncWebRequest>& request, mActiveRequests)
+    request->Cancel();
+  mActiveRequests.Clear();
 }
 
 void WebRequester::AddHeader(StringParam name, StringParam data)
@@ -385,6 +462,14 @@ void WebRequester::AddField(StringParam formFieldName, StringParam content)
   mRequest->AddField(formFieldName, content);
 }
 
+void WebRequester::OnForwardEvent(WebResponseEvent* event)
+{
+  DispatchEvent(event->EventId, event);
+
+  if (event->EventId == Events::WebResponseComplete)
+    CleanDeadRequests();
+}
+
 HandleOf<AsyncWebRequest> WebRequester::ReplaceRequest()
 {
   HandleOf<AsyncWebRequest> previousRequestHandle = mRequest;
@@ -400,6 +485,9 @@ HandleOf<AsyncWebRequest> WebRequester::ReplaceRequest()
   // If we had a request previously, then copy the old data over.
   if (previousRequest)
   {
+    // We only need to keep the previous requests alive (the current is kept alive by mRequest).
+    mActiveRequests.PushBack(previousRequestHandle);
+
     request->mUrl = previousRequest->mUrl;
     request->mPostData = previousRequest->mPostData;
     request->mAdditionalRequestHeaders = previousRequest->mAdditionalRequestHeaders;
@@ -408,9 +496,16 @@ HandleOf<AsyncWebRequest> WebRequester::ReplaceRequest()
   return previousRequestHandle;
 }
 
-void WebRequester::OnForwardEvent(WebResponseEvent* event)
+void WebRequester::CleanDeadRequests()
 {
-  DispatchEvent(event->EventId, event);
+  for (size_t i = 0; i < mActiveRequests.Size();)
+  {
+    HandleOf<AsyncWebRequest>& request = mActiveRequests[i];
+    if (!request->GetIsRunning())
+      mActiveRequests.EraseAt(i);
+    else
+      ++i;
+  }
 }
 
 } // namespace Zero

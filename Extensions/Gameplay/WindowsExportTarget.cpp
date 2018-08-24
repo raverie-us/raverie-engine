@@ -156,8 +156,6 @@ void WindowsExportTarget::ExportApplication()
 
 void WindowsExportTarget::ExportContentFolders(Cog* projectCog)
 {
-  SendBlockingTaskStart("Exporting Content for Windows");
-
   ProjectSettings* project = projectCog->has(ProjectSettings);
   String outputDirectory = FilePath::Combine(GetTemporaryDirectory(), "Windows", project->ProjectName);
 
@@ -181,8 +179,6 @@ void WindowsExportTarget::ExportContentFolders(Cog* projectCog)
     if (status.Succeeded())
       mExporter->UpdateIcon(project, updater);
   }
-
-  SendBlockingTaskFinish();
 
   Os::SystemOpenFile(outputDirectory.c_str());
 }

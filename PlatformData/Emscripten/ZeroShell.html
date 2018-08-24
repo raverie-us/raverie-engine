@@ -377,6 +377,99 @@
       document.addEventListener('click', onUserInitiatedEvent);
       document.addEventListener('touchstart', onUserInitiatedEvent);
       
+      var requestToXhr = {};
+      
+      function xhrRun(isPost, url, headers, postData, request)
+      {
+        var xhr = new XMLHttpRequest();
+        requestToXhr[request] = xhr;
+        
+        xhr.responseType = "arraybuffer";
+        
+        var method = "GET";
+        if (isPost)
+          method = "POST";
+        
+        xhr.open(method, url, true);
+        xhr.seenBytes = 0;
+        
+        var headerRegex = /([\w-]+):\s*(.*)\s*/;
+        var headerLines = headers.split('\r\n');
+        for (var i = 0; i < headerLines.length; ++i)
+        {
+          var headerLine = headerLines[i];
+          if (headerLine)
+          {
+            var matches = headerRegex.exec(headerLine);
+            
+            if (matches)
+              xhr.setRequestHeader(matches[1], matches[2]);
+            else
+              console.error('Invalid header', headerLine);
+          }
+        }
+        
+        xhr.onreadystatechange = function()
+        {
+          // We call abort on the destruction of request, which should stop events,
+          // but to be sure we check that we still have the xhr registered.
+          if (requestToXhr[request] !== xhr)
+            return;
+          
+          // Headers received.
+          if (xhr.readyState == 2)
+          {
+            var responseHeaders = mallocStringUTF8(xhr.getAllResponseHeaders());
+            ccall('EmscriptenWebRequestOnHeadersReceived', null, ['number', 'number', 'number'], [responseHeaders, xhr.status, request]);
+          }
+          
+          // Done.
+          if (xhr.readyState == 4)
+          {
+            if (xhr.status == 200)
+            {
+              var byteLength = xhr.response.byteLength;
+              var dataPtr = Module._malloc(byteLength);
+              var dataHeap = new Uint8Array(Module.HEAPU8.buffer, dataPtr, byteLength);
+              dataHeap.set(new Uint8Array(xhr.response));
+              
+              ccall('EmscriptenWebRequestOnDataReceived', null, ['number', 'number', 'number', 'number'], [dataHeap.byteOffset, byteLength, byteLength, request]);
+              ccall('EmscriptenWebRequestOnComplete', null, ['number', 'number'], [null, request]);
+            }
+            else
+            {
+              var errorMessage = mallocStringUTF8(xhr.statusText);
+              ccall('EmscriptenWebRequestOnComplete', null, ['number', 'number'], [errorMessage, request]);
+            }
+            
+            xhr.onprogres = null;
+            xhr.abort();
+          }
+        };
+        
+        xhr.onprogress = function(event)
+        {
+          // We call abort on the destruction of request, which should stop events,
+          // but to be sure we check that we still have the xhr registered.
+          if (requestToXhr[request] !== xhr)
+            return;
+          
+          ccall('EmscriptenWebRequestOnDataReceived', null, ['number', 'number', 'number', 'number'], [null, 0, event.loaded, request]);
+        };
+        
+        xhr.send(postData);
+      }
+      
+      function xhrCancel(request)
+      {
+        var xhr = requestToXhr[request];
+        if (!xhr)
+          return;
+        
+        xhr.abort();
+        requestToXhr[request] = undefined;
+      }
+      
       function copyFileListToTemp(fileList, callback)
       {
         var loadCounter = fileList.length;
@@ -657,13 +750,13 @@
       Module.setStatus(downloadingDataText);
       
       var exceptionThrown = false;
-      window.addEventListener('error', function()
+      window.addEventListener('error', function(event)
       {
         if (exceptionThrown)
           return;
           
         exceptionThrown = true;
-        Module.setStatus('Exception Thrown');
+        Module.setStatus('Error: ' + event.message);
         alert('An exception was thrown. You will need to reload the page. You can view the JavaScript console for more details.');
         
         progressElement.style.display = 'none';

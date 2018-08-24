@@ -83,7 +83,7 @@ OsInt WebRequestThread(void* request)
   WebHandle hConnect = WinHttpConnect(
     hSession,
     hostName.c_str(),
-    INTERNET_DEFAULT_HTTPS_PORT,
+    urlComp.nPort,
     0);
 
   if (!hConnect)
@@ -110,7 +110,7 @@ OsInt WebRequestThread(void* request)
     nullptr,
     WINHTTP_NO_REFERER,
     WINHTTP_DEFAULT_ACCEPT_TYPES,
-    WINHTTP_FLAG_SECURE);
+    0);
 
   if (!hRequest)
   {
@@ -123,56 +123,11 @@ OsInt WebRequestThread(void* request)
   if (self->mCancel)
     return 0;
 
-  WString headers;
+  // Turn the additional headers and content type header into newline separated strings
+  String newlineSeparatedHeaders = self->GetNewlineSeparatedHeaders();
+  WString headers = Widen(newlineSeparatedHeaders);
 
-  // Turn the additional headers into newline separated strings
-  StringBuilder builder;
-
-  forRange(StringParam header, self->mAdditionalRequestHeaders)
-  {
-    builder.Append(header);
-    builder.Append("\r\n");
-  }
-
-  const char* boundary = "----------ZeroEngine43476095-a5a0-4190-a9b5-bce2d2de5eef$";
-
-  builder.Append("Content-Type:multipart/form-data; boundary=");
-  builder.Append(boundary);
-  builder.Append("\r\n");
-
-  headers = Widen(builder.ToString());
-
-  StringBuilder post;
-
-  forRange(WebPostData& postData, self->mPostData)
-  {
-    post.Append("--");
-    post.Append(boundary);
-    post.Append("\r\n");
-    post.Append("Content-Disposition: form-data; name=\"");
-    post.Append(postData.mName);
-    post.Append("\"");
-
-    if (!postData.mFileName.Empty())
-    {
-      post.Append("; filename=\"");
-      post.Append(postData.mFileName);
-      post.Append("\"");
-    }
-
-    post.Append("\r\n\r\n");
-
-    // We rely on the fact that this can write binary data
-    post.Write(postData.mValue.GetBegin(), postData.mValue.Size());
-
-    post.Append("\r\n");
-  }
-
-  post.Append("--");
-  post.Append(boundary);
-  post.Append("--");
-
-  String postString = post.ToString();
+  String postString = self->GetPostDataWithBoundaries();
 
   BOOL bResults = WinHttpSendRequest(
     hRequest,
@@ -281,6 +236,7 @@ OsInt WebRequestThread(void* request)
   }
 
   Array<byte> buffer;
+  u64 totalDownloaded = 0;
 
   DWORD dwSize = 0;
   do
@@ -299,10 +255,14 @@ OsInt WebRequestThread(void* request)
     if (self->mCancel)
       return 0;
 
-    buffer.Resize(dwSize);
+    // Read larger chunks 100kb at a time (it makes less events for the main thread to process).
+    DWORD readSize = 102400;
+    if (dwSize > readSize)
+      readSize = dwSize;
+    buffer.Resize(readSize);
 
     DWORD dwDownloaded = 0;
-    if (!WinHttpReadData(hRequest, (LPVOID)buffer.Data(), dwSize, &dwDownloaded))
+    if (!WinHttpReadData(hRequest, (LPVOID)buffer.Data(), readSize, &dwDownloaded))
     {
       FillWindowsErrorStatus(status, "WinHttpReadData");
       if (self->mOnComplete)
@@ -313,8 +273,18 @@ OsInt WebRequestThread(void* request)
     if (self->mCancel)
       return 0;
 
+    // If read data returns 0 bytes read, then the connection is completed.
+    if (dwDownloaded == 0)
+      break;
+
+    totalDownloaded += (u64)dwDownloaded;
+
     if (self->mOnDataReceived)
-      self->mOnDataReceived(buffer.Data(), (size_t)dwDownloaded, self);
+      self->mOnDataReceived(buffer.Data(), (size_t)dwDownloaded, totalDownloaded, self);
+
+    // If we don't sleep a bit, we can end up flooding the main thread with events.
+    Sleep(1);
+
   } while (dwSize > 0);
 
   if (self->mCancel)

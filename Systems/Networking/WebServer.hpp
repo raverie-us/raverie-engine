@@ -69,9 +69,11 @@ public:
   bool HasHeader(StringParam name);
 
   /// Get a value in the header by name, or returns an empty string if it does not exist.
+  /// All header values are automatically trimmed (no optional whitespace prefix/suffix).
   String GetHeaderValue(StringParam name);
 
   /// Get a range of all header names in this request.
+  /// All header names are lowercase because they are case insensitive.
   WebServerHeaderRange GetHeaderNames();
 
   /// Builds the response automatically with the given code, headers, and contents.

@@ -197,7 +197,7 @@ void DownloadStandaloneTaskJob::OnReponse(WebResponseEvent* event)
     Failed();
   }
 
-  mRequest->Clear();
+  mRequest->ClearAll();
 }
 
 //-------------------------------------------------------------------InstallBuildTask

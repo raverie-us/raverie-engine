@@ -341,7 +341,8 @@ public:
 template<typename ContextType>
 ContextType* Context::Get()
 {
-  return Get(ZilchTypeId(ContextType)).Get<ContextType*>();
+  BoundType* type = ZilchTypeId(ContextType);
+  return Get(type).Get<ContextType*>();
 }
 
 }//namespace Zero

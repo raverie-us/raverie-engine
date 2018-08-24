@@ -97,8 +97,11 @@ void SafeRelease(RefType& interfacePtr)
 template<typename RefType>
 void SafeDelete(RefType& objectPtr)
 {
-  delete objectPtr;
+  // We do this so that if the object is atomic we will
+  // be sure to null it before we delete it.
+  RefType temp = objectPtr;
   objectPtr = nullptr;
+  delete temp;
 }
 
 template<typename RefType>

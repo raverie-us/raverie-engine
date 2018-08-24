@@ -69,12 +69,12 @@ WebServerRequestEvent::~WebServerRequestEvent()
 
 bool WebServerRequestEvent::HasHeader(StringParam name)
 {
-  return mHeaders.ContainsKey(name);
+  return mHeaders.ContainsKey(name.ToLower());
 }
 
 String WebServerRequestEvent::GetHeaderValue(StringParam name)
 {
-  return mHeaders.FindValue(name, String());
+  return mHeaders.FindValue(name.ToLower(), String());
 }
 
 OrderedHashMap<String, String>::KeyRange WebServerRequestEvent::GetHeaderNames()
@@ -109,7 +109,7 @@ void WebServerRequestEvent::Respond(StringParam code, StringParam extraHeaders, 
   //builder.Append("Date: ");
   //builder.Append(gHttpNewline);
 
-  builder.Append("Content-Length: ");
+  builder.Append("content-length: ");
   builder.AppendFormat("%llu", (unsigned long long)contents.SizeInBytes());
   builder.Append(cHttpNewline);
   
@@ -254,9 +254,9 @@ OsInt WebServerConnection::ReadWriteThread(void* userData)
 
         if (matches.Size() == cHeaderMatchCount)
         {
-          // Add the header to the event.
-          String key = matches[1];
-          String value = matches[2];
+          // Add the header to the event (keys are case-insensitive, and values have optional whitespace).
+          String key = matches[1].ToLower();
+          String value = matches[2].Trim();
           toSend->mHeaders[key] = value;
 
           // Was this the last line in the header? We know this because we'll see \r\n\r\n.
@@ -276,7 +276,8 @@ OsInt WebServerConnection::ReadWriteThread(void* userData)
     if (stage == ReadStage::Content)
     {
       // We only care about post data if there was a Content-Length field.
-      String contentLengthString = toSend->mHeaders.FindValue("Content-Length", String());
+      static const String cContentLength("content-length");
+      String contentLengthString = toSend->GetHeaderValue(cContentLength);
 
       if (!contentLengthString.Empty())
         contentLength = atoi(contentLengthString.c_str());
