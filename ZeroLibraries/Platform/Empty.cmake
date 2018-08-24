@@ -53,6 +53,7 @@ zero_multitarget_output_settings(
     CONFIGS ${supported_configs}
     BASEPATH ${zero_build_out}
     PLATFORM ${platform}
+    CONFIG ${configuration}
     BITS ${bit}
     TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET}
     PRECOMPILED_HEADER_NAME "Precompiled.hpp"
