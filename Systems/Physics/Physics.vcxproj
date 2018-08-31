@@ -71,6 +71,7 @@
     <ClCompile Include="JointCreator.cpp" />
     <ClCompile Include="JointEvents.cpp" />
     <ClCompile Include="Joints\BasicSolver.cpp" />
+    <ClCompile Include="Joints\DebugDrawFragments.cpp" />
     <ClCompile Include="Joints\PositionCorrectionFragments.cpp" />
     <ClCompile Include="Joints\CustomJoint.cpp" />
     <ClCompile Include="Joints\UniversalJoint.cpp" />

@@ -456,6 +456,9 @@
     <ClCompile Include="ContactPoint.cpp">
       <Filter>Event</Filter>
     </ClCompile>
+    <ClCompile Include="Joints\DebugDrawFragments.cpp">
+      <Filter>Components\Constraints\Fragments</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ContactManager.hpp">
