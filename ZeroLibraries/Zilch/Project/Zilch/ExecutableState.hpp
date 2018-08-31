@@ -793,6 +793,23 @@ namespace Zilch
       }
     }
 
+    static T GetNonNull(Call& call, size_t index)
+    {
+      T result = Get(call, index);
+      // If the result is null then report an error
+      if (result == nullptr)
+      {
+        ExecutableState* executableState = ExecutableState::GetCallingState();
+        // Lookup the function type to get the argument name
+        DelegateType* functionType = call.GetFunction()->FunctionType;
+        if (index < functionType->Parameters.Size())
+          executableState->ThrowException(String::Format("Error: Parameter '%s' cannot be null.", functionType->Parameters[index].Name.c_str()));
+        else
+          executableState->ThrowException(String::Format("Error: Argument %d cannot be null.", index));
+      }
+      return result;
+    }
+
     static byte* GetArgumentPointer(Call& call, size_t index)
     {
       if (ZilchTypeId(T)->CopyMode == TypeCopyMode::ReferenceType || index == Call::This)
@@ -970,6 +987,13 @@ namespace Zilch
     T Get(size_t index)
     {
       return CallHelper<T>::Get(*this, index);
+    }
+
+    // Get a parameter from the call object. If the result is equal to null then an exception is thrown.
+    template <typename T>
+    T GetNonNull(size_t index)
+    {
+      return CallHelper<T>::GetNonNull(*this, index);
     }
 
     // Same as Get but without the type cast
