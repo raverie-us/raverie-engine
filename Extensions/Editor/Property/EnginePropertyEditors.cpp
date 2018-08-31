@@ -1963,7 +1963,7 @@ public:
     WidgetRect rect = mEditor->GetScreenRect();
     Vec3 topRight = ToVector3(rect.TopRight());
 
-    window->SetTranslation(topRight + Vec3(6.0f, -22.0f, 0));
+    window->ShiftOntoScreen(topRight + Vec3(6.0f, -22.0f, 0));
     
     Handle rootInstance;
     PropertyPath propertyPath;
