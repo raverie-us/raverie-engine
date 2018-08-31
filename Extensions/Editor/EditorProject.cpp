@@ -122,13 +122,13 @@ void UnloadProject(Editor* editor, Cog* projectCog)
     editor->Tools->SelectToolIndex(0);
 }
 
-void OpenProjectFile(StringParam filename)
+bool OpenProjectFile(StringParam filename)
 {
   // File check
   if(!FileExists(filename))
   {
     DoNotifyError("Failed to load project.", "Project file not found.");
-    return;
+    return false;
   }
 
   // Load the project object
@@ -136,17 +136,19 @@ void OpenProjectFile(StringParam filename)
   if(projectCog == nullptr)
   {
     DoNotifyError("Failed to load project.", "Project file invalid.");
-    return;
+    return false;
   }
   // Prevent components from being added or removed from the project cog
   projectCog->mFlags.SetFlag(CogFlags::ScriptComponentsLocked);
 
   ProjectSettings* project = projectCog->has(ProjectSettings);
-  if(project == nullptr) return;
+  if(project == nullptr)
+    return false;
 
   // Begin the loading project
   String projectFolder = FilePath::GetDirectoryPath(filename);
   LoadProject(Z::gEditor, projectCog, projectFolder, filename);
+  return true;
 }
 
 // Project Commands

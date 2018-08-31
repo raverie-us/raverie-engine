@@ -1170,14 +1170,16 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
   }
   else
   {
+    bool projectSuccessfullyLoaded = false;
     // Open cached project in user config
     String startingProject = HasOrAdd<EditorConfig>(Z::gEditor->mConfig)->EditingProject;
     //if the user has requested to create a new project then don't open the last edited project
     if(newProjectName.Empty() && FileExists(startingProject))
-    {
-      OpenProjectFile(startingProject);
-    }
-    else
+      projectSuccessfullyLoaded = OpenProjectFile(startingProject);
+
+    // If loading failed for some reason (either it didn't exist, the project was corrupted, etc...)
+    // then send out the failure event so we stop blocking and shell out to the launcher.
+    if(!projectSuccessfullyLoaded)
     {
       Event event;
       Z::gEngine->DispatchEvent(Events::NoProjectLoaded, &event);
