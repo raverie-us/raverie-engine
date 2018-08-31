@@ -175,8 +175,15 @@ void RevoluteJoint2d::DebugDraw()
 {
   if(!GetValid())
     return;
-  DrawAnchorAtomFragment(mAnchors, GetCollider(0), GetCollider(1));
-  DrawAngleAtomFragment(mReferenceAngle, GetCollider(0), GetCollider(1));
+
+  Collider* collider0 = GetCollider(0);
+  Collider* collider1 = GetCollider(1);
+  if(collider0 == nullptr || collider1 == nullptr)
+    return;
+
+  Mat3 basis0 = collider0->GetWorldRotation() * Math::ToMatrix3(mReferenceAngle[0]);
+  Mat3 basis1 = collider1->GetWorldRotation() * Math::ToMatrix3(mReferenceAngle[1]);
+  DrawHinge(this, mAnchors, basis0, basis1, 0);
 }
 
 uint RevoluteJoint2d::GetAtomIndexFilter(uint atomIndex, real& desiredConstraintValue) const
