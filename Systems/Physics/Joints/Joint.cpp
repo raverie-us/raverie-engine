@@ -16,7 +16,6 @@ namespace Tags
 
 ZilchDefineType(Joint, builder, type)
 {
-  ZeroBindComponent();
   ZeroBindDocumented();
 
   ZeroBindDependency(Cog);
