@@ -77,8 +77,6 @@ void ZeroStartup::InitializeLibraries(ZeroStartupSettings& settings)
 
   ZilchScriptLibrary::Initialize();
 
-  ZilchManager::Initialize();
-
   NativeBindingList::ValidateTypes();
 
   // Load documentation for all native libraries

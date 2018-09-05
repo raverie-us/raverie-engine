@@ -464,6 +464,8 @@ bool EngineLibrary::Initialize(ZeroStartupSettings& settings)
   Joysticks::Initialize();
   LocalModifications::Initialize();
   ObjectStore::Initialize();
+  // Need to initialize zilch here as it can be used in the factory below.
+  ZilchManager::Initialize();
 
   Space* engineSpace = new Space();
   engineSpace->SetName("EngineSpace");
