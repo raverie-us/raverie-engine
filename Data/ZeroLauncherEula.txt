@@ -191,7 +191,7 @@ DigiPen. You agree not to engage in any activity that could tarnish, dilute, or
 affect the validity or enforceability of the DigiPen Trademarks or cause 
 consumer confusion or diminish any goodwill relating to any DigiPen Trademarks. 
 If you wish to make further use of the DigiPen Trademarks, please go to 
-https://www.zeroengine.io/u/TrademarkPolicy.
+https://dev.zeroengine.io/u/TrademarkPolicy/.
 
 6. Royalty
 For products released within a published time frame after the launch date of 
@@ -200,7 +200,7 @@ royalty-free basis.  Following the published time frame of the Term, You agree
 to pay DigiPen a royalty equal to the percentage of all worldwide Gross Revenue 
 actually attributable to each Product, regardless of whether that revenue is 
 received by you or any other person or legal entity, described on the royalty 
-schedule here https://www.zeroengine.io/u/royalties.  The royalty is based on 
+schedule here https://dev.zeroengine.io/u/royalties/.  The royalty is based on 
 Gross Revenue from end users, regardless of whether you sell your Product to 
 end users directly, sell your Product to, or otherwise collect revenue from 
 your Product to other developers to produce their own works, self-publish via 
@@ -233,10 +233,10 @@ other form actually attributable to a Product (unless excluded below).
 Within 45 days after the end of each calendar quarter in which a Product earns 
 Gross Revenue, you must pay to DigiPen the full amount of the royalty due for 
 that quarter and send DigiPen a royalty report on a per Product basis. Detailed 
-information on royalty reporting and payment can be found at https://
-www.zeroengine.io/u/royaltyreport. DigiPen reserves the right to charge a 2% 
-late fee, per calendar quarter (compounding), for any amounts unpaid after the 
-required due date.  You are responsible for all taxes on all payments required 
+information on royalty reporting and payment can be found at
+https://dev.zeroengine.io/u/royaltyreport/. DigiPen reserves the right to charge
+a 2% late fee, per calendar quarter (compounding), for any amounts unpaid after 
+the required due date.  You are responsible for all taxes on all payments required 
 to be made by you under this Agreement (other than taxes that DigiPen is 
 obligated to pay on its income, which are DigiPen's responsibility). If you are 
 required by a government agency to reduce your payment to DigiPen for any 
@@ -254,7 +254,7 @@ for the cost of the audit.
 
 9. Support
 DigiPen provides limited technical support for the Licensed Technology, as 
-further described here https://www.zeroengine.io/w/zerohub_support/.
+further described here https://dev.zeroengine.io/w/zerohub_support/.
 
 10. Feedback and Contributions
 If you provide DigiPen with any Feedback, DigiPen is free to use the Feedback 
