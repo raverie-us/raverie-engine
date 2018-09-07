@@ -74,11 +74,11 @@ public:
   /// Useful for debugging one frame at a time.
   void Step();
 
-  // Gets the current frame time, or zero if the time space is paused
-  // This dt will include frame time 
+  /// Gets the current frame time, or zero if the time space is paused.
+  /// This dt will include frame time.
   float GetDtOrZero();
 
-  // Returns true if either the space is paused, or the game is globally paused
+  /// Returns true if either the space is paused, or the game is globally paused
   bool GetGloballyPaused();
 
   /// Scale the speed of time for interesting effects like bullet time or
@@ -120,10 +120,14 @@ public:
   /// This value counts up regardless of if the space is paused
   int mFrame;
 
+  /// The real amount of time that has passed since this space was created (unscaled and unclamped).
   float mRealTimePassed;
+  /// The amount of time that has passed since this space was created (TimeSpace.TimeScale affects this value).
   float mScaledClampedTimePassed;
   
+  /// The real amount of time that passed between this frame and the last (unscaled and unclamped).
   float mRealDt;
+  /// The amount of time that passed between this frame and the last (scaled by TimeSpace.TimeScale).
   float mScaledClampedDt;
 
   /// Causes the engine to update multiple times before rendering a frame.
