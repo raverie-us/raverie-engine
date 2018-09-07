@@ -528,6 +528,8 @@ void LauncherWindow::OnInstallMajorVersion(ModalConfirmEvent* e)
   ConnectThisTo(task, Events::BackgroundTaskCompleted, OnMajorLauncherUpdateDownloaded);
 
   ModalBackgroundTaskProgessBar* modal = new ModalBackgroundTaskProgessBar(GetRootWidget(), "Downloading", task);
+  modal->mCloseOnBackgroundClicked = false;
+  modal->mCloseOnEscape = false;
   mActiveModal = modal;
 }
 
@@ -610,8 +612,11 @@ void LauncherWindow::OnInstallPatchVersion(ModalConfirmEvent* e)
   ConnectThisTo(task, Events::BackgroundTaskCompleted, OnPatchLauncherUpdateDownloaded);
 
   ModalBackgroundTaskProgessBar* modal = new ModalBackgroundTaskProgessBar(GetRootWidget(), "Downloading", task);
+  modal->mCloseOnBackgroundClicked = false;
+  modal->mCloseOnEscape = false;
   mActiveModal = modal;
 }
+
 //******************************************************************************
 void LauncherWindow::OnPatchLauncherUpdateDownloaded(BackgroundTaskEvent* e)
 {
