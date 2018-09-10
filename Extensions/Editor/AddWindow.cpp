@@ -1098,7 +1098,11 @@ bool ResourceTemplateDisplay::ValidateName(bool finalValidation)
 
   // Check the resource manager for custom validation
   Status status;
-  manager->ValidateName(status, resourceName);
+  manager->ValidateRawName(status, resourceName, nullptr);
+
+  if (status.Succeeded())
+    manager->ValidateNewName(status, resourceName, nullptr);
+
   if (status.Failed())
   {
     CreateNameToolTip(status.Message);

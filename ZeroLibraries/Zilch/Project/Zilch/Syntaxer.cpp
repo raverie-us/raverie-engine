@@ -854,13 +854,13 @@ namespace Zilch
   }
 
   //***************************************************************************
-  void Syntaxer::SetupClassInstance(ClassNode* node, ClassContext* context)
+  void Syntaxer::SetupClassInstance(StringParam baseName, ClassNode* node, ClassContext* context)
   {
     // Get the instance of the type database
     Core& core = Core::GetInstance();
 
     // Create the class type
-    BoundType* type = this->Builder->AddBoundType(node->Name.Token, node->CopyMode, UndeterminedSize, 0);
+    BoundType* type = this->Builder->AddBoundType(baseName, node->Name.Token, node->CopyMode, UndeterminedSize, 0);
     type->Sealed = false;
     node->Type = type;
     
@@ -1028,7 +1028,7 @@ namespace Zilch
               cloneTree->Name.Token = fullyQualifiedTemplateName;
 
               // Setup the class as an instantiation
-              this->SetupClassInstance(cloneTree, context);
+              this->SetupClassInstance(baseName, cloneTree, context);
 
               // If aynyone queries the type we want to let them check what template arguments were used to create this type
               cloneTree->Type->TemplateArguments = templateInstanceArguments;
@@ -1241,7 +1241,7 @@ namespace Zilch
     else
     {
       // Setup the class as an instance
-      this->SetupClassInstance(node, context);
+      this->SetupClassInstance(node->Name.Token, node, context);
     }
   }
 

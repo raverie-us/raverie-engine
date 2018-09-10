@@ -963,9 +963,16 @@ namespace Zilch
   //***************************************************************************
   BoundType* LibraryBuilder::AddBoundType(StringParam name, TypeCopyMode::Enum copyMode, size_t size, size_t nativeVirtualCount)
   {
+    return AddBoundType(name, name, copyMode, size, nativeVirtualCount);
+  }
+
+  //***************************************************************************
+  BoundType* LibraryBuilder::AddBoundType(StringParam baseName, StringParam fullyQualifiedName, TypeCopyMode::Enum copyMode, size_t size, size_t nativeVirtualCount)
+  {
     // Create a new bound type with the given name / size
     BoundType* type = new BoundType(nullptr);
-    type->Name = name;
+    type->Name = fullyQualifiedName;
+    type->TemplateBaseName = baseName;
     type->CopyMode = copyMode;
     type->Size = size;
     type->RawNativeVirtualCount = nativeVirtualCount;

@@ -363,7 +363,7 @@ namespace Zilch
     BoundType* valueRangeType = builder.InstantiateTemplate("HashMapValueRange", ZilchConstants(valueType), Module()).Type;
 
     // Create the array type instance (arrays and any other containers should be reference types!)
-    BoundType* containerType = builder.AddBoundType(fullyQualifiedName, TypeCopyMode::ReferenceType, sizeof(AnyHashMap));
+    BoundType* containerType = builder.AddBoundType(baseName, fullyQualifiedName, TypeCopyMode::ReferenceType, sizeof(AnyHashMap));
 
     HashMapUserData containerUserData;
     containerUserData.KeyType = keyType;
@@ -545,7 +545,7 @@ namespace Zilch
     const void* userData
   )
   {
-    BoundType* rangeType = builder.AddBoundType(fullyQualifiedName, TypeCopyMode::ReferenceType, sizeof(AnyHashMapRange));
+    BoundType* rangeType = builder.AddBoundType(baseName, fullyQualifiedName, TypeCopyMode::ReferenceType, sizeof(AnyHashMapRange));
 
     // The user-data will be the 'HashMapRangeMode' enumeration
     rangeType->UserData = userData;
@@ -688,7 +688,7 @@ namespace Zilch
     Type* valueType = templateTypes[1].TypeValue;
 
     // Create the pair type instance
-    BoundType* keyValueType = builder.AddBoundType(fullyQualifiedName, TypeCopyMode::ReferenceType, sizeof(AnyKeyValue));
+    BoundType* keyValueType = builder.AddBoundType(baseName, fullyQualifiedName, TypeCopyMode::ReferenceType, sizeof(AnyKeyValue));
 
     KeyValueUserData newUserData;
     newUserData.KeyType = keyType;

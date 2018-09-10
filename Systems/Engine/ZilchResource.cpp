@@ -309,28 +309,23 @@ void ZilchDocumentResource::FindPositionToGenerateFunction(ICodeEditor* editor, 
 }
 
 //**************************************************************************************************
-void ZilchDocumentResource::ValidateScriptName(Status& status, StringParam name)
+void ZilchDocumentResource::ValidateNewScriptName(Status& status, StringParam name)
 {
-  if(BoundType* existingType = MetaDatabase::GetInstance()->FindType(name))
+  // If we're making a new type, then we need to check if this name already exists.
+  if (BoundType* existingType = MetaDatabase::GetInstance()->FindType(name))
   {
     // We can replace proxies
-    if(existingType->HasAttribute(ObjectAttributes::cProxy) == false)
+    if (existingType->HasAttribute(ObjectAttributes::cProxy) == false)
+    {
       status.SetFailed("A type already exists by that name");
+      return;
+    }
   }
+}
 
-  // Because we do component access off of cogs using the . operator, then it might
-  // conflict with an actual member of cog (name a component 'Destroy', what is Owner.Destroy?)
-  // We must do this for Space and GameSession also (technically GameSession and Space doubly hit Cog, but that's fine).
-  if(ZilchTypeId(Cog)->GetMember(name)   || ZilchTypeId(GameSession)->GetMember(name) ||
-     ZilchTypeId(Space)->GetMember(name) || ZilchTypeId(CogPath)->GetMember(name))
-  {
-    String message = String::Format(
-      "Components cannot have the same name as a property/method on Cog/Space/GameSession (this.Owner.%s would conflict)",
-      name.c_str());
-    status.SetFailed(message);
-    return;
-  }
-
+//**************************************************************************************************
+void ZilchDocumentResource::ValidateRawScriptName(Status& status, StringParam name)
+{
   // Make sure the user used a valid Zilch type name
   if(LibraryBuilder::CheckUpperIdentifier(name) == false)
   {

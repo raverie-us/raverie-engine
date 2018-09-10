@@ -419,6 +419,7 @@ namespace Zilch
 
     // Adds a bound type to the library builder
     BoundType* AddBoundType(StringParam name, TypeCopyMode::Enum copyMode, size_t size, size_t nativeVirtualCount = 0);
+    BoundType* AddBoundType(StringParam baseName, StringParam fullyQualifiedName, TypeCopyMode::Enum copyMode, size_t size, size_t nativeVirtualCount = 0);
 
     // This is ONLY used by automatic C++ binding because the BoundType must already exist to solve dependency issues,
     // so the library builder cannot 'new' the BoundType itself

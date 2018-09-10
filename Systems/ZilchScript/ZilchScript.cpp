@@ -196,9 +196,35 @@ ZilchScriptManager::ZilchScriptManager(BoundType* resourceType)
   ConnectThisTo(Z::gResources, Events::ResourceLibraryConstructed, OnResourceLibraryConstructed);
 }
 
-void ZilchScriptManager::ValidateName(Status& status, StringParam name)
+void ZilchScriptManager::ValidateNewName(Status& status, StringParam name, BoundType* optionalType)
 {
-  ZilchDocumentResource::ValidateScriptName(status, name);
+  ZilchDocumentResource::ValidateNewScriptName(status, name);
+}
+
+void ZilchScriptManager::ValidateRawName(Status& status, StringParam name, BoundType* optionalType)
+{
+  if (!optionalType || optionalType->IsA(ZilchTypeId(Component)))
+  {
+    // Because we do component access off of Cogs using the . operator, then it might
+    // conflict with an actual member of Cog (name a component 'Destroy', what is Owner.Destroy?)
+    // We must do this for Space and GameSession also (technically GameSession and Space doubly hit Cog, but that's fine).
+    bool hasMember =
+      ZilchTypeId(Cog)->GetMember(name) ||
+      ZilchTypeId(GameSession)->GetMember(name) ||
+      ZilchTypeId(Space)->GetMember(name) ||
+      ZilchTypeId(CogPath)->GetMember(name);
+
+    if (hasMember)
+    {
+      String message = String::Format(
+        "Components cannot have the same name as a property/method on Cog/Space/GameSession (this.Owner.%s would conflict)",
+        name.c_str());
+      status.SetFailed(message);
+      return;
+    }
+  }
+
+  ZilchDocumentResource::ValidateRawScriptName(status, name);
 }
 
 String ZilchScriptManager::GetTemplateSourceFile(ResourceAdd& resourceAdd)

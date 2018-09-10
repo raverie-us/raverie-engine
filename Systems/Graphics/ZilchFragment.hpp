@@ -45,7 +45,8 @@ public:
   ~ZilchFragmentManager();
 
   /// ResourceManager Interface
-  void ValidateName(Status& status, StringParam name);
+  void ValidateNewName(Status& status, StringParam name, BoundType* optionalType);
+  void ValidateRawName(Status& status, StringParam name, BoundType* optionalType);
 
   /// Get the template file for the requested resource type
   String GetTemplateSourceFile(ResourceAdd& resourceAdd) override;

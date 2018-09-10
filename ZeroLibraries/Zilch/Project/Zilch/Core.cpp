@@ -873,7 +873,7 @@ namespace Zilch
     DelegateType* setDelegateType = builder.GetDelegateType(setParameters, core.VoidType);
     DelegateType* getDelegateType = builder.GetDelegateType(ParameterArray(), innerType);
 
-    BoundType* type = builder.AddBoundType(fullyQualifiedName, TypeCopyMode::ReferenceType, sizeof(PropertyDelegateTemplate));
+    BoundType* type = builder.AddBoundType(baseName, fullyQualifiedName, TypeCopyMode::ReferenceType, sizeof(PropertyDelegateTemplate));
     builder.AddBoundField(type, "Set", setDelegateType, offsetof(PropertyDelegateTemplate, Set), MemberOptions::None);
     builder.AddBoundField(type, "Get", getDelegateType, offsetof(PropertyDelegateTemplate, Get), MemberOptions::None);
     builder.AddBoundField(type, "Property", ZilchTypeId(Property), offsetof(PropertyDelegateTemplate, ReferencedProperty), MemberOptions::None);

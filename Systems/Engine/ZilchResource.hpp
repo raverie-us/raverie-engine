@@ -46,7 +46,12 @@ public:
   void FindPositionToGenerateFunction(ICodeEditor* editor, int& positionOut, String& indent) override;
   void AttemptGetDefinition(ICodeEditor* editor, size_t cursorPosition, CodeDefinition& definition) override;
 
-  static void ValidateScriptName(Status& status, StringParam name);
+  // Validate that adding a script of this name would be valid.
+  // Does not check if the name itself is valid, only that it does not conflict.
+  static void ValidateNewScriptName(Status& status, StringParam name);
+
+  // Validate that a name is even valid (not considering the current state of the engine).
+  static void ValidateRawScriptName(Status& status, StringParam name);
 
   // Fill a project with a single document that the code editor is looking at
   // and push all the proper required libraries into the module

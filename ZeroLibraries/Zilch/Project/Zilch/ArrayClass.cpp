@@ -891,12 +891,12 @@ namespace Zilch
     String fullyQualifiedRangeName = rangeName.ToString();
     
     ZilchTodo("The range type must have a valid destructor the decrements the reference count on the 'array' handle");
-    BoundType* rangeType = builder.AddBoundType(fullyQualifiedRangeName, TypeCopyMode::ReferenceType, sizeof(ArrayRangeTemplate<T>));
+    BoundType* rangeType = builder.AddBoundType("ArrayRange", fullyQualifiedRangeName, TypeCopyMode::ReferenceType, sizeof(ArrayRangeTemplate<T>));
 
     rangeType->ToStringFunction = ArrayRangeTemplate<T>::ArrayRangeToString;
 
     // Create the array type instance (arrays and any other containers should be reference types!)
-    BoundType* arrayType = builder.AddBoundType(fullyQualifiedName, TypeCopyMode::ReferenceType, sizeof(ArrayTemplate<T>));
+    BoundType* arrayType = builder.AddBoundType(baseName, fullyQualifiedName, TypeCopyMode::ReferenceType, sizeof(ArrayTemplate<T>));
 
     arrayType->ToStringFunction = ArrayTemplate<T>::ArrayToString;
 

@@ -724,10 +724,17 @@ void ZilchShaderGenerator::OnZilchFragmentTypeParsed(Zilch::ParseEvent* event)
   // There are a lot of attributes in zilch fragments that aren't valid for zilch script.
   // Because of this, we want to ignore invalid attributes here and let the fragment compilation
   // catch them
+  BoundType* boundType = event->Type;
   AttributeStatus status;
-  AttributeExtensions::GetInstance()->ProcessType(status, event->Type, true);
+  AttributeExtensions::GetInstance()->ProcessType(status, boundType, true);
   if (status.Failed())
     event->BuildingProject->Raise(status.mLocation, ErrorCode::GenericError, status.Message.c_str());
+
+  Status nameStatus;
+  ZilchFragmentManager::GetInstance()->ValidateRawName(nameStatus, boundType->TemplateBaseName, boundType);
+
+  if (nameStatus.Failed())
+    event->BuildingProject->Raise(boundType->NameLocation, ErrorCode::GenericError, nameStatus.Message.c_str());
 }
 
 //**************************************************************************************************
