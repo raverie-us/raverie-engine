@@ -787,21 +787,23 @@ public:
   void ValidateSelection(Status& status, Cog* test)
   {
     EnsureCogPathIsRelativeTo();
-    CogPath::ComputePath(status, mValue.GetRelativeTo(), test, mValue.GetPathPreference0(), mValue.GetPathPreference1(), mValue.GetPathPreference2());
+    String path = CogPath::ComputePath(status, mValue.GetRelativeTo(), test, mValue.GetPathPreference0(), mValue.GetPathPreference1(), mValue.GetPathPreference2(), false);
     if (status.Failed())
       return;
 
-    if(AreTwoNamesTheSame(test))
-    {
-      status.SetFailed("Two objects have the same name");
-      return;
+    // Resolve the path to get clear ambiguity errors.
+    CogPath::Resolve(status, mValue.GetRelativeTo(), path, true);
     }
-  }
 
   void SetReferencedCog(Cog* to)
   {
     if(to != nullptr)
     {
+      Status status;
+      ValidateSelection(status, to);
+      if (status.Failed())
+        DoNotifyWarning("Cog Path", status.Message);
+
       Handle rootInstance;
       PropertyPath propertyPath;
       BuildPath(mNode, rootInstance, propertyPath);

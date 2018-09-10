@@ -104,6 +104,7 @@ DeclareBitField7(CogPathFlags,
   ResolvedNullErrorOccurred);
 DeclareEnum3(CogPathPreference, CogRelative, SpaceRelative, Absolute);
 
+// A reference counted node that cog paths can share.
 class CogPathNode : public ReferenceCountedEventObject
 {
 public:
@@ -215,16 +216,21 @@ public:
   /// If computing the path fails, this will return an empty string
   static String ComputePath(Cog* from, Cog* to, CogPathPreference::Enum pref);
 
-  static String ComputePath(Status& status, Cog* from, Cog* to, CogPathPreference::Enum pref0, CogPathPreference::Enum pref1, CogPathPreference::Enum pref2);
-  static String ComputePath(Status& status, Cog* from, Cog* to, CogPathPreference::Enum pref);
+  static String ComputePath(
+    Status& status,
+    Cog* from,
+    Cog* to,
+    CogPathPreference::Enum pref0,
+    CogPathPreference::Enum pref1,
+    CogPathPreference::Enum pref2,
+    bool ambiguityIsError);
+  static String ComputePath(Status& status, Cog* from, Cog* to, CogPathPreference::Enum pref, bool ambiguityIsError);
 
-  static Cog* Resolve(Status& status, Cog* startFrom, StringParam path);
-  static Cog* Resolve(Status& status, Cog* startFrom, const CogPathCompiled& path);
+  static Cog* Resolve(Status& status, Cog* startFrom, StringParam path, bool ambiguityIsError);
+  static Cog* Resolve(Status& status, Cog* startFrom, const CogPathCompiled& path, bool ambiguityIsError);
 
   HandleOf<CogPathNode> mSharedNode;
 };
-
-bool AreTwoNamesTheSame(Cog* test);
 
 template<typename type>
 inline type* CogPath::Has()

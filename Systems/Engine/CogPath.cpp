@@ -107,7 +107,55 @@ void AppendSeparatorIfNeeded(bool& hitFirst, StringBuilder& builder)
   hitFirst = true;
 }
 
-String CogPath::ComputePath(Status& status, Cog* from, Cog* to, CogPathPreference::Enum pref)
+void DetectAmbiguity(Status& status, Cog* cog)
+{
+  ReturnIf(!cog, , "The cog or space should always be valid");
+  String name = cog->GetName();
+  Space* cogSpace = cog->GetSpace();
+  Cog* cogParent = cog->GetParent();
+  bool success = true;
+
+  // Check if this is a space.
+  if (cog == cogSpace)
+  {
+    size_t sameNamedSpaces = RangeCount(cogSpace->GetGameSession()->FindAllSpacesByName(name));
+    success = sameNamedSpaces < 2;
+  }
+  // If we have no parent, it means we're a root cog.
+  else if (!cogParent)
+  {
+    // Root cogs need to check other roots in the space.
+    size_t sameNamedCogs = RangeCount(cog->GetSpace()->FindAllRootObjectsByName(name));
+    success = sameNamedCogs < 2;
+  }
+  // Otherwise we're a child cog.
+  else
+  {
+    // Child cogs need to check their parent's siblings.
+    size_t sameNamedCogs = RangeCount(cogParent->FindAllDirectChildrenByName(name));
+    success = sameNamedCogs < 2;
+  }
+
+  if (success)
+    return;
+
+  status.State = StatusState::Failure;
+  if (!status.IgnoreMessage)
+  {
+    status.Message = String::Format(
+      "Two or more siblings had the name '%s' which results in an ambiguous path (see %s)",
+      name.c_str(),
+      cog->GetDescription().c_str());
+  }
+}
+
+void DetectAmbiguityOptionally(Status& status, Cog* cog, bool ambiguityIsError)
+{
+  if (ambiguityIsError)
+    DetectAmbiguity(status, cog);
+}
+
+String CogPath::ComputePath(Status& status, Cog* from, Cog* to, CogPathPreference::Enum pref, bool ambiguityIsError)
 {
   if(pref == CogPathPreference::CogRelative)
   {
@@ -236,6 +284,8 @@ String CogPath::ComputePath(Status& status, Cog* from, Cog* to, CogPathPreferenc
         return String();
       }
 
+      DetectAmbiguityOptionally(status, pathCogTo, ambiguityIsError);
+
       builder.Append(cogName);
     }
 
@@ -263,6 +313,7 @@ String CogPath::ComputePath(Status& status, Cog* from, Cog* to, CogPathPreferenc
   
       if(!spaceName.Empty())
       {
+        DetectAmbiguityOptionally(status, space, ambiguityIsError);
         builder.Append(spaceName);
       }
       else
@@ -310,6 +361,7 @@ String CogPath::ComputePath(Status& status, Cog* from, Cog* to, CogPathPreferenc
         return String();
       }
 
+      DetectAmbiguityOptionally(status, pathCog, ambiguityIsError);
       builder.Append(cogName);
     }
 
@@ -317,7 +369,14 @@ String CogPath::ComputePath(Status& status, Cog* from, Cog* to, CogPathPreferenc
   }
 }
 
-String CogPath::ComputePath(Status& status, Cog* from, Cog* to, CogPathPreference::Enum pref0, CogPathPreference::Enum pref1, CogPathPreference::Enum pref2)
+String CogPath::ComputePath(
+  Status& status,
+  Cog* from,
+  Cog* to,
+  CogPathPreference::Enum pref0,
+  CogPathPreference::Enum pref1,
+  CogPathPreference::Enum pref2,
+  bool ambiguityIsError)
 {
   String newPath;
   String errorMessage;
@@ -335,7 +394,7 @@ String CogPath::ComputePath(Status& status, Cog* from, Cog* to, CogPathPreferenc
     status.SetSucceeded();
 
     CogPathPreference::Enum preference = preferences[i];
-    newPath = ComputePath(status, from, to, preference);
+    newPath = ComputePath(status, from, to, preference, ambiguityIsError);
 
     if (status.Succeeded())
       break;
@@ -634,7 +693,7 @@ void CogPathTokenizer::ReadToken(CogPathToken& tokenOut)
   }
 }
 
-Cog* CogPath::Resolve(Status& status, Cog* startFrom, const CogPathCompiled& path)
+Cog* CogPath::Resolve(Status& status, Cog* startFrom, const CogPathCompiled& path, bool ambiguityIsError)
 {
   if(path.mRootType == CogPathRootType::Null)
     return nullptr;
@@ -679,6 +738,9 @@ Cog* CogPath::Resolve(Status& status, Cog* startFrom, const CogPathCompiled& pat
         status.Message = String::Format("A space by the name of '%s' could not be found", path.mSpaceName.c_str());
       return nullptr;
     }
+
+    // Validate that there aren't any other spaces of the same name.
+    DetectAmbiguityOptionally(status, startSpace, ambiguityIsError);
   }
 
   Cog* resolvedCog = nullptr;
@@ -706,6 +768,9 @@ Cog* CogPath::Resolve(Status& status, Cog* startFrom, const CogPathCompiled& pat
         status.Message = String::Format("The root cog by the name of '%s' could not be found in the space", root.mValue.c_str());
       return nullptr;
     }
+
+    // Validate that there aren't any other root cogs of the same name.
+    DetectAmbiguityOptionally(status, resolvedCog, ambiguityIsError);
   }
   else
   {
@@ -731,6 +796,9 @@ Cog* CogPath::Resolve(Status& status, Cog* startFrom, const CogPathCompiled& pat
               previousCog->GetDescription().c_str(), element.mValue.c_str());
           return nullptr;
         }
+
+        // Validate that there aren't any other direct child cogs of the same name.
+        DetectAmbiguityOptionally(status, resolvedCog, ambiguityIsError);
         break;
 
       case CogPathElementType::Parent:
@@ -757,7 +825,7 @@ Cog* CogPath::Resolve(Status& status, Cog* startFrom, const CogPathCompiled& pat
   return resolvedCog;
 }
 
-Cog* CogPath::Resolve(Status& status, Cog* startFrom, StringParam path)
+Cog* CogPath::Resolve(Status& status, Cog* startFrom, StringParam path, bool ambiguityIsError)
 {
   CogPathParser parser;
   parser.mTokenizer.mPath = path;
@@ -775,7 +843,7 @@ Cog* CogPath::Resolve(Status& status, Cog* startFrom, StringParam path)
   // We set the error code assuming that if an error occurs below, it will be this kind
   // Technically the status could still return success, even with this error code set (which is what we want)
   status.Context = CogPathErrorCode::DidNotFind;
-  return Resolve(status, startFrom, finalPath);
+  return Resolve(status, startFrom, finalPath, ambiguityIsError);
 }
 
 CogPathNode::CogPathNode()
@@ -863,7 +931,7 @@ Cog* CogPath::RestoreLink(CogInitializer& initializer, Cog* owner, Component* co
     {
       Status status;
       status.IgnoreMessage = true;
-      mSharedNode->mPath = ComputePath(status, mSharedNode->mRelativeTo, cog, mSharedNode->mPathPreference0, mSharedNode->mPathPreference1, mSharedNode->mPathPreference2);
+      mSharedNode->mPath = ComputePath(status, mSharedNode->mRelativeTo, cog, mSharedNode->mPathPreference0, mSharedNode->mPathPreference1, mSharedNode->mPathPreference2, false);
     }
   }
 
@@ -915,7 +983,7 @@ void CogPath::SetCog(Cog* to)
   
     Status status;
     status.IgnoreMessage = (GetErrorOnPathCantCompute() == false);
-    String newPath = ComputePath(status, from, to, node->mPathPreference0, node->mPathPreference1, node->mPathPreference2);
+    String newPath = ComputePath(status, from, to, node->mPathPreference0, node->mPathPreference1, node->mPathPreference2, false);
 
     if(OperationQueue::IsListeningForSideEffects() && !OperationQueue::sSideEffectContextStack.Empty())
       OperationQueue::RegisterSideEffect(this, "Path", node->mPath);
@@ -957,9 +1025,6 @@ Cog* CogPath::GetCog()
 void CogPath::SetPath(StringParam path)
 {
   CogPathNode* node = mSharedNode;
-
-  if (AreTwoNamesTheSame(CogPath::Resolve(node->mRelativeTo, path)))
-    DoNotifyWarning("Cog Path", "Two objects have the same name (in the same space or under the same parent) so the CogPath may resolve to an incorrect object");
 
   // Don't do anything if the path is already set. If you have duplicate names, this could cause
   // the cog path to resolve to the wrong object
@@ -1083,7 +1148,7 @@ bool CogPath::Refresh()
   Status status;
 
   Cog* previousCog = mSharedNode->mResolvedCog;
-  mSharedNode->mResolvedCog = CogPath::Resolve(status, relativeTo, mSharedNode->mPath);
+  mSharedNode->mResolvedCog = CogPath::Resolve(status, relativeTo, mSharedNode->mPath, false);
 
   if(status.Failed())
   {
@@ -1119,14 +1184,14 @@ Cog* CogPath::Resolve(Cog* startFrom, StringParam path)
 {
   Status status;
   status.IgnoreMessage = true;
-  return Resolve(status, startFrom, path);
+  return Resolve(status, startFrom, path, false);
 }
 
 String CogPath::ComputePath(Cog* from, Cog* to, CogPathPreference::Enum pref)
 {
   Status status;
   status.IgnoreMessage = true;
-  return ComputePath(status, from, to, pref);
+  return ComputePath(status, from, to, pref, false);
 }
 
 bool CogPath::RefreshIfNull()
@@ -1134,35 +1199,6 @@ bool CogPath::RefreshIfNull()
   Cog* oldCog = mSharedNode->mResolvedCog;
   Cog* newCog = GetCog();
   return newCog != oldCog;
-}
-
-bool AreTwoNamesTheSame(Cog* test)
-{
-  if (!test)
-    return false;
-
-  String name = test->GetName();
-
-  Cog* parent = test->GetParent();
-  if (parent)
-  {
-    size_t childCount = RangeCount(parent->FindAllChildrenByName(name));
-    return childCount != 1;
-  }
-  else
-  {
-    // Check to see if there are multiple objects within the same space that have the same name
-    Space* toSpace = test->GetSpace();
-    if (toSpace != nullptr)
-    {
-      forRange(Cog& cog, toSpace->FindAllObjectsByName(name))
-      {
-        if (&cog != test && cog.GetName() == name)
-          return true;
-      }
-    }
-  }
-  return false;
 }
 
 ZilchDefineType(CogPathEvent, builder, type)

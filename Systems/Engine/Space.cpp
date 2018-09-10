@@ -44,6 +44,7 @@ ZilchDefineType(Space, builder, type)
   ZilchBindMethod(FindFirstRootObjectByName);
   ZilchBindMethod(FindLastRootObjectByName);
   ZilchBindMethod(FindAllObjectsByName);
+  ZilchBindMethod(FindAllRootObjectsByName);
 
   ZilchBindMethod(DestroyAll);
   ZilchBindMethod(DestroyAllFromLevel);
@@ -506,6 +507,15 @@ CogNameRange Space::FindAllObjectsByName(StringParam name)
     return nameList->All();
   else
     return CogNameRange();
+}
+
+CogRootNameRange Space::FindAllRootObjectsByName(StringParam name)
+{
+  NameCogList* nameList = mNameMap.FindValue(name, nullptr);
+  if (nameList)
+    return CogRootNameRange(nameList->All());
+  else
+    return CogRootNameRange();
 }
 
 Cog* Space::FindObjectByName(StringParam name)

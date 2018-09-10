@@ -26,6 +26,20 @@ struct NameCondition
   String Name;
 };
 
+// Conditional policy that checks for root cogs in a space.
+struct RootCondition
+{
+  bool operator()(const Cog& cog);
+  bool operator()(const Cog* cog);
+};
+
+// Conditional policy for comparing names of root cogs.
+struct RootNameCondition : public RootCondition, public NameCondition
+{
+  bool operator()(const Cog& cog);
+  bool operator()(const Cog* cog);
+};
+
 ///Range to visit all objects in a Hierarchy.
 class HierarchyRange
 {

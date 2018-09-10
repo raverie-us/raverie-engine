@@ -135,6 +135,7 @@ ZilchDefineType(Cog, builder, type)
   ZilchBindMethod(FindChildByName);
   ZilchBindMethod(FindDirectChildByName);
   ZilchBindMethod(FindAllChildrenByName);
+  ZilchBindMethod(FindAllDirectChildrenByName);
 
   ZilchBindMethod(IsDescendant)->AddAttribute(DeprecatedAttribute);
   ZilchBindMethod(IsDescendantOf);
@@ -1326,6 +1327,17 @@ HierarchyNameRange Cog::FindAllChildrenByName(StringParam name)
 
   // Return a conditional range that stores the hierarchy range and policy
   return HierarchyNameRange(HierarchyRange::SubTree(this), policy);
+}
+
+//**************************************************************************************************
+HierarchyListNameRange Cog::FindAllDirectChildrenByName(StringParam name)
+{
+  // Create the policy and set the name
+  NameCondition policy;
+  policy.Name = name;
+
+  // Return a conditional range that stores the hierarchy range and policy
+  return HierarchyListNameRange(GetChildren(), policy);
 }
 
 //**************************************************************************************************
