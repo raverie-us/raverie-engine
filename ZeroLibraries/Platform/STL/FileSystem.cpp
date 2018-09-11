@@ -149,29 +149,29 @@ void CreateDirectoryAndParents(StringParam directory)
 bool CopyFileInternal(StringParam dest, StringParam source)
 {
   std::error_code error;
-  fs::copy_file(source.c_str(), dest.c_str(), error);
-  return (bool)error;
+  fs::copy_file(source.c_str(), dest.c_str(), fs::copy_options::overwrite_existing, error);
+  return !(bool)error;
 }
 
 bool MoveFileInternal(StringParam dest, StringParam source)
 {
   std::error_code error;
   fs::rename(source.c_str(), dest.c_str(), error);
-  return (bool)error;
+  return !(bool)error;
 }
 
 bool DeleteFileInternal(StringParam file)
 {
   std::error_code error;
   fs::remove(file.c_str(), error);
-  return (bool)error;
+  return !(bool)error;
 }
 
 bool DeleteDirectory(StringParam directory)
 {
   std::error_code error;
   fs::remove_all(directory.c_str(), error);
-  return (bool)error;
+  return !(bool)error;
 }
 
 TimeType GetFileModifiedTime(StringParam filename)

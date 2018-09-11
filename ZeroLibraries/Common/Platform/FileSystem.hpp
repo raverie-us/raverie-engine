@@ -43,14 +43,17 @@ ZeroShared void AddVirtualFileSystemEntry(StringParam absolutePath, DataBlock* s
 ZeroShared bool PersistFiles();
 
 /// Copies a file. Will spin lock if fails up to a max number of iterations. (Calls CopyFileInternal)
+/// This operation will overwrite the destination file if it exists.
 ZeroShared bool CopyFile(StringParam dest, StringParam source);
-/// The actual platform specific file copy function.
+/// The actual platform specific file copy function. This operation will overwrite the destination file if it exists.
 ZeroShared bool CopyFileInternal(StringParam dest, StringParam source);
 
 /// Move a file. Must be folder to folder or file to file.
 /// Will spin lock if fails up to a max number of iterations. (Calls MoveFileInternal)
+/// This operation will overwrite the destination file if it exists.
 ZeroShared bool MoveFile(StringParam dest, StringParam source);
 /// The actual platform specific function. Move a file. Must be folder to folder or file to file.
+/// This operation will overwrite the destination file if it exists.
 ZeroShared bool MoveFileInternal(StringParam dest, StringParam source);
 
 /// Deletes a file. Will spin lock if fails up to a max number of iterations. (Calls DeleteFileInternal)
