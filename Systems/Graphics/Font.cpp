@@ -48,7 +48,7 @@ RenderFont::~RenderFont()
 Vec2 RenderFont::MeasureText(StringRange text, uint runesToCount, float unitsPerPixel)
 {
   Vec2 size = Vec2(0.0f, mLineHeight * unitsPerPixel);
-  uint count = Math::Min(runesToCount, text.ComputeRuneCount());
+  uint count = Math::Min(runesToCount, (uint)text.ComputeRuneCount());
   float lineSize = 0.0f;
   float maxLineSize = 0.0f;
 

@@ -4,7 +4,7 @@
 #include "Precompiled.hpp"
 #include "OpenglRenderer.hpp"
 
-#define ZeroExtraGlDebug
+//#define ZeroExtraGlDebug
 
 #ifdef PLATFORM_EMSCRIPTEN
 #define ZeroWebgl
@@ -299,6 +299,7 @@ GLuint GlTextureMipMapping(TextureMipMapping::Enum value)
 //**************************************************************************************************
 void CheckShader(GLuint shader, StringParam shaderCode)
 {
+#ifdef ZeroExtraGlDebug
   GLint status = 0;
   glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
   if (status == GL_FALSE)
@@ -309,15 +310,14 @@ void CheckShader(GLuint shader, StringParam shaderCode)
     glGetShaderInfoLog(shader, infoLogLength, NULL, strInfoLog);
     ZPrint("Compile Error\n%s\n", strInfoLog);
 
-#ifdef ZeroExtraGlDebug
     static size_t sMaxPrints = 4;
     if (sMaxPrints > 0)
     {
       ZPrint("\n************************************************************\n%s\n************************************************************\n", shaderCode.c_str());
       --sMaxPrints;
     }
-#endif
   }
+#endif
 }
 
 //**************************************************************************************************
@@ -1298,7 +1298,7 @@ void OpenglRenderer::AddShaders(Array<ShaderEntry>& entries, uint forceCompileBa
   }
   else
   {
-    uint processCount = Math::Min(forceCompileBatchCount, entries.Size());
+    uint processCount = Math::Min(forceCompileBatchCount, (uint)entries.Size());
     if (processCount == 0)
       processCount = entries.Size();
 
@@ -1529,16 +1529,9 @@ GlShader* OpenglRenderer::GetShader(ShaderKey& shaderKey)
 
     CreateShader(entry);
     mShaderEntries.Erase(shaderKey);
-
-    return mGlShaders.FindPointer(shaderKey);
   }
 
-  // Find existing shader
-  if (mGlShaders.ContainsKey(shaderKey))
-    return mGlShaders.FindPointer(shaderKey);
-
-  // No shader found
-  return nullptr;
+  return mGlShaders.FindPointer(shaderKey);
 }
 
 //**************************************************************************************************
@@ -2129,6 +2122,10 @@ void OpenglRenderer::SetShaderParameters(u64 objectId, uint shaderInputsId, uint
 //**************************************************************************************************
 void OpenglRenderer::CreateShader(ShaderEntry& entry)
 {
+#ifdef ZeroExtraGlDebug
+  ZPrint("Compiilng composite: %s\n", entry.mComposite.c_str());
+#endif
+
   ShaderKey shaderKey(entry.mComposite, StringPair(entry.mCoreVertex, entry.mRenderPass));
 
   GLuint shaderId = 0;
@@ -2150,19 +2147,15 @@ void OpenglRenderer::CreateShader(ShaderEntry& entry)
 //**************************************************************************************************
 void OpenglRenderer::CreateShader(StringParam vertexSource, StringParam geometrySource, StringParam pixelSource, GLuint& shader)
 {
-  //DebugPrint("%s\n", vertexSource.c_str());
-  //DebugPrint("%s\n", geometrySource.c_str());
-  //DebugPrint("%s\n", pixelSource.c_str());
-
   GLuint program = glCreateProgram();
 
   const GLchar* vertexSourceData = vertexSource.Data();
   GLint vertexSourceSize = vertexSource.SizeInBytes();
   GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+  glAttachShader(program, vertexShader);
   glShaderSource(vertexShader, 1, &vertexSourceData, &vertexSourceSize);
   glCompileShader(vertexShader);
   CheckShader(vertexShader, vertexSource);
-  glAttachShader(program, vertexShader);
 
   GLuint geometryShader = 0;
   if (!geometrySource.Empty())
@@ -2170,19 +2163,19 @@ void OpenglRenderer::CreateShader(StringParam vertexSource, StringParam geometry
     const GLchar* geometrySourceData = geometrySource.Data();
     GLint geometrySourceSize = geometrySource.SizeInBytes();
     geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
+    glAttachShader(program, geometryShader);
     glShaderSource(geometryShader, 1, &geometrySourceData, &geometrySourceSize);
     glCompileShader(geometryShader);
     CheckShader(geometryShader, geometrySource);
-    glAttachShader(program, geometryShader);
   }
 
   const GLchar* pixelSourceData = pixelSource.Data();
   GLint pixelSourceSize = pixelSource.SizeInBytes();
   GLuint pixelShader = glCreateShader(GL_FRAGMENT_SHADER);
+  glAttachShader(program, pixelShader);
   glShaderSource(pixelShader, 1, &pixelSourceData, &pixelSourceSize);
   glCompileShader(pixelShader);
   CheckShader(pixelShader, pixelSource);
-  glAttachShader(program, pixelShader);
 
   glBindAttribLocation(program, VertexSemantic::Position, "attLocalPosition");
   glBindAttribLocation(program, VertexSemantic::Normal, "attLocalNormal");
@@ -2202,8 +2195,23 @@ void OpenglRenderer::CreateShader(StringParam vertexSource, StringParam geometry
   glBindAttribLocation(program, 14, "attAux4");
   glBindAttribLocation(program, 15, "attAux5");
 
+#ifdef ZeroExtraGlDebug
+  double compileSeconds = compileTimer.UpdateAndGetTime();
+  ZPrint("Compiled shader in %f seconds\n", compileSeconds);
+#endif
+
+#ifdef ZeroExtraGlDebug
+  Timer linkTimer;
+#endif
+
   glLinkProgram(program);
 
+#ifdef ZeroExtraGlDebug
+  double linkSeconds = linkTimer.UpdateAndGetTime();
+  ZPrint("Linked shader in %f seconds\n", linkSeconds);
+#endif
+
+#ifdef ZeroExtraGlDebug
   GLint status;
   glGetProgramiv(program, GL_LINK_STATUS, &status);
   if (status == GL_FALSE)
@@ -2214,7 +2222,6 @@ void OpenglRenderer::CreateShader(StringParam vertexSource, StringParam geometry
     glGetProgramInfoLog(program, infoLogLength, NULL, strInfoLog);
     ZPrint("Link Error\n%s\n", strInfoLog);
 
-#ifdef ZeroExtraGlDebug
     static size_t sMaxPrints = 4;
     if (sMaxPrints > 0)
     {
@@ -2228,12 +2235,12 @@ void OpenglRenderer::CreateShader(StringParam vertexSource, StringParam geometry
         pixelSource.c_str());
       --sMaxPrints;
     }
+  }
 #endif
-  }
-  else
-  {
-    shader = program;
-  }
+
+  // For now we always output the shader assuming that all of them compile and link.
+  // This is because requesting the link status is a blocking operation.
+  shader = program;
 
   glDetachShader(program, vertexShader);
   glDetachShader(program, pixelShader);
@@ -2246,8 +2253,9 @@ void OpenglRenderer::CreateShader(StringParam vertexSource, StringParam geometry
     glDeleteShader(geometryShader);
   }
 
-  if (status == GL_FALSE)
-    glDeleteProgram(program);
+  // We don't currently do this because we don't want to check the status of the shader (blocking).
+  //if (status == GL_FALSE)
+  //  glDeleteProgram(program);
 }
 
 //**************************************************************************************************

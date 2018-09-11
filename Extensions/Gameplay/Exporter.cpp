@@ -583,15 +583,12 @@ void Exporter::UpdateIcon(ProjectSettings* project, ExecutableResourceUpdater& u
   }
 }
 
-void BuildContent(ProjectSettings* project);
-
 void Exporter::SaveAndBuildContent()
 {
   // Save all resources and build them so the 
   // output directory is up to date
   Editor* editor = Z::gEditor;
   editor->SaveAll(true);
-  BuildContent(mProjectCog->has(ProjectSettings));
 }
 
 void Exporter::ExportApplication(HashSet<String> exportTargets)

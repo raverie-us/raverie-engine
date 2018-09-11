@@ -51,9 +51,9 @@ u64 CogId::ToUint64() const
   return  *(u64*)this;
 }
 
-u32 CogId::Hash() const
+size_t CogId::Hash() const
 {
-  return Id ^ Slot;
+  return (size_t)(Id ^ Slot);
 }
 
 bool CogId::IsValid()

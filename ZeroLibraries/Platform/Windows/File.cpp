@@ -217,14 +217,16 @@ void File::Close()
   ZeroGetPrivateData(FilePrivateData);
   if(self->mOsfHandle != OSF_INVALID_HANDLE_VALUE || self->mHandle != INVALID_HANDLE_VALUE)
   {
-    if(mFileMode != FileMode::Read)
-      FileModifiedState::EndFileModified(mFilePath);
     if(self->mOsfHandle != OSF_INVALID_HANDLE_VALUE)
       _close(self->mOsfHandle);
     else
       CloseHandle(self->mHandle);
     self->mOsfHandle = OSF_INVALID_HANDLE_VALUE;
     self->mHandle = INVALID_HANDLE_VALUE;
+
+    // Must come after closing the file because it may need access to the modified date.
+    if (mFileMode != FileMode::Read)
+      FileModifiedState::EndFileModified(mFilePath);
   }
 }
 

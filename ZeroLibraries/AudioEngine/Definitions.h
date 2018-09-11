@@ -13,7 +13,7 @@
 
 namespace Audio
 {
-  typedef intptr_t AtomicType;
+  typedef int AtomicType;
 
   // The sample rate used by the audio engine for the output mix
   static const unsigned SystemSampleRate = 48000;

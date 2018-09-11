@@ -804,7 +804,7 @@ namespace Audio
     if (!SavedSamples.Empty())
     {
       // Find out how many samples need to be copied over
-      unsigned samplesToCopy = Math::Min(SavedSamples.Size(), outputFrames * outputChannels);
+      unsigned samplesToCopy = Math::Min((unsigned)SavedSamples.Size(), outputFrames * outputChannels);
       // Add the saved samples to the end of the buffer
       CopyIntoBuffer(buffer, SavedSamples, 0, samplesToCopy);
       // If there are more saved samples, erase the ones we copied

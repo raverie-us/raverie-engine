@@ -169,11 +169,18 @@ bool ContentComposition::AnyNeedsBuilding(BuildOptions& options)
 
 void ContentComposition::BuildContent(BuildOptions& options)
 {
+  bool anyBuilt = false;
   forRange(BuilderComponent* bc, Builders.All())
   {
-    if(bc->NeedsBuilding(options))
+    if (bc->NeedsBuilding(options))
+    {
+      anyBuilt = true;
       bc->BuildContent(options);
+    }
   }
+
+  if (anyBuilt)
+    ZPrint("Built %s\n", Filename.c_str());
 }
 
 void ContentComposition::Serialize(Serializer& stream)

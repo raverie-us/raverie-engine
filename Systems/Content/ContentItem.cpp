@@ -203,6 +203,13 @@ Object* ContentItem::GetEditingObject(Resource* resource)
   }
 }
 
+void ContentItem::BuildContent()
+{
+  BuildOptions options;
+  Z::gContentSystem->SetupOptions(mLibrary, options);
+  BuildContent(options);
+}
+
 void ContentItem::BuildListing(ResourceListing& listing)
 {
 

@@ -498,7 +498,7 @@ namespace Audio
     }
 
     // Copy either the number of samples requested or the samples available, whichever is smaller
-    unsigned samplesCopied = Math::Min(samplesRequested, data->mSamples.Size() - sampleIndex);
+    unsigned samplesCopied = Math::Min(samplesRequested, (unsigned)data->mSamples.Size() - sampleIndex);
     memcpy(outputBuffer, data->mSamples.Data() + sampleIndex, sizeof(float) * samplesCopied);
 
     // If we did not copy enough samples keep trying (in case there is another decoded buffer available)

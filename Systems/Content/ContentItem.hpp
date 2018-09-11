@@ -97,6 +97,9 @@ public:
   // Build the content item
   virtual void BuildContent(BuildOptions& buildOptions) = 0;
 
+  // Helper that builds the content item using build options from the content libarary.
+  void BuildContent();
+
   // Build the resource listing that this content item makes
   virtual void BuildListing(ResourceListing& listing);
 

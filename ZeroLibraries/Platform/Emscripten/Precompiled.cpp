@@ -6,6 +6,27 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
+
+extern "C" EMSCRIPTEN_KEEPALIVE void* Znaj(unsigned int n)
+{
+  return malloc((size_t)n);
+}
+
+extern "C" EMSCRIPTEN_KEEPALIVE  void* Znwj(unsigned int n)
+{
+  return malloc((size_t)n);
+}
+
+extern "C" EMSCRIPTEN_KEEPALIVE  void* _Znaj(unsigned int n)
+{
+  return malloc((size_t)n);
+}
+
+extern "C" EMSCRIPTEN_KEEPALIVE  void* _Znwj(unsigned int n)
+{
+  return malloc((size_t)n);
+}
+
 int vsprintf_s(char* buffer, size_t numberOfElements, const char* format, va_list args)
 {
   return vsnprintf(buffer, numberOfElements, format, args);

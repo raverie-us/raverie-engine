@@ -99,8 +99,6 @@ void ContentLibrary::BuildContent(BuildOptions& buildOptions)
   {
     ContentItem* item = itemsToProcess.Front();
 
-    //ZPrint("Building %s\n", item->Filename.c_str());
-
     if(buildOptions.SendProgress)
     {
       float progress = float(itemsBuilt + 1) / float(itemsToBuild);

@@ -528,11 +528,13 @@ struct ZeroSharedTemplate ComparePolicy
 {
   inline bool Equal(const T& left, const T& right) const
   {
+    Error("The empty ComparePolicy should never be called");
     return false;
   }
   template<typename T2>
   inline bool Equal(const T& left, const T2& right) const
   {
+    Error("The empty ComparePolicy should never be called");
     return false;
   }
 };

@@ -57,8 +57,6 @@ size_t WriteToFile(cstr filePath, const byte* data, size_t bufferSize)
   if (!file.Open(filePath, FileMode::Write, FileAccessPattern::Sequential, FileShare::Unspecified))
     return 0;
 
-  FileModifiedState::BeginFileModified(filePath);
-
   while (bufferSize != 0)
   {
     size_t amountWritten = file.Write(const_cast<byte*>(data), bufferSize);
@@ -69,9 +67,7 @@ size_t WriteToFile(cstr filePath, const byte* data, size_t bufferSize)
     data += amountWritten;
     bufferSize -= amountWritten;
   }
-
-  FileModifiedState::EndFileModified(filePath);
-
+  file.Close();
   return bufferSize;
 }
 

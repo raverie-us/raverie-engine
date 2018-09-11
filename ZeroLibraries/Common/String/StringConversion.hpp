@@ -54,6 +54,8 @@ ZeroShared void ToValue(StringRangeParam range, uint16& value, int base = 0);
 ZeroShared void ToValue(StringRangeParam range, uint32& value, int base = 0);
 ZeroShared void ToValue(StringRangeParam range, uint64& value, int base = 0);
 
+ZeroShared void ToValue(StringRangeParam range, ulong& value, int base = 0);
+
 ZeroShared void ToValue(StringRangeParam range, float& value);
 ZeroShared void ToValue(StringRangeParam range, double& value);
 
@@ -81,6 +83,8 @@ ZeroShared uint ToBuffer(char* buffer, uint bufferSize, uint8 value, bool shortF
 ZeroShared uint ToBuffer(char* buffer, uint bufferSize, uint16 value, bool shortFormat = false);
 ZeroShared uint ToBuffer(char* buffer, uint bufferSize, uint32 value, bool shortFormat = false);
 ZeroShared uint ToBuffer(char* buffer, uint bufferSize, uint64 value, bool shortFormat = false);
+
+ZeroShared uint ToBuffer(char* buffer, uint bufferSize, ulong value, bool shortFormat = false);
 
 ZeroShared uint ToBuffer(char* buffer, uint bufferSize, float value, bool shortFormat = false);
 ZeroShared uint ToBuffer(char* buffer, uint bufferSize, double value, bool shortFormat = false);

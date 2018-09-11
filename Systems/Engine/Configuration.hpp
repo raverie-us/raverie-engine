@@ -104,7 +104,7 @@ public:
 
   /// The hash of the last accepted Eula. Used to uniquely identify each
   /// eula and auto-detect if the eula text changes.
-  size_t LastAcceptedEulaHash;
+  u64 LastAcceptedEulaHash;
 };
 
 //------------------------------------------------------------------------------

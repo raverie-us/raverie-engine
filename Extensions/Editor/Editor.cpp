@@ -879,6 +879,8 @@ void EditorSaveResource(Resource* resource)
   resource->mContentItem->SaveContent();
 }
 
+void BuildContent(ProjectSettings* project);
+
 Status Editor::SaveAll(bool showNotify)
 {
   // Reset the focus to save any changes in progress (setting text, etc)
@@ -927,10 +929,13 @@ Status Editor::SaveAll(bool showNotify)
   if(zilchManager->mLastCompileResult == CompileResult::CompilationFailed)
     return Status(StatusState::Failure, "Failed to compile Zilch Scripts");
 
-  if(showNotify)
-    DoNotify("Saved", "Project and all scripts saved.", "Disk");
-
   Tweakables::Save();
+
+  // Make sure content in the output directory is up to date.
+  BuildContent(Z::gEngine->GetProjectSettings());
+
+  if (showNotify)
+    DoNotify("Saved", "Project and all scripts saved.", "Disk");
 
   // On some platforms, to make files persist between runs we need to call this function.
   PersistFiles();

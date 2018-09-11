@@ -54,7 +54,7 @@ public:
   /// Utility Functions
   operator Cog*() const{return ToCog();}
   u64 ToUint64() const;
-  u32 Hash() const;
+  size_t Hash() const;
 
   /// Look up component
   template<typename type>

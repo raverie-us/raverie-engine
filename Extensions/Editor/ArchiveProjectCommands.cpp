@@ -114,7 +114,6 @@ void ExportContent(ProjectSettings* project)
   // output directory is up to date
   Editor* editor = Z::gEditor;
   editor->SaveAll(true);
-  BuildContent(project);
 
   Exporter* exporter = Exporter::GetInstance();
   exporter->mProjectCog = project->GetOwner();

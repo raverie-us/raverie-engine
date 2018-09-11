@@ -39,7 +39,7 @@ String FileModeToString(FileMode::Enum fileMode)
     return String("ab");
 
   if (fileMode == FileMode::ReadWrite)
-    return String("w+b");
+    return String("r+b");
 
   return String();
 }
@@ -48,6 +48,7 @@ String FileModeToString(FileMode::Enum fileMode)
 File::File()
 {
   ZeroConstructPrivateData(FilePrivateData);
+  mFileMode = FileMode::Read;
 }
 
 File::~File()
@@ -58,14 +59,16 @@ File::~File()
 
 size_t File::Size()
 {
-  ZeroGetPrivateData(FilePrivateData);
-  return (size_t)SDL_RWsize(self->mFileData);
+  return (size_t)CurrentFileSize();
 }
 
 long long File::CurrentFileSize()
 {
   ZeroGetPrivateData(FilePrivateData);
-  return SDL_RWsize(self->mFileData);
+  if (!self->IsValidFile())
+    return 0;
+  
+  return (long long)SDL_RWsize(self->mFileData);
 }
 
 bool File::Open(StringParam filePath, FileMode::Enum mode, FileAccessPattern::Enum accessPattern, FileShare::Enum share, Status* status)
@@ -81,6 +84,9 @@ bool File::Open(StringParam filePath, FileMode::Enum mode, FileAccessPattern::En
     Warn("Failed to open file '%s'. %s", filePath.c_str(), errorString.c_str());
     return false;
   }
+  
+  if (mode != FileMode::Read)
+    FileModifiedState::BeginFileModified(mFilePath);
 
   return true;
 }
@@ -115,13 +121,14 @@ bool File::IsOpen()
 void File::Close()
 {
   ZeroGetPrivateData(FilePrivateData);
-  if (self->IsValidFile())
+  if (self->mFileData)
   {
-    if (mFileMode != FileMode::Read)
-      FileModifiedState::EndFileModified(mFilePath);
-
     SDL_RWclose(self->mFileData);
     self->mFileData = nullptr;
+    
+    // Must come after closing the file because it may need access to the modified date.
+    if (mFileMode != FileMode::Read)
+      FileModifiedState::EndFileModified(mFilePath);
   }
 }
 
@@ -140,19 +147,19 @@ bool File::Seek(FilePosition pos, SeekOrigin::Enum rel)
   if (!self->IsValidFile())
     return false;
   
-  int sdlWhence;
+  int origin = RW_SEEK_SET;
   switch (rel)
   {
-    case SeekOrigin::Begin: sdlWhence = RW_SEEK_SET;
+    case SeekOrigin::Begin: origin = RW_SEEK_SET;
       break;
-    case SeekOrigin::Current: sdlWhence = RW_SEEK_CUR;
+    case SeekOrigin::Current: origin = RW_SEEK_CUR;
       break;
-    case SeekOrigin::End: sdlWhence = RW_SEEK_END;
+    case SeekOrigin::End: origin = RW_SEEK_END;
       break;
     default: return false;
   }
 
-  s64 ret = SDL_RWseek(self->mFileData, pos, sdlWhence);
+  s64 ret = SDL_RWseek(self->mFileData, pos, origin);
   return (ret != -1);
 }
 
@@ -162,9 +169,7 @@ size_t File::Write(byte* data, size_t sizeInBytes)
   if (!self->IsValidFile())
     return 0;
 
-  size_t bytesWritten = 0;
-  bytesWritten = SDL_RWwrite(self->mFileData, data, 1, sizeInBytes);
-  return bytesWritten;
+  return SDL_RWwrite(self->mFileData, data, 1, sizeInBytes);
 }
 
 size_t File::Read(Status& status, byte* data, size_t sizeInBytes)
@@ -188,26 +193,8 @@ bool File::HasData(Status& status)
     status.SetFailed("No file was open");
     return false;
   }
-
-  if (self->mFileData->type != SDL_RWOPS_UNKNOWN)
-  {
-    int64 bytesRead = SDL_RWsize(self->mFileData);
-    if(bytesRead > 0)
-    {
-      status.SetSucceeded();
-    }
-    else
-    {
-      String errorString = SDL_GetError();
-      String message = String::Format("Failed to read file '%s': %s", mFilePath.c_str(), errorString.c_str());
-      status.SetFailed(message);
-    }
-
-    return bytesRead > 0;
-  }
-
-  status.SetFailed("Unknown file handle type. Only files or pipes are allowed");
-  return false;
+  
+  return Tell() != CurrentFileSize();
 }
 
 void File::Flush()
@@ -223,12 +210,12 @@ void File::Duplicate(Status& status, File& destinationFile)
 
   if (!self->IsValidFile() || !other->IsValidFile())
   {
-    status.SetFailed("File is not valid. Open a valid file before attemping file operations.");
+    status.SetFailed("File is not valid. Open a valid file before attempting file operations.");
     return;
   }
 
   // Get this files data size in bytes
-  size_t fileSizeInBytes = (size_t)SDL_RWsize(self->mFileData);
+  size_t fileSizeInBytes = (size_t)CurrentFileSize();
   byte* buffer = new byte[fileSizeInBytes];
 
   // Read this files data
