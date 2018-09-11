@@ -1409,9 +1409,13 @@ void ObjectView::OnMouseEnterRow(TreeEvent* e)
     if(LocalModifications::GetInstance()->IsObjectLocallyAdded(cog, false))
     {
       Cog* archetypeParent = cog->GetParent()->FindNearestArchetypeContext();
-      String archetypeName = archetypeParent->GetArchetype()->Name;
-      toolTipMessage = String::Format("Object is locally added to the '%s' Archetype.", archetypeName.c_str());
-      toolTipColor = ToolTipColorScheme::Green;
+      ErrorIf(archetypeParent == nullptr, "Cannot be modified if we're not a child of an Archetype");
+      if(archetypeParent)
+      {
+        String archetypeName = archetypeParent->GetArchetype()->Name;
+        toolTipMessage = String::Format("Object is locally added to the '%s' Archetype.", archetypeName.c_str());
+        toolTipColor = ToolTipColorScheme::Green;
+      }
     }
     else if(LocalModifications::GetInstance()->IsChildOrderModified(cog->has(Hierarchy)))
     {
