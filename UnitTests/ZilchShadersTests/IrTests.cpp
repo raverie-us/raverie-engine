@@ -278,7 +278,7 @@ void TestShaderCompilationOfDirectory(SimpleZilchShaderIRGenerator& shaderGenera
   FileRange range(directory);
   for(; !range.Empty(); range.PopFront())
   {
-    FileEntry entry = range.frontEntry();
+    FileEntry entry = range.FrontEntry();
     String filePath = entry.GetFullPath();
 
     if(FilePath::GetExtension(filePath).ToLower() == mFragmentExtension)
@@ -435,11 +435,11 @@ void TestDirectory(SimpleZilchShaderIRGenerator& shaderGenerator, UnitTestPackag
     FileRange range(directory);
     for(; !range.Empty(); range.PopFront())
     {
-      FileEntry entry = range.frontEntry();
+      FileEntry entry = range.FrontEntry();
       String filePath = entry.GetFullPath();
 
       // Recurse on only directories
-      if(IsDirectory(filePath))
+      if(DirectoryExists(filePath))
         TestDirectory(shaderGenerator, unitTestPackage, filePath, reporter, recurse);
     }
   }

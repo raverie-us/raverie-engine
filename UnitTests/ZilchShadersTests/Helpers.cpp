@@ -58,15 +58,15 @@ void LoadFragmentCodeDirectory(SimpleZilchShaderIRGenerator& shaderGenerator, St
   FileRange range(directory);
   for(; !range.Empty(); range.PopFront())
   {
-    FileEntry entry = range.frontEntry();
-    String filePath = range.frontEntry().GetFullPath();
+    FileEntry entry = range.FrontEntry();
+    String filePath = range.FrontEntry().GetFullPath();
 
-    if(IsDirectory(filePath))
+    if(DirectoryExists(filePath))
       continue;
 
     if(FilePath::GetExtension(filePath).ToLower() == mFragmentExtension)
     {
-      FileEntry entry = range.frontEntry();
+      FileEntry entry = range.FrontEntry();
       String fragmentCode = ReadFileIntoString(entry.GetFullPath());
       shaderGenerator.AddFragmentCode(fragmentCode, entry.mFileName, nullptr);
     }
@@ -79,10 +79,10 @@ void LoadCompositeDirectory(SimpleZilchShaderGenerator& shaderGenerator, StringP
   FileRange range(directory);
   for(; !range.Empty(); range.PopFront())
   {
-    String filePath = range.frontEntry().GetFullPath();
+    String filePath = range.FrontEntry().GetFullPath();
     if(FilePath::GetExtension(filePath).ToLower() == mFragmentExtension)
     {
-      FileEntry entry = range.frontEntry();
+      FileEntry entry = range.FrontEntry();
       String fragmentCode = ReadFileIntoString(entry.GetFullPath());
       shaderGenerator.AddFragmentCode(fragmentCode, entry.mFileName, nullptr);
     }
@@ -216,9 +216,9 @@ void TestShaderCompilationOfDirectory(SimpleZilchShaderGenerator& shaderGenerato
   FileRange range(directory);
   for(; !range.Empty(); range.PopFront())
   {
-    if(range.frontEntry().mFileName != "Simple.zilchFrag")
+    if(range.FrontEntry().mFileName != "Simple.zilchFrag")
       continue;
-    String filePath = range.frontEntry().GetFullPath();
+    String filePath = range.FrontEntry().GetFullPath();
     if(FilePath::GetExtension(filePath).ToLower() == mFragmentExtension)
       TestShaderFileCompilation(shaderGenerator, renderer, filePath, directory, reporter);
   }

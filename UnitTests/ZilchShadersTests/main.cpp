@@ -18,7 +18,7 @@ public:
 void ZilchCompilerErrorCallback(Zilch::ErrorEvent* e)
 {
   ZPrint("%s", e->GetFormattedMessage(Zilch::MessageFormat::MsvcCpp).c_str());
-  ZERO_DEBUG_BREAK;
+  ZeroDebugBreak();
 }
 
 void ZilchTranslationErrorCallback(TranslationErrorEvent* e)
@@ -78,8 +78,8 @@ void RunTests()
   unitTestPackage.mBackends.PushBack(new ZilchSpirVDisassemblerBackend());
   unitTestPackage.mRenderPackages.PushBack(glslPackage);
 
-  String extensionsPath = FilePath::Combine(GetApplicationDirectory(), "FragmentExtensionsIR");
-  String fragmentSettingsPath = FilePath::Combine(GetApplicationDirectory(), "ZilchFragmentSettings");
+  String extensionsPath = "FragmentExtensions";
+  String fragmentSettingsPath = "../../Data/ZilchFragmentSettings";/
 
   SpirVNameSettings nameSettings;
   SimpleZilchShaderIRGenerator::LoadNameSettings(nameSettings);

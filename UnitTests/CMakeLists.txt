@@ -26,9 +26,7 @@ add_executable(LcpSolvers "")
 add_executable(MathTests "")
 add_executable(SerializationTests "")
 add_executable(SSETests "")
-if(${generate_with_zilch_shader_tests})
-    add_executable(ZilchshadersTests "")
-endif()
+add_executable(ZilchShadersTests "")
 
 ################################################################################
 # Explicitly define the folders
@@ -41,10 +39,11 @@ set_target_properties(LcpSolvers         PROPERTIES FOLDER "UnitTests")
 set_target_properties(MathTests          PROPERTIES FOLDER "UnitTests")
 set_target_properties(SerializationTests PROPERTIES FOLDER "UnitTests") 
 set_target_properties(SSETests           PROPERTIES FOLDER "UnitTests")
+set_target_properties(ZilchShadersTests  PROPERTIES FOLDER "UnitTests")
 
-if(${generate_with_zilch_shader_tests})
-    set_target_properties(ZilchShadersTests  PROPERTIES FOLDER "UnitTests")
-endif()
+# Zilch Shader unit tests need the working directory to be set to where the unit
+# tests are so it can write output files (to be committed) in the same directory.
+set_target_properties(ZilchShadersTests PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${zero_core_path}/UnitTests/ZilchShaders/")
 
 ################################################################################
 # include filelists for each library
@@ -57,9 +56,7 @@ include(LcpSolvers/CMakeLists.txt)
 include(MathTests/CMakeLists.txt)
 include(SerializationTests/CMakeLists.txt)
 include(SSETests/CMakeLists.txt)
-if(${generate_with_zilch_shader_tests})
-    include(ZilchShadersTests/CMakeLists.txt)
-endif()
+include(ZilchShadersTests/CMakeLists.txt)
 
 ################################################################################
 # define include directories for all of our libraries
@@ -105,13 +102,11 @@ target_include_directories(SSETests
         ${CurrentDirectory}
 )
 
-if(${generate_with_zilch_shader_tests})
-    target_include_directories(ZilchShadersTests 
-        PUBLIC 
-            ${CurrentDirectory}/ZilchShadersTests
-            ${CurrentDirectory}
-    )
-endif()
+target_include_directories(ZilchShadersTests 
+    PUBLIC 
+        ${CurrentDirectory}/ZilchShadersTests
+        ${CurrentDirectory}
+)
 
 ################################################################################
 # set the linked libraries for all of our targets
@@ -119,7 +114,6 @@ endif()
 target_link_libraries(ContainersTests
                       PUBLIC
                       Common
-                      Math
                       CppUnitLite2
                       Platform
 )
@@ -134,7 +128,6 @@ target_link_libraries(FilePathTests
                       Common
                       Serialization
                       Support
-                      Math
                       CppUnitLite2
                       Platform
 )
@@ -143,7 +136,6 @@ target_link_libraries(IntersectionTests
                       PUBLIC
                       Common
                       Serialization
-                      Math
                       Geometry
                       Meta
                       CppUnitLite2
@@ -154,7 +146,6 @@ target_link_libraries(IntersectionTests
 target_link_libraries(LcpSolvers
                       PUBLIC
                       Common
-                      Math
                       CppUnitLite2
                       Platform
 )
@@ -162,7 +153,6 @@ target_link_libraries(LcpSolvers
 target_link_libraries(MathTests
                       PUBLIC
                       Common
-                      Math
                       Platform
                       CppUnitLite2
 )
@@ -172,7 +162,6 @@ target_link_libraries(SerializationTests
                       Common
                       Serialization
                       Support
-                      Math
                       Meta
                       Platform
                       CppUnitLite2
@@ -182,25 +171,25 @@ target_link_libraries(SerializationTests
 target_link_libraries(SSETests
                       PUBLIC
                       Common
-                      Math
                       Platform
                       CppUnitLite2
 )
 
-if(${generate_with_zilch_shader_tests})
-    target_link_libraries(ZilchShadersTests
-                          PUBLIC
-                          Common
-                          ZilchShaders
-                          Serialization
-                          Support
-                          Math
-                          Geometry
-                          Meta
-                          Platform
-                          Zilch
-    )
-endif()
+target_link_libraries(ZilchShadersTests
+                      PUBLIC
+                      Common
+                      ZilchShaders
+                      SPIRV-Cross
+                      SPIRV-Tools
+                      SPIRV-Tools-opt
+                      Serialization
+                      Support
+                      Geometry
+                      Meta
+                      Platform
+                      Zilch
+                      ${FreetypeStatic}
+)
 ################################################################################
 # set the output directories for all of our targets
 ################################################################################
@@ -213,17 +202,11 @@ zero_multitarget_output_directories(
     MathTests
     SerializationTests
     SSETests
+    ZilchShadersTests
     LIBRARY_DIRECTORY ${unit_test_library_dir}
     RUNTIME_DIRECTORY ${unit_test_binary_dir}
 )
 
-if(${generate_with_zilch_shader_tests})
-    zero_multitarget_output_directories(
-        ZilchShadersTests
-        LIBRARY_DIRECTORY ${unit_test_library_dir}
-        RUNTIME_DIRECTORY ${unit_test_binary_dir}
-    )
-endif()
 ################################################################################
 # Specify any additional target options such as pdb locations
 ################################################################################
@@ -238,6 +221,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         MathTests
         SerializationTests
         SSETests
+        ZilchShadersTests
         CONFIGS ${supported_configs}
         BASEPATH ${unit_tests_out}
         PLATFORM ${platform}
@@ -247,20 +231,6 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         PRECOMPILED_SOURCE_NAME ""
         TARGET_SUBFOLDER
     )
-
-    if(${generate_with_zilch_shader_tests})
-        zero_multitarget_output_settings(
-            ZilchShadersTests
-            CONFIGS ${supported_configs}
-            BASEPATH ${unit_tests_out}
-            PLATFORM ${platform}
-            BITS ${bit}
-            TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET}
-            PRECOMPILED_HEADER_NAME "Precompiled.hpp"
-            PRECOMPILED_SOURCE_NAME "Precompiled.cpp"
-            TARGET_SUBFOLDER
-        )
-    endif()
 endif()
 
 ################################################################################
@@ -277,6 +247,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         MathTests
         SerializationTests
         SSETests
+        ZilchShadersTests
 
         PUBLIC
         -wd"4305"
@@ -289,23 +260,6 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         "-D \"ZeroExportDll\"" 
         -W3
     )
-
-    if(${generate_with_zilch_shader_tests})
-        zero_multitarget_compile_options( 
-            ZilchShadersTests
-
-            PUBLIC
-            -wd"4305"
-
-            PRIVATE
-            ${common_flags}
-            "-D \"CURL_STATICLIB\"" 
-            "-D \"WIN32\"" 
-            "-D \"_CRT_SECURE_NO_WARNINGS\"" 
-            "-D \"ZeroExportDll\"" 
-            -W3
-        )
-    endif()
     
 endif()
 ################################################################################
@@ -319,7 +273,4 @@ zero_subfolder_source_group(${zero_core_path} UnitTests LcpSolvers  "")
 zero_subfolder_source_group(${zero_core_path} UnitTests MathTests  "")
 zero_subfolder_source_group(${zero_core_path} UnitTests SerializationTests  "")
 zero_subfolder_source_group(${zero_core_path} UnitTests SSETests  "")
-
-if(${generate_with_zilch_shader_tests})
-    zero_subfolder_source_group(${zero_core_path} UnitTests ZilchShadersTests  "")
-endif()
+zero_subfolder_source_group(${zero_core_path} UnitTests ZilchShadersTests  "")

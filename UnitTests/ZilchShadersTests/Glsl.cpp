@@ -64,7 +64,7 @@ GlTextureEnums gTextureEnums[] =
   {GL_DEPTH_COMPONENT32F, GL_DEPTH_COMPONENT, GL_FLOAT}
 };
 
-DeclareEnum5(VertexSemantic,
+DeclareEnum5(GlslVertexSemantic,
               Position,
               Normal,
               TexCoord0,
@@ -122,10 +122,10 @@ void GlslRenderer::InitializeBuffers()
   glBindBuffer(GL_ARRAY_BUFFER, mTriangleVertex);
   glBufferData(GL_ARRAY_BUFFER, sizeof(RenderVertex) * 3, mFullScreenTriangleVerts, GL_STATIC_DRAW);
 
-  glEnableVertexAttribArray(VertexSemantic::Position);
-  glVertexAttribPointer(VertexSemantic::Position, 3, GL_FLOAT, GL_FALSE, sizeof(RenderVertex), (void*)offsetof(RenderVertex, mPosition));
-  glEnableVertexAttribArray(VertexSemantic::TexCoord0);
-  glVertexAttribPointer(VertexSemantic::TexCoord0, 2, GL_FLOAT, GL_FALSE, sizeof(RenderVertex), (void*)offsetof(RenderVertex, mUv));
+  glEnableVertexAttribArray(GlslVertexSemantic::Position);
+  glVertexAttribPointer(GlslVertexSemantic::Position, 3, GL_FLOAT, GL_FALSE, sizeof(RenderVertex), (void*)offsetof(RenderVertex, mPosition));
+  glEnableVertexAttribArray(GlslVertexSemantic::TexCoord0);
+  glVertexAttribPointer(GlslVertexSemantic::TexCoord0, 2, GL_FLOAT, GL_FALSE, sizeof(RenderVertex), (void*)offsetof(RenderVertex, mUv));
 
   glGenBuffers(1, &mTriangleIndex);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mTriangleIndex);
@@ -315,8 +315,8 @@ bool GlslRenderer::LinkInternal(const Array<int>& shaderIds, int& programId, Err
     glAttachShader(programId, shaderIds[i]);
   }
 
-  glBindAttribLocation(programId, VertexSemantic::Position, "attPosition");
-  glBindAttribLocation(programId, VertexSemantic::TexCoord0, "attUv");
+  glBindAttribLocation(programId, GlslVertexSemantic::Position, "attPosition");
+  glBindAttribLocation(programId, GlslVertexSemantic::TexCoord0, "attUv");
 
   // Link the program vertex shader and pixel shader
   glLinkProgram(programId);

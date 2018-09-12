@@ -93,7 +93,7 @@ void ErrorReporter::Report(StringParam message)
   ZPrint("%s", message.c_str());
 
   if(mAssert)
-    ZERO_DEBUG_BREAK;
+    ZeroDebugBreak();
 }
 
 void ErrorReporter::Report(StringParam filePath, StringParam lineNumber, StringParam header, StringParam message)
@@ -105,7 +105,7 @@ void ErrorReporter::Report(StringParam filePath, StringParam lineNumber, StringP
   ZPrint("%s(%s): \n\t%s\n", filePath.c_str(), lineNumber.c_str(), message.c_str());
 
   if(mAssert)
-    ZERO_DEBUG_BREAK;
+    ZeroDebugBreak();
 }
 
 void ErrorReporter::Report(StringParam filePath, StringParam lineNumber, StringParam message)
@@ -156,7 +156,7 @@ void ErrorReporter::ReportCompilationError(const Array<LogMessage>& messages)
   }
 
   if(mAssert)
-    ZERO_DEBUG_BREAK;
+    ZeroDebugBreak();
 }
 
 void ErrorReporter::ReportLinkerError(StringParam filePath, StringParam lineNumber, StringParam message)

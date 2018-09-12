@@ -5,6 +5,6 @@
 #Adds generated list, do not remove line unless you are sure you want to ignore the generated file.
 include(${CMAKE_CURRENT_LIST_DIR}/Generated.cmake)
 
-target_sources(ZilchShaderTests
+target_sources(ZilchShadersTests
     PRIVATE
 )
