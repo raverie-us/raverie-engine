@@ -10,16 +10,18 @@ set(CurrentDirectory ${CMAKE_CURRENT_LIST_DIR})
 ################################################################################
 add_executable(ZeroEditor "")
 add_executable(ZeroLauncher "")
-add_executable(BrowserSubProcess "")
 add_library(ZeroLauncherSharedLibrary SHARED "")
+add_executable(BrowserSubProcess "")
+add_executable(SelfExtractor "")
 
 ################################################################################
 # Explicitly define the folders as they are not organized how we want
 ################################################################################
-set_target_properties(ZeroEditor       PROPERTIES FOLDER "Projects")
-set_target_properties(ZeroLauncher     PROPERTIES FOLDER "Projects")
+set_target_properties(ZeroEditor                 PROPERTIES FOLDER "Projects")
+set_target_properties(ZeroLauncher               PROPERTIES FOLDER "Projects")
 set_target_properties(ZeroLauncherSharedLibrary  PROPERTIES FOLDER "Projects")
-set_target_properties(BrowserSubProcess  PROPERTIES FOLDER "Projects")
+set_target_properties(BrowserSubProcess          PROPERTIES FOLDER "Projects")
+set_target_properties(SelfExtractor              PROPERTIES FOLDER "Projects")
 
 ################################################################################
 # include filelists for each library
@@ -28,6 +30,7 @@ include(ZeroEditor/CMakeLists.txt)
 include(ZeroLauncher/ZeroLauncher/CMakeLists.txt)
 include(ZeroLauncher/ZeroLauncherSharedLibrary/CMakeLists.txt)
 include(BrowserSubProcess/CMakeLists.txt)
+include(SelfExtractor/CMakeLists.txt)
 
 ################################################################################
 # define include directories for all of our libraries
@@ -60,6 +63,12 @@ target_include_directories(BrowserSubProcess
         ${CurrentDirectory}/BrowserSubProcess    
         ${CurrentDirectory}
         ${CEFHeaders}
+)
+target_include_directories(SelfExtractor
+    PUBLIC 
+        ${CurrentDirectory}/SelfExtractor
+        ${CurrentDirectory}
+        ${ZLibHeaders}
 )
 
 ################################################################################
@@ -162,10 +171,15 @@ target_link_libraries(BrowserSubProcess
                       PUBLIC
                       Common
                       Platform
-                      ${FreetypeStatic}
                       ${ZLibStatic}
-                      ${LibpngStatic}
                       ${CEFStatic}
+)
+target_link_libraries(SelfExtractor
+                      PUBLIC
+                      Common
+                      Platform
+                      Support
+                      ${ZLibStatic}
 ) 
 ################################################################################
 # set the output directories for all of our targets
@@ -175,6 +189,7 @@ zero_multitarget_output_directories(
                       ZeroLauncher 
                       ZeroLauncherSharedLibrary
                       BrowserSubProcess
+                      SelfExtractor
                       LIBRARY_DIRECTORY ${zero_library_dir}
                       RUNTIME_DIRECTORY ${zero_binary_dir}
 )
@@ -215,6 +230,18 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
 
     zero_multitarget_output_settings(
         BrowserSubProcess
+        CONFIGS ${supported_configs}
+        BASEPATH ${zero_build_out}
+        PLATFORM ${platform}
+        BITS ${bit}
+        TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET}
+        PRECOMPILED_HEADER_NAME ""
+        PRECOMPILED_SOURCE_NAME ""
+        TARGET_SUBFOLDER
+    )
+
+    zero_multitarget_output_settings(
+        SelfExtractor
         CONFIGS ${supported_configs}
         BASEPATH ${zero_build_out}
         PLATFORM ${platform}
@@ -313,6 +340,50 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         $<$<CONFIG:Release>:-"D \"VLD\"">
     )
 
+    # have to set flags for SelfExtractor seperatly because it has very different settings
+    zero_multitarget_compile_options(
+        SelfExtractor
+        PRIVATE
+        PUBLIC
+        PRIVATE
+        $<$<CONFIG:Debug>:-GS>
+        $<$<CONFIG:Release>:-MP>
+        $<$<CONFIG:Release>:-GS->
+        $<$<CONFIG:Release>:-GL>
+
+        -analyze-
+        -W3 
+        -wd"4302"
+        -wd"4305"
+        -Zc:wchar_t
+
+        $<$<CONFIG:Debug>:-Zi>
+        $<$<CONFIG:Release>:-Zi>
+        $<$<CONFIG:Debug>:-Gm>
+        $<$<CONFIG:Release>:-Gm->
+        $<$<CONFIG:Debug>:-Od>
+        $<$<CONFIG:Release>:-O2>
+
+        -Zc:inline 
+        -fp:precise 
+        -errorReport:prompt 
+        -Zc:forScope 
+        -GR- 
+        -Gd
+        $<$<CONFIG:Release>:-arch:SSE2>
+        -Oy-
+        $<$<CONFIG:Debug>:-MDd>
+        $<$<CONFIG:Release>:-Oi>
+        $<$<CONFIG:Release>:-MT>
+        -EHsc 
+        $<$<CONFIG:Release>:-Gy>
+
+        -nologo
+
+        $<$<CONFIG:Release>:-"D \"NDEBUG\"">
+        $<$<CONFIG:Release>:-"D \"VLD\"">
+    )
+
     
 ################################################################################
 # Set linker flags
@@ -337,6 +408,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         ZeroLauncher 
         ZeroLauncherSharedLibrary 
         BrowserSubProcess
+        SelfExtractor
         PROPERTIES 
         LINK_FLAGS "/SUBSYSTEM:WINDOWS /DEBUG ${common_linker_flags}"
     )
@@ -346,6 +418,7 @@ else()
         ZeroEditor
         ZeroLauncher
         BrowserSubProcess
+        SelfExtractor
         PRIVATE
         PUBLIC
         PRIVATE
@@ -355,6 +428,7 @@ else()
         ZeroEditor
         ZeroLauncher
         BrowserSubProcess
+        SelfExtractor
         PROPERTIES
         LINK_FLAGS "${common_linker_flags}"
     )
@@ -381,6 +455,7 @@ zero_subfolder_source_group_ignore_target_folder(${zero_core_path} Projects Zero
 zero_subfolder_source_group(${zero_core_path} Projects/ZeroLauncher ZeroLauncherSharedLibrary "${zero_core_path}/Projects")
 
 zero_subfolder_source_group(${zero_core_path} Projects BrowserSubProcess "")
+zero_subfolder_source_group(${zero_core_path} Projects SelfExtractor "")
 
 
 
