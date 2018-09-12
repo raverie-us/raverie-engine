@@ -11,6 +11,10 @@
 
 namespace Zero
 {
+const cstr cExecutableExtensionWithoutDot = "exe";
+const cstr cSharedLibraryExtensionWithoutDot = "dll";
+const cstr cExecutableExtensionWithDot = ".exe";
+const cstr cSharedLibraryExtensionWithDot = ".dll";
 
 ExternalLibrary::ExternalLibrary()
 {
