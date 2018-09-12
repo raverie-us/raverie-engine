@@ -33,7 +33,7 @@ public:
 /// event, but this also contains a call stack to trace where an error occurred.
 class ValidationErrorEvent : public Zilch::EventData
 {
-  ZilchDeclareType(Zilch::TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ValidationErrorEvent, Zilch::TypeCopyMode::ReferenceType);
   String GetFormattedMessage(Zilch::MessageFormat::Enum format);
 
   String mShortMessage;

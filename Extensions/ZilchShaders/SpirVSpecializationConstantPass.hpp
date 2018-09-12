@@ -20,7 +20,7 @@ ZilchDeclareEvent(CollectSpecializationConstants, SpecializationConstantEvent);
 class SpecializationConstantEvent : public Zilch::EventData
 {
 public:
-  ZilchDeclareType(Zilch::TypeCopyMode::ReferenceType);
+  ZilchDeclareType(SpecializationConstantEvent, Zilch::TypeCopyMode::ReferenceType);
 
   SpecializationConstantEvent();
   

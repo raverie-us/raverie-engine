@@ -12,44 +12,44 @@ namespace Zilch
 //------------------------------------------------------------------------Sampler
 class Sampler
 {
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(Sampler, TypeCopyMode::ValueType);
 };
 
 //------------------------------------------------------------------------Image2d
 class Image2d
 {
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(Image2d, TypeCopyMode::ValueType);
 };
 
 //------------------------------------------------------------------------DepthImage2d
 class DepthImage2d
 {
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(DepthImage2d, TypeCopyMode::ValueType);
 };
 
 //------------------------------------------------------------------------ImageCube
 class ImageCube
 {
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(ImageCube, TypeCopyMode::ValueType);
 };
 
 //------------------------------------------------------------------------SampledImage2d
 /// Represents a sampler combined with an image.
 class SampledImage2d
 {
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(SampledImage2d, TypeCopyMode::ValueType);
 };
 
 //------------------------------------------------------------------------SampledDepthImage2d
 class SampledDepthImage2d
 {
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(SampledDepthImage2d, TypeCopyMode::ValueType);
 };
 
 //------------------------------------------------------------------------SampledImageCube
 class SampledImageCube
 {
-  ZilchDeclareType(TypeCopyMode::ValueType);
+  ZilchDeclareType(SampledImageCube, TypeCopyMode::ValueType);
 };
 
 //------------------------------------------------------------------------ImageUserData

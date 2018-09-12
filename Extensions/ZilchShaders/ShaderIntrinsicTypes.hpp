@@ -18,7 +18,7 @@ namespace Zilch
 /// Helper class that contains a bunch of intrinsic functions for spir-v (generated in the cpp).
 class ShaderIntrinsics
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ShaderIntrinsics, TypeCopyMode::ReferenceType);
 };
 
 //------------------------------------------------------------------------Shader
@@ -36,7 +36,7 @@ class Shader
 // Component data for input/output geometry stream types. Used for reflection purposes.
 struct GeometryStreamUserData
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GeometryStreamUserData, TypeCopyMode::ReferenceType);
 public:
   GeometryStreamUserData() {}
 
@@ -55,7 +55,7 @@ public:
 // types which are only detected when walking the main function.
 struct GeometryFragmentUserData
 {
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(GeometryFragmentUserData, TypeCopyMode::ReferenceType);
   GeometryFragmentUserData();
 
   Zero::ZilchShaderIRType* GetInputVertexType();

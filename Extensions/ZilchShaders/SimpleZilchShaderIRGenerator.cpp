@@ -849,11 +849,11 @@ void SimpleZilchShaderIRGenerator::RecursivelyLoadDirectory(StringParam path, Zi
   FileRange fileRange(path);
   for(; !fileRange.Empty(); fileRange.PopFront())
   {
-    FileEntry entry = fileRange.frontEntry();
+    FileEntry entry = fileRange.FrontEntry();
     String filePath = entry.GetFullPath();
     String fileExt = FilePath::GetExtension(filePath);
 
-    if(IsDirectory(filePath))
+    if(DirectoryExists(filePath))
     {
       RecursivelyLoadDirectory(filePath, project);
       continue;
