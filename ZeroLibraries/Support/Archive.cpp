@@ -105,7 +105,8 @@ namespace Zero
 
 Archive::Archive(ArchiveMode::Enum mode, uint compressionLevel)
   : mCompressionLevel(compressionLevel),
-    mMode(mode)
+    mMode(mode),
+    mFileOriginBegin(0)
 {
 
 }
@@ -254,6 +255,7 @@ void Archive::ExportToDirectory(ArchiveExportMode::Enum exportMode, StringParam 
       DecompressEntry(entry);
 
     WriteToFile(outputFile.c_str(), entry.Full.Data, entry.Full.Size);
+    FreeBlock(entry.Full);
   }
 }
 
@@ -551,7 +553,7 @@ void Archive::ReadZipFileInternal(ArchiveReadFlags::Enum readFlags, Stream& file
       else
       {
         //Seek past the entry
-        file.Seek( localFile.Info.CompressedSize, FileOrigin::Current);
+        file.Seek(localFile.Info.CompressedSize, FileOrigin::Current);
       }
     }
     else if(signature == CentralHeader)
@@ -641,7 +643,7 @@ template<typename Stream>
 void Archive::DecompressEntryInternal(ArchiveEntry& entry, Stream& file)
 {
   // Seek to the start of the entry
-  file.Seek(entry.Offset, FileOrigin::Begin);
+  file.Seek(mFileOriginBegin + entry.Offset, FileOrigin::Begin);
 
   // Read the compressed data into a heap allocated block
   byte* buffer = (byte*)zAllocate(entry.Compressed.Size);

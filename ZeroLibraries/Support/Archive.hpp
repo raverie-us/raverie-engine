@@ -127,6 +127,10 @@ public:
   typedef Array<ArchiveEntry>::range range;
   range GetEntries(){return Entries.All();}
 
+  // By default his value is 0, but it can be set if extracting a file
+  // that's embedded within another file (set to the start of the embedded file).
+  u64 mFileOriginBegin;
+
 private:
   uint mCompressionLevel;
   ArchiveMode::Enum mMode;
