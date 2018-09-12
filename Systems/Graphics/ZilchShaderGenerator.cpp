@@ -88,15 +88,11 @@ void ZilchShaderGenerator::Initialize()
   String settingsDir = FilePath::Combine(mainConfig->DataDirectory, "ZilchFragmentSettings");
   settingsLoader.LoadSettings(settings, settingsDir);
 
-  settings->mShaderDefinitionSettings.SetMaxSimultaneousRenderTargets(8);
+  settings->mShaderDefinitionSettings.SetMaxSimultaneousRenderTargets(4);
   settings->mShaderDefinitionSettings.SetRenderTargetName("Target0", 0);
   settings->mShaderDefinitionSettings.SetRenderTargetName("Target1", 1);
   settings->mShaderDefinitionSettings.SetRenderTargetName("Target2", 2);
   settings->mShaderDefinitionSettings.SetRenderTargetName("Target3", 3);
-  settings->mShaderDefinitionSettings.SetRenderTargetName("Target4", 4);
-  settings->mShaderDefinitionSettings.SetRenderTargetName("Target5", 5);
-  settings->mShaderDefinitionSettings.SetRenderTargetName("Target6", 6);
-  settings->mShaderDefinitionSettings.SetRenderTargetName("Target7", 7);
   
   // Built-in inputs
 
@@ -218,133 +214,174 @@ void ZilchShaderGenerator::Initialize()
 }
 
 //**************************************************************************************************
-// Quick fix function for turning a zilch any into a string (the to-string function isn't always correct
-String DefaultValueToString(StringParam propertyType, Zilch::Any& defaultValue)
-{
-  if(defaultValue.IsNull() || propertyType == "Texture" || propertyType == "TextureCube"|| 
-    propertyType == "Real4x4" || propertyType == "Real3x3")
-    return String();
-
-  if(propertyType == "Boolean")
-    return defaultValue.ToString();
-  if(propertyType == "Integer")
-    return defaultValue.ToString();
-  if(propertyType == "Integer2")
-    return BuildString(propertyType, defaultValue.ToString());
-  if(propertyType == "Integer3")
-    return BuildString(propertyType, defaultValue.ToString());
-  if(propertyType == "Integer4")
-    return BuildString(propertyType, defaultValue.ToString());
-  if(propertyType == "Real")
-    return defaultValue.ToString();
-  if(propertyType == "Real2")
-    return BuildString(propertyType, defaultValue.ToString());
-  if(propertyType == "Real3")
-    return BuildString(propertyType, defaultValue.ToString());
-  if(propertyType == "Real4")
-    return BuildString(propertyType, defaultValue.ToString());
-  return String();
-}
-
-//**************************************************************************************************
 LibraryRef BuildWrapperLibrary(ZilchShaderLibraryRef fragmentsLibrary)
 {
-  // METAREFACTOR This whole function is temporary. It should build the types in a custom way
-  // instead of building a file that has to be parsed. It was done because I was having issues
-  // and needed to move on
+  // Helper structure for collecting property info.
+  struct ShaderPropertyInfo
+  {
+    String mName;
+    ShaderField* mShaderField;
+    BoundType* mBoundType;
+    size_t mMemberOffset;
+    bool mIsTexture;
+  };
 
+  // The Zero editor attributes to check for valid crossover attributes from the shader types.
   AttributeExtensions* zeroAttributes = AttributeExtensions::GetInstance();
 
-  Project project;
-  forRange(ShaderType* shaderType, fragmentsLibrary->mTypes.Values())
-  {
-    StringBuilder file;
-    // Only add fragment types 
-    if(shaderType->mFragmentType != FragmentType::None)
-    {
-      file.Append("class ");
-      file.Append(shaderType->mZilchName);
-      file.Append(" : MaterialBlock\n{\n");
+  String wrapperLibraryName = BuildString(fragmentsLibrary->mZilchLibrary->Name, "Wrapper");
+  LibraryBuilder builder(wrapperLibraryName);
 
-      uint offset = 0;
-      forRange(ShaderField* field, shaderType->mFieldList.All())
+  forRange (ShaderType* shaderType, fragmentsLibrary->mTypes.Values())
+  {
+    // Only add fragment types.
+    if (shaderType->mFragmentType != FragmentType::None)
+    {
+      size_t baseSize = sizeof(MaterialBlock);
+      size_t fragmentSize = baseSize;
+
+      Array<ShaderPropertyInfo> shaderProperties;
+
+      // Calculate the fragment type's size and get info needed to bind properties.
+      forRange (ShaderField* field, shaderType->mFieldList.All())
       {
-        if(field->mZilchType.Contains("FixedArray"))
+        if (field->mZilchType.Contains("FixedArray"))
           continue;
 
-        if(field->ContainsAttribute("PropertyInput"))
+        if (field->ContainsAttribute("PropertyInput"))
         {
-          ShaderType* type = field->GetShaderType();
+          ShaderType* fieldType = field->GetShaderType();
 
-          file.Append("\t[Property]");
-
-          // Copy over all attributes used by zero
-          forRange(ShaderAttribute& attribute, field->mAttributes.All())
+          // Property type should be a primitive or a texture.
+          BoundType* type = MetaDatabase::GetInstance()->FindType(fieldType->mPropertyType);
+          if (type != nullptr)
           {
-            if (zeroAttributes->IsValidPropertyAttribute(attribute.mAttributeName))
+            ShaderPropertyInfo shaderProperty;
+            shaderProperty.mName = field->mZilchName;
+            shaderProperty.mShaderField = field;
+            shaderProperty.mBoundType = type;
+
+            size_t fieldSize;
+            size_t byteAlignment;
+
+            if (type->IsA(ZilchTypeId(Texture)))
             {
-              file.AppendFormat("[%s", attribute.mAttributeName.c_str());
-              
-              // Start writing parameters if we have any
-              if (!attribute.mParameters.Empty())
-              {
-                file.Append("(");
-
-                // Copy each parameters
-                uint currentParameter = 0;
-                forRange(AttributeParameter& parameter, attribute.mParameters.All())
-                {
-                  // Include the name if specified
-                  if (!parameter.Name.Empty())
-                    file.AppendFormat("%s:", parameter.Name.c_str());
-
-                  file.Append(parameter.ToString());
-
-                  ++currentParameter;
-
-                  // Add a comma in between parameters
-                  if (currentParameter < attribute.mParameters.Size())
-                    file.Append(',');
-                }
-
-                file.Append(")");
-              }
-
-              file.Append("]");
+              // Textures are stored by their ID's.
+              fieldSize = sizeof(u64);
+              byteAlignment = fieldSize;
+              // Textures need a different getter/setter.
+              shaderProperty.mIsTexture = true;
             }
+            else
+            {
+              fieldSize = type->GetCopyableSize();
+              byteAlignment = Math::Min(fieldSize, sizeof(float));
+              shaderProperty.mIsTexture = false;
+            }
+
+            // Compute pad bytes needed for placing this data member on correct alignment.
+            size_t pad = (byteAlignment - fragmentSize % byteAlignment) % byteAlignment;
+            fragmentSize += pad;
+
+            // Memory offset from start of derived type.
+            shaderProperty.mMemberOffset = fragmentSize - baseSize;
+            shaderProperties.PushBack(shaderProperty);
+
+            fragmentSize += fieldSize;
           }
-
-          file.Append(" var ");
-          file.Append(field->mZilchName);
-          file.Append(" : ");
-          file.Append(type->mPropertyType);
-
-          // Append the default value if it exists
-          String defaultValueString = DefaultValueToString(type->mPropertyType, field->mDefaultValueVariant);
-          if(!defaultValueString.Empty())
-          {
-            file.Append(" = ");
-            file.Append(defaultValueString);
-          }
-
-          file.Append(";\n");
         }
       }
 
-      file.Append("}\n\n");
-      Resource* resource = (Resource*)shaderType->mLocation.mUserData;
-      project.AddCodeFromString(file.ToString(), Zilch::CodeString, (void*)resource);
+      // Pad type out to largest stored primitve.
+      size_t largestSize = sizeof(u64);
+      size_t endPad = (largestSize - fragmentSize % largestSize) % largestSize;
+      fragmentSize += endPad;
+
+      // Create fragment type.
+      BoundType* boundType = builder.AddBoundType(shaderType->mZilchName, TypeCopyMode::ReferenceType, fragmentSize);
+      boundType->BaseType = ZilchTypeId(MaterialBlock);
+      // Associate this type to the ZilchFragment resource containing the shader type.
+      boundType->Add(new MetaResource((Resource*)shaderType->mLocation.mUserData));
+
+      builder.AddBoundDefaultConstructor(boundType, FragmentConstructor);
+      builder.AddBoundDestructor(boundType, FragmentDestructor);
+
+      // Allocate one instance of the derived type and store it on the BoundType
+      // for initializing fragments to the default values.
+      ByteBufferBlock& defaultMemory = boundType->ComplexUserData.CreateObject<ByteBufferBlock>(0);
+      size_t derivedTypeSize = fragmentSize - baseSize;
+      defaultMemory.SetData(new byte[derivedTypeSize], derivedTypeSize, true);
+      byte* defaultMemoryPtr = defaultMemory.GetBegin();
+      memset(defaultMemoryPtr, 0, defaultMemory.Size());
+
+      // Add all found properties to the new type.
+      forRange (ShaderPropertyInfo& shaderProperty, shaderProperties.All())
+      {
+        // Address of the default value for this property.
+        byte* defaultElement = defaultMemoryPtr + shaderProperty.mMemberOffset;
+
+        BoundFn getter;
+        BoundFn setter;
+        if (shaderProperty.mIsTexture)
+        {
+          getter = FragmentTextureGetter;
+          setter = FragmentTextureSetter;
+
+          // Set default value.
+          Texture* texture = shaderProperty.mShaderField->mDefaultValueVariant.Get<Texture*>();
+          if (texture != nullptr)
+            *(u64*)defaultElement = (u64)texture->mResourceId;
+        }
+        else
+        {
+          getter = FragmentGetter;
+          setter = FragmentSetter;
+
+          // Set default value.
+          shaderProperty.mShaderField->mDefaultValueVariant.CopyStoredValueTo(defaultElement);
+        }
+
+        // Create property.
+        GetterSetter* getterSetter = builder.AddBoundGetterSetter(boundType, shaderProperty.mName, shaderProperty.mBoundType, setter, getter, MemberOptions::None);
+        // Storing member offset on the property meta for generic getter/setter implementation.
+        getterSetter->UserData = (void*)shaderProperty.mMemberOffset;
+        getterSetter->Get->UserData = (void*)shaderProperty.mMemberOffset;
+        getterSetter->Set->UserData = (void*)shaderProperty.mMemberOffset;
+        // Currently just setting the type location, a more specific location for properties still needs to be added.
+        getterSetter->NameLocation = shaderProperty.mShaderField->mNameLocation;
+        getterSetter->Location = shaderProperty.mShaderField->mSourceLocation;
+
+        // Mark all bound getter/setters as property.
+        getterSetter->AddAttribute(PropertyAttributes::cProperty);
+
+        // Add all other valid attributes from shader field.
+        forRange (ShaderAttribute& shaderAttribute, shaderProperty.mShaderField->mAttributes.All())
+        {
+          if (zeroAttributes->IsValidPropertyAttribute(shaderAttribute.mAttributeName))
+          {
+            Attribute* attribute = getterSetter->AddAttribute(shaderAttribute.mAttributeName);
+            attribute->Parameters = shaderAttribute.mParameters;
+          }
+        }
+      }
+
+      // Set file location for this type.
+      boundType->NameLocation = shaderType->mNameLocation;
+      boundType->Location = shaderType->mSourceLocation;
     }
   }
 
-  Module module;
-  module.Append(GraphicsLibrary::GetLibrary());
-  
-  EventConnect(&project, Zilch::Events::TypeParsed, &EngineLibraryExtensions::TypeParsedCallback);
-  EventConnect(&project, Zilch::Events::PostSyntaxer, &ZilchShaderGenerator::OnFragmentProjectPostSyntaxer);
+  // Adds the component getters for the fragment types.
+  forRange (BoundType* boundType, builder.BoundTypes.Values())
+  {
+    AttributeStatus status;
+    AttributeExtensions::GetInstance()->ProcessType(status, boundType, nullptr);
+    if (status.Failed())
+      ZPrint(status.Message.c_str());
+    MetaLibraryExtensions::ProcessComponent(builder, boundType);
+  }
 
-  String wrapperProjectName = BuildString(fragmentsLibrary->mZilchLibrary->Name, "Wrapper");
-  return project.Compile(wrapperProjectName, module, EvaluationMode::Project);
+  return builder.CreateLibrary();
 }
 
 //**************************************************************************************************
@@ -694,7 +731,10 @@ void ZilchShaderGenerator::OnZilchFragmentTypeParsed(Zilch::ParseEvent* event)
   // There are a lot of attributes in zilch fragments that aren't valid for zilch script.
   // Because of this, we want to ignore invalid attributes here and let the fragment compilation
   // catch them
-  AttributeExtensions::GetInstance()->ProcessType(event->Type, event->BuildingProject, true);
+  AttributeStatus status;
+  AttributeExtensions::GetInstance()->ProcessType(status, event->Type, true);
+  if (status.Failed())
+    event->BuildingProject->Raise(status.mLocation, ErrorCode::GenericError, status.Message.c_str());
 }
 
 //**************************************************************************************************
@@ -702,12 +742,6 @@ void ZilchShaderGenerator::OnZilchFragmentTranslationError(TranslationErrorEvent
 {
   String fullMessage = event->GetFormattedMessage(Zilch::MessageFormat::Python);
   ZilchFragmentManager::GetInstance()->DispatchScriptError(Events::SyntaxError, event->mShortMessage, fullMessage, event->mLocation);
-}
-
-//**************************************************************************************************
-void ZilchShaderGenerator::OnFragmentProjectPostSyntaxer(ParseEvent* e)
-{
-  MetaLibraryExtensions::AddExtensionsPostCompilation(*e->Builder);
 }
 
 //**************************************************************************************************

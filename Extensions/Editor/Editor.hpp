@@ -91,6 +91,7 @@ public:
   Level* GetStartingLevel();
 
   Widget* ShowConsole();
+  Widget* HideConsole();
   Widget* ToggleConsole();
   Widget* ShowBrowser();
   Widget* ShowBrowser(StringParam url, StringParam tabName);
@@ -111,6 +112,7 @@ public:
   MainWindow* mMainWindow;
 
   Widget* ShowWindow(StringParam name);
+  Widget* HideWindow(StringParam name);
   Window* AddManagedWidget(Widget* widget, DockArea::Enum dockArea, bool visible = true);
 
   void CreateDockableWindow(StringParam windowName, CameraViewport* cameraViewport,
@@ -194,7 +196,7 @@ public:
   void AddResource();
 
   // Add a new resource type of given type
-  void AddResourceType(BoundType* resourceType);
+  void AddResourceType(BoundType* resourceType, ContentLibrary* library = nullptr, StringParam resourceName = "");
 
   // Open a text file if it is a resource it will open as that resource
   virtual DocumentEditor* OpenTextFileAuto(StringParam file) = 0;
@@ -246,6 +248,7 @@ public:
   void SelectPrimary(HandleParam object);
   virtual void OnEngineUpdate(UpdateEvent* event);
   void OnResourcesUnloaded(ResourceEvent* event);
+  void OnMouseFileDrop(MouseFileDropEvent* event);
   void Update();
   void ExecuteCommand(StringParam commandName);
   Composite* OpenSearchWindow(Widget* returnFocus, bool noBorder = false);

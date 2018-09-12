@@ -14,7 +14,7 @@ namespace Audio
   class ListenerNodeData
   {
   public:
-    ListenerNodeData(ListenerWorldPositionInfo& positionInfo);
+    ListenerNodeData();
 
     // Used for interpolating volume when changing active state. 
     InterpolatingObject VolumeInterpolator;
@@ -31,24 +31,13 @@ namespace Audio
   };
 
   //************************************************************************************************
-  ListenerNodeData::ListenerNodeData(ListenerWorldPositionInfo& positionInfo) :
+  ListenerNodeData::ListenerNodeData() :
     InterpolatingVolume(false),
-    PositionWorld(positionInfo.Position),
-    VelocityWorld(positionInfo.Velocity),
-    Deactivating(false)
+    Deactivating(false),
+    PositionWorld(Math::Vec3::cZero),
+    VelocityWorld(Math::Vec3::cZero)
   {
-    Math::Vec3 right = positionInfo.ForwardDirection.Cross(positionInfo.UpDirection);
-
-    positionInfo.ForwardDirection.Normalize();
-    right.Normalize();
-    positionInfo.UpDirection.Normalize();
-
-    Math::Mat3 orientation;
-    orientation.SetBasis(0, positionInfo.ForwardDirection);
-    orientation.SetBasis(1, positionInfo.UpDirection);
-    orientation.SetBasis(2, -right);
-
-    WorldToLocal = orientation.Inverted();
+    WorldToLocal.ZeroOut();
   }
 
   //---------------------------------------------------------------------------------- Listener Node
@@ -64,7 +53,10 @@ namespace Audio
     if (!Threaded)
       SetSiblingNodes(new ListenerNode(name, ID, positionInfo, nullptr, true));
     else
-      ThreadedData = new ListenerNodeData(positionInfo);
+    {
+      ThreadedData = new ListenerNodeData();
+      SetPositionData(positionInfo);
+  }
   }
 
   //************************************************************************************************
@@ -158,18 +150,13 @@ namespace Audio
       ThreadedData->PositionWorld = positionInfo.Position;
       ThreadedData->VelocityWorld = positionInfo.Velocity;
 
-      Math::Vec3 right = positionInfo.ForwardDirection.Cross(positionInfo.UpDirection);
+      Math::Vec3 bx = positionInfo.WorldMatrix.BasisX().Normalized();
+      Math::Vec3 by = positionInfo.WorldMatrix.BasisY().Normalized();
+      Math::Vec3 bz = positionInfo.WorldMatrix.BasisZ().Normalized();
 
-      positionInfo.ForwardDirection.Normalize();
-      right.Normalize();
-      positionInfo.UpDirection.Normalize();
-
-      Math::Mat3 orientation;
-      orientation.SetBasis(0, positionInfo.ForwardDirection);
-      orientation.SetBasis(1, positionInfo.UpDirection);
-      orientation.SetBasis(2, -right);
-
-      ThreadedData->WorldToLocal = orientation.Inverted();
+      ThreadedData->WorldToLocal = Math::Mat3(bz.x, bz.y, bz.z,
+                                              by.x, by.y, by.z,
+                                              -bx.x, -bx.y, -bx.z);
     }
   }
 
@@ -190,7 +177,7 @@ namespace Audio
         ThreadedData->Deactivating = true;
         ThreadedData->InterpolatingVolume = true;
         ThreadedData->VolumeInterpolator.SetValues(ThreadedData->VolumeInterpolator.GetCurrentValue(),
-          0.0f, cPropertyChangeFrames);
+          0.0f, PropertyChangeFrames);
       }
       // If currently not active and setting to active
       else if ((!Active || ThreadedData->Deactivating) && active)
@@ -199,7 +186,7 @@ namespace Audio
         Active = true;
         ThreadedData->InterpolatingVolume = true;
         ThreadedData->VolumeInterpolator.SetValues(ThreadedData->VolumeInterpolator.GetCurrentValue(),
-          1.0f, cPropertyChangeFrames);
+          1.0f, PropertyChangeFrames);
       }
     }
   }

@@ -9,7 +9,8 @@ set(platformSpecificSource)
 # get the rc file so we get icons on windows builds
 if (${platform} STREQUAL "Windows")
     set(platformSpecificSource
-        ${CMAKE_CURRENT_LIST_DIR}/../../Win32Shared/ZeroEditor.rc
+    ${zero_platform_data}/ZeroLauncher/ZeroLauncher.rc
+    ${zero_platform_data}/ZeroLauncher/Resource.h
     )
 endif()
 

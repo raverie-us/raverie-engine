@@ -58,7 +58,6 @@ target_include_directories(AudioEngine
         ${CurrentDirectory}/AudioEngine 
         ${CurrentDirectory}
         ${ParentDirectory}
-        ${OpusHeaders}
 )
 target_include_directories(Common
     PUBLIC 
@@ -93,8 +92,6 @@ target_include_directories(SpatialPartition
 target_include_directories(Support
     PUBLIC
         ${CurrentDirectory}/Support
-        ${ZLibHeaders}
-        ${LibpngHeaders}
         ${CurrentDirectory}
 )
 target_include_directories(Zilch
@@ -183,6 +180,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         CONFIGS ${supported_configs}
         BASEPATH ${zero_build_out}
         PLATFORM ${platform}
+        CONFIG ${configuration}
         BITS ${bit}
         TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET}
         PRECOMPILED_HEADER_NAME "Precompiled.hpp"
@@ -195,6 +193,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         CONFIGS ${supported_configs}
         BASEPATH ${zero_build_out}
         PLATFORM ${platform}
+        CONFIG ${configuration}
         BITS ${bit}
         TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET}
         PRECOMPILED_HEADER_NAME "Precompiled.h"
@@ -206,6 +205,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         CONFIGS ${supported_configs}
         BASEPATH ${zero_build_out}
         PLATFORM ${platform}
+        CONFIG ${configuration}
         BITS ${bit}
         TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET}
         PRECOMPILED_HEADER_NAME "Zilch.hpp"

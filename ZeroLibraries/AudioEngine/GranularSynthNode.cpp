@@ -483,15 +483,15 @@ namespace Audio
       mSampleChannels = asset->GetChannels();
 
       // Translate the start and stop times to frame numbers
-      int start = Math::Max((int)(startTime * cSystemSampleRate), 0);
-      int stop = Math::Min((int)(stopTime * cSystemSampleRate),
+      int start = Math::Max((int)(startTime * SystemSampleRate), 0);
+      int stop = Math::Min((int)(stopTime * SystemSampleRate),
         (int)asset->GetNumberOfFrames());
       if (stop == 0)
         stop = (int)asset->GetNumberOfFrames();
 
       // Get the audio samples from the asset
       Samples.Clear();
-      asset->AppendSamples(&Samples, start, (stop - start) * mSampleChannels);
+      asset->AppendSamples(&Samples, start, (stop - start) * mSampleChannels, NodeID);
 
       ValidateLengths();
     }
@@ -655,12 +655,7 @@ namespace Audio
   void GranularSynthNode::SetGrainPanningValue(float panValue)
   {
     if (!Threaded)
-    {
-      panValue = Math::Max(panValue, -1.0f);
-      panValue = Math::Min(panValue, 1.0f);
-
       AddTaskForSibling(&GranularSynthNode::SetGrainPanningValue, panValue);
-    }
 
     mGrainPanningValue = panValue;
   }

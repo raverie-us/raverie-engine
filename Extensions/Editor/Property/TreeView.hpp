@@ -20,6 +20,7 @@ class KeyboardEvent;
 class ValueEditor;
 class TreeView;
 class TreeRow;
+class ColumnHeader;
 class Spacer;
 class UpdateEvent;
 class Label;
@@ -133,6 +134,8 @@ namespace Events
   DeclareEvent(TreeKeyPress);
   DeclareEvent(MouseEnterRow);
   DeclareEvent(MouseExitRow);
+  // Sent when a TreeView has created new ColumnHeader.
+  DeclareEvent(TreeViewHeaderAdded);
 }
 
 /// Tree Event Contains what row was affected.
@@ -141,6 +144,17 @@ class TreeEvent : public Event
 public:
   ZilchDeclareType(TreeEvent, TypeCopyMode::ReferenceType);
   TreeRow* Row;
+};
+
+/// A new ColumnHeader was constructed.
+class TreeViewHeaderAddedEvent : public Event
+{
+  ZilchDeclareType(TreeViewHeaderAddedEvent, TypeCopyMode::ReferenceType);
+
+  TreeViewHeaderAddedEvent(uint headerIndex, ColumnHeader* newHeader);
+
+  uint mHeaderIndex;
+  ColumnHeader* mNewHeader;
 };
 
 //--------------------------------------------------------------------- Tree Row

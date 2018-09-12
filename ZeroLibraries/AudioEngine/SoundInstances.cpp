@@ -12,13 +12,14 @@ namespace Audio
   //------------------------------------------------------------------------------ Cross Fade Object
 
   //************************************************************************************************
-  AudioFadeObject::AudioFadeObject() :
+  AudioFadeObject::AudioFadeObject(unsigned instanceID) :
     mFading(false),
     mFrameIndex(0),
     mStartFrame(0),
-    mDefaultFrames(cPropertyChangeFrames),
+    mDefaultFrames(PropertyChangeFrames),
     mCrossFade(false),
-    mAsset(nullptr)
+    mAsset(nullptr),
+    mInstanceID(instanceID)
   {
     VolumeInterpolator.SetCurve(CurveTypes::Squared);
   }
@@ -35,10 +36,10 @@ namespace Audio
     VolumeInterpolator.SetValues(startingVolume, 0.0f, fadeFrames);
 
     // We can only get a second of samples at a time (will get the rest later)
-    if (fadeFrames > cSystemSampleRate)
-      fadeFrames = cSystemSampleRate;
+    if (fadeFrames > SystemSampleRate)
+      fadeFrames = SystemSampleRate;
 
-    asset->AppendSamples(&FadeSamples, startingIndex, fadeFrames * asset->GetChannels());
+    asset->AppendSamples(&FadeSamples, startingIndex, fadeFrames * asset->GetChannels(), mInstanceID);
   }
 
   //************************************************************************************************
@@ -86,13 +87,14 @@ namespace Audio
   void AudioFadeObject::GetMoreSamples()
   {
     // Get another second of samples
-    unsigned newFramesToGet = cSystemSampleRate;
+    unsigned newFramesToGet = SystemSampleRate;
     // If this would be more than we need, adjust the amount
     if (mFrameIndex + newFramesToGet > VolumeInterpolator.GetTotalFrames())
       newFramesToGet -= mFrameIndex + newFramesToGet - VolumeInterpolator.GetTotalFrames();
 
     // Add the new samples to the end of the sample array
-    mAsset->AppendSamples(&FadeSamples, mStartFrame + mFrameIndex, newFramesToGet * mAsset->GetChannels());
+    mAsset->AppendSamples(&FadeSamples, mStartFrame + mFrameIndex, 
+      newFramesToGet * mAsset->GetChannels(), mInstanceID);
   }
   
   //---------------------------------------------------------------------- Music Notification Object
@@ -218,6 +220,7 @@ namespace Audio
       SoundAsset* parentAsset, const bool looping, const bool startPaused, 
       ExternalNodeInterface* extInt, const bool isThreaded) :
     SimpleCollapseNode(name, ID, extInt, false, true, isThreaded), 
+    Fade(ID),
     Asset(parentAsset), 
     mVolume(0.8f), 
     mFinished(false), 
@@ -225,9 +228,9 @@ namespace Audio
     mPaused(startPaused), 
     mCurrentTime(0),
     mStartTime(0),
-    mEndTime((float)parentAsset->GetNumberOfFrames() / cSystemSampleRate),
+    mEndTime((float)parentAsset->GetNumberOfFrames() / SystemSampleRate),
     mLoopStartTime(0),
-    mLoopEndTime((float)parentAsset->GetNumberOfFrames() / cSystemSampleRate),
+    mLoopEndTime((float)parentAsset->GetNumberOfFrames() / SystemSampleRate),
     mLoopTailTime(0),
     mCrossFadeTail(false),
     mNotifyTime(0),
@@ -250,19 +253,10 @@ namespace Audio
   {
     if (!Threaded)
     {
-      if (parentAsset->AddReference())
-      {
-        SetSiblingNodes(new SoundInstanceNode(status, name, ID, parentAsset->ThreadedAsset, looping, 
-          startPaused, nullptr, true));
-      }
-      // Couldn't attach to this asset
-      else
-      {
-        status.SetFailed(Zero::String::Format(
-          "Unable to play instance from asset %s. Usually caused by trying to play an already playing streaming file.", 
-          Asset->mName.c_str()));
-        Asset = nullptr;
-      }
+      SetSiblingNodes(new SoundInstanceNode(status, name, ID, parentAsset->ThreadedAsset, looping, 
+        startPaused, nullptr, true));
+
+      Asset->AddReference(NodeID);
     }
     else
     {
@@ -274,11 +268,14 @@ namespace Audio
       {
         InstanceVolumeModifier *volumeMod = GetAvailableVolumeMod();
         if (volumeMod)
-          volumeMod->Reset(0.0f, 1.0f, cPropertyChangeFrames,
-            cPropertyChangeFrames);
+          volumeMod->Reset(0.0f, 1.0f, PropertyChangeFrames,
+            PropertyChangeFrames);
 
         ResetMusicBeats();
       }
+
+      // This needs to be done as a task since this constructor happens on the main thread
+      gAudioSystem->AddTask(Zero::CreateFunctor(&SoundAsset::AddReference, Asset, NodeID));
     }
   }
 
@@ -289,8 +286,8 @@ namespace Audio
     forRange(TagObject* tag, TagList.All())
       tag->RemoveInstanceFromLists(this);
 
-    if (!Threaded && Asset)
-      Asset->ReleaseReference();
+    if (Asset)
+      Asset->ReleaseReference(NodeID);
   }
 
   //************************************************************************************************
@@ -314,12 +311,12 @@ namespace Audio
       {
         mPausing = true;
         mStopFrameCount = 0;
-        mStopFramesToWait = cPropertyChangeFrames + 10;
+        mStopFramesToWait = PropertyChangeFrames + 10;
         InstanceVolumeModifier* mod = GetAvailableVolumeMod();
         if (mod)
         {
-          mod->Reset(1.0f, 0.0f, cPropertyChangeFrames,
-            cPropertyChangeFrames);
+          mod->Reset(1.0f, 0.0f, PropertyChangeFrames,
+            PropertyChangeFrames);
           PausingModifier = mod;
         }
       }
@@ -330,8 +327,8 @@ namespace Audio
         mPausing = false;
         InstanceVolumeModifier* mod = GetAvailableVolumeMod();
         if (mod)
-          mod->Reset(0.0f, 1.0f, cPropertyChangeFrames, 
-            cPropertyChangeFrames);
+          mod->Reset(0.0f, 1.0f, PropertyChangeFrames, 
+            PropertyChangeFrames);
 
         if (mCurrentTime == 0)
           ResetMusicBeats();
@@ -351,11 +348,11 @@ namespace Audio
     {
       mStopping = true;
       mStopFrameCount = 0;
-      mStopFramesToWait = cPropertyChangeFrames + 10;
+      mStopFramesToWait = PropertyChangeFrames + 10;
       InstanceVolumeModifier* mod = GetAvailableVolumeMod();
       if (mod)
-        mod->Reset(1.0f, 0.0f, cPropertyChangeFrames,
-          cPropertyChangeFrames);
+        mod->Reset(1.0f, 0.0f, PropertyChangeFrames,
+          PropertyChangeFrames);
     }
   }
 
@@ -386,14 +383,14 @@ namespace Audio
     if (!Threaded)
     {
       mStartTime = startTime;
-      if (mStartTime < 0.0f || mStartTime * cSystemSampleRate >= Asset->GetNumberOfFrames())
+      if (mStartTime < 0.0f || mStartTime * SystemSampleRate >= Asset->GetNumberOfFrames())
         mStartTime = 0.0f;
 
       AddTaskForSibling(&SoundInstanceNode::SetStartTime, mStartTime);
     }
     else
     {
-      mStartFrame = (unsigned)(startTime * cSystemSampleRate);
+      mStartFrame = (unsigned)(startTime * SystemSampleRate);
 
       if (mFrameIndex < mStartFrame)
         mFrameIndex = mStartFrame;
@@ -414,14 +411,14 @@ namespace Audio
       mEndTime = endTime;
 
       // If the end time is at zero or past the end of the file, set it to the length of the file
-      if (mEndTime <= 0.0f || mEndTime * cSystemSampleRate >= Asset->GetNumberOfFrames())
-        mEndTime = (float)Asset->GetNumberOfFrames() / (float)cSystemSampleRate;
+      if (mEndTime <= 0.0f || mEndTime * SystemSampleRate >= Asset->GetNumberOfFrames())
+        mEndTime = (float)Asset->GetNumberOfFrames() / (float)SystemSampleRate;
 
       AddTaskForSibling(&SoundInstanceNode::SetEndTime, mEndTime);
     }
     else
     {
-      mEndFrame = (unsigned)(endTime * cSystemSampleRate);
+      mEndFrame = (unsigned)(endTime * SystemSampleRate);
       if (mEndFrame >= Asset->GetNumberOfFrames())
         mEndFrame = Asset->GetNumberOfFrames() - 1;
     }
@@ -439,7 +436,7 @@ namespace Audio
     if (!Threaded)
     {
       mLoopStartTime = time;
-      if (mLoopStartTime < 0.0f || mLoopStartTime * cSystemSampleRate 
+      if (mLoopStartTime < 0.0f || mLoopStartTime * SystemSampleRate 
           >= Asset->GetNumberOfFrames())
         mLoopStartTime = 0.0f;
 
@@ -447,7 +444,7 @@ namespace Audio
     }
     else
     {
-      mLoopStartFrame = (unsigned)(time *cSystemSampleRate);
+      mLoopStartFrame = (unsigned)(time *SystemSampleRate);
     }
   }
 
@@ -465,14 +462,14 @@ namespace Audio
       mLoopEndTime = time;
 
       // If the end time is at zero or past the end of the file, set it to the length of the file
-      if (mLoopEndTime <= 0.0f || mLoopEndTime * cSystemSampleRate >= Asset->GetNumberOfFrames())
-        mLoopEndTime = (float)Asset->GetNumberOfFrames() / (float)cSystemSampleRate;
+      if (mLoopEndTime <= 0.0f || mLoopEndTime * SystemSampleRate >= Asset->GetNumberOfFrames())
+        mLoopEndTime = (float)Asset->GetNumberOfFrames() / (float)SystemSampleRate;
 
       AddTaskForSibling(&SoundInstanceNode::SetLoopEndTime, mLoopEndTime);
     }
     else
     {
-      mLoopEndFrame = (unsigned)(time * cSystemSampleRate);
+      mLoopEndFrame = (unsigned)(time * SystemSampleRate);
     }
   }
 
@@ -495,7 +492,7 @@ namespace Audio
     }
     else
     {
-      mLoopTailFrames = (unsigned)(time * cSystemSampleRate);
+      mLoopTailFrames = (unsigned)(time * SystemSampleRate);
     }
   }
 
@@ -548,7 +545,7 @@ namespace Audio
           time = 0.02f;
 
         VolumeInterpolator.SetValues(mVolume, newVolume, 
-          (unsigned)(time * cSystemSampleRate));
+          (unsigned)(time * SystemSampleRate));
       }
     }
   }
@@ -609,13 +606,13 @@ namespace Audio
       if (mFrameIndex > mStartFrame)
         Fade.StartFade(mVolume, mFrameIndex, Fade.mDefaultFrames, Asset, true);
 
-      mFrameIndex = (unsigned)(seconds * cSystemSampleRate);
+      mFrameIndex = (unsigned)(seconds * SystemSampleRate);
       if (mFrameIndex > mEndFrame)
         mFrameIndex = mEndFrame;
       else if (mFrameIndex < mStartFrame)
         mFrameIndex = mStartFrame;
 
-      mCurrentTime = mFrameIndex * cSystemTimeIncrement;
+      mCurrentTime = mFrameIndex * SystemTimeIncrement;
       ResetMusicBeats();
     }
   }
@@ -807,7 +804,7 @@ namespace Audio
     if (!SavedSamples.Empty())
     {
       // Find out how many samples need to be copied over
-      unsigned samplesToCopy = Math::Min(SavedSamples.Size(), outputFrames * outputChannels);
+      unsigned samplesToCopy = Math::Min((unsigned)SavedSamples.Size(), outputFrames * outputChannels);
       // Add the saved samples to the end of the buffer
       CopyIntoBuffer(buffer, SavedSamples, 0, samplesToCopy);
       // If there are more saved samples, erase the ones we copied
@@ -850,7 +847,7 @@ namespace Audio
         // Save the number of frames in the first section
         sectionFrames = inputFrames - (mFrameIndex - Math::Min(mLoopEndFrame, mEndFrame));
         // Get the samples from the asset
-        Asset->AppendSamples(&samples, startingFrameIndex, sectionFrames * inputChannels);
+        Asset->AppendSamples(&samples, startingFrameIndex, sectionFrames * inputChannels, NodeID);
       }
 
       // Reset back to the loop start frame
@@ -859,7 +856,7 @@ namespace Audio
       // Save the number of frames in the second section
       sectionFrames = inputFrames - sectionFrames;
       // Get the samples from the asset
-      Asset->AppendSamples(&samples, mFrameIndex, sectionFrames * inputChannels);
+      Asset->AppendSamples(&samples, mFrameIndex, sectionFrames * inputChannels, NodeID);
 
       // Move frame index forward
       mFrameIndex += sectionFrames;
@@ -867,10 +864,24 @@ namespace Audio
     // Check if we will reach the end of the audio
     else if (mFrameIndex >= mEndFrame)
     {
-      // Get the available samples
-      if (startingFrameIndex < mEndFrame)
+      // Determine how many frames are available
+      int framesAvailable = mEndFrame - startingFrameIndex;
+
+      // If the end frame is not the end of the asset, fade out
+      if (mEndFrame < Asset->GetNumberOfFrames())
+      {
+        InstanceVolumeModifier* mod = GetAvailableVolumeMod();
+        if (mod)
+          mod->Reset(1.0f, 0.0f, inputFrames, inputFrames);
+
+        // Use the full number of frames regardless of the EndFrame value
+        framesAvailable = inputFrames;
+      }
+
+      // If there are frames available, get them
+      if (framesAvailable > 0)
         Asset->AppendSamples(&samples, startingFrameIndex,
-        (inputFrames - (mFrameIndex - mEndFrame)) * inputChannels);
+        (inputFrames - (mFrameIndex - mEndFrame)) * inputChannels, NodeID);
 
       // Resize the array to full size, setting the rest of the samples to 0
       samples.Resize(inputFrames * inputChannels, 0.0f);
@@ -880,7 +891,7 @@ namespace Audio
     // Otherwise, no need to adjust anything
     else
     {
-      Asset->AppendSamples(&samples, startingFrameIndex, inputFrames * inputChannels);
+      Asset->AppendSamples(&samples, startingFrameIndex, inputFrames * inputChannels, NodeID);
     }
 
     // Apply fading if needed
@@ -957,7 +968,7 @@ namespace Audio
     }
 
     // Advance time and handle music notifications
-    mCurrentTime = mFrameIndex * cSystemTimeIncrement;
+    mCurrentTime = mFrameIndex * SystemTimeIncrement;
     MusicNotifications();
   }
 
@@ -992,12 +1003,12 @@ namespace Audio
 
     // Reset variables
     mFrameIndex = mLoopStartFrame;
-    mCurrentTime = mFrameIndex * cSystemTimeIncrement;
+    mCurrentTime = mFrameIndex * SystemTimeIncrement;
     ResetMusicBeats();
 
     // If streaming, reset to the beginning of the file
     if (Asset->GetStreaming())
-      Asset->ResetStreamingFile();
+      Asset->ResetStreamingFile(NodeID);
   }
 
   //************************************************************************************************
@@ -1030,14 +1041,23 @@ namespace Audio
 
     mFinished = true;
 
-    if (Threaded && GetSiblingNode())
+    if (Threaded)
     {
-      // Send notification that this instance is finished
-      AddTaskForSiblingThreaded(&SoundNode::SendEventToExternalData, AudioEventTypes::InstanceFinished);
+      if (Asset)
+      {
+        Asset->ReleaseReference(NodeID);
+        Asset = nullptr;
+      }
 
-      // Call the non-threaded versions of the clean-up functions
-      AddTaskForSiblingThreaded(&SoundInstanceNode::FinishedCleanUp);
-      AddTaskForSiblingThreaded(&SoundInstanceNode::RemoveFromAllTags);
+      if (GetSiblingNode()) 
+      {
+        // Send notification that this instance is finished
+        AddTaskForSiblingThreaded(&SoundNode::SendEventToExternalData, AudioEventTypes::InstanceFinished);
+
+        // Call the non-threaded versions of the clean-up functions
+        AddTaskForSiblingThreaded(&SoundInstanceNode::FinishedCleanUp);
+        AddTaskForSiblingThreaded(&SoundInstanceNode::RemoveFromAllTags);
+      }
     }
     // If not threaded and no external interface, can delete
     else if (!Threaded && !GetExternalInterface())

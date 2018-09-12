@@ -96,6 +96,7 @@ public:
   VertexAttribute GetAttribute(VertexSemantic::Enum semantic);
   uint GetElementSize(VertexElementType::Enum type);
   void ReadVertexData(byte* vertexData, VertexAttribute& attribute, Vec4& output);
+  void CopyTo(VertexBuffer& target);
 
   template <typename T>
   void WriteData(const T& value);
@@ -165,6 +166,8 @@ public:
 
   // Internal
 
+  void CopyTo(IndexBuffer& target);
+
   Array<uint> mData;
   uint mIndexSize;
   bool mGenerated;
@@ -178,6 +181,9 @@ public:
 
   /// Makes an anonymous Mesh resource that can be defined by script and uploaded to the gpu.
   static HandleOf<Mesh> CreateRuntime();
+  /// Creates a clone of this Mesh. As a clone is expected to be modified,
+  /// an upload function must be called before this mesh can be used.
+  HandleOf<Mesh> RuntimeClone();
 
   Mesh();
 

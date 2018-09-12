@@ -51,8 +51,6 @@ set(zero_core_path ${CMAKE_CURRENT_SOURCE_DIR})
 message("CorePath: ${zero_core_path}\n")
 set(zero_build_out ${zero_core_path}/BuildOutput)
 set(supported_configs $<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>)
-set(zero_library_dir ${zero_build_out}/Out/${supported_configs})
-set(zero_binary_dir ${zero_build_out}/Out/${supported_configs})
 set(zero_intermediates_dir ${zero_build_out}/Int/${supported_configs})
 set(zero_unit_test_dir ${zero_core_path}/UnitTests)
 
@@ -62,7 +60,15 @@ set(zero_unit_test_dir ${zero_core_path}/UnitTests)
 ################################################################################
 option(generate_with_unit_tests "If set to 'ON', project will be generated with the unit tests included." OFF)
 
+################################################################################
+# Define any platform options
+################################################################################
 include(${cmake_include_dir}/Platform_Options.cmake)
+
+set(zero_platform_data ${zero_core_path}/PlatformData/${platform})
+
+set(zero_library_dir ${zero_build_out}/Out/${configuration}/${supported_configs})
+set(zero_binary_dir ${zero_build_out}/Out/${configuration}/${supported_configs})
 
 ################################################################################
 # Path for finding external CMake modules

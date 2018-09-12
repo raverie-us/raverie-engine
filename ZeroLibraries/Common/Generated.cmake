@@ -168,6 +168,7 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Resolution.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Shell.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Shell.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Platform/Socket.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Socket.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/SocketConstants.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/SocketEnums.hpp
@@ -180,6 +181,8 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/Platform/UnicodeUtility.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Utilities.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Utilities.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Platform/WebRequest.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Platform/WebRequest.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Regex/Regex.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Regex/Regex.hpp
     ${CMAKE_CURRENT_LIST_DIR}/StlBinding/Array.hpp
@@ -238,6 +241,8 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/Utility/Standard.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Utility/Status.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Utility/Status.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Utility/Stream.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Utility/Stream.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Utility/TextStream.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Utility/Typedefs.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Utility/UintNType.hpp

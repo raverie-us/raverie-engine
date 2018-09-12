@@ -102,7 +102,7 @@ UndoMetaComposition::UndoMetaComposition(PropertyInterface* propertyInterface,
 }
 
 //******************************************************************************
-void UndoMetaComposition::AddComponent(HandleParam owner, BoundType* typeToAdd, int index, bool ignoreDependencies)
+void UndoMetaComposition::AddComponent(HandleParam owner, BoundType* typeToAdd, int index, bool ignoreDependencies, MetaCreationContext* creationContext)
 {
   QueueAddComponent(mOperationQueue, owner, typeToAdd);
   mPropertyInterface->SendComponentsModifiedOnGrid(owner);

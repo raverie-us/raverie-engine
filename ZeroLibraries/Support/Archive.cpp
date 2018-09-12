@@ -203,7 +203,7 @@ void Archive::AddFileBlock(StringParam relativeName, DataBlock sourceBlock)
 
   // Add the entry
   ArchiveEntry entry;
-  entry.Name = relativeName;
+  entry.Name = relativeName.Replace("\\", "/");
   entry.Full.Data = nullptr;
   entry.Full.Size = sourceBlock.Size;
   entry.Compressed.Size = compressedSize;
@@ -535,6 +535,11 @@ void Archive::ReadZipFileInternal(ArchiveReadFlags::Enum readFlags, Stream& file
       ReadString(file, localFile.Info.FileNameLength, entry.Name);
       ReadString(file, localFile.Info.ExtraFieldLength, extra);
 
+      // We want archives to be consistent, so we always have them use '/' for file systems.
+      // We could choose to use the platform's file separator, however this works for all
+      // platforms and produces consistent behavior.
+      entry.Name = entry.Name.Replace("\\", "/");
+
       entry.Offset = (uint)file.Tell();
       entry.Crc = localFile.Info.Crc;
 
@@ -553,7 +558,7 @@ void Archive::ReadZipFileInternal(ArchiveReadFlags::Enum readFlags, Stream& file
       else
       {
         //Seek past the entry
-        file.Seek(localFile.Info.CompressedSize, FileOrigin::Current);
+        file.Seek(localFile.Info.CompressedSize, SeekOrigin::Current);
       }
     }
     else if(signature == CentralHeader)
@@ -593,7 +598,7 @@ void Archive::Extract(File& file, StringParam name, StringParam destfile)
     {
       Status status;
       byte* buffer = (byte*)zAllocate(entry.Compressed.Size);
-      file.Seek(entry.Offset, FileOrigin::Begin);
+      file.Seek(entry.Offset, SeekOrigin::Begin);
       file.Read(status, buffer, entry.Compressed.Size);
       entry.Compressed.Data = buffer;
       DecompressEntry(entry);
@@ -643,7 +648,7 @@ template<typename Stream>
 void Archive::DecompressEntryInternal(ArchiveEntry& entry, Stream& file)
 {
   // Seek to the start of the entry
-  file.Seek(mFileOriginBegin + entry.Offset, FileOrigin::Begin);
+  file.Seek(mFileOriginBegin + entry.Offset, SeekOrigin::Begin);
 
   // Read the compressed data into a heap allocated block
   byte* buffer = (byte*)zAllocate(entry.Compressed.Size);

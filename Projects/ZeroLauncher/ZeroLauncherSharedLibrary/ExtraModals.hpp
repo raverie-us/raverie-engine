@@ -20,6 +20,7 @@ public:
   ModalBackgroundTaskProgessBar(Composite* parent, StringParam title, BackgroundTask* progressListener = nullptr);
 
   void OnProgressUpdated(BackgroundTaskEvent* e);
+  void OnTaskEnded(BackgroundTaskEvent* e);
   void UpdateProgress(float percentComplete);
 
   Text* mTitle;

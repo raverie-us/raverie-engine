@@ -105,6 +105,7 @@ namespace Zilch
     if (file.CurrentFileSize() == 0)
     {
       status.SetFailed("The plugin file was empty");
+      status.Context = StatusContextEmpty;
       return nullptr;
     }
 
@@ -135,6 +136,7 @@ namespace Zilch
     if (lib->IsValid() == false)
     {
       status.SetFailed("The plugin dynamic/shared library was not a valid library and could not be loaded");
+      status.Context = StatusContextNotValid;
       return nullptr;
     }
 
@@ -143,6 +145,7 @@ namespace Zilch
     if (createPlugin == nullptr)
     {
       status.SetFailed("The 'CreateZilchPlugin' function was not exported within the dll (did you use the ZeroExport macro?)");
+      status.Context = StatusContextNoCreateZilchPlugin;
       return nullptr;
     }
 
@@ -151,6 +154,7 @@ namespace Zilch
     if (plugin == nullptr)
     {
       status.SetFailed("We found the 'CreateZilchPlugin' function and called it, but it returned null so no plugin was created");
+      status.Context = StatusContextNullCreateZilchPlugin;
       return nullptr;
     }
 
@@ -373,6 +377,7 @@ namespace Zilch
     this->TypeToCppName.Insert(ZilchTypeId(EventsClass), NativeName("EventsClass", "const Zilch::EventsClass&", "Zilch::EventsClass"));
     this->TypeToCppName.Insert(ZilchTypeId(FilePathClass), NativeName("FilePathClass", "const Zilch::FilePathClass&", "Zilch::FilePathClass"));
     this->TypeToCppName.Insert(ZilchTypeId(IStreamClass), NativeName("IStreamClass", "const Zilch::IStreamClass&", "Zilch::IStreamClass"));
+    this->TypeToCppName.Insert(ZilchTypeId(FileStreamClass), NativeName("FileStreamClass", "const Zilch::FileStreamClass&", "Zilch::FileStreamClass"));
     this->TypeToCppName.Insert(ZilchTypeId(StringBuilderExtended), NativeName("StringBuilderExtended", "const Zilch::StringBuilderExtended&", "Zilch::StringBuilderExtended"));
     this->TypeToCppName.Insert(ZilchTypeId(StringRangeExtended), NativeName("StringRangeExtended", "const Zilch::StringRangeExtended&", "Zilch::StringRangeExtended"));
     this->TypeToCppName.Insert(ZilchTypeId(StringSplitRangeExtended), NativeName("StringSplitRangeExtended", "const Zilch::StringSplitRangeExtended&", "Zilch::StringSplitRangeExtended"));

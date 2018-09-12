@@ -11,13 +11,16 @@ namespace Zero
 
 //------------------------------------------------------------ Command Filtering
 static const int cNoMatch = INT_MIN;
+static const int cAllowAllMatch = cNoMatch + 1;
+static const int cInvalidUpperMatch = 0;
+static const int cExactMatch = 0;
 
 // Returns priority or cNoMatch if there was no match (higher priority means higher up)
 template<typename RangeType, typename Compare>
 int PartialMatchOnly(RangeType part, RangeType full, Compare compare)
 {
   bool foundAtLeastOneMatch = false;
-  int priority = 0;
+  int priority = cExactMatch;
 
   //Compare the words
   while (!full.Empty())
@@ -41,6 +44,8 @@ int PartialMatchOnly(RangeType part, RangeType full, Compare compare)
 
     if(match)
     {
+      // If 'fullCopy' is empty, and priority == 0,
+      // then priority -= 0 == 0 == cExactMatch.
       priority -= fullCopy.SizeInBytes();
       foundAtLeastOneMatch = true;
       break;
@@ -65,8 +70,9 @@ int PartialMatchOnly(RangeType part, RangeType full, Compare compare)
 template<typename RangeType, typename Compare>
 int PartialMatch(RangeType part, RangeType full, Compare compare)
 {
+  // Everything matches.
   if(part.Empty())
-    return 0;
+    return cAllowAllMatch;
 
   RangeType copyPart = part;
 
@@ -95,7 +101,7 @@ int PartialMatch(RangeType part, RangeType full, Compare compare)
   //If it's all upper case...
   if(allUpper)
   {
-    int upperPriority = 0;
+    int upperPriority = cInvalidUpperMatch;
 
     while(!part.Empty() && !full.Empty())
     {
@@ -108,7 +114,7 @@ int PartialMatch(RangeType part, RangeType full, Compare compare)
         }
         else
         {
-          upperPriority = 0;
+          upperPriority = cInvalidUpperMatch;
           break;
         }
       }
@@ -116,12 +122,19 @@ int PartialMatch(RangeType part, RangeType full, Compare compare)
       full.PopFront();
     }
 
-    if(upperPriority > priority && upperPriority != 0 && part.Empty() == true)
+    // 'upperPriority' will never be negative. If 'upperPriority' is 0, it's invalid.
+    if(upperPriority > priority && upperPriority != cInvalidUpperMatch && part.Empty() == true)
     {
-      priority = upperPriority;
+      // If both 'full' and 'part' are equally empty, then they are an exact match.
+      if(full.Empty())
+        priority = cExactMatch;
+      else
+        priority = upperPriority;
     }
   }
 
+  // 'priority' will never be positive.  If 'priority' is 0, regardless of all upper,
+  // then an exact match has been found.
   return priority;
 }
 

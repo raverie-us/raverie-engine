@@ -27,7 +27,6 @@ ZilchDefineType(CogInitializer, builder, type)
   ZilchBindGetterProperty(GameSession);
   ZilchBindMethod(DispatchEvent);
   ZeroBindEvent(Events::AllObjectsInitialized, CogInitializerEvent);
-  type->HandleManager = ZilchManagerId(PointerManager);
 }
 
 CogInitializer::CogInitializer(Zero::Space* space, Zero::GameSession* gameSession)

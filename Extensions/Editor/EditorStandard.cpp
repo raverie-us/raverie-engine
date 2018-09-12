@@ -14,6 +14,7 @@ ZilchDefineEnum(GizmoGrab);
 ZilchDefineEnum(GizmoBasis);
 ZilchDefineEnum(GizmoPivot);
 ZilchDefineEnum(UpdateMode);
+ZilchDefineEnum(IncludeMode);
 ZilchDefineEnum(GizmoDragMode);
 ZilchDefineEnum(GizmoGrabMode);
 ZilchDefineEnum(GizmoSnapMode);
@@ -58,6 +59,7 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeEnum(GizmoBasis);
   ZilchInitializeEnum(GizmoPivot);
   ZilchInitializeEnum(UpdateMode);
+  ZilchInitializeEnum(IncludeMode);
   ZilchInitializeEnum(GizmoDragMode);
   ZilchInitializeEnum(GizmoGrabMode);
   ZilchInitializeEnum(GizmoSnapMode);
@@ -84,26 +86,39 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeEnum(ImportFrames);
 
   // Events
+  ZilchInitializeType(LauncherCommunicationEvent);
   ZilchInitializeType(BackgroundTaskEvent);
-  ZilchInitializeType(ToolGizmoEvent);
-  ZilchInitializeType(ManipulatorToolEvent);
+  ZilchInitializeType(EditorEvent);
+  ZilchInitializeType(MetaDropEvent);
+  ZilchInitializeType(PostAddResourceEvent);
   ZilchInitializeType(TreeEvent);
+  ZilchInitializeType(TreeViewHeaderAddedEvent);
   ZilchInitializeType(ValueEvent);
   ZilchInitializeType(ContextMenuEvent);
   ZilchInitializeType(TileViewEvent);
   ZilchInitializeType(CurveEvent);
+  ZilchInitializeType(TextUpdatedEvent);
   ZilchInitializeType(ConsoleTextEvent);
+  ZilchInitializeType(MessageBoxEvent);
   ZilchInitializeType(ColorEvent);
   ZilchInitializeType(TextEditorEvent);
   ZilchInitializeType(ObjectPollEvent);
+  ZilchInitializeType(GizmoEvent);
+  ZilchInitializeType(GizmoUpdateEvent);
   ZilchInitializeType(GizmoRayTestEvent);
-  ZilchInitializeType(MessageBoxEvent);
-  ZilchInitializeType(BugReporter);
-  ZilchInitializeType(BugReporterResponse);
+  ZilchInitializeType(RingGizmoEvent);
+  ZilchInitializeType(TranslateGizmoUpdateEvent);
+  ZilchInitializeType(ScaleGizmoUpdateEvent);
+  ZilchInitializeType(RotateGizmoUpdateEvent);
+  ZilchInitializeType(ObjectTransformGizmoEvent);
+  ZilchInitializeType(RotationBasisGizmoAabbQueryEvent);
+  ZilchInitializeType(ToolGizmoEvent);
+  ZilchInitializeType(ManipulatorToolEvent);
+  ZilchInitializeType(SelectToolFrustumEvent);
 
+  ZilchInitializeType(BugReporter);
   ZilchInitializeType(MetaPropertyEditor);
   ZilchInitializeType(MetaCompositionWrapper);
-
   ZilchInitializeType(BackgroundTasks);
   ZilchInitializeType(StressTest);
   ZilchInitializeType(GeneralSearchView);
@@ -125,12 +140,10 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeType(FormattedInPlaceText);
   ZilchInitializeType(InPlaceTextEditor);
   ZilchInitializeType(ValueEditorFactory);
-  ZilchInitializeType(LauncherCommunicationEvent);
   ZilchInitializeType(PreviewWidget);
   ZilchInitializeType(PreviewWidgetFactory);
   ZilchInitializeType(TileViewWidget);
   ZilchInitializeType(TileView);
-  ZilchInitializeType(TextUpdatedEvent);
   ZilchInitializeType(ItemList);
   ZilchInitializeType(WeightedComposite);
   ZilchInitializeType(ItemGroup);
@@ -141,7 +154,6 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeType(ContentPackage);
 
   // Editor Core
-  ZilchInitializeType(EditorEvent);
   ZilchInitializeType(Editor);
   ZilchInitializeType(EditorMain);
   ZilchInitializeType(LauncherOpenProjectComposite);
@@ -160,23 +172,16 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeType(EditorViewport);
 
   // Gizmos
-  ZilchInitializeType(GizmoEvent);
   ZilchInitializeType(Gizmo);
   ZilchInitializeType(GizmoSpace);
-  ZilchInitializeType(GizmoUpdateEvent);
   ZilchInitializeType(GizmoDrag);
   ZilchInitializeType(SimpleGizmoBase);
   ZilchInitializeType(SquareGizmo);
   ZilchInitializeType(ArrowGizmo);
-  ZilchInitializeType(RingGizmoEvent);
   ZilchInitializeType(RingGizmo);
-  ZilchInitializeType(TranslateGizmoUpdateEvent);
-  ZilchInitializeType(ScaleGizmoUpdateEvent);
-  ZilchInitializeType(RotateGizmoUpdateEvent);
   ZilchInitializeType(TranslateGizmo);
   ZilchInitializeType(ScaleGizmo);
   ZilchInitializeType(RotateGizmo);
-  ZilchInitializeType(ObjectTransformGizmoEvent);
   ZilchInitializeType(ObjectTransformGizmo);
   ZilchInitializeType(ObjectTranslateGizmo);
   ZilchInitializeType(ObjectScaleGizmo);
@@ -186,7 +191,6 @@ ZilchDefineStaticLibrary(EditorLibrary)
   //ZilchInitializeType(SizerGizmo);
   ZilchInitializeType(RotationBasisGizmoMetaTransform);
   ZilchInitializeType(RotationBasisGizmoInitializationEvent);
-  ZilchInitializeType(RotationBasisGizmoAabbQueryEvent);
   ZilchInitializeType(RotationBasisGizmo);
   ZilchInitializeType(OrientationBasisGizmo);
   ZilchInitializeType(PhysicsCarWheelBasisGizmo);
@@ -210,7 +214,6 @@ ZilchDefineStaticLibrary(EditorLibrary)
 
   // Tools
   ZilchInitializeType(Tool);
-  ZilchInitializeType(SelectToolFrustumEvent);
   ZilchInitializeType(SelectTool);
   ZilchInitializeType(CreationTool);
   ZilchInitializeType(ObjectConnectingTool);
@@ -264,7 +267,6 @@ ZilchDefineStaticLibrary(EditorLibrary)
   // Editor Ui
   ZilchInitializeType(ObjectView);
   ZilchInitializeType(HotKeyEditor);
-  ZilchInitializeType(MetaDropEvent);
   ZilchInitializeType(LibraryView);
   ZilchInitializeType(FloatingComposite);
   ZilchInitializeType(PopUp);
@@ -283,6 +285,7 @@ ZilchDefineStaticLibrary(EditorLibrary)
   ZilchInitializeType(PropertyWidgetObject);
   ZilchInitializeType(AddObjectWidget);
   ZilchInitializeType(UiLegacyToolTip);
+  ZilchInitializeType(RenderGroupHierarchies);
 
   ZilchInitializeType(DirectProperty);
   

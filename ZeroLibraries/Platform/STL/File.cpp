@@ -1,184 +1,209 @@
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ///
-/// \file File.cpp
-/// Implementation of the Os file class.
-/// 
-/// Authors: Chris Peters
-/// Copyright 2010-2011, DigiPen Institute of Technology
+/// Authors: Trevor Sundberg
+/// Copyright 2018, DigiPen Institute of Technology
 ///
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
 namespace Zero
 {
+
+// TODO PLATFORM find and define the max path through C, if not possible move this variable to where it will be possible for other platforms
+const int File::PlatformMaxPath = 1024;
+
 struct FilePrivateData
 {
-  FILE* mHandle;
-  uint mFileSize;
+  FilePrivateData()
+  {
+    mFileData = nullptr;
+  }
+
+  bool IsValidFile()
+  {
+    return mFileData != nullptr;
+  }
+
+  FILE* mFileData;
 };
 
-cstr cBadFileMessage = "The file is missing, not in that location, or is protected.";
-
-uint GetFileSize(FILE* file)
+String FileModeToString(FileMode::Enum fileMode)
 {
-  long current = ftell(file);
-  fseek(file, 0L, SEEK_END);
-  uint size = (uint)ftell(file);
-  fseek(file, current, SEEK_SET);
-  return size;
+  if (fileMode == FileMode::Read)
+    return String("rb");
+
+  if (fileMode == FileMode::Write)
+    return String("wb");
+
+  if (fileMode == FileMode::Append)
+    return String("ab");
+
+  if (fileMode == FileMode::ReadWrite)
+    return String("r+b");
+
+  return String();
 }
 
-cstr ToFileMode(FileMode::Enum mode)
-{
-  switch(mode)
-  {
-    case FileMode::Read:
-      return "rb";
-
-    case FileMode::Append:
-      return "ab";
-
-    case FileMode::Write:
-      return "wb";
-  
-    case FileMode::ReadWrite:
-      return "r+b";
-  }
-  return "";
-}
-
-//Convert File Relative position to windows constant
-uint ToOrigin(FileOrigin::Enum origin)
-{
-  switch(origin)
-  {
-  case FileOrigin::Begin:
-    return SEEK_SET;
-  case FileOrigin::End: 
-    return SEEK_END;
-  case FileOrigin::Current:
-    return SEEK_CUR;
-  }
-  return SEEK_CUR;
-}
-
+//------------------------------------------------------------------------- File
 File::File()
 {
   ZeroConstructPrivateData(FilePrivateData);
-  self->mHandle = NULL;
-}
-
-bool File::Open(StringParam filePath, FileMode::Enum mode, FileAccessPattern::Enum accessPattern, FileShare::Enum share, Status* status)
-{
-  ZeroGetPrivateData(FilePrivateData);
-  cstr fmode = ToFileMode(mode);
-
-  self->mHandle = fopen(filePath.c_str(), fmode);
-  if (self->mHandle == nullptr)
-  {
-    if (status)
-      status->SetFailed(String::Format("Failed to open file '%s'. %s", filePath.c_str(), cBadFileMessage));
-    return false;
-  }
-
-  self->mFileSize = GetFileSize(self->mHandle);
-  mFilePath = filePath;
-
-  if(mode == FileMode::Append)
-    Seek(self->mFileSize);
-  return true;
-}
-
-void File::Open(OsHandle handle, FileMode::Enum mode)
-{
-  // Our OsHandle would be a FILE*.
-  Status status;
-  return Open(status, (FILE*)handle, mode);
-}
-
-void File::Open(Status& status, FILE* file, FileMode::Enum mode)
-{
-  ZeroGetPrivateData(FilePrivateData);
-  self->mHandle = file;
-  self->mFileSize = GetFileSize(self->mHandle);
-}
-
-void File::Close()
-{
-  ZeroGetPrivateData(FilePrivateData);
-  if(self->mHandle != NULL)
-  {
-    fclose(self->mHandle);
-    self->mHandle = NULL;
-  }
-}
-    
-bool File::IsOpen()
-{
-  ZeroGetPrivateData(FilePrivateData);
-  return self->mHandle != NULL;
+  mFileMode = FileMode::Read;
 }
 
 File::~File()
 {
   Close();
-}
-
-FilePosition File::Tell()
-{
-  ZeroGetPrivateData(FilePrivateData);
-  ErrorIf(self->mHandle == NULL, "File handle is not valid.");
-  return ftell(self->mHandle);
+  ZeroDestructPrivateData(FilePrivateData);
 }
 
 size_t File::Size()
 {
-  ZeroGetPrivateData(FilePrivateData);
-  return self->mFileSize;  
+  return (size_t)CurrentFileSize();
 }
 
 long long File::CurrentFileSize()
 {
   ZeroGetPrivateData(FilePrivateData);
-  return GetFileSize(self->mHandle);
+  if (!self->IsValidFile())
+    return 0;
+  
+  auto originalPosition = ftell(self->mFileData);
+  fseek(self->mFileData, 0, SEEK_END);
+  long long size = (long long)ftell(self->mFileData);
+  fseek(self->mFileData, originalPosition, SEEK_SET);
+  return size;
 }
 
-bool File::Seek(FilePosition pos, FileOrigin::Enum origin)
+bool File::Open(StringParam filePath, FileMode::Enum mode, FileAccessPattern::Enum accessPattern, FileShare::Enum share, Status* status)
 {
   ZeroGetPrivateData(FilePrivateData);
-  ErrorIf(self->mHandle == NULL, "File handle is not valid.");
-  int result = fseek(self->mHandle, (long)pos, ToOrigin(origin));
-  // A result of '0' means success
-  return (result == 0);
+  
+  String fileMode = FileModeToString(mode);
+  self->mFileData = fopen(filePath.c_str(), fileMode.c_str());
+
+  if (self->mFileData == nullptr)
+  {
+    Warn("Failed to open file '%s'.", filePath.c_str());
+    return false;
+  }
+  
+  if (mode != FileMode::Read)
+    FileModifiedState::BeginFileModified(mFilePath);
+
+  return true;
+}
+
+void File::Open(OsHandle handle, FileMode::Enum mode)
+{
+  Error("STL does not support opening files via OSHandles");
+}
+
+void File::Open(Status& status, FILE* file, FileMode::Enum mode)
+{
+  ZeroGetPrivateData(FilePrivateData);
+  self->mFileData = file;
+
+  if (self->mFileData == nullptr)
+  {
+    status.SetFailed("Failed to open file");
+    return;
+  }
+
+  mFileMode = mode;
+}
+
+bool File::IsOpen()
+{
+  ZeroGetPrivateData(FilePrivateData);
+  return self->mFileData != nullptr;
+}
+
+void File::Close()
+{
+  ZeroGetPrivateData(FilePrivateData);
+  if (self->mFileData)
+  {
+    fclose(self->mFileData);
+    self->mFileData = nullptr;
+    
+    // Must come after closing the file because it may need access to the modified date.
+    if (mFileMode != FileMode::Read)
+      FileModifiedState::EndFileModified(mFilePath);
+  }
+}
+
+FilePosition File::Tell()
+{
+  ZeroGetPrivateData(FilePrivateData);
+  if (!self->IsValidFile())
+    return 0;
+
+  return (FilePosition)ftell(self->mFileData);
+}
+
+bool File::Seek(FilePosition pos, SeekOrigin::Enum rel)
+{
+  ZeroGetPrivateData(FilePrivateData);
+  if (!self->IsValidFile())
+    return false;
+  
+  int origin = SEEK_SET;
+  switch (rel)
+  {
+    case SeekOrigin::Begin: origin = SEEK_SET;
+      break;
+    case SeekOrigin::Current: origin = SEEK_CUR;
+      break;
+    case SeekOrigin::End: origin = SEEK_END;
+      break;
+    default: return false;
+  }
+
+  int ret = fseek(self->mFileData, pos, origin);
+  return (ret == 0);
 }
 
 size_t File::Write(byte* data, size_t sizeInBytes)
 {
   ZeroGetPrivateData(FilePrivateData);
-  ErrorIf(self->mHandle == NULL, "File handle is not valid.");
-  return fwrite(data, 1, sizeInBytes, self->mHandle);
+  if (!self->IsValidFile())
+    return 0;
+
+  return fwrite(data, 1, sizeInBytes, self->mFileData);
 }
 
 size_t File::Read(Status& status, byte* data, size_t sizeInBytes)
 {
   ZeroGetPrivateData(FilePrivateData);
-  ErrorIf(self->mHandle == NULL, "File handle is not valid.");
-  size_t amount = fread(data, 1, sizeInBytes, self->mHandle);
-  if (amount != sizeInBytes && ferror(self->mHandle))
-    status.SetFailed("Error reading file data.");
-  return amount;
+  if (!self->IsValidFile())
+  {
+    status.SetFailed("No file was open");
+    return 0;
+  }
+
+  return fread(data, 1, sizeInBytes, self->mFileData);
 }
 
 bool File::HasData(Status& status)
 {
-  return (s64)Tell() < (s64)CurrentFileSize();
+  ZeroGetPrivateData(FilePrivateData);
+  if (!self->IsValidFile())
+  {
+    status.SetFailed("No file was open");
+    return false;
+  }
+
+  return Tell() != CurrentFileSize();
 }
 
 void File::Flush()
 {
   ZeroGetPrivateData(FilePrivateData);
-  ErrorIf(self->mHandle == NULL, "File handle is not valid.");
-  fflush(self->mHandle);
+  if (!self->IsValidFile())
+    return;
+  
+  fflush(self->mFileData);
 }
 
 void File::Duplicate(Status& status, File& destinationFile)
@@ -186,9 +211,9 @@ void File::Duplicate(Status& status, File& destinationFile)
   ZeroGetPrivateData(FilePrivateData);
   ZeroGetObjectPrivateData(FilePrivateData, &destinationFile, other);
 
-  if (!self->mHandle || !other->mHandle)
+  if (!self->IsValidFile() || !other->IsValidFile())
   {
-    status.SetFailed("File is not valid. Open a valid file before attemping file operations.");
+    status.SetFailed("File is not valid. Open a valid file before attempting file operations.");
     return;
   }
 

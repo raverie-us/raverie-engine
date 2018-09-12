@@ -182,7 +182,8 @@ void EditAnimation(Editor* editor, Resource* resource)
   Archetype* previewArchetype = GetAnimationPreviewArchetype(animation);
   if(previewArchetype == nullptr)
   {
-    DoNotifyWarning("Cannot Edit Resource", "No Preview Archetype is set on the Animation.");
+    editor->GetSelection()->SelectOnly(resource);
+    editor->GetSelection()->FinalSelectionChanged();
     return;
   }
 
@@ -201,6 +202,7 @@ void EditAnimation(Editor* editor, Resource* resource)
   // Create the animation preview object and select it
   Cog* cog = CreateAnimationPreview(space, animation, previewArchetype);
   editor->GetSelection()->SelectOnly(cog);
+  editor->GetSelection()->FinalSelectionChanged();
 
   // Clear the undo queue
   editor->mQueue->ClearAll();

@@ -34,42 +34,60 @@ EmscriptenExportTarget::EmscriptenExportTarget(Exporter* exporter, String target
 
 void EmscriptenExportTarget::ExportApplication()
 {
-  SendBlockingTaskStart("Exporting for Web");
-
   {
     TimerBlock block("Exported Project");
     String outputDirectory = FilePath::Combine(GetTemporaryDirectory(), "Web", "ZeroExport");
 
-    mExporter->CopyContent(outputDirectory, this);
+    Status status;
+    mExporter->CopyContent(status, outputDirectory, this);
+    if (status.Failed())
+    {
+      DoNotifyWarning("Web Build", status.Message);
+      return;
+    }
 
     // Archive the content to create a zip file that will be the virtual file system
     // on the web
-    Status status;
     Archive virtualFileSystem(ArchiveMode::Compressing);
     virtualFileSystem.ArchiveDirectory(status, outputDirectory);
 
     if (status.Failed())
     {
-      DoNotifyError("Web export failed %s\n", status.Message);
-      SendBlockingTaskFinish();
+      DoNotifyError("Web Build", status.Message);
       return;
     }
 
     // TODO: Select web build version and copy out that version for export
     // Copy the web build of Zero Engine to the the specified export folder location
-    // Update this string to your webbuild location for testing.
-    String webBuildPath = FilePath::Combine(GetWorkingDirectory(), "WebBuild");
+    // Update this string to your web-build location for testing.
+    Cog* configCog = Z::gEngine->GetConfigCog();
+    ReturnIf(!configCog,, "Unable to get the config cog");
+    MainConfig* mainConfig = configCog->has(MainConfig);
+    ReturnIf(!mainConfig,, "Unable to get the MainConfig on the config cog");
+    String webBuildPath = FilePath::Combine(mainConfig->DataDirectory, "WebBuild");
+
+    if (!DirectoryExists(webBuildPath))
+    {
+      DoNotifyError("Web Build", "The WebBuild directory does not exist inside the Data directory.");
+      return;
+    }
+
     FileRange webBuildFiles(webBuildPath);
 
     while (!webBuildFiles.Empty())
     {
       FileEntry entry = webBuildFiles.FrontEntry();
-      CopyFile(FilePath::Combine(mExporter->mOutputDirectory, entry.mFileName), entry.GetFullPath());
+      String targetFile = FilePath::Combine(mExporter->mOutputDirectory, entry.mFileName);
+      if (FileExists(targetFile))
+        DeleteFile(targetFile);
+      CopyFile(targetFile, entry.GetFullPath());
       webBuildFiles.PopFront();
     }
 
     // ZeroEditor.data is the name that the web build expects the virtual file system to be
     String zipOut = FilePath::Combine(mExporter->mOutputDirectory, "ZeroEditor.data");
+    if (FileExists(zipOut))
+      DeleteFile(zipOut);
     virtualFileSystem.WriteZipFile(zipOut);
 
     // Get the size of the achieved content folder and set the file size in
@@ -79,27 +97,13 @@ void EmscriptenExportTarget::ExportApplication()
     // Open the ZeroEditor.js file and search for information we need to update
     File zeroJsFile;
     String zeroJsFilepath = FilePath::Combine(webBuildPath, "ZeroEditor.js");
-    zeroJsFile.Open(zeroJsFilepath, FileMode::Read, FileAccessPattern::Sequential);
+    String fileContent = ReadFileIntoString(zeroJsFilepath);
 
-    // Get the filesize and create a buffer to read the text into
-    size_t filesize = zeroJsFile.Size();
-    byte* buffer = new byte[filesize];
-
-    // Read the file into the buffer
-    zeroJsFile.Read(status, buffer, filesize);
-    zeroJsFile.Close();
-
-    if (status.Failed())
+    if (fileContent.Empty())
     {
-      DoNotifyWarning("File Read Error", "Failed to read ZeroEditor.js, aborting export");
-      // cleanup the buffer
-      delete buffer;
+      DoNotifyWarning("Web Build", "Failed to read ZeroEditor.js, aborting export");
       return;
     }
-
-    // Create a string with the files contents
-    String fileContent((char*)buffer, filesize);
-    delete buffer;
 
     // Find the text to replace
     StringRange end = fileContent.FindFirstOf("\"end\": ");
@@ -119,12 +123,16 @@ void EmscriptenExportTarget::ExportApplication()
     // Write out the updated ZeroEditor.js file contents to our export location
     String outputZeroJsFile = zeroJsBuilder.ToString();
     File outputFile;
-    outputFile.Open(FilePath::Combine(mExporter->mOutputDirectory, "ZeroEditor.js"), FileMode::Write, FileAccessPattern::Sequential);
+    String zeroEditorJsPath = FilePath::Combine(mExporter->mOutputDirectory, "ZeroEditor.js");
+    outputFile.Open(zeroEditorJsPath, FileMode::Write, FileAccessPattern::Sequential, FileShare::Unspecified, &status);
+    if (status.Failed())
+    {
+      DoNotifyWarning("File Write Error", "Failed to write ZeroEditor.js, aborting export");
+      return;
+    }
+
     outputFile.Write((byte*)outputZeroJsFile.Data(), outputZeroJsFile.SizeInBytes());
     outputFile.Close();
-
-    // Fin?
-    SendBlockingTaskFinish();
   }
   
   DoNotify("Exported", "Project has been exported for the Web.", "Disk");

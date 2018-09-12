@@ -75,17 +75,19 @@ DeclareEnum3(IndexElementType,
   Ushort,
   Uint);
 
+#pragma pack(push, 1)
 class VertexAttribute
 {
 public:
   VertexAttribute() {};
   VertexAttribute(VertexSemantic::Enum semantic, VertexElementType::Enum type, byte count, byte offset);
 
-  VertexSemantic::Enum mSemantic : 8;
-  VertexElementType::Enum mType : 8;
+  ByteEnum<VertexSemantic::Enum> mSemantic;
+  ByteEnum<VertexElementType::Enum> mType;
   byte mCount;
   byte mOffset;
 };
+#pragma pack(pop)
 
 class MeshBone
 {

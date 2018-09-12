@@ -100,11 +100,13 @@ PropertyWidgetObject::PropertyWidgetObject(PropertyWidgetInitializer& initialize
   {
     mLocalModificationIcon = CreateAttached<Element>("ObjectLocallyRemoved");
     mLocalModificationIcon->SizeToContents();
+    mLocalModificationIcon->SetInteractive(false);
   }
   else if(mLocallyAdded && mParentWidgetObject)
   {
     mLocalModificationIcon = CreateAttached<Element>("ObjectLocallyAdded");
     mLocalModificationIcon->SizeToContents();
+    mLocalModificationIcon->SetInteractive(false);
   }
 
   // If we're a removable object, add an 'X' button to remove us
@@ -254,6 +256,9 @@ void PropertyWidgetObject::OnMouseExitX(MouseEvent* e)
 //******************************************************************************
 void BuildPath(ObjectPropertyNode* node, Handle& rootInstance, PropertyPath& path)
 {
+  if (node->mObject.StoredType == nullptr)
+    return;
+
   if(node->mParent)
   {
     BuildPath(node->mParent, rootInstance, path);
@@ -735,16 +740,10 @@ void PropertyWidgetObject::OpenNode(bool animate)
   // Add the 'Add Object' widget if we're of a composite type, and we have addable types
   bool canAdd = false;
 
-  if(MetaComposition* composition = mComposition)
-  {
-    Array<BoundType*> types;
-    composition->Enumerate(types, EnumerateAction::AllAddableToObject, instance);
-    canAdd = (types.Empty() == false);
-  }
-  else if(MetaArray* metaArray = mMetaArray)
-  {
+  if (MetaComposition* composition = mComposition)
+    canAdd = composition->mSupportsComponentAddition;
+  else if (mMetaArray)
     canAdd = true;
-  }
 
   if(canAdd)
   {
@@ -822,6 +821,9 @@ void PropertyWidgetObject::AnimateRemoveSelf()
     DoNotifyWarning("Can't remove component", "No object selected. Cannot remove component.");
     return;
   }
+  // Verify the parent composition isn't null (happens on arrays right now)
+  if(mParentComposition.IsNull())
+    return;
 
   Handle parentInstance = mParentWidgetObject->mNode->mObject;
   Handle selfInstance = mNode->mObject;
@@ -856,6 +858,9 @@ void PropertyWidgetObject::AnimateRemoveSelf()
 //******************************************************************************
 void PropertyWidgetObject::OnViewDoc(ObjectEvent* event)
 {
+  if (mNode->mObject.StoredType == nullptr)
+    return;
+
   // View Doc
   TypeEvent e(mNode->mObject.StoredType);
   mGrid->DispatchEvent(Events::NameActivated, &e);
@@ -864,6 +869,9 @@ void PropertyWidgetObject::OnViewDoc(ObjectEvent* event)
 //******************************************************************************
 void PropertyWidgetObject::OnViewOnlineDocs(ObjectEvent* event)
 {
+  if (mNode->mObject.StoredType == nullptr)
+    return;
+
   // View Website with Search pre-filled
   // Set up Text
   static const String prefix = "https://docsapi.zeroengine.io/?";
@@ -1435,6 +1443,9 @@ uint PropertyWidgetObject::GetComponentIndex()
 //******************************************************************************
 String PropertyWidgetObject::GetExpandId()
 {
+  if (mNode->mObject.StoredType == nullptr)
+    return String();
+
   String typeName = mNode->mObject.StoredType->Name;
   if(mNode->IsPropertyGroup())
     return BuildString(typeName, ".", mNode->mPropertyGroupName);
@@ -1444,6 +1455,9 @@ String PropertyWidgetObject::GetExpandId()
 //******************************************************************************
 void PropertyWidgetObject::OnEditScriptPressed(Event* e)
 {
+  if (mNode->mObject.StoredType == nullptr)
+    return;
+
   ResourceId resourceId = mNode->mObject.StoredType->HasInherited<MetaResource>()->mResourceId;
   Resource* resource = Z::gResources->GetResource(resourceId);
   ReturnIf(resource == nullptr, , "Could not find resource to edit");

@@ -194,4 +194,29 @@ public:
   ZilchDeclareType(LauncherProjectInfoProxy, TypeCopyMode::ReferenceType);
 };
 
+class DebugSettings : public Component
+{
+public:
+  ZilchDeclareType(DebugSettings, TypeCopyMode::ReferenceType);
+
+  void Serialize(Serializer& stream) override;
+  void Initialize(CogInitializer& initializer) override;
+
+  /// Maximum number of debug objects allowed at any one time to prevent accidentally running out of memory.
+  int GetMaxDebugObjects();
+  void SetMaxDebugObjects(int maxDebugObjects);
+  int mMaxDebugObjects;
+};
+
+class ExportSettings : public Component
+{
+public:
+  ZilchDeclareType(ExportSettings, TypeCopyMode::ReferenceType);
+
+  void Serialize(Serializer& stream) override;
+
+  //String mOutputDirectory;
+  HashSet<String> mActiveTargets;
+};
+
 }//namespace Zero

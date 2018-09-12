@@ -471,7 +471,7 @@ void GenerateCopyGeometryOutputs(BaseGlslTranslator* translator, ShaderType* com
   }
 }
 
-void WriteGlslMain(BaseGlslTranslator* translator, Zilch::SyntaxNode* node, ShaderFunction* function, ZilchShaderTranslatorContext* context)
+void WriteGlslMain(BaseGlslTranslator* translator, Zilch::SyntaxNode* node, ShaderFunction* function, ZilchShaderTranslatorContext* context, GlslBackendSettings& backendSettings)
 {
   ScopedShaderCodeBuilder mainBuilder(context);
   ShaderType* currentType = context->mCurrentType;
@@ -501,7 +501,7 @@ void WriteGlslMain(BaseGlslTranslator* translator, Zilch::SyntaxNode* node, Shad
   mainFunction->mShaderBodyCode = mainBuilder.ToString();
 }
 
-void GenerateCopyInputs(BaseGlslTranslator* translator, ShaderType* type, ZilchShaderTranslatorContext* context, bool legacyMode)
+void GenerateCopyInputs(BaseGlslTranslator* translator, ShaderType* type, ZilchShaderTranslatorContext* context, GlslBackendSettings& backendSettings)
 {
   NameSettings& settings = translator->mSettings->mNameSettings;
   ShaderDefinitionSettings& shaderSettings = translator->mSettings->mShaderDefinitionSettings;
@@ -509,7 +509,7 @@ void GenerateCopyInputs(BaseGlslTranslator* translator, ShaderType* type, ZilchS
 
   String attributeKeyword = "attribute";
   String varyingKeyword = "varying";
-  if(!legacyMode)
+  if(!backendSettings.mLegacyMode)
     attributeKeyword = varyingKeyword = "in";
 
   ShaderFunction* copyInputsFunction = type->CreateFinalShaderFunction("CopyInputs");
@@ -592,7 +592,7 @@ void GenerateCopyInputs(BaseGlslTranslator* translator, ShaderType* type, ZilchS
   copyInputsFunction->mShaderBodyCode = copyInputsBuilder.ToString();
 }
 
-void GenerateCopyOutputs(BaseGlslTranslator* translator, ShaderType* type, ZilchShaderTranslatorContext* context, bool legacyMode)
+void GenerateCopyOutputs(BaseGlslTranslator* translator, ShaderType* type, ZilchShaderTranslatorContext* context, GlslBackendSettings& backendSettings)
 {
   NameSettings& settings = translator->mSettings->mNameSettings;
   ShaderDefinitionSettings& shaderDefSettings = translator->mSettings->mShaderDefinitionSettings;
@@ -606,7 +606,7 @@ void GenerateCopyOutputs(BaseGlslTranslator* translator, ShaderType* type, Zilch
 
   String varyingKeyword = "varying";
   String renderTargetKeyword = "gl_FragData";
-  if(!legacyMode)
+  if(!backendSettings.mLegacyMode)
   {
     varyingKeyword = "out";
     renderTargetKeyword = "outputs";
@@ -708,6 +708,8 @@ void BaseGlslTranslator::WriteGeometryOutputVariableDeclaration(Zilch::LocalVari
 
 void BaseGlslTranslator::WriteMainForClass(Zilch::SyntaxNode* node, ShaderType* currentType, ShaderFunction* function, ZilchShaderTranslatorContext* context)
 {
+  GlslBackendSettings settings = GetSettings();
+
   if(context->mCurrentType->mFragmentType == FragmentType::Geometry)
   {
     GenerateCopyGeometryInputs(this, currentType, context);
@@ -716,9 +718,9 @@ void BaseGlslTranslator::WriteMainForClass(Zilch::SyntaxNode* node, ShaderType* 
   }
   else
   {
-    GenerateCopyInputs(this, currentType, context, false);
-    GenerateCopyOutputs(this, currentType, context, false);
-    WriteGlslMain(this, node, function, context);
+    GenerateCopyInputs(this, currentType, context, settings);
+    GenerateCopyOutputs(this, currentType, context, settings);
+    WriteGlslMain(this, node, function, context, settings);
   }
 }
 

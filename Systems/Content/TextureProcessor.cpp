@@ -23,26 +23,35 @@ void TextureProcessor::ExtractAndImportTextures(const aiScene* scene)
   for (size_t i = 0; i < numTextures; ++i)
   {
     aiTexture* texture = textures[i];
-    // compressed texture have 0 height, we support pngs only atm
-    if (texture->mHeight == 0 && texture->CheckFormat("png"))
-      CreatePngTexture(texture, i);
+
+    // A height of 0 means the file is stored in memory as its compressed format, e.g. a full png file in memory.
+    if (texture->mHeight != 0)
+    {
+      ZPrint("Geometry Processor: File contains uncompressed texture data (currently unsupported)\n");
+    }
     else
-      ZPrint("Geometry Processor: File contains unsupported non-png format texture: format %s\n", texture->achFormatHint);
+    {
+      String extension = texture->achFormatHint;
+      if (IsSupportedImageLoadExtension(extension))
+      {
+        CreateTexture(texture, i, extension);
+  }
+      else
+      {
+        ZPrint("Geometry Processor: File contains unsupported texture format: %s\n", texture->achFormatHint);
+}
+    }
   }
 }
 
-void TextureProcessor::CreatePngTexture(aiTexture* texture, uint textureIndex)
+void TextureProcessor::CreateTexture(aiTexture* texture, uint textureIndex, StringParam extension)
 {
-  // create the .png file
-  Image pngTexture;
   Status status;
   String filename = BuildString(mFilename, ToString(textureIndex));
 
-  // our texture is a png, mWidth is the size of the image in bytes
-  // and the pcData is just a buffer of that png data
-  // save the png
-  String fullPathToPngFile = FilePath::CombineWithExtension(mOutputPath, filename, ".png");
-  WriteToFile(fullPathToPngFile.c_str(), (byte*)texture->pcData, texture->mWidth);
+  // The member pcData holds the entire file data in memory, where mWidth is the full length in bytes of pcData.
+  String filePath = FilePath::CombineWithExtension(mOutputPath, filename, BuildString(".", extension));
+  WriteToFile(filePath.c_str(), (byte*)texture->pcData, texture->mWidth);
 }
 
 }// namespace Zero

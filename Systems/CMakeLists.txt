@@ -49,8 +49,6 @@ target_include_directories(Content
     PUBLIC 
         ${CurrentDirectory}/Content
         ${CurrentDirectory}
-        ${AssimpHeaders}
-        ${NvttHeaders}
 
 )
 target_include_directories(Engine 
@@ -61,7 +59,6 @@ target_include_directories(Engine
 target_include_directories(Graphics
     PUBLIC 
         ${CurrentDirectory}
-        ${FreetypeHeaders}
 )
 target_include_directories(Networking 
     PUBLIC 
@@ -165,6 +162,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         CONFIGS ${supported_configs}
         BASEPATH ${zero_build_out}
         PLATFORM ${platform}
+        CONFIG ${configuration}
         BITS ${bit}
         TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET}
         PRECOMPILED_HEADER_NAME "Precompiled.hpp"
@@ -259,3 +257,16 @@ zero_subfolder_source_group(${zero_core_path} Systems Physics "")
 zero_subfolder_source_group(${zero_core_path} Systems Sound "")
 zero_subfolder_source_group(${zero_core_path} Systems Startup "")
 zero_subfolder_source_group(${zero_core_path} Systems ZilchScript "")
+
+################################################################################
+# Post build steps
+################################################################################
+add_custom_command(
+    TARGET Engine PRE_BUILD    
+    COMMAND ${CMAKE_COMMAND} 
+    # options
+    -DZERO_CORE_ROOT="${zero_core_path}"
+    # command
+    -P ${cmake_utilities_dir}/Update_Build_Version_Script.cmake
+)
+

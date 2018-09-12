@@ -97,12 +97,13 @@ void BackgroundTaskJob::SendMainThreadEvent(StringParam eventId, Event* e)
 BackgroundTask::BackgroundTask(BackgroundTaskJob* job)
   : mJob(job)
 {
+  // Note: The job will be kept alive by the background
+  // task because we have a reference/handle to it.
+
   mHidden = false;
   mActivateOnCompleted = true;
   mCallback = nullptr;
 
-  // We want the tasks to stay around after their completion
-  job->mDeletedOnCompletion = false;
   job->mTask = this;
 
   mState = BackgroundTaskState::NotStarted;
@@ -121,9 +122,6 @@ BackgroundTask::BackgroundTask(BackgroundTaskJob* job)
 //******************************************************************************
 BackgroundTask::~BackgroundTask()
 {
-  // We should always have ownership of this job as we set mDeletedOnCompletion
-  // to true so it "should" always be safe to delete
-  SafeDelete(mJob);
 }
 
 //******************************************************************************

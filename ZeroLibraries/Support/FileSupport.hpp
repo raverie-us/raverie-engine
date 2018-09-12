@@ -54,7 +54,7 @@ void PeekType(bufferType& buffer, type& data)
 {
   Read(buffer, data);
   int offset = (int)sizeof(data);
-  buffer.Seek(-offset, FileOrigin::Current);
+  buffer.Seek(-offset, SeekOrigin::Current);
 }
 
 void WriteStringRangeToFile(StringParam path, StringRange range);
@@ -93,7 +93,7 @@ public:
 };
 
 // Move the contents of a folder.
-void MoveFolderContents(StringParam dest, StringParam source, FileFilter* filter = 0);
+bool MoveFolderContents(StringParam dest, StringParam source, FileFilter* filter = 0);
 
 // Copy the contents of a folder.
 void CopyFolderContents(StringParam dest, StringParam source, FileFilter* filter = 0);

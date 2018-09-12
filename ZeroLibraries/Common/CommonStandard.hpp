@@ -130,6 +130,7 @@ public:
 #include "Utility/Determinism.hpp"
 #include "Utility/SpinLock.hpp"
 #include "Utility/Web.hpp"
+#include "Utility/Stream.hpp"
 #include "Singleton.hpp"
 
 namespace Math
@@ -234,5 +235,6 @@ namespace Zero
 #include "Platform/Renderer.hpp"
 #include "Platform/Audio.hpp"
 #include "Platform/CallStack.hpp"
+#include "Platform/WebRequest.hpp"
 
 #include "ThreadableLoop.hpp"

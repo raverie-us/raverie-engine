@@ -33,7 +33,7 @@ target_sources(Networking
     ${CMAKE_CURRENT_LIST_DIR}/SendableEvent.cpp
     ${CMAKE_CURRENT_LIST_DIR}/SimpleSocket.cpp
     ${CMAKE_CURRENT_LIST_DIR}/TcpSocket.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/WebRequest.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/WebRequester.cpp
     ${CMAKE_CURRENT_LIST_DIR}/WebServer.cpp
 #  PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/BitStreamExtended.hpp
@@ -61,6 +61,6 @@ target_sources(Networking
     ${CMAKE_CURRENT_LIST_DIR}/SendableEvent.hpp
     ${CMAKE_CURRENT_LIST_DIR}/SimpleSocket.hpp
     ${CMAKE_CURRENT_LIST_DIR}/TcpSocket.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/WebRequest.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/WebRequester.hpp
     ${CMAKE_CURRENT_LIST_DIR}/WebServer.hpp
 )

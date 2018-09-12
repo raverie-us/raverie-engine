@@ -17,6 +17,8 @@ namespace ObjectAttributes
 extern const String cHidden;
 /// Object has documentation
 extern const String cDocumented;
+/// Object should explicitly not be documented
+extern const String cDoNotDocument;
 /// Object is always expanded in the property grid
 extern const String cExpanded;
 /// Core objects can not be removed from owner or added to new owner
@@ -37,7 +39,12 @@ extern const String cResourceInterface;
 extern const String cComponentInterface;
 /// Used to specify that this component has a gizmo (via the archetype parameter)
 extern const String cGizmo;
+/// Used to specify that a script component is a Command.
 extern const String cCommand;
+/// Specify Tags for a script component and its associated Resource.
+extern const String cTags;
+/// Specify a keyboard shortcut for a script component with the Command attribute.
+extern const String cShortcut;
 extern const String cTool;
 
 }//namespace ObjectFlags
@@ -271,7 +278,8 @@ public:
     mWorldTranslation(nullptr),
     mWorldRotation(nullptr),
     mWorldScale(nullptr),
-    mParentWorldMatrix(nullptr)
+    mParentWorldMatrix(nullptr),
+    mParentLocalMatrix(nullptr)
   {
     // Initialize the aabb to an invalid one so that we can take any other aabb
     // and combine with this without anything being affected.
@@ -298,6 +306,11 @@ public:
 
   // World Matrix
   Mat4 GetParentWorldMatrix();
+  // Local Matrix
+  Mat4 GetParentLocalMatrix();
+
+  // Transform a local space point to parent space.
+  Vec3 ToParent(Vec3Param local);
 
   // Transform for Cog, object instance for GeoElement, etc...
   Handle mInstance;
@@ -319,6 +332,7 @@ public:
   // Used to get the parents world matrix (your local space)
   Handle mParentInstance;
   Property* mParentWorldMatrix;
+  Property* mParentLocalMatrix;
 
   // Used to get a size for focusing. Potentially remove and refactor later.
   Aabb mAabb;

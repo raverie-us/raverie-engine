@@ -18,6 +18,7 @@ ${CMAKE_CURRENT_LIST_DIR}/../Empty/Intrinsics.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../Empty/MainLoop.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../Empty/Registry.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../Empty/Socket.cpp
+${CMAKE_CURRENT_LIST_DIR}/../Empty/WebRequest.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../OpenGL/OpenglRenderer.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../OpenGL/OpenglRenderer.hpp
 ${CMAKE_CURRENT_LIST_DIR}/../SDL/Audio.cpp
@@ -33,12 +34,10 @@ ${CMAKE_CURRENT_LIST_DIR}/../SDL/Thread.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../SDL/ThreadSync.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../SDL/Timer.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../SDL/Utilities.cpp
+${CMAKE_CURRENT_LIST_DIR}/../SDL/Keys.inl
+${CMAKE_CURRENT_LIST_DIR}/../SDL/MouseButtons.inl
 ${CMAKE_CURRENT_LIST_DIR}/../STL/Atomic.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../STL/FileSystem.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../STL/FpControl.cpp
 ${CMAKE_CURRENT_LIST_DIR}/../STL/Process.cpp
-${CMAKE_CURRENT_LIST_DIR}/../SDL/Keys.inl
-${CMAKE_CURRENT_LIST_DIR}/../SDL/MouseButtons.inl
-${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
-${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
 )

@@ -40,6 +40,7 @@ ZilchDefineEnum(KeyState);
 ZilchDefineEnum(LauncherAutoRunMode);
 ZilchDefineEnum(Math::CurveType);
 ZilchDefineEnum(MouseButtons);
+ZilchDefineEnum(ProgressType);
 ZilchDefineEnum(SplineType);
 ZilchDefineEnum(StoreResult);
 ZilchDefineEnum(StreamType);
@@ -75,6 +76,7 @@ ZeroDefineArrayType(Array<ContentLibraryReference>);
 // The keys enum has to be declared special since it skips values
 ZilchDefineExternalBaseType(Keys::Enum, TypeCopyMode::ValueType, builder, type)
 {
+  SetUpKeyNames();
   ZilchFullBindEnum(builder, type, SpecialType::Enumeration);
 
   // For now, just iterate over all keys in the name map and if there was no saved name then
@@ -146,6 +148,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeEnum(Location);
   ZilchInitializeEnumAs(Math::CurveType, "CurveType");
   ZilchInitializeEnum(MouseButtons);
+  ZilchInitializeEnum(ProgressType);
   ZilchInitializeEnum(SplineType);
   ZilchInitializeEnum(StoreResult);
   ZilchInitializeEnum(StreamType);
@@ -218,7 +221,6 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(TextErrorEvent);
   ZilchInitializeType(ProgressEvent);
   ZilchInitializeType(OsFileSelection);
-  ZilchInitializeType(ZilchPreCompilationEvent);
   ZilchInitializeType(ZilchCompiledEvent);
   ZilchInitializeType(ZilchCompileFragmentEvent);
   ZilchInitializeType(ZilchCompileEvent);
@@ -333,6 +335,8 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(EditorConfig);
   ZilchInitializeType(WindowLaunchSettings);
   ZilchInitializeType(FrameRateSettings);
+  ZilchInitializeType(DebugSettings);
+  ZilchInitializeType(ExportSettings);
   ZilchInitializeType(ContentConfig);
   ZilchInitializeType(UserConfig);
   ZilchInitializeType(DeveloperConfig);
@@ -404,8 +408,8 @@ bool EngineLibrary::Initialize(ZeroStartupSettings& settings)
   MetaDatabase::GetInstance()->AddNativeLibrary(GetLibrary());
 
   RegisterClassAttribute(ObjectAttributes::cRunInEditor)->TypeMustBe(Component);
-  RegisterClassAttributeType(ObjectAttributes::cTool, MetaEditorScriptObject)->TypeMustBe(Component);
   RegisterClassAttributeType(ObjectAttributes::cCommand, MetaEditorScriptObject)->TypeMustBe(Component);
+  RegisterClassAttributeType(ObjectAttributes::cTool, MetaEditorScriptObject)->TypeMustBe(Component);
   RegisterClassAttributeType(ObjectAttributes::cGizmo, MetaEditorGizmo)->TypeMustBe(Component);
   RegisterClassAttributeType(ObjectAttributes::cComponentInterface, MetaInterface)->TypeMustBe(Component);
 
@@ -458,10 +462,11 @@ bool EngineLibrary::Initialize(ZeroStartupSettings& settings)
   InitializeResourceManager(TextBlockManager);
   InitializeResourceManager(HeightMapSourceManager);
 
-  StartThreadSystem();
-
   //Create the engine.
   Engine* engine = new Engine();
+
+  // This must be called right after the engine is created because it connects to the engine.
+  StartThreadSystem();
 
   Keyboard::Initialize();
   Mouse::Initialize();

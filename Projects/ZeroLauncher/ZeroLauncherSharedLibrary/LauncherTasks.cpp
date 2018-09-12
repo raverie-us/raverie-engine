@@ -14,18 +14,17 @@ GetVersionListingTaskJob::GetVersionListingTaskJob(StringParam url) : DownloadTa
 {
 }
 
-int GetVersionListingTaskJob::Execute()
+void GetVersionListingTaskJob::Execute()
 {
-  ConnectThisTo(&mRequest, Events::WebResponse, OnReponse);
-  int ret = DownloadTaskJob::Execute();
-  return ret;
+  AsyncWebRequest* request = mRequest;
+  ConnectThisTo(request, Events::WebResponseComplete, OnReponse);
+  DownloadTaskJob::Execute();
 }
   
 void GetVersionListingTaskJob::OnReponse(WebResponseEvent* event)
 {
-  if(event->ResponseCode == Os::WebResponseCode::OK)
+  if(event->mResponseCode == WebResponseCode::OK)
   {
-    mData = event->Data;
     mState = BackgroundTaskState::Completed;
   }
   else
@@ -41,7 +40,7 @@ void GetVersionListingTaskJob::PopulatePackageList()
 
   // Create a cog from the received data
   DataTreeLoader loader;
-  loader.OpenBuffer(status, mData);
+  loader.OpenBuffer(status, GetData());
   Cog* rootCog = Z::gFactory->CreateFromStream(Z::gEngine->GetEngineSpace(), loader, 0, nullptr);
   ReturnIf(rootCog == nullptr, , "Invalid root cog created from server list of builds");
   
@@ -59,20 +58,20 @@ DownloadImageTaskJob::DownloadImageTaskJob(StringParam url) : DownloadTaskJob(ur
   mImageWasInvalid = false;
 }
 
-int DownloadImageTaskJob::Execute()
+void DownloadImageTaskJob::Execute()
 {
-  ConnectThisTo(&mRequest, Events::WebResponse, OnReponse);
-  int ret = DownloadTaskJob::Execute();
-  return ret;
+  AsyncWebRequest* request = mRequest;
+  ConnectThisTo(request, Events::WebResponseComplete, OnReponse);
+  DownloadTaskJob::Execute();
 }
 
 void DownloadImageTaskJob::OnReponse(WebResponseEvent* event)
 {
-  if(event->ResponseCode == Os::WebResponseCode::OK)
+  if(event->mResponseCode == WebResponseCode::OK)
   {
     //just save the data
     Status status;
-    LoadFromPng(status, &mImage, (byte*)event->Data.Data(), event->Data.SizeInBytes());
+    LoadImage(status, (byte*)event->mData.Data(), event->mData.SizeInBytes(), &mImage);
 
     if(status.Failed())
     {
@@ -98,27 +97,25 @@ LoadImageFromDiskTaskJob::LoadImageFromDiskTaskJob(StringParam path)
   mPath = path;
 }
 
-int LoadImageFromDiskTaskJob::Execute()
+void LoadImageFromDiskTaskJob::Execute()
 {
   if(FileExists(mPath) == false)
   {
     mState = BackgroundTaskState::Failed;
-    return 1;
+    return;
   }
 
   Status status;
-  LoadFromPng(status, &mImage, mPath);
+  LoadImage(status, mPath, &mImage);
 
   if(status.Failed())
   {
     mState = BackgroundTaskState::Failed;
-    return 1;
+    return;
   }
 
   mState = BackgroundTaskState::Completed;
   UpdateProgress(GetName(), 1.0f);
-
-  return 1;
 }
 
 //-------------------------------------------------------------------GetDataTask
@@ -127,19 +124,19 @@ GetDataTaskJob::GetDataTaskJob(StringParam url) : DownloadTaskJob(url)
 
 }
 
-int GetDataTaskJob::Execute()
+void GetDataTaskJob::Execute()
 {
-  ConnectThisTo(&mRequest, Events::WebResponse, OnReponse);
-  int ret = DownloadTaskJob::Execute();
-  return ret;
+  AsyncWebRequest* request = mRequest;
+  ConnectThisTo(request, Events::WebResponseComplete, OnReponse);
+  DownloadTaskJob::Execute();
 }
 
 void GetDataTaskJob::OnReponse(WebResponseEvent* event)
 {
-  if(event->ResponseCode == Os::WebResponseCode::OK)
+  if(event->mResponseCode == WebResponseCode::OK)
   {
     //just save the data
-    mData = event->Data;
+    mData = event->mData;
   }
   else
   {
@@ -156,19 +153,18 @@ DownloadStandaloneTaskJob::DownloadStandaloneTaskJob(StringParam url) : Download
 {
 }
 
-int DownloadStandaloneTaskJob::Execute()
+void DownloadStandaloneTaskJob::Execute()
 {
-  ConnectThisTo(&mRequest, Events::WebResponse, OnReponse);
-  int ret = DownloadTaskJob::Execute();
-  mData = String();
-  return ret;
+  AsyncWebRequest* request = mRequest;
+  ConnectThisTo(request, Events::WebResponseComplete, OnReponse);
+  DownloadTaskJob::Execute();
 }
 
 void DownloadStandaloneTaskJob::OnReponse(WebResponseEvent* event)
 {
-  if(event->ResponseCode == Os::WebResponseCode::OK)
+  if(event->mResponseCode == WebResponseCode::OK)
   {
-    String data = event->Data;
+    String data = event->mData;
 
     // Make sure the directory where we're extract to exists
     CreateDirectoryAndParents(mInstallLocation);
@@ -176,7 +172,7 @@ void DownloadStandaloneTaskJob::OnReponse(WebResponseEvent* event)
     // Validate that we got any data (otherwise archive fails)
     if(data.SizeInBytes() == 0)
     {
-      String msg = String::Format("Download of build from url '%s' failed", mRequest.mUrl.c_str());
+      String msg = String::Format("Download of build from url '%s' failed", mRequest->mUrl.c_str());
       DoNotifyWarning("Download failed", msg);
       return;
     }
@@ -192,7 +188,6 @@ void DownloadStandaloneTaskJob::OnReponse(WebResponseEvent* event)
     // Currently this should only happen if the server code is wrong.
     archive.ReadBuffer(ArchiveReadFlags::All, buffer);
     archive.ExportToDirectory(ArchiveExportMode::Overwrite, mInstallLocation);
-    mRequest.Clear();
 
     mState = BackgroundTaskState::Completed;
   }
@@ -201,6 +196,8 @@ void DownloadStandaloneTaskJob::OnReponse(WebResponseEvent* event)
     DoNotifyWarning("Failed Download", "Failed to download newest version");
     Failed();
   }
+
+  mRequest->ClearAll();
 }
 
 //-------------------------------------------------------------------InstallBuildTask
@@ -223,14 +220,12 @@ void InstallBuildTaskJob::LoadFromFile(StringParam filePath)
   mData = String((char*)data, fileSize);
 }
 
-int InstallBuildTaskJob::Execute()
+void InstallBuildTaskJob::Execute()
 {
   InstallBuild();
 
   mState = BackgroundTaskState::Completed;
   UpdateProgress(GetName(), 1.0f);
-
-  return 1;
 }
 
 void InstallBuildTaskJob::InstallBuild()
@@ -263,10 +258,10 @@ DeleteDirectoryJob::DeleteDirectoryJob(StringParam directory, StringParam rootDi
   mRecursivelyDeleteEmpty = recursivelyDeleteEmpty;
 }
 
-int DeleteDirectoryJob::Execute()
+void DeleteDirectoryJob::Execute()
 {
   if(DirectoryExists(mDirectory) == false)
-    return 1;
+    return;
 
   // Try to preserve the user's marked bad data if it existed
   String markedBadPath = FilePath::CombineWithExtension(mDirectory, "VersionMarkedBad", ".txt");
@@ -297,7 +292,6 @@ int DeleteDirectoryJob::Execute()
 
   mState = BackgroundTaskState::Completed;
   UpdateProgress("DeleteDirectory", 1.0f);
-  return 1;
 }
 
 //-------------------------------------------------------------------GetTemplateListingTask
@@ -306,18 +300,17 @@ GetTemplateListingTaskJob::GetTemplateListingTaskJob(StringParam url) : Download
 
 }
 
-int GetTemplateListingTaskJob::Execute()
+void GetTemplateListingTaskJob::Execute()
 {
-  ConnectThisTo(&mRequest, Events::WebResponse, OnReponse);
-  int ret = DownloadTaskJob::Execute();
-  return ret;
+  AsyncWebRequest* request = mRequest;
+  ConnectThisTo(request, Events::WebResponseComplete, OnReponse);
+  DownloadTaskJob::Execute();
 }
 
 void GetTemplateListingTaskJob::OnReponse(WebResponseEvent* event)
 {
-  if(event->ResponseCode == Os::WebResponseCode::OK)
+  if(event->mResponseCode == WebResponseCode::OK)
   {
-    mData = event->Data;
     mState = BackgroundTaskState::Completed;
   }
   else
@@ -332,7 +325,7 @@ void GetTemplateListingTaskJob::PopulateTemplateList()
   Status status;
   // Create a cog from the received data
   DataTreeLoader loader;
-  loader.OpenBuffer(status, mData);
+  loader.OpenBuffer(status, GetData());
   Cog* rootCog = Z::gFactory->CreateFromStream(Z::gEngine->GetEngineSpace(), loader, 0, nullptr);
   ReturnIf(rootCog == nullptr, , "Invalid root cog created from server list of builds");
 
@@ -351,23 +344,23 @@ DownloadTemplateTaskJob::DownloadTemplateTaskJob(StringParam templateUrl, Templa
   mTemplate = project;
 }
 
-int DownloadTemplateTaskJob::Execute()
+void DownloadTemplateTaskJob::Execute()
 {
-  ConnectThisTo(&mRequest, Events::WebResponse, OnReponse);
-  int ret = DownloadTaskJob::Execute();
-  return ret;
+  AsyncWebRequest* request = mRequest;
+  ConnectThisTo(request, Events::WebResponseComplete, OnReponse);
+  DownloadTaskJob::Execute();
 }
 
 void DownloadTemplateTaskJob::OnReponse(WebResponseEvent* event)
 {
-  if(event->ResponseCode != Os::WebResponseCode::OK)
+  if(event->mResponseCode != WebResponseCode::OK)
   {
     DoNotifyWarning("Failed Download", "Failed to download newest version");
     Failed();
     return;
   }
 
-  String data = event->Data;
+  String data = event->mData;
 
   CreateDirectoryAndParents(mTemplateInstallLocation);
 
@@ -385,7 +378,7 @@ void DownloadTemplateTaskJob::OnReponse(WebResponseEvent* event)
   // Save the icon image
   String iconFilePath = FilePath::Combine(mTemplateInstallLocation, zeroTemplate->mIconUrl);
   Status status;
-  SaveToPng(status, &mTemplate->mIconImage, iconFilePath);
+  SaveImage(status, iconFilePath, &mTemplate->mIconImage, ImageSaveFormat::Png);
   
   mState = BackgroundTaskState::Completed;
 }
@@ -397,7 +390,7 @@ DownloadAndCreateTemplateTaskJob::DownloadAndCreateTemplateTaskJob(StringParam t
   
 }
 
-int DownloadAndCreateTemplateTaskJob::Execute()
+void DownloadAndCreateTemplateTaskJob::Execute()
 {
   mCachedProject = nullptr;
   // If the template is downloaded and not available on the server then just create from the local path
@@ -406,12 +399,12 @@ int DownloadAndCreateTemplateTaskJob::Execute()
     // @JoshD: This is currently broken because the even will be sent before the listener.
     UpdateProgress("CreatedTemplate", 1.0f);
     mState = BackgroundTaskState::Completed;
-    return 1;
+    return;
   }
 
-  ConnectThisTo(&mRequest, Events::WebResponse, OnReponse);
-  int ret = DownloadTaskJob::Execute();
-  return ret;
+  AsyncWebRequest* request = mRequest;
+  ConnectThisTo(request, Events::WebResponseComplete, OnReponse);
+  DownloadTaskJob::Execute();
 }
 
 void DownloadAndCreateTemplateTaskJob::OnReponse(WebResponseEvent* event)
@@ -425,7 +418,7 @@ CachedProject* DownloadAndCreateTemplateTaskJob::GetOrCreateCachedProject(Projec
   if(mCachedProject != nullptr)
     return mCachedProject;
 
-  if(mRequest.mResponseCode != Os::WebResponseCode::OK)
+  if(mRequest->mResponseCode != WebResponseCode::OK)
   {
     DoNotifyWarning("Failed Download", "Failed to download newest version");
     Failed();
@@ -439,7 +432,8 @@ CachedProject* DownloadAndCreateTemplateTaskJob::GetOrCreateCachedProject(Projec
   String templateFilePath = FilePath::CombineWithExtension(templatePath, mTemplateNameWithoutExtension, TemplateProject::mExtensionWithDot);
   if(FileExists(templateFilePath))
     DeleteFile(templateFilePath);
-  WriteToFile(templateFilePath.c_str(), (byte*)mData.c_str(), mData.SizeInBytes());
+  String data = GetData();
+  WriteToFile(templateFilePath.c_str(), (byte*)data.c_str(), data.SizeInBytes());
 
   // From the downloaded file, create the project
   CreateFromTemplateFile(templateFilePath, projectCache);
@@ -466,17 +460,18 @@ DownloadLauncherPatchInstallerJob::DownloadLauncherPatchInstallerJob(StringParam
   mIsNewPatchAvailable = false;
 }
 
-int DownloadLauncherPatchInstallerJob::Execute()
+void DownloadLauncherPatchInstallerJob::Execute()
 {
-  ConnectThisTo(&mRequest, Events::WebResponse, OnReponse);
-  return DownloadTaskJob::Execute();
+  AsyncWebRequest* request = mRequest;
+  ConnectThisTo(request, Events::WebResponseComplete, OnReponse);
+  DownloadTaskJob::Execute();
 }
 
 void DownloadLauncherPatchInstallerJob::OnReponse(WebResponseEvent* event)
 {
   // Check if there's no new installer available, either from a failed request or getting no data back
-  String data = event->Data;
-  if(event->ResponseCode != Os::WebResponseCode::OK || data.SizeInBytes() == 0)
+  String data = event->mData;
+  if(event->mResponseCode != WebResponseCode::OK || data.SizeInBytes() == 0)
   {
     mIsNewPatchAvailable = false;
     return;
@@ -529,17 +524,18 @@ CheckForLauncherMajorInstallerJob::CheckForLauncherMajorInstallerJob(StringParam
   mIsNewInstallerAvailable = false;
 }
 
-int CheckForLauncherMajorInstallerJob::Execute()
+void CheckForLauncherMajorInstallerJob::Execute()
 {
-  ConnectThisTo(&mRequest, Events::WebResponse, OnReponse);
-  return DownloadTaskJob::Execute();
+  AsyncWebRequest* request = mRequest;
+  ConnectThisTo(request, Events::WebResponseComplete, OnReponse);
+  DownloadTaskJob::Execute();
 }
 
 void CheckForLauncherMajorInstallerJob::OnReponse(WebResponseEvent* event)
 {
   // Check if there's no new installer available, either from a failed request or getting no data back
-  String data = event->Data;
-  if(event->ResponseCode != Os::WebResponseCode::OK || data.SizeInBytes() == 0)
+  String data = event->mData;
+  if(event->mResponseCode != WebResponseCode::OK || data.SizeInBytes() == 0)
   {
     mIsNewInstallerAvailable = false;
     return;
@@ -555,17 +551,18 @@ DownloadLauncherMajorInstallerJob::DownloadLauncherMajorInstallerJob(StringParam
   mIsNewInstallerAvailable = false;
 }
 
-int DownloadLauncherMajorInstallerJob::Execute()
+void DownloadLauncherMajorInstallerJob::Execute()
 {
-  ConnectThisTo(&mRequest, Events::WebResponse, OnReponse);
-  return DownloadTaskJob::Execute();
+  AsyncWebRequest* request = mRequest;
+  ConnectThisTo(request, Events::WebResponseComplete, OnReponse);
+  DownloadTaskJob::Execute();
 }
 
 void DownloadLauncherMajorInstallerJob::OnReponse(WebResponseEvent* event)
 {
   // Check if there's no new installer available, either from a failed request or getting no data back
-  String data = event->Data;
-  if(event->ResponseCode != Os::WebResponseCode::OK || data.SizeInBytes() == 0)
+  String data = event->mData;
+  if(event->mResponseCode != WebResponseCode::OK || data.SizeInBytes() == 0)
   {
     mIsNewInstallerAvailable = false;
     return;
@@ -581,6 +578,71 @@ void DownloadLauncherMajorInstallerJob::OnReponse(WebResponseEvent* event)
 
   WriteToFile(mInstallerPath.c_str(), (byte*)data.c_str(), data.SizeInBytes());
   mState = BackgroundTaskState::Completed;
+}
+
+//-------------------------------------------------------------------BackupProjectJob
+BackupProjectJob::BackupProjectJob(StringParam projectPath, StringParam destFilePath)
+{
+  mOpenDirectoryOnCompletion = true;
+  mProjectPath = projectPath;
+  mDestinationFilePath = destFilePath;
+}
+
+void BackupProjectJob::Execute()
+{
+  String targetDirector = FilePath::GetDirectoryPath(mDestinationFilePath);
+  CreateDirectoryAndParents(targetDirector);
+
+  // Collect all of the files to archive
+  Array<ArchiveData> files;
+  GetFileList(mProjectPath, String(), files);
+
+  // Add each file to the archive, sending out progress events every so often
+  Archive projectArchive(ArchiveMode::Compressing);
+  for(size_t i = 0; i < files.Size(); ++i)
+  {
+    ArchiveData& data = files[i];
+    projectArchive.AddFile(data.mFullFilePath, data.mRelativePath);
+
+    if(i % 5)
+      UpdateProgress("ArchivingProject", i / (float)files.Size());
+  }
+
+  // Write the zip to the final file location
+  projectArchive.WriteZipFile(mDestinationFilePath);
+
+  // Mark that we've finished
+  mState = BackgroundTaskState::Completed;
+  UpdateProgress("ArchivingProject", 1.0f);
+
+  // If requested, open the target directory on completion.
+  if(mOpenDirectoryOnCompletion)
+    Os::SystemOpenFile(targetDirector.c_str());
+}
+
+void BackupProjectJob::GetFileList(StringParam path, StringParam parentPath, Array<ArchiveData>& fileList)
+{
+  FileRange fileRange(path);
+  for(; !fileRange.Empty(); fileRange.PopFront())
+  {
+    String localPath = fileRange.Front();
+    String fullPath = FilePath::Combine(path, fileRange.Front());
+    String relativePath = FilePath::Combine(parentPath, localPath);
+
+    // Recurse down directories
+    if(DirectoryExists(fullPath))
+    {
+      String subPath = FilePath::Combine(path, localPath);
+      GetFileList(subPath, relativePath, fileList);
+    }
+    // Add files (need relative path for archive)
+    else
+    {
+      ArchiveData& data = fileList.PushBack();
+      data.mFullFilePath = fullPath;
+      data.mRelativePath = relativePath;
+    }
+  }
 }
 
 }//namespace Zero

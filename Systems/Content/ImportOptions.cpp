@@ -115,12 +115,14 @@ ZilchDefineType(AudioOptions, builder, type)
   ZeroBindExpanded();
   ZilchBindFieldProperty(mGenerateCue);
   ZilchBindFieldProperty(mGroupCueName);
+  ZilchBindFieldProperty(mStreamingMode);
 }
 
 AudioOptions::AudioOptions(ImportOptions* owner) : mOwner(owner)
 {
   mGenerateCue = AudioCueImport::None;
   mGroupCueName = "NoName";
+  mStreamingMode = AudioFileLoadType::Auto;
 }
 
 //-------------------------------------------------------------- ConflictOptions

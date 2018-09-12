@@ -573,7 +573,7 @@ void LauncherWindow::OnCheckForLauncherPatch(BackgroundTaskEvent* e)
   // Load the available builds into the version selector
   DownloadTaskJob* job = (DownloadTaskJob*)e->mTask->GetFinishedJob();
   int serverVersionId;
-  ToValue(job->mData.c_str(), serverVersionId);
+  ToValue(job->GetData().c_str(), serverVersionId);
 
   // Load the id of the current running dll
   MainConfig* mainConfig = mConfigCog->has(MainConfig);
@@ -1226,16 +1226,16 @@ void LauncherWindow::OnBrowsePressed(Event* e)
   if(!GetDispatcher()->IsConnected(cCallBackEvent, this))
     ConnectThisTo(this, cCallBackEvent, OnOpenProjectFile);
 
-  LauncherConfig* config = mConfigCog->has(LauncherConfig);
+  LauncherConfig* launcherConfig = mConfigCog->has(LauncherConfig);
   
   //Open the open file dialog
-  FileDialogConfig fileConfig;
-  fileConfig.EventName = cCallBackEvent;
-  fileConfig.CallbackObject = this;
-  fileConfig.Title = "Open a project";
-  fileConfig.AddFilter("Zero Project File", "*.zeroproj");
-  fileConfig.StartingDirectory = config->mDefaultProjectSaveLocation;
-  Z::gEngine->has(OsShell)->OpenFile(fileConfig);
+  FileDialogConfig* config = FileDialogConfig::Create();
+  config->EventName = cCallBackEvent;
+  config->CallbackObject = this;
+  config->Title = "Open a project";
+  config->AddFilter("Zero Project File", "*.zeroproj");
+  config->StartingDirectory = launcherConfig->mDefaultProjectSaveLocation;
+  Z::gEngine->has(OsShell)->OpenFile(config);
 }
 
 //******************************************************************************

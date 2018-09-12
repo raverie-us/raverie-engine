@@ -3926,7 +3926,7 @@ namespace Zilch
     ZilchInitializeType(ExecutableState);
     ZilchInitializeTypeAs(FilePathClass, "FilePath");
     ZilchInitializeTypeAs(IStreamClass, "IStream");
-    ZilchInitializeType(FileStream);
+    ZilchInitializeTypeAs(FileStreamClass, "FileStream");
     ZilchInitializeType(Member);
     ZilchInitializeType(Function);
     ZilchInitializeType(Property);

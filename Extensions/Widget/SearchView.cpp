@@ -29,9 +29,14 @@ namespace Events
   DefineEvent(SearchCanceled);
   DefineEvent(SearchPreview);
   DefineEvent(SearchCompleted);
+  DefineEvent(AlternateSearchCompleted);
 }
 
 ZilchDefineType(SearchViewEvent, builder, type)
+{
+}
+
+ZilchDefineType(AlternateSearchCompletedEvent, builder, type)
 {
 }
 
@@ -192,6 +197,7 @@ void SearchViewElement::UpdateTransform()
 }
 
 //------------------------------------------------------------  SearchView
+const float cPreviewSize = 130.0f;
 
 ZilchDefineType(SearchView, builder, type)
 {
@@ -206,7 +212,6 @@ SearchView::SearchView(Composite* parent)
   this->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0, 4), Thickness(0, 1, 0, 0)));
 
   mSelectedIndex = 0;
-  mPreviewData = NULL;
 
   mBackground = CreateAttached<Element>(cWhiteSquare);
   mBackground->SetVisible(true);
@@ -250,47 +255,117 @@ void SearchView::UpdateTransform()
   Composite::UpdateTransform();
 }
 
+WidgetRect SearchView::GetToolTipRect()
+{
+  // Top left of the current row
+  Vec2 topLeft = GetScreenRect().TopLeft();
+
+  // Move it to the selected row
+  topLeft += Vec2(0, (mSelectedIndex + 1) * SearchViewUi::RowSize);
+
+  // Move it by the scroll area
+  topLeft.y += mArea->GetClientOffset().y;
+
+  // Size of each row
+  Vec2 size = Vec2(mSize.x, SearchViewUi::RowSize);
+
+  return WidgetRect::PointAndSize(topLeft, size);
+}
+
 void SearchView::PositionToolTip()
 {
-  if(ToolTip* toolTip = mToolTip)
+  ToolTip* toolTip = mToolTip;
+  if(toolTip == nullptr)
+    return;
+
+  // Position the tooltip
+  ToolTipPlacement placement;
+
+  WidgetRect rect = GetToolTipRect();
+  Vec2 topLeft = rect.TopLeft();
+
+  placement.SetScreenRect(rect);
+  placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, 
+                        IndicatorSide::Top, IndicatorSide::Bottom);
+
+  toolTip->SetArrowTipTranslation(placement);
+
+  // y starts at the bottom of the screen
+  float lowerY = GetScreenRect().TopLeft().y;
+  float upperY = GetScreenRect().BottomRight().y;
+
+  // only show the tooltip when it is within the scroll area
+  if(topLeft.y <= upperY && topLeft.y >= lowerY)
   {
-    // Position the tooltip
-    ToolTipPlacement placement;
-
-    // Top left of the current row
-    Vec2 topLeft = GetScreenRect().TopLeft();
-
-    // Move it to the selected row
-    topLeft += Vec2(0, (mSelectedIndex + 1) * SearchViewUi::RowSize);
-
-    // Move it by the scroll area
-    topLeft.y += mArea->GetClientOffset().y;
-
-    // Size of each row
-    Vec2 size = Vec2(mSize.x, SearchViewUi::RowSize);
-
-    // Set the rect
-    WidgetRect rect = WidgetRect::PointAndSize(topLeft, size);
-    placement.SetScreenRect(rect);
-
-    placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left, 
-                          IndicatorSide::Top, IndicatorSide::Bottom);
-    toolTip->SetArrowTipTranslation(placement);
-
-    // y starts at the bottom of the screen
-    float lowerY = GetScreenRect().TopLeft().y;
-    float upperY = GetScreenRect().BottomRight().y;
-
-    // only show the tooltip when it is within the scroll area
-    if (topLeft.y <= upperY && topLeft.y >= lowerY)
-      toolTip->SetVisible(true);
-    else
-      toolTip->SetVisible(false);
+    toolTip->SetVisible(true);
+    ResolveVerticalToolTipOverlap();
   }
+  else
+  {
+    toolTip->SetVisible(false);
+  }
+
+}
+
+void SearchView::PositionAlternateToolTip()
+{
+  ToolTip* alternateTip = mAlternateToolTip;
+  if(alternateTip == nullptr)
+    return;
+
+  ToolTipPlacement placement;
+  WidgetRect searchRect = mSearchBar->GetScreenRect();
+  // Push out the searchbox tooltip to be aligned with the list-item tooltip. 
+  searchRect.X += 1.0f;
+
+  placement.SetScreenRect(searchRect);
+  placement.SetPriority(IndicatorSide::Right, IndicatorSide::Left,
+                        IndicatorSide::Top, IndicatorSide::Bottom);
+
+  alternateTip->SetArrowTipTranslation(placement);
+
+  ResolveVerticalToolTipOverlap();
+}
+
+void SearchView::ResolveVerticalToolTipOverlap()
+{
+  ToolTip* toolTip = mToolTip;
+  ToolTip* alternateTip = mAlternateToolTip;
+
+  // No need to resolve overlap if both of the tooltips aren't active.
+  if(toolTip == nullptr || alternateTip == nullptr)
+    return;
+
+  WidgetRect itemRect = toolTip->GetScreenRect();
+  WidgetRect searchRect = alternateTip->GetScreenRect();
+    
+  // If the top of of the itemTip is above the bottom of the alternateTip,
+  // (by at least one pixel) then there's overlap.
+  float overlap = searchRect.Bottom() - itemRect.Top();
+  if(overlap < 1.0f)
+    return;
+
+  // Place the item tooltip next to its associated UI element. 
+  itemRect = GetToolTipRect();
+  // Resolve the vertical overlap, and also allow for a 2 pixel gap between the tooltips.
+  overlap = Math::Ceil(overlap) + 2.0f;
+  itemRect.Y += overlap;
+
+  ToolTipPlacement placeItem;
+  placeItem.SetScreenRect(itemRect);
+
+  placeItem.SetPriority(IndicatorSide::Right, IndicatorSide::Left,
+                        IndicatorSide::Top, IndicatorSide::Bottom);
+
+  toolTip->SetArrowTipTranslation(placeItem);
+  // Keep the tooltip arrow next to the UI element associated with the tooltip.
+  toolTip->TranslateArrowOffset(Vec2(0, -overlap));
 }
 
 void SearchView::OnSearchDataModified(Event* e)
 {
+  ClearToolTips();
+
   mSelectedIndex = 0;
   BuildResults();
 }
@@ -310,6 +385,8 @@ void SearchView::SetSelection(int index)
   {
     if(mSelectedIndex!=newIndex)
     {
+      ClearToolTips();
+
       mSelectedIndex = newIndex;
       BuildResults();
     }
@@ -318,6 +395,8 @@ void SearchView::SetSelection(int index)
 
 void SearchView::MoveSelection(int change)
 {
+  ClearToolTips();
+
   if(mSearch->Results.Size() > 0)
   {
     mSelectedIndex =  Math::Clamp(int(mSelectedIndex + change), 0, int(mSearch->Results.Size()-1));
@@ -339,6 +418,8 @@ void SearchView::Selected()
 
     if(searchCompleted)
     {
+      ClearToolTips();
+
       SearchViewEvent e;
       e.Element = &foundElement;
       e.View = this;
@@ -381,19 +462,54 @@ void SearchView::BuildResults()
 
   Vec3 windowTrans = window->GetTranslation();
   Vec2 windowSize = window->GetSize();
-  Vec2 endSize = Pixels(200, 200);
 
-  if(mSearch->Results.Size() > 0 && mSearch->Results[mSelectedIndex].Data != mPreviewData)
+  // Is there any tooltip info for the text in the search box?
+  if(!mSearch->SearchString.Empty())
+  {
+    // Group all search provider previews into one widget for the
+    // search TextBox's tooltip.
+    Composite* alternatePreviewWidget = new Composite(window->GetParent());
+    alternatePreviewWidget->SetLayout(CreateStackLayout());
+
+    bool needsAlternatePreview = false;
+
+    // Add to the search preview widget, if applicable.
+    forRange(SearchProvider* provider, mSearch->SearchProviders.All())
+      needsAlternatePreview |= provider->AddToAlternatePreview(mSearch, alternatePreviewWidget);
+
+    if(!needsAlternatePreview)
+    {
+      alternatePreviewWidget->Destroy();
+    }
+    else
+    {
+      // Destroy the old search-box tooltip, if it exists.
+      mAlternateToolTip.SafeDestroy();
+
+      ToolTip* toolTip = new ToolTip(this);
+      toolTip->SetDestroyOnMouseExit(false);
+      toolTip->mContentPadding = Thickness(1, 1, 1, 1);
+
+      alternatePreviewWidget->SetSize(Vec2(cPreviewSize));
+      toolTip->SetContent(alternatePreviewWidget);
+      mAlternateToolTip = toolTip;
+
+      PositionAlternateToolTip();
+    }
+  }
+
+  if(mSearch->Results.Size() > 0)
   {
     SearchViewResult& result = mSearch->Results[mSelectedIndex];
-    // Destroy the old tool tip if it exists
-    mToolTip.SafeDestroy();
 
     Composite* root = window->GetParent();
     Composite* composite = result.Interface->CreatePreview(window->GetParent(), 
                                                            result);
     if(composite)
     {
+      // Destroy the old list-item tooltip, if it exists.
+      mToolTip.SafeDestroy();
+
       // Create a new tooltip
       ToolTip* toolTip = new ToolTip(this);
       toolTip->SetDestroyOnMouseExit(false);
@@ -402,13 +518,22 @@ void SearchView::BuildResults()
       if(result.mStatus.Failed())
         toolTip->SetColorScheme(ToolTipColorScheme::Red);
 
+      bool matchWidth = mAlternateToolTip.IsNotNull();
+      // Get the search-box tooltip's content size without padding,
+      // as the list-item tooltip sets its own padding.
+      float width = (matchWidth) ? mAlternateToolTip->GetPaddedContentSize().x : cPreviewSize;
+
       // Defer border-display to the parent's (tooltip) border.
       if(MultiLineText* content = Type::DynamicCast<MultiLineText*>(composite))
         content->mBorder->SetVisible(false);
 
-      composite->SetSize(Pixels(130, 130));
+      if(matchWidth)
+        toolTip->BestFitTextToMaxWidth(true, width);
+
+      composite->SetSize(Pixels(width, cPreviewSize));
       toolTip->SetContent(composite);
       mToolTip = toolTip;
+
       PositionToolTip();
     }
 
@@ -420,8 +545,6 @@ void SearchView::BuildResults()
       e.View = this;
       DispatchEvent(Events::SearchPreview, &e);
     }
-
-    mPreviewData = result.Data;
   }
 
   Vec4 areaRect = mArea->GetClientArea();
@@ -466,29 +589,6 @@ bool SearchView::TakeFocusOverride()
   return true;
 }
 
-bool CheckTags(HashSet<String>& testTags, HashSet<String>& tags)
-{
-  //No tags always accept
-  if(testTags.Empty())
-    return true;
-
-  //Tags and no tags on this always false
-  if(!testTags.Empty() && tags.Empty())
-    return false;
-
-  //There must be no tag that rejects
-  //this object
-  uint foundTags = 0;
-
-  forRange(String str, tags.All())
-  {
-    if(testTags.Contains(str))
-      ++foundTags;
-  }
-
-  return !(testTags.Size() > foundTags);
-}
-
 bool CheckTags(HashSet<String>& testTags, BoundType* type)
 {
   forRange(CogComponentMeta* metaComponent, type->HasAll<CogComponentMeta>())
@@ -497,19 +597,13 @@ bool CheckTags(HashSet<String>& testTags, BoundType* type)
       return true;
   }
 
-  return false;
-}
-
-bool CheckAndAddTags(SearchData& search, HashSet<String>& tags)
-{
-  if(CheckTags(search.ActiveTags, tags))
+  if(MetaScriptTagAttribute* tagAttribute = type->HasInherited<MetaScriptTagAttribute>())
   {
-    forRange(String& tag, tags.All())
-      search.AvailableTags.Insert(tag);
-    return true;
+    if(CheckTags(testTags, tagAttribute->mTagSet))
+      return true;
   }
-  else
-    return false;
+
+  return false;
 }
 
 bool CheckAndAddTags(SearchData& search, BoundType* type)
@@ -521,10 +615,19 @@ bool CheckAndAddTags(SearchData& search, BoundType* type)
       forRange(String& tag, metaComponent->mTags.All())
         search.AvailableTags.Insert(tag);
     }
+
+    if(MetaScriptTagAttribute* tagAttribute = type->HasInherited<MetaScriptTagAttribute>())
+    {
+      forRange(String& tag, tagAttribute->mTagSet.All())
+        search.AvailableTags.Insert(tag);
+    }
+
     return true;
   }
   else
+  {
     return false;
+  }
 }
 
 bool CheckAndAddSingleTag(SearchData& search, StringParam tag)
@@ -576,6 +679,11 @@ void SearchView::OnDestroy()
   Composite::OnDestroy();
 }
 
+void SearchView::OnEnter(ObjectEvent* event)
+{
+  Selected();
+}
+
 void SearchView::OnKeyPressed(KeyboardEvent* event)
 {
   if(event->Key == Keys::Down)
@@ -591,23 +699,34 @@ void SearchView::OnKeyPressed(KeyboardEvent* event)
     if(mSearchBar->GetText().Empty())
       Canceled();
   }
+  else if(event->Key == Keys::Enter && event->GetModifierPressed())
+  {
+    forRange(SearchProvider* provider, mSearch->SearchProviders.All())
+      provider->AttemptAlternateSearchCompleted();
+  }
+}
+
+void SearchView::ClearToolTips()
+{
+  // Destroy the old list-item tooltip, if it exists.
+  mToolTip.SafeDestroy();
+  // Destroy the old search-box tooltip, if it exists.
+  mAlternateToolTip.SafeDestroy();
 }
 
 void SearchView::Canceled()
 {
+  ClearToolTips();
+
   if(!mEventTerminated)
   {
     mEventTerminated = true;
     SearchViewEvent searchEvent;
     searchEvent.Element = nullptr;
     searchEvent.View = this;
+
     DispatchEvent(Events::SearchCanceled, &searchEvent);
   }
-}
-
-void SearchView::OnEnter(ObjectEvent* event)
-{
-  Selected();
 }
 
 Composite* CreateTextPreview(Composite* parent, StringParam text)

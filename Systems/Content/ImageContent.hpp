@@ -26,4 +26,6 @@ public:
   bool mReload;
 };
 
+void BuildImageFileDialogFilters(Array<FileDialogFilter>& filters);
+
 }//namespace Zero

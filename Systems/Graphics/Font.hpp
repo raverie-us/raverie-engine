@@ -153,6 +153,7 @@ public:
 
 
   Font* mFontObject;
+  DataBlock mFontSource;
   RenderFont* mRenderFont;
   Array<RenderGlyph> mGlyphInfo;
   Image mFontImage;

@@ -439,7 +439,7 @@ Tweakables
 		ScriptEditor_ 
 		{
 			var AutoCompleteConfident = Vec4{0.0725999996, 0.605000019, 0.0725999996, 1}
-			var AutoCompleteNonConfident = Vec4{0.595000029, 0.0892499983, 0.0892499983, 1}
+			var AutoCompleteNonConfident = Vec4{0.196078002, 0.527999997, 0.917647004, 1}
 			var CallTipTextSize = Vec2{500, 400}
 			var AutoCompleteSize = Vec2{250, 200}
 			var AutoCompleteTextSize = Vec2{500, 200}

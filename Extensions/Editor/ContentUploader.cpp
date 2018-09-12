@@ -409,16 +409,16 @@ void ContentPackageExporter::OnExportPressed(Event* e)
     return;
   }
 
-  FileDialogConfig config;
-  config.EventName = "OnExportFileSelected";
-  config.CallbackObject = this;
-  config.Title = "Select Content Package File";
-  config.AddFilter("Zero Pack File", "*.zeropack");
-  config.StartingDirectory = GetUserDocumentsDirectory();
+  FileDialogConfig* config = FileDialogConfig::Create();
+  config->EventName = "OnExportFileSelected";
+  config->CallbackObject = this;
+  config->Title = "Select Content Package File";
+  config->AddFilter("Zero Pack File", "*.zeropack");
+  config->StartingDirectory = GetUserDocumentsDirectory();
   String filename = "Package";
   if (!mTempPackage.mName.Empty())
     filename = mTempPackage.mName;
-  config.DefaultFileName = BuildString(filename, ".zeropack");
+  config->DefaultFileName = BuildString(filename, ".zeropack");
   Z::gEngine->has(OsShell)->SaveFile(config);
 
   // Close the export window after exporting a content package

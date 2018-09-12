@@ -1767,6 +1767,9 @@ void PhysicsSpace::UpdateKinematicVelocities()
     Mat3 oldRotation = transform->GetOldRotation();
     transform->ComputeOldValues();
     body.ComputeVelocities(oldTranslation,oldRotation, mIterationDt);
+    // Also make sure to update the stored center of mass. This might not always be needed if
+    // there is a collider on the body but there are some cases (child kinematics) that require this.
+    body.UpdateCenterMassFromWorldPosition();
   }
 }
 

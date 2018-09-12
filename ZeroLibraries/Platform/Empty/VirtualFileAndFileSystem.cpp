@@ -600,7 +600,7 @@ FilePosition File::Tell()
   return self->mPosition;
 }
 
-bool File::Seek(FilePosition pos, FileOrigin::Enum rel)
+bool File::Seek(FilePosition pos, SeekOrigin::Enum rel)
 {
   ZeroGetPrivateData(FilePrivateData);
   if (!self->mEntry)
@@ -608,11 +608,11 @@ bool File::Seek(FilePosition pos, FileOrigin::Enum rel)
 
   switch (rel)
   {
-  case FileOrigin::Begin: self->mPosition = (size_t)pos;
+  case SeekOrigin::Begin: self->mPosition = (size_t)pos;
     break;
-  case FileOrigin::Current: self->mPosition += (size_t)pos;
+  case SeekOrigin::Current: self->mPosition += (size_t)pos;
     break;
-  case FileOrigin::End: self->mPosition = self->mEntry->mFileData.Size() + (size_t)pos;
+  case SeekOrigin::End: self->mPosition = self->mEntry->mFileData.Size() + (size_t)pos;
     break;
   default:
     return false;

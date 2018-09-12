@@ -145,7 +145,7 @@ Image* ProjectSettings::GetScreenshot(bool forceReload)
     }
 
     Status status;
-    LoadFromPng(status, &mScreenshot, screenshotFile);
+    LoadImage(status, screenshotFile, &mScreenshot);
 
     // Store the time the file was last modified to compare the next
     // time the screen shot is used
@@ -227,7 +227,7 @@ void ProjectSettings::SaveScreenshotFromImage(Image& image)
   // Save the letter-boxed image to the file
   Status status;
   CreateDirectoryAndParents(EditorContentFolder);
-  SaveToPng(status, &subImage, GetScreenshotFile());
+  SaveImage(status, GetScreenshotFile(), &subImage);
 }
 
 //******************************************************************************
@@ -401,10 +401,53 @@ void FrameRateSettings::SetFrameRate(int frameRate)
   mFrameRate = Math::Max(frameRate, 1);
 }
 
+//------------------------------------------------------------ LauncherProjectInfoProxy
 ZilchDefineType(LauncherProjectInfoProxy, builder, type)
 {
   ZeroBindComponent();
   type->AddAttribute(ObjectAttributes::cCore);
+}
+
+//------------------------------------------------------------ DebugSettings
+ZilchDefineType(DebugSettings, builder, type)
+{
+  ZeroBindComponent();
+  ZeroBindDocumented();
+  ZeroBindSetup(SetupMode::DefaultSerialization);
+
+  ZilchBindGetterSetterProperty(MaxDebugObjects);
+}
+
+void DebugSettings::Serialize(Serializer& stream)
+{
+  SerializeNameDefault(mMaxDebugObjects, 5000);
+}
+
+void DebugSettings::Initialize(CogInitializer& initializer)
+{
+}
+
+int DebugSettings::GetMaxDebugObjects()
+{
+  return mMaxDebugObjects;
+}
+
+void DebugSettings::SetMaxDebugObjects(int maxDebugObjects)
+{
+  mMaxDebugObjects = Math::Max(maxDebugObjects, 0);
+}
+
+//------------------------------------------------------------ ExportSettings
+ZilchDefineType(ExportSettings, builder, type)
+{
+  ZeroBindComponent();
+  ZeroBindDocumented();
+  ZeroBindSetup(SetupMode::DefaultSerialization);
+}
+
+void ExportSettings::Serialize(Serializer& stream)
+{
+  SerializeNameDefault(mActiveTargets, HashSet<String>());
 }
 
 }//namespace Zero

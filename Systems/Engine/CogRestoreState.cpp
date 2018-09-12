@@ -107,6 +107,11 @@ Object* CogRestoreState::RestoreObject()
     Status status;
     ObjectLoader loader;
     loader.OpenBuffer(status, mSerializationBuffer);
+    if(status.Failed())
+    {
+      DoNotifyError("Failed to restore object", status.Message);
+      return nullptr;
+    }
 
     CogCreationContext context;
     context.mSpace = space;

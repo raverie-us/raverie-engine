@@ -474,6 +474,18 @@ void Resource::AddTags(HashSet<String>& tags)
   }
 }
 
+void Resource::SetTags(HashSet<String>& tags)
+{
+  if(mContentItem != nullptr)
+    mContentItem->SetTags(tags);
+}
+
+void Resource::RemoveTags(HashSet<String>& tags)
+{
+  if(mContentItem != nullptr)
+    mContentItem->RemoveTags(tags);
+}
+
 bool Resource::HasTag(StringParam tag)
 {
   if(mContentItem)

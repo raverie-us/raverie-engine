@@ -14,8 +14,11 @@ DirectoryWatcher::DirectoryWatcher(cstr directoryToWatch, CallbackFunction callb
   mCallbackInstance = callbackInstance;
   mCallback = callback;
 
-  mWorkThread.Initialize(Thread::ObjectEntryCreator<DirectoryWatcher, &DirectoryWatcher::RunThreadEntryPoint>, this, "DirectoryWatcherWorker");
-  mCancelEvent.Initialize(true, false);
+  if (ThreadingEnabled)
+  {
+    mWorkThread.Initialize(Thread::ObjectEntryCreator<DirectoryWatcher, &DirectoryWatcher::RunThreadEntryPoint>, this, "DirectoryWatcherWorker");
+    mCancelEvent.Initialize(true, false);
+  }
 }
 
 DirectoryWatcher::~DirectoryWatcher()
@@ -25,8 +28,11 @@ DirectoryWatcher::~DirectoryWatcher()
 
 void DirectoryWatcher::Shutdown()
 {
-  mCancelEvent.Signal();
-  mWorkThread.WaitForCompletion();
+  if (ThreadingEnabled)
+  {
+    mCancelEvent.Signal();
+    mWorkThread.WaitForCompletion();
+  }
 }
 
 }// namespace Zero

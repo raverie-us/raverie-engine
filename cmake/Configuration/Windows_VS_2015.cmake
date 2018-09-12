@@ -6,3 +6,5 @@
 include(${cmake_os_dir}/Windows.cmake)
 include(${cmake_compiler_dir}/MSVC.cmake)
 include(${cmake_flags_dir}/MSVC_FLAGS.cmake)
+
+set(configuration Windows_VS_2015)

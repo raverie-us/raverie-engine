@@ -387,11 +387,11 @@ void ImportContentPackage()
   CenterToWindow(Z::gEditor, window, false);
 
   //Open the open file dialog
-  FileDialogConfig config;
-  config.EventName = "OnImportFileSelected";
-  config.CallbackObject = widget;
-  config.Title = "Zero Package";
-  config.AddFilter("Zero Pack File", "*.zeropack");
+  FileDialogConfig* config = FileDialogConfig::Create();
+  config->EventName = "OnImportFileSelected";
+  config->CallbackObject = widget;
+  config->Title = "Zero Package";
+  config->AddFilter("Zero Pack File", "*.zeropack");
   Z::gEngine->has(OsShell)->OpenFile(config);
 }
 

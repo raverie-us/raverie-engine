@@ -30,12 +30,24 @@
 #include "CustomDataNode.h"
 #include "Emitter.h"
 #include "Attenuator.h"
+#include "FileEncoder.h"
+#include "FileDecoder.h"
+#include "LockFreeQueue.hpp"
 #include "SoundAssets.h"
 #include "SoundInstances.h"
 #include "Tags.h"
 
 namespace Audio
 {
+
+  static const float MaxVolumeValue = 50.0f;
+  static const float MaxDecibelsValue = 20.0f;
+  static const float MinDecibelsValue = -100.0f;
+  static const float MinPitchValue = -5.0f;
+  static const float MaxPitchValue = 5.0f;
+  static const float MinSemitonesValue = -100.0f;
+  static const float MaxSemitonesValue = 100.0f;
+
   //------------------------------------------------------------------------ External System Interface
 
   class ExternalSystemInterface
@@ -176,7 +188,7 @@ namespace Audio
 
   //--------------------------------------------------------------------------- Audio Stream Decoder
 
-  class PacketDecoder;
+  class SingleChannelPacketDecoder;
 
   class AudioStreamDecoder
   {
@@ -188,7 +200,7 @@ namespace Audio
       float*& decodedSamples, unsigned& sampleCount);
 
   private:
-    PacketDecoder* Decoder;
+    SingleChannelPacketDecoder* Decoder;
   };
 }
 

@@ -127,6 +127,7 @@ private:
 #include "Mouse.hpp"
 #include "Level.hpp"
 #include "Operation.hpp"
+#include "ResourceListOperation.hpp"
 #include "MetaOperations.hpp"
 #include "CogRestoreState.hpp"
 #include "CogOperations.hpp"

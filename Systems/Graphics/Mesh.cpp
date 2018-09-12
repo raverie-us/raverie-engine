@@ -413,6 +413,15 @@ void VertexBuffer::ReadVertexData(byte* vertexData, VertexAttribute& attribute, 
 }
 
 //**************************************************************************************************
+void VertexBuffer::CopyTo(VertexBuffer& target)
+{
+  target.Grow(mDataSize);
+  target.mDataSize = mDataSize;
+  target.mFixedDesc = mFixedDesc;
+  memcpy(target.mData, mData, mDataSize);
+}
+
+//**************************************************************************************************
 ZilchDefineType(IndexBuffer, builder, type)
 {
   ZeroBindDocumented();
@@ -483,11 +492,18 @@ void IndexBuffer::Clear()
 }
 
 //**************************************************************************************************
+void IndexBuffer::CopyTo(IndexBuffer& target)
+{
+  target = *this;
+}
+
+//**************************************************************************************************
 ZilchDefineType(Mesh, builder, type)
 {
   ZeroBindDocumented();
 
   ZilchBindMethod(CreateRuntime);
+  ZilchBindMethod(RuntimeClone);
 
   ZilchBindFieldGetter(mVertices);
   ZilchBindFieldGetter(mIndices);
@@ -506,6 +522,21 @@ HandleOf<Mesh> Mesh::CreateRuntime()
 
   Z::gEngine->has(GraphicsEngine)->AddMesh(mesh);
   return mesh;
+}
+
+//**************************************************************************************************
+HandleOf<Mesh> Mesh::RuntimeClone()
+{
+  Mesh* clone = MeshManager::CreateRuntime();
+  clone->mAabb = mAabb;
+  mVertices.CopyTo(clone->mVertices);
+  mIndices.CopyTo(clone->mIndices);
+  clone->mBones = mBones;
+  clone->mBindOffsetInv = mBindOffsetInv;
+  clone->mPrimitiveType = mPrimitiveType;
+
+  Z::gEngine->has(GraphicsEngine)->AddMesh(clone);
+  return clone;
 }
 
 //**************************************************************************************************
@@ -820,10 +851,12 @@ template<typename streamType>
 void LoadIndexChunk(Mesh& mesh, streamType& file)
 {
   IndexBuffer* indexBuffer = &mesh.mIndices;
-  IndexElementType::Enum indexType;
+  byte indexTypeByte;
   uint numIndicies;
-  file.Read(indexType);
+  file.Read(indexTypeByte);
   file.Read(numIndicies);
+
+  IndexElementType::Enum indexType = (IndexElementType::Enum)indexTypeByte;
 
   uint indexBufferSize = GetIndexSize(indexType) * numIndicies;
   byte* indexBufferData = new byte[indexBufferSize];

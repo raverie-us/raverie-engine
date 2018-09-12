@@ -50,9 +50,9 @@ namespace Audio
   private:
     enum Channels { FrontLeft, FrontRight, Center, LowFreq, SideLeft, SideRight, BackLeft, BackRight };
     unsigned mStoredChannels;
-    const float* Matrices[cMaxChannels + 1];
-    float mSamples[cMaxChannels];
-    float mCopiedSamples[cMaxChannels];
+    const float* Matrices[MaxChannels + 1];
+    float mSamples[MaxChannels];
+    float mCopiedSamples[MaxChannels];
 
     static void CopySamples(const float* source, float* destination, const unsigned channels);
   };
@@ -94,6 +94,8 @@ namespace Audio
     void SetMinVolumeThresholdThreaded(const float volume);
     // Sets whether or not all audio should be muted
     void SetMutedThreaded(bool muteAudio);
+    // Starts the input stream if it is not already started. Returns false if stream could not be started.
+    bool StartInput();
     
     // Number of channels to use for calculating output. 
     unsigned SystemChannelsThreaded;
@@ -111,8 +113,6 @@ namespace Audio
     float MinimumVolumeThresholdThreaded;
     // Audio input data for the current mix, matching the current output sample rate and channels
     Zero::Array<float> InputBuffer;
-    // If true, will send microphone input data to external system
-    bool SendMicrophoneInputData;
     // List of decoding tasks used if the system is not threaded
     Zero::Array<FileDecoder*> DecodingTasks;
     // The maximum number of decoding tasks that will be processed on one update
@@ -191,6 +191,8 @@ namespace Audio
     bool MutedThreaded;
     // Used to know when to set the Muted variable
     bool MutingThreaded;
+    // If true, will send microphone input data to external system
+    bool SendMicrophoneInputData;
 
     // Adds current sounds into the output buffer. Will return false when the system can shut down. 
     bool MixCurrentInstancesThreaded();
@@ -210,6 +212,8 @@ namespace Audio
     void CheckForResampling();
     // Gets the current input data from the AudioIO and adjusts if necessary to match output settings
     void GetAudioInputDataThreaded(unsigned howManySamples);
+    // Sets whether microphone input data will be sent to the external system
+    void SetSendMicInputData(bool sendData);
 
     friend class AudioSystemInterface;
     friend class ListenerNode;
@@ -230,25 +234,25 @@ namespace Audio
   
   static const float Sqrt2Inv = 1.0f / Math::Sqrt(2.0f);
 
-  static const float ChannelMatrix1[cMaxChannels] =
+  static const float ChannelMatrix1[MaxChannels] =
   {
     Sqrt2Inv, Sqrt2Inv, 1.0f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f
   };
 
-  static const float ChannelMatrix2[cMaxChannels * 2] =
+  static const float ChannelMatrix2[MaxChannels * 2] =
   {
     1.0f, 0.0f, Sqrt2Inv, 0.0f, Sqrt2Inv, 0.0f, Sqrt2Inv, 0.0f,
     0.0f, 1.0f, Sqrt2Inv, 0.0f, 0.0f, Sqrt2Inv, 0.0f, Sqrt2Inv
   };
 
-  static const float ChannelMatrix3[cMaxChannels * 3] =
+  static const float ChannelMatrix3[MaxChannels * 3] =
   {
     1.0f, 0.0f, 0.0f, 0.0f, Sqrt2Inv, 0.0f, Sqrt2Inv, 0.0f,
     0.0f, 1.0f, 0.0f, 0.0f, 0.0f, Sqrt2Inv, 0.0f, Sqrt2Inv,
     0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f
   };
 
-  static const float ChannelMatrix4[cMaxChannels * 4] =
+  static const float ChannelMatrix4[MaxChannels * 4] =
   {
     1.0f, 0.0f, Sqrt2Inv, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
     0.0f, 1.0f, Sqrt2Inv, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
@@ -256,7 +260,7 @@ namespace Audio
     0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f
   };
 
-  static const float ChannelMatrix5[cMaxChannels * 5] =
+  static const float ChannelMatrix5[MaxChannels * 5] =
   {
     1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
     0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
@@ -265,7 +269,7 @@ namespace Audio
     0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f
   };
 
-  static const float ChannelMatrix6[cMaxChannels * 6] =
+  static const float ChannelMatrix6[MaxChannels * 6] =
   {
     1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
     0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
@@ -275,7 +279,7 @@ namespace Audio
     0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f
   };
 
-  static const float ChannelMatrix7[cMaxChannels * 7] =
+  static const float ChannelMatrix7[MaxChannels * 7] =
   {
     1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
     0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
@@ -286,7 +290,7 @@ namespace Audio
     0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f
   };
 
-  static const float ChannelMatrix8[cMaxChannels * 8] =
+  static const float ChannelMatrix8[MaxChannels * 8] =
   {
     1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
     0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,

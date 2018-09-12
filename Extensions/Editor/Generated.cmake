@@ -175,6 +175,7 @@ target_sources(Editor
     ${CMAKE_CURRENT_LIST_DIR}/PreviewWidgets.hpp
     ${CMAKE_CURRENT_LIST_DIR}/PropertyInterface.cpp
     ${CMAKE_CURRENT_LIST_DIR}/PropertyInterface.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/RenderGroupHierarchies.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ResourceCommands.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ResourceEditors.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ResourceEditors.hpp

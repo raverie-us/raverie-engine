@@ -44,6 +44,8 @@ public:
   FloatingSearchView* OpenSearch(Vec3 position);
 
   void OnLeftClick(MouseEvent* event);
+  void OnPostResourceAdded(PostAddResourceEvent* event);
+  void OnAlternateSearchCompleted(AlternateSearchCompletedEvent* event);
   void OnSearchCompleted(SearchViewEvent* event);
   void OnMetaModified(Event* event);
   void OnMouseEnter(MouseEvent* event);

@@ -29,6 +29,9 @@ static const String cBindingColumn = "Shortcut";
 static const String cTagsColumn = "Tags";
 static const String cDescriptionColumn = "Description";
 
+  // Orange
+static const Vec4 cZeroCommandColor(1, 0.647f, 0, 1);
+
 static const bool cNotUsingHotKeyResource = true;
 static const bool cHotKeysEditable = false;
 
@@ -469,8 +472,8 @@ public:
 
   void GetSelected(Array<DataIndex>& selected) override
   {
-    Cog* primary = mSelection->GetPrimaryAs<Cog>();
-    selected.PushBack(primary->GetId().ToUint64());
+    if(Cog* primary = mSelection->GetPrimaryAs<Cog>())
+      selected.PushBack(primary->GetId().ToUint64());
   }
 
   uint Size() override
@@ -533,6 +536,15 @@ public:
 
 //------------------------------------------------------------- CommandEntry ---
 
+#define CommandSortFunctor(name, operation)                                   \
+struct name : public binary_function<CommandEntry, CommandEntry, bool>        \
+{                                                                             \
+  bool operator()(const CommandEntry& left, const CommandEntry& right) const  \
+  {                                                                           \
+    return left.operation(right);                                             \
+  }                                                                           \
+};
+
 /******************************************************************************/
 bool CommandEntry::operator<(const CommandEntry& rhs) const
 {
@@ -540,9 +552,81 @@ bool CommandEntry::operator<(const CommandEntry& rhs) const
 }
 
 /******************************************************************************/
+bool CommandEntry::operator==(const CommandEntry& rhs) const
+{
+  return mName == rhs.mName;
+}
+
+/******************************************************************************/
 bool CommandEntry::operator==(const Command& rhs) const
 {
   return mName == rhs.Name;
+}
+
+/******************************************************************************/
+CommandSortFunctor(CompareCogCommand, IsCogCommand)
+bool CommandEntry::IsCogCommand(const CommandEntry& rhs) const
+{
+  if(mIsACogCommand && !rhs.mIsACogCommand)
+    return true;
+  else if(!mIsACogCommand && rhs.mIsACogCommand)
+    return false;
+  else if(mIsACogCommand && rhs.mIsACogCommand)
+    return LessName(rhs);
+  else
+    return false;
+}
+
+/******************************************************************************/
+CommandSortFunctor(CompareNotCogCommand, IsNotCogCommand)
+bool CommandEntry::IsNotCogCommand(const CommandEntry& rhs) const
+{
+  if(!mIsACogCommand && rhs.mIsACogCommand)
+    return true;
+  else if(mIsACogCommand && !rhs.mIsACogCommand)
+    return false;
+  else if(!mIsACogCommand && !rhs.mIsACogCommand)
+    return LessName(rhs);
+  else
+    return false;
+}
+
+/******************************************************************************/
+CommandSortFunctor(CompareCommandName, LessName)
+bool CommandEntry::LessName(const CommandEntry& rhs) const
+{
+  if(mName.Empty())
+    return false;
+  else if(rhs.mName.Empty())
+    return true;
+  else
+    return mName < rhs.mName;
+}
+
+/******************************************************************************/
+CommandSortFunctor(CompareCommandBinding, LessBinding)
+bool CommandEntry::LessBinding(const CommandEntry& rhs) const
+{
+  if(mBindingStr.Empty())
+    return false;
+  else if(rhs.mBindingStr.Empty())
+    return true;
+  else
+    return mBindingStr < rhs.mBindingStr;
+}
+
+/******************************************************************************/
+CommandSortFunctor(CompareCommandTags, LessTags)
+bool CommandEntry::LessTags(const CommandEntry& rhs) const
+{
+  if(mTags.Empty())
+    return false;
+  else if(rhs.mTags.Empty())
+    return true;
+  else if(mTags == rhs.mTags)
+    return LessName(rhs);
+  else
+    return mTags < rhs.mTags;
 }
 
 //----------------------------------------------------------- HotKeyCommands ---
@@ -781,26 +865,35 @@ bool HotKeyCommands::SetData(DataEntry* dataEntry, AnyParam variant, StringParam
 /******************************************************************************/
 bool HotKeyCommands::Remove(DataEntry* dataEntry)
 {
+  // Probably won't happen, as the root cannot be selected, but protect against
+  // removal of the entire data source.
+  DataEntry* root = &mCommand;
+  if(dataEntry == root)
+    return false;
+
   CommandEntry *row = ((CommandEntry *)dataEntry);
 
+  // Index must be recorded before removing the entry from the DataSource.
   DataEvent e;
   e.Index = row->mIndex;
-  this->DispatchEvent(Events::DataRemoved, &e);
 
+  mCommand.Erase(row);
+
+  this->DispatchEvent(Events::DataRemoved, &e);
   return true;
 }
 
 //------------------------------------------------------------- HotKeyEditor ---
 ZilchDefineType(HotKeyEditor, builder, type)
 {
-  
 }
 
 HashMap<unsigned, String> HotKeyEditor::sKeyMap;
 
 
 /******************************************************************************/
-HotKeyEditor::HotKeyEditor(Composite* parent) : Composite(parent)
+HotKeyEditor::HotKeyEditor(Composite* parent)
+  : Composite(parent), mCogCommandSortToggle(true), mCurrentSort(CommandCompare::None)
 {
   mHotKeys = HotKeyCommands::GetInstance();
 
@@ -833,13 +926,15 @@ HotKeyEditor::HotKeyEditor(Composite* parent) : Composite(parent)
 
     // Search must be declared before the TreeView so that it shows up in the
     // layout before the TreeView.
-  TreeViewSearch* search = new TreeViewSearchHotKeys(this);
-  search->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(20));
+  mSearch = new TreeViewSearchHotKeys(this);
+  mSearch->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(20));
 
   mTreeView = new TreeView(this);
   mTreeView->SetSelection(new CogCommandSelection(selection, mHotKeys));
 
-  search->mTreeView = mTreeView;
+  mSearch->mTreeView = mTreeView;
+
+  ConnectThisTo(mTreeView, Events::TreeViewHeaderAdded, OnTreeViewHeaderAdded);
 
   if(cHotKeysEditable)
   {
@@ -1055,7 +1150,7 @@ void HotKeyEditor::UpdateTransform()
 /******************************************************************************/
 void HotKeyEditor::Refresh()
 {
-  mTreeView->ClearAllRows();
+  mSearch->CancelFilter();
   mTreeView->SetDataSource(mHotKeys);
 }
 
@@ -1098,37 +1193,11 @@ void HotKeyEditor::OnScriptsCompiled(Event*)
   CommandManager* commands = CommandManager::GetInstance();
   HotKeyCommands::GetInstance()->CopyCommandData(commands->mCommands);
 
-  Sort(true);
+  if(mCurrentSort != CommandCompare::None)
+    Sort(true, mCurrentSort);
 
   Refresh();
 }
-
-/******************************************************************************/
-void HotKeyEditor::Sort(bool updateIndexes)
-{
-  CommandSet& set = mHotKeys->mCommand;
-
-  int i = 0;
-  CommandSet::range sortRange = set.All();
-  while(sortRange[0].mName == cDefaultCommandString || sortRange[0].mBindingStr == cDefaultBindingString)
-  {
-    sortRange.PopFront();
-    ++i;
-  }
-
-  QuickSort(sortRange.Begin(), sortRange.End(), &sortRange.Front(), less<CommandEntry>());
-
-  // Reset the scroll of the view the to top.
-  mTreeView->mArea->SetScrolledPercentage(Vec2(0, 0));
-
-  if(!updateIndexes)
-    return;
-
-  int size = (int)set.Size();
-  for(; i < size; ++i)
-    set[i].mIndex = i;
-}
-
 
 /******************************************************************************/
 void HotKeyEditor::OnCommandRename(ObjectEvent* event)
@@ -1156,9 +1225,8 @@ void HotKeyEditor::OnCommandDelete(ObjectEvent* event)
 {
   TreeRow* row = mTreeView->FindRowByIndex(mRightClickedRowIndex);
   row->Remove();  // dispatch event
-  
-  mHotKeys->mCommand.EraseAt((unsigned)mRightClickedRowIndex.Id);
-  mTreeView->mRows.EraseAt((unsigned)mRightClickedRowIndex.Id);
+
+  mTreeView->mRows.EraseValue(row);
 
   Sort(false);
 
@@ -1185,9 +1253,7 @@ void HotKeyEditor::OnCommandDelete(ObjectEvent* event)
     toErase.PushBack((unsigned)selection);
   }
 
-  size = (int)mHotKeys->mCommand.Size();
-  for(int i = 0; i < size; ++i)
-    mHotKeys->mCommand[i].mIndex = i;
+  UpdateIndexes();
 
     // deselect UI elements
   data->mSelection.Clear();
@@ -1207,6 +1273,181 @@ void HotKeyEditor::OnCommandRightClick(TreeEvent* event)
   ConnectMenu(menu, "Rename", OnCommandRename);
   ConnectMenu(menu, "Rebind", OnCommandRebind);
   ConnectMenu(menu, "Delete", OnCommandDelete);
+}
+
+/******************************************************************************/
+void HotKeyEditor::UpdateIndexes(int start)
+{
+  int size = (int)mHotKeys->mCommand.Size();
+  for(int i = start; i < size; ++i)
+    mHotKeys->mCommand[i].mIndex = i;
+}
+
+/******************************************************************************/
+void HotKeyEditor::Sort(bool updateIndexes, CommandCompare::Enum sortBy)
+{
+  CommandSet& set = mHotKeys->mCommand;
+
+  int i = 0;
+  CommandSet::range sortRange = set.All();
+  while(sortRange[0].mName == cDefaultCommandString || sortRange[0].mBindingStr == cDefaultBindingString)
+  {
+    sortRange.PopFront();
+    ++i;
+  }
+
+  mCurrentSort = sortBy;
+
+  switch(sortBy)
+  {
+    case CommandCompare::IsCogCommand:
+      QuickSort(sortRange.Begin(), sortRange.End(), &sortRange.Front(), CompareCogCommand());
+      break;
+
+    case CommandCompare::IsNotCogCommand:
+      QuickSort(sortRange.Begin(), sortRange.End(), &sortRange.Front(), CompareNotCogCommand());
+      break;
+
+    case CommandCompare::CommandName:
+      QuickSort(sortRange.Begin(), sortRange.End(), &sortRange.Front(), CompareCommandName());
+      break;
+
+    case CommandCompare::CommandBinding:
+      QuickSort(sortRange.Begin(), sortRange.End(), &sortRange.Front(), CompareCommandBinding());
+      break;
+
+    case CommandCompare::CommandTags:
+      QuickSort(sortRange.Begin(), sortRange.End(), &sortRange.Front(), CompareCommandTags());
+      break;
+  }
+
+  mTreeView->mArea->SetScrolledPercentage(Vec2(0, 0));
+
+  if(updateIndexes)
+    UpdateIndexes(i);
+}
+
+/******************************************************************************/
+void HotKeyEditor::OnCogCommandSort(MouseEvent* event)
+{
+  if(mCogCommandSortToggle)
+  {
+    mCogCommandSortToggle = false;
+    Sort(true, CommandCompare::IsCogCommand);
+
+    if(ToolTip* toolTip = mSortToolTip)
+    {
+      toolTip->ClearText();
+      toolTip->AddText("Click to sort by:", Vec4(1));
+      toolTip->AddText("  Zero Commands", cZeroCommandColor);
+    }
+
+  }
+  else
+  {
+    mCogCommandSortToggle = true;
+    Sort(true, CommandCompare::IsNotCogCommand);
+
+    if(ToolTip* toolTip = mSortToolTip)
+    {
+      toolTip->ClearText();
+      toolTip->AddText("Click to sort by:", Vec4(1));
+      toolTip->AddText("  User Commands", Vec4(1));
+    }
+
+  }
+
+  Refresh();
+}
+
+/******************************************************************************/
+void HotKeyEditor::OnCommandNameSort(MouseEvent* event)
+{
+  // Reset command type sorting to default of: click to sort by user commands.
+  mCogCommandSortToggle = true;
+
+  Sort(true);
+  Refresh();
+}
+
+/******************************************************************************/
+void HotKeyEditor::OnCommandBindingSort(MouseEvent* event)
+{
+  // Reset command type sorting to default of: click to sort by user commands.
+  mCogCommandSortToggle = true;
+
+  Sort(true, CommandCompare::CommandBinding);
+  Refresh();
+}
+
+/******************************************************************************/
+void HotKeyEditor::OnCommandTagsSort(MouseEvent* event)
+{
+  // Reset command type sorting to default of: click to sort by user commands.
+  mCogCommandSortToggle = true;
+
+  Sort(true, CommandCompare::CommandTags);
+  Refresh();
+}
+
+/******************************************************************************/
+void HotKeyEditor::CreateCommandHeaderToolTip(Widget* source, StringParam sortName, Vec4Param color)
+{
+  mSortToolTip.SafeDestroy();
+  mSortToolTip = new ToolTip(source);
+
+  ToolTip* toolTip = mSortToolTip;
+  toolTip->SetDestroyOnMouseExit(false);
+
+  toolTip->AddText("Click to sort by:", Vec4(1));
+  toolTip->AddText(BuildString("  ", sortName), color);
+
+  ToolTipPlacement placement;
+  placement.SetScreenRect(source->GetScreenRect());
+  placement.SetPriority(IndicatorSide::Left, IndicatorSide::Right,
+    IndicatorSide::Bottom, IndicatorSide::Top);
+
+  toolTip->SetArrowTipTranslation(placement);
+}
+
+/******************************************************************************/
+void HotKeyEditor::OnMouseEnterIconHeader(MouseEvent* event)
+{
+  Widget* source = mTreeView->mHeaders[0]->mBackground;
+
+  if(mCogCommandSortToggle)
+    CreateCommandHeaderToolTip(source, "User Commands", Vec4(1));
+  else
+    CreateCommandHeaderToolTip(source, "Zero Commands", cZeroCommandColor);
+}
+
+/******************************************************************************/
+void HotKeyEditor::OnMouseEnterCommandHeader(MouseEvent* event)
+{
+  Widget* source = mTreeView->mHeaders[1]->mBackground;
+
+  String sortString = BuildString(cCommandColumn, " Name");
+  CreateCommandHeaderToolTip(source, sortString, Vec4(1));
+}
+
+/******************************************************************************/
+void HotKeyEditor::OnMouseEnterBindingHeader(MouseEvent* event)
+{
+  Widget* source = mTreeView->mHeaders[2]->mBackground;
+  CreateCommandHeaderToolTip(source, cBindingColumn, Vec4(1));
+}
+
+/******************************************************************************/
+void HotKeyEditor::OnMouseEnterTagsHeader(MouseEvent* event)
+{
+  Widget* source = mTreeView->mHeaders[3]->mBackground;
+  CreateCommandHeaderToolTip(source, cTagsColumn, Vec4(1));
+}
+
+/******************************************************************************/
+void HotKeyEditor::OnMouseExitHeader(MouseEvent* event)
+{
+  mSortToolTip.SafeDestroy();
 }
 
 /******************************************************************************/
@@ -1232,6 +1473,32 @@ void HotKeyEditor::OnKeyDown(KeyboardEvent* event)
 }
 
 /******************************************************************************/
+void HotKeyEditor::OnTreeViewHeaderAdded(TreeViewHeaderAddedEvent* event)
+{
+  uint index = event->mHeaderIndex;
+
+  // Left to right - headers beyond the tags header do not have sorting capability.
+  if(index > Tags)
+    return;
+
+  ColumnHeader* header = event->mNewHeader;
+
+  MouseEventHandler handler[8] = {
+    &HotKeyEditor::OnCogCommandSort,
+    &HotKeyEditor::OnCommandNameSort,
+    &HotKeyEditor::OnCommandBindingSort,
+    &HotKeyEditor::OnCommandTagsSort,
+    &HotKeyEditor::OnMouseEnterIconHeader,
+    &HotKeyEditor::OnMouseEnterCommandHeader,
+    &HotKeyEditor::OnMouseEnterBindingHeader,
+    &HotKeyEditor::OnMouseEnterTagsHeader };
+
+  Zero::Connect(header, Events::LeftMouseUp, this, handler[index]);
+  Zero::Connect(header, Events::MouseEnterHierarchy, this, handler[index + 4]);
+  ConnectThisTo(header, Events::MouseExitHierarchy, OnMouseExitHeader);
+}
+
+/******************************************************************************/
 void HotKeyEditor::OnGlobalCommandAdded(CommandUpdateEvent* event)
 {
   mHotKeys->AddCommand(event->mCommand, true);
@@ -1248,11 +1515,11 @@ void HotKeyEditor::OnGlobalCommandRemoved(CommandUpdateEvent* event)
   TreeRow* row = mTreeView->FindRowByIndex(i);
 
     // Dispatch data source remove event.
-  row->Remove();  
+  row->Remove();
+  UpdateIndexes();
 
-  mHotKeys->mCommand.EraseAt((size_t)i.Id);
-  mTreeView->mRows.EraseAt((size_t)i.Id);
-
+    // Don't need to delete the row from the TreeView, as 'Refresh' will cause
+    // the TreeView's UI elements [ie, TreeRows] to update.
   Refresh();
 }
 
@@ -1261,10 +1528,16 @@ void HotKeyEditor::OnGlobalCommandUpdated(CommandUpdateEvent* event)
 {
   int index = mHotKeys->mCommand.FindIndex(*event->mCommand);
 
-  if(index != CommandSet::InvalidIndex)
+  if(index == CommandSet::InvalidIndex)
     return;
 
   CopyCommand(mHotKeys->mCommand[index], event->mCommand);
+
+    // Shortcut or Tags could have changed.  If the commands are sorted by either
+    // of these, then a resort needs to occur.
+  if(mCurrentSort != CommandCompare::None)
+    Sort(true, mCurrentSort);
+
   Refresh();
 }
 
@@ -1283,10 +1556,7 @@ void HotKeyEditor::OnAddCommand(MouseEvent* event)
   mHotKeys->mCommand[0].mBindingStr = cDefaultBindingString;
   
   //Sort(mHotKeys->mCommand.All());
-  int size = (int)mHotKeys->mCommand.Size();
-  for(int i = 0; i < size; ++i)
-    mHotKeys->mCommand[i].mIndex = i;
-
+  UpdateIndexes();
   Refresh();
 
   MetaOperations::NotifyObjectModified(mHotKeys->mCommand);

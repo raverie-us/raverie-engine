@@ -27,13 +27,15 @@ public:
 
 ///Cog initialization data. Structure that is passed in to 
 ///initialize the component and cog.
-class CogInitializer : public EventObject
+class CogInitializer : public SafeId32EventObject
 {
 public:
   ZilchDeclareType(CogInitializer, TypeCopyMode::ReferenceType);
 
   CogInitializer(Space* space, GameSession* gameSession = nullptr);
   ~CogInitializer();
+
+  void Initialize(Space* space);
 
   SpaceCogList::range AllCreated();
   void SendAllObjectsInitialized();

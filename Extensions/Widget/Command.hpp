@@ -99,8 +99,12 @@ public:
 
   virtual void Execute();
 
+  StringParam GetDisplayName();
+  /// Separates whole-words for the DisplayName.
+  void SetDisplayName(StringParam name);
+
   /// Sets the ToolTip member value.
-  void Format();
+  void FillOutToolTip();
   
   /// Sends out that the state of this command changed
   void ChangeState();
@@ -187,26 +191,31 @@ public:
   /// Checks the command-line arguments to see if any match a command.
   void RunParsedCommands();
 
-  // Context functions
-  template<typename ContextType>
-  ContextType* GetContext();
-  Handle GetContextFromTypeName(StringParam typeName);
-  void SetContext(HandleParam object, BoundType* overrideType = nullptr);
-  void ClearContext(BoundType* boundType);
+  String BuildShortcutString(bool ctrl, bool alt, bool shift, StringParam key);
   
   /// Check to see if a command's shortcut hot-key has been pressed.
   bool TestCommandKeyboardShortcuts(KeyboardEvent* event);
   /// Check to see if command has already registered a valid shortcut by string.
   bool IsShortcutReserved(StringParam validShortcut);
+  bool IsShortcutReserved(bool ctrl, bool alt, bool shift, StringParam validKey, Command** out);
+
+  bool ClearCommandShortcut(Command* command, bool sendEvents = false);
+
+  bool UpdateCommandShortcut(StringParam commandName, bool ctrl, bool alt, bool shift, StringParam key, bool sendEvents = false);
+  bool UpdateCommandShortcut(Command* command, bool ctrl, bool alt, bool shift, StringParam key, bool sendEvents = false);
+
+  bool UpdateCommandTags(StringParam commandName, StringParam tags, bool sendEvents = false);
+  bool UpdateCommandTags(Command* command, StringParam tags, bool sendEvents = false);
 
   SearchProvider* GetCommandSearchProvider();
   
-  /// Process all loaded commands to find tags, shortcuts, etc...
-  void ScanCommands();
+  /// Process a command's tag field and separate each tag into a list item.
+  void BuildTagList(Command* command);
+  /// After all commands are loaded, make sure their executors are setup properly.
   void ValidateCommands();
 
-  typedef HashMap<String, Handle> ContextMapType;
-  ContextMapType mContextMap;
+  Context* GetContext();
+  Context mContext;
 
   typedef HashMap<String, Command*> CommandMapType;
   Array<Command*> mCommands;
@@ -215,13 +224,6 @@ public:
   CommandMapType mNamedCommands;
   CommandMapType mShortcuts;
 };
-
-template<typename ContextType>
-ContextType* CommandManager::GetContext()
-{
-  BoundType* type = ZilchTypeId(ContextType);
-  return GetContextFromTypeName(type->Name).Get<ContextType*>();
-}
 
 //------------------------------------------------ Command Capture Context Event
 class CommandCaptureContextEvent : public Event

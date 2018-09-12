@@ -94,7 +94,7 @@ public:
   /// Widget interface.
   void UpdateTransform() override;
 
-  float GetDesiredHeight();
+  float GetDesiredHeight(Vec2Param& sizeConstraint);
 
 private:
   Element* mBackground;
@@ -160,10 +160,16 @@ public:
 
   /// Widget interface.
   void UpdateTransform() override;
+  Vec2 Measure(LayoutArea& data) override;
 
-  float GetDesiredHeight();
+  float GetDesiredHeight(Vec2Param& sizeConstraint);
 
   TagChain* GetTagChain();
+
+  float GetAxisSize(SizeAxis::Enum axis);
+  void SetAxisSize(SizeAxis::Enum axis, float size);
+
+  void SetIsAnimating(bool state);
 
 protected:
   /// Validates the given text as a tag and adds it.
@@ -175,6 +181,7 @@ protected:
   void OnSearchBoxChanged(Event* e);
   void OnSearchBoxSubmitted(Event* e);
 
+  bool mIsAnimating;
   TagChain* mTagChain;
   TextBox* mTextBox;
   IconButton* mAddButton;

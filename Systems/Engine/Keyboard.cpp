@@ -404,7 +404,7 @@ ZilchDefineType(KeyboardEvent, builder, type)
   ZilchBindFieldPropertyAs(HandledEventScript, "HandledEvent");
   ZilchBindGetterProperty(Keyboard);
   ZilchBindFieldProperty(OsKey);
-  ZilchBindGetterProperty(ModififierPressed);
+  ZilchBindGetterProperty(ModifierPressed);
 }
 
 KeyboardEvent::KeyboardEvent()
@@ -432,7 +432,7 @@ Keyboard* KeyboardEvent::GetKeyboard()
   return mKeyboard;
 }
 
-bool KeyboardEvent::GetModififierPressed()
+bool KeyboardEvent::GetModifierPressed()
 {
   return CtrlPressed || ShiftPressed || AltPressed;
 }

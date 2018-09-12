@@ -14,14 +14,8 @@ namespace Events
   DeclareEvent(AddWindowCancelled);
   DeclareEvent(ResourceTypeSelected);
   DeclareEvent(ResourceTemplateSelected);
+  DeclareEvent(PostAddResource);
 }
-
-// After we create a new Resource, it will be assigned to the object and property defined here.
-struct PostAddOp
-{
-  Array<Handle> mObjects;
-  PropertyPath mProperty;
-};
 
 class ReourceManagersDataSource;
 class AddResourceWindow;
@@ -31,8 +25,27 @@ class ResourceTemplateDisplay;
 class ResourceTemplateDataSource;
 class ImportButton;
 
+// After we create a new Resource, it will be assigned to the object and property defined here.
+struct PostAddOp
+{
+  Array<Handle> mObjects;
+  PropertyPath mProperty;
+};
+
+//------------------------------------------------------------------------------ Post Add Resource Event
+class PostAddResourceEvent : public Event
+{
+public:
+  ZilchDeclareType(PostAddResourceEvent, TypeCopyMode::ReferenceType);
+
+  PostAddResourceEvent(PostAddOp& postAdd, ResourceAdd* resource);
+
+  PostAddOp& mPostAdd;
+  ResourceAdd* mResourceAdd;
+};
+
 // Open an add window
-AddResourceWindow* OpenAddWindow(BoundType* resourceType, Window** window = NULL);
+AddResourceWindow* OpenAddWindow(BoundType* resourceType, Window** window = nullptr, StringParam resourceName = "");
 
 //------------------------------------------------------------------------------ Add Resource Window
 class AddResourceWindow : public Composite
@@ -45,8 +58,14 @@ public:
   // Event handlers
   void OnKeyDown(KeyboardEvent* e);
 
+  /// Fill out resource name field, then validate.
+  void SetResourceNameField(StringParam resourceName);
+
   /// Shows template's for the given resource type.
   void SelectResourceType(BoundType* resourceType);
+
+  /// Sets the library that the new Resource will be created in.
+  void SetLibrary(ContentLibrary* library);
 
   /// Used to hide the Resource type search on the left.
   void ShowResourceTypeSearch(bool state);
@@ -173,6 +192,7 @@ private:
   void OnTextTypedTag(Event*);
   void OnKeyDownNameField(KeyboardEvent* e);
   void OnKeyUpNameField(KeyboardEvent* e);
+  void OnKeyDownTagField(KeyboardEvent* e);
   bool ValidateName(bool finalValidation);
   bool ValidateTags();
   void OnCancel(Event*);

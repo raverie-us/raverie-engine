@@ -59,9 +59,21 @@ namespace Events
   DefineEvent(TreeKeyPress);
   DefineEvent(MouseEnterRow);
   DefineEvent(MouseExitRow);
+  DefineEvent(TreeViewHeaderAdded);
 }
 
+//------------------------------------------------------------------- Tree Event
 ZilchDefineType(TreeEvent, builder, type)
+{
+}
+
+//-------------------------------------------------- TreeView Header Added Event
+ZilchDefineType(TreeViewHeaderAddedEvent, builder, type)
+{
+}
+
+TreeViewHeaderAddedEvent::TreeViewHeaderAddedEvent(uint headerIndex, ColumnHeader* newHeader)
+  : mHeaderIndex(headerIndex), mNewHeader(newHeader)
 {
 }
 
@@ -1505,7 +1517,7 @@ void TreeView::SetFormat(TreeFormatting& format)
     header->Destroy();
   }
   auto resizers = mHeaderResizers.All();
-  while(!headers.Empty())
+  while(!resizers.Empty())
   {
     ColumnResizer* resizer = resizers.Front().second;
     resizers.PopFront();
@@ -1532,6 +1544,9 @@ void TreeView::SetRowHeight(float height)
 
 void TreeView::ShowRow(DataIndex& index)
 {
+  if(mDataSource == nullptr)
+    return;
+
   DataEntry* entry = mDataSource->ToEntry(index);
   if(entry == nullptr)
     return;
@@ -2201,14 +2216,24 @@ void TreeView::UpdateHeaders()
     if(format.HeaderName.Empty() && format.HeaderIcon.Empty())
       continue;
 
+    ColumnHeader* header;
+
     // Create a new header
     if(currHeader >= mHeaders.Size())
-      mHeaders.PushBack(new ColumnHeader(this, &format));
+    {
+      header = new ColumnHeader(this, &format);
+      mHeaders.PushBack(header);
+
+      TreeViewHeaderAddedEvent headerEvent(currHeader, header);
+      DispatchEvent(Events::TreeViewHeaderAdded, &headerEvent);
+    }
     
-    ColumnHeader* header = mHeaders[currHeader];
+    header = mHeaders[currHeader];
 
     float startPos = format.StartX;
     float extraWidth = 0.0f;
+    if (mArea->IsScrollBarVisible(1))
+      extraWidth += mArea->GetScrollBarSize();
 
     // We want to walk left and keep pushing the start of the header left
     // to eat any columns that don't have a header

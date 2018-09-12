@@ -21,19 +21,19 @@ namespace Zilch
   }
 
   //***************************************************************************
-  ZilchDefineType(FileStream, builder, type)
+  ZilchDefineType(FileStreamClass, builder, type)
   {
     // Even though this is an interface, because it is native, it must have a constructor that can be implemented
-    ZilchFullBindDestructor(builder, type, FileStream);
-    ZilchFullBindConstructor(builder, type, FileStream, "filePath, mode", StringParam, FileMode::Enum);
-    ZilchFullBindConstructor(builder, type, FileStream, nullptr);
-    ZilchBindConstructor(const FileStream&);
+    ZilchFullBindDestructor(builder, type, FileStreamClass);
+    ZilchFullBindConstructor(builder, type, FileStreamClass, "filePath, mode", StringParam, FileMode::Enum);
+    ZilchFullBindConstructor(builder, type, FileStreamClass, nullptr);
+    ZilchBindConstructor(const FileStreamClass&);
 
-    ZilchFullBindMethod(builder, type, &FileStream::Close, ZilchNoOverload, "Close", nullptr);
+    ZilchFullBindMethod(builder, type, &FileStreamClass::Close, ZilchNoOverload, "Close", nullptr);
   }
   
   //***************************************************************************
-  FileStream::FileStream(StringParam filePath, FileMode::Enum mode)
+  FileStreamClass::FileStreamClass(StringParam filePath, FileMode::Enum mode)
   {
     Zero::FileShare::Enum zeroShare = (Zero::FileShare::Enum)0;
     Zero::FileMode::Enum zeroMode = Zero::FileMode::Read;
@@ -45,7 +45,7 @@ namespace Zilch
 
     if (append && read)
     {
-      ExecutableState::CallingState->ThrowException("Cannot Append and Read from the same FileStream");
+      ExecutableState::CallingState->ThrowException("Cannot Append and Read from the same FileStreamClass");
       return;
     }
 
@@ -98,54 +98,54 @@ namespace Zilch
   }
 
   //***************************************************************************
-  FileStream::FileStream()
+  FileStreamClass::FileStreamClass()
   {
     Capabilities = (StreamCapabilities::Enum)0;
   }
 
   //***************************************************************************
-  FileStream::FileStream(const FileStream& stream)
+  FileStreamClass::FileStreamClass(const FileStreamClass& stream)
   {
     // Duplicate the file handle
     Status status;
-    const_cast<FileStream&>(stream).InternalFile.Duplicate(status, InternalFile);
+    const_cast<FileStreamClass&>(stream).InternalFile.Duplicate(status, InternalFile);
 
     Capabilities = stream.Capabilities;
   }
 
   //***************************************************************************
-  FileStream::~FileStream()
+  FileStreamClass::~FileStreamClass()
   {
     if(this->InternalFile.IsOpen())
       Close();
   }
 
   //***************************************************************************
-  StreamCapabilities::Enum FileStream::GetCapabilities()
+  StreamCapabilities::Enum FileStreamClass::GetCapabilities()
   {
     return this->Capabilities;
   }
   
   //***************************************************************************
-  DoubleInteger FileStream::GetPosition()
+  DoubleInteger FileStreamClass::GetPosition()
   {
     return this->InternalFile.Tell();
   }
   
   //***************************************************************************
-  DoubleInteger FileStream::GetCount()
+  DoubleInteger FileStreamClass::GetCount()
   {
     return this->InternalFile.CurrentFileSize();
   }
   
   //***************************************************************************
-  bool FileStream::Seek(DoubleInteger position, StreamOrigin::Enum origin)
+  bool FileStreamClass::Seek(DoubleInteger position, StreamOrigin::Enum origin)
   {
-    return this->InternalFile.Seek(position, (Zero::FileOrigin::Enum)origin);
+    return this->InternalFile.Seek(position, (Zero::SeekOrigin::Enum)origin);
   }
   
   //***************************************************************************
-  Integer FileStream::Write(ArrayClass<Byte>& data, Integer byteStart, Integer byteCount)
+  Integer FileStreamClass::Write(ArrayClass<Byte>& data, Integer byteStart, Integer byteCount)
   {
     IStreamClass::Write(data, byteStart, byteCount);
     if (ExecutableState::GetCallingReport().HasThrownExceptions())
@@ -155,13 +155,13 @@ namespace Zilch
   }
 
   //***************************************************************************
-  Integer FileStream::WriteByte(Byte byte)
+  Integer FileStreamClass::WriteByte(Byte byte)
   {
     return (Integer)this->InternalFile.Write(&byte, 1);
   }
 
   //***************************************************************************
-  Integer FileStream::Read(ArrayClass<Byte>& data, Integer byteStart, Integer byteCount)
+  Integer FileStreamClass::Read(ArrayClass<Byte>& data, Integer byteStart, Integer byteCount)
   {
     Status status;
     IStreamClass::Read(data, byteStart, byteCount);
@@ -172,7 +172,7 @@ namespace Zilch
   }
   
   //***************************************************************************
-  Integer FileStream::ReadByte()
+  Integer FileStreamClass::ReadByte()
   {
     Status status;
     IStreamClass::ReadByte();
@@ -192,12 +192,12 @@ namespace Zilch
   }
 
   //***************************************************************************
-  void FileStream::Flush()
+  void FileStreamClass::Flush()
   {
     this->InternalFile.Flush();
   }
 
-  void FileStream::Close()
+  void FileStreamClass::Close()
   {
     this->InternalFile.Close();
   }

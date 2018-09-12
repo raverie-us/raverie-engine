@@ -62,13 +62,6 @@ MainPropertyView::MainPropertyView(Composite* parent, MetaSelection* selection,
     showButton->SetIcon("ShowObject");
     showButton->SetToolTip("Show Selection");
     ConnectThisTo(showButton, Events::ButtonPressed, OnShowPressed);
-
-    // Recent button
-    IconButton* recentButton = new IconButton(mButtonRow);
-    recentButton->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(40));
-    recentButton->SetIcon("RecentObjects");
-    recentButton->SetToolTip("Recent..");
-    ConnectThisTo(recentButton, Events::ButtonPressed, OnRecentPressed);
   }
 
   // Create the property view
@@ -230,12 +223,6 @@ void MainPropertyView::OnNextPressed(Event* e)
 void MainPropertyView::OnShowPressed(Event* e)
 {
   mSelectionHistory->ShowObject();
-}
-
-//******************************************************************************
-void MainPropertyView::OnRecentPressed(Event* e)
-{
-  mSelectionHistory->OnRecent(mButtonRow);
 }
 
 //******************************************************************************

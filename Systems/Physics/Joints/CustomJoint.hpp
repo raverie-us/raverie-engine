@@ -61,6 +61,10 @@ struct CustomConstraintInfo : public ReferenceCountedEventObject
   /// Motors should typically be their own constraint unlike springs.
   void ComputeMotor(float targetSpeed, float minImpulse, float maxImpulse);
 
+  /// The effective mass of the constraint. This is typically set by calling SetJacobian.
+  real GetEffectiveMass();
+  void SetEffectiveMass(real effectiveMass);
+
   /// Reset secondary terms that should be computed each frame.
   void Reset();
   /// Remove this constraint from whatever joint owns it.
@@ -82,6 +86,7 @@ struct CustomConstraintInfo : public ReferenceCountedEventObject
 
   /// The effective mass of the constraint. This is typically set by calling SetJacobian.
   real mEffectiveMass;
+  real mInvEffectiveMass;
   /// The error of the constraint. This should typically be set via the SetError function.
   real mError;
   /// The baumgarte term used to correct error. This should typically be set in initialization

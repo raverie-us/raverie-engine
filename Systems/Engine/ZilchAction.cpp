@@ -179,7 +179,16 @@ void CreateZilchPropertyAction(Call& call, ExceptionReport& report)
   }
 
   ZilchPropertyAction<PropertyType, EaserType>* action = new ZilchPropertyAction<PropertyType, EaserType>();
-  action->mEnding = call.Get<PropertyType>(2);
+
+  // Make sure the end-value is valid
+  PropertyType* endingProperty = call.Get<PropertyType*>(2);
+  if(endingProperty == nullptr)
+  {
+    DoNotifyException("Invalid Property Action", "Cannot form a property action with a null endValue.");
+    return;
+  }
+
+  action->mEnding = *endingProperty;
   action->mDuration = call.Get<float>(3);
   action->mEaser = EaserType::Build(call, 4);
   action->mStarting = PropertyType();

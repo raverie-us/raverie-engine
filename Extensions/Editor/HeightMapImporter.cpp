@@ -27,12 +27,12 @@ void ImportHeightMap(Editor* editor)
   HeightMapImporter* importer = CreateImporter(editor);
 
   //Open the open file dialog
-  FileDialogConfig config;
-  config.EventName = "OnFileSelected";
-  config.CallbackObject = importer;
-  config.Title = "Select height map to import";
-  config.AddFilter("Png File", "*.png");
-  config.StartingDirectory = editor->GetProjectPath();
+  FileDialogConfig* config = FileDialogConfig::Create();
+  config->EventName = "OnFileSelected";
+  config->CallbackObject = importer;
+  config->Title = "Select height map to import";
+  BuildImageFileDialogFilters(config->mSearchFilters);
+  config->StartingDirectory = editor->GetProjectPath();
   Z::gEngine->has(OsShell)->OpenFile(config);
 }
 
@@ -139,7 +139,7 @@ void HeightMapImporter::OnFileSelected(OsFileSelection* event)
 void HeightMapImporter::LoadImage(StringParam filename)
 {
   Status status;
-  LoadFromPng(status, &mHeightMap, filename);
+  Zero::LoadImage(status, filename, &mHeightMap);
   if (!status)
   {
     DoNotifyStatus(status);
@@ -253,6 +253,7 @@ void HeightMapImporter::GenerateHeightMap(Event* e)
     return;
 
   cog->SetName(mName);
+  cog->ClearArchetype();
   HeightMap* map = cog->has(HeightMap);
   map->SetUnitsPerPatch((float)mPatchSize);
   

@@ -269,7 +269,7 @@ void VersionSelector::UpdatePackageListing(GetVersionListingTaskJob* job)
     localStandalone->mOnServer = true;
     
     // If there is a deprecated component then make sure the build is tagged as deprecated
-    if(localStandalone->GetDeprecatedInfo(false) != false)
+    if(localStandalone->GetDeprecatedInfo(false) != nullptr)
       buildContent->AddTag(ZeroBuild::mDeprecatedTag);
     // On the flip side, the server could have a build tagged as deprecated without actually
     // having the component (or no message). In this case add the component and set a message if there wasn't one.

@@ -958,6 +958,9 @@ void CogPath::SetPath(StringParam path)
 {
   CogPathNode* node = mSharedNode;
 
+  if (AreTwoNamesTheSame(CogPath::Resolve(node->mRelativeTo, path)))
+    DoNotifyWarning("Cog Path", "Two objects have the same name (in the same space or under the same parent) so the CogPath may resolve to an incorrect object");
+
   // Don't do anything if the path is already set. If you have duplicate names, this could cause
   // the cog path to resolve to the wrong object
   if (node->mPath == path)
@@ -1133,6 +1136,35 @@ bool CogPath::RefreshIfNull()
   return newCog != oldCog;
 }
 
+bool AreTwoNamesTheSame(Cog* test)
+{
+  if (!test)
+    return false;
+
+  String name = test->GetName();
+
+  Cog* parent = test->GetParent();
+  if (parent)
+  {
+    size_t childCount = RangeCount(parent->FindAllChildrenByName(name));
+    return childCount != 1;
+  }
+  else
+  {
+    // Check to see if there are multiple objects within the same space that have the same name
+    Space* toSpace = test->GetSpace();
+    if (toSpace != nullptr)
+    {
+      forRange(Cog& cog, toSpace->FindAllObjectsByName(name))
+      {
+        if (&cog != test && cog.GetName() == name)
+          return true;
+      }
+    }
+  }
+  return false;
+}
+
 ZilchDefineType(CogPathEvent, builder, type)
 {
   ZilchBindFieldProperty(mCogPath);
@@ -1213,7 +1245,7 @@ ZilchDefineType(CogPathMetaComposition, builder, type)
 CogPathMetaComposition::CogPathMetaComposition()
   : MetaComposition(ZilchTypeId(Component))
 {
-
+  mSupportsComponentAddition = false;
 }
 
 Handle CogPathMetaComposition::GetComponent(HandleParam owner, BoundType* componentType)
@@ -1225,7 +1257,10 @@ Handle CogPathMetaComposition::GetComponent(HandleParam owner, BoundType* compon
 
     // If the component is null, the constructed Handle will be of type 'Component' instead of
     // the actual type we were querying. This can cause a problem when building a Zilch::Call.
-    component.StoredType = componentType;
+    // Don't do this if the component is valid though otherwise component interfaces won't
+    // work (the base class type will be set over the derived class type).
+    if(component.IsNull())
+      component.StoredType = componentType;
     return component;
   }
 

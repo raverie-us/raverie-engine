@@ -13,8 +13,8 @@ target_sources(Support
     ${CMAKE_CURRENT_LIST_DIR}/FileSupport.hpp
     ${CMAKE_CURRENT_LIST_DIR}/HdrSupport.cpp
     ${CMAKE_CURRENT_LIST_DIR}/HdrSupport.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/LoadHdr.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/LoadHdr.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ImageSupport.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ImageSupport.hpp
     ${CMAKE_CURRENT_LIST_DIR}/NameValidation.cpp
     ${CMAKE_CURRENT_LIST_DIR}/NameValidation.hpp
     ${CMAKE_CURRENT_LIST_DIR}/PartialMatch.cpp

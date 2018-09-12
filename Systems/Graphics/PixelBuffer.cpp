@@ -56,7 +56,7 @@ PixelBuffer::~PixelBuffer()
   Data = nullptr;
 }
 
-void PixelBuffer::Resize(uint width, uint height, bool copyOldContents, bool clearNewContents, ByteColor clearColor)
+void PixelBuffer::Resize(uint width, uint height, bool copyOldContents, bool clearNewContents, ByteColor clearColor, bool Upload)
 {
   Total = width * height;
   ByteColor* oldData = Data;
@@ -128,8 +128,11 @@ void PixelBuffer::Resize(uint width, uint height, bool copyOldContents, bool cle
 
   delete[] oldData;
 
-  uint dataSize = width * height * sizeof(ByteColor);
-  Image->Upload(width, height, TextureFormat::RGBA8, (byte*)newData, dataSize);
+  if(Upload)
+  {
+    uint dataSize = width * height * sizeof(ByteColor);
+    Image->Upload(width, height, TextureFormat::RGBA8, (byte*)newData, dataSize);
+  }
 }
 
 IntVec2 PixelBuffer::GetSize()
@@ -223,7 +226,7 @@ void PixelBuffer::GetCoordinates(uint index, uint* x, uint* y)
 // Upload the image data
 void PixelBuffer::Upload()
 {
-  Image->Upload(Image->mWidth, Image->mHeight, TextureFormat::RGBA8, (byte*)Data, Total * sizeof(ByteColor));
+  Image->Upload(Width, Height, TextureFormat::RGBA8, (byte*)Data, Total * sizeof(ByteColor));
 }
 
 void PixelBuffer::SetAll(byte* data)

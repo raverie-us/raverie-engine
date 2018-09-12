@@ -275,6 +275,45 @@ struct ExportTargetSource : public DataSource
   }
 };
 
+//-------------------------------------------------------------------- ExportTargetList
+ExportTargetList::ExportTargetList()
+{
+}
+
+
+ExportTargetList::~ExportTargetList()
+{
+  DeleteObjectsInContainer(SortedEntries);
+}
+
+
+void ExportTargetList::AddEntry(ExportTargetEntry* entry)
+{
+  Entries.Insert(entry->TargetName, entry);
+  SortedEntries.PushBack(entry);
+}
+
+
+void ExportTargetList::SetActiveTargets(HashSet<String>& activeTargets)
+{
+  forRange(ExportTargetEntry* entry, SortedEntries)
+  {
+    if (activeTargets.Contains(entry->TargetName))
+      entry->Export = true;
+  }
+}
+
+HashSet<String> ExportTargetList::GetActiveTargets()
+{
+  HashSet<String> activeTargets;
+  forRange(ExportTargetEntry* entry, SortedEntries)
+  {
+    if (entry->Export)
+      activeTargets.Insert(entry->TargetName);
+  }
+  return activeTargets;
+}
+
 //-------------------------------------------------------------------- ExportUI
 
 ExportUI::ExportUI(Composite* parent)
@@ -287,7 +326,9 @@ ExportUI::ExportUI(Composite* parent)
   mApplicationName = new TextBox(this);
   mApplicationName->SetEditable(true);
 
+  Cog* projectCog = Z::gEditor->GetProjectCog();
   ProjectSettings* projectSettings = Z::gEngine->GetProjectSettings();
+  ExportSettings* exportSettings = HasOrAdd<ExportSettings>(projectCog);
   if (projectSettings)
     mApplicationName->SetText(projectSettings->GetProjectName());
 
@@ -299,7 +340,7 @@ ExportUI::ExportUI(Composite* parent)
 
   mExportPath = new TextBox(pathRow);
   mExportPath->SetEditable(true);
-  mExportPath->SetText(GetUserLocalDirectory());
+  mExportPath->SetText(FilePath::Combine(GetUserDocumentsDirectory(), "ZeroExports", projectSettings->GetProjectName()));
   mExportPath->SetSizing(SizeAxis::X, SizePolicy::Flex, Pixels(200));
 
   TextButton* pathSelectButton = new TextButton(pathRow);
@@ -390,8 +431,11 @@ void ExportUI::OpenExportWindow()
   forRange(StringParam target, exporter->mExportTargets.Keys())
     targets.Insert(target);
 
-  exportUi->SetAvailableTargets(targets);
+  Cog* projectCog = Z::gEditor->GetProjectCog();
+  ExportSettings* exportSettings = HasOrAdd<ExportSettings>(projectCog);
 
+  exportUi->SetAvailableTargets(targets);
+  exportUi->SetActiveTargets(exportSettings->mActiveTargets);
 
   window->MoveToFront();
 }
@@ -406,7 +450,9 @@ void ExportUI::OnExportApplication(Event* e)
     exporter->mApplicationName = mApplicationName->GetText();
     exporter->mOutputDirectory = mExportPath->GetText();
     // Export to all to selected targets
-    exporter->ExportApplication(targetList->GetActiveTargets());
+    HashSet<String> activeTargets = targetList->GetActiveTargets();
+    SaveActiveTargets(activeTargets);
+    exporter->ExportApplication(activeTargets);
     // Close the export window
     CloseTabContaining(this);
     return;
@@ -425,7 +471,9 @@ void ExportUI::OnExportContentFolder(Event* e)
     exporter->mApplicationName = mApplicationName->GetText();
     exporter->mOutputDirectory = mExportPath->GetText();
     // Export to all to selected targets
-    exporter->ExportContent(targetList->GetActiveTargets());
+    HashSet<String> activeTargets = targetList->GetActiveTargets();
+    SaveActiveTargets(activeTargets);
+    exporter->ExportContent(activeTargets);
     // Close the export window
     CloseTabContaining(this);
     return;
@@ -447,14 +495,14 @@ void ExportUI::OnSelectPath(Event* e)
     ConnectThisTo(this, CallBackEvent, OnFolderSelected);
 
   //Open the open file dialog
-  FileDialogConfig config;
-  config.EventName = CallBackEvent;
-  config.CallbackObject = this;
-  config.Title = "Select a folder";
-  config.AddFilter("Project Export Folder", "*.none");
-  config.DefaultFileName = mExportPath->GetText();
-  config.StartingDirectory = mExportPath->GetText();
-  config.Flags |= FileDialogFlags::Folder;
+  FileDialogConfig* config = FileDialogConfig::Create();
+  config->EventName = CallBackEvent;
+  config->CallbackObject = this;
+  config->Title = "Select a folder";
+  config->AddFilter("Project Export Folder", "*.none");
+  config->DefaultFileName = mExportPath->GetText();
+  config->StartingDirectory = mExportPath->GetText();
+  config->Flags |= FileDialogFlags::Folder;
   Z::gEngine->has(OsShell)->SaveFile(config);
 }
 
@@ -467,7 +515,7 @@ void ExportUI::OnFolderSelected(OsFileSelection* e)
   }
 }
 
-void ExportUI::SetAvailableTargets(HashSet<String> targets)
+void ExportUI::SetAvailableTargets(HashSet<String>& targets)
 {
   forRange(StringParam target, targets)
   {
@@ -475,6 +523,20 @@ void ExportUI::SetAvailableTargets(HashSet<String> targets)
     mTargetList.AddEntry(entry);
   }
   mTreeView->Refresh();
+}
+
+
+void ExportUI::SetActiveTargets(HashSet<String>& targets)
+{
+  mTargetList.SetActiveTargets(targets);
+  mTreeView->Refresh();
+}
+
+void ExportUI::SaveActiveTargets(HashSet<String>& targets)
+{
+  Cog* projectCog = Z::gEditor->GetProjectCog();
+  if (ExportSettings* exportSettings = HasOrAdd<ExportSettings>(projectCog))
+    exportSettings->mActiveTargets = targets;
 }
 
 //--------------------------------------------------------------------- Exporter
@@ -521,9 +583,20 @@ void Exporter::UpdateIcon(ProjectSettings* project, ExecutableResourceUpdater& u
   }
 }
 
+void Exporter::SaveAndBuildContent()
+{
+  // Save all resources and build them so the 
+  // output directory is up to date
+  Editor* editor = Z::gEditor;
+  editor->SaveAll(true);
+}
+
 void Exporter::ExportApplication(HashSet<String> exportTargets)
 {
+  SaveAndBuildContent();
+
   Z::gEngine->LoadingStart();
+  CreateDirectoryAndParents(mOutputDirectory);
   forRange(ExportTarget* exportTarget, mExportTargets.Values())
   {
     if (exportTargets.Contains(exportTarget->mTargetName))
@@ -534,7 +607,10 @@ void Exporter::ExportApplication(HashSet<String> exportTargets)
 
 void Exporter::ExportContent(HashSet<String> exportTargets)
 {
+  SaveAndBuildContent();
+
   Z::gEngine->LoadingStart();
+  CreateDirectoryAndParents(mOutputDirectory);
   forRange(ExportTarget* exportTarget, mExportTargets.Values())
   {
     if (exportTargets.Contains(exportTarget->mTargetName))
@@ -544,7 +620,7 @@ void Exporter::ExportContent(HashSet<String> exportTargets)
 }
 
 
-void Exporter::CopyContent(String outputDirectory, ExportTarget* target)
+void Exporter::CopyContent(Status& status, String outputDirectory, ExportTarget* target)
 {
   Assert(target, "A valid export target should always be provided");
 
@@ -554,7 +630,12 @@ void Exporter::CopyContent(String outputDirectory, ExportTarget* target)
   MainConfig* mainConfig = configCog->has(MainConfig);
 
   // Delete the old content if it was previously exported
-  DeleteDirectoryContents(outputDirectory);
+  bool directoryDeleted = DeleteDirectoryContents(outputDirectory);
+  if (!directoryDeleted)
+  {
+    status.SetFailed("Unable to delete the output directory contents");
+    return;
+  }
   CreateDirectoryAndParents(outputDirectory);
 
   // Copy content output

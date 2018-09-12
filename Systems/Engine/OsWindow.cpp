@@ -616,8 +616,7 @@ ZilchDefineType(OsWindowEvent, builder, type)
 
 OsWindowEvent::OsWindowEvent() :
   Window(nullptr),
-  ClientSize(IntVec2::cZero),
-  WindowSize(IntVec2::cZero)
+  ClientSize(IntVec2::cZero)
 {
 }
 

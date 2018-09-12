@@ -372,10 +372,12 @@ void Engine::Shutdown()
   DestroyAllSpaces();
   Z::gTracker->ClearDeletedObjects();
 
-  // There could still be threaded events queued up. Make sure to completely shut down
+  // There could still be threaded events queued up. Make sure to delete all events
   // so that no events can use a destructed handle manager (such as ui widget handles
-  // being destroyed after the widget system is shutdown)
-  ShutdownThreadSystem();
+  // being destroyed after the widget system is shutdown).
+  // Do NOT call ShutdownThreadSystem here because there are still systems that
+  // are alive (and threaded) such as AsyncWebRequest that can be using gDispatch.
+  Z::gDispatch->ClearEvents();
 }
 
 //******************************************************************************

@@ -14,17 +14,16 @@ class TextButton;
 
 namespace Events
 {
-	DeclareEvent(BugReporterResponse);
+  DeclareEvent(BugReporterResponse);
 }//namespace Events
 
-/// Event carrying the string http response from the waypoint server between the BugReportJob and the BugReporter instance
+/// Event carrying the AsyncWebRequest back to the main thread
+/// so we can run it and listen for the completed response.
 class BugReporterResponse : public Event
 {
 public:
-	ZilchDeclareType(BugReporterResponse, TypeCopyMode::ReferenceType);
-	BugReporterResponse();
-	BugReporterResponse(String response);
-	String mResponse;
+  ZilchDeclareType(BugReporterResponse, TypeCopyMode::ReferenceType);
+  HandleOf<AsyncWebRequest> mRequest;
 };
 
 class BugReporter : public Composite
@@ -42,7 +41,6 @@ public:
   void OnBrowse(Event* event);
   void OnBrowseSelected(OsFileSelection* event);
   void OnUpdate(UpdateEvent* event);
-  void OnBugReporterResponse(BugReporterResponse* event);
   
   TextBox* mUsername;
   TextBox* mTitle;
@@ -63,7 +61,9 @@ public:
 class BugReportJob : public Job
 {
 public:
-  int Execute();
+  typedef BugReportJob ZilchSelf;
+  void Execute();
+  void OnWebResponseComplete(WebResponseEvent* event);
 
   String mFileName;
   CogId mProject;

@@ -9,12 +9,6 @@
 namespace Zero
 {
 
-bool RunLauncher(CogId config, CogId projectCogId)
-{
-  Error("This must be implemented");
-  return true;
-}
-
 OsShell* CreateOsShellSystem();
 System* CreateSoundSystem();
 System* CreateGraphicsSystem();
@@ -86,7 +80,8 @@ bool Startup(Engine* engine, StringMap& arguments, String projectFile)
 
   if(playGame)
   {
-    // Creating project cog outside of CreateGame() so that launcher can make changes if needed.
+    // Creating project cog outside of CreateGame() so that eula window can make changes if needed.
+    // Note: We don't currently show a eula window so this may need to be refactored.
     Cog* projectCog = Z::gFactory->Create(engine->GetEngineSpace(),  projectFile, 0, nullptr);
     if(projectCog == nullptr)
     {
@@ -94,7 +89,6 @@ bool Startup(Engine* engine, StringMap& arguments, String projectFile)
       return false;
     }
 
-    RunLauncher(configCog, projectCog);
     CreateGame(configCog, projectCog, projectFile);
   }
   else

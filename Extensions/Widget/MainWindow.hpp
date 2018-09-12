@@ -11,6 +11,33 @@
 namespace Zero
 {
 
+namespace Events
+{
+DeclareEvent(MainWindowTransformUpdated);
+}
+
+//----------------------------------------------------- MainWindowTransformEvent
+class MainWindowTransformEvent : public Event
+{
+public:
+  ZilchDeclareType(MainWindowTransformEvent, TypeCopyMode::ReferenceType);
+
+  MainWindowTransformEvent(OsWindow* window = nullptr,
+                           Vec2Param oldScreenPosition = Vec2::cZero,
+                           Vec2Param newScreenPosition = Vec2::cZero,
+                           Vec2Param oldScreenSize = Vec2::cZero,
+                           Vec2Param newScreenSize = Vec2::cZero);
+
+
+  OsWindow* mTargetWindow;
+
+  Vec2 mOldScreenPosition;
+  Vec2 mNewScreenPosition;
+
+  Vec2 mOldScreenSize;
+  Vec2 mNewScreenSize;
+};
+
 class MainWindow : public RootWidget
 {
 public:
@@ -29,6 +56,8 @@ public:
   void OnClickClose(Event* event);
   void OnClickMax(Event* event);
   void OnClickMin(Event* event);
+
+  Vec2 mPreviousPosition;
 
   Composite* mClientWidget;
   Composite* mMenuArea;

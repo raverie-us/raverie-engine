@@ -48,7 +48,7 @@ RenderFont::~RenderFont()
 Vec2 RenderFont::MeasureText(StringRange text, uint runesToCount, float unitsPerPixel)
 {
   Vec2 size = Vec2(0.0f, mLineHeight * unitsPerPixel);
-  uint count = Math::Min(runesToCount, text.ComputeRuneCount());
+  uint count = Math::Min(runesToCount, (uint)text.ComputeRuneCount());
   float lineSize = 0.0f;
   float maxLineSize = 0.0f;
 
@@ -267,14 +267,8 @@ RenderFont* FontManager::GetRenderFont(StringParam face, uint size, uint flags)
 //------------------------------------------------------------ FontRasterizer
 struct FontRasterizerData
 {
-  ~FontRasterizerData()
-  {
-    zDeallocate(LoadedFont.Data);
-  }
-
   FT_Library Library;
   FT_Face FontFace;
-  DataBlock LoadedFont;
 };
 
 FontRasterizer::FontRasterizer(Font* fontObject)
@@ -291,6 +285,7 @@ FontRasterizer::~FontRasterizer()
   FT_Done_Face(mData->FontFace);
   FT_Done_FreeType(mData->Library);
   SafeDelete(mData);
+  SafeDelete(mFontSource.Data);
 }
 
 RenderFont* FontRasterizer::RasterNewFont(int fontHeight)
@@ -383,16 +378,15 @@ void FontRasterizer::LoadFontFace(int fontHeight)
   //Always face index zero for now.
   uint faceIndex = 0;
 
-  // Load the font from the font file
-  // We don't use the freetype file API because it doens't use our internal File wrapper.
+  //Load the font from the font file into memory
+  // We don't use the freetype file API because it doens't use our internal File wrapper and doesn't handle utf8.
   // We CANNOT deallocate this file block here because freetype continues to reference it.
-  mData->LoadedFont = ReadFileIntoDataBlock(mFontObject->LoadPath.c_str());
-  int errorCode = FT_New_Memory_Face(mData->Library, mData->LoadedFont.Data, mData->LoadedFont.Size, faceIndex, &mData->FontFace);
+  mFontSource = ReadFileIntoDataBlock(mFontObject->LoadPath.c_str());
+  // Create the font face from the file data now stored in memory
+  int errorCode = FT_New_Memory_Face(mData->Library, mFontSource.Data, mFontSource.Size, faceIndex, &mData->FontFace);
 
   ErrorIf(errorCode == FT_Err_Unknown_File_Format, nullptr, "File is not a valid font file.");
   ErrorIf(errorCode != 0, nullptr, "Bad file or path.");
-
-  //mGlyphSlot = mFontFace->glyph;
 
   errorCode = FT_Set_Pixel_Sizes(mData->FontFace, 0, fontHeight);
   ErrorIf(errorCode != 0, nullptr, "Pixel size failed for some reason.");

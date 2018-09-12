@@ -14,12 +14,23 @@ namespace Events
   DefineEvent(AddWindowCancelled);
   DefineEvent(ResourceTypeSelected);
   DefineEvent(ResourceTemplateSelected);
+  DefineEvent(PostAddResource);
+}
+
+//------------------------------------------------------------------------------ Post Add Resource Event
+ZilchDefineType(PostAddResourceEvent, builder, type)
+{
+}
+
+PostAddResourceEvent::PostAddResourceEvent(PostAddOp& postAdd, ResourceAdd* resource)
+  : mPostAdd(postAdd), mResourceAdd(resource)
+{
 }
 
 const String cFilesSelected = "cFilesSelected";
 
 //**************************************************************************************************
-AddResourceWindow* OpenAddWindow(BoundType* resourceType, Window** window)
+AddResourceWindow* OpenAddWindow(BoundType* resourceType, Window** window, StringParam resourceName)
 {
   Composite* parent = Z::gEditor;
   Window* addWindow = new Window(parent);
@@ -55,6 +66,10 @@ AddResourceWindow* OpenAddWindow(BoundType* resourceType, Window** window)
     *window = addWindow;
 
   addDialog->TakeFocus();
+
+  if(!resourceName.Empty())
+    addDialog->SetResourceNameField(resourceName);
+
   return addDialog;
 }
 
@@ -136,10 +151,31 @@ void AddResourceWindow::OnKeyDown(KeyboardEvent* e)
 }
 
 //**************************************************************************************************
+void AddResourceWindow::SetResourceNameField(StringParam resourceName)
+{
+  mResourceTemplateDisplay->mNameField->SetText(resourceName);
+  mResourceTemplateDisplay->ValidateName(false);
+
+  mResourceTemplateDisplay->mNameField->TakeFocus();
+}
+
+//**************************************************************************************************
 void AddResourceWindow::SelectResourceType(BoundType* resourceType)
 {
   mResourceTemplateDisplay->ShowResourceTemplate(nullptr);
   mResourceTypeSearch->SetSelectedResourceType(resourceType);
+}
+
+//**************************************************************************************************
+void AddResourceWindow::SetLibrary(ContentLibrary* library)
+{
+  if (library)
+  {
+    StringComboBox* comboBox = mResourceTemplateDisplay->mLibrarySelect;
+    int index = comboBox->GetIndexOfItem(library->Name);
+    if (index != -1)
+      comboBox->SetSelectedItem(index, true);
+  }
 }
 
 //**************************************************************************************************
@@ -379,12 +415,12 @@ bool ResourceTypeSearch::TakeFocusOverride()
 //**************************************************************************************************
 void ResourceTypeSearch::OnImportClicked(Event*)
 {
-  FileDialogConfig config;
-  config.EventName = "cFilesSelected";
-  config.CallbackObject = this;
-  config.Title = "Add a content file";
-  config.AddFilter("All Content (*.*)", "*.*");
-  config.Flags = FileDialogFlags::MultiSelect;
+  FileDialogConfig* config = FileDialogConfig::Create();
+  config->EventName = "cFilesSelected";
+  config->CallbackObject = this;
+  config->Title = "Add a content file";
+  config->AddFilter("All Content (*.*)", "*.*");
+  config->Flags = FileDialogFlags::MultiSelect;
   Z::gEngine->has(OsShell)->OpenFile(config);
 }
 
@@ -629,15 +665,15 @@ void ResourceTemplateSearch::UpdateTransform()
 //**************************************************************************************************
 void ResourceTemplateSearch::OnImportClicked(Event*)
 {
-  FileDialogConfig config;
-  config.EventName = "cFilesSelected";
-  config.CallbackObject = this;
-  config.Title = String::Format("Add a %s", mManager->GetResourceType()->Name.c_str());
+  FileDialogConfig* config = FileDialogConfig::Create();
+  config->EventName = "cFilesSelected";
+  config->CallbackObject = this;
+  config->Title = String::Format("Add a %s", mManager->GetResourceType()->Name.c_str());
 
   forRange(FileDialogFilter& filter, mManager->mOpenFileFilters)
-    config.mSearchFilters.PushBack(filter);
+    config->mSearchFilters.PushBack(filter);
 
-  config.Flags = FileDialogFlags::MultiSelect;
+  config->Flags = FileDialogFlags::MultiSelect;
   Z::gEngine->has(OsShell)->OpenFile(config);
 }
 
@@ -770,6 +806,7 @@ ResourceTemplateDisplay::ResourceTemplateDisplay(Composite* parent, PostAddOp& p
     mTagsBox->SetEditable(true);
 
     ConnectThisTo(mTagsBox, Events::TextTyped, OnTextTypedTag);
+    ConnectThisTo(mTagsBox, Events::KeyDown, OnKeyDownTagField);
     ConnectThisTo(mTagsBox->mEditTextField, Events::FocusGained, OnTagsFocusGained);
     ConnectThisTo(mTagsBox->mEditTextField, Events::FocusLost, OnTagsFocusLost);
   }
@@ -1033,6 +1070,13 @@ void ResourceTemplateDisplay::OnKeyUpNameField(KeyboardEvent* e)
 }
 
 //**************************************************************************************************
+void ResourceTemplateDisplay::OnKeyDownTagField(KeyboardEvent* e)
+{
+  if (e->Key == Keys::Enter)
+    OnCreate(nullptr);
+}
+
+//**************************************************************************************************
 bool ResourceTemplateDisplay::ValidateName(bool finalValidation)
 {
   // Can't do anything if there is no selected template
@@ -1186,6 +1230,9 @@ void ResourceTemplateDisplay::OnCreate(Event*)
     e.EventResource = resourceTemplate;
     resourceTemplate->GetManager()->DispatchEvent(Events::ResourceTagsModified, &e);
     Z::gResources->DispatchEvent(Events::ResourceTagsModified, &e);
+
+    PostAddResourceEvent eventToSend(mPostAdd, &resourceAdd);
+    DispatchBubble(Events::PostAddResource, &eventToSend);
   }
 
   Z::gEditor->GetCenterWindow()->TryTakeFocus();

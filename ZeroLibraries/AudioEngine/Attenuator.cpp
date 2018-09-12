@@ -183,7 +183,7 @@ namespace Audio
     if (listener->GetAttenuationScale() <= 0.0f)
       distance = AttenEndDist;
     else
-      distance /= listener->GetAttenuationScale();
+      distance *= listener->GetAttenuationScale();
 
     // If we are outside the max distance and the minimum volume is zero, there is no audio
     if (distance >= AttenEndDist && MinimumVolume == 0)

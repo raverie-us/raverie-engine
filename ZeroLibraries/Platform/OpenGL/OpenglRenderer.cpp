@@ -4,23 +4,27 @@
 #include "Precompiled.hpp"
 #include "OpenglRenderer.hpp"
 
-#if defined(PLATFORM_EMSCRIPTEN)
-#define ZeroGlEs
+//#define ZeroExtraGlDebug
+
+#ifdef PLATFORM_EMSCRIPTEN
+#define ZeroWebgl
 #else
 #define ZeroGl
 #endif
 
-#if defined(ZeroGl)
+#ifdef ZeroGl
 #define ZeroIfGl(X) X
 #else
 #define ZeroIfGl(X)
 #endif
 
-#if defined(ZeroGlEs)
-#define ZeroIfGlEs(X) X
+#ifdef ZeroWebgl
+#define ZeroIfWebgl(X) X
 #else
-#define ZeroIfGlEs(X)
+#define ZeroIfWebgl(X)
 #endif
+
+static const size_t cMaxDrawBuffers = 4;
 
 // As Of NVidia Driver 302 exporting this symbol will enable GPU hardware accelerated 
 // graphics when using Optimus (Laptop NVidia gpu / Intel HD auto switching). 
@@ -101,6 +105,56 @@ GlTextureEnums gTextureEnums[] =
   {GL_DEPTH24_STENCIL8  , GL_DEPTH_STENCIL  , GL_UNSIGNED_INT_24_8             }, // Depth24Stencil8
   {GL_DEPTH32F_STENCIL8 , GL_DEPTH_STENCIL  , GL_FLOAT_32_UNSIGNED_INT_24_8_REV}  // Depth32fStencil8Pad24
 };
+
+//**************************************************************************************************
+void WebglConvertTextureFormat(AddTextureInfo* info)
+{
+  // 16 integer formats are unsupported, fallback to half floats to preserve data size.
+  if (IsShortColorFormat(info->mFormat))
+  {
+    switch (info->mFormat)
+    {
+      case TextureFormat::R16:    info->mFormat = TextureFormat::R16f;    break;
+      case TextureFormat::RG16:   info->mFormat = TextureFormat::RG16f;   break;
+      case TextureFormat::RGB16:  info->mFormat = TextureFormat::RGB16f;  break;
+      case TextureFormat::RGBA16: info->mFormat = TextureFormat::RGBA16f; break;
+      default: return;
+    }
+
+    uint componentCount = GetPixelSize(info->mFormat) / sizeof(u16);
+
+    for (uint i = 0; i < info->mMipCount; ++i)
+    {
+      MipHeader* mipHeader = info->mMipHeaders + i;
+      u16* imageData = (u16*)(info->mImageData + mipHeader->mDataOffset);
+      uint pixelCount = mipHeader->mWidth * mipHeader->mHeight;
+
+      for (uint p = 0; p < pixelCount * componentCount; ++p)
+      {
+        float normalized = imageData[p] / 65535.0f;
+        imageData[p] = HalfFloatConverter::ToHalfFloat(normalized);
+      }
+    }
+  }
+}
+
+//**************************************************************************************************
+void WebglConvertRenderTargetFormat(AddTextureInfo* info)
+{
+  // For unsupported target formats, fallback to formats that do not drop any data.
+  // Formats are either converting to floats, adding an alpha channel, or both.
+  switch (info->mFormat)
+  {
+    case TextureFormat::R16:     info->mFormat = TextureFormat::R16f;     break;
+    case TextureFormat::RG16:    info->mFormat = TextureFormat::RG16f;    break;
+    case TextureFormat::RGB16:   info->mFormat = TextureFormat::RGBA16f;  break;
+    case TextureFormat::RGBA16:  info->mFormat = TextureFormat::RGBA16f;  break;
+    case TextureFormat::RGB16f:  info->mFormat = TextureFormat::RGBA16f;  break;
+    case TextureFormat::RGB32f:  info->mFormat = TextureFormat::RGBA32f;  break;
+    case TextureFormat::SRGB8:   info->mFormat = TextureFormat::SRGB8A8;  break;
+    case TextureFormat::Depth32: info->mFormat = TextureFormat::Depth32f; break;
+  }
+}
 
 //**************************************************************************************************
 GLint GlInternalFormat(TextureCompression::Enum compression)
@@ -245,6 +299,7 @@ GLuint GlTextureMipMapping(TextureMipMapping::Enum value)
 //**************************************************************************************************
 void CheckShader(GLuint shader, StringParam shaderCode)
 {
+#ifdef ZeroExtraGlDebug
   GLint status = 0;
   glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
   if (status == GL_FALSE)
@@ -255,15 +310,14 @@ void CheckShader(GLuint shader, StringParam shaderCode)
     glGetShaderInfoLog(shader, infoLogLength, NULL, strInfoLog);
     ZPrint("Compile Error\n%s\n", strInfoLog);
 
-#ifdef ZeroExtraGlDebug
     static size_t sMaxPrints = 4;
     if (sMaxPrints > 0)
     {
       ZPrint("\n************************************************************\n%s\n************************************************************\n", shaderCode.c_str());
       --sMaxPrints;
     }
-#endif
   }
+#endif
 }
 
 //**************************************************************************************************
@@ -443,7 +497,7 @@ void SetRenderSettings(const RenderSettings& renderSettings, bool drawBuffersBle
   }
   else
   {
-    for (uint i = 0; i < 8; ++i)
+    for (uint i = 0; i < cMaxDrawBuffers; ++i)
     {
       const BlendSettings& blendSettings = renderSettings.mBlendSettings[i];
       switch (blendSettings.mBlendMode)
@@ -582,12 +636,12 @@ void SetMultiRenderTargets(GLuint fboId, TextureRenderData** colorTargets, Textu
 {
   glBindFramebuffer(GL_FRAMEBUFFER, fboId);
 
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 0, 0);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, 0, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
 
-  GLenum drawBuffers[8];
+  GLenum drawBuffers[cMaxDrawBuffers];
 
-  for (uint i = 0; i < 8; ++i)
+  for (uint i = 0; i < cMaxDrawBuffers; ++i)
   {
     GlTextureRenderData* colorRenderData = (GlTextureRenderData*)colorTargets[i];
     if (colorRenderData != nullptr)
@@ -603,7 +657,7 @@ void SetMultiRenderTargets(GLuint fboId, TextureRenderData** colorTargets, Textu
   }
 
   // Set active buffers, some drivers do not work correctly if all are always active
-  glDrawBuffers(8, drawBuffers);
+  glDrawBuffers(cMaxDrawBuffers, drawBuffers);
 
   GlTextureRenderData* depthRenderData = (GlTextureRenderData*)depthTarget;
   if (depthRenderData != nullptr)
@@ -786,11 +840,20 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
     return;
   }
 
+#ifdef ZeroWebgl
+  // glewIsSupported on emscripten doesn't emulate desktop gl extension queries.
+  bool version_2_0 = true;
+  bool framebuffer_object = true;
+  bool texture_compression = false;
+  bool draw_buffers_blend = false;
+  bool sampler_objects = true;
+#else
   bool version_2_0 = glewIsSupported("GL_VERSION_2_0");
   bool framebuffer_object = glewIsSupported("GL_ARB_framebuffer_object");
   bool texture_compression = glewIsSupported("GL_ARB_texture_compression");
   bool draw_buffers_blend = glewIsSupported("GL_ARB_draw_buffers_blend");
   bool sampler_objects = glewIsSupported("GL_ARB_sampler_objects");
+#endif
 
   ZPrint("OpenGL *Required Extensions\n");
   ZPrint("OpenGL *(GL_VERSION_2_0) Shader Program support                 : %s\n", version_2_0 ? "True" : "False");
@@ -802,17 +865,15 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
 
   ZPrint("OpenGL All Extensions : %s\n", gl_extensions ? gl_extensions : "(no data)");
 
-#if !defined(ZeroGlEs)
-    // Required OpenGL extensions
-    if (!version_2_0 || !framebuffer_object)
-    {
-      String failedExtensions = BuildString(version_2_0 ? "" : "GL_VERSION_2_0, ",
-        framebuffer_object ? "" : "GL_ARB_framebuffer_object, ");
-      error = String::Format("Required OpenGL extensions: %s are unsupported by the active driver. "
-        "Please update your computer's graphics drivers or verify that your graphics card supports the listed features.", failedExtensions.c_str());
-      return;
-    }
-#endif
+  // Required OpenGL extensions
+  if (!version_2_0 || !framebuffer_object)
+  {
+    String failedExtensions = BuildString(version_2_0 ? "" : "GL_VERSION_2_0, ",
+      framebuffer_object ? "" : "GL_ARB_framebuffer_object, ");
+    error = String::Format("Required OpenGL extensions: %s are unsupported by the active driver. "
+      "Please update your computer's graphics drivers or verify that your graphics card supports the listed features.", failedExtensions.c_str());
+    return;
+  }
 
   mDriverSupport.mTextureCompression = texture_compression;
   mDriverSupport.mMultiTargetBlend = draw_buffers_blend;
@@ -830,7 +891,7 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
   glPixelStorei(GL_PACK_ALIGNMENT, 1);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-#if !defined(ZeroGlEs)
+#if !defined(ZeroWebgl)
   glEnable(GL_TEXTURE_2D);
   glEnable(GL_TEXTURE_CUBE_MAP);
 #endif
@@ -916,14 +977,14 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
 
   mStreamedVertexBuffer.Initialize();
 
-#define ZeroGlVertexIn ZeroIfGl("in") ZeroIfGlEs("attribute")
-#define ZeroGlVertexOut ZeroIfGl("out") ZeroIfGlEs("varying")
-#define ZeroGlPixelIn ZeroIfGl("in") ZeroIfGlEs("varying")
+#define ZeroGlVertexIn ZeroIfGl("in") ZeroIfWebgl("attribute")
+#define ZeroGlVertexOut ZeroIfGl("out") ZeroIfWebgl("varying")
+#define ZeroGlPixelIn ZeroIfGl("in") ZeroIfWebgl("varying")
 
   String loadingShaderVertex =
     ZeroIfGl("#version 150\n")
-    ZeroIfGlEs("#version 100\n")
-    ZeroIfGlEs("precision mediump float;\n")
+    ZeroIfWebgl("#version 100\n")
+    ZeroIfWebgl("precision mediump float;\n")
     "uniform mat4 Transform;\n"
     "uniform mat3 UvTransform;\n"
     ZeroGlVertexIn " vec3 attLocalPosition;\n"
@@ -937,8 +998,8 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
 
   String loadingShaderPixel =
     ZeroIfGl("#version 150\n")
-    ZeroIfGlEs("#version 100\n")
-    ZeroIfGlEs("precision mediump float;\n")
+    ZeroIfWebgl("#version 100\n")
+    ZeroIfWebgl("precision mediump float;\n")
     "uniform sampler2D Texture;\n"
     "uniform float Alpha;\n"
     ZeroGlPixelIn " vec2 psInUv;\n"
@@ -1098,7 +1159,6 @@ void OpenglRenderer::AddMesh(AddMeshInfo* info)
 void OpenglRenderer::AddTexture(AddTextureInfo* info)
 {
   GlTextureRenderData* renderData = (GlTextureRenderData*)info->mRenderData;
-  GlTextureEnums glEnums = gTextureEnums[info->mFormat];
 
   if (info->mFormat == TextureFormat::None)
   {
@@ -1125,12 +1185,18 @@ void OpenglRenderer::AddTexture(AddTextureInfo* info)
     // A texture resource with uploaded data will never set data size to 0.
     if (info->mTotalDataSize == 0)
     {
+      ZeroIfWebgl(WebglConvertRenderTargetFormat(info));
+      GlTextureEnums glEnums = gTextureEnums[info->mFormat];
+
       // Rendering to cubemap is not implemented.
       glTexImage2D(GL_TEXTURE_2D, 0, glEnums.mInternalFormat, info->mWidth, info->mHeight, 0, glEnums.mFormat, glEnums.mType, nullptr);
     }
     // Do not try to reallocate texture data if no new data is given.
     else if (info->mImageData != nullptr)
     {
+      ZeroIfWebgl(WebglConvertTextureFormat(info));
+      GlTextureEnums glEnums = gTextureEnums[info->mFormat];
+
       for (uint i = 0; i < info->mMipCount; ++i)
       {
         MipHeader* mipHeader = info->mMipHeaders + i;
@@ -1232,7 +1298,7 @@ void OpenglRenderer::AddShaders(Array<ShaderEntry>& entries, uint forceCompileBa
   }
   else
   {
-    uint processCount = Math::Min(forceCompileBatchCount, entries.Size());
+    uint processCount = Math::Min(forceCompileBatchCount, (uint)entries.Size());
     if (processCount == 0)
       processCount = entries.Size();
 
@@ -1463,16 +1529,9 @@ GlShader* OpenglRenderer::GetShader(ShaderKey& shaderKey)
 
     CreateShader(entry);
     mShaderEntries.Erase(shaderKey);
-
-    return mGlShaders.FindPointer(shaderKey);
   }
 
-  // Find existing shader
-  if (mGlShaders.ContainsKey(shaderKey))
-    return mGlShaders.FindPointer(shaderKey);
-
-  // No shader found
-  return nullptr;
+  return mGlShaders.FindPointer(shaderKey);
 }
 
 //**************************************************************************************************
@@ -2063,6 +2122,10 @@ void OpenglRenderer::SetShaderParameters(u64 objectId, uint shaderInputsId, uint
 //**************************************************************************************************
 void OpenglRenderer::CreateShader(ShaderEntry& entry)
 {
+#ifdef ZeroExtraGlDebug
+  ZPrint("Compiilng composite: %s\n", entry.mComposite.c_str());
+#endif
+
   ShaderKey shaderKey(entry.mComposite, StringPair(entry.mCoreVertex, entry.mRenderPass));
 
   GLuint shaderId = 0;
@@ -2084,19 +2147,15 @@ void OpenglRenderer::CreateShader(ShaderEntry& entry)
 //**************************************************************************************************
 void OpenglRenderer::CreateShader(StringParam vertexSource, StringParam geometrySource, StringParam pixelSource, GLuint& shader)
 {
-  //DebugPrint("%s\n", vertexSource.c_str());
-  //DebugPrint("%s\n", geometrySource.c_str());
-  //DebugPrint("%s\n", pixelSource.c_str());
-
   GLuint program = glCreateProgram();
 
   const GLchar* vertexSourceData = vertexSource.Data();
   GLint vertexSourceSize = vertexSource.SizeInBytes();
   GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+  glAttachShader(program, vertexShader);
   glShaderSource(vertexShader, 1, &vertexSourceData, &vertexSourceSize);
   glCompileShader(vertexShader);
   CheckShader(vertexShader, vertexSource);
-  glAttachShader(program, vertexShader);
 
   GLuint geometryShader = 0;
   if (!geometrySource.Empty())
@@ -2104,19 +2163,19 @@ void OpenglRenderer::CreateShader(StringParam vertexSource, StringParam geometry
     const GLchar* geometrySourceData = geometrySource.Data();
     GLint geometrySourceSize = geometrySource.SizeInBytes();
     geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
+    glAttachShader(program, geometryShader);
     glShaderSource(geometryShader, 1, &geometrySourceData, &geometrySourceSize);
     glCompileShader(geometryShader);
     CheckShader(geometryShader, geometrySource);
-    glAttachShader(program, geometryShader);
   }
 
   const GLchar* pixelSourceData = pixelSource.Data();
   GLint pixelSourceSize = pixelSource.SizeInBytes();
   GLuint pixelShader = glCreateShader(GL_FRAGMENT_SHADER);
+  glAttachShader(program, pixelShader);
   glShaderSource(pixelShader, 1, &pixelSourceData, &pixelSourceSize);
   glCompileShader(pixelShader);
   CheckShader(pixelShader, pixelSource);
-  glAttachShader(program, pixelShader);
 
   glBindAttribLocation(program, VertexSemantic::Position, "attLocalPosition");
   glBindAttribLocation(program, VertexSemantic::Normal, "attLocalNormal");
@@ -2136,8 +2195,23 @@ void OpenglRenderer::CreateShader(StringParam vertexSource, StringParam geometry
   glBindAttribLocation(program, 14, "attAux4");
   glBindAttribLocation(program, 15, "attAux5");
 
+#ifdef ZeroExtraGlDebug
+  double compileSeconds = compileTimer.UpdateAndGetTime();
+  ZPrint("Compiled shader in %f seconds\n", compileSeconds);
+#endif
+
+#ifdef ZeroExtraGlDebug
+  Timer linkTimer;
+#endif
+
   glLinkProgram(program);
 
+#ifdef ZeroExtraGlDebug
+  double linkSeconds = linkTimer.UpdateAndGetTime();
+  ZPrint("Linked shader in %f seconds\n", linkSeconds);
+#endif
+
+#ifdef ZeroExtraGlDebug
   GLint status;
   glGetProgramiv(program, GL_LINK_STATUS, &status);
   if (status == GL_FALSE)
@@ -2147,11 +2221,26 @@ void OpenglRenderer::CreateShader(StringParam vertexSource, StringParam geometry
     GLchar* strInfoLog = (GLchar*)alloca(infoLogLength + 1);
     glGetProgramInfoLog(program, infoLogLength, NULL, strInfoLog);
     ZPrint("Link Error\n%s\n", strInfoLog);
+
+    static size_t sMaxPrints = 4;
+    if (sMaxPrints > 0)
+    {
+      ZPrint(
+        "\n************************************************************VERTEX\n%s"
+        "\n************************************************************GEOMETRY\n%s"
+        "\n************************************************************PIXEL\n%s"
+        "\n************************************************************\n",
+        vertexSource.c_str(),
+        geometrySource.c_str(),
+        pixelSource.c_str());
+      --sMaxPrints;
+    }
   }
-  else
-  {
-    shader = program;
-  }
+#endif
+
+  // For now we always output the shader assuming that all of them compile and link.
+  // This is because requesting the link status is a blocking operation.
+  shader = program;
 
   glDetachShader(program, vertexShader);
   glDetachShader(program, pixelShader);
@@ -2164,8 +2253,9 @@ void OpenglRenderer::CreateShader(StringParam vertexSource, StringParam geometry
     glDeleteShader(geometryShader);
   }
 
-  if (status == GL_FALSE)
-    glDeleteProgram(program);
+  // We don't currently do this because we don't want to check the status of the shader (blocking).
+  //if (status == GL_FALSE)
+  //  glDeleteProgram(program);
 }
 
 //**************************************************************************************************

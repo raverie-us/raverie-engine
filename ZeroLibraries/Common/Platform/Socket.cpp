@@ -4,7 +4,16 @@
 /// Copyright 2018, DigiPen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
-#pragma once
+#include "Precompiled.hpp"
 
-#include "Common/CommonStandard.hpp"
-#include "Platform/PlatformStandard.hpp"
+namespace Zero
+{
+
+void Socket::Close()
+{
+  // Ignore any errors that are returned
+  Status status;
+  Close(status);
+}
+
+}//namespace Zero

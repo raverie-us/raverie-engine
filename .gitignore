@@ -61,3 +61,4 @@ CMakeBuild/*
 !CMakeBuild/*/*.inl
 !CMakeBuild/*/*.zilchscript
 
+WebBuild/

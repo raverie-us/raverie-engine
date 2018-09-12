@@ -73,7 +73,6 @@ target_include_directories(CppUnitLite2
     PUBLIC 
         ${CurrentDirectory}/CppUnitLite2
         ${CurrentDirectory}
-        ${FreetypeHeaders}
 )
 target_include_directories(FilePathTests 
     PUBLIC 

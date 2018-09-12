@@ -109,7 +109,7 @@ public:
   /// Get the keyboard that generated this event.
   Keyboard* GetKeyboard();
 
-  bool GetModififierPressed();
+  bool GetModifierPressed();
 
   /// Key that was changed.
   Keys::Enum Key;

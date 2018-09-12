@@ -56,6 +56,10 @@ public:
   void UpdateTransform() override;
   void SizeToContents() override;
 
+  /// Make all multi-line text-objects in the ToolTip's content-hierarchy
+  /// conform to the ToolTip's max best fit width, if applicable.
+  void ForceBestFitText(Composite* composite, Vec2 padding);
+
   /// Sets the widget to be displayed in the center of the tooltip.
   /// GetMinSize will be called on the given widget to lay out the tooltip.
   void SetContent(Widget* content);
@@ -86,6 +90,23 @@ public:
 
   void SetColorScheme(ToolTipColorScheme::Enum color);
 
+  /// Further offset the ToolTip's arrow from its current location, where ever
+  /// it is. If the arrow is offset outside the ToolTip's rect, then the arrow's
+  /// visibility will be disabled. Return value denotes arrow visibility.
+  bool TranslateArrowOffset(Vec2Param translation);
+
+  /// Current offset of the ToolTip's arrow relative to the ToolTip rect's
+  /// center, on each axis.
+  Vec2 GetArrowOffset();
+
+  /// Size of the content inside the ToolTip.
+  Vec2 GetContentSize();
+
+  /// Size of the content inside the ToolTip, including content padding.
+  Vec2 GetPaddedContentSize();
+
+  void BestFitTextToMaxWidth(bool enabled, float maxBestFitTextWidth = 0.0f);
+
   /// The side the tooltip is meant to be on.
   IndicatorSide::Type mSide;
 
@@ -102,6 +123,13 @@ private:
   
   /// We want to destroy ourself if our source is destroyed or the mouse exits.
   void OnMouseUpdate(MouseEvent* event);
+
+  /// If the text wraps, then the width of this tooltip will never be more or
+  /// less than the best fit width.
+  /// If the text doesn't wrap, then the width of this tooltip can be less-than
+  /// or equal to the best fit width.
+  bool mBestFitText;
+  float mMaxBestFitTextWidth;
 
   /// Offset used when shifting the tooltip onto the screen.
   Vec2 mArrowOffset;

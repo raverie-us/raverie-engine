@@ -121,7 +121,7 @@ private:
 
   Process mProcess;
   ThreadInfo mThreads[2];
-  HandleOf<Zilch::FileStream> mStandardInput;
+  HandleOf<Zilch::FileStreamClass> mStandardInput;
   ObjectThreadDispatch mEventDispatchList;
 };
 

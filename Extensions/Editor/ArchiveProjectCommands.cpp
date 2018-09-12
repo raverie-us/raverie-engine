@@ -20,29 +20,13 @@ void ArchiveProjectFile(Cog* projectCog, StringParam filename)
   projectArchive.WriteZipFile(filename);
 }
 
-void UploadToDevelopers(StringParam projectName, StringParam filename)
-{
-  BlockingWebRequest request;
-  request.AddFile("userfile", filename);
-  request.AddField("project_name", projectName);
-  request.mUrl = "https://uploadproject.zeroengine.io";
-  String response = request.Run();
-
-  if(response == "success")
-    DoNotify("Success", "Uploaded Project", "Disk");
-  else
-    DoNotifyError("Failed to upload", "Failed to upload project. Project is too large or no network access");
-
-}
-
 class ArchiveProjectJob : public Job
 {
 public:
-  bool mUpload;
   String mFileName;
   Cog* mProject;
 
-  int Execute()
+  void Execute()
   {
     SendBlockingTaskStart("Archiving");
 
@@ -50,23 +34,17 @@ public:
 
     ArchiveProjectFile(mProject, mFileName);
 
-    if(mUpload)
-      UploadToDevelopers(project->ProjectName, mFileName);
-
     SendBlockingTaskFinish();
-
-    return true;
   }
 };
 
-void StartArchiveJob(StringParam filename, bool upload = false)
+void StartArchiveJob(StringParam filename)
 {
   Cog* projectCog = Z::gEditor->mProject;
   Z::gEditor->SaveAll(true);
 
   ArchiveProjectJob* job = new ArchiveProjectJob();
   job->mProject = projectCog;
-  job->mUpload = upload;
   job->mFileName = filename;
   Z::gJobs->AddJob(job);
 }
@@ -78,10 +56,10 @@ void BackupProject(ProjectSettings* project)
   String timeStamp = GetTimeAndDateStamp();
   String fileName = BuildString(project->ProjectName, timeStamp, ".zip");
   String fullPath = FilePath::Combine(backupDirectory, fileName);
-  StartArchiveJob(fullPath, false);
+  StartArchiveJob(fullPath);
 }
 
-struct ArchiveProjectCallback : public EventObject
+struct ArchiveProjectCallback : public SafeId32EventObject
 {
   typedef ArchiveProjectCallback ZilchSelf;
 
@@ -90,13 +68,13 @@ struct ArchiveProjectCallback : public EventObject
     const String CallBackEvent = "ArchiveCallback"; 
     ProjectSettings* project = Z::gEditor->mProject.has(ProjectSettings);
     
-    FileDialogConfig config;
-    config.EventName = CallBackEvent;
-    config.CallbackObject = this;
-    config.Title = "Archive a project";
-    config.AddFilter("Zip", "*.zip");
-    config.DefaultFileName = BuildString(project->ProjectName, ".zip");
-    config.mDefaultSaveExtension = "zip";
+    FileDialogConfig* config = FileDialogConfig::Create();
+    config->EventName = CallBackEvent;
+    config->CallbackObject = this;
+    config->Title = "Archive a project";
+    config->AddFilter("Zip", "*.zip");
+    config->DefaultFileName = BuildString(project->ProjectName, ".zip");
+    config->mDefaultSaveExtension = "zip";
 
     ConnectThisTo(this, CallBackEvent, OnArchiveProjectFile);
     Z::gEngine->has(OsShell)->SaveFile(config);
@@ -136,7 +114,6 @@ void ExportContent(ProjectSettings* project)
   // output directory is up to date
   Editor* editor = Z::gEditor;
   editor->SaveAll(true);
-  BuildContent(project);
 
   Exporter* exporter = Exporter::GetInstance();
   exporter->mProjectCog = project->GetOwner();

@@ -148,14 +148,14 @@ bool OsShell::GetPrimaryMonitorImage(Image* imageBuffer)
   return mShell.GetPrimaryMonitorImage(imageBuffer);
 }
 
-bool OsShell::OpenFile(FileDialogConfig& config)
+void OsShell::OpenFile(FileDialogConfig* config)
 {
-  return mShell.OpenFile(config);
+  return mShell.OpenFile(*config);
 }
 
-bool OsShell::SaveFile(FileDialogConfig& config)
+void OsShell::SaveFile(FileDialogConfig* config)
 {
-  return mShell.SaveFile(config);
+  return mShell.SaveFile(*config);
 }
 
 void OsShell::ShowMessageBox(StringParam title, StringParam message)
@@ -204,6 +204,11 @@ ZilchDefineType(OsFileSelection, builder, type)
 }
 
 //-------------------------------------------------------------------FileDialogConfig
+FileDialogConfig* FileDialogConfig::Create()
+{
+  return new FileDialogConfig();
+}
+
 FileDialogConfig::FileDialogConfig()
 {
   CallbackObject = nullptr;
@@ -215,14 +220,20 @@ void FileDialogConfig::Callback(Array<String>& files, void* userData)
 {
   FileDialogConfig* self = (FileDialogConfig*)userData;
   
-  if (!self->CallbackObject)
-    return;
-  
-  OsFileSelection fileEvent;
-  fileEvent.Files = files;
-  fileEvent.Success = !files.Empty();
-  EventDispatcher* dispatcher = self->CallbackObject->GetDispatcherObject();
-  dispatcher->Dispatch(self->EventName, &fileEvent);
+  if (Object* callbackObject = self->CallbackObject)
+  {
+    EventDispatcher* dispatcher = callbackObject->GetDispatcherObject();
+    if (dispatcher)
+    {
+      OsFileSelection fileEvent;
+      fileEvent.Files = files;
+      fileEvent.Success = !files.Empty();
+      dispatcher->Dispatch(self->EventName, &fileEvent);
+    }
+  }
+
+  // At the end of the callback we need to free the memory for the config.
+  delete self;
 }
 
 }//namespace Zero

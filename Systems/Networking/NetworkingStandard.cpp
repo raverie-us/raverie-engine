@@ -45,46 +45,46 @@ ZilchDefineEnum(TransferMode);
 ZilchDefineEnum(Receipt);
 ZilchDefineEnum(WebServerRequestMethod);
 
-ZilchDefineExternalBaseType(Os::WebResponseCode::Enum, TypeCopyMode::ValueType, builder, type)
+ZilchDefineExternalBaseType(WebResponseCode::Enum, TypeCopyMode::ValueType, builder, type)
 {
   ZilchFullBindEnum(builder, type, SpecialType::Enumeration);
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::Invalid, "Invalid");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::NoServerResponse, "NoServerResponse");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::Continue, "Continue");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::SwitchingProtocols, "SwitchingProtocols");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::OK, "OK");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::Created, "Created");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::Accepted, "Accepted");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::NonauthoritativeInformation, "NonauthoritativeInformation");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::NoContent, "NoContent");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::ResetContent, "ResetContent");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::PartialContent, "PartialContent");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::MovedPermanently, "MovedPermanently");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::ObjectMovedTemporarily, "ObjectMovedTemporarily");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::SeeOther, "SeeOther");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::NotModified, "NotModified");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::TemporaryRedirect, "TemporaryRedirect");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::PermanentRedirect, "PermanentRedirect");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::BadRequest, "BadRequest");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::AccessDenied, "AccessDenied");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::Forbidden, "Forbidden");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::NotFound, "NotFound");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::HTTPVerbNotAllowed, "HTTPVerbNotAllowed");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::ClientBrowserRejectsMIME, "ClientBrowserRejectsMIME");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::ProxyAuthenticationRequired, "ProxyAuthenticationRequired");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::PreconditionFailed, "PreconditionFailed");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::RequestEntityTooLarge, "RequestEntityTooLarge");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::RequestURITooLarge, "RequestURITooLarge");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::UnsupportedMediaType, "UnsupportedMediaType");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::RequestedRangeNotSatisfiable, "RequestedRangeNotSatisfiable");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::ExecutionFailed, "ExecutionFailed");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::LockedError, "LockedError");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::InternalServerError, "InternalServerError");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::UnimplementedHeaderValueUsed, "UnimplementedHeaderValueUsed");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::GatewayProxyReceivedInvalid, "GatewayProxyReceivedInvalid");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::ServiceUnavailable, "ServiceUnavailable");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::GatewayTimedOut, "GatewayTimedOut");
-  ZilchFullBindEnumValue(builder, type, Os::WebResponseCode::HTTPVersionNotSupported, "HTTPVersionNotSupported");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::Invalid, "Invalid");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::NoServerResponse, "NoServerResponse");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::Continue, "Continue");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::SwitchingProtocols, "SwitchingProtocols");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::OK, "OK");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::Created, "Created");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::Accepted, "Accepted");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::NonauthoritativeInformation, "NonauthoritativeInformation");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::NoContent, "NoContent");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::ResetContent, "ResetContent");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::PartialContent, "PartialContent");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::MovedPermanently, "MovedPermanently");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::ObjectMovedTemporarily, "ObjectMovedTemporarily");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::SeeOther, "SeeOther");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::NotModified, "NotModified");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::TemporaryRedirect, "TemporaryRedirect");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::PermanentRedirect, "PermanentRedirect");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::BadRequest, "BadRequest");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::AccessDenied, "AccessDenied");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::Forbidden, "Forbidden");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::NotFound, "NotFound");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::HTTPVerbNotAllowed, "HTTPVerbNotAllowed");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::ClientBrowserRejectsMIME, "ClientBrowserRejectsMIME");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::ProxyAuthenticationRequired, "ProxyAuthenticationRequired");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::PreconditionFailed, "PreconditionFailed");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::RequestEntityTooLarge, "RequestEntityTooLarge");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::RequestURITooLarge, "RequestURITooLarge");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::UnsupportedMediaType, "UnsupportedMediaType");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::RequestedRangeNotSatisfiable, "RequestedRangeNotSatisfiable");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::ExecutionFailed, "ExecutionFailed");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::LockedError, "LockedError");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::InternalServerError, "InternalServerError");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::UnimplementedHeaderValueUsed, "UnimplementedHeaderValueUsed");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::GatewayProxyReceivedInvalid, "GatewayProxyReceivedInvalid");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::ServiceUnavailable, "ServiceUnavailable");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::GatewayTimedOut, "GatewayTimedOut");
+  ZilchFullBindEnumValue(builder, type, WebResponseCode::HTTPVersionNotSupported, "HTTPVersionNotSupported");
 }
 
 // Arrays
@@ -127,7 +127,7 @@ ZilchDefineStaticLibrary(NetworkingLibrary)
   ZilchInitializeEnum(TransferMode);
   ZilchInitializeEnum(Receipt);
   ZilchInitializeEnum(WebServerRequestMethod);
-  ZilchInitializeEnum(Os::WebResponseCode);
+  ZilchInitializeEnum(WebResponseCode);
 
   // Meta Arrays
   ZeroInitializeArrayTypeAs(NetPropertyInfoArray, "NetPropertyInfos");
@@ -192,10 +192,11 @@ ZilchDefineStaticLibrary(NetworkingLibrary)
 
   // Other Networking Type Initialization
   ZilchInitializeType(TcpSocket);
-  ZilchInitializeType(ThreadedWebRequest);
-  ZilchInitializeType(BlockingWebRequest);
+  ZilchInitializeType(SimpleSocket);
   ZilchInitializeType(ConnectionData);
   ZilchInitializeType(WebServer);
+  ZilchInitializeType(AsyncWebRequest);
+  ZilchInitializeType(WebRequester);
 
   // NetPeer Type Initialization
   ZilchInitializeTypeAs(BitStreamExtended, "BitStream");
@@ -213,8 +214,6 @@ ZilchDefineStaticLibrary(NetworkingLibrary)
   ZilchInitializeType(NetSpace);
   ZilchInitializeType(NetUser);
   ZilchInitializeType(NetPeer);
-  ZilchInitializeType(SimpleSocket);
-  ZilchInitializeType(WebRequester);
 
   EngineLibraryExtensions::AddNativeExtensions(builder);
 }
@@ -236,6 +235,8 @@ void NetworkingLibrary::Initialize()
 //**************************************************************************************************
 void NetworkingLibrary::Shutdown()
 {
+  AsyncWebRequest::CancelAllActiveRequests();
+
   GetLibrary()->ClearComponents();
 }
 

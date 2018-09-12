@@ -147,6 +147,10 @@ public:
   void GetTags(Array<String>& tags);
   void GetTags(HashSet<String>& tags);
   void AddTags(HashSet<String>& tags);
+  void SetTags(HashSet<String>& tags);
+  /// If applicable, remove all tags in the given set from this resource.
+  void RemoveTags(HashSet<String>& tags);
+
   bool HasTag(StringParam tag);
 
   virtual void GetDependencies(HashSet<ContentItem*>& dependencies,

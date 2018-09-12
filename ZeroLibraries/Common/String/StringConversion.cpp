@@ -239,6 +239,11 @@ void ToValue(StringRangeParam range, uint64& value, int base)
   value = (uint64)strtoull(range.mBegin, nullptr, base);
 }
 
+void ToValue(StringRangeParam range, ulong& value, int base)
+{
+  value = (ulong)strtoull(range.mBegin, nullptr, base);
+}
+
 void ToValue(StringRangeParam range, float& value)
 {
   value = (float)atof(range.mBegin);
@@ -317,6 +322,11 @@ uint ToBuffer(char* buffer, uint bufferSize, uint32 value, bool shortFormat)
 uint ToBuffer(char* buffer, uint bufferSize, uint64 value, bool shortFormat)
 {
   return ZeroSPrintf(buffer, bufferSize, "%llu", value);
+}
+
+uint ToBuffer(char* buffer, uint bufferSize, ulong value, bool shortFormat)
+{
+  return ZeroSPrintf(buffer, bufferSize, "%llu", (uint64)value);
 }
 
 uint ToBuffer(char* buffer, uint bufferSize, float value, bool shortFormat)

@@ -7,3 +7,6 @@ include(${cmake_os_dir}/Windows.cmake)
 include(${cmake_compiler_dir}/MSVC.cmake)
 include(${cmake_flags_dir}/MSVC_FLAGS.cmake)
 include(${cmake_os_dir}/SDLSTLEmpty.cmake)
+
+set(configuration Windows_VS_2015_SDLSTLEmpty)
+

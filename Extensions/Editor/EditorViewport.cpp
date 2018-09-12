@@ -67,7 +67,6 @@ EditorViewport::EditorViewport(Composite* parent, OwnerShip::Enum ownership)
   ConnectThisTo(this, Events::KeyDown, OnKeyDown);
   ConnectThisTo(this, Events::KeyUp, OnKeyUp);
 
-  ConnectThisTo(this, Events::MouseFileDrop, OnMouseFileDrop);
   ConnectThisTo(this, Events::MetaDrop, OnMetaDrop);
   ConnectThisTo(this, Events::MetaDropTest, OnMetaDrop);
   ConnectThisTo(this, Events::MetaDropUpdate, OnMetaDrop);
@@ -453,8 +452,8 @@ void EditorViewport::OnResourceModified(ResourceEvent* event)
 
 void EditorViewport::OnCaptureContext(CommandCaptureContextEvent* event)
 {
-  event->ActiveSet->SetContext(this);
-  event->ActiveSet->SetContext((Space*)mEditSpace);
+  event->ActiveSet->GetContext()->Add(this);
+  event->ActiveSet->GetContext()->Add((Space*)mEditSpace);
 }
 
 void EditorViewport::OnObjectPoll(ObjectPollEvent* event)
@@ -695,16 +694,6 @@ void EditorViewport::OnMouseScroll(MouseEvent* e)
 
   if(EditorCameraController* controller = mEditorCamera.has(EditorCameraController))
     controller->MouseScroll(e->Scroll);
-}
-
-void EditorViewport::OnMouseFileDrop(MouseFileDropEvent* event)
-{
-  ReactiveViewport* viewport = GetReactiveViewport();
-  if (viewport == nullptr)
-    return;
-
-  if (Space* space = mEditSpace)
-      LoadFilesDroppedOnViewport(event->Files->NativeArray);
 }
 
 void EditorViewport::OnMetaDrop(MetaDropEvent* e)

@@ -15,7 +15,7 @@ namespace Zero
 void RunGroupImport(ImportOptions& options);
 void GroupImport();
 void OpenGroupImport(Array<String>& files);
-void LoadFilesDroppedOnViewport(Array<HandleOfString>& files);
+void LoadDroppedFiles(Array<HandleOfString>& files);
 
 //------------------------------------------------------------------------ GroupImportWindow
 class GroupImportWindow : public Composite
@@ -41,7 +41,7 @@ public:
 };
 
 //------------------------------------------------------------------------ ImportCallback
-class ImportCallback : public EventObject
+class ImportCallback : public SafeId32EventObject
 {
 public:
   typedef ImportCallback ZilchSelf;

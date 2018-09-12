@@ -427,7 +427,7 @@ void SoundNodeGraph::PositionCleanUp(Array<NodeInfoListType> &infoByLevel, int l
           if (gap / mNodeWidth > 2 && index + 1 < orphans.Size())
           {
             // The number if nodes to move is either the number that will fit in the gap or all of them
-            unsigned nodesToMove = Math::Min((unsigned)(gap / mNodeWidth), orphans.Size() - index);
+            unsigned nodesToMove = Math::Min((unsigned)(gap / mNodeWidth), (unsigned)(orphans.Size() - index));
             // Save the base X position
             float startingXpos = positions[gapIndex];
 

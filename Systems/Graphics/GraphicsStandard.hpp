@@ -32,7 +32,6 @@ public:
 
 // No Dependencies
 #include "Camera.hpp"
-#include "FileElements.hpp"
 #include "Font.hpp"
 #include "GraphicalEntry.hpp"
 #include "GraphicsRaycastProvider.hpp"

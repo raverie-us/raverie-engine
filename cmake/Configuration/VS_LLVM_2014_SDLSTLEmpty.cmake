@@ -8,6 +8,8 @@ include(${cmake_compiler_dir}/Clang.cmake)
 include(${cmake_flags_dir}/MSVC_FLAGS.cmake)
 include(${cmake_os_dir}/SDLSTLEmpty.cmake)
 
+set(configuration VS_LLVM_2014_SDLSTLEmpty)
+
 unset(common_flags)
 # override the flags because clangs hates some of the normal msvc flags
 set(common_flags     

@@ -3,7 +3,7 @@
 /// \file AudioContent.cpp
 /// Implementation of the Audio content classes.
 /// 
-/// Authors: Chris Peters
+/// Authors: Chris Peters, Andrea Ellinger
 /// Copyright 2010-2012, DigiPen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
@@ -44,7 +44,7 @@ ZilchDefineType(SoundBuilder, builder, type)
   ZeroBindExpanded();
 
   ZilchBindFieldProperty(Name);
-  ZilchBindFieldProperty(mStreamed);
+  ZilchBindFieldProperty(mFileLoadType);
   ZilchBindFieldProperty(mNormalize)->AddAttribute(PropertyAttributes::cInvalidatesObject);
   ZilchBindFieldProperty(mMaxVolume)->Add(new EditorSlider(0.0f, 1.0f, 0.1f))->ZeroFilterBool(mNormalize);
 }
@@ -53,17 +53,28 @@ void SoundBuilder::Generate(ContentInitializer& initializer)
 {
   mResourceId = GenerateUniqueId64();
   Name = initializer.Name;
-
-  mStreamed = false;
+  mFileLoadType = initializer.Options->mAudioOptions->mStreamingMode;
 }
 
 void SoundBuilder::Serialize(Serializer& stream)
 {
   SerializeName(Name);
   SerializeName(mResourceId);
-  SerializeNameDefault(mStreamed, false);
+  SerializeEnumNameDefault(AudioFileLoadType, mFileLoadType, AudioFileLoadType::Auto);
   SerializeNameDefault(mNormalize, false);
   SerializeNameDefault(mMaxVolume, 0.9f);
+
+  // This should be removed at the next major version (makes sure that we keep the streaming
+  // setting for existing sounds)
+  if (stream.GetType() != SerializerType::Binary && stream.GetMode() == SerializerMode::Loading)
+  {
+    SerializeNameDefault(mStreamed, false);
+    if (mStreamed)
+    {
+      mFileLoadType = AudioFileLoadType::StreamFromFile;
+      mStreamed = false;
+    }
+  }
 }
 
 void SoundBuilder::BuildContent(BuildOptions& options)
@@ -72,7 +83,7 @@ void SoundBuilder::BuildContent(BuildOptions& options)
   String sourceFile = FilePath::Combine(options.SourcePath, mOwner->Filename);
   String destFile = FilePath::Combine(options.OutputPath, BuildString(Name, SoundExtension));
 
-  // Create the AudiFile object and open the source file
+  // Create the AudioFile object and open the source file
   Audio::AudioFile audioFile;
   audioFile.OpenFile(status, sourceFile);
 
@@ -96,10 +107,12 @@ bool SoundBuilder::NeedsBuilding(BuildOptions& options)
 void SoundBuilder::BuildListing(ResourceListing& listing)
 {
   //Data is the same but loaders are different for streamed and direct load.
-  if(mStreamed)
+  if (mFileLoadType == AudioFileLoadType::StreamFromFile)
     LoaderType = "StreamedSound";
-  else
+  else if (mFileLoadType == AudioFileLoadType::Uncompressed)
     LoaderType = "Sound";
+  else
+    LoaderType = "AutoStreamedSound";
 
   DirectBuilderComponent::BuildListing(listing);
 }

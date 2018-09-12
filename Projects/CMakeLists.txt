@@ -35,9 +35,6 @@ include(BrowserSubProcess/CMakeLists.txt)
 target_include_directories(ZeroEditor 
     PUBLIC 
         ${Source_Root}
-        ${OpusHeaders}
-        ${FreetypeHeaders}
-        ${WinHidHeaders}
         ${CurrentDirectory}/ZeroEditor 
         ${CurrentDirectory}
 )
@@ -46,7 +43,6 @@ target_include_directories(ZeroLauncher
         ${CurrentDirectory}
         ${CurrentDirectory}/ZeroLauncher/ZeroLauncher
         ${CurrentDirectory}/ZeroLauncher/ZeroLauncherSharedLibrary
-        ${ZLibHeaders}
 )
 target_include_directories(ZeroLauncherSharedLibrary 
     PUBLIC 
@@ -59,7 +55,6 @@ target_include_directories(BrowserSubProcess
     PUBLIC 
         ${CurrentDirectory}/BrowserSubProcess    
         ${CurrentDirectory}
-        ${CEFHeaders}
 )
 
 ################################################################################
@@ -154,6 +149,9 @@ target_link_libraries(ZeroLauncherSharedLibrary
 add_dependencies(ZeroLauncherSharedLibrary
     BrowserSubProcess
 )
+add_dependencies(ZeroEditor
+    BrowserSubProcess
+)
 # launcher needs the dll to run
 add_dependencies(ZeroLauncher
     ZeroLauncherSharedLibrary
@@ -193,6 +191,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         CONFIGS ${supported_configs}
         BASEPATH ${zero_build_out}
         PLATFORM ${platform}
+        CONFIG ${configuration}
         BITS ${bit}
         TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET}
         PRECOMPILED_HEADER_NAME "Precompiled.hpp"
@@ -204,8 +203,9 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         ZeroLauncher 
         ZeroLauncherSharedLibrary
         CONFIGS ${supported_configs}
-        BASEPATH ${zero_build_out}
+        BASEPATH "${zero_build_out}"
         PLATFORM ${platform}
+        CONFIG ${configuration}
         BITS ${bit}
         TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET}
         PRECOMPILED_HEADER_NAME "Precompiled.hpp"
@@ -218,6 +218,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         CONFIGS ${supported_configs}
         BASEPATH ${zero_build_out}
         PLATFORM ${platform}
+        CONFIG ${configuration}
         BITS ${bit}
         TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET}
         PRECOMPILED_HEADER_NAME ""
@@ -312,7 +313,6 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         $<$<CONFIG:Release>:-"D \"NDEBUG\"">
         $<$<CONFIG:Release>:-"D \"VLD\"">
     )
-
     
 ################################################################################
 # Set linker flags
@@ -364,12 +364,12 @@ if (${platform} STREQUAL "Emscripten")
     set_target_properties(
         ZeroEditor
         PROPERTIES SUFFIX ".html"
-        LINK_FLAGS "--preload-file \"${zero_build_out}/ZeroEditorFileSystem.zip\"@/FileSystem.zip"
+        LINK_FLAGS "--embed-file \"${zero_build_out}/ZeroEditorFileSystem.zip\"@/FileSystem.zip"
     )
     set_target_properties(
         ZeroLauncher
         PROPERTIES SUFFIX ".html"
-        LINK_FLAGS "--preload-file \"${zero_build_out}/ZeroLauncherFileSystem.zip\"@/FileSystem.zip"
+        LINK_FLAGS "--embed-file \"${zero_build_out}/ZeroLauncherFileSystem.zip\"@/FileSystem.zip"
     )
 endif()
 
@@ -385,14 +385,14 @@ zero_subfolder_source_group(${zero_core_path} Projects BrowserSubProcess "")
 
 
 ################################################################################
-# Post build step to put all the dlls next to the executable
+# Post build steps
 ################################################################################
 #### ZeroEditor editor
-copy_multiple_dlls(
+copy_multiple_shared_objects(
     ZeroEditor
     ZeroLauncher
     OUTPUT_DIRECTORY ${zero_binary_dir}
-    DLL_LOCATIONS
+    SHARED_OBJECT_LOCATIONS
     ## setup all dll locations
     ${AssimpSharedPath}
     ${CEFSharedPath}
@@ -404,6 +404,47 @@ copy_multiple_dlls(
     ${PortAudioSharedPath}
     ${SDLSharedPath}
 )
+
+if("${platform}" STREQUAL "Emscripten")
+    message("should be calling zip directory")
+    multitarget_zip_directory(
+        ZeroEditor 
+        FOLDERS_TO_ZIP
+        "Resources/Loading"
+        "Resources/FragmentCore"
+        "Resources/ZeroCore"
+        "Resources/Editor"
+        "Resources/EditorUi"
+        "Resources/UiWidget"
+        "PrebuiltZeroContent"
+        "Tools/SpriteVersion.txt"
+        "Data/ColorSchemes"
+        "Data/Fallback"
+        "Data/Licenses"
+        "Data/ZilchFragmentSettings"
+        "Data/*.*"
+        OUTPUT_FILE
+        "BuildOutput/ZeroEditorFileSystem.zip"
+    )
+    multitarget_zip_directory(
+        ZeroLauncher 
+        FOLDERS_TO_ZIP
+        "Resources/Loading"
+        "Resources/FragmentCore"
+        "Resources/ZeroCore"
+        "Resources/ZeroLauncherResources"
+        "PrebuiltZeroContent"
+        "Tools/SpriteVersion.txt"
+        "Data/ColorSchemes"
+        "Data/Fallback"
+        "Data/Licenses"
+        "Data/ZilchFragmentSettings"
+        "Data/*.*"
+        OUTPUT_FILE
+        "BuildOutput/ZeroLauncherFileSystem.zip"
+    )
+endif()
+
 
 #function(create_build_info aTarget aSourceDir aBuildOutDir aOutputLocation)
 create_build_info(
@@ -435,12 +476,17 @@ launcher_shared_post_build(
     ${zero_binary_dir}
 )
 
-#copy_cef_bin_post_build(aTarget aZeroCoreDirectory aBuildOutputDirectory)
-copy_cef_bin_post_build(
-    BrowserSubProcess
-    ${zero_core_path}
-    ${zero_binary_dir}
+#### BrowserSubProcess
+add_custom_command(
+    TARGET BrowserSubProcess POST_BUILD
+    # executes "cmake -E copy_directory
+    COMMAND ${CMAKE_COMMAND} -E copy_directory  
+    # input folder
+    ${zero_binary_dir}/BrowserSubProcess                                  
+    #output folder
+    ${zero_binary_dir}/ZeroEditor
 )
+
 ####
 
 #### ZeroLauncher
@@ -451,17 +497,17 @@ launcher_post_build(
     ${zero_binary_dir}
 )
 
-#create_build_info(
-#    ZeroLauncher
-#    ${CurrentDirectory}/ZeroLauncher/ZeroLauncher
-#    ${zero_core_path}
-#    ${zero_binary_dir}
-#    ${zero_binary_dir}
-#)
-#
-#copy_cef_bin_post_build(
-#    ZeroLauncher
-#    ${zero_core_path}
-#    ${zero_binary_dir}
-#)
+
+#### Copy the CEF files for every project that needs them
+# first check if we need CEF for this platform, then copy cef files over
+if (${CEF_exists})
+    zero_multitarget_copy_folders_to_target_output_directories(
+        ZeroEditor
+        ZeroLauncher
+        BrowserSubProcess
+        OUTPUT_DIRECTORY ${zero_binary_dir}
+        FOLDERS_TO_COPY 
+        ${aZeroCoreDirectory}/External/CEF/bin
+    )
+endif()
 ####

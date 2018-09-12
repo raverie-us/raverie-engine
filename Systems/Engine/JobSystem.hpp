@@ -16,48 +16,51 @@ namespace Zero
 {
 
 //-------------------------------------------------------------------------- Job
-class Job : public EventObject
+class Job : public ReferenceCountedEventObject
 {
 public:
+  friend class JobSystem;
   ZilchDeclareType(Job, TypeCopyMode::ReferenceType);
   Job();
   virtual ~Job();
 
-  // Entrant function of the job.
-  virtual int Execute()=0;
+  // Entrant function of the job. If it returns Complete, the job may be destroyed
+  // by the job system. Returning InProgress means the job will not be deleted
+  // (you can call AddJob again from any thread, even on the same job class).
+  virtual void Execute() = 0;
 
   // Called from a different thread, typically setting a bool to stop
   virtual int Cancel(){return 0;};
-  
-  /// We don't want to create an OsEvent for every job, so only call this if you
-  /// need it. Creating an OsEvent on this job will also set 
-  /// mDeletedOnCompletion to false, as the job must be alive to wait on the OsEvent.
-  OsEvent* InitializeOsEvent();
 
-  bool mDeletedOnCompletion;
-  OsEvent* mOsEvent;
-  Link<Job> link;
+private:
+  // This value is incremented by the job system every time we add the job.
+  // If the value is greater than 1, the thread will run it multiple times.
+  // Must be locked by the JobSystem.
+  size_t mRunCount;
 };
 
 //------------------------------------------------------------------- Job System
-class JobSystem
+class JobSystem : public EventObject
 {
 public:
+  typedef JobSystem ZilchSelf;
   JobSystem();
   ~JobSystem();
   
+  // Add's a job to be worked on (can be called from any thread).
+  // Note that a job can be queued up again after it completes.
   void AddJob(Job* job);
   OsInt WorkerThreadEntry();
 
 private:
+  void RunJob(Job* job);
+
   ThreadLock mLock;
-  InList<Job> PendingJobs;
-  InList<Job> ActiveJobs;
-  Array<Thread*> Workers;
+  Array<HandleOf<Job>> mPendingJobs;
+  Array<HandleOf<Job>> mActiveJobs;
+  Array<Thread*> mWorkers;
   Semaphore mJobCounter;
   Job* GetNextJob();
-  void JobFinished(Job* job);
-  bool mWorkerThreadsActive;
   friend class Job;
 };
 

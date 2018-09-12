@@ -48,12 +48,18 @@ foreach(possibleStaticLib ${AllPossibleStaticExternals})
     set(${possibleStaticLib}Static "")
     set(${possibleStaticLib}Static "" PARENT_SCOPE)
     set(${possibleStaticLib}Headers "" PARENT_SCOPE)
+
+    #variable to easily check if an external exists
+    set(${possibleStaticLib}_exists OFF)
 endforeach()
 
 foreach(possibleSharedLib ${AllPossibleSharedExternals})
-set(${possibleSharedLib}Shared "")
-set(${possibleSharedLib}Shared "" PARENT_SCOPE)
-set(${possibleSharedLib}Headers "" PARENT_SCOPE)
+    set(${possibleSharedLib}Shared "")
+    set(${possibleSharedLib}Shared "" PARENT_SCOPE)
+    set(${possibleSharedLib}Headers "" PARENT_SCOPE)
+
+    #variable to easily check if an external exists
+    set(${possibleSharedLib}_exists OFF)
 endforeach()
 
 
@@ -63,13 +69,14 @@ endforeach()
 # use parent scope so the folders are accessible anywhere
 ################################################################################
 
-foreach(externLib ${AllPossibleStaticExternals})
-    set(${externLib}Headers "" PARENT_SCOPE)
-endforeach()
+#foreach(externLib ${AllPossibleStaticExternals})
+#    set(${externLib}Headers "" PARENT_SCOPE)
+#endforeach()
 
-foreach(externLib ${StaticExternals})
-  set(${externLib}Headers ${CurrentDirectory}/${externLib}/include PARENT_SCOPE)
-endforeach()
+#foreach(externLib ${StaticExternals})
+#  set(${externLib}Headers ${CurrentDirectory}/${externLib}/include PARENT_SCOPE)
+#  set_target_properties(glfwStatic PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_LIST_DIR}/include)
+#endforeach()
 
 ################################################################################
 # Set path to library folders
@@ -95,6 +102,9 @@ set(SDLPath ${CurrentDirectory}/SDL)
 ################################################################################
 
 foreach(libStatic ${StaticExternals})
+    #variable to easily check if an external exists
+    set(${libStatic}_exists ON)
+
     # get lists of libraries
     if ("${bit}" STREQUAL "")
         file(GLOB ${libStatic}StaticPath ${${libStatic}Path}/lib/${platform}/*.*)
@@ -105,8 +115,6 @@ foreach(libStatic ${StaticExternals})
         file(GLOB ${libStatic}StaticDebugPath ${${libStatic}Path}/lib/${platform}/${bit}/Debug/*.*)
         file(GLOB ${libStatic}StaticReleasePath ${${libStatic}Path}/lib/${platform}/${bit}/Release/*.*)
     endif()
-
-
 
     if ("${${libStatic}StaticPath}"        STRGREATER "" 
      OR "${${libStatic}StaticDebugPath}"   STRGREATER ""
@@ -121,9 +129,19 @@ foreach(libStatic ${StaticExternals})
             #create library using that name
             #insert into list of libraries under this name
             add_library(${libName} STATIC IMPORTED GLOBAL) 
-            set_target_properties(${libName} PROPERTIES
+
+            set_target_properties(
+                ${libName} 
+                PROPERTIES
                 IMPORTED_LOCATION ${libPath}
             )
+
+            set_target_properties(
+                ${libName}
+                PROPERTIES 
+                INTERFACE_INCLUDE_DIRECTORIES ${CurrentDirectory}/${libStatic}/include
+            )
+
             set(${libStatic}Static ${${libStatic}Static} ${libName})
             set(${libStatic}Static ${${libStatic}Static} PARENT_SCOPE)
         endforeach()
@@ -137,9 +155,19 @@ foreach(libStatic ${StaticExternals})
             #create library using that name
             #insert into list of libraries under this name
             add_library(${libNameDebug} STATIC IMPORTED GLOBAL) 
-            set_target_properties(${libNameDebug} PROPERTIES
+
+            set_target_properties(
+                ${libNameDebug}
+                PROPERTIES
                 IMPORTED_LOCATION ${libPath}
             )
+
+            set_target_properties(
+                ${libNameDebug}
+                PROPERTIES 
+                INTERFACE_INCLUDE_DIRECTORIES ${CurrentDirectory}/${libStatic}/include
+            )
+
             set(${libStatic}Static ${${libStatic}Static} $<$<CONFIG:Debug>:${libNameDebug}>)
             set(${libStatic}Static ${${libStatic}Static} PARENT_SCOPE)
             set(${libStatic}StaticDebug ${${libStatic}StaticDebug} ${libNameDebug})
@@ -155,9 +183,20 @@ foreach(libStatic ${StaticExternals})
             #create library using that name
             #insert into list of libraries under this name
             add_library(${libNameRelease} STATIC IMPORTED GLOBAL) 
-            set_target_properties(${libNameRelease} PROPERTIES
+
+            set_target_properties(
+                ${libNameRelease} 
+                PROPERTIES
                 IMPORTED_LOCATION ${libPath}
             )
+
+            # add the include directory for the headers
+            set_target_properties(
+                ${libNameRelease}
+                PROPERTIES 
+                INTERFACE_INCLUDE_DIRECTORIES ${CurrentDirectory}/${libStatic}/include
+            )
+
             set(${libStatic}Static ${${libStatic}Static} $<$<CONFIG:Release>:${libNameRelease}>)
             set(${libStatic}Static ${${libStatic}Static} PARENT_SCOPE)
             set(${libStatic}StaticRelease ${${libStatic}StaticRelease} ${libNameRelease})
@@ -172,6 +211,9 @@ foreach(libStatic ${StaticExternals})
 endforeach()
 
 foreach(libShared ${SharedExternals})
+    # set easy variable for seeing if a lib exists
+    set(${libShared}_exists ON)
+
     # get list of shared libraries
     file(GLOB ${libShared}SharedPath ${${libShared}Path}/bin/*.dll)
 
@@ -193,6 +235,14 @@ foreach(libShared ${SharedExternals})
                 ${libName} PROPERTIES
                 IMPORTED_LOCATION ${libPath}
             )
+
+            # add the include directory for the headers
+            set_target_properties(
+                ${libName}
+                PROPERTIES 
+                INTERFACE_INCLUDE_DIRECTORIES ${CurrentDirectory}/${libShared}/include
+            )
+
 
             # set the libraries that can be added by targets
             set(${libShared}Shared ${${libShared}Shared} ${libName})

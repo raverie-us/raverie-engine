@@ -47,7 +47,7 @@ void MetaEditorScriptObject::PostProcess(Status& status, ReflectionObject* owner
   // If auto register is true, we're creating an empty Cog and adding this Component to it.
   // Therefore, it cannot have any dependencies. We could first add the dependencies to the
   // empty Cog, but that's for a later time
-  if (mAutoRegister)
+  if(mAutoRegister)
   {
     BoundType* componentType = Type::DebugOnlyDynamicCast<BoundType*>(owner);
 

@@ -44,10 +44,12 @@ ZilchDefineStaticLibrary(WidgetLibrary)
   ZilchInitializeType(QueryModifiedSaveEvent);
   ZilchInitializeType(HandleableEvent);
   ZilchInitializeType(WindowTabEvent);
+  ZilchInitializeType(MainWindowTransformEvent);
   ZilchInitializeType(MouseDragEvent);
   ZilchInitializeType(ModalConfirmEvent);
   ZilchInitializeType(ModalButtonEvent);
   ZilchInitializeType(SearchViewEvent);
+  ZilchInitializeType(AlternateSearchCompletedEvent);
   ZilchInitializeType(TagEvent);
   ZilchInitializeType(ContextMenuEvent);
 
@@ -91,6 +93,8 @@ ZilchDefineStaticLibrary(WidgetLibrary)
   ZilchInitializeType(WidgetManager);
   ZilchInitializeType(CommandExecuter);
   ZilchInitializeType(CommandManager);
+  ZilchInitializeType(MetaScriptTagAttribute);
+  ZilchInitializeType(MetaScriptShortcutAttribute);
   ZilchInitializeType(Spacer);
   ZilchInitializeType(Splitter);
   ZilchInitializeType(TabArea);
@@ -115,6 +119,9 @@ void WidgetLibrary::Initialize()
 {
   BuildStaticLibrary();
   MetaDatabase::GetInstance()->AddNativeLibrary(GetLibrary());
+
+  RegisterClassAttributeType(ObjectAttributes::cTags, MetaScriptTagAttribute)->TypeMustBe(Component);
+  RegisterClassAttributeType(ObjectAttributes::cShortcut, MetaScriptShortcutAttribute)->TypeMustBe(Component);
 
   WidgetManager::Initialize();
   CommandManager::Initialize();

@@ -1,0 +1,100 @@
+[Version:1]
+Cog 
+{
+	var Name = "SpotLightShadows"
+	Transform 
+	{
+		var Translation = Real3{0, 0, 0}
+		var Scale = Real3{20, 20, 20}
+		var Rotation = Quaternion{-0.707106829, 0, 0, 0.707106829}
+	}
+	SelectionIcon 
+	{
+		var Visible = true
+		var VisibilityEvents = true
+		var Material = "56581e2bb81777be:DebugDrawOnTop"
+		var SpriteSource = "58f8e4be736f5ea2:LightIcon"
+		var ViewScale = 1
+		var OverrideSelections = true
+	}
+	Model 
+	{
+		var Visible = true
+		var ViewCulling = true
+		var VisibilityEvents = true
+		var OverrideBoundingBox = false
+		var LocalAabbCenter = Real3{0, 0, 0}
+		var LocalAabbHalfExtents = Real3{1, 1, 1}
+		var GroupSortValue = 0
+		var Material = "5b3cf9a9e5d99896:SpotLightShadows"
+		var Mesh = "4de0354322b376ae:Sphere"
+	}
+	SpotLight 
+	{
+		var LightColor = Real4{1, 1, 1, 1}
+		var LightIntensity = 20
+		var FalloffRadius = 10
+		var LightRadius = 0
+		var InnerAngle = 45
+		var OuterAngle = 60
+	}
+	CameraViewport 
+	{
+		var RenderInEditor = true
+		var RenderInGame = true
+		var RenderOrder = -1
+		var CameraPath = CogPath
+		{
+			var Path = "."
+			var ErrorOnResolveToNull = false
+			var ErrorOnPathCantCompute = false
+			var ErrorOnDirectLinkFail = false
+			var UpdateCogOnPathChange = true
+			var UpdatePathOnCogChange = true
+			var UpdateCogOnInitialize = true
+			var ResolvedNullErrorOccurred = false
+			var Cog = 4294967293
+			var PathPreference0 = CogPathPreference.CogRelative
+			var PathPreference1 = CogPathPreference.SpaceRelative
+			var PathPreference2 = CogPathPreference.Absolute
+		}
+		var RendererPath = CogPath
+		{
+			var Path = "."
+			var ErrorOnResolveToNull = false
+			var ErrorOnPathCantCompute = false
+			var ErrorOnDirectLinkFail = false
+			var UpdateCogOnPathChange = true
+			var UpdatePathOnCogChange = true
+			var UpdateCogOnInitialize = true
+			var ResolvedNullErrorOccurred = false
+			var Cog = 4294967293
+			var PathPreference0 = CogPathPreference.CogRelative
+			var PathPreference1 = CogPathPreference.SpaceRelative
+			var PathPreference2 = CogPathPreference.Absolute
+		}
+		var ResolutionOrAspect = Integer2{1, 1}
+		var RenderToViewport = false
+		var ForwardViewportEvents = true
+		var ViewportScaling = ViewportScaling.Fill
+		var MarginColor = Real4{0, 0, 0, 1}
+		var NormalizedSize = Real2{1, 1}
+		var NormalizedOffset = Real2{0, 0}
+	}
+	Camera 
+	{
+		var NearPlane = 0.100000001
+		var FarPlane = 10
+		var PerspectiveMode = PerspectiveMode.Perspective
+		var FieldOfView = 60
+		var Size = 20
+	}
+	ShadowRenderer 
+	{
+		var ResolutionValue = ShadowResolution.Low
+		var NormalOffsetBias = 0.100000001
+	}
+	Hierarchy 
+	{
+	}
+}

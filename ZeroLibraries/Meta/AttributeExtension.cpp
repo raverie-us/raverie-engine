@@ -9,6 +9,14 @@
 namespace Zero
 {
 
+//--------------------------------------------------------------------------------- Attribute Status
+//**************************************************************************************************
+void AttributeStatus::SetFailed(CodeLocation& location, StringParam message)
+{
+  mLocation = location;
+  Status::SetFailed(message);
+}
+
 //----------------------------------------------------------------------------- Attribute Extensions
 //**************************************************************************************************
 AttributeExtensions::~AttributeExtensions()
@@ -19,26 +27,26 @@ AttributeExtensions::~AttributeExtensions()
 }
 
 //**************************************************************************************************
-void AttributeExtensions::ProcessType(BoundType* type, Project* buildingProject, bool ignoreUnkownAttributes)
+void AttributeExtensions::ProcessType(AttributeStatus& status, BoundType* type, bool ignoreUnkownAttributes)
 {
   // Class attributes
-  ProcessObject(type, mClassExtensions, buildingProject, ignoreUnkownAttributes);
-  if (buildingProject->WasError)
+  ProcessObject(status, type, mClassExtensions, ignoreUnkownAttributes);
+  if (status.Failed())
     return;
 
   // Property attributes
   forRange(Property* property, type->GetProperties(Members::InstanceStatic))
   {
-    ProcessObject(property, mPropertyExtensions, buildingProject, ignoreUnkownAttributes);
-    if (buildingProject->WasError)
+    ProcessObject(status, property, mPropertyExtensions, ignoreUnkownAttributes);
+    if (status.Failed())
       return;
   }
 
   // Function attributes
   forRange(Function* function, type->GetFunctions(Members::InstanceStatic))
   {
-    ProcessObject(function, mFunctionExtensions, buildingProject, ignoreUnkownAttributes);
-    if (buildingProject->WasError)
+    ProcessObject(status, function, mFunctionExtensions, ignoreUnkownAttributes);
+    if (status.Failed())
       return;
   }
 }
@@ -76,8 +84,8 @@ String GetDescriptorFromObject(ReflectionObject* object)
 }
 
 //**************************************************************************************************
-void AttributeExtensions::ProcessObject(ReflectionObject* object, ExtensionMap& extensionMap,
-                                        Project* buildingProject, bool ignoreUnkownAttributes)
+void AttributeExtensions::ProcessObject(AttributeStatus& status, ReflectionObject* object,
+                                        ExtensionMap& extensionMap, bool ignoreUnkownAttributes)
 {
   // Used to keep track of duplicate attributes
   HashSet<String> processedAttributes;
@@ -106,7 +114,7 @@ void AttributeExtensions::ProcessObject(ReflectionObject* object, ExtensionMap& 
         message = String::Format("Attribute '%s' is not recognized", attribute.Name.c_str());
       }
 
-      buildingProject->Raise(object->Location, ErrorCode::GenericError, message.c_str());
+      status.SetFailed(object->Location, message);
       return;
     }
 
@@ -114,17 +122,16 @@ void AttributeExtensions::ProcessObject(ReflectionObject* object, ExtensionMap& 
     if (processedAttributes.Contains(attribute.Name) && extension->mAllowMultiple == false)
     {
       String message = String::Format("You cannot have multiple '%s' attributes", attribute.Name.c_str());
-      buildingProject->Raise(object->Location, ErrorCode::GenericError, message.c_str());
+      status.SetFailed(object->Location, message);
       return;
     }
 
-    Status status;
     extension->Validate(status, object, attribute);
 
     // The attribute name is correct, but something failed when trying to add it
     if (status.Failed())
     {
-      buildingProject->Raise(object->Location, ErrorCode::GenericError, status.Message.c_str());
+      status.mLocation = object->Location;
       return;
     }
 

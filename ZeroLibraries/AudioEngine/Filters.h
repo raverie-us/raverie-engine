@@ -151,7 +151,7 @@ namespace Audio
     float SqRoot2;
     float HalfPI;
 
-    BiQuad BiQuadsPerChannel[cMaxChannels];
+    BiQuad BiQuadsPerChannel[MaxChannels];
 
     void SetCutoffValues();
   };
@@ -173,7 +173,7 @@ namespace Audio
     float SqRoot2;
     float HalfPI;
 
-    BiQuad BiQuadsPerChannel[cMaxChannels];
+    BiQuad BiQuadsPerChannel[MaxChannels];
 
     void SetCutoffValues();
   };
@@ -198,9 +198,9 @@ namespace Audio
     float HighPassCutoff;
     float AlphaLP;
     float AlphaHP;
-    float PreviousInput[cMaxChannels];
-    float PreviousOutput1[cMaxChannels];
-    float PreviousOutput2[cMaxChannels];
+    float PreviousInput[MaxChannels];
+    float PreviousOutput1[MaxChannels];
+    float PreviousOutput2[MaxChannels];
 
     void ResetFrequencies();
 
@@ -267,6 +267,8 @@ namespace Audio
     float GetWetLevel() { return WetLevel; }
     // Changes the wet level value over time
     void InterpolateWetLevel(const float newValue, const float time);
+    // Returns true if there is any audio data in the delay buffers
+    bool IsDataInBuffer();
 
   private:
     // Length of delay in samples
@@ -276,15 +278,13 @@ namespace Audio
     // Wet level value (0 - 1.0f)
     float WetLevel;
     // Array of delay buffers per channel
-    float* BuffersPerChannel[cMaxChannels];
+    float* BuffersPerChannel[MaxChannels];
     // Current read position in the buffers
     int ReadIndex;
     // Current write position in the buffers
     int WriteIndex;
     // Size of the buffers
     int BufferSize;
-    // Maximum length of delay in seconds
-    float MaxDelaySec;
 
     bool InterpolatingWetLevel;
     InterpolatingObject WetLevelInterpolator;
@@ -380,7 +380,7 @@ namespace Audio
     float mExpanderRatio;
     float mHalfKnee;
 
-    EnvelopeDetector Detectors[cMaxChannels];
+    EnvelopeDetector Detectors[MaxChannels];
 
     static double LagrangeInterpolation(double *x, double *y, int howMany, double xBar);
   };
@@ -486,7 +486,7 @@ namespace Audio
     // The current length of reverb in milliseconds
     float TimeMSec;
     // Maximum reverb data channels
-    static const int ChannelCount = cMaxChannels - 1;
+    static const int ChannelCount = MaxChannels - 1;
     // Data per channel
     ReverbData Data[ChannelCount];
     // The low pass gain value

@@ -62,7 +62,7 @@ public:
   Handle GetComponentAt(HandleParam object, uint index) override;
 
   bool CanAddComponent(HandleParam object, BoundType* typeToAdd, AddInfo* info) override;
-  void AddComponent(HandleParam owner, BoundType* typeToAdd, int index = -1, bool ignoreDependencies = false) override;
+  void AddComponent(HandleParam owner, BoundType* typeToAdd, int index = -1, bool ignoreDependencies = false, MetaCreationContext* creationContext = nullptr) override;
 
   bool CanRemoveComponent(HandleParam object, HandleParam subObject, String& reason) override;
   void RemoveComponent(HandleParam owner, HandleParam component, bool ignoreDependencies = false) override;

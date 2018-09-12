@@ -32,7 +32,7 @@ struct ShellPrivateData
 // only using a fourth of the limit
 const int cFileBufferSize = 8192;
 
-bool FileDialog(FileDialogInfo& config, bool opening)
+void FileDialog(FileDialogInfo& config, bool opening)
 {
   //Create Windows OPENFILENAME structure and zero it
   OPENFILENAME fileDialog = { 0 };
@@ -146,7 +146,6 @@ bool FileDialog(FileDialogInfo& config, bool opening)
   //and then get no files. So if we didn't get any files for some reason then mark that we actually failed.
   if (config.mCallback)
     config.mCallback(config.mFiles, config.mUserData);
-  return !config.mFiles.Empty();
 }
 
 // Convert bitmap to image. Hdc is hdc bitmap was created in
@@ -330,6 +329,10 @@ DWORD Win32StyleFromWindowStyle(WindowStyleFlags::Enum styleFlags)
   // The buttons interfere with input on some drivers, even when border is disabled.
   if (styleFlags & WindowStyleFlags::Close && !(styleFlags & WindowStyleFlags::ClientOnly))
     win32Style |= WS_SYSMENU | WS_MINIMIZEBOX;
+  // Removing the caption flag causes a border flicker sometimes when the application gains focus.
+  // However, not removing it causes an incorrect window size sometimes when toggling between windowed/maximized.
+  if(styleFlags & WindowStyleFlags::ClientOnly)
+    win32Style &= ~WS_CAPTION;
   return win32Style;
 }
 
@@ -1393,12 +1396,12 @@ bool Shell::GetPrimaryMonitorImage(Image* image)
   return GetWindowImage(GetDesktopWindow(), image);
 }
 
-bool Shell::OpenFile(FileDialogInfo& config)
+void Shell::OpenFile(FileDialogInfo& config)
 {
   return FileDialog(config, true);
 }
 
-bool Shell::SaveFile(FileDialogInfo& config)
+void Shell::SaveFile(FileDialogInfo& config)
 {
   return FileDialog(config, false);
 }

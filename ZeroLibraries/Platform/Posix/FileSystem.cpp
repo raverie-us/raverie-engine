@@ -79,6 +79,10 @@ void AddVirtualFileSystemEntry(StringParam absolutePath, DataBlock* stealData, T
       ErrorIf(written != stealData->Size, "Could not write all data to file '%s'", absolutePath.c_str());
 
       fclose(file);
+      struct utimbuf times;
+      times.actime = (time_t)modifiedTime;
+      times.modtime = (time_t)modifiedTime;
+      utime(absolutePath.c_str(), &times);
     }
   }
 }
@@ -106,11 +110,11 @@ bool PersistFiles()
 bool CopyFileInternal(StringParam dest, StringParam source)
 {
   FILE* sourceFile = fopen(source.c_str(), "rb");
-  if(sourceFile == NULL)
+  if(sourceFile == nullptr)
     return false;
 
   FILE* destFile = fopen(dest.c_str(), "wb");
-  if(destFile == NULL)
+  if(destFile == nullptr)
   { 
     fclose(sourceFile);
     return false;
@@ -118,18 +122,36 @@ bool CopyFileInternal(StringParam dest, StringParam source)
 
   const int bufferSize = 4096;
 
+  bool result = true;
   char buf[bufferSize];
   for(;;)
   {
     size_t bytesRead = fread(buf, 1, bufferSize, sourceFile);
+    if (ferror(sourceFile))
+    {
+      result = false;
+      break;
+    }
+    
     int written = fwrite(buf, bytesRead, 1, destFile);
-    if (bytesRead!=bufferSize) 
+    if (!written)
+    {
+      result = false;
+      break;
+    }
+    if (ferror(destFile))
+    {
+      result = false;
+      break;
+    }
+    
+    if (bytesRead != bufferSize) 
       break;
   }
 
   fclose(sourceFile);
   fclose(destFile);
-  return true;
+  return result;
 }
 
 bool VerifyPosix(int returnCode, cstr operation)
@@ -147,7 +169,7 @@ bool VerifyPosix(int returnCode, cstr operation)
 
 bool MoveFileInternal(StringParam dest, StringParam source)
 {
-  return  VerifyPosix(rename(source.c_str(), dest.c_str()), "MoveFile");
+  return VerifyPosix(rename(source.c_str(), dest.c_str()), "MoveFile");
 }
 
 bool DeleteFileInternal(StringParam filename)
@@ -168,12 +190,15 @@ void CreateDirectory(StringParam dest)
   {
     // If the error is anything except already exists
     if(errno != EEXIST)
-      ZPrint("Failed to create directory %s: %s\n", dest.c_str(), strerror(errno));
+      ZPrint("Failed to create directory '%s': %s\n", dest.c_str(), strerror(errno));
   }
 }
 
 void CreateDirectoryAndParents(StringParam directory)
 {
+  if (directory.Empty())
+    return;
+  
   // Normalize it first to ensure we don't have any double slashes.
   // This also ensures we don't have a trailing separator.
   String path = FilePath::Normalize(directory);
@@ -203,36 +228,35 @@ void CreateDirectoryAndParents(StringParam directory)
 
 time_t GetFileModifiedTime(StringParam file)
 {
-  struct stat fileStat;
-  if(stat(file.c_str(), &fileStat) != 0)
-    return (time_t)fileStat.st_mtime;
+  struct stat st;
+  if(stat(file.c_str(), &st) == 0)
+    return (time_t)st.st_mtime;
   return 0;
 }
 
 bool SetFileToCurrentTime(StringParam filename)
 {
-  return VerifyPosix(utimensat(AT_FDCWD, filename.c_str(), nullptr, 0), "Updating File Time");
+  return VerifyPosix(utime(filename.c_str(), nullptr), "Updating File Time");
 }
 
 u64 GetFileSize(StringParam fileName)
 {
   struct stat st;
-  stat(fileName.c_str(), &st);
-  return (uint)st.st_size;
+  if (stat(fileName.c_str(), &st) == 0)
+    return (uint)st.st_size;
+  return 0;
 }
 
 bool FileExists(StringParam filePath)
 {
   struct stat st;
-  return stat(filePath.c_str(), &st) != -1;
+  return stat(filePath.c_str(), &st) == 0 && S_ISREG(st.st_mode);
 }
 
 bool DirectoryExists(StringParam directoryPath)
 {
   struct stat st;
-  if(stat(directoryPath.c_str(), &st) == 0 && S_ISDIR(st.st_mode))
-    return true;
-  return false;
+  return stat(directoryPath.c_str(), &st) == 0 && S_ISDIR(st.st_mode);
 }
 
 String CanonicalizePath(StringParam directoryPath)

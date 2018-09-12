@@ -12,7 +12,7 @@ public:
   TextureProcessor(TextureContent* textureContent, String outputPath, String inputFile);
 
   void ExtractAndImportTextures(const aiScene* scene);
-  void CreatePngTexture(aiTexture* texture, uint textureIndex);
+  void CreateTexture(aiTexture* texture, uint textureIndex, StringParam extension);
 
   TextureContent* mTextureContent;
   String mOutputPath;

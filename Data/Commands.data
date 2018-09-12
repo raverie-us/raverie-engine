@@ -84,7 +84,6 @@ Commands commands =
 		string Description = "Add a new content item to the project",
 		string IconName = "AddResource",
 		string Shortcut = "Ctrl+N",
-		string Function = "Editor.AddResource",
 		string Tags = "Editor",
 	},
 
@@ -373,6 +372,22 @@ Commands commands =
 		string Tags = "Windows",
 	},
 
+  Command =
+  {
+    string Name = "ShowConsole",
+    string Description = "Show the Console Window",
+    string IconName = "Console",
+    string Tags = "Windows",
+  },
+
+  Command =
+  {
+    string Name = "HideConsole",
+    string Description = "Hide the Console Window",
+    string IconName = "Console",
+    string Tags = "Windows",
+  },
+
 	Command =
 	{
 		string Name = "Browser",
@@ -455,7 +470,7 @@ Commands commands =
 		string Name = "Commands",
 		string Description = "Show the Command List Viewer",
 		string IconName = "Commands",
-		string Shortcut = "Alt+Shift+H",
+		string Shortcut = "Ctrl+Shift+C",
 		string Tags = "Windows",
 	},
 	
@@ -553,6 +568,13 @@ Commands commands =
 		string Name = "SoundNodeGraph",
 		string Description = "Show the Sound Node Graph Window",
 		string Tags = "Windows Sound",
+	},
+	
+	Command =
+	{
+		string Name = "RenderGroupHierarchies",
+		string Description = "Show the RenderGroup Hierarchies Window",
+		string Tags = "Editor",
 	},
 	
 	// ------------------------------------------ More editor commands	

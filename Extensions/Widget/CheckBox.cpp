@@ -155,7 +155,7 @@ void CheckBox::OnKeyDown(KeyboardEvent* event)
 {
   if(event->Key == Keys::Space || event->Key == Keys::Enter)
   {
-    if (!event->GetModififierPressed())
+    if (!event->GetModifierPressed())
       ToggleChecked();
   }
   

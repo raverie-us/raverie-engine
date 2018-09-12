@@ -6,6 +6,7 @@
 
 namespace Zero
 {
+#pragma pack(push, 4)
 class FixedVertexDescription
 {
 public:
@@ -15,6 +16,7 @@ public:
   static const size_t sMaxElements = 16;
   VertexAttribute mAttributes[sMaxElements];
 };
+#pragma pack(pop)
 
 const String cMeshOutputType = "Mesh";
 
@@ -25,14 +27,16 @@ const uint VertexChunk = 'vert';
 const uint IndexChunk = 'indx';
 const uint SkeletonChunk = 'skel';
 
+#pragma pack(push, 4)
 class MeshHeader
 {
 public:
   uint mFileId;
   Aabb mAabb;
-  PrimitiveType::Enum mPrimitiveType;
+  ByteEnum<PrimitiveType::Enum> mPrimitiveType;
   Mat4 mBindOffsetInv;
 };
+#pragma pack(pop)
 
 /// Geometry content item that builds meshes.
 class MeshBuilder : public BuilderComponent

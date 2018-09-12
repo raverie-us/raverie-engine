@@ -107,10 +107,10 @@ public:
   /// Get the name of the Joystick
   String GetName();
 
-  /// Queries an axes and returns a value between [-1, 1]
-  /// The valid range of axes is between 0 and 'GetMaxAxes'
-  /// If the axis is not valid, then the value returned is 0
-  /// If the axis is disabled, then the value returned is Joystick.DisabledValue
+  /// Queries an axes and returns a value between [-1, 1].
+  /// The valid range of axes is between 0 and 'GetMaxAxes'.
+  /// If the axis is not valid, then the value returned is 0.
+  /// If the axis is disabled, then the value returned is Joystick.DisabledValue.
   float GetAxisValue(int index);
 
   /// A value that means a joystick axis is invalid. For example

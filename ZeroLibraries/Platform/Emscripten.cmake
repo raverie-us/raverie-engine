@@ -24,7 +24,6 @@ include(Emscripten/CMakeLists.txt)
 target_include_directories(Platform
     PUBLIC
         ${CurrentDirectory}/Emscripten 
-        ${GLEWHeaders}
 )
 
 ################################################################################
@@ -33,7 +32,6 @@ target_include_directories(Platform
 target_link_libraries(Platform
                       PUBLIC
                       Common
-                      ${GLEWStatic}
 )
 
 ################################################################################
@@ -53,6 +51,7 @@ zero_multitarget_output_directories(
 #    CONFIGS ${supported_configs}
 #    BASEPATH ${zero_build_out}
 #    PLATFORM ${platform}
+#    CONFIG ${configuration}
 #    BITS ${bit}
 #    TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET}
 #    PRECOMPILED_HEADER_NAME "Precompiled.hpp"

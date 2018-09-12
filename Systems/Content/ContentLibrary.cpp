@@ -13,6 +13,7 @@ namespace Zero
 {
 ZilchDefineType(ContentLibrary, builder, type)
 {
+  type->HandleManager = ZilchManagerId(PointerManager);
 }
 
 ContentLibrary::ContentLibrary()
@@ -97,8 +98,6 @@ void ContentLibrary::BuildContent(BuildOptions& buildOptions)
   while(!itemsToProcess.Empty() && buildOptions.BuildStatus == BuildStatus::Running)
   {
     ContentItem* item = itemsToProcess.Front();
-
-    //ZPrint("Building %s\n", item->Filename.c_str());
 
     if(buildOptions.SendProgress)
     {

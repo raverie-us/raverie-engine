@@ -12,8 +12,15 @@ namespace Zero
 //  - We do not handle mOnFrozenUpdate (Zero may freeze on window drags)
 
 //----------------------------------------------------------------------Shell
+struct DropFileInfo
+{
+  bool mBeganDropFiles = false;
+  Array<String> mDropFiles;
+};
+
 struct ShellPrivateData
 {
+  HashMap<Uint32, DropFileInfo> mDropInfos;
 };
 
 static const char* cShellWindow = "ShellWindow";
@@ -30,6 +37,23 @@ Keys::Enum SDLScancodeToKey(SDL_Scancode code)
 #include "Keys.inl"
 #undef ProcessInput
   }
+
+  switch (code)
+  {
+    // Treat the gui keys as if they are control.
+    case SDL_SCANCODE_LGUI:
+    case SDL_SCANCODE_RGUI:
+      return Keys::Control;
+
+    // Keys.inl already handles all the right versions.
+    case SDL_SCANCODE_RCTRL:
+      return Keys::Control;
+    case SDL_SCANCODE_RSHIFT:
+      return Keys::Shift;
+    case SDL_SCANCODE_RALT:
+      return Keys::Alt;
+  }
+
   return Keys::Unknown;
 }
 
@@ -52,6 +76,22 @@ Keys::Enum SDLKeycodeToKey(SDL_Keycode code)
 #include "Keys.inl"
 #undef ProcessInput
   }
+  
+  switch (code)
+  {
+    // Treat the gui keys as if they are control.
+    case SDLK_LGUI:
+    case SDLK_RGUI:
+      return Keys::Control;
+
+    // Keys.inl already handles all the right versions.
+    case SDLK_RCTRL:
+      return Keys::Control;
+    case SDLK_RSHIFT:
+      return Keys::Shift;
+    case SDLK_RALT:
+      return Keys::Alt;
+  }
   return Keys::Unknown;
 }
 
@@ -63,6 +103,7 @@ SDL_Keycode KeyToSDLKeycode(Keys::Enum key)
 #include "Keys.inl"
 #undef ProcessInput
   }
+
   return SDLK_UNKNOWN;
 }
 
@@ -110,7 +151,7 @@ String Shell::GetOsName()
   return name;
 }
 
-#if !defined(ZeroPlatformNoIncompleteImplementations)
+#if !defined(ZeroPlatformNoShellGetScrollLineCount)
 uint Shell::GetScrollLineCount()
 {
   // Pick a good default since SDL has no query for this.
@@ -138,7 +179,7 @@ IntVec2 Shell::GetPrimaryMonitorSize()
   return IntVec2(rect.X, rect.Y);
 }
 
-#if !defined(ZeroPlatformNoIncompleteImplementations)
+#if !defined(ZeroPlatformNoShellGetColorAtMouse)
 ByteColor Shell::GetColorAtMouse()
 {
   // We can either attempt to use SDL_RenderReadPixels or the Renderer API to
@@ -147,13 +188,13 @@ ByteColor Shell::GetColorAtMouse()
 }
 #endif
 
-#if !defined(ZeroPlatformNoIncompleteImplementations)
+#if !defined(ZeroPlatformNoShellSetMonitorCursorClip)
 void Shell::SetMonitorCursorClip(const IntRect& monitorRectangle)
 {
 }
 #endif
 
-#if !defined(ZeroPlatformNoIncompleteImplementations)
+#if !defined(ZeroPlatformNoShellClearMonitorCursorClip)
 void Shell::ClearMonitorCursorClip()
 {
 }
@@ -226,22 +267,36 @@ void Shell::SetMouseCursor(Cursor::Enum cursor)
   SDL_SetCursor(sdlCursor);
 }
 
+#if !defined(ZeroPlatformNoShellIsClipboardText)
 bool Shell::IsClipboardText()
 {
   return SDL_HasClipboardText() == SDL_TRUE;
 }
+#endif
 
-String Shell::GetClipboardText()
+String SDLGetClipboardTextAsString()
 {
-  return SDL_GetClipboardText();
+  char* clipboardText = SDL_GetClipboardText();
+  String result = clipboardText;
+  SDL_free(clipboardText);
+  return result;
 }
 
+#if !defined(ZeroPlatformNoShellGetClipboardText)
+String Shell::GetClipboardText()
+{
+  return SDLGetClipboardTextAsString();
+}
+#endif
+
+#if !defined(ZeroPlatformNoShellSetClipboardText)
 void Shell::SetClipboardText(StringParam text)
 {
   SDL_SetClipboardText(text.c_str());
 }
+#endif
 
-#if !defined(ZeroPlatformNoIncompleteImplementations)
+#if !defined(ZeroPlatformNoShellIsClipboardImage)
 bool Shell::IsClipboardImage()
 {
   // SDL has no way of grabbing images from the clipboard.
@@ -249,7 +304,7 @@ bool Shell::IsClipboardImage()
 }
 #endif
 
-#if !defined(ZeroPlatformNoIncompleteImplementations)
+#if !defined(ZeroPlatformNoShellGetClipboardImage)
 bool Shell::GetClipboardImage(Image* image)
 {
   // SDL has no way of grabbing images from the clipboard.
@@ -258,7 +313,7 @@ bool Shell::GetClipboardImage(Image* image)
 }
 #endif
 
-#if !defined(ZeroPlatformNoIncompleteImplementations)
+#if !defined(ZeroPlatformNoShellGetPrimaryMonitorImage)
 bool Shell::GetPrimaryMonitorImage(Image* image)
 {
   // SDL cannot take a screen-shot of the entire monitor.
@@ -267,10 +322,9 @@ bool Shell::GetPrimaryMonitorImage(Image* image)
 }
 #endif
 
-#if !defined(ZeroPlatformNoIncompleteImplementations)
 // SDL has no open file dialog. We could maybe revert to using our own custom dialog that uses the file system API.
 // This method uses a very poor message box + clipboard approach.
-bool FileDialog(FileDialogInfo& config, bool isOpen)
+void FileDialog(Shell* shell, FileDialogInfo& config, bool isOpen)
 {
   const SDL_MessageBoxButtonData buttons[] =
   {
@@ -305,13 +359,12 @@ bool FileDialog(FileDialogInfo& config, bool isOpen)
 
   // Show the message box, and if it failed or they click cancel, early out
   if (SDL_ShowMessageBox(&messageboxdata, &buttonid) < 0 || buttonid == 0)
-    return false;
+    return;
 
-  const char* text = SDL_GetClipboardText();
-  if (text == nullptr)
-    return false;
+  String files = shell->GetClipboardText();
+  if (files.Empty())
+    return;
 
-  String files = text;
   forRange(StringRange fileRange, files.Split("\n"))
   {
     config.mFiles.PushBack(fileRange.Trim());
@@ -319,22 +372,19 @@ bool FileDialog(FileDialogInfo& config, bool isOpen)
 
   if (config.mCallback)
     config.mCallback(config.mFiles, config.mUserData);
+}
 
-  return !config.mFiles.Empty();
+#if !defined(ZeroPlatformNoShellOpenFile)
+void Shell::OpenFile(FileDialogInfo& config)
+{
+  return FileDialog(this, config, true);
 }
 #endif
 
-#if !defined(ZeroPlatformNoIncompleteImplementations)
-bool Shell::OpenFile(FileDialogInfo& config)
+#if !defined(ZeroPlatformNoShellSaveFile)
+void Shell::SaveFile(FileDialogInfo& config)
 {
-  return FileDialog(config, true);
-}
-#endif
-
-#if !defined(ZeroPlatformNoIncompleteImplementations)
-bool Shell::SaveFile(FileDialogInfo& config)
-{
-  return FileDialog(config, false);
+  return FileDialog(this, config, false);
 }
 #endif
 
@@ -359,10 +409,25 @@ PlatformInputDevice* PlatformInputDeviceFromSDL(SDL_JoystickID id)
   return nullptr;
 }
 
+void UpdateResize(ShellWindow* window, IntVec2Param clientSize)
+{
+  if (clientSize == window->mClientSize)
+    return;
+
+  window->mOnClientSizeChanged(clientSize, window);
+  window->mClientSize = clientSize;
+}
+
 void Shell::Update()
 {
+  ZeroGetPrivateData(ShellPrivateData);
   ShellWindow* mainWindow = mMainWindow;
 
+  // Some platforms don't sent all resize events, so handle that here.
+  // For example, if you resize the window while loading in Emscripten, it misses the resize.
+  if (mainWindow)
+    UpdateResize(mainWindow, mainWindow->GetClientSize());
+  
   SDL_Event e;
   while (SDL_PollEvent(&e))
   {
@@ -390,9 +455,10 @@ void Shell::Update()
               window->mOnFocusChanged(e.window.event == SDL_WINDOWEVENT_FOCUS_GAINED, window);
             break;
 
+          case SDL_WINDOWEVENT_RESIZED:
           case SDL_WINDOWEVENT_SIZE_CHANGED:
             if (window->mOnClientSizeChanged)
-              window->mOnClientSizeChanged(IntVec2(e.window.data1, e.window.data2), window);
+              UpdateResize(window, IntVec2(e.window.data1, e.window.data2));
             break;
 
           case SDL_WINDOWEVENT_MINIMIZED:
@@ -408,29 +474,53 @@ void Shell::Update()
         break;
       }
 
+      case SDL_DROPBEGIN:
+      case SDL_DROPCOMPLETE:
       case SDL_DROPFILE:
       {
         ShellWindow* window = GetShellWindowFromSDLId(e.drop.windowID);
+        DropFileInfo& info = self->mDropInfos[e.drop.windowID];
+        if (e.type == SDL_DROPBEGIN)
+        {
+          ErrorIf(info.mBeganDropFiles, "Got SDL_DROPBEGIN while another SDL_DROPBEGIN was in progress");
+          info.mBeganDropFiles = true;
+        }
+        else if (e.type == SDL_DROPCOMPLETE)
+        {
+          ErrorIf(!info.mBeganDropFiles, "Got SDL_DROPCOMPLETE without a SDL_DROPBEGIN");
+          info.mBeganDropFiles = false;
+        }
+        else if (e.type == SDL_DROPFILE)
+        {
+          info.mDropFiles.PushBack(e.drop.file);
+        }
 
-        if (window && window->mOnMouseDropFiles)
+        // If this is a drop file without a begin, or it's a drop complete and we're ending a drop...
+        if (window && window->mOnMouseDropFiles && !info.mBeganDropFiles)
         {
           IntVec2 clientPosition = IntVec2::cZero;
           SDL_GetMouseState(&clientPosition.x, &clientPosition.y);
 
-          Array<String> files(ZeroInit, e.drop.file);
-          window->mOnMouseDropFiles(clientPosition, files, window);
+          window->mOnMouseDropFiles(clientPosition, info.mDropFiles, window);
+          info.mDropFiles.Clear();
+          SDL_free(e.drop.file);
         }
         break;
       }
 
       case SDL_TEXTINPUT:
       {
-        ShellWindow* window = GetShellWindowFromSDLId(e.text.windowID);
-        if (window && window->mOnTextTyped)
+        // Some platforms send SDL_TEXTINPUT even when Control/Alt are down.
+        // In Zero we ignore these because we don't want the events here.
+        if (!IsKeyDown(Keys::Control) && !IsKeyDown(Keys::Alt))
         {
-          String text = e.text.text;
-          forRange(Rune rune, text)
-            window->mOnTextTyped(rune, window);
+          ShellWindow* window = GetShellWindowFromSDLId(e.text.windowID);
+          if (window && window->mOnTextTyped)
+          {
+            String text = e.text.text;
+            forRange(Rune rune, text)
+              window->mOnTextTyped(rune, window);
+          }
         }
         break;
       }
@@ -793,12 +883,12 @@ WindowState::Enum ShellWindow::GetState()
   Uint32 flags = SDL_GetWindowFlags((SDL_Window*)mHandle);
 
   // Restore is never returned.
-  if (flags & SDL_WINDOW_MINIMIZED)
-    return WindowState::Minimized;
-  if (flags & SDL_WINDOW_MAXIMIZED)
-    return WindowState::Maximized;
   if (flags & SDL_WINDOW_FULLSCREEN || flags & SDL_WINDOW_FULLSCREEN_DESKTOP)
     return WindowState::Fullscreen;
+  if (flags & SDL_WINDOW_MAXIMIZED)
+    return WindowState::Maximized;
+  if (flags & SDL_WINDOW_MINIMIZED)
+    return WindowState::Minimized;
 
   return WindowState::Windowed;
 }

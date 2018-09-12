@@ -65,11 +65,13 @@ struct ZeroSharedTemplate has_hash_function : public integral_constant<bool, has
 
 /// Policy for how values are hashed
 template <typename T, typename Enable = void>
-struct ZeroSharedTemplate HashPolicy
+struct ZeroSharedTemplate HashPolicy : public ComparePolicy<T>
 {
   // (Dummy operator() required for has_valid_hash_policy<T> to compile properly)
-  inline void operator()(void)
+  inline size_t operator()(const T&)
   {
+    Error("The empty HashPolicy should never be called");
+    return 0;
   }
 };
 

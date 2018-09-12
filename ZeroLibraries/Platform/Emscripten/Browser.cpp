@@ -101,7 +101,10 @@ EM_JS(const char*, IFrameGetUrl, (int32_t id),
     if (iframe.contentWindow.location && iframe.contentWindow.location.href)
       return mallocStringUTF8(iframe.contentWindow.location.href);
   }
-  catch { }
+  catch (err)
+  {
+    console.error(err);
+  }
   
   if (iframe.src)
     return mallocStringUTF8(iframe.src);

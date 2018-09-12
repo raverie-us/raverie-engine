@@ -26,6 +26,8 @@ public:
   void ShowTools(CommandEvent* event);
   void ShowLibrary(CommandEvent* event);
   void ToggleConsole(CommandEvent* event);
+  void ShowConsole(CommandEvent* event);
+  void HideConsole(CommandEvent* event);
   void ShowBrowser(CommandEvent* event);
   void ShowMarket(CommandEvent* event);
   void ShowChat(CommandEvent* event);
@@ -50,6 +52,7 @@ public:
   void ShowCoreLibrary(CommandEvent* event);
   void ShowVolumeMeter(CommandEvent* event);
   void ShowSoundNodeGraph(CommandEvent* event);
+  void ShowRenderGroupHierarchies(CommandEvent* event);
   LibraryView* CreateLibraryView(bool showCore, bool autoDock = true);
   void AttachDocumentEditor(StringParam name, DocumentEditor* docEditor);
   DocumentEditor* OpenTextString(StringParam name, StringParam text, StringParam extension = String()) override;

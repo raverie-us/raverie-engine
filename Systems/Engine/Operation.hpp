@@ -38,6 +38,20 @@ public:
   Operation* mOperation;
 };
 
+//--------------------------------------------------- Operation Creation Context
+class OperationCreationContext
+{
+public:
+  ~OperationCreationContext();
+
+  /// If the context for the given composition doesn't exist, it will be created for you.
+  MetaCreationContext* GetContext(MetaComposition* composition);
+  void Finalize();
+
+  typedef HashMap<MetaComposition*, MetaCreationContext*> ContextMap;
+  ContextMap mContexts;
+};
+
 //-------------------------------------------------------------------- Operation
 class Operation;
 
@@ -51,7 +65,7 @@ public:
   typedef BaseInList<OperationLink, Operation, &OperationLink::link> OperationList;
   typedef OperationList::range OperationRange;
 
-  Operation() : mParent(nullptr) {}
+  Operation() : mParent(nullptr), mQueue(nullptr) {}
 
   /// Operation memory management.
   static Memory::Heap* sHeap;
@@ -72,6 +86,7 @@ public:
 
   String mName;
   String mInvalidReason;
+  OperationQueue* mQueue;
 
 private:
   Operation(const Operation& rhs) {}
@@ -200,6 +215,7 @@ public:
   void BuildMetaProxy(MetaProxy* proxy, Cog* object);
   void QueueChanges(MetaProxy* proxy);
 
+  OperationCreationContext mCreationContexts;
   HashSet<Cog*> mDestroyedObjects;
 
   //----------------------------------------------------------------------------------- Side Effects

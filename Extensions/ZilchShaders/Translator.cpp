@@ -826,6 +826,7 @@ void ZilchShaderTranslator::PreWalkClassVariables(Zilch::MemberVariableNode*& no
   field->mZilchType = shaderResultType->mZilchName;
   field->mShaderType = shaderResultType->mShaderName;
   field->mSourceLocation = node->Location;
+  field->mNameLocation = node->CreatedField->NameLocation;
 
   field->mIsStatic = false;
   // if this type is static or a type that is forced to be static (such as samplers)
@@ -940,6 +941,8 @@ void ZilchShaderTranslator::GeneratePreConstructor(Zilch::ClassNode*& node, Zilc
   function->mSignatureRange.Set(node->Location);
   // Also each function needs its total range which is just the node's location (or in this case the class')
   function->mSourceLocation = node->Location;
+  // Pre-constructors don't have an actual backing function so there's no real name location
+  function->mNameLocation = function->mSourceLocation;
 
   // Declare the pre-constructor as taking the class in by reference
   StringBuilder signatureBuilder;
@@ -987,6 +990,8 @@ void ZilchShaderTranslator::GenerateDefaultConstructor(Zilch::ClassNode*& node, 
     constructor->mSignatureRange.Set(node->Location);
     // Also each function needs its total range which is just the node's location (or in this case the class')
     constructor->mSourceLocation = node->Location;
+    // A generated constructor doesn't have an actual backing function so there's no real name location
+    constructor->mNameLocation = constructor->mSourceLocation;
 
     // Create an instance of the class named 'self' and then call the pre-constructor
     ScopedShaderCodeBuilder subBuilder(context);
@@ -1084,6 +1089,7 @@ void ZilchShaderTranslator::WalkClassConstructor(Zilch::ConstructorNode*& node, 
 
   // Also each function needs its total range which is just the node's location (or in this case the class')
   function->mSourceLocation = node->Location;
+  function->mNameLocation = node->DefinedFunction->NameLocation;
 
   // Build up the arguments of the constructor
   ScopedShaderCodeBuilder parametersBuilder(context);
@@ -1126,6 +1132,7 @@ void ZilchShaderTranslator::WalkClassFunction(Zilch::FunctionNode*& node, ZilchS
 
   // Store the function's full location
   function->mSourceLocation = node->Location;
+  function->mNameLocation = node->DefinedFunction->NameLocation;
   // Unfortunately the function's location includes the statements. To get the range of just
   // the signature we need to start at the function name and go until the last argument or the return type (if it exists)
   int signatureStart = node->Name.Location.StartPosition;

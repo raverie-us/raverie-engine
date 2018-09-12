@@ -21,7 +21,15 @@ namespace Audio
     CurrentVolume(1.0f)
   {
     if (!isThreaded)
+    {
       SetSiblingNodes(new MicrophoneInputNode(name, ID, nullptr, true));
+
+      if (!gAudioSystem->StartInput())
+      {
+        Active = false;
+        ((MicrophoneInputNode*)GetSiblingNode())->Active = false;
+      }
+    }
   }
 
   //************************************************************************************************
@@ -50,7 +58,7 @@ namespace Audio
       // Don't change volume if we are currently not active or deactivating
       if (Active && !Stopping)
         VolumeInterpolator.SetValues(CurrentVolume, newVolume,
-          cPropertyChangeFrames);
+          PropertyChangeFrames);
     }
   }
 
@@ -70,20 +78,23 @@ namespace Audio
         return;
 
       Active = active;
+      
+      if (Active && !gAudioSystem->StartInput())
+        Active = false;
 
       // Send task to threaded node
-      AddTaskForSiblingThreaded(&MicrophoneInputNode::SetActive, active);
+      AddTaskForSiblingThreaded(&MicrophoneInputNode::SetActive, Active);
     }
     else
     {
       // Check if we are deactivating
-      if (!active)
+      if (!active && Active)
       {
         // Mark that we are stopping
         Stopping = true;
         // Interpolate volume to 0
         VolumeInterpolator.SetValues(CurrentVolume, 0.0f,
-          cPropertyChangeFrames);
+          PropertyChangeFrames);
       }
       // Activating
       else
@@ -93,7 +104,7 @@ namespace Audio
         Stopping = false;
         // Interpolate volume to its previous setting
         VolumeInterpolator.SetValues(CurrentVolume, Volume,
-          cPropertyChangeFrames);
+          PropertyChangeFrames);
       }
     }
   }

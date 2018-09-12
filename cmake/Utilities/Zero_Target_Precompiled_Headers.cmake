@@ -9,25 +9,21 @@ function(zero_target_precompiled_headers aTarget aIntPath aHeaderName aSourceNam
   get_target_property(sourceDir ${aTarget} SOURCE_DIR)
   if ("${aSubFolder}" STREQUAL "")
     if (aIgnoreTarget)
-      set(sourceDir ${sourceDir})
+      set(sourceDir "${sourceDir}")
     else()
-      set(sourceDir ${sourceDir}/${aTarget})
+      set(sourceDir "${sourceDir}/${aTarget}")
     endif()
   else()
     if (aIgnoreTarget)
-      set(sourceDir ${sourceDir}/${aSubFolder})
+      set(sourceDir "${sourceDir}/${aSubFolder}")
     else()
-      set(sourceDir ${sourceDir}/${aSubFolder}/${aTarget})
+      set(sourceDir "${sourceDir}/${aSubFolder}/${aTarget}")
     endif()
   endif()
 
-  set(sourceName ${aSourceName})
-
-  set(pathToSource ${sourceDir}/${sourceName})
+  set(pathToSource "${sourceDir}/${aSourceName}")
 
   set(precompiledObj "${aIntPath}/${aTarget}.pch")
-
-  #message("Target '${aTarget}' Precompiled header path to source: ${pathToSource}\n")
 
   get_target_property(targetSources ${aTarget} SOURCES)
 
@@ -37,21 +33,21 @@ function(zero_target_precompiled_headers aTarget aIntPath aHeaderName aSourceNam
       # if it is the precompiled cpp
       if(${targetSource} STREQUAL ${pathToSource})
         set_source_files_properties(${targetSource} PROPERTIES COMPILE_FLAGS
-        "/Yc${aHeaderName} /Fp${precompiledObj}")
-        set_source_files_properties(${targetSource} PROPERTIES OBJECT_OUTPUTS ${precompiledObj})
+        "/Yc\"${aHeaderName}\" /Fp\"${precompiledObj}\"")
+        set_source_files_properties(${targetSource} PROPERTIES OBJECT_OUTPUTS "${precompiledObj}")
         # if it is every other cpp
       else()
-        set_source_files_properties(${targetSource} PROPERTIES OBJECT_DEPENDS ${precompiledObj})
+        set_source_files_properties(${targetSource} PROPERTIES OBJECT_DEPENDS "${precompiledObj}")
         set_source_files_properties(${targetSource} PROPERTIES COMPILE_FLAGS
-                                "/Yu${aHeaderName} /Fp${precompiledObj}")
+                                "/Yu\"${aHeaderName}\" /Fp\"${precompiledObj}\"")
       endif()
     endif()
   endforeach()
 
   if (${MSVC} OR (CMAKE_GENERATOR_TOOLSET STREQUAL "LLVM-vs2014"))
     target_compile_options(${aTarget} PRIVATE #"/Yc${aHeaderName}"
-                                              "/Yu${aHeaderName}"
-                                              "/Fp${precompiledObj}")
+                                              "/Yu\"${aHeaderName}\""
+                                              "/Fp\"${precompiledObj}\"")
     message("Precompiled header added for target: ${aTarget}")                                    
   else()
     message(SEND_ERROR "zero_target_precompiled_headers doesn't currently support anything but MSVC.")

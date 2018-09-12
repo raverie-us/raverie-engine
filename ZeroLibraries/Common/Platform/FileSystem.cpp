@@ -113,6 +113,7 @@ int CheckFileTime(StringParam dest, StringParam source)
     return -1;
   if (destTime > sourceTime)
     return +1;
+
   return 0;
 }
 

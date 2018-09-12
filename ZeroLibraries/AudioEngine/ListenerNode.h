@@ -19,21 +19,17 @@ namespace Audio
   {
     ListenerWorldPositionInfo() :
       Position(Math::Vec3(0, 0, 0)),
-      Velocity(Math::Vec3(0, 0, 0)),
-      ForwardDirection(Math::Vec3(0, 0, 0)),
-      UpDirection(Math::Vec3(0, 0, 0))
+      Velocity(Math::Vec3(0, 0, 0))
     {}
-    ListenerWorldPositionInfo(Math::Vec3 position, Math::Vec3 velocity, Math::Vec3 forward, Math::Vec3 up) :
+    ListenerWorldPositionInfo(const Math::Vec3& position, const Math::Vec3& velocity, const Math::Mat3& worldMatrix) :
       Position(position),
       Velocity(velocity),
-      ForwardDirection(forward),
-      UpDirection(up)
+      WorldMatrix(worldMatrix)
     {}
 
     Math::Vec3 Position;
     Math::Vec3 Velocity;
-    Math::Vec3 ForwardDirection;
-    Math::Vec3 UpDirection;
+    Math::Mat3 WorldMatrix;
   };
 
   //---------------------------------------------------------------------------------- Listener Node

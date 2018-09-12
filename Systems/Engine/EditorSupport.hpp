@@ -140,6 +140,8 @@ extern const String SplineParticleSystem;
 extern const String DirectionalLight;
 extern const String DirectionalLightShadows;
 extern const String PointLight;
+extern const String SpotLight;
+extern const String SpotLightShadows;
 extern const String Cube;
 extern const String Grid;
 extern const String DefaultSpace;

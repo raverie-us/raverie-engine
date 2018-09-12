@@ -30,6 +30,7 @@ ZilchDefineEnum(TextureFiltering);
 ZilchDefineEnum(TextureFormat);
 ZilchDefineEnum(TextureMipMapping);
 ZilchDefineEnum(TextureType);
+ZilchDefineEnum(AudioFileLoadType);
 
 ZeroDefineArrayType(Array<AnimationClip>);
 
@@ -59,6 +60,7 @@ ZilchDefineStaticLibrary(ContentMetaLibrary)
   ZilchInitializeEnum(TextureFormat);
   ZilchInitializeEnum(TextureMipMapping);
   ZilchInitializeEnum(TextureType);
+  ZilchInitializeEnum(AudioFileLoadType);
 
   ZeroInitializeArrayTypeAs(Array<AnimationClip>, "AnimationClips");
 

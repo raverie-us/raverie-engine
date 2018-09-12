@@ -79,6 +79,10 @@ public:
   void GetTags(HashSet<String>& tags);
   void SetTag(StringParam tag);
   void SetTags(HashSet<String>& tags);
+
+  /// If applicable, remove all tags in the given set from this content item.
+  void RemoveTags(HashSet<String>& tags);
+
   bool HasTag(StringParam tag);
 
   // Content Item Interface
@@ -92,6 +96,9 @@ public:
 
   // Build the content item
   virtual void BuildContent(BuildOptions& buildOptions) = 0;
+
+  // Helper that builds the content item using build options from the content libarary.
+  void BuildContent();
 
   // Build the resource listing that this content item makes
   virtual void BuildListing(ResourceListing& listing);

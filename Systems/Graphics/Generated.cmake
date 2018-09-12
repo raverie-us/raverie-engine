@@ -12,7 +12,6 @@ target_sources(Graphics
     ${CMAKE_CURRENT_LIST_DIR}/DebugGraphical.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Definition.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Definition.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/FileElements.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Font.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Font.hpp
     ${CMAKE_CURRENT_LIST_DIR}/FontPattern.cpp

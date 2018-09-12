@@ -17,6 +17,7 @@ namespace ObjectAttributes
 
 const String cHidden("Hidden");
 const String cDocumented("Documented");
+const String cDoNotDocument("DoNotDocument");
 const String cExpanded("Expanded");
 const String cCore("Core");
 const String cStoreLocalModifications("StoreLocalModifications");
@@ -27,6 +28,8 @@ const String cResourceInterface("ResourceInterface");
 const String cComponentInterface("ComponentInterface");
 const String cGizmo("Gizmo");
 const String cCommand("Command");
+const String cTags("Tags");
+const String cShortcut("Shortcut");
 const String cTool("Tool");
 
 }//namespace ObjectFlags
@@ -98,7 +101,7 @@ void PropertyModifiedDefault(HandleParam object, PropertyPathParam property, Any
     // Send the event to the object
     PropertyEvent eventToSend(object, property, oldValue, newValue);
     if(EventDispatcher* dispatcher = zeroObject->GetDispatcher())
-      dispatcher->Dispatch(Events::PropertyModified, &eventToSend);
+      dispatcher->Dispatch(eventId, &eventToSend);
   }
 }
 
@@ -401,6 +404,22 @@ Mat4 MetaTransformInstance::GetParentWorldMatrix()
   if(mParentWorldMatrix)
     return mParentWorldMatrix->GetValue(mParentInstance).Get<Mat4>();
   return Mat4::cIdentity;
+}
+
+//**************************************************************************************************
+Mat4 MetaTransformInstance::GetParentLocalMatrix()
+{
+  if(mParentLocalMatrix)
+    return mParentLocalMatrix->GetValue(mParentInstance).Get<Mat4>();
+  return Mat4::cIdentity;
+}
+
+//**************************************************************************************************
+Vec3 MetaTransformInstance::ToParent(Vec3Param local)
+{
+  if(mParentLocalMatrix)
+    return Math::TransformPoint(mParentLocalMatrix->GetValue(mParentInstance).Get<Mat4>(), local);
+  return local;
 }
 
 //----------------------------------------------------------------------------------- Meta Attribute

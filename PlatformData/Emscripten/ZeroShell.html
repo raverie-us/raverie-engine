@@ -5,6 +5,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Zero Engine</title>
     <style>
+      *
+      {
+        font-family: NotoSans-Regular, Verdana, sans-serif;
+      }
+      
       html
       {
         margin: 0px;
@@ -25,13 +30,17 @@
       }
     
       /* The canvas *must not* have any border or padding, or mouse coords will be wrong */
-      canvas
+      .full-screen
       {
         margin: 0px;
         padding: 0px;
         border: 0px none;
         width: 100%;
         height: 100%;
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        outline: none;
       }
       
       @keyframes logo
@@ -106,14 +115,128 @@
         top: 50%;
         margin-left: -256px;
         margin-top: 80px;
-        font-family: NotoSans-Regular, Verdana, sans-serif;
         font-size: 16px;
         color: #ffffff;
+      }
+      
+      .modal
+      {
+        background-color: rgba(0, 0, 0, 0.7);
+      }
+      
+      .input-file-wrapper
+      {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+      }
+      
+      .close-button
+      {
+        right: 3px;
+        top: 3px;
+        position: fixed;
+        margin: 0px;
+        padding: 0px;
+        width: 9px;
+        height: 9px;
+        opacity: 0.5;
+        background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjAuMTJDBGvsAAAAa0lEQVQoU4XOUQpAQBgE4D2AUyhS3r1Q8qJ4WKXc/yhjZu3+7UaZ+lrDbHEAfqUHZab840SKjbpQgYXUx9Ce00bSk7LFM10oRjKQspO9zwc1KWc8VypGFSkHqfvQgJZspDSUulykvP7pA9wNOzYDopVtkHIAAAAASUVORK5CYII=');
+      }
+
+      .button
+      {
+        border: 1px solid #646464;
+        color: white;
+        background-color: #646464;
+        padding: 5px 10px;
+        font-size: 12px;
+        outline: none;
+      }
+      
+      .button:hover
+      {
+        border: 1px solid #8C8C8C;
+        background-color: #8C8C8C;
+      }
+      
+      .button:focus
+      {
+        border: 1px solid #056BF2;
+      }
+      
+      .button:active
+      {
+        background-color: #323232;
+        border: 1px solid #056BF2;
+      }
+
+      .input-file-wrapper:hover .button
+      {
+        border: 1px solid #8C8C8C;
+        background-color: #8C8C8C;
+      }
+      
+      .input-file-wrapper:focus .button
+      {
+        border: 1px solid #056BF2;
+      }
+      
+      .input-file-wrapper:active .button
+      {
+        background-color: #323232;
+        border: 1px solid #056BF2;
+      }
+
+      .input-file-wrapper input[type=file]
+      {
+        font-size: 100px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+      }
+      
+      .dialog-tab
+      {
+        margin: 0px;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 17px;
+        padding: 0px 6px;
+        background-color: #1E1E1E;
+        box-sizing: border-box;
+      }
+      
+      .dialog
+      {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        -moz-transform: translate(-50%, -50%);
+        -webkit-transform: translate(-50%, -50%);
+        -o-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+      
+        border-left: 1px solid #2E2E2E;
+        border-right: 1px solid #2E2E2E;
+        border-bottom: 1px solid #2E2E2E;
+        border-top: 1px solid #1E1E1E;
+        color: white;
+        background-color: #424242;
+        font-size: 12px;
+        outline: none;
+      }
+      
+      .dialog-contents
+      {
+        padding: 4px;
       }
     </style>
   </head>
   <body>
-    <canvas id='canvas' oncontextmenu='event.preventDefault()'></canvas>
+    <canvas id='canvas' class='full-screen' oncontextmenu='event.preventDefault()'></canvas>
 
     <div id='loader'>
       <div class='logo'></div>
@@ -130,7 +253,52 @@
       
       <div class='text-core' id='status'>Initializing</div>
     </div>
+    <div id='shell-open' class='full-screen modal' tabindex='1' style='display: none'>
+      <div class='dialog' style="width: 400px; height: 300px; display: flex; flex-direction: column; flex: auto">
+        <div class='dialog-tab'>
+          Open Files
+          <div class='close-button' id='close'></div>
+        </div>
+        <div class='dialog-contents' style="display: flex; flex-direction: column; flex: auto">
+          <div style="flex: 100000" id='text'>
+            Click 'Choose Files' or drop files over this dialog.
+          </div>
+          <div style="display: flex; flex-direction: row; justify-content: flex-end;">
+            <button class='button' id='cancel'>Cancel</button>
+            <div style="flex: 100000"></div>
+            <div class='input-file-wrapper'>
+              <button class='button'>Choose Files</button>
+              <input type="file" id='choose' />
+            </div>
+            <div style="width:10px"></div>
+            <button class='button' id='upload'>Upload</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <script type='text/javascript'>
+      // From: https://stackoverflow.com/questions/9847580/how-to-detect-safari-chrome-ie-firefox-and-opera-browser
+      // Opera 8.0+
+      var isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+
+      // Firefox 1.0+
+      var isFirefox = typeof InstallTrigger !== 'undefined';
+
+      // Safari 3.0+ "[object HTMLElementConstructor]" 
+      var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
+
+      // Internet Explorer 6-11
+      var isIE = /*@cc_on!@*/false || !!document.documentMode;
+
+      // Edge 20+
+      var isEdge = !isIE && !!window.StyleMedia;
+
+      // Chrome 1+
+      var isChrome = !!window.chrome && !!window.chrome.webstore;
+
+      // Blink engine detection
+      var isBlink = (isChrome || isOpera) && !!window.CSS;
+      
       if (Error && Error.stackTraceLimit)
         Error.stackTraceLimit = Infinity;
       
@@ -171,14 +339,272 @@
         }, 1000);
       };
       
+      function toArray(value)
+      {
+        return Array.prototype.slice.call(value);
+      }
+      
+      function sanitizeHTML(html)
+      {
+        var temp = document.createElement('div');
+        temp.textContent = html;
+        return temp.innerHTML;
+      }
+      
+      var userInitiatedActions = [];
+      
+      function onUserInitiatedEvent(event)
+      {
+        while (userInitiatedActions.length != 0)
+        {
+          var action = userInitiatedActions.shift();
+          try
+          {
+            action();
+          }
+          catch (err)
+          {
+            console.error(err);
+          }
+        }
+      }
+      
+      document.addEventListener('keydown', onUserInitiatedEvent);
+      document.addEventListener('keypress', onUserInitiatedEvent);
+      document.addEventListener('keyup', onUserInitiatedEvent);
+      document.addEventListener('mousedown', onUserInitiatedEvent);
+      document.addEventListener('mouseup', onUserInitiatedEvent);
+      document.addEventListener('click', onUserInitiatedEvent);
+      document.addEventListener('touchstart', onUserInitiatedEvent);
+      
+      var requestToXhr = {};
+      
+      function xhrRun(isPost, url, headers, postData, request)
+      {
+        var xhr = new XMLHttpRequest();
+        requestToXhr[request] = xhr;
+        
+        xhr.responseType = "arraybuffer";
+        
+        var method = "GET";
+        if (isPost)
+          method = "POST";
+        
+        xhr.open(method, url, true);
+        xhr.seenBytes = 0;
+        
+        var headerRegex = /([\w-]+):\s*(.*)\s*/;
+        var headerLines = headers.split('\r\n');
+        for (var i = 0; i < headerLines.length; ++i)
+        {
+          var headerLine = headerLines[i];
+          if (headerLine)
+          {
+            var matches = headerRegex.exec(headerLine);
+            
+            if (matches)
+              xhr.setRequestHeader(matches[1], matches[2]);
+            else
+              console.error('Invalid header', headerLine);
+          }
+        }
+        
+        xhr.onreadystatechange = function()
+        {
+          // We call abort on the destruction of request, which should stop events,
+          // but to be sure we check that we still have the xhr registered.
+          if (requestToXhr[request] !== xhr)
+            return;
+          
+          // Headers received.
+          if (xhr.readyState == 2)
+          {
+            var responseHeaders = mallocStringUTF8(xhr.getAllResponseHeaders());
+            ccall('EmscriptenWebRequestOnHeadersReceived', null, ['number', 'number', 'number'], [responseHeaders, xhr.status, request]);
+          }
+          
+          // Done.
+          if (xhr.readyState == 4)
+          {
+            if (xhr.status == 200)
+            {
+              var byteLength = xhr.response.byteLength;
+              var dataPtr = Module._malloc(byteLength);
+              var dataHeap = new Uint8Array(Module.HEAPU8.buffer, dataPtr, byteLength);
+              dataHeap.set(new Uint8Array(xhr.response));
+              
+              ccall('EmscriptenWebRequestOnDataReceived', null, ['number', 'number', 'number', 'number'], [dataHeap.byteOffset, byteLength, byteLength, request]);
+              ccall('EmscriptenWebRequestOnComplete', null, ['number', 'number'], [null, request]);
+            }
+            else
+            {
+              var errorMessage = mallocStringUTF8(xhr.statusText);
+              ccall('EmscriptenWebRequestOnComplete', null, ['number', 'number'], [errorMessage, request]);
+            }
+            
+            xhr.onprogres = null;
+            xhr.abort();
+          }
+        };
+        
+        xhr.onprogress = function(event)
+        {
+          // We call abort on the destruction of request, which should stop events,
+          // but to be sure we check that we still have the xhr registered.
+          if (requestToXhr[request] !== xhr)
+            return;
+          
+          ccall('EmscriptenWebRequestOnDataReceived', null, ['number', 'number', 'number', 'number'], [null, 0, event.loaded, request]);
+        };
+        
+        xhr.send(postData);
+      }
+      
+      function xhrCancel(request)
+      {
+        var xhr = requestToXhr[request];
+        if (!xhr)
+          return;
+        
+        xhr.abort();
+        requestToXhr[request] = undefined;
+      }
+      
+      function copyFileListToTemp(fileList, callback)
+      {
+        var loadCounter = fileList.length;
+        var concatenatedFilePaths = '';
+        for (var i = 0; i < fileList.length; i++)
+        {
+          var file = fileList[i];
+          let tempFilePath = '/tmp/' + file.name;
+          concatenatedFilePaths += tempFilePath + '\0';
+
+          // Read the file data into a format that can be written out.
+          var reader = new FileReader();
+          reader.addEventListener('loadend', function(event)
+          {
+            // Copy the file to our browsers local file system in the temp location.
+            FS.writeFile(tempFilePath, new Uint8Array(event.target.result));
+
+            --loadCounter;
+            if (loadCounter == 0)
+            {
+              // Add an extra null terminator so we know when the list is done.
+              var concatenatedFilePathsUtf8 = mallocStringUTF8(concatenatedFilePaths + '\0');
+              callback(concatenatedFilePathsUtf8);
+            }
+          });
+          reader.readAsArrayBuffer(file);
+        }
+      }
+      
+      function shellOpenFile(multiple, accept, configPointer)
+      {
+        var shellOpen = document.body.appendChild(document.getElementById('shell-open').cloneNode(true));
+        shellOpen.style.display = 'block';
+        
+        var close = shellOpen.querySelector('#close');
+        var cancel = shellOpen.querySelector('#cancel');
+        var upload = shellOpen.querySelector('#upload');
+        var choose = shellOpen.querySelector('#choose');
+        var text = shellOpen.querySelector('#text');
+        
+        if (multiple)
+          choose.multiple = true;
+        choose.accept = accept;
+        
+        var cancelHandler = function()
+        {
+          ccall('EmscriptenShellOpenFileEnd', null, ['number', 'number'], [null, configPointer]);
+          shellOpen.remove();
+        };
+        
+        close.addEventListener('click', cancelHandler);
+        cancel.addEventListener('click', cancelHandler);
+        
+        var files = [];
+        
+        var updateFileList = function()
+        {
+          var filesList = '';
+          
+          for (var i = 0; i < files.length; ++i)
+            filesList += sanitizeHTML(files[i].name) + '<br/>';
+          
+          text.innerHTML = filesList;
+        };
+        
+        shellOpen.addEventListener('drop', function(event)
+        {
+          // Disable the browsers default file drop event behavior.
+          event.preventDefault();
+          event.stopImmediatePropagation();
+
+          // Check if the drop event contained a data transfer object.
+          if (event.dataTransfer)
+          {
+            files = event.dataTransfer.files;
+            updateFileList();
+          }
+        });
+        
+        choose.addEventListener('change', function()
+        {
+          files = choose.files;
+          updateFileList();
+        });
+        
+        upload.addEventListener('click', function()
+        {
+          copyFileListToTemp(files, function(concatenatedFilePathsUtf8)
+          {
+            ccall('EmscriptenShellOpenFileEnd', null, ['number', 'number'], [concatenatedFilePathsUtf8, configPointer]);
+            shellOpen.remove();
+          });
+        });
+      }
+      
       // We use this helper to return strings back to C++.
       function mallocStringUTF8(string)
       {
+        if (!string)
+          string = '';
+        
         var lengthBytes = lengthBytesUTF8(string) + 1;
         var stringOnWasmHeap = _malloc(lengthBytes);
-        return stringToUTF8(string, stringOnWasmHeap, lengthBytes);
+        stringToUTF8(string, stringOnWasmHeap, lengthBytes);
+        return stringOnWasmHeap;
       }
       
+      // Disable file drag default behavior.
+      function dragHandler(event)
+      {
+        event.preventDefault();
+      }
+
+      // File drop helper to upload a resource.
+      function dropHandler(event)
+      {
+        // Disable the browsers default file drop event behavior.
+        event.preventDefault();
+
+        // Check if the drop event contained a data transfer object.
+        if (event.dataTransfer)
+        {
+          // Get the file list of items dropped on the browser.
+          copyFileListToTemp(event.dataTransfer.files, function(concatenatedFilePathsUtf8)
+          {
+            // Call C++ function drag and drop handler.
+            ccall('EmscriptenFileDropHandler', null, ['number'], [concatenatedFilePathsUtf8]);
+          });
+        }
+      }
+      
+      // Set the drag and drop event handler to our custom one.
+      window.addEventListener('dragover', dragHandler, false);
+      window.addEventListener('drop', dropHandler, false);
+
       var downloadingDataText = 'Downloading data...';
       
       var Module =
@@ -211,7 +637,7 @@
           
           var data = '/Data';
           FS.mkdir(data);
-          
+
           var fallback = data + '/Fallback';
           FS.mkdir(fallback);
           FS.mount(IDBFS, {}, fallback);
@@ -244,7 +670,7 @@
         
         setStatus: function(text)
         {
-        console.log("STATUS: " + text);
+          console.log("STATUS: " + text);
           if (!Module.setStatus.last)
             Module.setStatus.last = { time: Date.now(), text: '' };
           
@@ -286,7 +712,7 @@
             setEngineLoading();
         }
       };
-      
+
       // See http://www.khronos.org/registry/webgl/specs/latest/1.0/#5.15.2
       canvasElement.addEventListener('webglcontextlost', function(e)
       {
@@ -300,25 +726,22 @@
         e = e || window.event;
         var ctrlKey = e.ctrlKey || e.metaKey;
         var key = e.which || e.keyCode;
-        if (ctrlKey)
-        {
-            switch (key)
-            {
-                // Block Ctrl+S
-                case 83:
-                // Block Ctrl+W (not in Chrome)
-                case 87:
-                    e.preventDefault();
-                break;
-            }
-        }
+        
+        // Prevent all Ctrl key combos (except Ctrl itself).
+        if (ctrlKey && key != 17)
+          e.preventDefault();
+        
+        // Prevent all Alt key combos (except Alt itself).
+        if (e.altKey && key != 18)
+          e.preventDefault();
+        
+        // Block Refresh
         switch (key)
         {
-            // Block Refresh
-            case 116:
-            case 154:
-                e.preventDefault();
-            break;
+          case 116:
+          case 154:
+              e.preventDefault();
+          break;
         }
       };
       
@@ -327,13 +750,13 @@
       Module.setStatus(downloadingDataText);
       
       var exceptionThrown = false;
-      window.onerror = function()
+      window.addEventListener('error', function(event)
       {
         if (exceptionThrown)
           return;
           
         exceptionThrown = true;
-        Module.setStatus('Exception Thrown');
+        Module.setStatus('Error: ' + event.message);
         alert('An exception was thrown. You will need to reload the page. You can view the JavaScript console for more details.');
         
         progressElement.style.display = 'none';
@@ -343,7 +766,7 @@
           if (text)
             Module.printErr('[post-exception status] ' + text);
         };
-      };
+      });
     </script>
     <div style='display: none'>
     {{{ SCRIPT }}}

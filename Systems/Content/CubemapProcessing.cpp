@@ -720,7 +720,7 @@ Vec3 FilterEnvMap(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, uint pi
 class FilterJob : public Job
 {
 public:
-  int Execute() override
+  void Execute() override
   {
     uint width = (*mMipHeaders)[mTargetIndex].mWidth;
     float alpha = mRoughness * mRoughness;
@@ -747,7 +747,6 @@ public:
     }
 
     mCountdownEvent->DecrementCount();
-    return 0;
   }
 
   Array<MipHeader>* mMipHeaders;

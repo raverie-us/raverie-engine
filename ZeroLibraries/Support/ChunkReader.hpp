@@ -14,6 +14,7 @@
 namespace Zero
 {
 
+#pragma pack(push, 4)
 struct FileChunk
 {
   //Header
@@ -24,6 +25,7 @@ struct FileChunk
   u32 StartPos;
   u32 EndPos;
 };
+#pragma pack(pop)
 
 template<typename streamType>
 class ChunkReader
@@ -54,7 +56,7 @@ public:
   {
     FileChunk chunk = ReadChunkHeader();
     int headerSize = (int)HeaderSize;
-    file.Seek(-headerSize, FileOrigin::Current);
+    file.Seek(-headerSize, SeekOrigin::Current);
     return chunk;
   }
 
@@ -93,13 +95,13 @@ public:
   // Skip to the end of this chunk
   void SkipChunk(FileChunk& chunk)
   {
-    file.Seek(chunk.EndPos, FileOrigin::Begin);
+    file.Seek(chunk.EndPos, SeekOrigin::Begin);
   }
 
   // Move to the beginning of the chunk
   void MoveToChunk(FileChunk& chunk)
   {
-    file.Seek(chunk.StartPos, FileOrigin::Begin);
+    file.Seek(chunk.StartPos, SeekOrigin::Begin);
   }
 
   template<typename type>

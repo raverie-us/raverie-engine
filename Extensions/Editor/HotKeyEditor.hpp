@@ -30,10 +30,20 @@ class BindingConflictEvent;
 class ModalConfirmEvent;
 
 //------------------------------------------------------------- CommandEntry ---
+DeclareEnum6(CommandCompare, IsCogCommand, IsNotCogCommand,
+  CommandName, CommandBinding, CommandTags, None);
+
 struct CommandEntry
 {
   bool operator<(const CommandEntry& rhs) const;
+  bool operator==(const CommandEntry& rhs) const;
   bool operator==(const Command& rhs) const;
+
+  bool IsCogCommand(const CommandEntry& rhs) const;
+  bool IsNotCogCommand(const CommandEntry& rhs) const;
+  bool LessName(const CommandEntry& rhs) const;
+  bool LessBinding(const CommandEntry& rhs) const;
+  bool LessTags(const CommandEntry& rhs) const;
 
   bool mIsACogCommand;
   bool mDevOnly;
@@ -99,6 +109,17 @@ class HotKeyEditor : public Composite
 public:
   ZilchDeclareType(HotKeyEditor, TypeCopyMode::ReferenceType);
 
+  typedef void (HotKeyEditor::*MouseEventHandler)(MouseEvent*);
+
+  enum Headers
+  {
+    CommandType = 0,
+    Name,
+    Binding,
+    Tags,
+    Description
+  };
+
   HotKeyEditor(Composite* parent);
   void BuildFormat(TreeFormatting& formatting);
 
@@ -113,14 +134,30 @@ public:
   void OnCancel(SearchViewEvent* event);
 
   void OnScriptsCompiled(Event* event);
-  void Sort(bool updateIndexes);
-  
   void OnCommandRename(ObjectEvent* event);
   void OnCommandRebind(ObjectEvent* event);
   void OnCommandDelete(ObjectEvent* event);
   void OnCommandRightClick(TreeEvent* event);
 
+  void UpdateIndexes(int start = 0);
+  void Sort(bool updateIndexes, CommandCompare::Enum sortBy = CommandCompare::CommandName);
+
+  void OnCogCommandSort(MouseEvent* event);
+  void OnCommandNameSort(MouseEvent* event);
+  void OnCommandBindingSort(MouseEvent* event);
+  void OnCommandTagsSort(MouseEvent* event);
+  
+  void CreateCommandHeaderToolTip(Widget* source, StringParam sortName, Vec4Param color);
+
+  void OnMouseEnterIconHeader(MouseEvent* event);
+  void OnMouseEnterCommandHeader(MouseEvent* event);
+  void OnMouseEnterBindingHeader(MouseEvent* event);
+  void OnMouseEnterTagsHeader(MouseEvent* event);
+  void OnMouseExitHeader(MouseEvent* event);
+
   void OnKeyDown(KeyboardEvent* event);
+
+  void OnTreeViewHeaderAdded(TreeViewHeaderAddedEvent* event);
 
   void OnGlobalCommandAdded(CommandUpdateEvent* event);
   void OnGlobalCommandRemoved(CommandUpdateEvent* event);
@@ -139,11 +176,17 @@ public:
 public:
   static HashMap<unsigned, String> sKeyMap;  // <Keys::Enum, "CommandName">
 
+  bool mCogCommandSortToggle;
+
   DataIndex mRightClickedRowIndex;
 
+  TreeViewSearch* mSearch;
   TreeView* mTreeView;
   TextButton* mAddCommand;
   ComboBox* mHotKeySetDropdown;
+
+  HandleOf<ToolTip> mSortToolTip;
+  CommandCompare::Enum mCurrentSort;
 
   StringSource mSetNames;
 

@@ -12,6 +12,50 @@
 namespace Zero
 {
 
+// When importing Zero Engine resource files we strip the resource extension from the filename
+// to get the original resource name from the project it was imported from
+// if we do not do this then the file ZeroEngineResource.ResourceType.data
+// becomes    ZeroEngineResourceResourceType.ResourceType.data
+// instead of ZeroEngineResource.ResourceType.data
+String StripResourceExtension(StringParam filename)
+{
+  // Count the periods in the filename
+  int periodCount = 0;
+  forRange(Rune rune, filename.All())
+  {
+    if (rune == '.')
+      ++periodCount;
+  }
+  // If it contains more than 2 periods this is not one of Zero Engine's data files
+  // as at most a file would be named ZeroEngineResource.ResourceType.data
+  // so anymore than 2 is a way of identifying a user named external file
+  // and not accidentally turning a user file like User.Custom.Font.ttf
+  // into UserCustom as a font instead of UserCustomFont
+  if (periodCount > 2)
+    return filename;
+
+  // Find the resource extensions begin and end position in the string
+  StringRange resourceExtensionStart = filename.FindFirstOf('.');
+  StringRange resourceExtensionEnd = filename.FindLastOf('.');
+  if (resourceExtensionStart.Begin() != resourceExtensionEnd.Begin())
+  {
+    // Get the resource extension without including the beginning and end periods
+    String resourceExtension = filename.SubString(resourceExtensionStart.End(), resourceExtensionEnd.Begin());
+    // Check if the included middle extension is a Zero Engine resource
+    MetaDatabase* metaDatabase = MetaDatabase::GetInstance();
+    BoundType* type = metaDatabase->FindType(resourceExtension);
+    // If it is a Zero Engine resource strip it from the filename
+    if (type->IsA(ZilchTypeId(Resource)))
+    {
+      // Replace the .ResourceType with nothing and return that filename to import
+      // Zero Engine created resources files from another project and get the same name
+      return filename.Replace(BuildString(".", resourceExtension), "");
+    }
+  }
+  // This file is not a Zero Engine resource so return as is
+  return filename;
+}
+
 void RunGroupImport(ImportOptions& options)
 {
   ContentLibrary* library = options.mLibrary;
@@ -26,7 +70,8 @@ void RunGroupImport(ImportOptions& options)
   for(uint fileIndex = 0; fileIndex < filesToExport.Size(); ++fileIndex)
   {
     String fullPath = filesToExport[fileIndex];
-    String filename = SanitizeContentFilename(FilePath::GetFileName(fullPath));
+    String filename = StripResourceExtension(FilePath::GetFileName(fullPath));
+    filename = SanitizeContentFilename(filename);
     String storedfilename = FilePath::Combine(library->SourcePath, filename);
 
     //Add the content item
@@ -105,7 +150,7 @@ void OpenGroupImport(Array<String>& files)
   }
 }
 
-void LoadFilesDroppedOnViewport(Array<HandleOfString>& files)
+void LoadDroppedFiles(Array<HandleOfString>& files)
 {
   if (files.Empty())
     return;
@@ -291,14 +336,14 @@ void GroupImportWindow::OnCancel(Event* event)
 void ImportCallback::Open()
 {
   //Open the open file dialog
-  FileDialogConfig config;
-  config.EventName = "OnFileSelected";
-  config.CallbackObject = this;
-  config.Title = "Select resource";
-  config.AddFilter("ResourceFile", "*.*");
-  config.Flags |= FileDialogFlags::MultiSelect;
+  FileDialogConfig* config = FileDialogConfig::Create();
+  config->EventName = "OnFileSelected";
+  config->CallbackObject = this;
+  config->Title = "Select resource";
+  config->AddFilter("ResourceFile", "*.*");
+  config->Flags |= FileDialogFlags::MultiSelect;
 
-  ConnectThisTo(this, config.EventName, OnFilesSelected);
+  ConnectThisTo(this, config->EventName, OnFilesSelected);
   Z::gEngine->has(OsShell)->OpenFile(config);
 }
 

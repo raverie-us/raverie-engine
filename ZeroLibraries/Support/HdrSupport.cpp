@@ -1,62 +1,74 @@
+///////////////////////////////////////////////////////////////////////////////
+///
+/// Authors: Nathan Carlson
+/// Copyright 2018, DigiPen Institute of Technology
+///
+///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
-namespace
+namespace Zero
 {
+static const String cHdrSignature("#?RADIANCE");
 
-bool FindNewline(cstr data, uint size, char* newline)
+static bool FindNewline(Stream* stream, char* newline)
 {
-  uint i = 0;
-  while (i < size)
+  while (!stream->IsEof())
   {
-    if (data[i] == '\r')
+    byte character = stream->ReadByte();
+    if (character == '\r')
     {
       newline[0] = '\r';
-      if (i + 1 < size && data[i + 1] == '\n')
+      if (!stream->IsEof() && stream->PeekByte() == '\n')
+      {
+        // Since we just peeked, we need to advance the stream
+        stream->ReadByte();
         newline[1] = '\n';
+      }
       return true;
     }
-    else if (data[i] == '\n')
+    else if (character == '\n')
     {
       newline[0] = '\n';
       return true;
     }
-    ++i;
   }
 
   return false;
 }
 
-uint ReadLine(cstr data, uint size, cstr newline, Zero::String& line)
+DeclareEnum3(ReadLineStatus, ReadTextLine, ReadEmptyLine, Eof);
+
+static ReadLineStatus::Enum ReadLine(Stream* stream, cstr newline)
 {
-  uint i = 0;
+  ReadLineStatus::Enum result = ReadLineStatus::ReadEmptyLine;
+
   // Find newline location
-  while (i < size)
+  while (!stream->IsEof())
   {
-    if (data[i] == newline[0])
+    if (stream->ReadByte() == newline[0])
     {
       if (newline[1] == 0)
         break;
-      else if (i + 1 < size && data[i + 1] == newline[1])
+      else if (!stream->IsEof() && stream->PeekByte() == newline[1])
+      {
+        // Since we just peeked, we need to advance the stream
+        stream->ReadByte();
         break;
+      }
     }
-    ++i;
+    else
+    {
+      result = ReadLineStatus::ReadTextLine;
+    }
   }
 
   // No data or didn't find newline
-  if (i == size)
-    return 0;
+  if (stream->IsEof())
+    result = ReadLineStatus::Eof;
 
-  line = Zero::String(data, i);
-
-  // Return the index passed the newline
-  i += (newline[1] == 0) ? 1 : 2;
-  return i;
+  // The stream position should now be past the newline
+  return result;
 }
-
-}
-
-namespace Zero
-{
 
 class HdrHeaderGrammar
 {
@@ -218,56 +230,51 @@ void HdrHeaderParser::EndRule(ParseNodeInfo<Token>* info)
   }
 }
 
-const byte* ParseHdrHeader(Status& status, const byte* data, uint size, uint& width, uint& height)
+void ParseHdrHeader(Status& status, Stream* stream, uint& width, uint& height)
 {
-  cstr headerData = (cstr)data;
-  uint i = 0;
-
   // Determine newline type
-  char newline[2] = {0};
-  if (FindNewline(headerData, size, newline) == false)
+  char newline[2] = { 0 };
+  if (FindNewline(stream, newline) == false)
   {
     status.SetFailed("No header found");
-    return nullptr;
+    return;
   }
 
   // Find empty line for end of header
-  while (i < size)
+  while (!stream->IsEof())
   {
-    String line;
-    uint index = ReadLine(headerData + i, size - i, newline, line);
-    if (index == 0)
+    ReadLineStatus::Enum line = ReadLine(stream, newline);
+    if (line == ReadLineStatus::Eof)
     {
       status.SetFailed("No end of header found (empty line)");
-      return nullptr;
+      return;
     }
 
-    i += index;
-    if (line.Empty())
+    if (line == ReadLineStatus::ReadEmptyLine)
       break;
   }
 
   // Read past resolution line
-  String line;
-  i += ReadLine(headerData + i, size - i, newline, line);
-  if (i == size)
+  if (ReadLine(stream, newline) != ReadLineStatus::ReadTextLine)
   {
     status.SetFailed("No resolution line after header");
-    return nullptr;
+    return;
   }
 
-  String header(headerData, i);
-  if (!HdrHeaderParser::Parse(status, header, width, height))
-    return nullptr;
+  // Seek back to the beginning and create a String out of the header data
+  size_t headerSize = (size_t)stream->Tell();
+  Zero::StringNode* node = Zero::String::AllocateNode(headerSize);
+  stream->Seek(0);
+  stream->Read((byte*)node->Data, headerSize);
+  String header(node);
 
-  // Return data pointer after the header (the image data)
-  return data + i;
+  HdrHeaderParser::Parse(status, header, width, height);
 }
 
 // Used to make sure no data reads go out of bounds
 #define ValidateRead(data, endData, count) if (data + (count) > endData) return false;
 
-bool DecodeHdrScanline(const byte*& imageData, const byte* endData, uint imageWidth, byte* scanline)
+bool DecodeHdrScanline(byte*& imageData, const byte* endData, uint imageWidth, byte* scanline)
 {
   uint index = 0;
   ValidateRead(imageData, endData, index + 4);
@@ -327,6 +334,145 @@ bool DecodeHdrScanline(const byte*& imageData, const byte* endData, uint imageWi
   return true;
 }
 
+bool IsHdr(Stream* stream)
+{
+  size_t signatureSize = cHdrSignature.SizeInBytes();
+  byte* buffer = (byte*)alloca(signatureSize);
+  size_t amountRead = stream->Read(buffer, signatureSize);
+  stream->Seek(0);
+  return amountRead == signatureSize && memcmp(buffer, cHdrSignature.Data(), signatureSize) == 0;
+}
+
+bool ReadHdrInfo(Stream* stream, ImageInfo& info)
+{
+  info.Format = TextureFormat::RGB32f;
+
+  Status status;
+  ParseHdrHeader(status, stream, info.Width, info.Height);
+  stream->Seek(0);
+  return status.Succeeded();
+}
+
+bool IsHdrLoadFormat(TextureFormat::Enum format)
+{
+  return format == TextureFormat::None || IsHdrSaveFormat(format);
+}
+
+bool IsHdrSaveFormat(TextureFormat::Enum format)
+{
+  return format == TextureFormat::RGB32f;
+}
+
+void LoadHdr(Status& status, Stream* stream, byte** output, uint* width, uint* height, TextureFormat::Enum* format, TextureFormat::Enum requireFormat)
+{
+  if (!IsHdrLoadFormat(requireFormat))
+  {
+    status.SetFailed("Hdr only supports the format RGB32f");
+    return;
+  }
+
+  // Note that ParseHdrHeader advances the stream.
+  uint imageWidth, imageHeight;
+  ParseHdrHeader(status, stream, imageWidth, imageHeight);
+  if (status.Failed())
+    return;
+
+  // At this point, the stream will be just after the header (where the data starts).
+  // Subtract header size
+  size_t size = (size_t)(stream->Size() - stream->Tell());
+  ByteBufferBlock block;
+  stream->ReadMemoryBlock(status, block, size);
+
+  if (status.Failed())
+    return;
+
+  byte* imageData = block.GetBegin();
+  const byte* endData = imageData + size;
+
+  // Allocate full size of final image
+  float* outputImage = (float*)zAllocate(sizeof(float) * imageWidth * imageHeight * 3);
+
+  if (!outputImage)
+  {
+    status.SetFailed("Failed to allocate memory for the Hdr output image");
+    return;
+  }
+
+  // Scratch buffer for decoding a single scanline
+  byte* scanline = (byte*)zAllocate(sizeof(byte) * imageWidth * 4);
+
+  if (!scanline)
+  {
+    zDeallocate(outputImage);
+    status.SetFailed("Failed to allocate memory for the Hdr scanline");
+    return;
+  }
+  
+  // Process one scanline at a time
+  for (uint line = 0; line < imageHeight; ++line)
+  {
+    if (!DecodeHdrScanline(imageData, endData, imageWidth, scanline))
+    {
+      status.SetFailed("Corrupted or invalid image data");
+      zDeallocate(scanline);
+      zDeallocate(outputImage);
+      return;
+    }
+
+    // Convert each pixel from the decoded scanline
+    float* outputScanline = outputImage + line * imageWidth * 3;
+    for (uint pixel = 0; pixel < imageWidth; ++pixel)
+      RgbeToRgb32f(scanline + pixel * 4, outputScanline + pixel * 3);
+  }
+
+  zDeallocate(scanline);
+  *width = imageWidth;
+  *height = imageHeight;
+  *output = (byte*)outputImage;
+
+  // We always output the RGB32f format.
+  *format = TextureFormat::RGB32f;
+}
+
+void SaveHdr(Status& status, Stream* stream, const byte* image, uint width, uint height, TextureFormat::Enum format)
+{
+  if (!IsHdrSaveFormat(format))
+  {
+    status.SetFailed("Hdr only supports the format RGB32f");
+    return;
+  }
+
+  if (image == nullptr || width == 0 || height == 0)
+  {
+    status.SetFailed("Empty Image");
+    return;
+  }
+
+  uint dataSize = width * height * 4;
+  byte* outputData = new byte[dataSize];
+
+  for (uint i = 0; i < width * height; ++i)
+    Rgb32fToRgbe((float*)image + i * 3, outputData + i * 4);
+
+  // Build header
+  StringBuilder header;
+  header.Append("#?RADIANCE\n");
+  header.Append("FORMAT=32-bit_rle_rgbe\n");
+  header.Append("\n");
+  header.Append(String::Format("-Y %d +X %d\n", height, width));
+
+  // Write header
+  uint headerSize = header.GetSize();
+  byte* headerData = new byte[headerSize];
+  header.ExtractInto(headerData, headerSize);
+  stream->Write(headerData, headerSize);
+  delete[] headerData;
+
+  // Write image data
+  stream->Write(outputData, dataSize);
+}
+
+
 void RgbeToRgb32f(byte* rgbe, float* rgb32f)
 {
   byte e = rgbe[3];
@@ -364,88 +510,6 @@ void Rgb32fToRgbe(float* rgb32f, byte* rgbe)
     rgbe[2] = (byte)(rgb32f[2] * scale);
     rgbe[3] = (byte)(exp + 128);
   }
-}
-
-void LoadFromHdr(Status& status, byte** output, uint* width, uint* height, const byte* data, uint size)
-{
-  uint imageWidth, imageHeight;
-  const byte* imageData = ParseHdrHeader(status, data, size, imageWidth, imageHeight);
-  if (imageData == nullptr)
-    return;
-
-  // Subtract header size
-  size -= imageData - data;
-  const byte* endData = imageData + size;
-
-  // Allocate full size of final image
-  float* outputImage = new float[imageWidth * imageHeight * 3];
-  // Scratch buffer for decoding a single scanline
-  byte* scanline = new byte[imageWidth * 4];
-
-  // Process one scanline at a time
-  for (uint line = 0; line < imageHeight; ++line)
-  {
-    if (!DecodeHdrScanline(imageData, endData, imageWidth, scanline))
-    {
-      status.SetFailed("Corrupted or invalid image data");
-      delete[] scanline;
-      delete[] outputImage;
-      return;
-    }
-
-    // Convert each pixel from the decoded scanline
-    float* outputScanline = outputImage + line * imageWidth * 3;
-    for (uint pixel = 0; pixel < imageWidth; ++pixel)
-      RgbeToRgb32f(scanline + pixel * 4, outputScanline + pixel * 3);
-  }
-
-  delete[] scanline;
-  *width = imageWidth;
-  *height = imageHeight;
-  *output = (byte*)outputImage;
-}
-
-void SaveToHdr(Status& status, byte* image, uint width, uint height, StringParam filename)
-{
-  if (image == nullptr || width == 0 || height == 0)
-  {
-    status.SetFailed("Empty Image");
-    return;
-  }
-
-  File file;
-  file.Open(filename.c_str(), FileMode::Write, FileAccessPattern::Sequential);
-
-  if (!file.IsOpen())
-  {
-    status.SetFailed(String::Format("Can not open hdr file '%s' for writing", filename.c_str()));
-    return;
-  }
-
-  uint dataSize = width * height * 4;
-  byte* outputData = new byte[dataSize];
-
-  for (uint i = 0; i < width * height; ++i)
-    Rgb32fToRgbe((float*)image + i * 3, outputData + i * 4);
-
-  // Build header
-  StringBuilder header;
-  header.Append("#?RADIANCE\n");
-  header.Append("FORMAT=32-bit_rle_rgbe\n");
-  header.Append("\n");
-  header.Append(String::Format("-Y %d +X %d\n", height, width));
-
-  // Write header
-  uint headerSize = header.GetSize();
-  byte* headerData = new byte[headerSize];
-  header.ExtractInto(headerData, headerSize);
-  file.Write(headerData, headerSize);
-  delete[] headerData;
-
-  // Write image data
-  file.Write(outputData, dataSize);
-
-  file.Close();
 }
 
 } // namespace Zero

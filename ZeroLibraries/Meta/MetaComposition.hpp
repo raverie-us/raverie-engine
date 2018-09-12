@@ -65,6 +65,16 @@ struct AddInfo
   String Reason;
 };
 
+//---------------------------------------------------------------------------- Meta Creation Context
+/// When the operation system creates multiple components in the same batch, some systems (such as
+/// Cog Components) require knowledge of all the created components. In the case of Cog Components,
+/// we want to send the 'AllObjectsInitialized' event only once when all Components have been added.
+/// This will also be useful when we make a generic object factory.
+struct MetaCreationContext
+{
+  virtual ~MetaCreationContext() {}
+};
+
 //--------------------------------------------------------------------------------- Meta Composition
 /// Meta Interface for polymorphic, dynamic containment of objects / components.
 class MetaComposition : public ReferenceCountedEventObject
@@ -114,12 +124,20 @@ public:
   virtual Handle MakeObject(BoundType* typeToCreate);
   virtual BoundType* MakeProxy(StringParam typeName, ProxyReason::Enum reason);
 
+  /// See the comment above 'MetaCreationContext'.
+  virtual MetaCreationContext* GetCreationContext();
+
   /// Allocates and adds the component to the object at the given index. Default index puts the
   /// component at the back of all components.
   virtual void AddComponent(HandleParam owner, HandleParam component, int index = -1,
-                            bool ignoreDependencies = false);
+                            bool ignoreDependencies = false, MetaCreationContext* creationContext = nullptr);
   virtual void AddComponent(HandleParam owner, BoundType* typeToAdd, int index = -1,
-                            bool ignoreDependencies = false); 
+                            bool ignoreDependencies = false, MetaCreationContext* creationContext = nullptr);
+
+  /// See the comment above 'MetaCreationContext'. Once all components are created, this function
+  /// will be called and any post-creation logic can be executed. e.g. Cog initializer can send
+  /// the AllObjectsInitialized event to all newly created components.
+  virtual void FinalizeCreation(MetaCreationContext* context);
 
   /// Checks dependencies to see if the component can be removed. If it can't be removed, the reason
   /// will be filled out explaining why.
@@ -162,6 +180,8 @@ public:
   /// The type of Component contained in the composition.
   BoundType* mComponentType;
 
+  /// Some compositions are only there for accessing components, not adding them (e.g. CogPath).
+  bool mSupportsComponentAddition;
   bool mSupportsComponentRemoval;
   bool mSupportsComponentReorder;
   
