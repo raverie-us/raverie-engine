@@ -5,8 +5,6 @@
 
 target_sources(SPIRV-Tools
   PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}/SPIRV-Headers/example/example-1.1.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/SPIRV-Headers/example/example.cpp
     ${CMAKE_CURRENT_LIST_DIR}/SPIRV-Headers/tools/buildHeaders/header.cpp
     ${CMAKE_CURRENT_LIST_DIR}/SPIRV-Headers/tools/buildHeaders/jsonToSpirv.cpp
     ${CMAKE_CURRENT_LIST_DIR}/SPIRV-Headers/tools/buildHeaders/main.cpp

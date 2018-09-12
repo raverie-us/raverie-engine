@@ -79,7 +79,7 @@ void RunTests()
   unitTestPackage.mRenderPackages.PushBack(glslPackage);
 
   String extensionsPath = "FragmentExtensions";
-  String fragmentSettingsPath = "../../Data/ZilchFragmentSettings";/
+  String fragmentSettingsPath = "../../Data/ZilchFragmentSettings";
 
   SpirVNameSettings nameSettings;
   SimpleZilchShaderIRGenerator::LoadNameSettings(nameSettings);
