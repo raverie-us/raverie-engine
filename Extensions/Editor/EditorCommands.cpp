@@ -971,6 +971,12 @@ bool ExecuteShortCuts(Space* space, Viewport* viewport, KeyboardEvent* event)
     return true;
   }
 
+  if (event->Key == Keys::F9)
+  {
+    EditInGame(editor);
+    return true;
+  }
+
   return false;
 
 }
@@ -1229,6 +1235,22 @@ void DumpMemoryDebuggerStats()
   Memory::DumpMemoryDebuggerStats("MyProject");
 }
 
+void EditInGame(Editor* editor)
+{
+  // command needs a game to be running to work so start the game if none are running
+  if (!editor->AreGamesRunning())
+  {
+    editor->PlaySingleGame();
+  }
+
+  Editor::GameRange gameSessionList = editor->GetGames();
+
+  forRange(GameSession *session, gameSessionList.All())
+  {
+    session->EditSpaces();
+  }
+}
+
 void BindEditorCommands(Cog* configCog, CommandManager* commands)
 {
   commands->AddCommand("Undo", BindCommandFunction(EditorUndo));
@@ -1292,6 +1314,9 @@ void BindEditorCommands(Cog* configCog, CommandManager* commands)
 
   commands->AddCommand("GoToDefinition", BindCommandFunction(GoToDefinition));
   commands->AddCommand("Add", BindCommandFunction(Add));
+
+  Command* editInGameCommand = commands->AddCommand("EditInGame", BindCommandFunction(EditInGame));
+  editInGameCommand->Shortcut = "F9";
 
   if(DeveloperConfig* config = configCog->has(DeveloperConfig))
   {
