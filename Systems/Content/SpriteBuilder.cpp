@@ -97,10 +97,7 @@ bool SpriteSourceBuilder::NeedsBuilding(BuildOptions& options)
 {
   mOwner->EditMode = ContentEditMode::ResourceObject;
 
-  if(DirectBuilderComponent::NeedsBuilding(options))
-    return true;
-
-  return DirectBuilderComponent::NeedsBuildingTool(options, "SpriteVersion.txt");
+  return DirectBuilderComponent::NeedsBuilding(options);
 }
 
 void SpriteSourceBuilder::BuildListing(ResourceListing& listing)
