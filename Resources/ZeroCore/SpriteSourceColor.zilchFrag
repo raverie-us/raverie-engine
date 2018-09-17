@@ -3,7 +3,7 @@
 [Pixel]
 struct SpriteSourceColor
 {
-  [BuiltInInput] var SpriteSource : Sampler2d;
+  [PropertyInput] var SpriteSource : SampledImage2d;
 
   [FragmentInput][StageInput] var Uv : Real2;
   [FragmentInput][StageInput][Output] var Color : Real4;

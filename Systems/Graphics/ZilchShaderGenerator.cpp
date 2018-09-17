@@ -41,7 +41,6 @@ BaseShaderTranslator* CreateShaderTranslator()
 ZilchShaderGenerator* CreateZilchShaderGenerator()
 {
   ZilchShaderGenerator* shaderGenerator = new ZilchShaderGenerator();
-  shaderGenerator->mTranslator = CreateShaderTranslator();
   shaderGenerator->Initialize();
   return shaderGenerator;
 }
@@ -50,7 +49,6 @@ ZilchShaderGenerator* CreateZilchShaderGenerator()
 ZilchShaderGenerator::ZilchShaderGenerator()
   : mFragmentsProject("Fragments")
 {
-  mSettings = new ZilchShaderSettings();
 }
 
 //**************************************************************************************************
@@ -61,166 +59,182 @@ ZilchShaderGenerator::~ZilchShaderGenerator()
 //**************************************************************************************************
 void ZilchShaderGenerator::Initialize()
 {
-  if(mTranslator == nullptr)
-    mTranslator = CreateShaderTranslator();
-
   ShaderSettingsLibrary::GetInstance().BuildLibrary();
-  EventConnect(&mFragmentsProject, Zilch::Events::CompilationError, &ZilchShaderGenerator::OnZilchFragmentCompilationError, this);
-  EventConnect(&mFragmentsProject, Zilch::Events::TypeParsed, &ZilchShaderGenerator::OnZilchFragmentTypeParsed, this);
-  EventConnect(&mFragmentsProject, Events::TranslationError, &ZilchShaderGenerator::OnZilchFragmentTranslationError, this);
-
-  MainConfig* mainConfig = Z::gEngine->GetConfigCog()->has(MainConfig);
-
-  // Set the default render target names
-  // max target count needs to be queried by the renderer
-  ZilchShaderSettings* settings = mSettings;
-
-  settings->mNameSettings.mAllowedClassAttributes.Insert("Protected", AttributeInfo());
-  settings->mNameSettings.mAllowedClassAttributes.Insert("CoreVertex", AttributeInfo());
-  settings->mNameSettings.mAllowedClassAttributes.Insert("RenderPass", AttributeInfo());
-  settings->mNameSettings.mAllowedClassAttributes.Insert("PostProcess", AttributeInfo());
-  settings->mNameSettings.mAllowedFieldAttributes.Insert("Hidden", AttributeInfo());
-  settings->mNameSettings.mAllowedFieldAttributes.Insert(PropertyAttributes::cGroup, AttributeInfo());
-  settings->mNameSettings.mAllowedFieldAttributes.Insert(PropertyAttributes::cRange, AttributeInfo());
-  settings->mNameSettings.mAllowedFieldAttributes.Insert(PropertyAttributes::cSlider, AttributeInfo());
-
-  ZilchShaderSettingsLoader settingsLoader;
-  String settingsDir = FilePath::Combine(mainConfig->DataDirectory, "ZilchFragmentSettings");
-  settingsLoader.LoadSettings(settings, settingsDir);
-
-  settings->mShaderDefinitionSettings.SetMaxSimultaneousRenderTargets(4);
-  settings->mShaderDefinitionSettings.SetRenderTargetName("Target0", 0);
-  settings->mShaderDefinitionSettings.SetRenderTargetName("Target1", 1);
-  settings->mShaderDefinitionSettings.SetRenderTargetName("Target2", 2);
-  settings->mShaderDefinitionSettings.SetRenderTargetName("Target3", 3);
-  
-  // Built-in inputs
-
-  // Vertex Attributes
-  settings->mShaderDefinitionSettings.AddVertexDefinition("LocalPosition", "Real3");
-  settings->mShaderDefinitionSettings.AddVertexDefinition("LocalNormal", "Real3");
-  settings->mShaderDefinitionSettings.AddVertexDefinition("LocalTangent", "Real3");
-  settings->mShaderDefinitionSettings.AddVertexDefinition("LocalBitangent", "Real3");
-  settings->mShaderDefinitionSettings.AddVertexDefinition("Uv", "Real2");
-  settings->mShaderDefinitionSettings.AddVertexDefinition("UvAux", "Real2");
-  settings->mShaderDefinitionSettings.AddVertexDefinition("Color", "Real4");
-  settings->mShaderDefinitionSettings.AddVertexDefinition("ColorAux", "Real4");
-  settings->mShaderDefinitionSettings.AddVertexDefinition("BoneIndices", "Integer4");
-  settings->mShaderDefinitionSettings.AddVertexDefinition("BoneWeights", "Real4");
-  settings->mShaderDefinitionSettings.AddVertexDefinition("Aux0", "Real4");
-  settings->mShaderDefinitionSettings.AddVertexDefinition("Aux1", "Real4");
-  settings->mShaderDefinitionSettings.AddVertexDefinition("Aux2", "Real4");
-  settings->mShaderDefinitionSettings.AddVertexDefinition("Aux3", "Real4");
-  settings->mShaderDefinitionSettings.AddVertexDefinition("Aux4", "Real4");
-  settings->mShaderDefinitionSettings.AddVertexDefinition("Aux5", "Real4");
-
-  // Transformations
-  settings->mShaderDefinitionSettings.AddBuiltIn("LocalToWorld", "Real4x4");
-  settings->mShaderDefinitionSettings.AddBuiltIn("WorldToLocal", "Real4x4");
-  settings->mShaderDefinitionSettings.AddBuiltIn("WorldToView", "Real4x4");
-  settings->mShaderDefinitionSettings.AddBuiltIn("ViewToWorld", "Real4x4");
-  settings->mShaderDefinitionSettings.AddBuiltIn("LocalToView", "Real4x4");
-  settings->mShaderDefinitionSettings.AddBuiltIn("ViewToLocal", "Real4x4");
-  settings->mShaderDefinitionSettings.AddBuiltIn("LocalToViewNormal", "Real3x3");
-  settings->mShaderDefinitionSettings.AddBuiltIn("ViewToLocalNormal", "Real3x3");
-  settings->mShaderDefinitionSettings.AddBuiltIn("LocalToWorldNormal", "Real3x3");
-  settings->mShaderDefinitionSettings.AddBuiltIn("WorldToLocalNormal", "Real3x3");
-  settings->mShaderDefinitionSettings.AddBuiltIn("LocalToPerspective", "Real4x4");
-  settings->mShaderDefinitionSettings.AddBuiltIn("ViewToPerspective", "Real4x4");
-  settings->mShaderDefinitionSettings.AddBuiltIn("PerspectiveToView", "Real4x4");
-  settings->mShaderDefinitionSettings.AddBuiltIn("ZeroPerspectiveToApiPerspective", "Real4x4");
-  // @JoshD: Cleanup later
-  ShaderField* field = settings->mShaderDefinitionSettings.mBuiltIns[ShaderFieldKey("ZeroPerspectiveToApiPerspective", "Real4x4")];
-  field->mAttributes.AddAttribute(settings->mNameSettings.mStaticAttribute, nullptr);
-
-  settings->mShaderDefinitionSettings.AddBuiltIn("BoneTransforms", "FixedArray[Real4x4, 80]");
-
-  // Utility
-  settings->mShaderDefinitionSettings.AddBuiltIn("FrameTime", "Real");
-  settings->mShaderDefinitionSettings.AddBuiltIn("LogicTime", "Real");
-  settings->mShaderDefinitionSettings.AddBuiltIn("NearPlane", "Real");
-  settings->mShaderDefinitionSettings.AddBuiltIn("FarPlane", "Real");
-  settings->mShaderDefinitionSettings.AddBuiltIn("ViewportSize", "Real2");
-  settings->mShaderDefinitionSettings.AddBuiltIn("InverseViewportSize", "Real2");
-  settings->mShaderDefinitionSettings.AddBuiltIn("ObjectWorldPosition", "Real3");
-
-  // SpriteSource input
-  settings->mShaderDefinitionSettings.AddBuiltIn("SpriteSource", "Sampler2d");
-
-  // HeightMap input
-  settings->mShaderDefinitionSettings.AddBuiltIn("HeightMapWeights", "Sampler2d");
-
-  mTranslator->SetSettings(mSettings);
-  mTranslator->Setup();
-
-  mZilchCoreLibrary = new ZilchShaderLibrary();
-  mZilchCoreLibrary->mZilchLibrary = Zilch::Core::GetInstance().GetLibrary();
-  mTranslator->ParseNativeLibrary(mZilchCoreLibrary);
-
-  // Build intrinsics library
-  Zilch::ShaderIntrinsicsLibrary::GetInstance().BuildLibrary();
-
-  mIntrinsicsLibrary = new ZilchShaderLibrary();
-  mIntrinsicsLibrary->mZilchLibrary = Zilch::ShaderIntrinsicsLibrary::GetInstance().GetLibrary();
-  mTranslator->ParseNativeLibrary(mIntrinsicsLibrary);
-
-  //// Build extensions library
-  //ZilchShaderProject extensionsProject("Extensions");
-  //EventConnect(&extensionsProject, Zilch::Events::CompilationError, &ZilchShaderGenerator::OnZilchFragmentCompilationError, this);
-  //EventConnect(&extensionsProject, Events::TranslationError, &ZilchShaderGenerator::OnZilchFragmentTranslationError, this);
-  //
-  //String extensionsDir = FilePath::Combine(mainConfig->DataDirectory, "ZilchFragmentExtensions");
-  //FileRange fileRange(extensionsDir);
-  //
-  //for (; !fileRange.Empty(); fileRange.PopFront())
-  //{
-  //  FileEntry entry = fileRange.FrontEntry();
-  //  String filePath = entry.GetFullPath();
-  //  String fileExt = FilePath::GetExtension(filePath);
-  //  if (fileExt == "zilchFrag")
-  //    extensionsProject.AddCodeFromFile(filePath, nullptr);
-  //}
-
-  //ZilchShaderModuleRef dependencies = new ZilchShaderModule();
-  //dependencies->PushBack(mZilchCoreLibrary);
-  //dependencies->PushBack(mIntrinsicsLibrary);
-
-  //mExtensionsLibrary = extensionsProject.CompileAndTranslate(dependencies, mTranslator, mSettings);
 
   // Pre map every attribute value for quick processing of sampler shader inputs
-  mSamplerAttributeValues["TextureAddressingXClamp"]        = SamplerSettings::AddressingX(TextureAddressing::Clamp);
-  mSamplerAttributeValues["TextureAddressingXRepeat"]       = SamplerSettings::AddressingX(TextureAddressing::Repeat);
-  mSamplerAttributeValues["TextureAddressingXMirror"]       = SamplerSettings::AddressingX(TextureAddressing::Mirror);
-  mSamplerAttributeValues["TextureAddressingYClamp"]        = SamplerSettings::AddressingY(TextureAddressing::Clamp);
-  mSamplerAttributeValues["TextureAddressingYRepeat"]       = SamplerSettings::AddressingY(TextureAddressing::Repeat);
-  mSamplerAttributeValues["TextureAddressingYMirror"]       = SamplerSettings::AddressingY(TextureAddressing::Mirror);
-  mSamplerAttributeValues["TextureFilteringNearest"]        = SamplerSettings::Filtering(TextureFiltering::Nearest);
-  mSamplerAttributeValues["TextureFilteringBilinear"]       = SamplerSettings::Filtering(TextureFiltering::Bilinear);
-  mSamplerAttributeValues["TextureFilteringTrilinear"]      = SamplerSettings::Filtering(TextureFiltering::Trilinear);
-  mSamplerAttributeValues["TextureCompareModeDisabled"]     = SamplerSettings::CompareMode(TextureCompareMode::Disabled);
-  mSamplerAttributeValues["TextureCompareModeEnabled"]      = SamplerSettings::CompareMode(TextureCompareMode::Enabled);
-  mSamplerAttributeValues["TextureCompareFuncNever"]        = SamplerSettings::CompareFunc(TextureCompareFunc::Never);
-  mSamplerAttributeValues["TextureCompareFuncAlways"]       = SamplerSettings::CompareFunc(TextureCompareFunc::Always);
-  mSamplerAttributeValues["TextureCompareFuncLess"]         = SamplerSettings::CompareFunc(TextureCompareFunc::Less);
-  mSamplerAttributeValues["TextureCompareFuncLessEqual"]    = SamplerSettings::CompareFunc(TextureCompareFunc::LessEqual);
-  mSamplerAttributeValues["TextureCompareFuncGreater"]      = SamplerSettings::CompareFunc(TextureCompareFunc::Greater);
+  mSamplerAttributeValues["TextureAddressingXClamp"] = SamplerSettings::AddressingX(TextureAddressing::Clamp);
+  mSamplerAttributeValues["TextureAddressingXRepeat"] = SamplerSettings::AddressingX(TextureAddressing::Repeat);
+  mSamplerAttributeValues["TextureAddressingXMirror"] = SamplerSettings::AddressingX(TextureAddressing::Mirror);
+  mSamplerAttributeValues["TextureAddressingYClamp"] = SamplerSettings::AddressingY(TextureAddressing::Clamp);
+  mSamplerAttributeValues["TextureAddressingYRepeat"] = SamplerSettings::AddressingY(TextureAddressing::Repeat);
+  mSamplerAttributeValues["TextureAddressingYMirror"] = SamplerSettings::AddressingY(TextureAddressing::Mirror);
+  mSamplerAttributeValues["TextureFilteringNearest"] = SamplerSettings::Filtering(TextureFiltering::Nearest);
+  mSamplerAttributeValues["TextureFilteringBilinear"] = SamplerSettings::Filtering(TextureFiltering::Bilinear);
+  mSamplerAttributeValues["TextureFilteringTrilinear"] = SamplerSettings::Filtering(TextureFiltering::Trilinear);
+  mSamplerAttributeValues["TextureCompareModeDisabled"] = SamplerSettings::CompareMode(TextureCompareMode::Disabled);
+  mSamplerAttributeValues["TextureCompareModeEnabled"] = SamplerSettings::CompareMode(TextureCompareMode::Enabled);
+  mSamplerAttributeValues["TextureCompareFuncNever"] = SamplerSettings::CompareFunc(TextureCompareFunc::Never);
+  mSamplerAttributeValues["TextureCompareFuncAlways"] = SamplerSettings::CompareFunc(TextureCompareFunc::Always);
+  mSamplerAttributeValues["TextureCompareFuncLess"] = SamplerSettings::CompareFunc(TextureCompareFunc::Less);
+  mSamplerAttributeValues["TextureCompareFuncLessEqual"] = SamplerSettings::CompareFunc(TextureCompareFunc::LessEqual);
+  mSamplerAttributeValues["TextureCompareFuncGreater"] = SamplerSettings::CompareFunc(TextureCompareFunc::Greater);
   mSamplerAttributeValues["TextureCompareFuncGreaterEqual"] = SamplerSettings::CompareFunc(TextureCompareFunc::GreaterEqual);
-  mSamplerAttributeValues["TextureCompareFuncEqual"]        = SamplerSettings::CompareFunc(TextureCompareFunc::Equal);
-  mSamplerAttributeValues["TextureCompareFuncNotEqual"]     = SamplerSettings::CompareFunc(TextureCompareFunc::NotEqual);
+  mSamplerAttributeValues["TextureCompareFuncEqual"] = SamplerSettings::CompareFunc(TextureCompareFunc::Equal);
+  mSamplerAttributeValues["TextureCompareFuncNotEqual"] = SamplerSettings::CompareFunc(TextureCompareFunc::NotEqual);
+
+
+  InitializeSpirV();
+}
+
+void ZilchShaderGenerator::InitializeSpirV()
+{
+  SpirVNameSettings nameSettings;
+
+  nameSettings.mAllowedClassAttributes.Insert("Protected", AttributeInfo());
+  nameSettings.mAllowedClassAttributes.Insert("CoreVertex", AttributeInfo());
+  nameSettings.mAllowedClassAttributes.Insert("RenderPass", AttributeInfo());
+  nameSettings.mAllowedClassAttributes.Insert("PostProcess", AttributeInfo());
+  nameSettings.mAllowedFieldAttributes.Insert("Hidden", AttributeInfo());
+  nameSettings.mAllowedFieldAttributes.Insert(PropertyAttributes::cGroup, AttributeInfo());
+  nameSettings.mAllowedFieldAttributes.Insert(PropertyAttributes::cRange, AttributeInfo());
+  nameSettings.mAllowedFieldAttributes.Insert(PropertyAttributes::cSlider, AttributeInfo());
 
   // Add names to list of allowed attributes in zilch fragments
   forRange(String& attribute, mSamplerAttributeValues.Keys())
-    settings->mNameSettings.mAllowedFieldAttributes.Insert(attribute, AttributeInfo());
+    nameSettings.mAllowedFieldAttributes.Insert(attribute, AttributeInfo());
+
+  mSpirVSettings = new ZilchShaderSpirVSettings(nameSettings);
+  ZilchShaderSpirVSettings* settings = mSpirVSettings;
+  settings->SetMaxSimultaneousRenderTargets(4);
+  settings->SetRenderTargetName("Target0", 0);
+  settings->SetRenderTargetName("Target1", 1);
+  settings->SetRenderTargetName("Target2", 2);
+  settings->SetRenderTargetName("Target3", 3);
+
+  // Built-in inputs
+
+  Zilch::BoundType* realType = ZilchTypeId(Zilch::Real);
+  Zilch::BoundType* real2Type = ZilchTypeId(Zilch::Real2);
+  Zilch::BoundType* real3Type = ZilchTypeId(Zilch::Real3);
+  Zilch::BoundType* real4Type = ZilchTypeId(Zilch::Real4);
+  Zilch::BoundType* intType = ZilchTypeId(Zilch::Integer);
+  Zilch::BoundType* int4Type = ZilchTypeId(Zilch::Integer4);
+  Zilch::BoundType* real3x3Type = ZilchTypeId(Zilch::Real3x3);
+  Zilch::BoundType* real4x4Type = ZilchTypeId(Zilch::Real4x4);
+
+  // Vertex Attributes
+  VertexDefinitionDescription& vertexDefDesc = settings->mVertexDefinitions;
+  vertexDefDesc.AddField(real3Type, "LocalPosition");
+  vertexDefDesc.AddField(real3Type, "LocalNormal");
+  vertexDefDesc.AddField(real3Type, "LocalTangent");
+  vertexDefDesc.AddField(real3Type, "LocalBitangent");
+  vertexDefDesc.AddField(real2Type, "Uv");
+  vertexDefDesc.AddField(real2Type, "UvAux");
+  vertexDefDesc.AddField(real4Type, "Color");
+  vertexDefDesc.AddField(real4Type, "ColorAux");
+  vertexDefDesc.AddField(intType, "BoneIndices");
+  vertexDefDesc.AddField(real4Type, "BoneWeights");
+  vertexDefDesc.AddField(real4Type, "Aux0");
+  vertexDefDesc.AddField(real4Type, "Aux1");
+  vertexDefDesc.AddField(real4Type, "Aux2");
+  vertexDefDesc.AddField(real4Type, "Aux3");
+  vertexDefDesc.AddField(real4Type, "Aux4");
+  vertexDefDesc.AddField(real4Type, "Aux5");
+
+  // Setup uniform buffers
+  UniformBufferDescription frameData(0);
+  frameData.mDebugName = "FrameData";
+  frameData.AddField(realType, "LogicTime");
+  frameData.AddField(realType, "FrameTime");
+  settings->AddUniformBufferDescription(frameData);
+
+  // Setup uniform buffers
+  UniformBufferDescription cameraData(1);
+  cameraData.mDebugName = "CameraData";
+  cameraData.AddField(realType, "NearPlane");
+  cameraData.AddField(realType, "FarPlane");
+  cameraData.AddField(real2Type, "ViewportSize");
+  cameraData.AddField(real2Type, "InverseViewportSize");
+  cameraData.AddField(real3Type, "ObjectWorldPosition");
+  settings->AddUniformBufferDescription(cameraData);
+
+  // Setup uniform buffers
+  UniformBufferDescription transformData(2);
+  transformData.mDebugName = "TransformData";
+  transformData.AddField(real4x4Type, "LocalToWorld");
+  transformData.AddField(real4x4Type, "WorldToLocal");
+  transformData.AddField(real4x4Type, "WorldToView");
+  transformData.AddField(real4x4Type, "ViewToWorld");
+  transformData.AddField(real4x4Type, "LocalToView");
+  transformData.AddField(real4x4Type, "ViewToLocal");
+  transformData.AddField(real3x3Type, "LocalToViewNormal");
+  transformData.AddField(real3x3Type, "ViewToLocalNormal");
+  transformData.AddField(real3x3Type, "LocalToWorldNormal");
+  transformData.AddField(real3x3Type, "WorldToLocalNormal");
+  transformData.AddField(real4x4Type, "LocalToPerspective");
+  transformData.AddField(real4x4Type, "ViewToPerspective");
+  transformData.AddField(real4x4Type, "PerspectiveToView");
+  transformData.AddField(real4x4Type, "ZeroPerspectiveToApiPerspective");
+  settings->AddUniformBufferDescription(transformData);
+
+  //UniformBufferDescription miscData(3);
+  //miscData.mDebugName = "MiscData";
+  //settings->mShaderDefinitionSettings.AddBuiltIn("BoneTransforms", "FixedArray[Real4x4, 80]");
+  // SpriteSource input
+  //settings->mShaderDefinitionSettings.AddBuiltIn("SpriteSource", "Sampler2d");
+  //// HeightMap input
+  //settings->mShaderDefinitionSettings.AddBuiltIn("HeightMapWeights", "Sampler2d");
+
+  settings->AutoSetDefaultUniformBufferDescription();
+
+  settings->SetHardwareBuiltInName(spv::BuiltInPosition, "ApiPerspectivePosition");
+
+  // Utility
+
+  // Set custom callbacks in both the compositor and entry point code generation
+  // for dealing with perspective position vs. api perspective position.
+  settings->mCallbackSettings.SetCompositeCallback(&ZilchShaderIRCompositor::ApiPerspectivePositionCallback, nullptr);
+  settings->mCallbackSettings.SetAppendCallback(&EntryPointGeneration::PerspectiveTransformAppendVertexCallback, nullptr);
+
+  settings->Finalize();
+
+  mFrontEndTranslator = new ZilchSpirVFrontEnd();
+  mFrontEndTranslator->SetSettings(mSpirVSettings);
+  mFrontEndTranslator->Setup();
+  // Create the core library and parse it
+  ZilchShaderIRCore::InitializeInstance();
+  ZilchShaderIRCore& coreLibrary = ZilchShaderIRCore::GetInstance();
+  coreLibrary.Parse(mFrontEndTranslator);
+  mCoreLibrary = coreLibrary.GetLibrary();
+
+  // Create the intrinsics library and parse it
+  ZilchShaderIntrinsics::InitializeInstance();
+  ZilchShaderIntrinsics& shaderIntrinsics = ZilchShaderIntrinsics::GetInstance();
+  shaderIntrinsics.Parse(mFrontEndTranslator);
+  mShaderIntrinsicsLibrary = shaderIntrinsics.GetLibrary();
+
+  // Connect error events
+  EventConnect(&mFragmentsProject, Zilch::Events::CompilationError, &ZilchShaderGenerator::OnZilchFragmentCompilationError, this);
+  EventConnect(&mFragmentsProject, Zilch::Events::TypeParsed, &ZilchShaderGenerator::OnZilchFragmentTypeParsed, this);
+  EventConnect(&mFragmentsProject, Events::TranslationError, &ZilchShaderGenerator::OnZilchFragmentTranslationError, this);
 }
 
 //**************************************************************************************************
-LibraryRef BuildWrapperLibrary(ZilchShaderLibraryRef fragmentsLibrary)
+LibraryRef BuildWrapperLibrary(ZilchShaderIRLibraryRef fragmentsLibrary)
 {
+  // @Nate: Maybe put this somewhere else?
+  // Build a lookup map to deal with opaque shader types
+  HashMap<String, String> lookupMap;
+  lookupMap["SampledImage2d"] = "Texture";
+  lookupMap["SampledImage3d"] = "Texture3d";
+  lookupMap["SampledImageCube"] = "Texture";
+  lookupMap["SampledDepthImage2d"] = "Texture";
+
   // Helper structure for collecting property info.
   struct ShaderPropertyInfo
   {
     String mName;
-    ShaderField* mShaderField;
+    ShaderIRFieldMeta* mShaderField;
     BoundType* mBoundType;
     size_t mMemberOffset;
     bool mIsTexture;
@@ -232,10 +246,14 @@ LibraryRef BuildWrapperLibrary(ZilchShaderLibraryRef fragmentsLibrary)
   String wrapperLibraryName = BuildString(fragmentsLibrary->mZilchLibrary->Name, "Wrapper");
   LibraryBuilder builder(wrapperLibraryName);
 
-  forRange (ShaderType* shaderType, fragmentsLibrary->mTypes.Values())
+  forRange (ZilchShaderIRType* shaderType, fragmentsLibrary->mTypes.Values())
   {
     // Only add fragment types.
-    if (shaderType->mFragmentType != FragmentType::None)
+    ShaderIRTypeMeta* shaderTypeMeta = shaderType->mMeta;
+    if (shaderTypeMeta == nullptr)
+      continue;
+
+    if (shaderTypeMeta->mFragmentType != FragmentType::None)
     {
       size_t baseSize = sizeof(MaterialBlock);
       size_t fragmentSize = baseSize;
@@ -243,17 +261,16 @@ LibraryRef BuildWrapperLibrary(ZilchShaderLibraryRef fragmentsLibrary)
       Array<ShaderPropertyInfo> shaderProperties;
 
       // Calculate the fragment type's size and get info needed to bind properties.
-      forRange (ShaderField* field, shaderType->mFieldList.All())
+      forRange (ShaderIRFieldMeta* field, shaderTypeMeta->mFields.All())
       {
-        if (field->mZilchType.Contains("FixedArray"))
+        if (field->mZilchType->Name.Contains("FixedArray"))
           continue;
 
         if (field->ContainsAttribute("PropertyInput"))
         {
-          ShaderType* fieldType = field->GetShaderType();
-
           // Property type should be a primitive or a texture.
-          BoundType* type = MetaDatabase::GetInstance()->FindType(fieldType->mPropertyType);
+          String propertyTypeName = lookupMap.FindValue(field->mZilchType->Name, field->mZilchType->Name);
+          BoundType* type = MetaDatabase::GetInstance()->FindType(propertyTypeName);
           if (type != nullptr)
           {
             ShaderPropertyInfo shaderProperty;
@@ -298,10 +315,10 @@ LibraryRef BuildWrapperLibrary(ZilchShaderLibraryRef fragmentsLibrary)
       fragmentSize += endPad;
 
       // Create fragment type.
-      BoundType* boundType = builder.AddBoundType(shaderType->mZilchName, TypeCopyMode::ReferenceType, fragmentSize);
+      BoundType* boundType = builder.AddBoundType(shaderTypeMeta->mZilchName, TypeCopyMode::ReferenceType, fragmentSize);
       boundType->BaseType = ZilchTypeId(MaterialBlock);
       // Associate this type to the ZilchFragment resource containing the shader type.
-      boundType->Add(new MetaResource((Resource*)shaderType->mLocation.mUserData));
+      boundType->Add(new MetaResource((Resource*)shaderTypeMeta->mZilchType->Location.CodeUserData));
 
       builder.AddBoundDefaultConstructor(boundType, FragmentConstructor);
       builder.AddBoundDestructor(boundType, FragmentDestructor);
@@ -348,26 +365,30 @@ LibraryRef BuildWrapperLibrary(ZilchShaderLibraryRef fragmentsLibrary)
         getterSetter->Get->UserData = (void*)shaderProperty.mMemberOffset;
         getterSetter->Set->UserData = (void*)shaderProperty.mMemberOffset;
         // Currently just setting the type location, a more specific location for properties still needs to be added.
-        getterSetter->NameLocation = shaderProperty.mShaderField->mNameLocation;
-        getterSetter->Location = shaderProperty.mShaderField->mSourceLocation;
+        getterSetter->NameLocation = shaderProperty.mShaderField->mZilchType->NameLocation;
+        getterSetter->Location = shaderProperty.mShaderField->mZilchType->Location;
 
         // Mark all bound getter/setters as property.
         getterSetter->AddAttribute(PropertyAttributes::cProperty);
 
         // Add all other valid attributes from shader field.
-        forRange (ShaderAttribute& shaderAttribute, shaderProperty.mShaderField->mAttributes.All())
+        forRange (ShaderIRAttribute& shaderAttribute, shaderProperty.mShaderField->mAttributes.All())
         {
           if (zeroAttributes->IsValidPropertyAttribute(shaderAttribute.mAttributeName))
           {
             Attribute* attribute = getterSetter->AddAttribute(shaderAttribute.mAttributeName);
-            attribute->Parameters = shaderAttribute.mParameters;
+            forRange(ShaderIRAttributeParameter& attributeParam , shaderAttribute.mParameters.All())
+            {
+              Zilch::AttributeParameter& param = attributeParam.GetZilchAttributeParameter();
+              attribute->Parameters.PushBack(param);
+            }
           }
         }
       }
 
       // Set file location for this type.
-      boundType->NameLocation = shaderType->mNameLocation;
-      boundType->Location = shaderType->mSourceLocation;
+      boundType->NameLocation = shaderTypeMeta->mZilchType->NameLocation;
+      boundType->Location = shaderTypeMeta->mZilchType->Location;
     }
   }
 
@@ -403,33 +424,38 @@ LibraryRef ZilchShaderGenerator::BuildFragmentsLibrary(Module& dependencies, Arr
   }
 
   // Internal dependencies used to build the internal library
-  ZilchShaderModuleRef internalDependencies = new ZilchShaderModule();
-  internalDependencies->PushBack(mZilchCoreLibrary);
-  internalDependencies->PushBack(mIntrinsicsLibrary);
+  ZilchShaderIRModuleRef internalDependencies = new ZilchShaderIRModule();
+  internalDependencies->PushBack(mCoreLibrary);
+  internalDependencies->PushBack(mShaderIntrinsicsLibrary);
 
   // We gave the engine our "wrapped" library, and it's giving them back as dependencies.
   // For fragment compilation, it expects our internal libraries, so we need to look them up
   // and use those instead
-  forRange(Library* dependentLibrary, dependencies.All())
+  forRange (Library* dependentLibrary, dependencies.All())
   {
-    ZilchShaderLibraryRef internalDependency = GetInternalLibrary(dependentLibrary);
+    ZilchShaderIRLibraryRef internalDependency = GetInternalLibrary(dependentLibrary);
     internalDependencies->Append(internalDependency);
   }
 
-  ZilchShaderLibraryRef fragmentsLibrary = mFragmentsProject.CompileAndTranslate(internalDependencies, mTranslator, mSettings);
+  ZilchShaderIRLibraryRef fragmentsLibrary = mFragmentsProject.CompileAndTranslate(internalDependencies, mFrontEndTranslator);
   if (fragmentsLibrary == nullptr)
     return nullptr;
 
   // Write to the complex user data of each shader type the name of the resource they came from.
   // This has to be done as a second pass because complex user currently can't be written per file (we also need per type).
-  forRange(ShaderType* shaderType, fragmentsLibrary->mTypes.Values())
+  forRange (ZilchShaderIRType* shaderType, fragmentsLibrary->mTypes.Values())
   {
-    Resource* resource = (Resource*)shaderType->mSourceLocation.CodeUserData;
+    ShaderIRTypeMeta* shaderTypeMeta = shaderType->mMeta;
+    // Not all types in the library will have meta (such as ref/pointer types)
+    if (shaderTypeMeta == nullptr)
+      continue;
+
+    Resource* resource = (Resource*)shaderTypeMeta->mZilchType->Location.CodeUserData;
     // If we have a valid user data (some types won't, like arrays that are generated in your library)
-    if(resource == nullptr)
+    if (resource == nullptr)
       continue;
     FragmentUserData complexUserData(resource->Name);
-    shaderType->mComplexUserData.WriteObject(complexUserData);
+    shaderTypeMeta->mComplexUserData.WriteObject(complexUserData);
   }
 
   // Build the wrapper library around the internal library
@@ -456,15 +482,16 @@ LibraryRef ZilchShaderGenerator::BuildFragmentsLibrary(Module& dependencies, Arr
   fragmentTypes.Clear();
   forRange (BoundType* boundType, library->BoundTypes.Values())
   {
-    ShaderType* shaderType = fragmentsLibrary->FindType(boundType->Name);
+    ZilchShaderIRType* shaderType = fragmentsLibrary->FindType(boundType->Name);
+    ShaderIRTypeMeta* shaderTypeMeta = shaderType->mMeta;
     
-    if (shaderType->ContainsAttribute("CoreVertex") && shaderType->ContainsAttribute("Vertex"))
+    if (shaderTypeMeta->ContainsAttribute("CoreVertex") && shaderTypeMeta->ContainsAttribute("Vertex"))
       fragmentTypes.Insert(boundType->Name, ZilchFragmentType::CoreVertex);
-    else if (shaderType->ContainsAttribute("RenderPass") && shaderType->ContainsAttribute("Pixel"))
+    else if (shaderTypeMeta->ContainsAttribute("RenderPass") && shaderTypeMeta->ContainsAttribute("Pixel"))
       fragmentTypes.Insert(boundType->Name, ZilchFragmentType::RenderPass);
-    else if (shaderType->ContainsAttribute("PostProcess") && shaderType->ContainsAttribute("Pixel"))
+    else if (shaderTypeMeta->ContainsAttribute("PostProcess") && shaderTypeMeta->ContainsAttribute("Pixel"))
       fragmentTypes.Insert(boundType->Name, ZilchFragmentType::PostProcess);
-    else if (shaderType->ContainsAttribute("Protected"))
+    else if (shaderTypeMeta->ContainsAttribute("Protected"))
       fragmentTypes.Insert(boundType->Name, ZilchFragmentType::Protected);
     else
       fragmentTypes.Insert(boundType->Name, ZilchFragmentType::Fragment);
@@ -486,7 +513,7 @@ bool ZilchShaderGenerator::Commit(ZilchCompileEvent* e)
     Library* pendingLibrary = library->mSwapFragment.mPendingLibrary;
     if(pendingLibrary)
     {
-      ZilchShaderLibraryRef internalPendingLibrary = mPendingToPendingInternal.FindValue(pendingLibrary, nullptr);
+      ZilchShaderIRLibraryRef internalPendingLibrary = mPendingToPendingInternal.FindValue(pendingLibrary, nullptr);
       ErrorIf(internalPendingLibrary == nullptr, "Invalid pending library");
 
       mCurrentToInternal.Erase(library->mSwapFragment.mCurrentLibrary);
@@ -516,26 +543,27 @@ void ZilchShaderGenerator::MapFragmentTypes()
   // Find fragments needed for shader permutations
   forRange (LibraryRef wrapperLibrary, mCurrentToInternal.Keys())
   {
-    ZilchShaderLibraryRef fragmentLibrary = GetInternalLibrary(wrapperLibrary);
+    ZilchShaderIRLibraryRef fragmentLibrary = GetInternalLibrary(wrapperLibrary);
     forRange (BoundType* boundType, wrapperLibrary->BoundTypes.Values())
     {
-      ShaderType* shaderType = fragmentLibrary->FindType(boundType->Name);
+      ZilchShaderIRType* shaderType = fragmentLibrary->FindType(boundType->Name);
+      ShaderIRTypeMeta* shaderTypeMeta = shaderType->mMeta;
 
-      if (shaderType->ContainsAttribute("CoreVertex") && shaderType->ContainsAttribute("Vertex"))
+      if (shaderTypeMeta->ContainsAttribute("CoreVertex") && shaderTypeMeta->ContainsAttribute("Vertex"))
       {
         mCoreVertexFragments.PushBack(boundType->Name);
         mFragmentTypes.Insert(boundType->Name, ZilchFragmentType::CoreVertex);
       }
-      else if (shaderType->ContainsAttribute("RenderPass") && shaderType->ContainsAttribute("Pixel"))
+      else if (shaderTypeMeta->ContainsAttribute("RenderPass") && shaderTypeMeta->ContainsAttribute("Pixel"))
       {
         mRenderPassFragments.PushBack(boundType->Name);
         mFragmentTypes.Insert(boundType->Name, ZilchFragmentType::RenderPass);
       }
-      else if (shaderType->ContainsAttribute("PostProcess") && shaderType->ContainsAttribute("Pixel"))
+      else if (shaderTypeMeta->ContainsAttribute("PostProcess") && shaderTypeMeta->ContainsAttribute("Pixel"))
       {
         mFragmentTypes.Insert(boundType->Name, ZilchFragmentType::PostProcess);
       }
-      else if (shaderType->ContainsAttribute("Protected"))
+      else if (shaderTypeMeta->ContainsAttribute("Protected"))
       {
         mFragmentTypes.Insert(boundType->Name, ZilchFragmentType::Protected);
       }
@@ -548,12 +576,18 @@ void ZilchShaderGenerator::MapFragmentTypes()
 }
 
 //**************************************************************************************************
-bool ZilchShaderGenerator::BuildShaders(ShaderSet& shaders, HashMap<String, UniqueComposite>& composites, Array<ShaderEntry>& shaderEntries, Array<ZilchShaderDefinition>* compositeShaderDefs)
+bool ZilchShaderGenerator::BuildShaders(ShaderSet& shaders, HashMap<String, UniqueComposite>& composites, Array<ShaderEntry>& shaderEntries, Array<ShaderDefinition>* compositeShaderDefs)
 {
-  ZilchCompositor compositor;
-  compositor.mEmitVertexCallback = CustomEmitVertexCallback;
+  // @Nate: Build a description of the pipeline tools to run.
+  // This could be cached and down the line should probably be
+  // split up to deal with multiple libraries and caching.
+  ShaderPipelineDescription pipelineDescription;
+  //pipelineDescription.mToolPasses.PushBack(new SpirVOptimizerPass());
+  pipelineDescription.mBackend = new ZilchShaderGlslBackend();
 
-  ZilchShaderLibraryRef fragmentsLibrary = GetCurrentInternalProjectLibrary();
+  ZilchShaderIRCompositor compositor;
+
+  ZilchShaderIRLibraryRef fragmentsLibrary = GetCurrentInternalProjectLibrary();
 
   Array<Shader*> shaderArray;
   shaderArray.Append(shaders.All());
@@ -564,7 +598,7 @@ bool ZilchShaderGenerator::BuildShaders(ShaderSet& shaders, HashMap<String, Uniq
   size_t totalShaderCount = shaderArray.Size();
   for (size_t startIndex = 0; startIndex < totalShaderCount; startIndex += compositeBatchCount)
   {
-    ZilchShaderProject shaderProject("ShaderProject");
+    ZilchShaderIRProject shaderProject("ShaderProject");
 
     // All batches are added to this array, get start index for this batch.
     size_t entryStartIndex = shaderEntries.Size();
@@ -575,14 +609,14 @@ bool ZilchShaderGenerator::BuildShaders(ShaderSet& shaders, HashMap<String, Uniq
       Shader* shader = shaderArray[i];
 
       // Make shader def.
-      ZilchShaderDefinition shaderDef;
+      ZilchShaderIRCompositor::ShaderDefinition shaderDef;
       shaderDef.mShaderName = shader->mName;
 
-      ZilchShaderLibrary* lib = fragmentsLibrary;
+      ZilchShaderIRLibrary* lib = fragmentsLibrary;
 
       // CoreVertex
       ErrorIf(fragmentsLibrary->FindType(shader->mCoreVertex) == nullptr, "No fragment.");
-      shaderDef.mFragmentTypes.PushBack(fragmentsLibrary->FindType(shader->mCoreVertex));
+      shaderDef.mFragments.PushBack(fragmentsLibrary->FindType(shader->mCoreVertex));
 
       // Composition
       if (composites.ContainsKey(shader->mComposite))
@@ -590,55 +624,58 @@ bool ZilchShaderGenerator::BuildShaders(ShaderSet& shaders, HashMap<String, Uniq
         forRange (String fragmentName, composites[shader->mComposite].mFragmentNames.All())
         {
           ErrorIf(fragmentsLibrary->FindType(fragmentName) == nullptr, "No fragment.");
-          shaderDef.mFragmentTypes.PushBack(fragmentsLibrary->FindType(fragmentName));
+          shaderDef.mFragments.PushBack(fragmentsLibrary->FindType(fragmentName));
         }
       }
       else
       {
         String fragmentName = shader->mComposite;
         ErrorIf(fragmentsLibrary->FindType(fragmentName) == nullptr, "No fragment.");
-        shaderDef.mFragmentTypes.PushBack(fragmentsLibrary->FindType(fragmentName));
+        shaderDef.mFragments.PushBack(fragmentsLibrary->FindType(fragmentName));
       }
 
       // ApiPerspective
-      ShaderType* apiPerspectiveOutput = fragmentsLibrary->FindType("ApiPerspectiveOutput");
+      ZilchShaderIRType* apiPerspectiveOutput = fragmentsLibrary->FindType("ApiPerspectiveOutput");
       ErrorIf(apiPerspectiveOutput == nullptr, "Missing fragment from core library.");
-      shaderDef.mFragmentTypes.PushBack(apiPerspectiveOutput);
+      shaderDef.mFragments.PushBack(apiPerspectiveOutput);
 
       // RenderPass
       if (shader->mRenderPass.Empty() == false)
       {
         ErrorIf(fragmentsLibrary->FindType(shader->mRenderPass) == nullptr, "No fragment.");
-        shaderDef.mFragmentTypes.PushBack(fragmentsLibrary->FindType(shader->mRenderPass));
+        shaderDef.mFragments.PushBack(fragmentsLibrary->FindType(shader->mRenderPass));
       }
 
-      compositor.BuildCompositedShader(mTranslator, fragmentsLibrary, shaderDef, mSettings);
+      // @Nate: Should be separated at some point.
+      // Currently only is used to emit errors on unsupported shader stages.
+      ShaderCapabilities capabilities;
+      compositor.Composite(shaderDef, capabilities, mSpirVSettings);
 
       // If the user requested it, then add the resulting shader def as an output.
       // Used for debugging purposes to display the zilch composites.
       if(compositeShaderDefs != nullptr)
         compositeShaderDefs->PushBack(shaderDef);
 
-      ZilchFragmentInfo& vertexInfo = shaderDef.mShaderData[FragmentType::Vertex];
-      ZilchFragmentInfo& geometryInfo = shaderDef.mShaderData[FragmentType::Geometry];
-      ZilchFragmentInfo& pixelInfo = shaderDef.mShaderData[FragmentType::Pixel];
+      ZilchShaderIRCompositor::ShaderStageDescription& vertexInfo = shaderDef.mResults[FragmentType::Vertex];
+      ZilchShaderIRCompositor::ShaderStageDescription& geometryInfo = shaderDef.mResults[FragmentType::Geometry];
+      ZilchShaderIRCompositor::ShaderStageDescription& pixelInfo = shaderDef.mResults[FragmentType::Pixel];
 
-      shaderProject.AddCodeFromString(vertexInfo.mZilchCode, vertexInfo.mZilchClassName, nullptr);
-      shaderProject.AddCodeFromString(geometryInfo.mZilchCode, geometryInfo.mZilchClassName, nullptr);
-      shaderProject.AddCodeFromString(pixelInfo.mZilchCode, pixelInfo.mZilchClassName, nullptr);
+      shaderProject.AddCodeFromString(vertexInfo.mShaderCode, vertexInfo.mClassName, nullptr);
+      shaderProject.AddCodeFromString(geometryInfo.mShaderCode, geometryInfo.mClassName, nullptr);
+      shaderProject.AddCodeFromString(pixelInfo.mShaderCode, pixelInfo.mClassName, nullptr);
 
       ShaderEntry entry(shader);
-      entry.mVertexShader = vertexInfo.mZilchClassName;
-      entry.mGeometryShader = geometryInfo.mZilchClassName;
-      entry.mPixelShader = pixelInfo.mZilchClassName;
+      entry.mVertexShader = vertexInfo.mClassName;
+      entry.mGeometryShader = geometryInfo.mClassName;
+      entry.mPixelShader = pixelInfo.mClassName;
       shaderEntries.PushBack(entry);
     }
 
-    ZilchShaderModuleRef shaderDependencies = new ZilchShaderModule();
+    ZilchShaderIRModuleRef shaderDependencies = new ZilchShaderIRModule();
     shaderDependencies->PushBack(fragmentsLibrary);
 
     EventConnect(&shaderProject, Zilch::Events::CompilationError, &ZilchShaderGenerator::OnZilchFragmentCompilationError, this);
-    ZilchShaderLibraryRef shaderLibrary = shaderProject.CompileAndTranslate(shaderDependencies, mTranslator, mSettings);
+    ZilchShaderIRLibraryRef shaderLibrary = shaderProject.CompileAndTranslate(shaderDependencies, mFrontEndTranslator);
 
     if (shaderLibrary == nullptr)
     {
@@ -650,32 +687,79 @@ bool ZilchShaderGenerator::BuildShaders(ShaderSet& shaders, HashMap<String, Uniq
     {
       ShaderEntry& entry = shaderEntries[i];
 
-      ShaderType* vertexShader = shaderLibrary->FindType(entry.mVertexShader);
-      ShaderType* geometryShader = shaderLibrary->FindType(entry.mGeometryShader);
-      ShaderType* pixelShader = shaderLibrary->FindType(entry.mPixelShader);
+      ZilchShaderIRType* vertexShader = shaderLibrary->FindType(entry.mVertexShader);
+      ZilchShaderIRType* geometryShader = shaderLibrary->FindType(entry.mGeometryShader);
+      ZilchShaderIRType* pixelShader = shaderLibrary->FindType(entry.mPixelShader);
       ErrorIf(vertexShader == nullptr || pixelShader == nullptr, "Invalid shader entry");
 
-      ShaderTypeTranslation vertexShaderResults, geometryShaderResults, pixelShaderResults;
-      mTranslator->BuildFinalShader(vertexShader, vertexShaderResults);
-      mTranslator->BuildFinalShader(geometryShader, geometryShaderResults);
-      mTranslator->BuildFinalShader(pixelShader, pixelShaderResults);
+      bool success = true;
+      Array<TranslationPassResultRef> vertexPipelineResults;
+      success = CompilePipeline(vertexShader, pipelineDescription, vertexPipelineResults);
+      entry.mVertexShader = vertexPipelineResults.Back()->mByteStream.ToString();
 
-      entry.mVertexShader = vertexShaderResults.mTranslation;
-      entry.mGeometryShader = geometryShaderResults.mTranslation;
-      entry.mPixelShader = pixelShaderResults.mTranslation;
-
-      // Debug
-      if (false)
+      Array<TranslationPassResultRef> geometryPipelineResults;
+      if(geometryShader != nullptr)
       {
-        String path = FilePath::Combine(GetTemporaryDirectory(), "Shaders");
-        CreateDirectoryAndParents(path);
-        String baseName = BuildString(entry.mComposite, entry.mCoreVertex, entry.mRenderPass);
-        WriteStringRangeToFile(FilePath::Combine(path, BuildString(baseName, "Vertex.glsl")), entry.mVertexShader);
-        WriteStringRangeToFile(FilePath::Combine(path, BuildString(baseName, "Geometry.glsl")), entry.mGeometryShader);
-        WriteStringRangeToFile(FilePath::Combine(path, BuildString(baseName, "Pixel.glsl")), entry.mPixelShader);
+        success = CompilePipeline(geometryShader, pipelineDescription, geometryPipelineResults);
+        entry.mGeometryShader = geometryPipelineResults.Back()->mByteStream.ToString();
       }
+
+      Array<TranslationPassResultRef> pixelPipelineResults;
+      success = CompilePipeline(pixelShader, pipelineDescription, pixelPipelineResults);
+      entry.mPixelShader = pixelPipelineResults.Back()->mByteStream.ToString();
+
+      if(!success)
+        return false;
     }
   }
+
+  return true;
+}
+
+//**************************************************************************************************
+bool ZilchShaderGenerator::CompilePipeline(ZilchShaderIRType* shaderType, ShaderPipelineDescription& pipeline, Array<TranslationPassResultRef>& pipelineResults)
+{
+  if(shaderType == nullptr)
+    return false;
+
+  ShaderTranslationPassResult* binaryBackendData = new ShaderTranslationPassResult();
+  pipelineResults.PushBack(binaryBackendData);
+
+  // Convert from the in-memory format of spir-v to actual binary (array of words)
+  ShaderByteStreamWriter byteWriter(&binaryBackendData->mByteStream);
+  ZilchShaderSpirVBinaryBackend binaryBackend;
+  binaryBackend.TranslateType(shaderType, byteWriter, binaryBackendData->mReflectionData);
+
+  // Run each tool in the pipeline
+  for(size_t i = 0; i < pipeline.mToolPasses.Size(); ++i)
+  {
+    ZilchShaderIRTranslationPass* translationPass = pipeline.mToolPasses[i];
+
+    ShaderTranslationPassResult* prevPassData = pipelineResults.Back();
+    ShaderTranslationPassResult* toolData = new ShaderTranslationPassResult();
+    pipelineResults.PushBack(toolData);
+
+    translationPass->RunTranslationPass(*prevPassData, *toolData);
+  }
+
+  ShaderTranslationPassResult* lastPassData = pipelineResults.Back();
+
+  // @Nate: Here's examples for running debug passes like the disassembler.
+  //for(size_t i = 0; i < pipeline.mDebugPasses.Size(); ++i)
+  //{
+  //  ZilchShaderIRTranslationPass* debugBackend = pipeline.mDebugPasses[i];
+  //
+  //  ShaderTranslationPassResult* prevPassData = pipelineResults.Back();
+  //  ShaderTranslationPassResult* resultData = new ShaderTranslationPassResult();
+  //  debugResults.PushBack(resultData);
+  //
+  //  debugBackend->RunTranslationPass(*prevPassData, *resultData);
+  //}
+
+  // Run the final backend
+  ShaderTranslationPassResult* backendResult = new ShaderTranslationPassResult();
+  pipelineResults.PushBack(backendResult);
+  pipeline.mBackend->RunTranslationPass(*lastPassData, *backendResult);
 
   return true;
 }
@@ -688,28 +772,33 @@ ShaderInput ZilchShaderGenerator::CreateShaderInput(StringParam fragmentName, St
   if (type == ShaderInputType::Invalid)
     return shaderInput;
 
-  ShaderType* shaderType = GetCurrentInternalProjectLibrary()->FindType(fragmentName);
+  ZilchShaderIRType* shaderType = GetCurrentInternalProjectLibrary()->FindType(fragmentName);
   if (shaderType == nullptr)
     return shaderInput;
 
-  ShaderField* field = shaderType->mFieldMap.FindValue(inputName, nullptr);
-  if (field == nullptr)
+  ShaderIRTypeMeta* shaderTypeMeta = shaderType->mMeta;
+  if (shaderTypeMeta == nullptr)
+    return shaderInput;
+  
+  ShaderIRFieldMeta* fieldMeta = shaderTypeMeta->FindField(inputName);
+  if (fieldMeta == nullptr)
     return shaderInput;
 
-  if (type == ShaderInputType::Texture)
-  {
-    shaderInput.mTranslatedInputName = GenerateMangledName(shaderType->mZilchName, inputName);
-
-    // Check for sampler settings overrides
-    forRange (ShaderAttribute& attribute, field->mAttributes.All())
-    {
-      if (mSamplerAttributeValues.ContainsKey(attribute.mAttributeName))
-        SamplerSettings::AddValue(shaderInput.mSamplerSettings, mSamplerAttributeValues[attribute.mAttributeName]);
-    }
-  }
-  else
-    shaderInput.mTranslatedInputName = GenerateFieldUniformName(field);
-
+  // @Nate: Needs reflection
+  //if (type == ShaderInputType::Texture)
+  //{
+  //  shaderInput.mTranslatedInputName = GenerateMangledName(shaderType->mZilchName, inputName);
+  //
+  //  // Check for sampler settings overrides
+  //  forRange (ShaderAttribute& attribute, field->mAttributes.All())
+  //  {
+  //    if (mSamplerAttributeValues.ContainsKey(attribute.mAttributeName))
+  //      SamplerSettings::AddValue(shaderInput.mSamplerSettings, mSamplerAttributeValues[attribute.mAttributeName]);
+  //  }
+  //}
+  //else
+  //  shaderInput.mTranslatedInputName = GenerateFieldUniformName(field);
+  
   // If unsuccessful returned ShaderInput's type will be Invalid, otherwise it will be the passed in type
   shaderInput.mShaderInputType = type;
   ShaderInputSetValue(shaderInput, value);
@@ -745,13 +834,13 @@ void ZilchShaderGenerator::OnZilchFragmentTranslationError(TranslationErrorEvent
 }
 
 //**************************************************************************************************
-ZilchShaderLibraryRef ZilchShaderGenerator::GetInternalLibrary(LibraryRef library)
+ZilchShaderIRLibraryRef ZilchShaderGenerator::GetInternalLibrary(LibraryRef library)
 {
   if(library == nullptr)
-    return nullptr; 
+    return nullptr;
 
   // First look in pending
-  ZilchShaderLibraryRef internalLibrary = GetPendingInternalLibrary(library);
+  ZilchShaderIRLibraryRef internalLibrary = GetPendingInternalLibrary(library);
 
   // Then look in current (if it wasn't recompiled)
   if(internalLibrary == nullptr)
@@ -763,13 +852,13 @@ ZilchShaderLibraryRef ZilchShaderGenerator::GetInternalLibrary(LibraryRef librar
 }
 
 //**************************************************************************************************
-ZilchShaderLibraryRef ZilchShaderGenerator::GetCurrentInternalLibrary(LibraryRef library)
+ZilchShaderIRLibraryRef ZilchShaderGenerator::GetCurrentInternalLibrary(LibraryRef library)
 {
   return mCurrentToInternal.FindValue(library, nullptr);
 }
 
 //**************************************************************************************************
-ZilchShaderLibraryRef ZilchShaderGenerator::GetPendingInternalLibrary(LibraryRef library)
+ZilchShaderIRLibraryRef ZilchShaderGenerator::GetPendingInternalLibrary(LibraryRef library)
 {
   return mPendingToPendingInternal.FindValue(library, nullptr);
 }
@@ -781,13 +870,13 @@ ZilchShaderGenerator::InternalLibraryRange ZilchShaderGenerator::GetCurrentInter
 }
 
 //**************************************************************************************************
-ZilchShaderLibraryRef ZilchShaderGenerator::GetCurrentInternalProjectLibrary()
+ZilchShaderIRLibraryRef ZilchShaderGenerator::GetCurrentInternalProjectLibrary()
 {
   return GetInternalLibrary(ZilchManager::GetInstance()->mCurrentFragmentProjectLibrary);
 }
 
 //**************************************************************************************************
-ZilchShaderLibraryRef ZilchShaderGenerator::GetPendingInternalProjectLibrary()
+ZilchShaderIRLibraryRef ZilchShaderGenerator::GetPendingInternalProjectLibrary()
 {
   return GetInternalLibrary(ZilchManager::GetInstance()->mPendingFragmentProjectLibrary);
 }

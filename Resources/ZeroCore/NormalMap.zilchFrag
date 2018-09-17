@@ -8,7 +8,7 @@ struct NormalMap
   [StageInput] var ViewTangent : Real3;
   [StageInput] var ViewBitangent : Real3;
   
-  [Input] var NormalMap : Sampler2d;
+  [Input] var NormalMap : SampledImage2d;
   [Input] var Bumpiness : Real = 1.0;
   
   // Zero generates tangents/bitangents in the increasing u/v directions

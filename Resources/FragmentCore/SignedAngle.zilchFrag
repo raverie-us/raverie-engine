@@ -1,0 +1,27 @@
+struct MathSignedAngleImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function SignedAngle(p0 : Real3, p1 : Real3, up : Real3) : Real
+  {
+    // Get the right vector
+    var right = Math.Cross(p0, up);
+    right = Math.Normalize(right);
+    
+    // Get the forward and right dot products
+    var forwardDot = Math.Clamp(Math.Dot(p0, p1), -1.0, 1.0);
+    var rightDot = Math.Clamp(Math.Dot(right, p1), -1.0, 1.0);
+    
+    // Get the actual angle from the forward dot product
+    var finalAngle = Math.ACos(forwardDot);
+    
+    // If we're actually on the left side...
+    if(rightDot > 0.0)
+    {
+      // Compute the real final angle given the quadrant it's in (kinda like atan2)
+      finalAngle = -finalAngle;
+    }
+    
+    // Return the finally computed angle
+    return finalAngle;
+  }
+}

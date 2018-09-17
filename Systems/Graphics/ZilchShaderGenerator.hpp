@@ -23,19 +23,25 @@ public:
 class ZilchShaderGenerator : public Zilch::EventHandler
 {
 public:
-  typedef HashMap<LibraryRef, ZilchShaderLibraryRef> ExternalToInternalLibraryMap;
+  typedef HashMap<LibraryRef, ZilchShaderIRLibraryRef> ExternalToInternalLibraryMap;
   typedef ExternalToInternalLibraryMap::valuerange InternalLibraryRange;
+  typedef ZilchShaderIRCompositor::ShaderDefinition ShaderDefinition;
+  typedef Zilch::Ref<ShaderTranslationPassResult> TranslationPassResultRef;
+  typedef Zilch::Ref<SimplifiedShaderReflectionData> SimplifiedReflectionRef;
+  typedef Zilch::Ref<ZilchSpirVFrontEnd> ZilchSpirVFrontEndRef;
 
   ZilchShaderGenerator();
   ~ZilchShaderGenerator();
 
   void Initialize();
+  void InitializeSpirV();
 
   LibraryRef BuildFragmentsLibrary(Module& dependencies, Array<ZilchDocumentResource*>& fragments, StringParam libraryName = "Fragments");
   bool Commit(ZilchCompileEvent* e);
   void MapFragmentTypes();
 
-  bool BuildShaders(ShaderSet& shaders, HashMap<String, UniqueComposite>& composites, Array<ShaderEntry>& shaderEntries, Array<ZilchShaderDefinition>* compositeShaderDefs = nullptr);
+  bool BuildShaders(ShaderSet& shaders, HashMap<String, UniqueComposite>& composites, Array<ShaderEntry>& shaderEntries, Array<ShaderDefinition>* compositeShaderDefs = nullptr);
+  bool CompilePipeline(ZilchShaderIRType* shaderType, ShaderPipelineDescription& pipeline, Array<TranslationPassResultRef>& pipelineResults);
 
   ShaderInput CreateShaderInput(StringParam fragmentName, StringParam inputName, ShaderInputType::Enum type, AnyParam value);
 
@@ -43,20 +49,23 @@ public:
   void OnZilchFragmentTypeParsed(Zilch::ParseEvent* event);
   void OnZilchFragmentTranslationError(TranslationErrorEvent* event);
 
-  ZilchShaderLibraryRef GetInternalLibrary(LibraryRef library);
-  ZilchShaderLibraryRef GetCurrentInternalLibrary(LibraryRef library);
-  ZilchShaderLibraryRef GetPendingInternalLibrary(LibraryRef library);
+  ZilchShaderIRLibraryRef GetInternalLibrary(LibraryRef library);
+  ZilchShaderIRLibraryRef GetCurrentInternalLibrary(LibraryRef library);
+  ZilchShaderIRLibraryRef GetPendingInternalLibrary(LibraryRef library);
   InternalLibraryRange GetCurrentInternalLibraries();
-  ZilchShaderLibraryRef GetCurrentInternalProjectLibrary();
-  ZilchShaderLibraryRef GetPendingInternalProjectLibrary();
+  ZilchShaderIRLibraryRef GetCurrentInternalProjectLibrary();
+  ZilchShaderIRLibraryRef GetPendingInternalProjectLibrary();
 
-  ZilchShaderSettingsRef mSettings;
-  BaseShaderTranslatorRef mTranslator;
+  // The shared settings to be used through all of the compositing/translation
+  ZilchShaderSpirVSettingsRef mSpirVSettings;
+  // The front-end translator used.
+  ZilchSpirVFrontEndRef mFrontEndTranslator;
 
-  ZilchShaderLibraryRef mZilchCoreLibrary;
-  ZilchShaderLibraryRef mIntrinsicsLibrary;
+  // Core libraries built once.
+  ZilchShaderIRLibraryRef mCoreLibrary;
+  ZilchShaderIRLibraryRef mShaderIntrinsicsLibrary;
 
-  ZilchShaderProject mFragmentsProject;
+  ZilchShaderIRProject mFragmentsProject;
 
   Array<String> mCoreVertexFragments;
   Array<String> mRenderPassFragments;

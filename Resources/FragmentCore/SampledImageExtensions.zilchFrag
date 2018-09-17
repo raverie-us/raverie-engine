@@ -1,0 +1,68 @@
+struct SampledImageExtensions
+{
+  [Extension(typeid(SampledImage2d))]
+  function Sample(uv : Real2) : Real4
+  {
+    return ShaderIntrinsics.SampleImplicitLod(*this, uv);
+  }
+  
+  [Extension(typeid(SampledImage2d))]
+  function Sample(uv : Real2, ddx : Real2, ddy : Real2) : Real4
+  {
+    return ShaderIntrinsics.SampleGradExplicitLod(*this, uv, ddx, ddy);
+  }
+  
+  [Extension(typeid(SampledImage2d))]
+  function SampleLod(uv : Real2, lod : Real) : Real4
+  {
+    return ShaderIntrinsics.SampleExplicitLod(*this, uv, lod);
+  }
+  
+  [Extension(typeid(SampledImage2d))]
+  function SampleSize(lod : Integer) : Integer2
+  {
+    return ShaderIntrinsics.ImageQuerySize(*this, lod);
+  }
+}
+
+struct SampledDepthImageExtensions
+{
+  [Extension(typeid(SampledDepthImage2d))]
+  function Sample(uv : Real2, depthCompare : Real) : Real
+  {
+    return ShaderIntrinsics.SampleDRefImplicitLod(*this, uv, depthCompare);
+  }
+  
+  [Extension(typeid(SampledDepthImage2d))]
+  function SampleLod(uv : Real2, depthCompare : Real, lod : Real) : Real
+  {
+    return ShaderIntrinsics.SampleDRefExplicitLod(*this, uv, depthCompare, lod);
+  }
+  
+  [Extension(typeid(SampledDepthImage2d))]
+  function SampleSize(lod : Integer) : Integer2
+  {
+    return ShaderIntrinsics.ImageQuerySize(*this, lod);
+  }
+}
+
+struct SampledImageCubeExtensions
+{
+  [Extension(typeid(SampledImageCube))]
+  function Sample(uv : Real3) : Real4
+  {
+    return ShaderIntrinsics.SampleImplicitLod(*this, uv);
+  }
+  
+  [Extension(typeid(SampledImageCube))]
+  function SampleLod(uv : Real3, lod : Real) : Real4
+  {
+    return ShaderIntrinsics.SampleExplicitLod(*this, uv, lod);
+  }
+  
+  [Extension(typeid(SampledImageCube))]
+  function SampleSize(lod : Integer) : Integer2
+  {
+    return ShaderIntrinsics.ImageQuerySize(*this, lod);
+  }
+}

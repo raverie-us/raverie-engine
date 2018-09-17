@@ -206,6 +206,11 @@ void ShaderIRAttributeParameter::SetLocationNode(Zilch::SyntaxNode* node)
   mNode = node;
 }
 
+Zilch::AttributeParameter& ShaderIRAttributeParameter::GetZilchAttributeParameter()
+{
+  return mParameter;
+}
+
 //-------------------------------------------------------------------ShaderIRAttribute
 ShaderIRAttribute::ShaderIRAttribute()
 {

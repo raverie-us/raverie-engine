@@ -2,8 +2,8 @@
 [Pixel]
 struct PointLightFragment
 {
-  [BuiltInInput] var WorldToView : Real4x4;
-  [BuiltInInput] var ObjectWorldPosition : Real3;
+  [AppBuiltInInput] var WorldToView : Real4x4;
+  [AppBuiltInInput] var ObjectWorldPosition : Real3;
   
   [StageInput] var PerspectivePosition : Real4;
   
@@ -48,8 +48,8 @@ struct PointLightFragment
 [Pixel]
 struct SpotLightFragment
 {
-  [BuiltInInput] var WorldToView : Real4x4;
-  [BuiltInInput] var ObjectWorldPosition : Real3;
+  [AppBuiltInInput] var WorldToView : Real4x4;
+  [AppBuiltInInput] var ObjectWorldPosition : Real3;
   
   [StageInput] var PerspectivePosition : Real4;
   
@@ -105,7 +105,7 @@ struct SpotLightFragment
 [Pixel]
 struct DirectionalLightFragment
 {
-  [BuiltInInput] var WorldToView : Real4x4;
+  [AppBuiltInInput] var WorldToView : Real4x4;
   
   [FragmentInput] var ShadowFactor : Real = 1.0;
   

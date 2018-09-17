@@ -1,0 +1,34 @@
+struct MathGenerateScaleMatrixImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function GenerateScaleMatrix2x2(scale : Real2) : Real2x2
+  {
+    return Real2x2(scale.X, 0.0,
+                   0.0, scale.Y);
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function GenerateScaleMatrix3x3(scale : Real2) : Real3x3
+  {
+    return Real3x3(scale.X, 0.0, 0.0,
+                   0.0, scale.Y, 0.0,
+                   0.0,     0.0, 1.0);
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function GenerateScaleMatrix3x3(scale : Real3) : Real3x3
+  {
+    return Real3x3(scale.X, 0.0, 0.0,
+                   0.0, scale.Y, 0.0,
+                   0.0, 0.0, scale.Z);
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function GenerateScaleMatrix4x4(scale : Real3) : Real4x4
+  {
+    return Real4x4(scale.X,     0.0,     0.0, 0.0,
+                       0.0, scale.Y,     0.0, 0.0,
+                       0.0,     0.0, scale.Z, 0.0,
+                       0.0,     0.0,     0.0, 1.0);
+  }
+}

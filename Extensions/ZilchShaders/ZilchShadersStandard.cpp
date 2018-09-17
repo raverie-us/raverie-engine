@@ -85,14 +85,14 @@ ZilchDefineStaticLibrary(ShaderIntrinsicsLibrary)
 
   ZilchInitializeType(Shader);
   // @Nate: These have to be uncommented for new shaders
-  //ZilchInitializeType(ShaderIntrinsics);
-  //ZilchInitializeType(Sampler);
-  //ZilchInitializeType(Image2d);
-  //ZilchInitializeType(DepthImage2d);
-  //ZilchInitializeType(ImageCube);
-  //ZilchInitializeType(SampledImage2d);
-  //ZilchInitializeType(SampledDepthImage2d);
-  //ZilchInitializeType(SampledImageCube);
+  ZilchInitializeType(ShaderIntrinsics);
+  ZilchInitializeType(Sampler);
+  ZilchInitializeType(Image2d);
+  ZilchInitializeType(DepthImage2d);
+  ZilchInitializeType(ImageCube);
+  ZilchInitializeType(SampledImage2d);
+  ZilchInitializeType(SampledDepthImage2d);
+  ZilchInitializeType(SampledImageCube);
 
   // Bind the fixed array type instantiator (creates the different arrays when instantiated)
   {

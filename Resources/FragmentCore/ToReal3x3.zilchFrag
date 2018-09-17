@@ -1,0 +1,44 @@
+struct MathToReal3x3Implements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function ToReal3x3(axis : Real3, radians : Real) : Real3x3
+  {
+    axis = Math.Normalize(axis);
+    var c0 = Math.Cos(radians);
+    var n1C0 = 1.0 - c0;
+    var s0 = Math.Sin(radians);
+
+    //| x^2(1-c0)+c0  xy(1-c0)-zs0  xz(1-c0)+ys0 |
+    //| xy(1-c0)+zs0  y^2(1-c0)+c0  yz(1-c0)-xs0 |
+    //| xz(1-c0)-ys0  yz(1-c0)+xs0  z^2(1-c0)+c0 |
+    var matrix = Real3x3();
+    matrix.M00 = axis.X * axis.X * n1C0 + c0;
+    matrix.M01 = axis.X * axis.Y * n1C0 - axis.Z * s0;
+    matrix.M02 = axis.X * axis.Z * n1C0 + axis.Y * s0;
+
+    matrix.M10 = axis.X * axis.Y * n1C0 + axis.Z * s0;
+    matrix.M11 = axis.Y * axis.Y * n1C0 + c0;
+    matrix.M12 = axis.Y * axis.Z * n1C0 - axis.X * s0;
+
+    matrix.M20 = axis.X * axis.Z * n1C0 - axis.Y * s0;
+    matrix.M21 = axis.Y * axis.Z * n1C0 + axis.X * s0;
+    matrix.M22 = axis.Z * axis.Z * n1C0 + c0;
+    return matrix;
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function ToReal3x3(facing : Real3, up : Real3) : Real3x3
+  {
+    var right = Math.Cross(facing, up);
+    return Math.ToReal3x3(facing, up, right);
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function ToReal3x3(facing : Real3, up : Real3, right : Real3) : Real3x3
+  {
+    var nFacing = -facing;
+    return Real3x3(right.X, up.X, nFacing.X,
+                   right.Y, up.Y, nFacing.Y,
+                   right.Z, up.Z, nFacing.Z);
+  }
+}

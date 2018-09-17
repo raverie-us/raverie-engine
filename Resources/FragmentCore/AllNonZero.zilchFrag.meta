@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "AllNonZero"
+		var ResourceId = 0x5bcd3fd88ea07753
+	}
+}

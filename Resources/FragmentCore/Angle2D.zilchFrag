@@ -1,0 +1,8 @@
+struct MathAngle2DImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Angle2D(param0 : Real3) : Real
+  {
+    return Math.ATan2(param0.Y, param0.X);
+  }
+}

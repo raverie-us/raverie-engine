@@ -4,7 +4,7 @@
 struct ColorMap
 {
   [FragmentInput][StageInput] var Uv : Real2;
-  [Input] var Texture : Sampler2d;
+  [Input] var Texture : SampledImage2d;
 
   [Output] var Color : Real4;
 

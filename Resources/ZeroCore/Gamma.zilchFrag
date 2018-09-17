@@ -3,7 +3,7 @@
 struct ToGamma
 {
   [StageInput] var Uv : Real2;
-  [Input] var Texture : Sampler2d;
+  [Input] var Texture : SampledImage2d;
   
   [Output] var Target0 : Real4;
   
@@ -22,7 +22,7 @@ struct ToGamma
 struct FilmicTonemap
 {
   [StageInput] var Uv : Real2;
-  [Input] var Texture : Sampler2d;
+  [Input] var Texture : SampledImage2d;
   
   [Output] var Target0 : Real4;
   

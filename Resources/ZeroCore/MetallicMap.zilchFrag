@@ -4,7 +4,7 @@
 struct MetallicMap
 {
   [FragmentInput][StageInput] var Uv : Real2;
-  [Input] var MetallicMap : Sampler2d;
+  [Input] var MetallicMap : SampledImage2d;
   
   [Output] var Metallic : Real;
   

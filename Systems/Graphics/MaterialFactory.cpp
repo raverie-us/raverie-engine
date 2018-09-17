@@ -96,7 +96,7 @@ bool MaterialFactory::CanAddComponent(HandleParam owner, BoundType* typeToAdd, A
 }
 
 //**************************************************************************************************
-void MaterialFactory::UpdateRestrictedComponents(HashMap<LibraryRef, ZilchShaderLibraryRef>& libraries, ZilchFragmentTypeMap& fragmentTypes)
+void MaterialFactory::UpdateRestrictedComponents(HashMap<LibraryRef, ZilchShaderIRLibraryRef>& libraries, ZilchFragmentTypeMap& fragmentTypes)
 {
   mRestrictedComponents.Clear();
   mGeometryComponents.Clear();

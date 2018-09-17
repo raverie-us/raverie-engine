@@ -3,9 +3,9 @@
 [Pixel][RenderPass]
 struct ForwardPass
 {
-  [BuiltInInput] var ViewToWorld : Real4x4;
-  [BuiltInInput] var WorldToView : Real4x4;
-  [BuiltInInput] var ViewportSize : Real2;
+  [AppBuiltInInput] var ViewToWorld : Real4x4;
+  [AppBuiltInInput] var WorldToView : Real4x4;
+  [AppBuiltInInput] var ViewportSize : Real2;
   
   [StageInput] var PerspectivePosition : Real4;
   [FragmentInput][StageInput] var ViewPosition : Real3;
@@ -16,9 +16,9 @@ struct ForwardPass
   [Input] var Roughness : Real = 1.0;
   [Input] var Specular : Real = 0.5;
   
-  [Input] var DitherTexture : Sampler2d;
-  [Input] var EnvironmentBrdfLut : Sampler2d;
-  [Input] var Skybox : SamplerCube;
+  [Input] var DitherTexture : SampledImage2d;
+  [Input] var EnvironmentBrdfLut : SampledImage2d;
+  [Input] var Skybox : SampledImageCube;
   [Input] var IndirectIntensity : Real = 1.0;
   [Input] var RenderDiffuse : Boolean = true;
   [Input] var RenderSpecular : Boolean = true;
@@ -84,9 +84,9 @@ struct ForwardPass
 [Pixel][RenderPass]
 struct ForwardPassShadows
 {
-  [BuiltInInput] var ViewToWorld : Real4x4;
-  [BuiltInInput] var WorldToView : Real4x4;
-  [BuiltInInput] var ViewportSize : Real2;
+  [AppBuiltInInput] var ViewToWorld : Real4x4;
+  [AppBuiltInInput] var WorldToView : Real4x4;
+  [AppBuiltInInput] var ViewportSize : Real2;
   
   [StageInput] var PerspectivePosition : Real4;
   [FragmentInput][StageInput] var ViewPosition : Real3;
@@ -97,9 +97,9 @@ struct ForwardPassShadows
   [Input] var Roughness : Real = 1.0;
   [Input] var Specular : Real = 0.5;
   
-  [Input] var DitherTexture : Sampler2d;
-  [Input] var EnvironmentBrdfLut : Sampler2d;
-  [Input] var Skybox : SamplerCube;
+  [Input] var DitherTexture : SampledImage2d;
+  [Input] var EnvironmentBrdfLut : SampledImage2d;
+  [Input] var Skybox : SampledImageCube;
   [Input] var IndirectIntensity : Real = 1.0;
   [Input] var RenderDiffuse : Boolean = true;
   [Input] var RenderSpecular : Boolean = true;
@@ -109,7 +109,7 @@ struct ForwardPassShadows
   [Input] var DirectLightIntensity : Real = 1.0;
   
   [Input] var LightTransform : Real4x4;
-  [Input] var ShadowBuffer : SamplerShadow2d;
+  [Input] var ShadowBuffer : SampledDepthImage2d;
   [Input] var NormalOffsetBias : Real = 0.1;
   
   [Output] var Target0 : Real4;

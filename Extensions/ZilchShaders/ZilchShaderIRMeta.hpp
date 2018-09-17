@@ -77,6 +77,11 @@ public:
   Array<ShaderIRFunctionMeta*> mFunctions;
 
   FragmentType::Enum mFragmentType;
+
+  // Any user data that cant simply be represented by a pointer
+  // Data can be written to the buffer and will be properly destructed
+  // when this object is destroyed (must be read in the order it's written)
+  mutable Zilch::DestructibleBuffer mComplexUserData;
 };
 
 }//namespace Zero

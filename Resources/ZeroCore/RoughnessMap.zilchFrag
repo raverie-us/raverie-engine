@@ -4,7 +4,7 @@
 struct RoughnessMap
 {
   [FragmentInput][StageInput] var Uv : Real2;
-  [Input] var RoughnessMap : Sampler2d;
+  [Input] var RoughnessMap : SampledImage2d;
   
   [Output] var Roughness : Real;
   

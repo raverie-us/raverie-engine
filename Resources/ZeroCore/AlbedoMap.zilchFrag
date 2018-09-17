@@ -4,7 +4,7 @@
 struct AlbedoMap
 {
   [FragmentInput][StageInput] var Uv : Real2;
-  [Input] var AlbedoMap : Sampler2d;
+  [Input] var AlbedoMap : SampledImage2d;
   
   [Output] var Albedo : Real3;
   

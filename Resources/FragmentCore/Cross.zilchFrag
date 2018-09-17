@@ -1,0 +1,23 @@
+struct MathCross
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Cross(lhs : Real, rhs : Real2) : Real2
+  {
+    var result = Real2(-lhs * rhs.Y, lhs * rhs.X);
+    return result;
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function Cross(lhs : Real2, rhs : Real) : Real2
+  {
+    var result = Real2(rhs * lhs.Y, -rhs * lhs.X);
+    return result;
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function Cross(lhs : Real2, rhs : Real2) : Real
+  {
+    var result = lhs.X * rhs.Y - rhs.X * lhs.Y;
+    return result;
+  }
+}

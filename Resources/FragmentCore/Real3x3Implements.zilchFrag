@@ -1,0 +1,59 @@
+struct Real3x3Implements
+{
+  [Static][Extension(typeid(Real3x3))][Implements]
+  var CountX : Integer
+  {
+    get { return 3; }
+  }
+  [Static][Extension(typeid(Real3x3))][Implements]
+  var CountY : Integer
+  {
+    get { return 3; }
+  }
+  [Extension(typeid(Real3x3))][Implements]
+  var CountX : Integer
+  {
+    get { return Real3x3.CountX; }
+  }
+  [Extension(typeid(Real3x3))][Implements]
+  var CountY : Integer
+  {
+    get { return Real3x3.CountY; }
+  }
+  [Static][Extension(typeid(Real3x3))][Implements]
+  var Count : Integer
+  {
+    get { return Real3x3.CountX * Real3x3.CountY; }
+  }
+  [Extension(typeid(Real3x3))][Implements]
+  var Count : Integer
+  {
+    get { return Real3x3.Count; }
+  }
+  [Extension(typeid(Real3x3))][Implements]
+  function Get(y : Integer, x : Integer) : Real
+  {
+    return this[y][x];
+  }
+  [Extension(typeid(Real3x3))][Implements]
+  function Set(y : Integer, x : Integer, value : Real)
+  {
+    this[y][x] = value;
+  }
+  [Extension(typeid(Real3x3))][Implements]
+  function GetByIndex(index : Integer) : Real
+  {
+    var countX = this.CountX;
+    var indexX = index % countX;
+    var indexY = index / countX;
+    return this[indexY][indexX];
+  }
+  [Extension(typeid(Real3x3))][Implements]
+  function SetByIndex(index : Integer, value : Real)
+  {
+    var countX = this.CountX;
+    var indexX = index % countX;
+    var indexY = index / countX;
+    this[indexY][indexX] = value;
+  }
+}

@@ -981,19 +981,20 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
 #define ZeroGlVertexOut ZeroIfGl("out") ZeroIfWebgl("varying")
 #define ZeroGlPixelIn ZeroIfGl("in") ZeroIfWebgl("varying")
 
+  // @Nate: This will most likley have to change to use uniform buffers
   String loadingShaderVertex =
     ZeroIfGl("#version 150\n")
     ZeroIfWebgl("#version 100\n")
     ZeroIfWebgl("precision mediump float;\n")
     "uniform mat4 Transform;\n"
     "uniform mat3 UvTransform;\n"
-    ZeroGlVertexIn " vec3 attLocalPosition;\n"
-    ZeroGlVertexIn " vec2 attUv;\n"
+    ZeroGlVertexIn " vec3 LocalPosition;\n"
+    ZeroGlVertexIn " vec2 Uv;\n"
     ZeroGlVertexOut " vec2 psInUv;\n"
     "void main(void)\n"
     "{\n"
-    "  psInUv = (vec3(attUv, 1.0) * UvTransform).xy;\n"
-    "  gl_Position = vec4(attLocalPosition, 1.0) * Transform;\n"
+    "  psInUv = (vec3(Uv, 1.0) * UvTransform).xy;\n"
+    "  gl_Position = vec4(LocalPosition, 1.0) * Transform;\n"
     "}";
 
   String loadingShaderPixel =
@@ -2123,7 +2124,7 @@ void OpenglRenderer::SetShaderParameters(u64 objectId, uint shaderInputsId, uint
 void OpenglRenderer::CreateShader(ShaderEntry& entry)
 {
 #ifdef ZeroExtraGlDebug
-  ZPrint("Compiilng composite: %s\n", entry.mComposite.c_str());
+  ZPrint("Compiling composite: %s\n", entry.mComposite.c_str());
 #endif
 
   ShaderKey shaderKey(entry.mComposite, StringPair(entry.mCoreVertex, entry.mRenderPass));
@@ -2147,6 +2148,10 @@ void OpenglRenderer::CreateShader(ShaderEntry& entry)
 //**************************************************************************************************
 void OpenglRenderer::CreateShader(StringParam vertexSource, StringParam geometrySource, StringParam pixelSource, GLuint& shader)
 {
+#ifdef ZeroExtraGlDebug
+  Timer compileTimer;
+#endif
+
   GLuint program = glCreateProgram();
 
   const GLchar* vertexSourceData = vertexSource.Data();
@@ -2177,23 +2182,23 @@ void OpenglRenderer::CreateShader(StringParam vertexSource, StringParam geometry
   glCompileShader(pixelShader);
   CheckShader(pixelShader, pixelSource);
 
-  glBindAttribLocation(program, VertexSemantic::Position, "attLocalPosition");
-  glBindAttribLocation(program, VertexSemantic::Normal, "attLocalNormal");
-  glBindAttribLocation(program, VertexSemantic::Tangent, "attLocalTangent");
-  glBindAttribLocation(program, VertexSemantic::Bitangent, "attLocalBitangent");
-  glBindAttribLocation(program, VertexSemantic::Uv, "attUv");
-  glBindAttribLocation(program, VertexSemantic::UvAux, "attUvAux");
-  glBindAttribLocation(program, VertexSemantic::Color, "attColor");
-  glBindAttribLocation(program, VertexSemantic::ColorAux, "attColorAux");
-  glBindAttribLocation(program, VertexSemantic::BoneIndices, "attBoneIndices");
-  glBindAttribLocation(program, VertexSemantic::BoneWeights, "attBoneWeights");
+  glBindAttribLocation(program, VertexSemantic::Position, "LocalPosition");
+  glBindAttribLocation(program, VertexSemantic::Normal, "LocalNormal");
+  glBindAttribLocation(program, VertexSemantic::Tangent, "LocalTangent");
+  glBindAttribLocation(program, VertexSemantic::Bitangent, "LocalBitangent");
+  glBindAttribLocation(program, VertexSemantic::Uv, "Uv");
+  glBindAttribLocation(program, VertexSemantic::UvAux, "UvAux");
+  glBindAttribLocation(program, VertexSemantic::Color, "Color");
+  glBindAttribLocation(program, VertexSemantic::ColorAux, "ColorAux");
+  glBindAttribLocation(program, VertexSemantic::BoneIndices, "BoneIndices");
+  glBindAttribLocation(program, VertexSemantic::BoneWeights, "BoneWeights");
   // Not implemented by geometry processor
-  glBindAttribLocation(program, 10, "attAux0");
-  glBindAttribLocation(program, 11, "attAux1");
-  glBindAttribLocation(program, 12, "attAux2");
-  glBindAttribLocation(program, 13, "attAux3");
-  glBindAttribLocation(program, 14, "attAux4");
-  glBindAttribLocation(program, 15, "attAux5");
+  glBindAttribLocation(program, 10, "Aux0");
+  glBindAttribLocation(program, 11, "Aux1");
+  glBindAttribLocation(program, 12, "Aux2");
+  glBindAttribLocation(program, 13, "Aux3");
+  glBindAttribLocation(program, 14, "Aux4");
+  glBindAttribLocation(program, 15, "Aux5");
 
 #ifdef ZeroExtraGlDebug
   double compileSeconds = compileTimer.UpdateAndGetTime();

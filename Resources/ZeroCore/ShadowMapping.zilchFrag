@@ -3,8 +3,8 @@
 [Pixel]
 struct ShadowMapping
 {
-  [BuiltInInput] var PerspectiveToView : Real4x4;
-  [BuiltInInput] var ViewToWorld : Real4x4;
+  [AppBuiltInInput] var PerspectiveToView : Real4x4;
+  [AppBuiltInInput] var ViewToWorld : Real4x4;
   
   [StageInput] var PerspectivePosition : Real4;
   
@@ -12,7 +12,7 @@ struct ShadowMapping
   [FragmentInput] var GeoPosition : Real3;
   
   [Input] var LightTransform : Real4x4;
-  [Input] var ShadowBuffer : SamplerShadow2d;
+  [Input] var ShadowBuffer : SampledDepthImage2d;
   [Input] var NormalOffsetBias : Real = 0.1;
   
   [Output] var ShadowFactor : Real;
@@ -30,7 +30,7 @@ struct ShadowMapping
   }
   
   [Static]
-  function ComputePcf5x5(uv : Real3, shadowBuffer : ref SamplerShadow2d) : Real
+  function ComputePcf5x5(uv : Real3, shadowBuffer : ref SampledDepthImage2d) : Real
   {
     var shadowFactor = 0.0;
     
@@ -39,7 +39,8 @@ struct ShadowMapping
     {
       for (var u = -2; u <= 2; ++u)
       {
-        shadowFactor += shadowBuffer.Sample(uv + Real3(Real2(u, v) * step, 0.0));
+        var subUv = uv + Real3(Real2(u, v) * step, 0.0);
+        shadowFactor += shadowBuffer.Sample(subUv.XY, subUv.Z);
       }
     }
     shadowFactor /= 25.0;

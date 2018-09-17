@@ -19,41 +19,45 @@ FragmentSearchProvider::FragmentSearchProvider(StringParam attribute)
 void FragmentSearchProvider::Search(SearchData& search)
 {
   ZilchShaderGenerator* generator = Z::gEngine->has(GraphicsEngine)->mShaderGenerator;
-  ZilchShaderLibraryRef shaderLibrary = generator->GetCurrentInternalProjectLibrary();
+  ZilchShaderIRLibraryRef shaderLibrary = generator->GetCurrentInternalProjectLibrary();
 
   // Search this library and all dependencies
-  HashSet<ZilchShaderLibrary*> visitedLibraries;
+  HashSet<ZilchShaderIRLibrary*> visitedLibraries;
   Search(search, shaderLibrary, visitedLibraries);
 }
 
-void FragmentSearchProvider::Search(SearchData& search, ZilchShaderLibrary* shaderLibrary, HashSet<ZilchShaderLibrary*>& visitedLibraries)
+void FragmentSearchProvider::Search(SearchData& search, ZilchShaderIRLibrary* shaderLibrary, HashSet<ZilchShaderIRLibrary*>& visitedLibraries)
 {
-  forRange(ShaderType* shaderType, shaderLibrary->mTypes.Values())
+  forRange(ZilchShaderIRType* shaderType, shaderLibrary->mTypes.Values())
   {
-    if(!shaderType->ContainsAttribute(mAttribute))
+    ShaderIRTypeMeta* shaderTypeMeta = shaderType->mMeta;
+    if(shaderTypeMeta == nullptr)
       continue;
 
-    int priority = PartialMatch(search.SearchString.All(), shaderType->mZilchName.All(), CaseInsensitiveCompare);
+    if(!shaderTypeMeta->ContainsAttribute(mAttribute))
+      continue;
+
+    int priority = PartialMatch(search.SearchString.All(), shaderTypeMeta->mZilchName.All(), CaseInsensitiveCompare);
     if(priority != cNoMatch)
     {
       //Add a match
       SearchViewResult& result = search.Results.PushBack();
-      result.Data = shaderType;
+      result.Data = shaderTypeMeta;
       result.Interface = this;
-      result.Name = shaderType->mZilchName;
+      result.Name = shaderTypeMeta->mZilchName;
       result.Priority = priority;
     }
   }
 
   // Handle having no dependencies
-  ZilchShaderModule* dependencies = shaderLibrary->mDependencies;
+  ZilchShaderIRModule* dependencies = shaderLibrary->mDependencies;
   if(dependencies == nullptr)
     return;
 
   // Walk all dependencies (making sure to not walk any library twice)
   for(size_t i = 0; i < dependencies->Size(); ++i)
   {
-    ZilchShaderLibrary* dependency = (*dependencies)[i];
+    ZilchShaderIRLibrary* dependency = (*dependencies)[i];
     if(visitedLibraries.Contains(dependency))
       return;
     visitedLibraries.Insert(dependency);
@@ -239,23 +243,24 @@ void ShaderTranslationDebugHelper::OnCompileZilchFragments(ZilchCompileFragmentE
   if(mShaderGenerator == nullptr)
     return;
 
-  mShaderGenerator->BuildFragmentsLibrary(event->mDependencies, event->mFragments);
-
-  // This basically transfers all pending libraries into current libraries.
-  // This is basically the logic of commit but we have to do this here. This seems to be an issue when we haven't 
-  // been listening for events since the startup so we're missing all of the initial libraries in the map. I believe
-  // on load it calls PrePatch after each library instead of at the end of all of them. 
-  AutoDeclare(range, mShaderGenerator->mPendingToPendingInternal.All());
-  for(; !range.Empty(); range.PopFront())
-  {
-    // Use the returned library here instead of the one in the map. The one in the map is garbage.
-    Library* externalLibrary = event->mReturnedLibrary;
-    ZilchShaderLibraryRef shaderLibrary = range.Front().second;
-    
-    mShaderGenerator->mCurrentToInternal.Insert(externalLibrary, shaderLibrary);
-  }
-  mShaderGenerator->mPendingToPendingInternal.Clear();
-  mShaderGenerator->MapFragmentTypes();
+  // @JoshD: Need to update
+  //mShaderGenerator->BuildFragmentsLibrary(event->mDependencies, event->mFragments);
+  //
+  //// This basically transfers all pending libraries into current libraries.
+  //// This is basically the logic of commit but we have to do this here. This seems to be an issue when we haven't 
+  //// been listening for events since the startup so we're missing all of the initial libraries in the map. I believe
+  //// on load it calls PrePatch after each library instead of at the end of all of them. 
+  //AutoDeclare(range, mShaderGenerator->mPendingToPendingInternal.All());
+  //for(; !range.Empty(); range.PopFront())
+  //{
+  //  // Use the returned library here instead of the one in the map. The one in the map is garbage.
+  //  Library* externalLibrary = event->mReturnedLibrary;
+  //  ZilchShaderLibraryRef shaderLibrary = range.Front().second;
+  //  
+  //  mShaderGenerator->mCurrentToInternal.Insert(externalLibrary, shaderLibrary);
+  //}
+  //mShaderGenerator->mPendingToPendingInternal.Clear();
+  //mShaderGenerator->MapFragmentTypes();
 }
 
 void ShaderTranslationDebugHelper::OnScriptsCompiledPrePatch(ZilchCompileEvent* event)
@@ -296,21 +301,22 @@ void ShaderTranslationDebugHelper::ValidateComposition(ZilchShaderGenerator& gen
         // Get the shader field that had an error
         String fragmentName = compositeInfo->mFragmentName;
         String fieldName = fieldInfo.mZilchName;
-        ShaderType* fragmentShaderType = generator.GetCurrentInternalProjectLibrary()->FindType(fragmentName);
-        ShaderField* shaderField = fragmentShaderType->FindField(fieldName);
+        ZilchShaderIRType* fragmentShaderType = generator.GetCurrentInternalProjectLibrary()->FindType(fragmentName);
+        ShaderIRFieldMeta* shaderField = fragmentShaderType->mMeta->FindField(fieldName);
         // Build up a string of all of the attributes to make it easier for a user to see what went wrong
         StringBuilder attributesBuilder;
-        forRange(ShaderAttribute& attribute, shaderField->mAttributes.All())
+        forRange(ShaderIRAttribute& attribute, shaderField->mAttributes.All())
         {
           attributesBuilder.AppendFormat("[%s]", attribute.mAttributeName.c_str());
         }
 
         // Print out fragment and field with the error.
         String attributesList = attributesBuilder.ToString();
-        String noFallbackName = generator.mSettings->mNameSettings.mNoFallbackWarningAttributeName;
-        errorsBuilder.AppendFormat("\tCouldn't resolve input attributes on '%s.%s'. Provided attributes were '%s'. "
-          "Input will fallback to the default value. To suppress this warning use the attribute '[%s]'.\n",
-          fragmentName.c_str(), fieldName.c_str(), attributesList.c_str(), noFallbackName.c_str());
+        // @JoshD: Need to update
+        //String noFallbackName = generator.mSettings->mSpirVNameSettings.mNoFallbackWarningAttributeName;
+        //errorsBuilder.AppendFormat("\tCouldn't resolve input attributes on '%s.%s'. Provided attributes were '%s'. "
+        //  "Input will fallback to the default value. To suppress this warning use the attribute '[%s]'.\n",
+        //  fragmentName.c_str(), fieldName.c_str(), attributesList.c_str(), noFallbackName.c_str());
       }
     }
   }
@@ -356,7 +362,7 @@ void ShaderTranslationDebugHelper::OnRunTranslation(Event* e)
   
   // Create and initialize the shader generator
   ZilchShaderGenerator generator;
-  generator.mTranslator = translator;
+  //generator.mTranslator = translator;
   generator.Initialize();
   // Store a pointer to it so we can access this in callbacks
   // (no need to allocate and a fresh generate each time is more "proper")
@@ -390,38 +396,39 @@ void ShaderTranslationDebugHelper::OnRunTranslation(Event* e)
   
   // Build the shader library for this composite
   Array<ShaderEntry> shaderEntries;
-  Array<ZilchShaderDefinition> compositeDefinitions;
+  Array<ZilchShaderIRCompositor::ShaderDefinition> compositeDefinitions;
   generator.BuildShaders(shaders, composites, shaderEntries, &compositeDefinitions);
   
+  // @JoshD: Need to update
   // Add an entry for each shader stage, both for the zilch and shader composite results
-  ZilchShaderDefinition& shaderDef = compositeDefinitions[0];
-  ShaderEntry& entry = shaderEntries[0];
-  ZilchFragmentInfo& vertexInfo = shaderDef.mShaderData[FragmentType::Vertex];
-  ZilchFragmentInfo& geometryInfo = shaderDef.mShaderData[FragmentType::Geometry];
-  ZilchFragmentInfo& pixelInfo = shaderDef.mShaderData[FragmentType::Pixel];
-  // Validate that there weren't any incorrectly resolved compositions
-  ValidateComposition(generator, vertexInfo, FragmentType::Vertex);
-  ValidateComposition(generator, geometryInfo, FragmentType::Geometry);
-  ValidateComposition(generator, pixelInfo, FragmentType::Pixel);
-  
-  mTranslationEntries.PushBack(ShaderTranslationEntry(Lexer::Zilch, "ZilchVertex", vertexInfo.mZilchCode));
-  mTranslationEntries.PushBack(ShaderTranslationEntry(Lexer::Zilch, "ZilchGeometry", geometryInfo.mZilchCode));
-  mTranslationEntries.PushBack(ShaderTranslationEntry(Lexer::Zilch, "ZilchPixel", pixelInfo.mZilchCode));
-  mTranslationEntries.PushBack(ShaderTranslationEntry(Lexer::Shader, "ShaderVertex", entry.mVertexShader));
-  mTranslationEntries.PushBack(ShaderTranslationEntry(Lexer::Shader, "ShaderGeometry", entry.mGeometryShader));
-  mTranslationEntries.PushBack(ShaderTranslationEntry(Lexer::Shader, "ShaderPixel", entry.mPixelShader));
-  
-  for(size_t i = 0; i < shaderDef.mFragmentTypes.Size(); ++i)
-  {
-    ShaderType* fragment = shaderDef.mFragmentTypes[i];
-    
-    ShaderTypeTranslation result;
-    translator->BuildFinalShader(fragment, result);
-    mTranslationEntries.PushBack(ShaderTranslationEntry(Lexer::Shader, fragment->mZilchName, result.mTranslation));
-  }
-  
-  // Reselect the current item with our new translations
-  OnScriptDisplayChanged(nullptr);
+  //ZilchShaderIRCompositor::ShaderDefinition& shaderDef = compositeDefinitions[0];
+  //ShaderEntry& entry = shaderEntries[0];
+  //ZilchFragmentInfo& vertexInfo = shaderDef.mResults[FragmentType::Vertex];
+  //ZilchFragmentInfo& geometryInfo = shaderDef.mShaderData[FragmentType::Geometry];
+  //ZilchFragmentInfo& pixelInfo = shaderDef.mShaderData[FragmentType::Pixel];
+  //// Validate that there weren't any incorrectly resolved compositions
+  //ValidateComposition(generator, vertexInfo, FragmentType::Vertex);
+  //ValidateComposition(generator, geometryInfo, FragmentType::Geometry);
+  //ValidateComposition(generator, pixelInfo, FragmentType::Pixel);
+  //
+  //mTranslationEntries.PushBack(ShaderTranslationEntry(Lexer::Zilch, "ZilchVertex", vertexInfo.mZilchCode));
+  //mTranslationEntries.PushBack(ShaderTranslationEntry(Lexer::Zilch, "ZilchGeometry", geometryInfo.mZilchCode));
+  //mTranslationEntries.PushBack(ShaderTranslationEntry(Lexer::Zilch, "ZilchPixel", pixelInfo.mZilchCode));
+  //mTranslationEntries.PushBack(ShaderTranslationEntry(Lexer::Shader, "ShaderVertex", entry.mVertexShader));
+  //mTranslationEntries.PushBack(ShaderTranslationEntry(Lexer::Shader, "ShaderGeometry", entry.mGeometryShader));
+  //mTranslationEntries.PushBack(ShaderTranslationEntry(Lexer::Shader, "ShaderPixel", entry.mPixelShader));
+  //
+  //for(size_t i = 0; i < shaderDef.mFragmentTypes.Size(); ++i)
+  //{
+  //  ShaderType* fragment = shaderDef.mFragmentTypes[i];
+  //  
+  //  ShaderTypeTranslation result;
+  //  translator->BuildFinalShader(fragment, result);
+  //  mTranslationEntries.PushBack(ShaderTranslationEntry(Lexer::Shader, fragment->mZilchName, result.mTranslation));
+  //}
+  //
+  //// Reselect the current item with our new translations
+  //OnScriptDisplayChanged(nullptr);
 }
 
 void ShaderTranslationDebugHelper::OnScriptDisplayChanged(Event* e)

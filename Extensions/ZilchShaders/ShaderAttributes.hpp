@@ -93,6 +93,9 @@ public:
   Zilch::CodeLocation* GetLocation();
   void SetLocationNode(Zilch::SyntaxNode* node);
 
+  // Return the internal zilch attribute parameter. Mostly exposed for ease of binding.
+  Zilch::AttributeParameter& GetZilchAttributeParameter();
+
 private:
   Zilch::AttributeParameter mParameter;
   Zilch::SyntaxNode* mNode;

@@ -8,7 +8,7 @@
 struct TextureCubePreview
 {
   // Skybox texture
-  [Input] var SpriteSource : SamplerCube;
+  [Input] var SpriteSource : SampledImageCube;
   
   // We use the Uv to determine the sample direction for the cube map
   [Input] var Uv : Real2;

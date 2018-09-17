@@ -1,0 +1,247 @@
+struct IntegerExtensions
+{
+  [Static][Extension(typeid(Integer))][Implements]
+  var PositiveMax : Integer
+  {
+    get {return 2147483647; }
+  }
+  
+  [Static][Extension(typeid(Integer))][Implements]
+  var PositiveValueClosestToZero : Integer
+  {
+    get {return 1; }
+  }
+  
+  [Static][Extension(typeid(Integer))][Implements]
+  var NegativeMin : Integer
+  {
+    get {return -Integer.PositiveMax - 1; }
+  }
+  
+  [Static][Extension(typeid(Integer))][Implements]
+  var NegativeValueClosestToZero : Integer
+  {
+    get {return -1; }
+  }
+  
+  [Static][Extension(typeid(Integer))][Implements]
+  var XAxis : Integer
+  {
+    get {return 1; }
+  }
+  
+  [Static][Extension(typeid(Integer))][Implements]
+  var Zero : Integer
+  {
+    get {return 0; }
+  }
+  
+  [Static][Extension(typeid(Integer))][Implements]
+  var One : Integer
+  {
+    get {return 1; }
+  }
+  
+  [Static][Extension(typeid(Integer))][Implements]
+  function GetAxis(value : Integer) : Integer
+  {
+    if(value == 0)
+      return 1;
+    return 0;
+  }
+}
+
+struct Integer2Extensions
+{
+  [Static][Extension(typeid(Integer2))][Implements]
+  var XAxis : Integer2
+  {
+    get {return Integer2(1, 0); }
+  }
+  
+  [Static][Extension(typeid(Integer2))][Implements]
+  var YAxis : Integer2
+  {
+    get {return Integer2(0, 1); }
+  }
+  
+  [Static][Extension(typeid(Integer2))][Implements]
+  var Zero : Integer2
+  {
+    get {return Integer2(0); }
+  }
+  
+  [Static][Extension(typeid(Integer2))][Implements]
+  var One : Integer2
+  {
+    get {return Integer2(1); }
+  }
+  
+  [Static][Extension(typeid(Integer2))][Implements]
+  function GetAxis(value : Integer) : Integer2
+  {
+    var result = Integer2();
+    result[value] = 1;
+    return result;
+  }
+  
+  [Static][Extension(typeid(Integer2))][Implements]
+  var PositiveMax : Integer2
+  {
+    get {return Integer2(Integer.PositiveMax); }
+  }
+  
+  [Static][Extension(typeid(Integer2))][Implements]
+  var PositiveValueClosestToZero : Integer2
+  {
+    get {return Integer2(Integer.PositiveValueClosestToZero); }
+  }
+  
+  [Static][Extension(typeid(Integer2))][Implements]
+  var NegativeMin : Integer2
+  {
+    get {return Integer2(Integer.NegativeMin); }
+  }
+  
+  [Static][Extension(typeid(Integer2))][Implements]
+  var NegativeValueClosestToZero : Integer2
+  {
+    get {return Integer2(Integer.NegativeValueClosestToZero); }
+  }
+}
+
+struct Integer3Extensions
+{
+  [Static][Extension(typeid(Integer3))][Implements]
+  var XAxis : Integer3
+  {
+    get {return Integer3(1, 0, 0); }
+  }
+  
+  [Static][Extension(typeid(Integer3))][Implements]
+  var YAxis : Integer3
+  {
+    get {return Integer3(0, 1, 0); }
+  }
+  
+  [Static][Extension(typeid(Integer3))][Implements]
+  var ZAxis : Integer3
+  {
+    get {return Integer3(0, 0, 1); }
+  }
+  
+  [Static][Extension(typeid(Integer3))][Implements]
+  var Zero : Integer3
+  {
+    get {return Integer3(0); }
+  }
+  
+  [Static][Extension(typeid(Integer3))][Implements]
+  var One : Integer3
+  {
+    get {return Integer3(1); }
+  }
+  
+  [Static][Extension(typeid(Integer3))][Implements]
+  function GetAxis(value : Integer) : Integer3
+  {
+    var result = Integer3();
+    result[value] = 1;
+    return result;
+  }
+  
+  [Static][Extension(typeid(Integer3))][Implements]
+  var PositiveMax : Integer3
+  {
+    get {return Integer3(Integer.PositiveMax); }
+  }
+  
+  [Static][Extension(typeid(Integer3))][Implements]
+  var PositiveValueClosestToZero : Integer3
+  {
+    get {return Integer3(Integer.PositiveValueClosestToZero); }
+  }
+  
+  [Static][Extension(typeid(Integer3))][Implements]
+  var NegativeMin : Integer3
+  {
+    get {return Integer3(Integer.NegativeMin); }
+  }
+  
+  [Static][Extension(typeid(Integer3))][Implements]
+  var NegativeValueClosestToZero : Integer3
+  {
+    get {return Integer3(Integer.NegativeValueClosestToZero); }
+  }
+}
+
+struct Integer4Extensions
+{
+  [Static][Extension(typeid(Integer4))][Implements]
+  var XAxis : Integer4
+  {
+    get {return Integer4(1, 0, 0, 0); }
+  }
+  
+  [Static][Extension(typeid(Integer4))][Implements]
+  var YAxis : Integer4
+  {
+    get {return Integer4(0, 1, 0, 0); }
+  }
+  
+  [Static][Extension(typeid(Integer4))][Implements]
+  var ZAxis : Integer4
+  {
+    get {return Integer4(0, 0, 1, 0); }
+  }
+  
+  [Static][Extension(typeid(Integer4))][Implements]
+  var WAxis : Integer4
+  {
+    get {return Integer4(0, 0, 0, 1); }
+  }
+  
+  [Static][Extension(typeid(Integer4))][Implements]
+  var Zero : Integer4
+  {
+    get {return Integer4(0); }
+  }
+  
+  [Static][Extension(typeid(Integer4))][Implements]
+  var One : Integer4
+  {
+    get {return Integer4(1); }
+  }
+  
+  [Static][Extension(typeid(Integer4))][Implements]
+  function GetAxis(value : Integer) : Integer4
+  {
+    var result = Integer4();
+    result[value] = 1;
+    return result;
+  }
+  
+  [Static][Extension(typeid(Integer4))][Implements]
+  var PositiveMax : Integer4
+  {
+    get {return Integer4(Integer.PositiveMax); }
+  }
+  
+  [Static][Extension(typeid(Integer4))][Implements]
+  var PositiveValueClosestToZero : Integer4
+  {
+    get {return Integer4(Integer.PositiveValueClosestToZero); }
+  }
+  
+  [Static][Extension(typeid(Integer4))][Implements]
+  var NegativeMin : Integer4
+  {
+    get {return Integer4(Integer.NegativeMin); }
+  }
+  
+  [Static][Extension(typeid(Integer4))][Implements]
+  var NegativeValueClosestToZero : Integer4
+  {
+    get {return Integer4(Integer.NegativeValueClosestToZero); }
+  }
+}

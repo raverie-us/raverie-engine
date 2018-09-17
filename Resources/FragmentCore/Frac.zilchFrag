@@ -1,0 +1,27 @@
+struct MathFracImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Frac(param0 : Real) : Real
+  {
+    var signedFrac = param0 - Math.Truncate(param0);
+    return Math.Abs(signedFrac);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Frac(param0 : Real2) : Real2
+  {
+    var signedFrac = param0 - Math.Truncate(param0);
+    return Math.Abs(signedFrac);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Frac(param0 : Real3) : Real3
+  {
+    var signedFrac = param0 - Math.Truncate(param0);
+    return Math.Abs(signedFrac);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Frac(param0 : Real4) : Real4
+  {
+    var signedFrac = param0 - Math.Truncate(param0);
+    return Math.Abs(signedFrac);
+  }
+}

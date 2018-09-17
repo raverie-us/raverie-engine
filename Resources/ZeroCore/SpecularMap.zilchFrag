@@ -4,7 +4,7 @@
 struct SpecularMap
 {
   [FragmentInput][StageInput] var Uv : Real2;
-  [Input] var SpecularMap : Sampler2d;
+  [Input] var SpecularMap : SampledImage2d;
   
   [Output] var Specular : Real;
   

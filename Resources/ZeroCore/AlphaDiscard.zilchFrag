@@ -3,12 +3,12 @@
 struct AlphaDiscard
 {
   [FragmentInput][StageInput] var Uv : Real2;
-  [PropertyInput] var Texture : Sampler2d;
+  [PropertyInput] var Texture : SampledImage2d;
   [PropertyInput] var Threshold : Real = 0.5;
   
   function Main()
   {
     if (this.Texture.Sample(this.Uv).W < this.Threshold)
-      Shader.Discard();
+      ShaderIntrinsics.Kill();
   }
 }

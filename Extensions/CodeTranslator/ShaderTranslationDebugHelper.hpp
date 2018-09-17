@@ -21,7 +21,7 @@ class FragmentSearchProvider : public SearchProvider
 public:
   FragmentSearchProvider(StringParam attribute);
   void Search(SearchData& search) override;
-  void Search(SearchData& search, ZilchShaderLibrary* shaderLibrary, HashSet<ZilchShaderLibrary*>& visitedLibraries);
+  void Search(SearchData& search, ZilchShaderIRLibrary* shaderLibrary, HashSet<ZilchShaderIRLibrary*>& visitedLibraries);
 
   // The attribute to filter fragments by
   String mAttribute;

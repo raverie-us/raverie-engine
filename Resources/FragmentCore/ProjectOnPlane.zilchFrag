@@ -1,0 +1,18 @@
+struct MathProjectOnPlaneImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function ProjectOnPlane(toBeProjected : Real2, planeNormal : Real2) : Real2
+  {
+    return toBeProjected - Math.ProjectOnVector(toBeProjected, planeNormal);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function ProjectOnPlane(toBeProjected : Real3, planeNormal : Real3) : Real3
+  {
+    return toBeProjected - Math.ProjectOnVector(toBeProjected, planeNormal);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function ProjectOnPlane(toBeProjected : Real4, planeNormal : Real4) : Real4
+  {
+    return toBeProjected - Math.ProjectOnVector(toBeProjected, planeNormal);
+  }
+}
