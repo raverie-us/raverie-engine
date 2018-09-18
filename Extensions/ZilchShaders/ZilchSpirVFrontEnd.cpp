@@ -1059,6 +1059,14 @@ void ZilchSpirVFrontEnd::CollectEnumTypes(Zilch::EnumNode*& node, ZilchSpirVFron
 void ZilchSpirVFrontEnd::PreWalkClassNode(Zilch::ClassNode*& node, ZilchSpirVFrontEndContext* context)
 {
   context->mCurrentType = FindType(node->Type, node);
+
+  // Destructors cannot be supported as there's no actual
+  // call to the destructor in zilch's AST.
+  if(node->Destructor != nullptr)
+  {
+    SendTranslationError(node->Location, "Destructors are not supported in shaders");
+    return;
+  }
   
   TranslatorBranchWalker* walker = context->Walker;
   walker->Walk(this, node->Variables, context);
