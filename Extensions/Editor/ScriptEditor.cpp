@@ -59,7 +59,7 @@ int CompletionDataSource::Modified()
     {
       mFiltered.PushBack(&mAll[i]);
     }
-    
+    FilterHidden();
     ListSource::Modified();
     return -1;
   }
@@ -78,12 +78,40 @@ int CompletionDataSource::Modified()
 
       mFiltered.PushBack(completion);
     }
-    
+
+    FilterHidden();
     ListSource::Modified();
     return filterResults.mPrimaryFilteredIndex;
   }
 
   return cAutoCompleteFailed;
+}
+
+void CompletionDataSource::FilterHidden()
+{
+  bool allHidden = true;
+  forRange(Completion* completion, mFiltered.All())
+    allHidden &= completion->Hidden;
+
+  // We want to show hidden only when they're all hidden
+  if (allHidden)
+    return;
+
+  // Remove all hidden
+  for(uint i = 0; i < mFiltered.Size();)
+  {
+    Completion* completion = mFiltered[i];
+
+    // Still show hidden if it's an exact match
+    bool exactMatch = (mPartialText == completion->Name);
+    if(completion->Hidden && !exactMatch)
+    {
+      mFiltered.EraseAt(i);
+      continue;
+    }
+
+    ++i;
+  }
 }
 
 String CompletionDataSource::GetStringValueAt(DataIndex index)

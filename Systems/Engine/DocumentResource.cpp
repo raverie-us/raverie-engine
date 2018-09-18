@@ -21,20 +21,23 @@ ZilchDefineType(SavingEvent, builder, type)
 }
 
 Completion::Completion() :
-  AssociatedResourceId(0)
+  AssociatedResourceId(0),
+  Hidden(false)
 {
 }
 
 Completion::Completion(StringParam name) :
   Name(name),
-  AssociatedResourceId(0)
+  AssociatedResourceId(0),
+  Hidden(false)
 {
 }
 
 Completion::Completion(StringParam name, StringParam description) :
   Name(name),
   Description(description),
-  AssociatedResourceId(0)
+  AssociatedResourceId(0),
+  Hidden(false)
 {
 }
 

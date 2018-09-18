@@ -23,6 +23,7 @@ namespace Zilch
   const String HiddenAttribute            ("Hidden");
   const String ExtensionAttribute         ("Extension");
   const String PropertyAttribute          ("Property");
+  const String InternalAttribute          ("Internal");
   const String DeprecatedAttribute        ("Deprecated");
   const String ExportDocumentation        ("ExportDocumentation");
   const String ImportDocumentation        ("ImportDocumentation");

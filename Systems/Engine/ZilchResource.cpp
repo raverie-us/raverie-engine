@@ -68,7 +68,6 @@ void ZilchDocumentResource::OnCharacterAdded(ICodeEditor* editor, Rune value)
     AutoCompleteInfo info;
     GetAutoCompleteInfo(editor, info);
 
-
     Array<Completion> completions;
 
     if (info.IsLiteral && info.NearestType == ZilchTypeId(int))
@@ -81,6 +80,7 @@ void ZilchDocumentResource::OnCharacterAdded(ICodeEditor* editor, Rune value)
       completion.Name = entry.Name;
       completion.SignaturePathType = entry.Type;
       completion.AssociatedResourceId = entry.CodeUserDataU64;
+      completion.Hidden = entry.Hidden;
     }
 
     editor->ShowAutoComplete(completions, CompletionConfidence::Perfect);
@@ -347,11 +347,9 @@ void ZilchDocumentResource::PrepForAutoComplete(ICodeEditor* editor, Project& pr
   Array<LibraryRef> libraries;
   GetLibraries(libraries);
 
-  String documentName = editor->GetDocumentDisplayName();
-
   for (uint i = 0; i < libraries.Size(); ++i)
     dependencies.PushBack(libraries[i]);
-  project.AddCodeFromString(allText, documentName, editor->GetDocumentResource());
+  project.AddCodeFromString(allText, mContentItem->GetFullPath(), editor->GetDocumentResource());
 }
 
 //**************************************************************************************************
@@ -361,7 +359,7 @@ void ZilchDocumentResource::AttemptGetDefinition(ICodeEditor* editor, size_t cur
   Module dependencies;
   PrepForAutoComplete(editor, project, dependencies);
 
-  project.GetDefinitionInfo(dependencies, cursorPosition, editor->GetDocumentDisplayName(), definition);
+  project.GetDefinitionInfo(dependencies, cursorPosition, mContentItem->GetFullPath(), definition);
 }
 
 //**************************************************************************************************
@@ -370,8 +368,9 @@ void ZilchDocumentResource::GetAutoCompleteInfo(ICodeEditor* editor, AutoComplet
   Project project;
   Module dependencies;
   PrepForAutoComplete(editor, project, dependencies);
-
-  project.GetAutoCompleteInfo(dependencies, editor->GetCaretPosition(), editor->GetDocumentDisplayName(), info);
+  
+  String cursorOrigin = mContentItem->GetFullPath();
+  project.GetAutoCompleteInfo(dependencies, editor->GetCaretPosition(), cursorOrigin, info);
 
   // Don't show types marked as hidden
   for (uint i = info.CompletionEntries.Size() - 1; i < info.CompletionEntries.Size(); --i)

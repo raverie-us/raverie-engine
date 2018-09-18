@@ -60,6 +60,8 @@ namespace Zilch
     // The shorter version of the type name (limited to AutoCompleteInfo::ShortTypeNameMaxLength, usually around 20)
     String ShortType;
 
+    bool Hidden;
+
     // When this completion represents a property or function, we pull this CodeUserData
     // Note that if we remove duplicates upon request, then this
     // may only be the first one sorted by the 'operator<' above

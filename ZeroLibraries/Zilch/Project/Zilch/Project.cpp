@@ -31,7 +31,8 @@ namespace Zilch
 
   //***************************************************************************
   CompletionEntry::CompletionEntry() :
-    CodeUserData(nullptr)
+    CodeUserData(nullptr),
+    Hidden(false)
   {
   }
 
@@ -594,6 +595,7 @@ namespace Zilch
   {
   public:
     AutoCompleteInfo* Info;
+    String CursorOrigin;
 
     // Every time we encounter an extension property...
     bool operator()(Property* property)
@@ -606,6 +608,7 @@ namespace Zilch
       entry.ShortType = AutoCompleteInfo::GetShortTypeName(entry.Type);
       entry.CodeUserData = property->NameLocation.CodeUserData;
       entry.CodeUserDataU64 = property->NameLocation.CodeUserDataU64;
+      entry.Hidden = IsInternalHidden(property);
       return false;
     }
     
@@ -620,6 +623,14 @@ namespace Zilch
       entry.ShortType = AutoCompleteInfo::GetShortTypeName(entry.Type);
       entry.CodeUserData = function->NameLocation.CodeUserData;
       entry.CodeUserDataU64 = function->NameLocation.CodeUserDataU64;
+      entry.Hidden = IsInternalHidden(function);
+      return false;
+    }
+
+    bool IsInternalHidden(Member* member)
+    {
+      if (member->HasAttribute(InternalAttribute))
+        return (member->Location.Origin != CursorOrigin);
       return false;
     }
   };
@@ -999,6 +1010,7 @@ namespace Zilch
       // These functors also walk up base types and find any of their properties
       AutoCompletePropertyFunctionQuery queryFunctor;
       queryFunctor.Info = &resultOut;
+      queryFunctor.CursorOrigin = cursorOrigin;
       ForEachGetterSetter(resultOut.IsStatic, dependencies, boundType, queryFunctor);
       ForEachFunction(resultOut.IsStatic, dependencies, boundType, queryFunctor);
     }
