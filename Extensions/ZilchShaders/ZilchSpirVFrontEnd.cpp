@@ -211,6 +211,7 @@ bool ZilchSpirVFrontEnd::Translate(Zilch::SyntaxTree& syntaxTree, ZilchShaderIRP
   // Collect all types
   TranslatorBranchWalker classTypeCollectorWalker;
   classTypeCollectorWalker.Register(&ZilchSpirVFrontEnd::CollectClassTypes);
+  classTypeCollectorWalker.Register(&ZilchSpirVFrontEnd::CollectEnumTypes);
   classTypeCollectorWalker.Walk(this, syntaxTree.Root, &context);
   // If this failed somehow then early return
   if(mErrorTriggered)
@@ -1035,6 +1036,24 @@ void ZilchSpirVFrontEnd::CollectClassTypes(Zilch::ClassNode*& node, ZilchSpirVFr
   context->mCurrentType = type;
 
   ExtractDebugInfo(node, type->mDebugInfo);
+}
+
+void ZilchSpirVFrontEnd::CollectEnumTypes(Zilch::EnumNode*& node, ZilchSpirVFrontEndContext* context)
+{
+  // Map the enum type to integer. This is needed to handle
+  // any function taking/returning the enum type.
+  ZilchShaderIRType* intType = mLibrary->FindType(ZilchTypeId(int));
+  mLibrary->mTypes[node->Name.Token] = intType;
+
+  // For each value in the enum, create an integer constant that 
+  // can be looked up via the enum integer property
+  for(size_t i = 0; i < node->Values.Size(); ++i)
+  {
+    Zilch::EnumValueNode* valueNode = node->Values[i];
+
+    ZilchShaderIROp* constantValue = GetIntegerConstant(valueNode->IntegralValue, context);
+    mLibrary->mEnumContants[valueNode->IntegralProperty] = constantValue;
+  }
 }
 
 void ZilchSpirVFrontEnd::PreWalkClassNode(Zilch::ClassNode*& node, ZilchSpirVFrontEndContext* context)
@@ -1882,8 +1901,13 @@ void ZilchSpirVFrontEnd::WalkUnaryOperationNode(Zilch::UnaryOperatorNode*& node,
     return;
   }
 
+  // If the operand type is an enum then treat it like an integer
+  Zilch::Type* operandType = node->Operand->ResultType;
+  if(operandType->IsEnumOrFlags())
+    operandType = ZilchTypeId(int);
+
   // Find and use a resolver if we have one
-  UnaryOperatorKey opKey = UnaryOperatorKey(node->Operand->ResultType, node->OperatorInfo.Operator);
+  UnaryOperatorKey opKey = UnaryOperatorKey(operandType, node->OperatorInfo.Operator);
   UnaryOpResolverIRFn unaryOpResolver = mLibrary->FindOperatorResolver(opKey);
   if(unaryOpResolver != nullptr)
   {
@@ -1924,8 +1948,16 @@ void ZilchSpirVFrontEnd::WalkBinaryOperationNode(Zilch::BinaryOperatorNode*& nod
     return;
   }
 
+  // If any operand type is an enum then treat it like an integer
+  Zilch::Type* leftType = node->LeftOperand->ResultType;
+  Zilch::Type* rightType = node->RightOperand->ResultType;
+  if(leftType->IsEnumOrFlags())
+    leftType = ZilchTypeId(int);
+  if(rightType->IsEnumOrFlags())
+    rightType = ZilchTypeId(int);
+
   // Find a resolver for the given binary op
-  BinaryOperatorKey opKey = BinaryOperatorKey(node->LeftOperand->ResultType, node->RightOperand->ResultType, node->OperatorInfo.Operator);
+  BinaryOperatorKey opKey = BinaryOperatorKey(leftType, rightType, node->OperatorInfo.Operator);
   BinaryOpResolverIRFn binaryOpResolver = mLibrary->FindOperatorResolver(opKey);
   if(binaryOpResolver != nullptr)
   {
@@ -1942,8 +1974,24 @@ void ZilchSpirVFrontEnd::WalkCastNode(Zilch::TypeCastNode*& node, ZilchSpirVFron
 {
   BasicBlock* currentBlock = context->GetCurrentBlock();
 
+  // If the operand or result type is an enum then treat it like an integer
+  Zilch::Type* operatorType = node->Operand->ResultType;
+  Zilch::Type* resultType = node->ResultType;
+  if(operatorType->IsEnumOrFlags())
+    operatorType = ZilchTypeId(int);
+  if(resultType->IsEnumOrFlags())
+    resultType = ZilchTypeId(int);
+
+  // Cast to same type. Do a no-op
+  if(operatorType == resultType)
+  {
+    ZilchShaderIROp* operandValueResult = WalkAndGetValueTypeResult(node->Operand, context);
+    context->PushIRStack(operandValueResult);
+    return;
+  }
+
   // Find a resolver for the cast operator
-  TypeCastKey castOpKey(node->Operand->ResultType, node->ResultType);
+  TypeCastKey castOpKey(operatorType, resultType);
   TypeCastResolverIRFn resolverFn = mLibrary->FindOperatorResolver(castOpKey);
   if(resolverFn != nullptr)
   {
@@ -1987,6 +2035,22 @@ void ZilchSpirVFrontEnd::WalkMemberAccessNode(Zilch::MemberAccessNode*& node, Zi
 
     if(node->AccessedGetterSetter != nullptr)
     {
+      // Deal with accessing enums/flags (grab their constant value)
+      if(node->AccessedGetterSetter->PropertyType->IsEnumOrFlags())
+      {
+        ZilchShaderIROp* enumConstant = mLibrary->FindEnumConstantOp(node->AccessedGetterSetter);
+        // Sanity check (this should never happen)
+        if(enumConstant == nullptr)
+        {
+          SendTranslationError(node->Location, "Enum unable to be translated");
+          context->PushIRStack(GenerateDummyIR(node, context));
+          return;
+        }
+
+        context->PushIRStack(enumConstant);
+        return;
+      }
+
       if(node->IoUsage == Zilch::IoMode::ReadRValue)
       {
         Zilch::Type* ownerType = node->AccessedGetterSetter->Owner;

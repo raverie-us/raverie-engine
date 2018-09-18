@@ -1,0 +1,16 @@
+enum MyEnum
+{
+  Value1,
+  Value2,
+  Value3
+}
+
+[UnitTest][Pixel]
+struct DependentLibraryEnum
+{
+  [EntryPoint]
+  function Main()
+  {
+    var glsl = ShaderLanguage.Glsl;
+  }
+}

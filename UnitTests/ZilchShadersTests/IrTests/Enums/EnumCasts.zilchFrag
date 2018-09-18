@@ -1,0 +1,28 @@
+enum MyEnum1
+{
+  Value1,
+  Value2,
+  Value3
+}
+
+[UnitTest][Pixel]
+struct EnumCasts
+{
+  function ToFromInt()
+  {
+    var intValue = MyEnum1.Value1 as Integer;
+    var enumValue = intValue as MyEnum1;
+  }
+  
+  function SameCast()
+  {
+    var value = MyEnum1.Value1 as MyEnum1;
+  }
+  
+  [EntryPoint]
+  function Main()
+  {
+    this.ToFromInt();
+    this.SameCast();
+  }
+}

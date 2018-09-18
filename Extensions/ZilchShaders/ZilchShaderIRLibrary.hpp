@@ -155,6 +155,7 @@ public:
 
   ZilchShaderIRConstantLiteral* FindConstantLiteral(Zilch::Any& literalValue, bool checkDependencies = true);
   ZilchShaderIROp* FindConstantOp(ConstantOpKeyType& key, bool checkDependencies = true);
+  ZilchShaderIROp* FindEnumConstantOp(void* key, bool checkDependencies = true);
   ZilchShaderIROp* FindSpecializationConstantOp(void* key, bool checkDependencies = true);
 
   // An intrusive reference count for memory handling
@@ -213,6 +214,7 @@ public:
   ZilchShaderIRConstantLiteral* FindConstantLiteral(Zilch::Any& literalValue, bool checkDependencies = true);
 
   ZilchShaderIROp* FindConstantOp(ConstantOpKeyType& key, bool checkDependencies = true);
+  ZilchShaderIROp* FindEnumConstantOp(void* key, bool checkDependencies = true);
   /// Finds a specialization constant given a key. The key is normally a zilch
   /// field, but can also be special global keys (like languageId).
   ZilchShaderIROp* FindSpecializationConstantOp(void* key, bool checkDependencies = true);
@@ -237,6 +239,8 @@ public:
   HashMap<Zilch::Any, ZilchShaderIRConstantLiteral*> mConstantLiterals;
   // Map of all constants by type/value
   HashMap<ConstantOpKeyType, ZilchShaderIROp*> mConstantOps;
+  // Lookup for enums based upon their zilch property.
+  HashMap<void*, ZilchShaderIROp*> mEnumContants;
   // Map of all specialization constant by key (typically zilch field)
   HashMap<void*, ZilchShaderIROp*> mSpecializationConstantMap;
   // All globals declared in this library. Currently used for samplers.

@@ -274,6 +274,18 @@ ZilchShaderIROp* ZilchShaderIRModule::FindConstantOp(ConstantOpKeyType& key, boo
   return nullptr;
 }
 
+ZilchShaderIROp* ZilchShaderIRModule::FindEnumConstantOp(void* key, bool checkDependencies)
+{
+  for(size_t i = 0; i < Size(); ++i)
+  {
+    ZilchShaderIRLibrary* library = (*this)[i];
+    ZilchShaderIROp* result = library->FindEnumConstantOp(key, checkDependencies);
+    if(result != nullptr)
+      return result;
+  }
+  return nullptr;
+}
+
 ZilchShaderIROp* ZilchShaderIRModule::FindSpecializationConstantOp(void* key, bool checkDependencies)
 {
   for(size_t i = 0; i < Size(); ++i)
@@ -597,6 +609,23 @@ ZilchShaderIROp* ZilchShaderIRLibrary::FindConstantOp(ConstantOpKeyType& key, bo
   if(mDependencies == nullptr)
     return nullptr;
   return mDependencies->FindConstantOp(key, checkDependencies);
+}
+
+ZilchShaderIROp* ZilchShaderIRLibrary::FindEnumConstantOp(void* key, bool checkDependencies)
+{
+  // Try to find the type in this library
+  ZilchShaderIROp* result = mEnumContants.FindValue(key, nullptr);
+  if(result != nullptr)
+    return result;
+
+  // If we failed to find the type but we don't check dependencies then return that we can't find it
+  if(!checkDependencies)
+    return nullptr;
+
+  // Otherwise check all of our dependencies (if we have any)
+  if(mDependencies == nullptr)
+    return nullptr;
+  return mDependencies->FindEnumConstantOp(key, checkDependencies);
 }
 
 ZilchShaderIROp* ZilchShaderIRLibrary::FindSpecializationConstantOp(void* key, bool checkDependencies)

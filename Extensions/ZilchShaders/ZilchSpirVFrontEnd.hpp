@@ -96,6 +96,8 @@ public:
   void AddImplements(Zilch::SyntaxNode* node, Zilch::Function* zilchFunction, ZilchShaderIRFunction* shaderFunction, StringParam functionName, ZilchSpirVFrontEndContext* context);
 
   void CollectClassTypes(Zilch::ClassNode*& node, ZilchSpirVFrontEndContext* context);
+  void CollectEnumTypes(Zilch::EnumNode*& node, ZilchSpirVFrontEndContext* context);
+
   void PreWalkClassNode(Zilch::ClassNode*& node, ZilchSpirVFrontEndContext* context);
   void PreWalkTemplateTypes(ZilchSpirVFrontEndContext* context);
   void PreWalkClassVariables(Zilch::MemberVariableNode*& node, ZilchSpirVFrontEndContext* context);
