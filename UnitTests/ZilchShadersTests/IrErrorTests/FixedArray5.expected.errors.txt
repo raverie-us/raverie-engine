@@ -1,0 +1,2 @@
+  IrErrorTests\FixedArray5.zilchFrag(9) in Main: Failed to translation function call: 'Add':
+  Failed to translation function call: 'Add'
