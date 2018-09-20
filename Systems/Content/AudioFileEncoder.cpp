@@ -6,7 +6,8 @@
 
 #include "Precompiled.hpp"
 #include "stb_vorbis.h"
-#include "opus.h"
+#include "../Sound/opus.h"
+#include "../Sound/Definitions.hpp"
 
 namespace Zero
 {
@@ -52,7 +53,7 @@ void AudioFileData::ReleaseData()
 //----------------------------------------------------------------------------------- File Encoder
 
 //************************************************************************************************
-AudioFileData FileEncoder::OpenFile(Status& status, StringParam fileName)
+AudioFileData AudioFileEncoder::OpenFile(Status& status, StringParam fileName)
 {
   AudioFileData data;
   File file;
@@ -105,7 +106,7 @@ AudioFileData FileEncoder::OpenFile(Status& status, StringParam fileName)
 }
 
 //************************************************************************************************
-void FileEncoder::WriteFile(Status& status, StringParam outputFileName, AudioFileData& data, 
+void AudioFileEncoder::WriteFile(Status& status, StringParam outputFileName, AudioFileData& data,
   bool normalize, float maxVolume)
 {
   // Open the output file
@@ -134,7 +135,7 @@ void FileEncoder::WriteFile(Status& status, StringParam outputFileName, AudioFil
 }
 
 //************************************************************************************************
-void FileEncoder::ReadWav(Status& status, File& file, StringParam fileName, AudioFileData& data)
+void AudioFileEncoder::ReadWav(Status& status, File& file, StringParam fileName, AudioFileData& data)
 {
   // Read in the next chunk header
   WavChunkHeader chunkHeader;
@@ -210,7 +211,7 @@ void FileEncoder::ReadWav(Status& status, File& file, StringParam fileName, Audi
 }
 
 //************************************************************************************************
-void FileEncoder::ReadOgg(Status& status, File& file, StringParam fileName, AudioFileData& data)
+void AudioFileEncoder::ReadOgg(Status& status, File& file, StringParam fileName, AudioFileData& data)
 {
   // Reset to beginning of file
   file.Seek(0);
@@ -265,7 +266,7 @@ void FileEncoder::ReadOgg(Status& status, File& file, StringParam fileName, Audi
 }
 
 //************************************************************************************************
-bool FileEncoder::PcmToFloat(byte* inputBuffer, float** samplesPerChannel,
+bool AudioFileEncoder::PcmToFloat(byte* inputBuffer, float** samplesPerChannel,
   const unsigned totalSampleCount, const unsigned channelCount, const unsigned bytesPerSample)
 {
   // 16 bit data can be read as shorts
@@ -314,7 +315,7 @@ bool FileEncoder::PcmToFloat(byte* inputBuffer, float** samplesPerChannel,
 }
 
 //************************************************************************************************
-void FileEncoder::Normalize(float** samplesPerChannel, const unsigned frames,
+void AudioFileEncoder::Normalize(float** samplesPerChannel, const unsigned frames,
   const unsigned channels, float maxVolume)
 {
   // Save variables for finding the maximum volume in the audio data
@@ -348,7 +349,7 @@ void FileEncoder::Normalize(float** samplesPerChannel, const unsigned frames,
 }
 
 //************************************************************************************************
-unsigned FileEncoder::Resample(unsigned fileSampleRate, unsigned channels, unsigned samplesPerChannel,
+unsigned AudioFileEncoder::Resample(unsigned fileSampleRate, unsigned channels, unsigned samplesPerChannel,
   float**& buffersPerChannel)
 {
   // Get the factor to use while resampling
@@ -396,7 +397,7 @@ unsigned FileEncoder::Resample(unsigned fileSampleRate, unsigned channels, unsig
 }
 
 //************************************************************************************************
-void FileEncoder::EncodeFile(Status& status, File& outputFile, AudioFileData& data,
+void AudioFileEncoder::EncodeFile(Status& status, File& outputFile, AudioFileData& data,
   float** buffersPerChannel)
 {
   // Create the buffer for encoded packets
@@ -504,11 +505,11 @@ void PacketEncoder::EncodePacket(const float* dataBuffer, const unsigned samples
   Array<byte>& encodedData)
 {
   ReturnIf(!Encoder, , "Tried to encode packet without initializing encoder");
-  ReturnIf(samples != FileEncoder::cPacketFrames, , "Tried to encode packet with incorrect number of samples");
+  ReturnIf(samples != AudioFileEncoder::cPacketFrames, , "Tried to encode packet with incorrect number of samples");
 
-  encodedData.Resize(FileEncoder::cMaxPacketSize);
+  encodedData.Resize(AudioFileEncoder::cMaxPacketSize);
   unsigned encodedDataSize = opus_encode_float(Encoder, dataBuffer, samples, encodedData.Data(),
-    FileEncoder::cMaxPacketSize);
+    AudioFileEncoder::cMaxPacketSize);
   encodedData.Resize(encodedDataSize);
 }
 

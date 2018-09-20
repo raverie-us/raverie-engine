@@ -48,6 +48,7 @@ public:
 #include "ZilchPluginContent.hpp"
 #include "VectorContent.hpp"
 #include "TextureBuilder.hpp"
+#include "AudioFileEncoder.hpp"
 #include "AudioContent.hpp"
 #include "ImportOptions.hpp"
 #include "ImageContent.hpp"

@@ -60,7 +60,6 @@
     <ClCompile Include="Definitions.cpp" />
     <ClCompile Include="EmitterNode.cpp" />
     <ClCompile Include="FileDecoder.cpp" />
-    <ClCompile Include="FileEncoder.cpp" />
     <ClCompile Include="Filters.cpp" />
     <ClCompile Include="GeneratedAudio.cpp" />
     <ClCompile Include="Interpolator.cpp" />
@@ -100,7 +99,6 @@
     <ClInclude Include="Definitions.hpp" />
     <ClInclude Include="EmitterNode.hpp" />
     <ClInclude Include="FileDecoder.hpp" />
-    <ClInclude Include="FileEncoder.hpp" />
     <ClInclude Include="Filters.hpp" />
     <ClInclude Include="GeneratedAudio.hpp" />
     <ClInclude Include="Interpolator.hpp" />
@@ -128,11 +126,6 @@
     <ClInclude Include="SoundTag.hpp" />
     <ClInclude Include="VBAP.hpp" />
     <ClInclude Include="VolumeModifier.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="$(ZeroLibraries)\AudioEngine\AudioEngine.vcxproj">
-      <Project>{fa3c580e-8e06-466a-8eb1-34bb2efed4fa}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

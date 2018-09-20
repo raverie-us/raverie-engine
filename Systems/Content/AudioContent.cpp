@@ -8,7 +8,7 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "AudioEngine/AudioSystemInterface.h"
+#include "../Sound/SoundStandard.hpp"
 
 namespace Zero
 {
@@ -84,13 +84,12 @@ void SoundBuilder::BuildContent(BuildOptions& options)
   String destFile = FilePath::Combine(options.OutputPath, BuildString(Name, SoundExtension));
 
   // Create the AudioFile object and open the source file
-  Audio::AudioFile audioFile;
-  audioFile.OpenFile(status, sourceFile);
+  AudioFileData audioFile = AudioFileEncoder::OpenFile(status, sourceFile);
 
   if (status.Succeeded())
   {
     // Encode the file and write it out to disk
-    audioFile.WriteEncodedFile(status, destFile, mNormalize, mMaxVolume);
+    AudioFileEncoder::WriteFile(status, destFile, audioFile, mNormalize, mMaxVolume);
 
     if (status.Failed())
       DoNotifyWarning("Error Processing Audio File", status.Message);

@@ -687,7 +687,7 @@ void AudioMixer::DispatchMicrophoneInput()
     // Add the input samples to the end of the buffer
     PreviousInputSamples.Append(inputData.All());
 
-    unsigned totalPacketSamples = FileEncoder::cPacketFrames * channels;
+    unsigned totalPacketSamples = AudioFileEncoder::cPacketFrames * channels;
 
     // While we have at least the number of samples for a packet, encode them
     while (PreviousInputSamples.Size() > totalPacketSamples)
@@ -696,7 +696,7 @@ void AudioMixer::DispatchMicrophoneInput()
 
       // If the system is in mono, just add samples
       if (channels == 1)
-        monoSamples.Append(PreviousInputSamples.SubRange(0, FileEncoder::cPacketFrames));
+        monoSamples.Append(PreviousInputSamples.SubRange(0, AudioFileEncoder::cPacketFrames));
       else
       {
         // Translate samples to mono
@@ -716,7 +716,7 @@ void AudioMixer::DispatchMicrophoneInput()
 
       // Encode the packet
       Zero::Array<byte> dataArray;
-      Encoder.EncodePacket(monoSamples.Data(), FileEncoder::cPacketFrames, dataArray);
+      Encoder.EncodePacket(monoSamples.Data(), AudioFileEncoder::cPacketFrames, dataArray);
 
       // Send the event with the encoded data
       AudioByteDataEvent event;

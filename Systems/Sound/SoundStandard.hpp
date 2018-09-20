@@ -50,7 +50,6 @@ public:
 #include "Resampler.hpp"
 #include "VBAP.hpp"
 #include "PitchChange.hpp"
-#include "FileEncoder.hpp"
 #include "FileDecoder.hpp"
 #include "VolumeModifier.hpp"
 #include "SoundAsset.hpp"

@@ -102,6 +102,12 @@
     <ClInclude Include="FileExtensionManager.hpp">
       <Filter>ContentTypes</Filter>
     </ClInclude>
+    <ClInclude Include="AudioFileEncoder.hpp">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_vorbis.h">
+      <Filter>Support</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ContentSystem.cpp">
@@ -175,6 +181,12 @@
     </ClCompile>
     <ClCompile Include="FileExtensionManager.cpp">
       <Filter>ContentTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioFileEncoder.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="stb_vorbis.cpp">
+      <Filter>Support</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

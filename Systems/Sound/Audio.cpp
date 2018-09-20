@@ -18,11 +18,11 @@
 typedef void WASAPICallbackType(float* outputBuffer, float* inputBuffer, const unsigned frameCount,
   void* userData);
 
-//const CLSID CLSID_MMDeviceEnumerator = __uuidof(MMDeviceEnumerator);
-//const IID IID_IMMDeviceEnumerator = __uuidof(IMMDeviceEnumerator);
-//const IID IID_IAudioClient = __uuidof(IAudioClient);
-//const IID IID_IAudioRenderClient = __uuidof(IAudioRenderClient);
-//const IID IID_IAudioCaptureClient = __uuidof(IAudioCaptureClient);
+const CLSID CLSID_MMDeviceEnumerator = __uuidof(MMDeviceEnumerator);
+const IID IID_IMMDeviceEnumerator = __uuidof(IMMDeviceEnumerator);
+const IID IID_IAudioClient = __uuidof(IAudioClient);
+const IID IID_IAudioRenderClient = __uuidof(IAudioRenderClient);
+const IID IID_IAudioCaptureClient = __uuidof(IAudioCaptureClient);
 
 namespace Zero
 {

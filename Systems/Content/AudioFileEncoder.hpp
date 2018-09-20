@@ -35,13 +35,13 @@ public:
 
 //------------------------------------------------------------------------------------- File Encoder
 
-class FileEncoder
+class AudioFileEncoder
 {
 public:
   // Opens the specified file and reads in the raw data
   static AudioFileData OpenFile(Status& status, StringParam fileName);
   // Encodes the audio file and writes it out to the specified file name
-  static void WriteFile(Status& status, StringParam outputFileName, AudioFileData& fileData, 
+  static void WriteFile(Status& status, StringParam outputFileName, AudioFileData& fileData,
     bool normalize, float maxVolume);
 
   // 20 ms of audio data at 48000 samples per second
@@ -64,7 +64,7 @@ private:
   static unsigned Resample(unsigned fileSampleRate, unsigned channels, unsigned samplesPerChannel,
     float**& buffersPerChannel);
   // Encodes the audio data and writes it out to the file
-  static void EncodeFile(Zero::Status& status, Zero::File& outputFile, AudioFileData& data,
+  static void EncodeFile(Status& status, File& outputFile, AudioFileData& data,
     float** buffersPerChannel);
 };
 

@@ -86,7 +86,7 @@ public:
   // If true, will send microphone input data to external system
   ThreadedInt mSendMicrophoneInputData;
   // List of decoding tasks used if the system is not threaded
-  Array<FileDecoder*> DecodingTasks;
+  Array<AudioFileDecoder*> DecodingTasks;
   // The maximum number of decoding tasks that will be processed on one update
   // (this number is arbitrary and can be changed)
   static const unsigned MaxDecodingTasksToRun = 10;

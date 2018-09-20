@@ -52,7 +52,7 @@
       <AdditionalIncludeDirectories>$(ZeroSource)\External\Nvtt\include;$%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(ZERO_SOURCE)\ZeroLibraries\AudioEngine;$(ZeroSource)\External\Nvtt\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ZERO_SOURCE)\Systems\Sound;$(ZeroSource)\External\Nvtt\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
     </Link>
     <PostBuildEvent>
@@ -104,10 +104,6 @@ copy "$(TargetDir)$(TargetFileName)" "$(ZERO_SOURCE)\Tools\ImageProcessor\$(Conf
     </ProjectReference>
     <ProjectReference Include="..\..\Systems\Engine\Engine.vcxproj">
       <Project>{b45f9232-8734-48ea-ac16-29f41866d676}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\ZeroLibraries\AudioEngine\AudioEngine.vcxproj">
-      <Project>{fa3c580e-8e06-466a-8eb1-34bb2efed4fa}</Project>
-      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
     </ProjectReference>
     <ProjectReference Include="..\..\ZeroLibraries\Common\Common.vcxproj">
       <Project>{3a62ce69-835e-4d16-86c2-5326625a18bc}</Project>

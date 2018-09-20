@@ -84,11 +84,11 @@ public:
 
 typedef void(*FileDecoderCallback)(DecodedPacket*, void* data);
 
-class FileDecoder
+class AudioFileDecoder
 {
 public:
-  FileDecoder(int channels, unsigned samplesPerChannel, FileDecoderCallback callback, void* callbackData);
-  virtual ~FileDecoder();
+  AudioFileDecoder(int channels, unsigned samplesPerChannel, FileDecoderCallback callback, void* callbackData);
+  virtual ~AudioFileDecoder();
 
   // Should only be called when starting the decoding thread 
   virtual void DecodingLoopThreaded() = 0;
@@ -131,7 +131,7 @@ protected:
 
 //----------------------------------------------------------------------------- Decompressed Decoder
 
-class DecompressedDecoder : public FileDecoder
+class DecompressedDecoder : public AudioFileDecoder
 {
 public:
   DecompressedDecoder(Zero::Status& status, const Zero::String& fileName, FileDecoderCallback callback,
@@ -162,7 +162,7 @@ private:
 
 //-------------------------------------------------------------------------------- Streaming Decoder
 
-class StreamingDecoder : public FileDecoder
+class StreamingDecoder : public AudioFileDecoder
 {
 public:
   // The file object must be already open, and will not be closed by this decoder

@@ -105,9 +105,6 @@
     <ClCompile Include="AudioIOInterface.cpp">
       <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="FileEncoder.cpp">
-      <Filter>Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="Recording.cpp">
       <Filter>SoundNodes</Filter>
     </ClCompile>
@@ -168,9 +165,6 @@
       <Filter>Utilities</Filter>
     </ClInclude>
     <ClInclude Include="LockFreeQueue.hpp">
-      <Filter>Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="FileEncoder.hpp">
       <Filter>Utilities</Filter>
     </ClInclude>
     <ClInclude Include="RingBuffer.hpp">
