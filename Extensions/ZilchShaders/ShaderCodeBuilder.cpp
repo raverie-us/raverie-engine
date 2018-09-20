@@ -220,23 +220,4 @@ void ShaderCodeBuilder::WriteLine(StringParam string)
   WriteLine();
 }
 
-//-------------------------------------------------------------------ScopedShaderCodeBuilder
-ScopedShaderCodeBuilder::ScopedShaderCodeBuilder(ZilchShaderTranslatorContext* context)
-{
-  mContext = context;
-  mContext->PushBuilder(this);
-}
-
-ScopedShaderCodeBuilder::~ScopedShaderCodeBuilder()
-{
-  PopFromStack();
-}
-
-void ScopedShaderCodeBuilder::PopFromStack()
-{
-  if(mContext != nullptr)
-    mContext->PopBuilder();
-  mContext = nullptr;
-}
-
 }//namespace Zero

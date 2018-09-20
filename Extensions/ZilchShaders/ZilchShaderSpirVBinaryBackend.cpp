@@ -9,27 +9,6 @@
 namespace Zero
 {
 
-//-------------------------------------------------------------------SpirVBinary
-void SpirVBinary::Add(uint32 word)
-{
-  mData.PushBack(word);
-}
-
-void SpirVBinary::Clear()
-{
-  mData.Clear();
-}
-
-byte* SpirVBinary::Data()
-{
-  return (byte*)mData.Data();
-}
-
-size_t SpirVBinary::Size() const
-{
-  return mData.Size();
-}
-
 //-------------------------------------------------------------------ZilchShaderToSpirVContext
 ZilchShaderToSpirVContext::ZilchShaderToSpirVContext()
 {

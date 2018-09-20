@@ -36,13 +36,5 @@ void LoadFragmentCodeDirectory(SimpleZilchShaderIRGenerator& shaderGenerator, St
 // Simple function to display a diff error in notepad++ (ideally use a better text editor or something later)
 void DisplayError(StringParam filePath, StringParam lineNumber, StringParam errMsg);
 
-void TestCompilation(SimpleZilchShaderGenerator& shaderGenerator, BaseRenderer& renderer, ShaderType* type, StringParam directory, ErrorReporter& reporter);
-void TestShaderFileCompilation(SimpleZilchShaderGenerator& shaderGenerator, BaseRenderer& renderer, StringParam filePath, StringParam directory, ErrorReporter& reporter);
-void TestShaderCompilationOfDirectory(SimpleZilchShaderGenerator& shaderGenerator, BaseRenderer& renderer, StringParam directory, ErrorReporter& reporter);
-void TestCompilationAndLinkingOfCompositesInDirectory(SimpleZilchShaderGenerator& shaderGenerator, BaseRenderer& renderer, StringParam directory, ErrorReporter& reporter);
-void TestRuntime(SimpleZilchShaderGenerator& shaderGenerator, BaseRenderer& renderer, StringParam directory, ErrorReporter& reporter);
-
-FragmentInfo BuildShaderAndDiff(SimpleZilchShaderGenerator& shaderGenerator, ZilchShaderDefinition& shaderDef, BaseRenderer& renderer, FragmentType::Enum fragmentType, StringParam directory, ErrorReporter& reporter);
-
 void FileToStream(File& file, TextStreamBuffer& stream);
 void RunProcess(StringParam applicationPath, StringParam args, String* stdOutResult, String* stdErrResult);

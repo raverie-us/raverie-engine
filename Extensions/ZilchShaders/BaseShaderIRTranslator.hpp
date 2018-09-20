@@ -23,7 +23,7 @@ public:
   virtual bool Translate(Zilch::SyntaxTree& syntaxTree, ZilchShaderIRProject* project, ZilchShaderIRLibrary* library) = 0;
 
   // An intrusive reference count for memory handling
-  ZilchRefLink(BaseShaderTranslator);
+  ZilchRefLink(BaseShaderIRTranslator);
 };
 
 }//namespace Zero

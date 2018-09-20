@@ -12,6 +12,27 @@ namespace Zero
 class ZilchShaderIRLibrary;
 class ShaderIRTypeMeta;
 
+DeclareEnum4(FragmentType, Vertex, Pixel, Geometry, None);
+
+//-------------------------------------------------------------------ShaderFieldKey
+// A typed string for looking up shader fields. This is a specific type to help avoid ambiguities on
+// HashMap<String, ShaderField*> where it's hard to know what the string's value is. This type implies
+// that the hashmap is not based upon the field's name, but rather it's key (name:string).
+struct ShaderFieldKey
+{
+  ShaderFieldKey() {};
+  //ShaderFieldKey(ShaderField* shaderField);
+  ShaderFieldKey(StringParam fieldName, StringParam fieldType);
+
+  void Set(StringParam fieldName, StringParam fieldType);
+
+  size_t Hash() const;
+  bool operator==(const ShaderFieldKey& other) const;
+  operator String() const;
+
+  String mKey;
+};
+
 //-------------------------------------------------------------------ShaderIRMeta
 /// Base meta type of all shader meta objects. Currently only contains attributes.
 class ShaderIRMeta

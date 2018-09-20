@@ -75,21 +75,4 @@ public:
   const char* SingleIndentation;
 };
 
-//-------------------------------------------------------------------ScopedShaderCodeBuilder
-
-// A code builder for a scope. This replaces the builder on the translator's context during this builder's life-time.
-// This makes it easier to gather information from a sub-portion of the tree and then store for later use, such as
-// collecting the initialization of a member variable. To manually pop the builder off the context's stack
-// (so future operations don't write to this builder) just call PopFromStatck().
-class ScopedShaderCodeBuilder : public ShaderCodeBuilder
-{
-public:
-  ScopedShaderCodeBuilder(ZilchShaderTranslatorContext* context);
-  ~ScopedShaderCodeBuilder();
-
-  void PopFromStack();
-
-  ZilchShaderTranslatorContext* mContext;
-};
-
 }//namespace Zero

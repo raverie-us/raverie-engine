@@ -6,6 +6,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
+#include "ShaderErrors.hpp"
+
 namespace Zilch
 {
 
@@ -136,3 +138,18 @@ ZilchDefineStaticLibrary(ShaderIntrinsicsLibrary)
 }
 
 }//namespace Zilch
+
+namespace Zero
+{
+
+//-------------------------------------------------------------------ShaderSettingsLibrary
+ZilchDefineStaticLibrary(ShaderSettingsLibrary)
+{
+  builder.CreatableInScriptDefault = false;
+
+  ZilchInitializeType(TranslationErrorEvent);
+  ZilchInitializeType(ValidationErrorEvent);
+  ZilchInitializeType(SpecializationConstantEvent);
+}
+
+}//namespace Zero

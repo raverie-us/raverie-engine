@@ -30,6 +30,23 @@ DeclareBitFieldBitwiseOperators(ShaderStage::Enum);
 ShaderStage::Enum FragmentTypeToShaderStage(FragmentType::Enum fragmentType);
 
 //-------------------------------------------------------------------SpirVNameSettings
+/// Extra data to store for our allowed attributes.
+/// Currently only used to hide attributes from code completion.
+struct AttributeInfo
+{
+  AttributeInfo()
+  {
+    mHidden = false;
+  }
+  AttributeInfo(bool hidden)
+  {
+    mHidden = hidden;
+  }
+
+  bool mHidden;
+};
+
+//-------------------------------------------------------------------SpirVNameSettings
 class SpirVNameSettings
 {
 public:
