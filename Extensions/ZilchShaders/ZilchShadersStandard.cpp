@@ -83,7 +83,6 @@ ZilchDefineStaticLibrary(ShaderIntrinsicsLibrary)
   ZilchInitializeType(GeometryStreamUserData);
   ZilchInitializeType(GeometryFragmentUserData);
 
-  ZilchInitializeType(Shader);
   // @Nate: These have to be uncommented for new shaders
   ZilchInitializeType(ShaderIntrinsics);
   ZilchInitializeType(Sampler);

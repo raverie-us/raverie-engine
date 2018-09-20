@@ -283,12 +283,6 @@ void SetupGenericLibraryTranslation(ZilchShaderTranslator* translator)
   LibraryTranslator& libraryTranslator = translator->mLibraryTranslator;
 
   Zilch::Library* shaderLibrary = Zilch::ShaderIntrinsicsLibrary::GetInstance().GetLibrary();
-  Zilch::BoundType* shaderType = ZilchTypeId(Zilch::Shader);
-  libraryTranslator.RegisterFunctionCallResolver(GetStaticFunction(shaderType, "AddInlineShaderCode", "String", "String"), ResolveShaderAddInlineShaderCode);
-  libraryTranslator.RegisterFunctionCallResolver(GetStaticFunction(shaderType, "AddInlineShaderCode", "String", "Integer", "Integer", "String"), ResolveShaderAddInlineShaderCodeWithVersionNumbers);
-  libraryTranslator.RegisterFunctionCallResolver(GetStaticFunction(shaderType, "IsLanguage", "String"), ResolveShaderIsLanguage);
-  libraryTranslator.RegisterFunctionCallResolver(GetStaticFunction(shaderType, "IsLanguage", "String", "Integer", "Integer"), ResolveShaderIsLanguageWithVersionNumbers);
-  
 
   // Register the Dot product for all basic types
   libraryTranslator.RegisterMemberAccessResolver(GetStaticFunction(core.MathType, "Cross", "Real3", "Real3"), "cross");

@@ -869,7 +869,6 @@ void SetupGlsl_1_3(ZilchShaderTranslator* translator)
 
   // Stuff for shader values (samplers, etc...)
   Zilch::Library* shaderLibrary = Zilch::ShaderIntrinsicsLibrary::GetInstance().GetLibrary();
-  Zilch::BoundType* shaderType = ZilchTypeId(Zilch::Shader);
 }
 
 }//namespace Zero
