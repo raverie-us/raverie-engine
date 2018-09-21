@@ -47,9 +47,10 @@ if not platform:
   platform = "Win32"
 
 # Build up the full build version string (for example: "1.4.0.847.5411767e62d3-Win32").
-versionString = major + "." + minor + "." + patch + "." + revision + "." + shortChangeSet + "-" + platform
+versionStringPlatformIndependent = major + "." + minor + "." + patch + "." + revision + "." + shortChangeSet
+versionString = versionStringPlatformIndependent + "-" + platform
 
-outputZerobuild = "ZeroEngineSetup." + versionString + ".zerobuild"
+outputZerobuild = os.path.join(os.getcwd(), "Develop." + versionString + ".zerobuild")
 print "Outputting " + outputZerobuild
 zip = zipfile.ZipFile(outputZerobuild, "w", zipfile.ZIP_DEFLATED)
 zip_directory(zip, "../Resources", "Resources")
@@ -59,8 +60,11 @@ zip_directory(zip, "../Data", "Data")
 zeroEditorBuildOutput = os.environ.get("ZeroEditorBuildOutput")
 if not zeroEditorBuildOutput:
   print "Environment variable 'ZeroEditorBuildOutput' not detected."
-  zeroEditorBuildOutput = "../BuildOutput/Out/Windows_VS_2017/Debug/ZeroEditor/"
+  zeroEditorBuildOutput = "../BuildOutput/Out/Windows_VS_2015/Release/ZeroEditor/"
 
 zip_directory(zip, zeroEditorBuildOutput, "", artifact_filter)
+
+# Output the build id so we can use it on a build server.
+os.environ["ZeroBuildId"] = versionString
 
 print "Completed " + outputZerobuild
