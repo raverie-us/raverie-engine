@@ -479,17 +479,11 @@ ZilchDefineType(MicrophoneInputNode, builder, type)
 //**************************************************************************************************
 MicrophoneInputNode::MicrophoneInputNode(StringParam name, unsigned ID) :
   SoundNode(name, ID, false, true),
-  mActive(true),
+  mActive(false),
   mVolume(1.0f),
   mStopping(cFalse)
 {
-  if (!Z::gSound->Mixer.StartInput())
-  {
-    mActive.SetDirectly(false);
-    DoNotifyWarning("No Microphone Available", "No microphone input is available for the MicrophoneInputNode");
-  }
-  else
-    VolumeInterpolatorThreaded.SetValues(0.0f, 1.0f, cPropertyChangeFrames);
+
 }
 
 //**************************************************************************************************
