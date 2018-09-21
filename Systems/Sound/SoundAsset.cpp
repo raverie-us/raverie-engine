@@ -138,7 +138,7 @@ void DecompressedSoundAsset::DecodingCallback(DecodedPacket* packet)
   memcpy(mSamples.Data() + mSamplesAvailableShared, packet->mSamples.Data(),
     sizeof(float) * samplesCopied);
   // Change the samples available value
-  AtomicExchange(&mSamplesAvailableShared, mSamplesAvailableShared + samplesCopied);
+  AtomicExchange((s32*)&mSamplesAvailableShared, (s32)(mSamplesAvailableShared + samplesCopied));
 }
 
 //---------------------------------------------------------------------- Streaming Data Per Instance

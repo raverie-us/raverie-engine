@@ -44,7 +44,7 @@ bool AudioIOInterface::Initialize(bool initOutput, bool initInput)
   bool returnValue = true;
 
   // Initialize output stream
-  if (initOutput)
+  if (initOutput && StreamInfoList[StreamTypes::Output].mStatus != StreamStatus::Initialized)
   {
     StreamInfo& outputInfo = StreamInfoList[StreamTypes::Output];
     outputInfo.mStatus = AudioIO.InitializeStream(StreamTypes::Output, &outputInfo.mErrorMessage);
@@ -60,7 +60,7 @@ bool AudioIOInterface::Initialize(bool initOutput, bool initInput)
   }
 
   // Initialize input stream
-  if (initInput)
+  if (initInput && StreamInfoList[StreamTypes::Input].mStatus != StreamStatus::Initialized)
   {
     StreamInfo& inputInfo = StreamInfoList[StreamTypes::Input];
     inputInfo.mStatus = AudioIO.InitializeStream(StreamTypes::Input, &inputInfo.mErrorMessage);

@@ -114,7 +114,7 @@ void AudioMixer::StartMixing(Status& status)
 
   ZPrint("Audio mix thread initialized\n");
 
-  // Start audio streams
+  // Start audio output stream
   AudioIO.StartStreams(true, false);
 
   ZPrint("Audio initialization completed\n");
@@ -221,7 +221,10 @@ bool AudioMixer::StartInput()
   if (AudioIO.GetStreamStatus(StreamTypes::Input) == StreamStatus::Started)
     return true;
 
-  return AudioIO.Initialize(false, true);
+  if (!AudioIO.Initialize(false, true))
+    return false;
+
+  return AudioIO.StartStreams(false, true);
 }
 
 //**************************************************************************************************
