@@ -870,7 +870,7 @@ namespace Zilch
     DelegateType* setDelegateType = builder.GetDelegateType(setParameters, core.VoidType);
     DelegateType* getDelegateType = builder.GetDelegateType(ParameterArray(), innerType);
 
-    BoundType* type = builder.AddBoundType(fullyQualifiedName, TypeCopyMode::ReferenceType, sizeof(PropertyDelegateTemplate));
+    BoundType* type = builder.AddBoundType(baseName, fullyQualifiedName, TypeCopyMode::ReferenceType, sizeof(PropertyDelegateTemplate));
     builder.AddBoundField(type, "Set", setDelegateType, offsetof(PropertyDelegateTemplate, Set), MemberOptions::None);
     builder.AddBoundField(type, "Get", getDelegateType, offsetof(PropertyDelegateTemplate, Get), MemberOptions::None);
     builder.AddBoundField(type, "Property", ZilchTypeId(Property), offsetof(PropertyDelegateTemplate, ReferencedProperty), MemberOptions::None);
@@ -888,21 +888,22 @@ namespace Zilch
     // Get this string object
     String& self = call.Get<String&>(Call::This);
 
-    RuneIterator start = call.Get<RuneIterator>(0);
-    RuneIterator end = call.Get<RuneIterator>(1);
-
+    RuneIterator* start = call.GetNonNull<RuneIterator*>(0);
+    RuneIterator* end = call.GetNonNull<RuneIterator*>(1);
+    if(report.HasThrownExceptions())
+      return;
 
     // All validations present contains the zilch throw exception so just return
-    if(RuneIterator::ValidateIteratorPair(start, end) == false)
+    if(RuneIterator::ValidateIteratorPair(*start, *end) == false)
       return;
-    if(StringRangeExtended::ValidateRange(self, start.mRange) == false)
+    if(StringRangeExtended::ValidateRange(self, start->mRange) == false)
       return;
-    if(StringRangeExtended::ValidateRange(self, end.mRange) == false)
+    if(StringRangeExtended::ValidateRange(self, end->mRange) == false)
       return;
-    if(RuneIterator::ValidateIteratorOrder(start,end) == false)
+    if(RuneIterator::ValidateIteratorOrder(*start, *end) == false)
       return;
 
-    String result(start.mRange.Begin(), end.mRange.Begin());
+    String result(start->mRange.Begin(), end->mRange.Begin());
 
     call.Set(Call::Return, &result);
   }
@@ -1058,14 +1059,10 @@ namespace Zilch
   //***************************************************************************
   void StringConcatenate(Call& call, ExceptionReport& report)
   {
-    String* first = call.Get<String*>(0);
-    String* second = call.Get<String*>(1);
-
-    if (first == nullptr || second == nullptr)
-    {
-      call.GetState()->ThrowNullReferenceException(report);
+    String* first = call.GetNonNull<String*>(0);
+    String* second = call.GetNonNull<String*>(1);
+    if(report.HasThrownExceptions())
       return;
-    }
 
     String result = BuildString(*first, *second);
     call.Set(Call::Return, &result);
@@ -1074,14 +1071,11 @@ namespace Zilch
   //***************************************************************************
   void StringRangeConcatenate(Call& call, ExceptionReport& report)
   {
-    StringRangeExtended* first = call.Get<StringRangeExtended*>(0);
-    StringRangeExtended* second = call.Get<StringRangeExtended*>(1);
+    StringRangeExtended* first = call.GetNonNull<StringRangeExtended*>(0);
+    StringRangeExtended* second = call.GetNonNull<StringRangeExtended*>(1);
 
-    if (first == nullptr || second == nullptr)
-    {
-      call.GetState()->ThrowNullReferenceException(report);
+    if(report.HasThrownExceptions())
       return;
-    }
 
     String result = BuildString(first->mRange, second->mRange);
     call.Set(Call::Return, &result);
@@ -1108,7 +1102,10 @@ namespace Zilch
   void StringContains(Call& call, ExceptionReport& report)
   {
     String& self = call.Get<String&>(Call::This);
-    StringRangeExtended* first = call.Get<StringRangeExtended*>(0);
+    StringRangeExtended* first = call.GetNonNull<StringRangeExtended*>(0);
+
+    if(report.HasThrownExceptions())
+      return;
 
     bool result = self.Contains(first->mRange);
     call.Set(Call::Return, result);
@@ -1117,8 +1114,11 @@ namespace Zilch
   //***************************************************************************
   void StringCompare(Call& call, ExceptionReport& report)
   {
-    String* first = call.Get<String*>(0);
-    String* second = call.Get<String*>(1);
+    String* first = call.GetNonNull<String*>(0);
+    String* second = call.GetNonNull<String*>(1);
+
+    if(report.HasThrownExceptions())
+      return;
 
     int result = first->CompareTo(*second);
     call.Set(Call::Return, result);
@@ -1127,8 +1127,11 @@ namespace Zilch
   //***************************************************************************
   void StringRangeCompare(Call& call, ExceptionReport& report)
   {
-    StringRangeExtended* first = call.Get<StringRangeExtended*>(0);
-    StringRangeExtended* second = call.Get<StringRangeExtended*>(1);
+    StringRangeExtended* first = call.GetNonNull<StringRangeExtended*>(0);
+    StringRangeExtended* second = call.GetNonNull<StringRangeExtended*>(1);
+
+    if(report.HasThrownExceptions())
+      return;
 
     int result = first->mRange.CompareTo(second->mRange);
     call.Set(Call::Return, result);
@@ -1138,7 +1141,10 @@ namespace Zilch
   void StringCompareTo(Call& call, ExceptionReport& report)
   {
     String& self = call.Get<String&>(Call::This);
-    StringRangeExtended* first = call.Get<StringRangeExtended*>(0);
+    StringRangeExtended* first = call.GetNonNull<StringRangeExtended*>(0);
+
+    if(report.HasThrownExceptions())
+      return;
 
     int result = self.CompareTo(first->mRange);
     call.Set(Call::Return, result);
@@ -1148,7 +1154,10 @@ namespace Zilch
   void StringStartsWith(Call& call, ExceptionReport& report)
   {
     String& self = call.Get<String&>(Call::This);
-    StringRangeExtended* first = call.Get<StringRangeExtended*>(0);
+    StringRangeExtended* first = call.GetNonNull<StringRangeExtended*>(0);
+
+    if(report.HasThrownExceptions())
+      return;
 
     bool result = self.StartsWith(first->mRange);
     call.Set(Call::Return, result);
@@ -1158,7 +1167,10 @@ namespace Zilch
   void StringEndsWith(Call& call, ExceptionReport& report)
   {
     String& self = call.Get<String&>(Call::This);
-    StringRangeExtended* first = call.Get<StringRangeExtended*>(0);
+    StringRangeExtended* first = call.GetNonNull<StringRangeExtended*>(0);
+
+    if(report.HasThrownExceptions())
+      return;
 
     bool result = self.EndsWith(first->mRange);
     call.Set(Call::Return, result);
@@ -1210,8 +1222,11 @@ namespace Zilch
   void StringReplace(Call& call, ExceptionReport& report)
   {
     String& self = call.Get<String&>(Call::This);
-    StringRangeExtended* first = call.Get<StringRangeExtended*>(0);
-    StringRangeExtended* second = call.Get<StringRangeExtended*>(1);
+    StringRangeExtended* first = call.GetNonNull<StringRangeExtended*>(0);
+    StringRangeExtended* second = call.GetNonNull<StringRangeExtended*>(1);
+
+    if(report.HasThrownExceptions())
+      return;
 
     String result = self.Replace(first->mRange, second->mRange);
     call.Set(Call::Return, &result);
@@ -1221,8 +1236,11 @@ namespace Zilch
   void StringFindRangeInclusive(Call& call, ExceptionReport& report)
   {
     String& self = call.Get<String&>(Call::This);
-    StringRangeExtended* first = call.Get<StringRangeExtended*>(0);
-    StringRangeExtended* second = call.Get<StringRangeExtended*>(1);
+    StringRangeExtended* first = call.GetNonNull<StringRangeExtended*>(0);
+    StringRangeExtended* second = call.GetNonNull<StringRangeExtended*>(1);
+
+    if(report.HasThrownExceptions())
+      return;
 
     StringRange result = self.FindRangeInclusive(first->mRange, second->mRange);
     StringRangeExtended::SetResultStringRange(call, report, self, result);
@@ -1232,8 +1250,11 @@ namespace Zilch
   void StringFindRangeExclusive(Call& call, ExceptionReport& report)
   {
     String& self = call.Get<String&>(Call::This);
-    StringRangeExtended* first = call.Get<StringRangeExtended*>(0);
-    StringRangeExtended* second = call.Get<StringRangeExtended*>(1);
+    StringRangeExtended* first = call.GetNonNull<StringRangeExtended*>(0);
+    StringRangeExtended* second = call.GetNonNull<StringRangeExtended*>(1);
+
+    if(report.HasThrownExceptions())
+      return;
 
     StringRange result = self.FindRangeExclusive(first->mRange, second->mRange);
     StringRangeExtended::SetResultStringRange(call, report, self, result);
@@ -1243,7 +1264,10 @@ namespace Zilch
   void StringFindFirstOf(Call& call, ExceptionReport& report)
   {
     String& self = call.Get<String&>(Call::This);
-    StringRangeExtended* first = call.Get<StringRangeExtended*>(0);
+    StringRangeExtended* first = call.GetNonNull<StringRangeExtended*>(0);
+
+    if(report.HasThrownExceptions())
+      return;
 
     StringRange result = self.FindFirstOf(first->mRange);
     StringRangeExtended::SetResultStringRange(call, report, self, result);
@@ -1253,7 +1277,10 @@ namespace Zilch
   void StringFindLastOf(Call& call, ExceptionReport& report)
   {
     String& self = call.Get<String&>(Call::This);
-    StringRangeExtended* first = call.Get<StringRangeExtended*>(0);
+    StringRangeExtended* first = call.GetNonNull<StringRangeExtended*>(0);
+
+    if(report.HasThrownExceptions())
+      return;
 
     StringRange result = self.FindLastOf(first->mRange);
     StringRangeExtended::SetResultStringRange(call, report, self, result);
@@ -1262,14 +1289,12 @@ namespace Zilch
   //***************************************************************************
   void JoinTwoStrings(Call& call, ExceptionReport& report)
   {
-    StringRangeExtended* separator = call.Get<StringRangeExtended*>(0);
-    StringRangeExtended* first = call.Get<StringRangeExtended*>(1);
-    StringRangeExtended* second = call.Get<StringRangeExtended*>(2);
-    if(separator == NULL || first == NULL || second == NULL)
-    {
-      call.GetState()->ThrowNullReferenceException(report);
+    StringRangeExtended* separator = call.GetNonNull<StringRangeExtended*>(0);
+    StringRangeExtended* first = call.GetNonNull<StringRangeExtended*>(1);
+    StringRangeExtended* second = call.GetNonNull<StringRangeExtended*>(2);
+    
+    if(report.HasThrownExceptions())
       return;
-    }
 
     String result = Zero::String::Join(separator->mRange, first->mRange, second->mRange);
     call.Set(Call::Return, &result);
@@ -1278,15 +1303,13 @@ namespace Zilch
   //***************************************************************************
   void JoinThreeStrings(Call& call, ExceptionReport& report)
   {
-    StringRangeExtended* separator = call.Get<StringRangeExtended*>(0);
-    StringRangeExtended* first = call.Get<StringRangeExtended*>(1);
-    StringRangeExtended* second = call.Get<StringRangeExtended*>(2);
-    StringRangeExtended* third = call.Get<StringRangeExtended*>(3);
-    if(separator == nullptr || first == nullptr || second == nullptr || third == nullptr)
-    {
-      call.GetState()->ThrowNullReferenceException(report);
+    StringRangeExtended* separator = call.GetNonNull<StringRangeExtended*>(0);
+    StringRangeExtended* first = call.GetNonNull<StringRangeExtended*>(1);
+    StringRangeExtended* second = call.GetNonNull<StringRangeExtended*>(2);
+    StringRangeExtended* third = call.GetNonNull<StringRangeExtended*>(3);
+    
+    if(report.HasThrownExceptions())
       return;
-    }
 
     String result = Zero::String::Join(separator->mRange, first->mRange, second->mRange, third->mRange);
     call.Set(Call::Return, &result);
@@ -1295,16 +1318,14 @@ namespace Zilch
   //***************************************************************************
   void JoinFourStrings(Call& call, ExceptionReport& report)
   {
-    StringRangeExtended* separator = call.Get<StringRangeExtended*>(0);
-    StringRangeExtended* first = call.Get<StringRangeExtended*>(1);
-    StringRangeExtended* second = call.Get<StringRangeExtended*>(2);
-    StringRangeExtended* third = call.Get<StringRangeExtended*>(3);
-    StringRangeExtended* fourth = call.Get<StringRangeExtended*>(4);
-    if(separator == nullptr || first == nullptr || second == nullptr || third == nullptr || fourth == nullptr)
-    {
-      call.GetState()->ThrowNullReferenceException(report);
+    StringRangeExtended* separator = call.GetNonNull<StringRangeExtended*>(0);
+    StringRangeExtended* first = call.GetNonNull<StringRangeExtended*>(1);
+    StringRangeExtended* second = call.GetNonNull<StringRangeExtended*>(2);
+    StringRangeExtended* third = call.GetNonNull<StringRangeExtended*>(3);
+    StringRangeExtended* fourth = call.GetNonNull<StringRangeExtended*>(4);
+    
+    if(report.HasThrownExceptions())
       return;
-    }
 
     String result = Zero::String::Join(separator->mRange, first->mRange, second->mRange, third->mRange, fourth->mRange);
     call.Set(Call::Return, &result);
@@ -1314,7 +1335,10 @@ namespace Zilch
   void StringSplit(Call& call, ExceptionReport& report)
   {
     String& self = call.Get<String&>(Call::This);
-    StringRangeExtended* separatorStr = call.Get<StringRangeExtended*>(0);
+    StringRangeExtended* separatorStr = call.GetNonNull<StringRangeExtended*>(0);
+
+    if(report.HasThrownExceptions())
+      return;
 
     //if(ValidateRange(self->mOriginalStringReference, self->mRange) == false)
     //  return;
@@ -1583,7 +1607,10 @@ namespace Zilch
     size_t argumentCount = (size_t)call.GetFunction()->UserData;
 
     // The format string (as used with sprintf)
-    StringParam format = call.Get<StringParam>(0);
+    String* format = call.GetNonNull<String*>(0);
+
+    if(report.HasThrownExceptions())
+      return;
 
     // Create a stack array to hold all the arguments we read off the Zilch stack
     // The 'Any' type can hold any value from Zilch, including primitives and classes
@@ -1611,8 +1638,8 @@ namespace Zilch
     Array<char> temporaryBuffer;
 
     // Loop through all characters in the format string
-    StringIterator it = format.Begin();
-    StringIterator end = format.End();
+    StringIterator it = format->Begin();
+    StringIterator end = format->End();
     for (; it < end; ++it)
     {
       // Grab the current character

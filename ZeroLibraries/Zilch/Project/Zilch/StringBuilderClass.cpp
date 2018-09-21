@@ -711,7 +711,10 @@ namespace Zilch
   void StringRangeExtended::FindFirstOf(Call& call, ExceptionReport& report)
   {
     StringRangeExtended* self = (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
-    StringRangeExtended* searchRange = call.Get<StringRangeExtended*>(0);
+    StringRangeExtended* searchRange = call.GetNonNull<StringRangeExtended*>(0);
+
+    if(report.HasThrownExceptions())
+      return;
 
     if(ValidateRange(self->mOriginalStringReference, self->mRange) == false)
       return;
@@ -724,7 +727,10 @@ namespace Zilch
   void StringRangeExtended::FindLastOf(Call& call, ExceptionReport& report)
   {
     StringRangeExtended* self = (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
-    StringRangeExtended* searchRange = call.Get<StringRangeExtended*>(0);
+    StringRangeExtended* searchRange = call.GetNonNull<StringRangeExtended*>(0);
+
+    if(report.HasThrownExceptions())
+      return;
 
     if(ValidateRange(self->mOriginalStringReference, self->mRange) == false)
       return;
@@ -737,8 +743,11 @@ namespace Zilch
   void StringRangeExtended::FindRangeExclusive(Call& call, ExceptionReport& report)
   {
     StringRangeExtended* self = (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
-    StringRangeExtended* beginRange = call.Get<StringRangeExtended*>(0);
-    StringRangeExtended* endRange = call.Get<StringRangeExtended*>(1);
+    StringRangeExtended* beginRange = call.GetNonNull<StringRangeExtended*>(0);
+    StringRangeExtended* endRange = call.GetNonNull<StringRangeExtended*>(1);
+
+    if(report.HasThrownExceptions())
+      return;
 
     if(ValidateRange(self->mOriginalStringReference, self->mRange) == false)
       return;
@@ -751,8 +760,11 @@ namespace Zilch
   void StringRangeExtended::FindRangeInclusive(Call& call, ExceptionReport& report)
   {
     StringRangeExtended* self = (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
-    StringRangeExtended* beginRange = call.Get<StringRangeExtended*>(0);
-    StringRangeExtended* endRange = call.Get<StringRangeExtended*>(1);
+    StringRangeExtended* beginRange = call.GetNonNull<StringRangeExtended*>(0);
+    StringRangeExtended* endRange = call.GetNonNull<StringRangeExtended*>(1);
+
+    if(report.HasThrownExceptions())
+      return;
 
     if(ValidateRange(self->mOriginalStringReference, self->mRange) == false)
       return;
@@ -825,7 +837,10 @@ namespace Zilch
   void StringRangeExtended::Split(Call& call, ExceptionReport& report)
   {
     StringRangeExtended* self = (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
-    StringRangeExtended* separatorStr = call.Get<StringRangeExtended*>(0);
+    StringRangeExtended* separatorStr = call.GetNonNull<StringRangeExtended*>(0);
+
+    if(report.HasThrownExceptions())
+      return;
 
     if(ValidateRange(self->mOriginalStringReference, self->mRange) == false)
       return;
@@ -843,8 +858,11 @@ namespace Zilch
   void StringRangeExtended::SubString(Call& call, ExceptionReport& report)
   {
     StringRangeExtended* self = (StringRangeExtended*)call.GetHandle(Call::This).Dereference();
-    RuneIterator& beginIterator = *call.Get<RuneIterator*>(0);
-    RuneIterator& endIterator = *call.Get<RuneIterator*>(1);
+    RuneIterator& beginIterator = *call.GetNonNull<RuneIterator*>(0);
+    RuneIterator& endIterator = *call.GetNonNull<RuneIterator*>(1);
+
+    if(report.HasThrownExceptions())
+      return;
     
     String& originalString = self->mOriginalStringReference;
     // All validations present contains the zilch throw exception so just return

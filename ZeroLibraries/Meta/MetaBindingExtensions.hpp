@@ -55,6 +55,8 @@ namespace PropertyAttributes
 
 /// Implies both [Display] and [Serialize].
 extern const String cProperty;
+/// Used to hide members from auto-complete.
+extern const String cInternal;
 /// When this property is modified in the property grid, the property grid
 /// will do a full rebuild allowing for custom property filters to be run
 extern const String cInvalidatesObject;
@@ -105,6 +107,8 @@ namespace FunctionAttributes
 
 /// The function shows up in the property grid.
 extern const String cProperty;
+/// Used to hide the function from auto-complete.
+extern const String cInternal;
 /// The function shows up in the property grid.
 extern const String cDisplay;
 /// When this function is called from the property grid, the property grid will do a full rebuild

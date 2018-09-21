@@ -38,13 +38,6 @@ SoundListener::~SoundListener()
 {
   // Remove from space
   mSpace->mListeners.Erase(this);
-  // Remove from audio engine
-  if (mSoundNode && mSoundNode->mNode)
-  {
-    mSoundNode->mNode->DisconnectInputs();
-    mSoundNode->mNode->DeleteThisNode();
-    mSoundNode->mNode = nullptr;
-  }
 }
 
 //**************************************************************************************************
@@ -61,33 +54,28 @@ void SoundListener::Initialize(CogInitializer& initializer)
   Mat4 matrix = mTransform->GetWorldMatrix();
   mPrevForward = Math::ToVector3(matrix.BasisZ());
 
-  // Add a new listener to audio engine 
-  SoundNode* newNode = new SoundNode();
-  mSoundNode = newNode;
+  // Add a new listener node
   String name;
   if (!mSpace->GetOwner()->IsEditorMode())
     name = "Listener";
   else
     name = "EditorListener";
 
-  mSoundNode->mNode = new Audio::ListenerNode(name, Z::gSound->mCounter++,
-    Audio::ListenerWorldPositionInfo(mPrevPosition, Math::Vec3::cZero, Math::ToMatrix3(matrix)), newNode);
-
-  newNode->mCanRemove = false;
-  newNode->mCanReplace = false;
+  mListenerNode = new ListenerNode(name, Z::gSound->mCounter++,
+    ListenerWorldPositionInfo(mPrevPosition, Math::Vec3(0, 0, 0), Math::ToMatrix3(matrix)));
 
   // If not currently active, tell the audio engine
   if (!mActive)
-    ((Audio::ListenerNode*)newNode->mNode)->SetActive(false);
+    mListenerNode->SetActive(false);
   // Set the attenuation scale
-  ((Audio::ListenerNode*)newNode->mNode)->SetAttenuationScale(mAttenuationScale);
+  mListenerNode->SetAttenuationScale(mAttenuationScale);
 
   // Add to all existing SoundEmitters
   forRange(SoundEmitter& emitter, mSpace->mEmitters.All())
-    newNode->AddInputNode(emitter.GetOutputNode());
+    mListenerNode->AddInputNode(emitter.GetOutputNode());
 
   // Add to the SoundSpace's output
-  mSpace->GetInputNode()->AddInputNode(newNode);
+  mSpace->GetInputNode()->AddInputNode(mListenerNode);
 
 }
 
@@ -123,7 +111,7 @@ bool SoundListener::GetActive()
 //**************************************************************************************************
 void SoundListener::SetActive(bool newActive)
 {
-  ((Audio::ListenerNode*)mSoundNode->mNode)->SetActive(newActive);
+  mListenerNode->SetActive(newActive);
 
   mActive = newActive;
 }
@@ -131,7 +119,7 @@ void SoundListener::SetActive(bool newActive)
 //**************************************************************************************************
 HandleOf<SoundNode> SoundListener::GetSoundNode()
 {
-  return mSoundNode;
+  return mListenerNode;
 }
 
 //**************************************************************************************************
@@ -144,7 +132,7 @@ float SoundListener::GetAttenuationScale()
 void SoundListener::SetAttenuationScale(float scale)
 {
   mAttenuationScale = scale;
-  ((Audio::ListenerNode*)mSoundNode->mNode)->SetAttenuationScale(Math::Max(scale, 0.0f));
+  mListenerNode->SetAttenuationScale(scale);
 }
 
 //**************************************************************************************************
@@ -165,8 +153,7 @@ void SoundListener::Update(float invDt)
       mPrevPosition = position;
       mPrevForward = basisZ;
 
-      ((Audio::ListenerNode*)mSoundNode->mNode)->SetPositionData(Audio::ListenerWorldPositionInfo
-        (position, velocity, Math::ToMatrix3(matrix)));
+      mListenerNode->SetPositionData(ListenerWorldPositionInfo(position, velocity, Math::ToMatrix3(matrix)));
     }
   }
 }

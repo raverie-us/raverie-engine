@@ -185,20 +185,28 @@ ZilchFragmentManager::~ZilchFragmentManager()
 }
 
 //**************************************************************************************************
-void ZilchFragmentManager::ValidateName(Status& status, StringParam name)
+void ZilchFragmentManager::ValidateNewName(Status& status, StringParam name, BoundType* optionalType)
 {
-  ZilchDocumentResource::ValidateScriptName(status, name);
-  if(status.Failed())
-    return;
-
   // Check all shader types
   GraphicsEngine* graphicsEngine = Z::gEngine->has(GraphicsEngine);
   ZilchShaderLibrary* lastFragmentLibrary = graphicsEngine->mShaderGenerator->GetCurrentInternalProjectLibrary();
-  ShaderType* shaderType = lastFragmentLibrary->FindType(name, true);
-  if(shaderType != nullptr)
+  if (lastFragmentLibrary)
   {
-    status.SetFailed(String::Format("Type '%s' is already a fragment type", name.c_str()));
+    ShaderType* shaderType = lastFragmentLibrary->FindType(name, true);
+    if (shaderType != nullptr)
+    {
+      status.SetFailed(String::Format("Type '%s' is already a fragment type", name.c_str()));
+      return;
+    }
   }
+
+  ZilchDocumentResource::ValidateNewScriptName(status, name);
+}
+
+//**************************************************************************************************
+void ZilchFragmentManager::ValidateRawName(Status& status, StringParam name, BoundType* optionalType)
+{
+  ZilchDocumentResource::ValidateRawScriptName(status, name);
 }
 
 //**************************************************************************************************

@@ -10,6 +10,8 @@ target_sources(Content
     ${CMAKE_CURRENT_LIST_DIR}/ArchetypeProcessor.hpp
     ${CMAKE_CURRENT_LIST_DIR}/AudioContent.cpp
     ${CMAKE_CURRENT_LIST_DIR}/AudioContent.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/AudioFileEncoder.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/AudioFileEncoder.hpp
     ${CMAKE_CURRENT_LIST_DIR}/BaseBuilders.cpp
     ${CMAKE_CURRENT_LIST_DIR}/BaseBuilders.hpp
     ${CMAKE_CURRENT_LIST_DIR}/BinaryContent.cpp
@@ -62,6 +64,8 @@ target_sources(Content
     ${CMAKE_CURRENT_LIST_DIR}/SkeletonProcessor.hpp
     ${CMAKE_CURRENT_LIST_DIR}/SpriteBuilder.cpp
     ${CMAKE_CURRENT_LIST_DIR}/SpriteBuilder.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/stb_vorbis.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/stb_vorbis.h
     ${CMAKE_CURRENT_LIST_DIR}/SupportComponents.cpp
     ${CMAKE_CURRENT_LIST_DIR}/SupportComponents.hpp
     ${CMAKE_CURRENT_LIST_DIR}/TagsContent.cpp

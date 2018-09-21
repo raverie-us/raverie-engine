@@ -26,6 +26,7 @@ namespace Zilch
   ZeroShared extern const String HiddenAttribute;
   ZeroShared extern const String ExtensionAttribute;
   ZeroShared extern const String PropertyAttribute;
+  ZeroShared extern const String InternalAttribute;
   ZeroShared extern const String DeprecatedAttribute;
   ZeroShared extern const String ExportDocumentation;
   ZeroShared extern const String ImportDocumentation;

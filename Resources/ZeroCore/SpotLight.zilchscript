@@ -29,7 +29,7 @@ class SpotLight : ZilchComponent
     set
     {
       this.FalloffRadiusValue = Math.Max(value, 0.1);
-      this.LightRadiusValue = Math.Min(this.LightRadiusValue, this.FalloffRadiusValue);
+      this.SetLightRadiusInput();
       // Don't have access to other components in serialization.
       if (this.Transform != null)
         this.Transform.WorldScale = Real3(this.FalloffRadiusValue * 2.0);
@@ -41,10 +41,14 @@ class SpotLight : ZilchComponent
   
   // Physical radius of the sphere of light.
   // Affects the shape of specular reflection.
-  [Property][ShaderInput("SpotLightFragment")] var LightRadius : Real
+  [Property] var LightRadius : Real
   {
     get { return this.LightRadiusValue; }
-    set { this.LightRadiusValue = Math.Clamp(value, 0.0, this.FalloffRadiusValue); }
+    set
+    {
+      this.LightRadiusValue = Math.Max(value, 0.0);
+      this.SetLightRadiusInput();
+    }
   }
   
   // Angle at which the penumbra falloff begins.
@@ -55,7 +59,6 @@ class SpotLight : ZilchComponent
     set
     {
       this.InnerAngleValue = Math.Clamp(value, 10.0, 170.0);
-      this.InnerAngleValue = Math.Min(this.InnerAngleValue, this.OuterAngleValue);
       this.SetSpotAngles();
     }
   }
@@ -71,7 +74,6 @@ class SpotLight : ZilchComponent
     set
     {
       this.OuterAngleValue = Math.Clamp(value, 10.0, 170.0);
-      this.OuterAngleValue = Math.Max(this.InnerAngleValue, this.OuterAngleValue);
       this.SetSpotAngles();
       
       if (this.Owner != null && this.Owner.Camera != null)
@@ -79,6 +81,7 @@ class SpotLight : ZilchComponent
     }
   }
   
+  [ShaderInput("SpotLightFragment", "LightRadius")] var LightRadiusInput : Real;
   [ShaderInput("SpotLightFragment")] var LightDirection : Real3;
   [ShaderInput("SpotLightFragment")] var SpotAngles : Real2;
   [ShaderInput("LightPass", "LightColor")] var LightColorValue : Real3 = Real3(1.0);
@@ -93,6 +96,7 @@ class SpotLight : ZilchComponent
   {
     this.LightDirection = Math.Normalize(this.Transform.TransformNormal(-Real3.ZAxis));
     this.Transform.WorldScale = Real3(this.FalloffRadiusValue * 2.0);
+    this.SetLightRadiusInput();
     this.SetSpotAngles();
     Zero.Connect(this.Owner, Events.TransformUpdated, this.OnTransformUpdated);
   }
@@ -102,30 +106,41 @@ class SpotLight : ZilchComponent
     this.LightDirection = Math.Normalize(this.Transform.TransformNormal(-Real3.ZAxis));
   }
   
+  function SetLightRadiusInput()
+  {
+    this.LightRadiusInput = Math.Min(this.LightRadiusValue, this.FalloffRadius);
+  }
+  
   function SetSpotAngles()
   {
-    var cosInner = Math.Cos(Math.ToRadians(this.InnerAngleValue) * 0.5);
-    var cosOuter = Math.Cos(Math.ToRadians(this.OuterAngle) * 0.5);
+    var innerAngle = Math.ToRadians(Math.Min(this.InnerAngleValue, this.OuterAngleValue));
+    var outerAngle = Math.ToRadians(this.OuterAngleValue);
+    
+    var cosInner = Math.Cos(innerAngle * 0.5);
+    var cosOuter = Math.Cos(outerAngle * 0.5);
     this.SpotAngles = Real2(cosOuter, cosInner - cosOuter);
   }
 
   function DebugDraw()
   {
+    var innerAngle = Math.ToRadians(Math.Min(this.InnerAngleValue, this.OuterAngleValue));
+    var outerAngle = Math.ToRadians(this.OuterAngleValue);
+    
     var color = Real4(1.0, 1.0, 0.0, 1.0);
     var colorDark = Real4(0.5, 0.5, 0.0, 1.0);
     
     var position = this.Transform.WorldTranslation;
     var direction = Math.Normalize(this.Transform.TransformNormal(-Real3.ZAxis));
     
-    DebugDraw.Add(DebugSphere(position, this.LightRadius) {Color = colorDark});
+    DebugDraw.Add(DebugSphere(position, this.LightRadiusInput) {Color = colorDark});
     
     DebugDraw.Add(DebugLine(position, position + direction * 5.0, 1.0) {Color = color});
     
     var angleRotation = Math.Normalize(this.Transform.TransformNormal(Real3.XAxis));
-    var dirInnerA = Math.RotateVector(direction, angleRotation, Math.ToRadians(this.InnerAngleValue) * 0.5);
-    var dirInnerB = Math.RotateVector(direction, angleRotation, Math.ToRadians(this.InnerAngleValue) * -0.5);
-    var dirOuterA = Math.RotateVector(direction, angleRotation, Math.ToRadians(this.OuterAngleValue) * 0.5);
-    var dirOuterB = Math.RotateVector(direction, angleRotation, Math.ToRadians(this.OuterAngleValue) * -0.5);
+    var dirInnerA = Math.RotateVector(direction, angleRotation, innerAngle * 0.5);
+    var dirInnerB = Math.RotateVector(direction, angleRotation, innerAngle * -0.5);
+    var dirOuterA = Math.RotateVector(direction, angleRotation, outerAngle * 0.5);
+    var dirOuterB = Math.RotateVector(direction, angleRotation, outerAngle * -0.5);
     
     var rotateAxis = Math.Normalize(this.Transform.TransformNormal(Real3.ZAxis));
     var rotateAngle = Math.Pi * 0.25;
@@ -150,10 +165,10 @@ class SpotLight : ZilchComponent
       dirOuterB = Math.RotateVector(dirOuterB, rotateAxis, rotateAngle);
     }
     
-    var innerRadius = Math.Sin(Math.ToRadians(this.InnerAngleValue) * 0.5) * this.FalloffRadius;
-    var innerCenter = Math.Cos(Math.ToRadians(this.InnerAngleValue) * 0.5) * this.FalloffRadius;
-    var outerRadius = Math.Sin(Math.ToRadians(this.OuterAngleValue) * 0.5) * this.FalloffRadius;
-    var outerCenter = Math.Cos(Math.ToRadians(this.OuterAngleValue) * 0.5) * this.FalloffRadius;
+    var innerRadius = Math.Sin(innerAngle * 0.5) * this.FalloffRadius;
+    var innerCenter = Math.Cos(innerAngle * 0.5) * this.FalloffRadius;
+    var outerRadius = Math.Sin(outerAngle * 0.5) * this.FalloffRadius;
+    var outerCenter = Math.Cos(outerAngle * 0.5) * this.FalloffRadius;
     
     DebugDraw.Add(DebugCircle(position + direction * innerCenter, direction, innerRadius) {Color = colorDark});
     DebugDraw.Add(DebugCircle(position + direction * outerCenter, direction, outerRadius) {Color = color});

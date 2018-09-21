@@ -37,6 +37,24 @@ void ReplaceInSelection(Cog* oldCog, Cog* newCog,
                         HashSet<MetaSelection*>* modifiedSelections);
 
 //**************************************************************************************************
+Cog* FindNextInOrderSkipChildren(Cog* cog)
+{
+  if (Cog* sibling = cog->FindNextSibling())
+    return sibling;
+
+  Cog* parent = cog->GetParent();
+  while (parent)
+  {
+    if (Cog* parentSibling = parent->FindNextSibling())
+      return parentSibling;
+
+    parent = parent->GetParent();
+  }
+
+  return nullptr;
+}
+
+//**************************************************************************************************
 void ArchetypeRebuilder::RebuildArchetypes(Archetype* modifiedArchetype, Cog* ignore,
                                            Array<CogRestoreState*>* restoreStates)
 {
@@ -53,18 +71,25 @@ void ArchetypeRebuilder::RebuildArchetypes(Archetype* modifiedArchetype, Cog* ig
   {
     forRange(Space* space, gameSession->GetAllSpaces())
     {
-      forRange(Cog& cog, space->mCogList.All())
+      Cog* cog = &space->AllRootObjects().Front();
+      while(cog)
       {
-        // We don't want to create an object that's going to be destroyed
-        if(cog.GetMarkedForDestruction() || &cog == ignore)
+        // We don't want to re-create an object that's going to be destroyed
+        if(cog->GetMarkedForDestruction() || cog == ignore)
+        {
+          // Skip all of this Cogs children
+          cog = FindNextInOrderSkipChildren(cog);
           continue;
-
+        }
+        
+        bool found = false;
+        
         // Walk all base types to see if the current cog's Archetype derives from the
         // Archetype we're rebuilding
-        Resource* currArchetype = cog.mArchetype;
-        while(currArchetype)
+        Resource* currArchetype = cog->GetArchetype();
+        while (currArchetype)
         {
-          if(currArchetype == modifiedArchetype)
+          if (currArchetype == modifiedArchetype)
           {
             // If the Archetype is contained under another Archetype, we want to rebuild it from
             // the highest Archetype context. This way, when we delete and re-create it, all
@@ -74,12 +99,23 @@ void ArchetypeRebuilder::RebuildArchetypes(Archetype* modifiedArchetype, Cog* ig
             // Archetype) to the object, save it out, then rebuild it. This method is already
             // used when uploading to Archetype on a child of another Archetype.
             // See Cog::UploadToArchetype.
-            objectsToReload.Insert(cog.FindNearestArchetypeContext());
+            Cog* archetypeContext = cog->FindNearestArchetypeContext();
+            objectsToReload.Insert(archetypeContext);
+      
+            // We're already rebuilding this Cog, so we can skip all its children and move
+            // to the next Cog
+            cog = FindNextInOrderSkipChildren(archetypeContext);
+            found = true;
             break;
           }
-
+          
           currArchetype = currArchetype->GetBaseResource();
         }
+        
+        // We didn't find an object with the modified Archetype, so continue searching
+        // the full hierarchy
+        if(found == false)
+          cog = cog->FindNextInOrder();
       }
     }
   }

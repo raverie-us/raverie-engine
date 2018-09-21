@@ -6,17 +6,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "Precompiled.hpp"
+
 namespace Zero
 {
-const size_t cSoundCurveSamples = 30;
-
-//---------------------------------------------------------------------------- Sound Attenuator Node
-
-//**************************************************************************************************
-SoundAttenuatorNode::~SoundAttenuatorNode()
-{
-  mNode->DeleteThisNode();
-}
 
 //--------------------------------------------------------------------------------- Sound Attenuator 
 
@@ -133,8 +125,7 @@ void SoundAttenuator::SetStartDistance(float value)
 
   // Update the attenuation information on all existing nodes
   for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty(); nodes.PopFront())
-    nodes.Front().mNode->SetAttenuationData(Audio::AttenuationData(mStartDistance, mStopDistance, 
-      mMinAttenuatedVolume));
+    nodes.Front().mNode->SetStartDistance(mStartDistance);
 }
 
 //**************************************************************************************************
@@ -150,8 +141,7 @@ void SoundAttenuator::SetStopDistance(float value)
 
   // Update the attenuation information on all existing nodes
   for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty(); nodes.PopFront())
-    nodes.Front().mNode->SetAttenuationData(Audio::AttenuationData(mStartDistance, mStopDistance, 
-      mMinAttenuatedVolume));
+    nodes.Front().mNode->SetEndDistance(mStopDistance);
 }
 
 //**************************************************************************************************
@@ -163,12 +153,11 @@ float SoundAttenuator::GetMinAttenuatedVolume()
 //**************************************************************************************************
 void SoundAttenuator::SetMinAttenuatedVolume(float value)
 {
-  mMinAttenuatedVolume = Math::Clamp(value, 0.0f, Audio::MaxVolumeValue);
+  mMinAttenuatedVolume = Math::Clamp(value, 0.0f, AudioConstants::cMaxVolumeValue);
 
   // Update the attenuation information on all existing nodes
   for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty(); nodes.PopFront())
-    nodes.Front().mNode->SetAttenuationData(Audio::AttenuationData(mStartDistance, mStopDistance, 
-      mMinAttenuatedVolume));
+    nodes.Front().mNode->SetMinimumVolume(mMinAttenuatedVolume);
 }
 
 //**************************************************************************************************
@@ -199,13 +188,13 @@ void SoundAttenuator::SetFalloffCurve(SampleCurve* newCurve)
 
     // Send the custom curve data to all existing nodes
     for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty(); nodes.PopFront())
-      nodes.Front().mNode->SetCurveType(Audio::CurveTypes::Custom, &curveData);
+      nodes.Front().mNode->SetCurveType(FalloffCurveType::Custom, &curveData);
   }
   else
   {
     // Set the custom curve data to null on all existing nodes
     for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty(); nodes.PopFront())
-      nodes.Front().mNode->SetCurveType(Audio::CurveTypes::Custom, nullptr);
+      nodes.Front().mNode->SetCurveType(FalloffCurveType::Custom, nullptr);
   }
 }
 
@@ -222,32 +211,9 @@ void SoundAttenuator::SetFalloffCurveType(FalloffCurveType::Enum newtype)
 
   if (newtype != FalloffCurveType::Custom)
   {
-    Audio::CurveTypes::Enum curve;
-    switch (newtype)
-    {
-    case FalloffCurveType::Linear:
-      curve = Audio::CurveTypes::Linear;
-      break;
-    case FalloffCurveType::Squared:
-      curve = Audio::CurveTypes::Squared;
-      break;
-    case FalloffCurveType::Sine:
-      curve = Audio::CurveTypes::Sine;
-      break;
-    case FalloffCurveType::SquareRoot:
-      curve = Audio::CurveTypes::SquareRoot;
-      break;
-    case FalloffCurveType::Log:
-      curve = Audio::CurveTypes::Log;
-      break;
-    default:
-      curve = Audio::CurveTypes::Log;
-      break;
-    }
-
     // Set the curve type on all existing nodes
     for (AttenuatorListType::range nodes = mNodeList.All(); !nodes.Empty(); nodes.PopFront())
-      nodes.Front().mNode->SetCurveType(curve, nullptr);
+      nodes.Front().mNode->SetCurveType(newtype, nullptr);
   }
 }
 
@@ -311,39 +277,11 @@ void SoundAttenuator::UpdateCurve(Event* event)
     if (name == manager->DefaultResourceName || name == manager->FallbackResourceName)
       mCustomFalloffCurve = nullptr;
   }
-
 }
 
 //**************************************************************************************************
 SoundAttenuatorNode* SoundAttenuator::GetAttenuationNode(StringParam name, unsigned ID)
 {
-  // Get the enum value for the curve type
-  Audio::CurveTypes::Enum curveType;
-  switch (mFalloffCurveType)
-  {
-  case FalloffCurveType::Linear:
-    curveType = Audio::CurveTypes::Linear;
-    break;
-  case FalloffCurveType::Squared:
-    curveType = Audio::CurveTypes::Squared;
-    break;
-  case FalloffCurveType::Sine:
-    curveType = Audio::CurveTypes::Sine;
-    break;
-  case FalloffCurveType::SquareRoot:
-    curveType = Audio::CurveTypes::SquareRoot;
-    break;
-  case FalloffCurveType::Log:
-    curveType = Audio::CurveTypes::Log;
-    break;
-  case FalloffCurveType::Custom:
-    curveType = Audio::CurveTypes::Custom;
-    break;
-  default:
-    curveType = Audio::CurveTypes::Log;
-    break;
-  }
-
   SoundAttenuatorNode* node;
   // If using a custom curve, create the SoundAttenuatorNode with that curve
   if (mFalloffCurveType == FalloffCurveType::Custom && mCustomFalloffCurve)
@@ -351,13 +289,13 @@ SoundAttenuatorNode* SoundAttenuator::GetAttenuationNode(StringParam name, unsig
     Array<Vec3> curve;
     mCustomFalloffCurve->GetCurve(curve);
 
-    node = new SoundAttenuatorNode(new Audio::AttenuatorNode(name, ID, Math::Vec3(0, 0, 0), 
-      Audio::AttenuationData(mStartDistance, mStopDistance, mMinAttenuatedVolume), curveType, &curve, this));
+    node = new SoundAttenuatorNode(new AttenuatorNode(name, ID, Math::Vec3(0, 0, 0), 
+      mStartDistance, mStopDistance, mMinAttenuatedVolume, mFalloffCurveType, &curve));
   }
   // Otherwise create it for the specified curve type
   else
-    node = new SoundAttenuatorNode(new Audio::AttenuatorNode(name, ID, Math::Vec3(0, 0, 0), 
-      Audio::AttenuationData(mStartDistance, mStopDistance, mMinAttenuatedVolume), curveType, nullptr, this));
+    node = new SoundAttenuatorNode(new AttenuatorNode(name, ID, Math::Vec3(0, 0, 0), 
+      mStartDistance, mStopDistance, mMinAttenuatedVolume, mFalloffCurveType, nullptr));
 
   node->mNode->SetUsingLowPass(mUseLowPassFilter);
   if (mUseLowPassFilter)
@@ -384,7 +322,7 @@ bool SoundAttenuator::HasInput()
   // If any of the SoundAttenuatorNodes has input, return true
   forRange(SoundAttenuatorNode& node, mNodeList.All())
   {
-    if (node.mNode->HasInputs())
+    if (node.mNode->GetHasInputs())
       return true;
   }
 
@@ -408,4 +346,4 @@ SoundAttenuatorManager::SoundAttenuatorManager(BoundType* resourceType) : Resour
   mExtension = DataResourceExtension;
 }
 
-}
+} // namespace Zero

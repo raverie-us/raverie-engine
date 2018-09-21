@@ -1189,6 +1189,10 @@ void AnimationEditor::CreateKeyFrameAtPlayHead(Property* property,
 
   // Grab the component and object from the instance
   Component* component = componentInstance.Get<Component*>();
+
+  if (component == nullptr)
+    return;
+
   Cog* object = component->GetOwner();
 
   // If we weren't given a value, query the object for its current value

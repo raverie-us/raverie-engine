@@ -124,16 +124,7 @@ void PopUp::SetBelowMouse(Mouse* mouse, Vec2 offset)
 
 void PopUp::ShiftOntoScreen(Vec3 offset)
 {
-  Vec2 screenSize = this->GetParent()->GetSize();
-  Vec2 thisSize = this->GetSize();
-
-  if(offset.y + thisSize.y > screenSize.y)
-    offset.y -= (offset.y + thisSize.y) - screenSize.y;
-
-  if(offset.x + thisSize.x > screenSize.x)
-    offset.x -= (offset.x + thisSize.x) - screenSize.x;
-
-  this->SetTranslation(offset);
+  Composite::ShiftOntoScreen(offset);
 }
 
 void PopUp::OnMouseDown(MouseEvent* event)

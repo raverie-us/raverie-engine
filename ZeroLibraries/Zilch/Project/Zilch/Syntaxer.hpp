@@ -124,7 +124,7 @@ namespace Zilch
     void InstantiateTemplatesFromSyntaxTypes(SyntaxTypes& types, ClassContext* context, const CodeLocation& location);
     
     // Setup a class instance for a given class node (called by CollectClass, and CollectTemplateInstantiations)
-    void SetupClassInstance(ClassNode* node, ClassContext* context);
+    void SetupClassInstance(StringParam baseName, ClassNode* node, ClassContext* context);
 
     // Setup the location for a function, as well as the this variable
     void SetupFunctionLocation(Function* function, const CodeLocation& location, const CodeLocation& nameLocation);

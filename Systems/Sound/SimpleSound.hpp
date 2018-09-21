@@ -53,4 +53,4 @@ private:
   friend class SoundEmitter;
 };
 
-}//namespace Zero
+} // namespace Zero

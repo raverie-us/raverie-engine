@@ -135,6 +135,7 @@ ZilchDefineType(Cog, builder, type)
   ZilchBindMethod(FindChildByName);
   ZilchBindMethod(FindDirectChildByName);
   ZilchBindMethod(FindAllChildrenByName);
+  ZilchBindMethod(FindAllDirectChildrenByName);
 
   ZilchBindMethod(IsDescendant)->AddAttribute(DeprecatedAttribute);
   ZilchBindMethod(IsDescendantOf);
@@ -1329,6 +1330,17 @@ HierarchyNameRange Cog::FindAllChildrenByName(StringParam name)
 }
 
 //**************************************************************************************************
+HierarchyListNameRange Cog::FindAllDirectChildrenByName(StringParam name)
+{
+  // Create the policy and set the name
+  NameCondition policy;
+  policy.Name = name;
+
+  // Return a conditional range that stores the hierarchy range and policy
+  return HierarchyListNameRange(GetChildren(), policy);
+}
+
+//**************************************************************************************************
 Cog* Cog::FindChildByChildId(Guid childId)
 {
   forRange(Cog& child, GetChildren())
@@ -1726,7 +1738,22 @@ void Cog::UploadToArchetype()
   Archetype* archetype = mArchetype;
 
   // If we're a child of another Archetype, we may need to keep around some local changes after
-  // we upload to Archetype.
+  // we upload to Archetype. Even though we're uploading, the changes we're uploading could
+  // still be considered modified from what our parent Archetype says it should be.
+  //
+  // Example:
+  // Lets say we have an Archetype called Enemy. This Archetype has a child object
+  // that is the Gun Archetype.
+  // 
+  // If we modify the Gun's damage to 5 and upload that to the Enemy Archetype, the Enemy
+  // has overridden the Gun's damage.
+  //
+  // If we then modify the Gun's damage to 7 and upload to Archetype on the Gun, the Gun's
+  // damage should still be marked as modified because it's still not what the Enemy Archetype
+  // says it should be (5).
+  //
+  // This is only the case because the Enemy ALSO had the same modification as the Gun. This is
+  // why we find overlapping modifications and re-apply them after the upload.
   CachedModifications overlappingModifications;
 
   Cog* archetypeContextCog = FindNearestArchetypeContext();

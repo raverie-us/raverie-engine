@@ -20,6 +20,10 @@ class UiRenderer : ZilchComponent
   // If DebugDraw RenderGroups are drawn in play mode.
   [Property] var GameDebugDraw : Boolean = true;
   
+  // This is used to resize the root widget to the game camera if it's fixed.
+  // The reason is to preview what the game will look like at a specific resolution.
+  [Property] var GameCamera = CogPath(":/GameCamera");
+  
   var PreviousResolutionY : Integer;
   
   //***************************************************************************
@@ -80,6 +84,11 @@ class UiRenderer : ZilchComponent
     }
     else
     {
+      // In the editor, if the game camera has a fixed resolution, resize ourself to that resolution
+      var gameCameraViewport = this.GameCamera.CameraViewport;
+      if(gameCameraViewport != null && gameCameraViewport.ViewportScaling == ViewportScaling.Exact)
+        this.ResizeToGameCamera(gameCameraViewport);
+      
       var firstRender = (this.PreviousResolutionY == 0);
       var zoomOneToOneHotkey = Zero.Keyboard.KeyIsDown(Keys.Zero) && Zero.Keyboard.KeyIsDown(Keys.Control);
       
@@ -106,6 +115,22 @@ class UiRenderer : ZilchComponent
     // due to the EditorCameraController adding in non-integral offsets
     cameraPos.XY += (viewportSize % 2) * 0.5;
     cameraTransform.Translation = cameraPos;
+  }
+  
+  //***************************************************************************
+  function ResizeToGameCamera(gameCameraViewport : CameraViewport)
+  {
+    // Root widget should be the exact size specified on the game CameraViewport
+    this.UiRootWidget.Size = gameCameraViewport.ResolutionOrAspect as Real2;
+    
+    // Size the camera to the same
+    var gameCameraViewportCog = gameCameraViewport.Owner;
+    gameCameraViewportCog.Camera.Size = this.UiRootWidget.Size.Y;
+    
+    // Move the camera to the center of the root widget
+    var gameCameraLocalPos = gameCameraViewportCog.Transform.LocalTranslation;
+    gameCameraLocalPos.XY = this.UiRootWidget.WorldCenter;
+    gameCameraViewportCog.Transform.LocalTranslation = gameCameraLocalPos;
   }
   
   //***************************************************************************

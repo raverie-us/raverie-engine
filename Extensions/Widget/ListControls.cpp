@@ -233,6 +233,7 @@ void ListBox::UpdateTransform()
 
   float cellsOff = (-clientOffset.y) / cTextCellHeight;
   cellsOff = floor(cellsOff);
+  uint startingBlockIndex = uint(cellsOff);
 
   for(uint i = 0; i < mTextBlocks.Size(); ++i)
   {
@@ -249,7 +250,11 @@ void ListBox::UpdateTransform()
     background->SetTranslation(translation);
     background->SetSize(Vec2(boxWidth, cTextCellHeight));
 
-    if(i % 2)
+    // Compute the global index for this item so that the color is consistent for
+    // the same named item, otherwise the color can flip when we have an odd
+    // number of bound items and we reach the end of the list.
+    uint globalIndex = i + startingBlockIndex;
+    if(globalIndex % 2)
       background->SetColor(ListControlsUi::ListPrimaryColor);
     else
       background->SetColor(ListControlsUi::ListSecondaryColor);
@@ -257,23 +262,23 @@ void ListBox::UpdateTransform()
 
   if(mDataSource)
   {
-    uint blockStart = uint(cellsOff);
     uint itemCount = mDataSource->GetCount();
     uint itemsToDisplay = mTextBlocks.Size();
+    uint currentBlockIndex = startingBlockIndex;
 
     for(uint i = 0; i < itemsToDisplay; ++i)
     {
-      Vec3 blockTrans = Vec3(0, cTextCellHeight * float(blockStart), 0);
+      Vec3 blockTrans = Vec3(0, cTextCellHeight * float(currentBlockIndex), 0);
       Vec2 blockSize = Vec2(boxWidth, cTextCellHeight);
 
-      if(blockStart == mSelectedItem)
+      if(currentBlockIndex == mSelectedItem)
       {
         mSelection->SetVisible(true);
         mSelection->SetTranslation(blockTrans);
         mSelection->SetSize(blockSize);
       }
 
-      if(blockStart == mHighlightItem && mMouseHover && 
+      if(currentBlockIndex == mHighlightItem && mMouseHover &&
          mHighlightItem < (int)dataCount)
       {
         mHighlightBox->SetVisible(true);
@@ -286,12 +291,12 @@ void ListBox::UpdateTransform()
       TextDefinition* highlighted = (TextDefinition*)mDefSet->GetDefinition(cHighlightedText);
       
       Text& text = *mTextBlocks[i].second;
-      if(blockStart < itemCount)
+      if(currentBlockIndex < itemCount)
       {
         text.SetActive(true);
-        text.SetText(mDataSource->GetStringValueAt(blockStart));
+        text.SetText(mDataSource->GetStringValueAt(currentBlockIndex));
 
-        if(blockStart == mSelectedItem)
+        if(currentBlockIndex == mSelectedItem)
           text.ChangeDefinition(selected);
         else if(mHighlightedItems.Contains(i))
           text.ChangeDefinition(highlighted);
@@ -303,7 +308,7 @@ void ListBox::UpdateTransform()
         text.SetActive(false);
       }
 
-      ++blockStart;
+      ++currentBlockIndex;
     }
   }
 

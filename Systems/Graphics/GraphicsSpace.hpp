@@ -69,7 +69,6 @@ public:
 
   typedef InList<Camera, &Camera::SpaceLink> CameraList;
   CameraList mCameras;
-  CameraList mRemovedCameras;
 
   /// If graphics for this Space should be running.
   bool mActive;

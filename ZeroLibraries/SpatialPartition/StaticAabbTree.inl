@@ -107,8 +107,10 @@ void StaticAabbTree<ClientDataType>:: CountProxies()
 
     //since this is an internal node, put it's children onto the stack for
     //further iteration.
-    stack.PushBack(node->mChild1);
-    stack.PushBack(node->mChild2);
+    if(node->mChild1 != nullptr)
+      stack.PushBack(node->mChild1);
+    if(node->mChild2 != nullptr)
+      stack.PushBack(node->mChild2);
   }
 }
 

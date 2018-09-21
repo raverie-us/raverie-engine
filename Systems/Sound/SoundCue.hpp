@@ -116,7 +116,7 @@ class SoundTagEntryDisplay : public MetaDisplay
   String GetDebugText(HandleParam object) override;
 };
 
-//---------------------------------------------------------------------------------------- Sound Cue
+//-------------------------------------------------------------------------------- Sound Cue Display
 
 typedef Array<SoundTag*> SoundTagList;
 
@@ -128,6 +128,8 @@ public:
   String GetName(HandleParam object) override;
   String GetDebugText(HandleParam object) override;
 };
+
+//---------------------------------------------------------------------------------------- Sound Cue
 
 /// Settings and Sounds for playing audio files.
 class SoundCue : public DataResource
@@ -216,12 +218,12 @@ public:
   /// Adds a new SoundTagEntry to this SoundCue.
   void AddSoundTagEntry(SoundTag* soundTag);
   /// Plays this SoundCue using a specified SoundNode as the output and returns the resulting SoundInstance.
-  HandleOf<SoundInstance> PlayCueOnNode(SoundNode* outputNode, bool startPaused);
+  HandleOf<SoundInstance> PlayCueOnNode(HandleOf<SoundNode> outputNode, bool startPaused);
 
 //Internals
   void Preview();
   void StopPreview();
-  HandleOf<SoundInstance> PlayCue(SoundSpace *space, Audio::SoundNode* outputNode, bool startPaused);
+  HandleOf<SoundInstance> PlayCue(SoundSpace *space, HandleOf<SoundNode> outputNode, bool startPaused);
 
 private:
   Array<SoundEntry> Sounds;

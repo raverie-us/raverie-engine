@@ -11,7 +11,6 @@ set(CurrentDirectory ${CMAKE_CURRENT_LIST_DIR})
 ################################################################################
 # define all of the libraries that are in this folder
 ################################################################################
-add_library(AudioEngine "")
 add_library(Common "") 
 add_library(Dash "")
 add_library(Geometry "")
@@ -24,7 +23,6 @@ add_library(Zilch "")
 ################################################################################
 # Explicitly define the folders as they are not organized how we want
 ################################################################################
-set_target_properties(AudioEngine      PROPERTIES FOLDER "ZeroLibraries")
 set_target_properties(Common           PROPERTIES FOLDER "ZeroLibraries")
 set_target_properties(Dash             PROPERTIES FOLDER "ZeroLibraries")
 set_target_properties(Geometry         PROPERTIES FOLDER "ZeroLibraries")
@@ -37,7 +35,6 @@ set_target_properties(Zilch            PROPERTIES FOLDER "ZeroLibraries")
 ################################################################################
 # include filelists for each library
 ################################################################################
-include(AudioEngine/CMakeLists.txt)
 include(Common/CMakeLists.txt)
 include(Dash/CMakeLists.txt)
 include(Geometry/CMakeLists.txt)
@@ -53,12 +50,6 @@ add_subdirectory(Platform)
 ################################################################################
 # define include directories for all of our libraries
 ################################################################################
-target_include_directories(AudioEngine
-    PUBLIC
-        ${CurrentDirectory}/AudioEngine 
-        ${CurrentDirectory}
-        ${ParentDirectory}
-)
 target_include_directories(Common
     PUBLIC 
         ${CurrentDirectory}/Common
@@ -105,12 +96,6 @@ target_include_directories(Zilch
 ################################################################################
 # set the linked libraries for all of our targets
 ################################################################################
-target_link_libraries(AudioEngine
-                      PUBLIC
-                      ${OpusStatic}
-                      Common 
-                      ${PlatformSoundLibrary}
-) 
 target_link_libraries(Dash
                       PUBLIC
                       Common
@@ -151,7 +136,6 @@ target_link_libraries(Support
 # set the output directories for all of our targets
 ################################################################################
 zero_multitarget_output_directories(
-    AudioEngine
     Common
     Dash
     Geometry
@@ -184,19 +168,6 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         BITS ${bit}
         TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET}
         PRECOMPILED_HEADER_NAME "Precompiled.hpp"
-        PRECOMPILED_SOURCE_NAME "Precompiled.cpp"
-        TARGET_SUBFOLDER
-    )
-
-    zero_multitarget_output_settings(
-        AudioEngine 
-        CONFIGS ${supported_configs}
-        BASEPATH ${zero_build_out}
-        PLATFORM ${platform}
-        CONFIG ${configuration}
-        BITS ${bit}
-        TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET}
-        PRECOMPILED_HEADER_NAME "Precompiled.h"
         PRECOMPILED_SOURCE_NAME "Precompiled.cpp"
         TARGET_SUBFOLDER
     )
@@ -238,43 +209,6 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
     )
     if (CMAKE_GENERATOR_TOOLSET STREQUAL "LLVM-vs2014")
         zero_multitarget_compile_options(  
-            AudioEngine 
-            PRIVATE
-
-            PUBLIC
-                -GS -analyze-  -Zc:wchar_t
-
-            PRIVATE
-            $<$<CONFIG:Debug>:-GS>
-            $<$<CONFIG:Release>:-GS->
-            $<$<CONFIG:Release>:-GL>
-            -analyze-
-            -W3 
-            -wd"4302"
-            -Zc:wchar_t
-            $<$<CONFIG:Debug>:-Od>
-            $<$<CONFIG:Release>:-O2>
-            -Zc:inline 
-            -fp:fast 
-            -errorReport:prompt 
-            -WX 
-            -Zc:forScope 
-            -GR- 
-            -Gd
-            $<$<CONFIG:Release>:-arch:SSE2>
-            -Oy-
-            $<$<CONFIG:Debug>:-MDd>
-            $<$<CONFIG:Release>:-Oi>
-            $<$<CONFIG:Release>:-MT>
-            -EHsc 
-            -nologo
-            -DDEBUG  
-            "-D \"_CRT_SECURE_NO_WARNINGS\"" 
-            "-Wno-unused-command-line-argument"
-            "-Wno-undefined-inline"
-            -FIPrecompiled.h
-        )
-        zero_multitarget_compile_options(  
             Zilch 
             PRIVATE
 
@@ -314,7 +248,6 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
     else()
         zero_multitarget_compile_options(  
             Zilch 
-            AudioEngine
             PRIVATE
              
             PUBLIC
@@ -327,7 +260,6 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
     endif()
 else()
     zero_multitarget_compile_options(
-        AudioEngine
         Common 
         Dash 
         Geometry
@@ -342,7 +274,6 @@ else()
         ${common_flags}
     )
     set_target_properties(
-        AudioEngine
         Common 
         Dash 
         Geometry
@@ -362,7 +293,6 @@ endif()
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL "LLVM-vs2014"))
     # set the correct subsystems for executable targets, and set stack size for the editor
     set_target_properties(
-        AudioEngine
         Common
         Dash
         Geometry
@@ -379,7 +309,6 @@ endif()
 ################################################################################
 # Group source into folders
 ################################################################################
-zero_subfolder_source_group(${zero_core_path} ZeroLibraries AudioEngine "")
 zero_subfolder_source_group(${zero_core_path} ZeroLibraries Common "")
 zero_subfolder_source_group(${zero_core_path} ZeroLibraries Dash "")
 zero_subfolder_source_group(${zero_core_path} ZeroLibraries Geometry "")

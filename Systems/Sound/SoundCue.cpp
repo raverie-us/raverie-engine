@@ -9,10 +9,8 @@
 
 namespace Zero
 {
-namespace
-{
-  Math::Random gRandom;
-}
+
+using namespace AudioConstants;
 
 //-------------------------------------------------------------------------------------- Sound Entry 
 
@@ -131,17 +129,15 @@ void SoundEntry::Preview()
 
   // Create a new SoundInstance with no SoundSpace
   Status status;
-  SoundInstance *instance = new SoundInstance(status, nullptr, mSound->mSoundAsset, 1.0f, 0.0f); 
+  SoundInstance *instance = new SoundInstance(status, nullptr, mSound->mAsset, 1.0f, 0.0f); 
 
   if (!status.Failed())
   {
     // If instance was created successfully, play it without looping, 
     // without a tag, and without an output node
-    instance->Play(false, nullptr, false);
+    instance->Play(false, Z::gSound->mOutputNode, false);
     // Save the SoundInstance
     Z::gSound->mPreviewInstance = instance;
-    // Connect it to the audio system's output node
-    Z::gSound->mOutputNode->AddInputNode(instance->mSoundNode);
   }
   else
   {
@@ -446,21 +442,20 @@ float SoundCue::GetVolume()
 //**************************************************************************************************
 void SoundCue::SetVolume(float newVolume)
 {
-  mVolume = Math::Clamp(newVolume, 0.0f, Audio::MaxVolumeValue);
+  mVolume = Math::Clamp(newVolume, 0.0f, cMaxVolumeValue);
 }
 
 //**************************************************************************************************
 float SoundCue::GetDecibels()
 {
-  return Z::gSound->VolumeToDecibels(mVolume);
+  return VolumeToDecibels(mVolume);
 }
 
 //**************************************************************************************************
 void SoundCue::SetDecibels(float newDecibels)
 {
-  newDecibels = Math::Clamp(newDecibels, Audio::MinDecibelsValue, Audio::MaxDecibelsValue);
+  newDecibels = Math::Clamp(newDecibels, cMinDecibelsValue, cMaxDecibelsValue);
 
-  mVolume = Z::gSound->DecibelsToVolume(newDecibels);
 }
 
 //**************************************************************************************************
@@ -472,7 +467,7 @@ float SoundCue::GetVolumeVariation()
 //**************************************************************************************************
 void SoundCue::SetVolumeVariation(float variation)
 {
-  mVolumeVariation = Math::Clamp(variation, 0.0f, Audio::MaxVolumeValue);
+  mVolumeVariation = Math::Clamp(variation, 0.0f, cMaxVolumeValue);
 }
 
 //**************************************************************************************************
@@ -484,7 +479,7 @@ float SoundCue::GetDecibelVariation()
 //**************************************************************************************************
 void SoundCue::SetDecibelVariation(float variation)
 {
-  mDecibelVariation = Math::Clamp(variation, Audio::MinDecibelsValue, Audio::MaxDecibelsValue);
+  mDecibelVariation = Math::Clamp(variation, cMinDecibelsValue, cMaxDecibelsValue);
 }
 
 //**************************************************************************************************
@@ -496,19 +491,19 @@ float SoundCue::GetPitch()
 //**************************************************************************************************
 void SoundCue::SetPitch(float newPitch)
 {
-  mPitch = Math::Clamp(newPitch, Audio::MinPitchValue, Audio::MaxPitchValue);
+  mPitch = Math::Clamp(newPitch, cMinPitchValue, cMaxPitchValue);
 }
 
 //**************************************************************************************************
 float SoundCue::GetSemitones()
 {
-  return Z::gSound->PitchToSemitones(mPitch);
+  return PitchToSemitones(mPitch);
 }
 
 //**************************************************************************************************
 void SoundCue::SetSemitones(float newSemitones)
 {
-  mPitch = Math::Clamp(Z::gSound->SemitonesToPitch(newSemitones), Audio::MinPitchValue, Audio::MaxPitchValue);
+  mPitch = Math::Clamp(SemitonesToPitch(newSemitones), cMinPitchValue, cMaxPitchValue);
 }
 
 //**************************************************************************************************
@@ -520,7 +515,7 @@ float SoundCue::GetPitchVariation()
 //**************************************************************************************************
 void SoundCue::SetPitchVariation(float variation)
 {
-  mPitchVariation = Math::Clamp(variation, 0.0f, Audio::MaxPitchValue);
+  mPitchVariation = Math::Clamp(variation, 0.0f, cMaxPitchValue);
 }
 
 //**************************************************************************************************
@@ -532,7 +527,7 @@ float SoundCue::GetSemitoneVariation()
 //**************************************************************************************************
 void SoundCue::SetSemitoneVariation(float variation)
 {
-  mSemitoneVariation = Math::Clamp(variation, 0.0f, Audio::MaxSemitonesValue);
+  mSemitoneVariation = Math::Clamp(variation, 0.0f, cMaxSemitonesValue);
 }
 
 //**************************************************************************************************
@@ -600,10 +595,10 @@ void SoundCue::AddSoundTagEntry(SoundTag* tag)
 }
 
 //**************************************************************************************************
-HandleOf<SoundInstance> SoundCue::PlayCueOnNode(SoundNode* outputNode, bool startPaused)
+HandleOf<SoundInstance> SoundCue::PlayCueOnNode(HandleOf<SoundNode> outputNode, bool startPaused)
 {
-  if (outputNode && outputNode->mNode)
-    return PlayCue(nullptr, outputNode->mNode, startPaused);
+  if (outputNode)
+    return PlayCue(nullptr, outputNode, startPaused);
   else
     return nullptr;
 }
@@ -620,7 +615,7 @@ void SoundCue::Preview()
   if (instance)
   {
     // Connect it to the audio system's output 
-    Z::gSound->mOutputNode->AddInputNode(instance->mSoundNode);
+    Z::gSound->mOutputNode->AddInputNode(instance);
   }
 }
 
@@ -631,7 +626,7 @@ void SoundCue::StopPreview()
 }
 
 //**************************************************************************************************
-HandleOf<SoundInstance> SoundCue::PlayCue(SoundSpace* space, Audio::SoundNode* outputNode, bool startPaused)
+HandleOf<SoundInstance> SoundCue::PlayCue(SoundSpace* space, HandleOf<SoundNode> outputNode, bool startPaused)
 {
   // No sounds to choose from
   if (Sounds.Empty())
@@ -643,16 +638,16 @@ HandleOf<SoundInstance> SoundCue::PlayCue(SoundSpace* space, Audio::SoundNode* o
   // Get volume value
   float volume(mVolume); 
   if (mUseDecibelVariation && mDecibelVariation > 0)
-    volume = Z::gSound->DecibelsToVolume(gRandom.FloatVariance(GetDecibels(), mDecibelVariation));
+    volume = DecibelsToVolume(Z::gSound->mRandom.FloatVariance(GetDecibels(), mDecibelVariation));
   else if (!mUseDecibelVariation && mVolumeVariation > 0)
-    volume = gRandom.FloatVariance(mVolume, mVolumeVariation);
+    volume = Z::gSound->mRandom.FloatVariance(mVolume, mVolumeVariation);
 
   // Get pitch value
   float pitch(mPitch);
   if (mUseSemitoneVariation && mSemitoneVariation > 0)
-    pitch = Z::gSound->SemitonesToPitch(gRandom.FloatVariance(GetSemitones(), mSemitoneVariation));
+    pitch = SemitonesToPitch(Z::gSound->mRandom.FloatVariance(GetSemitones(), mSemitoneVariation));
   else if (!mUseSemitoneVariation && mPitchVariation > 0)
-    pitch = gRandom.FloatVariance(mPitch, mPitchVariation);
+    pitch = Z::gSound->mRandom.FloatVariance(mPitch, mPitchVariation);
 
   // Get the sound to play
   SoundEntry* entry;
@@ -668,7 +663,7 @@ HandleOf<SoundInstance> SoundCue::PlayCue(SoundSpace* space, Audio::SoundNode* o
     for (unsigned i = 0; i < Sounds.Size(); ++i)
       weightedtable.AddItem(&Sounds[i], Sounds[i].GetWeight());
     weightedtable.BuildTable();
-    entry = weightedtable.Sample(gRandom);
+    entry = weightedtable.Sample(Z::gSound->mRandom);
   }
   // If sequential, advance the index and check for wrapping
   else
@@ -679,7 +674,7 @@ HandleOf<SoundInstance> SoundCue::PlayCue(SoundSpace* space, Audio::SoundNode* o
   }
 
   // Get asset
-  Audio::SoundAsset* asset = entry->GetSound()->mSoundAsset;
+  SoundAsset* asset = entry->GetSound()->mAsset;
   ErrorIf(!asset, "No sound asset when playing SoundCue");
   if (!asset)
   {
@@ -698,15 +693,15 @@ HandleOf<SoundInstance> SoundCue::PlayCue(SoundSpace* space, Audio::SoundNode* o
   }
 
   // Set the time settings on the instance
-  Audio::SoundInstanceNode* instanceNode = (Audio::SoundInstanceNode*)instance->mSoundNode->mNode;
-  instanceNode->SetStartTime(entry->GetStartTime());
-  instanceNode->SetEndTime(entry->GetEndTime());
+  if (entry->GetStartTime() > 0.0f)
+    instance->SetTime(entry->GetStartTime());
+  instance->SetEndTime(entry->GetEndTime());
   if (mPlayMode == SoundPlayMode::Looping)
   {
-    instanceNode->SetLoopStartTime(entry->GetLoopStartTime());
-    instanceNode->SetLoopEndTime(entry->GetLoopEndTime());
-    instanceNode->SetLoopTailTime(entry->GetLoopTailLength());
-    instanceNode->SetCrossFadeTail(entry->mCrossFadeLoopTail);
+    instance->SetLoopStartTime(entry->GetLoopStartTime());
+    instance->SetLoopEndTime(entry->GetLoopEndTime());
+    instance->SetLoopTailTime(entry->GetLoopTailLength());
+    instance->SetCrossFadeLoopTail(entry->mCrossFadeLoopTail);
   }
 
   // Create the handle to avoid deleting the instance object

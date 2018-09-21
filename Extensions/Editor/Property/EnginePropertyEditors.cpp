@@ -787,21 +787,23 @@ public:
   void ValidateSelection(Status& status, Cog* test)
   {
     EnsureCogPathIsRelativeTo();
-    CogPath::ComputePath(status, mValue.GetRelativeTo(), test, mValue.GetPathPreference0(), mValue.GetPathPreference1(), mValue.GetPathPreference2());
+    String path = CogPath::ComputePath(status, mValue.GetRelativeTo(), test, mValue.GetPathPreference0(), mValue.GetPathPreference1(), mValue.GetPathPreference2(), false);
     if (status.Failed())
       return;
 
-    if(AreTwoNamesTheSame(test))
-    {
-      status.SetFailed("Two objects have the same name");
-      return;
+    // Resolve the path to get clear ambiguity errors.
+    CogPath::Resolve(status, mValue.GetRelativeTo(), path, true);
     }
-  }
 
   void SetReferencedCog(Cog* to)
   {
     if(to != nullptr)
     {
+      Status status;
+      ValidateSelection(status, to);
+      if (status.Failed())
+        DoNotifyWarning("Cog Path", status.Message);
+
       Handle rootInstance;
       PropertyPath propertyPath;
       BuildPath(mNode, rootInstance, propertyPath);
@@ -1963,7 +1965,7 @@ public:
     WidgetRect rect = mEditor->GetScreenRect();
     Vec3 topRight = ToVector3(rect.TopRight());
 
-    window->SetTranslation(topRight + Vec3(6.0f, -22.0f, 0));
+    window->ShiftOntoScreen(topRight + Vec3(6.0f, -22.0f, 0));
     
     Handle rootInstance;
     PropertyPath propertyPath;

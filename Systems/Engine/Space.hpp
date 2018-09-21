@@ -40,6 +40,7 @@ namespace CreationFlags
 DeclareBitField1(DestroyFlags, DynamicallyDestroyed);
 
 //------------------------------------------------------------------------ Space
+typedef ConditionalRange<CogNameRange, RootCondition> CogRootNameRange;
 
 /// A space is a near boundless, three-dimensional extent in which objects 
 /// and events occur and have relative position, direction, and time.
@@ -139,6 +140,8 @@ public:
 
   /// Find an object in the space with a given name.
   CogNameRange FindAllObjectsByName(StringParam name);
+  /// Find root objects in the space with the given name.
+  CogRootNameRange FindAllRootObjectsByName(StringParam name);
 
   /// Find an object in the space with a given name.
   Cog* FindObjectByName(StringParam name);

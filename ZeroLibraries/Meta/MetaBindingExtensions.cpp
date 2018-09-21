@@ -39,6 +39,7 @@ namespace PropertyAttributes
 {
 
 const String cProperty("Property");
+const String cInternal("Internal");
 const String cInvalidatesObject("InvalidatesObject");
 const String cShaderInput("ShaderInput");
 const String cLocalModificationOverride("LocalModificationOverride");
@@ -64,6 +65,7 @@ namespace FunctionAttributes
 {
 
 const String cProperty("Property");
+const String cInternal("Internal");
 const String cDisplay("Display");
 const String cInvalidatesObject("InvalidatesObject");
 

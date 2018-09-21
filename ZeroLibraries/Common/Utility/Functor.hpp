@@ -12,6 +12,7 @@ namespace Zero
 class Functor
 {
 public:
+  virtual ~Functor() {}
   virtual Functor* Execute() = 0;
 };
 

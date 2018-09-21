@@ -87,6 +87,7 @@ EulaWindow::EulaWindow(Cog* configCog, Composite* parent) :
     {
       TextEditor* eulaText = new TextEditor(eulaArea);
       eulaText->SetSizing(SizePolicy::Flex, 1);
+      eulaText->mTextMatchHighlighting = false;
 
       // Set the font size (requires re-setting the color scheme for this to go through...)
       eulaText->SetFontSize(12);
@@ -102,6 +103,7 @@ EulaWindow::EulaWindow(Cog* configCog, Composite* parent) :
       eulaText->SetReadOnly(true);
       // Mark the text after we set it as read-only so the user can't change it.
       eulaText->SizeToContents();
+      eulaText->GoToLine(0);
     }
   }
 

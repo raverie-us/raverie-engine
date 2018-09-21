@@ -153,7 +153,7 @@ Aabb GetAabb(HandleParam instance, IncludeMode::Type includeMode, bool world)
   }
 
 
-  Aabb aabb;
+  Aabb aabb(center, Vec3::cZero);
   ExpandAabb(instance, aabb, includeMode, world);
   return aabb;
 }

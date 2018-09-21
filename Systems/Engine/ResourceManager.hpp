@@ -96,7 +96,10 @@ public:
   //Validate that a name of a resource is ok to add
   //Before calling this, we already check for valid file names,
   // and that it won't conflict with another resource of the same name
-  virtual void ValidateName(Status& status, StringParam name);
+  virtual void ValidateNewName(Status& status, StringParam name, BoundType* optionalType);
+
+  // Validate that a name is even valid (not considering the current state of the engine).
+  virtual void ValidateRawName(Status& status, StringParam name, BoundType* optionalType);
 
   //List all available resources
   void EnumerateResources(Array<String>& values);

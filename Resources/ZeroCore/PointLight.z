@@ -29,7 +29,7 @@ class PointLight : ZilchComponent
     set
     {
       this.FalloffRadiusValue = Math.Max(value, 0.1);
-      this.LightRadiusValue = Math.Min(this.LightRadiusValue, this.FalloffRadiusValue);
+      this.SetLightRadiusInput();
       // Don't have access to other components in serialization.
       if (this.Transform != null)
         this.Transform.WorldScale = Real3(this.FalloffRadiusValue * 2.0);
@@ -38,12 +38,17 @@ class PointLight : ZilchComponent
   
   // Physical radius of the sphere of light.
   // Affects the shape of specular reflection.
-  [Property][ShaderInput("PointLightFragment")] var LightRadius : Real
+  [Property] var LightRadius : Real
   {
     get { return this.LightRadiusValue; }
-    set { this.LightRadiusValue = Math.Clamp(value, 0.0, this.FalloffRadiusValue); }
+    set
+    {
+      this.LightRadiusValue = Math.Max(value, 0.0);
+      this.SetLightRadiusInput();
+    }
   }
   
+  [ShaderInput("PointLightFragment", "LightRadius")] var LightRadiusInput : Real;
   [ShaderInput("LightPass", "LightColor")] var LightColorValue : Real3 = Real3(1.0);
   var LightIntensityValue : Real = 20.0;
   var FalloffRadiusValue : Real = 10.0;
@@ -52,12 +57,18 @@ class PointLight : ZilchComponent
   function Initialize(init : CogInitializer)
   {
     this.Transform.WorldScale = Real3(this.FalloffRadiusValue * 2.0);
+    this.SetLightRadiusInput();
+  }
+  
+  function SetLightRadiusInput()
+  {
+    this.LightRadiusInput = Math.Min(this.LightRadiusValue, this.FalloffRadius);
   }
   
   function DebugDraw()
   {
     var position = this.Transform.WorldTranslation;
-    var lightSphere = DebugSphere(position, this.LightRadius) {Color = Real4(0.5, 0.5, 0.0, 1.0)};
+    var lightSphere = DebugSphere(position, this.LightRadiusInput) {Color = Real4(0.5, 0.5, 0.0, 1.0)};
     var falloffSphere = DebugSphere(position, this.FalloffRadius) {Color = Real4(1.0, 1.0, 0.0, 1.0)};
     DebugDraw.Add(lightSphere);
     DebugDraw.Add(falloffSphere);

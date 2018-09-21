@@ -35,39 +35,39 @@ SoundNodeGraph::~SoundNodeGraph()
 //**************************************************************************************************
 // Helper function for GetNodeInfoList
 // Adds new NodePrintInfo to the map
-void SoundNodeGraph::CreateInfo(Audio::SoundNode* node, Audio::SoundNode* outputNode, int level)
+void SoundNodeGraph::CreateInfo(HandleOf<SoundNode> node, HandleOf<SoundNode> outputNode, int level)
 {
   // If this is an editor space, skip it and its parents
-  if (node->Name == "EditorSpace")
+  if (node->cName == "EditorSpace")
     return;
 
   // If this is a space with no inputs, skip it
-  if (node->Name == "Space" && !node->HasInputs())
+  if (node->cName == "Space" && !node->GetHasInputs())
   {
     // Check if the output node is also for the space
-    if (outputNode->Name == "Space")
+    if (outputNode->cName == "Space")
     {
       // If the child exists in the map and has no other parents, erase it
-      NodePrintInfo* child = mNodeMap.FindValue(outputNode->NodeID, nullptr);
+      NodePrintInfo* child = mNodeMap.FindValue(outputNode->cNodeID, nullptr);
       if (child && child->mParents.Empty())
-        mNodeMap.Erase(outputNode->NodeID);
+        mNodeMap.Erase(outputNode->cNodeID);
     }
 
     return;
   }
 
-  NodePrintInfo* info = mNodeMap.FindValue(node->NodeID, nullptr);
+  NodePrintInfo* info = mNodeMap.FindValue(node->cNodeID, nullptr);
 
   // Node wasn't in the map, so we need to create it
   if (!info)
   {
-    info = new NodePrintInfo(level, node->Name, node->NodeID, node->HasAudibleOutput(), node);
-    mNodeMap[node->NodeID] = info;
+    info = new NodePrintInfo(level, node->cName, node->cNodeID, node->HasAudibleOutput(), node);
+    mNodeMap[node->cNodeID] = info;
 
     // If there is an output connection, add it to the list
     if (outputNode)
     {
-      NodePrintInfo* child = mNodeMap.FindValue(outputNode->NodeID, nullptr);
+      NodePrintInfo* child = mNodeMap.FindValue(outputNode->cNodeID, nullptr);
       if (child)
       {
         info->mChildren.PushBack(child);
@@ -83,9 +83,9 @@ void SoundNodeGraph::CreateInfo(Audio::SoundNode* node, Audio::SoundNode* output
     --level;
 
     // If the output node isn't the same ID, add it as a connection
-    if (outputNode && outputNode->NodeID != node->NodeID)
+    if (outputNode && outputNode->cNodeID != node->cNodeID)
     {
-      NodePrintInfo* child = mNodeMap.FindValue(outputNode->NodeID, nullptr);
+      NodePrintInfo* child = mNodeMap.FindValue(outputNode->cNodeID, nullptr);
       if (child)
       {
         info->mChildren.PushBack(child);
@@ -99,7 +99,7 @@ void SoundNodeGraph::CreateInfo(Audio::SoundNode* node, Audio::SoundNode* output
     // If there is an output connection, add it to the list
     if (outputNode)
     {
-      NodePrintInfo* child = mNodeMap.FindValue(outputNode->NodeID, nullptr);
+      NodePrintInfo* child = mNodeMap.FindValue(outputNode->cNodeID, nullptr);
       if (child)
       {
         info->mChildren.PushBack(child);
@@ -116,7 +116,7 @@ void SoundNodeGraph::CreateInfo(Audio::SoundNode* node, Audio::SoundNode* output
     mMaxLevel = level;
 
   // Call this function on all inputs of this node
-  const Array<Audio::SoundNode*>* inputs = node->GetInputs();
+  const Array<HandleOf<SoundNode>>* inputs = node->GetInputs(AudioThreads::MainThread);
   for (unsigned i = 0; i < inputs->Size(); ++i)
   {
     CreateInfo((*inputs)[i], node, level + 1);
@@ -472,7 +472,7 @@ NodeInfoListType::range SoundNodeGraph::GetNodeInfoList()
   mMaxLevel = 0;
 
   // Create all node info objects, starting with the system's output node
-  CreateInfo(Z::gSound->mOutputNode->mNode, nullptr, 0);
+  CreateInfo(Z::gSound->mOutputNode, nullptr, 0);
 
   // Make sure no children are above their parents
   bool foundSomething = true;
@@ -530,4 +530,4 @@ NodeInfoListType::range SoundNodeGraph::GetNodeInfoList()
   return mNodeInfoList.All();
 }
 
-}
+} // namespace Zero
