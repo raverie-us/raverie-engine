@@ -32,7 +32,7 @@
 #include "ShaderIntrinsicTypes.hpp"
 
 #include "BaseShaderIRTranslator.hpp"
-#include "ZilchShaderIntrinsics.hpp"
+#include "ShaderIntrinsicsStaticZilchLibrary.hpp"
 #include "StageRequirementsGatherer.hpp"
 #include "SimpleZilchParser.hpp"
 #include "EntryPointGeneration.hpp"

@@ -393,7 +393,7 @@ SimpleZilchShaderIRGenerator::SimpleZilchShaderIRGenerator(FrontEndTranslatorTyp
 SimpleZilchShaderIRGenerator::~SimpleZilchShaderIRGenerator()
 {
   delete mFrontEndTranslator;
-  ZilchShaderIntrinsics::Destroy();
+  ShaderIntrinsicsStaticZilchLibrary::Destroy();
   Zilch::ShaderIntrinsicsLibrary::Destroy();
   ZilchShaderIRCore::Destroy();
 }
@@ -409,8 +409,8 @@ void SimpleZilchShaderIRGenerator::SetupDependencies(StringParam extensionsDirec
   Zilch::ShaderIntrinsicsLibrary::InitializeInstance();
 
   // Create the intrinsics library and parse it
-  ZilchShaderIntrinsics::InitializeInstance();
-  ZilchShaderIntrinsics& shaderIntrinsics = ZilchShaderIntrinsics::GetInstance();
+  ShaderIntrinsicsStaticZilchLibrary::InitializeInstance();
+  ShaderIntrinsicsStaticZilchLibrary& shaderIntrinsics = ShaderIntrinsicsStaticZilchLibrary::GetInstance();
   shaderIntrinsics.Parse(mFrontEndTranslator);
   mShaderIntrinsicsLibrary = shaderIntrinsics.GetLibrary();
 

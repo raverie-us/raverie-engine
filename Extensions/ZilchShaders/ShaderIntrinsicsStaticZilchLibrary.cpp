@@ -14,22 +14,22 @@ namespace Zero
 {
 
 //-------------------------------------------------------------------ZilchShaderIRCore
-ZilchShaderIntrinsics* ZilchShaderIntrinsics::mInstance = nullptr;
+ShaderIntrinsicsStaticZilchLibrary* ShaderIntrinsicsStaticZilchLibrary::mInstance = nullptr;
 
-void ZilchShaderIntrinsics::InitializeInstance()
+void ShaderIntrinsicsStaticZilchLibrary::InitializeInstance()
 {
   ReturnIf(mInstance != nullptr, ,
     "Can't initialize a static library more than once");
-  mInstance = new ZilchShaderIntrinsics();
+  mInstance = new ShaderIntrinsicsStaticZilchLibrary();
 }
 
-void ZilchShaderIntrinsics::Destroy()
+void ShaderIntrinsicsStaticZilchLibrary::Destroy()
 {
   delete mInstance;
   mInstance = nullptr;
 }
 
-ZilchShaderIntrinsics& ZilchShaderIntrinsics::GetInstance()
+ShaderIntrinsicsStaticZilchLibrary& ShaderIntrinsicsStaticZilchLibrary::GetInstance()
 {
   ErrorIf(mInstance == nullptr,
     "Attempted to get an uninitialized singleton static library");
@@ -37,12 +37,12 @@ ZilchShaderIntrinsics& ZilchShaderIntrinsics::GetInstance()
   return *mInstance;
 }
 
-ZilchShaderIntrinsics::ZilchShaderIntrinsics()
+ShaderIntrinsicsStaticZilchLibrary::ShaderIntrinsicsStaticZilchLibrary()
 {
 
 }
 
-void ZilchShaderIntrinsics::Parse(ZilchSpirVFrontEnd* translator)
+void ShaderIntrinsicsStaticZilchLibrary::Parse(ZilchSpirVFrontEnd* translator)
 {
   ZilchShaderIRLibrary* shaderLibrary = new ZilchShaderIRLibrary();
   shaderLibrary->mZilchLibrary = Zilch::ShaderIntrinsicsLibrary::GetInstance().GetLibrary();
@@ -89,12 +89,12 @@ void ZilchShaderIntrinsics::Parse(ZilchSpirVFrontEnd* translator)
   PopulateStageRequirementsData(shaderLibrary);
 }
 
-ZilchShaderIRLibraryRef ZilchShaderIntrinsics::GetLibrary()
+ZilchShaderIRLibraryRef ShaderIntrinsicsStaticZilchLibrary::GetLibrary()
 {
   return mLibraryRef;
 }
 
-void ZilchShaderIntrinsics::CreateImageAndSampler(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary,
+void ShaderIntrinsicsStaticZilchLibrary::CreateImageAndSampler(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary,
   Zilch::BoundType* zilchSampledType, Zilch::BoundType* zilchImageType, Zilch::BoundType* zilchSampledImageType,
   int dimension, int depthMode)
 {
@@ -115,7 +115,7 @@ void ZilchShaderIntrinsics::CreateImageAndSampler(ZilchSpirVFrontEnd* translator
   translator->MakeShaderTypeMeta(sampledImageType, nullptr);
 }
 
-void ZilchShaderIntrinsics::PopulateStageRequirementsData(ZilchShaderIRLibrary* shaderLibrary)
+void ShaderIntrinsicsStaticZilchLibrary::PopulateStageRequirementsData(ZilchShaderIRLibrary* shaderLibrary)
 {
   // Find all zilch functions that have the [RequiresPixel] attribute.
   // These need to be processed into the stage requirements cached in the library/

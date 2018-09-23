@@ -9,16 +9,17 @@
 namespace Zero
 {
 
-//-------------------------------------------------------------------ZilchShaderIntrinsics
-// The zilch shader wrapper around Zilch's ShaderIntrinsics library. Contains the image/sampler types.
-class ZilchShaderIntrinsics
+//-------------------------------------------------------------------ShaderIntrinsicsStaticZilchLibrary
+// The zilch shader library wrapper around Zilch's ShaderIntrinsics library.
+// This needs to be built once before all shader translations. Contains the image/sampler types.
+class ShaderIntrinsicsStaticZilchLibrary
 {
 public:
   static void InitializeInstance();
   static void Destroy();
-  static ZilchShaderIntrinsics& GetInstance();
+  static ShaderIntrinsicsStaticZilchLibrary& GetInstance();
 
-  ZilchShaderIntrinsics();
+  ShaderIntrinsicsStaticZilchLibrary();
   // Parse the ShaderIntrinsics library and make all backing shader types.
   void Parse(ZilchSpirVFrontEnd* translator);
   ZilchShaderIRLibraryRef GetLibrary();
@@ -31,7 +32,7 @@ private:
   void PopulateStageRequirementsData(ZilchShaderIRLibrary* shaderLibrary);
 
   ZilchShaderIRLibraryRef mLibraryRef;
-  static ZilchShaderIntrinsics* mInstance;
+  static ShaderIntrinsicsStaticZilchLibrary* mInstance;
 };
 
 }//namespace Zero

@@ -10,7 +10,9 @@ namespace Zero
 {
 
 //-------------------------------------------------------------------ZilchShaderIRCore
-// The zilch shader wrapper around Zilch's core library. Contains the primitive types for translation.
+/// The zilch shader wrapper around Zilch's core library. This needs to be
+/// built and have the Parse function called once before all shader translation.
+/// Contains the primitive types for translation.
 class ZilchShaderIRCore
 {
 public:

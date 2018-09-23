@@ -177,8 +177,8 @@ void ZilchShaderGenerator::InitializeSpirV()
   mCoreLibrary = coreLibrary.GetLibrary();
 
   // Create the intrinsics library and parse it
-  ZilchShaderIntrinsics::InitializeInstance();
-  ZilchShaderIntrinsics& shaderIntrinsics = ZilchShaderIntrinsics::GetInstance();
+  ShaderIntrinsicsStaticZilchLibrary::InitializeInstance();
+  ShaderIntrinsicsStaticZilchLibrary& shaderIntrinsics = ShaderIntrinsicsStaticZilchLibrary::GetInstance();
   shaderIntrinsics.Parse(mFrontEndTranslator);
   mShaderIntrinsicsLibrary = shaderIntrinsics.GetLibrary();
 
