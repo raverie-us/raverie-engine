@@ -1705,7 +1705,7 @@ void ZilchSpirVFrontEnd::WalkMemberAccessCallNode(Zilch::FunctionCallNode*& node
     return;
   }
 
-  ExtensionInstruction* extension = mLibrary->FindExtensionInstruction(zilchFunction);
+  SpirVExtensionInstruction* extension = mLibrary->FindExtensionInstruction(zilchFunction);
   if(extension != nullptr)
   {
     WalkMemberAccessExtensionInstructionCallNode(node, memberAccessNode, extension, context);
@@ -1780,7 +1780,7 @@ ZilchShaderIROp* ZilchSpirVFrontEnd::GenerateFunctionCall(BasicBlock* block, Zil
   return functionCallOp;
 }
 
-void ZilchSpirVFrontEnd::WalkMemberAccessExtensionInstructionCallNode(Zilch::FunctionCallNode*& node, Zilch::MemberAccessNode* memberAccessNode, ExtensionInstruction* extensionInstruction, ZilchSpirVFrontEndContext* context)
+void ZilchSpirVFrontEnd::WalkMemberAccessExtensionInstructionCallNode(Zilch::FunctionCallNode*& node, Zilch::MemberAccessNode* memberAccessNode, SpirVExtensionInstruction* extensionInstruction, ZilchSpirVFrontEndContext* context)
 {
   ZilchShaderExtensionImport* importLibraryIR = nullptr;
   importLibraryIR = mLibrary->FindExtensionLibraryImport(extensionInstruction->mLibrary);
@@ -3214,6 +3214,8 @@ ZilchShaderIROp* ZilchSpirVFrontEnd::GenerateBoolToIntegerCast(BasicBlock* block
 
 ZilchShaderIROp* ZilchSpirVFrontEnd::GenerateFromBoolCast(BasicBlock* block, ZilchShaderIROp* source, ZilchShaderIRType* destType, IZilchShaderIR* zero, IZilchShaderIR* one, ZilchSpirVFrontEndContext* context)
 {
+  // SpirV doesn't support a bool to type cast. Instead a select op must be generated
+  // to choose between two values. This is effectively: bool ? trueResult : falseResult.
   IZilchShaderIR* condition = source;
   IZilchShaderIR* trueValue = one;
   IZilchShaderIR* falseValue = zero;
@@ -3248,6 +3250,8 @@ ZilchShaderIROp* ZilchSpirVFrontEnd::GenerateIntegerToBoolCast(BasicBlock* block
 
 ZilchShaderIROp* ZilchSpirVFrontEnd::GenerateToBoolCast(BasicBlock* block, OpType op, ZilchShaderIROp* source, ZilchShaderIRType* destType, IZilchShaderIR* zero, ZilchSpirVFrontEndContext* context)
 {
+  // SpirV doesn't support a cast to a bool. Instead this must be generated from a comparison
+  // operator with the corrsponding zero vector. E.g. (Boolean2)Integer2 => Integer2 != Integer2(0)
   IZilchShaderIR* rhs = zero;
   ZilchShaderIROp* condition = source;
   ZilchShaderIRType* sourceType = source->mResultType;

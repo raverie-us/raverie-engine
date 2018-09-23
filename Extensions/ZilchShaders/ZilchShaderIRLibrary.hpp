@@ -150,7 +150,7 @@ public:
 
   // Constructor library replacements
   ZilchShaderIRFunction* FindFunction(Zilch::Function* zilchFunction, bool checkDependencies = true);
-  ExtensionInstruction* FindExtensionInstruction(Zilch::Function* zilchFunction, bool checkDependencies = true);
+  SpirVExtensionInstruction* FindExtensionInstruction(Zilch::Function* zilchFunction, bool checkDependencies = true);
   ZilchShaderExtensionImport* FindExtensionLibraryImport(SpirVExtensionLibrary* extensionLibrary, bool checkDependencies = true);
 
   ZilchShaderIRConstantLiteral* FindConstantLiteral(Zilch::Any& literalValue, bool checkDependencies = true);
@@ -208,7 +208,7 @@ public:
   ConstructorCallResolverIRFn FindConstructorResolver(Zilch::Type* zilchType, Zilch::Function* zilchFunction, bool checkDependencies = true);
 
   ZilchShaderIRFunction* FindFunction(Zilch::Function* zilchFunction, bool checkDependencies = true);
-  ExtensionInstruction* FindExtensionInstruction(Zilch::Function* zilchFunction, bool checkDependencies = true);
+  SpirVExtensionInstruction* FindExtensionInstruction(Zilch::Function* zilchFunction, bool checkDependencies = true);
   ZilchShaderExtensionImport* FindExtensionLibraryImport(SpirVExtensionLibrary* extensionLibrary, bool checkDependencies = true);
 
   ZilchShaderIRConstantLiteral* FindConstantLiteral(Zilch::Any& literalValue, bool checkDependencies = true);
@@ -255,7 +255,7 @@ public:
   OperatorResolvers mOperatorResolvers;
 
   Array<SpirVExtensionLibrary*> mExtensionLibraries;
-  HashMap<Zilch::Function*, ExtensionInstruction*> mExtensionInstructions;
+  HashMap<Zilch::Function*, SpirVExtensionInstruction*> mExtensionInstructions;
   HashMap<SpirVExtensionLibrary*, ZilchShaderExtensionImport*> mExtensionLibraryImports;
   HashMap<TemplateTypeKey, TemplateTypeIRResloverFn> mTemplateResolvers;
 
