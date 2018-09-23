@@ -64,12 +64,12 @@ public:
   DefaultConstructorResolverFn mDefaultConstructorResolver;
   ConstructorCallResolverIRFn mBackupConstructorResolver;
   MemberPropertySetterResolverIRFn mBackupSetterResolver;
-  // Library translations for constructors of a type (e.g. Real3 splat constructor)
+  /// Library translations for constructors of a type (e.g. Real3 splat constructor)
   HashMap<Zilch::Function*, ConstructorCallResolverIRFn> mConstructorResolvers;
 
   HashMap<Zilch::Function*, MemberFunctionResolverIRFn> mFunctionResolvers;
   HashMap<Zilch::Function*, MemberPropertySetterResolverIRFn> mSetterResolvers;
-  // Some types need to override how expression initializers work (e.g. fixed array).
+  /// Some types need to override how expression initializers work (e.g. fixed array).
   ExpressionInitializerIRResolverFn mExpressionInitializerListResolver;
 };
 
@@ -97,16 +97,16 @@ private:
 };
 
 //-------------------------------------------------------------------GlobalVariableData
-// Data about global variables.
+/// Data about global variables.
 class GlobalVariableData
 {
 public:
   GlobalVariableData();
   ~GlobalVariableData();
 
-  // The instance of the global variable. This instance is owned by this class.
+  /// The instance of the global variable. This instance is owned by this class.
   ZilchShaderIROp* mInstance;
-  // A function that initializes this instance. Can be null.
+  /// A function that initializes this instance. Can be null.
   ZilchShaderIRFunction* mInitializerFunction;
 };
 
@@ -132,18 +132,21 @@ struct StageRequirementsData
 };
 
 //-------------------------------------------------------------------ZilchShaderIRModule
+/// A module represents a collection of libraries, typically used to
+/// express what dependencies another library has. All libraries in this
+/// module should be fully compiled (and hence locked) if they're in a module.
 class ZilchShaderIRModule : public Array<ZilchShaderIRLibraryRef>
 {
 public:
-  // Find a type in any of the contained libraries
+  /// Find a type in any of the contained libraries
   ZilchShaderIRType* FindType(const String& typeName, bool checkDependencies = true);
 
-  // Find the global variable data associate with the given zilch field.
+  /// Find the global variable data associate with the given zilch field.
   GlobalVariableData* FindGlobalVariable(Zilch::Field* zilchField, bool checkDependencies = true);
-  // Find the global variable data associate with the given instance variable op.
+  /// Find the global variable data associate with the given instance variable op.
   GlobalVariableData* FindGlobalVariable(ZilchShaderIROp* globalInstance, bool checkDependencies = true);
 
-  // Find a resolver for a template type
+  /// Find a resolver for a template type
   TemplateTypeIRResloverFn FindTemplateResolver(const TemplateTypeKey& templateKey, bool checkDependencies = true);
 
   TypeResolvers* FindTypeResolver(Zilch::Type* zilchType, bool checkDependencies = true);
@@ -170,6 +173,9 @@ private:
 };
 
 //-------------------------------------------------------------------ZilchShaderIRLibrary
+/// A library built during shader translation. Mostly an internal type that
+/// stores all necessary lookup information to build and generate a spir-v shader.
+/// Also contains what types were created during translation.
 class ZilchShaderIRLibrary
 {
 public:
@@ -180,18 +186,18 @@ public:
   ZilchShaderIRType* FindType(const String& typeName, bool checkDependencies = true);
   ZilchShaderIRType* FindType(Zilch::Type* zilchType, bool checkDependencies = true);
 
-  // Find the global variable data associate with the given zilch field.
+  /// Find the global variable data associate with the given zilch field.
   GlobalVariableData* FindGlobalVariable(Zilch::Field* zilchField, bool checkDependencies = true);
-  // Find the global variable data associate with the given instance variable op.
+  /// Find the global variable data associate with the given instance variable op.
   GlobalVariableData* FindGlobalVariable(ZilchShaderIROp* globalInstance, bool checkDependencies = true);
   
   // Resolvers for template types (e.g. FixedArray)
   void RegisterTemplateResolver(const TemplateTypeKey& templateKey, TemplateTypeIRResloverFn resolver);
   TemplateTypeIRResloverFn FindTemplateResolver(const TemplateTypeKey& templateKey, bool checkDependencies = true);
 
-  // Pulls all reverse dependencies from all the dependent modules into this library (flattens the list)
+  /// Pulls all reverse dependencies from all the dependent modules into this library (flattens the list)
   void FlattenModuleDependents();
-  // Fills out a list of all types that depend on the given type
+  /// Fills out a list of all types that depend on the given type
   void GetAllDependents(ZilchShaderIRType* shaderType, HashSet<ZilchShaderIRType*>& finalDependents);
 
   // Library replacements on a type
@@ -232,23 +238,25 @@ public:
   PodBlockArray<ShaderIRTypeMeta*> mOwnedTypeMeta;
   PodBlockArray<ZilchShaderIROp*> mOwnedSpecializationConstants;
 
-  // Map of all types by name (Zilch type name)
+  /// Map of all types by name (Zilch type name). Contains all types generated
+  /// (including function pointer types, Real*, etc...), not just bound types.
+  /// A type is a bound type is the meta is non-null.
   HashMap<String, ZilchShaderIRType*> mTypes;
 
-  // All constant literals.
+  /// All constant literals.
   HashMap<Zilch::Any, ZilchShaderIRConstantLiteral*> mConstantLiterals;
-  // Map of all constants by type/value
+  /// Map of all constants by type/value
   HashMap<ConstantOpKeyType, ZilchShaderIROp*> mConstantOps;
-  // Lookup for enums based upon their zilch property.
+  /// Lookup for enums based upon their zilch property.
   HashMap<void*, ZilchShaderIROp*> mEnumContants;
-  // Map of all specialization constant by key (typically zilch field)
+  /// Map of all specialization constant by key (typically zilch field)
   HashMap<void*, ZilchShaderIROp*> mSpecializationConstantMap;
-  // All globals declared in this library. Currently used for samplers.
+  /// All globals declared in this library. Currently used for samplers.
   HashMap<Zilch::Field*, GlobalVariableData*> mZilchFieldToGlobalVariable;
-  // Mapping from the global variable ops to the owning field so that the global variable data can be looked up.
+  /// Mapping from the global variable ops to the owning field so that the global variable data can be looked up.
   HashMap<ZilchShaderIROp*, Zilch::Field*> mGlobalVariableToZilchField;
 
-  // Map of all zilch functions to shader functions
+  /// Map of all zilch functions to shader functions
   HashMap<Zilch::Function*, ZilchShaderIRFunction*> mFunctions;
   HashMap<Zilch::Type*, TypeResolvers> mTypeResolvers;
   /// Operator resolvers for the current library

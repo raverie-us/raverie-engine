@@ -21,7 +21,7 @@ public:
   static ZilchShaderIRCore& GetInstance();
 
   ZilchShaderIRCore();
-  // Parse the core library and make all backing shader types.
+  /// Parse the core library and make all backing shader types.
   void Parse(ZilchSpirVFrontEnd* translator);
   ZilchShaderIRLibraryRef GetLibrary();
 
