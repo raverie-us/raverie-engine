@@ -33,7 +33,7 @@ target_sources(ZilchShaders
     ${CMAKE_CURRENT_LIST_DIR}/StageRequirementsGatherer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/TypeDependencyCollector.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderGlslBackend.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIntrinsics.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ShaderIntrinsicsStaticZilchLibrary.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRCompositor.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRCore.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRLibrary.cpp
@@ -73,7 +73,7 @@ target_sources(ZilchShaders
     ${CMAKE_CURRENT_LIST_DIR}/StageRequirementsGatherer.hpp
     ${CMAKE_CURRENT_LIST_DIR}/TypeDependencyCollector.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderGlslBackend.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIntrinsics.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ShaderIntrinsicsStaticZilchLibrary.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRCompositor.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRCore.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRLibrary.hpp
