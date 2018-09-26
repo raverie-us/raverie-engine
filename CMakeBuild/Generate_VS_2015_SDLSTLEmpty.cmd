@@ -1,4 +1,4 @@
-pushd %cd%
+pushd %~dp0
 
 set folder_name="VS_2015_SDLSTLEmpty_Windows"
 rd %folder_name% /s/q

@@ -1,4 +1,4 @@
-pushd %cd%
+pushd %~dp0
 
 set folder_name="VS2015_LLVM-vs2014_Windows"
 rd %folder_name% /s/q

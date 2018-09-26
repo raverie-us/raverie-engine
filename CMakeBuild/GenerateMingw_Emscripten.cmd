@@ -1,4 +1,4 @@
-pushd %cd%
+pushd %~dp0
 
 set folder_name="Mingw_Emscripten"
 rd %folder_name% /s/q
