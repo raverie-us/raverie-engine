@@ -24,7 +24,8 @@ class LauncherCommunicationEvent;
 class TcpSocket;
 
 void BindProjectCommands(Cog* config, CommandManager* commands);
-void OpenProjectFile(StringParam filename);
+/// Returns false when the project file couldn't be opened.
+bool OpenProjectFile(StringParam filename);
 
 void NewProject();
 void OpenProject();

@@ -80,6 +80,12 @@ void EngineLibraryExtensions::TypeParsedCallback(Zilch::ParseEvent* e, void* use
   ReturnIf(resource == nullptr, , "Type parsed not from a Resource?");
   boundType->Add(new MetaResource(resource));
 
+  Status nameStatus;
+  resource->GetManager()->ValidateRawName(nameStatus, boundType->TemplateBaseName, boundType);
+
+  if (nameStatus.Failed())
+    e->BuildingProject->Raise(boundType->NameLocation, ErrorCode::GenericError, nameStatus.Message.c_str());
+
   ProcessComponentInterfaces(boundType);
 }
 

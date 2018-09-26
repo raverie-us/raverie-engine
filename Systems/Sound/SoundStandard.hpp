@@ -37,21 +37,38 @@ public:
   static void Shutdown();
 };
 
-}//namespace Zero
+} //namespace Zero
 
-#include "AudioEngine/AudioSystemInterface.h"
-
+#include "Definitions.hpp"
+#include "RingBuffer.hpp"
+#include "LockFreeQueue.hpp"
+#include "Interpolator.hpp"
+#include "AudioIOInterface.hpp"
+#include "Filters.hpp"
+#include "Resampler.hpp"
+#include "VBAP.hpp"
+#include "PitchChange.hpp"
+#include "FileDecoder.hpp"
+#include "VolumeModifier.hpp"
+#include "SoundAsset.hpp"
+#include "SoundNode.hpp"
+#include "SoundTag.hpp"
+#include "AudioMixer.hpp"
+#include "AttenuatorNode.hpp"
+#include "EmitterNode.hpp"
+#include "ListenerNode.hpp"
+#include "CustomAudioNode.hpp"
+#include "GeneratedAudio.hpp"
+#include "Recording.hpp"
 #include "SoundListener.hpp"
-#include "SoundFilterNode.hpp"
+#include "DspFilterNodes.hpp"
 #include "SoundAttenuator.hpp"
 #include "SoundEmitter.hpp"
 #include "SoundSpace.hpp"
 #include "SoundNodeGraph.hpp"
 #include "SoundInstance.hpp"
-#include "SoundTag.hpp"
 #include "SoundSystem.hpp"
 #include "Sound.hpp"
 #include "SoundCue.hpp"
 #include "SimpleSound.hpp"
 #include "SimpleSound.hpp"
-

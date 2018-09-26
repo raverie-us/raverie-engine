@@ -621,13 +621,21 @@ void NewProjectMenu::OnCreateProject(Event* e)
 //******************************************************************************
 void NewProjectMenu::OnTemplateInstallFinished(BackgroundTaskEvent* e)
 {
-  if(e->mTask->IsCompleted())
+  bool completed = e->mTask->IsCompleted();
+  // If downloading the template failed for any reason notify the user (typically no internet)
+  if(!completed)
   {
-    DownloadAndCreateTemplateTaskJob* job = (DownloadAndCreateTemplateTaskJob*)e->mTask->GetFinishedJob();
-    CachedProject* project = job->GetOrCreateCachedProject(mLauncher->mProjectCache);
-    
-    RunNewlyCreatedProject(project);
+    String msg = "Project creation failed";
+    String extraMsg = "Cannot download template project. Do you have internet?";
+    ModalButtonsAction* modal = new ModalButtonsAction(this, msg.ToUpper(), "CLOSE", extraMsg.ToUpper());
+    mLauncher->mActiveModal = modal;
+    return;
   }
+  
+  DownloadAndCreateTemplateTaskJob* job = (DownloadAndCreateTemplateTaskJob*)e->mTask->GetFinishedJob();
+  CachedProject* project = job->GetOrCreateCachedProject(mLauncher->mProjectCache);
+
+  RunNewlyCreatedProject(project);
 }
 
 //******************************************************************************

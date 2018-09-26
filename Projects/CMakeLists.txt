@@ -81,7 +81,6 @@ target_link_libraries(ZeroEditor
                       Platform 
                       Content 
                       Dash 
-                      AudioEngine 
                       UiWidget
                       Startup
                       Zilch
@@ -114,7 +113,6 @@ target_link_libraries(ZeroLauncher
                       Content 
                       Dash 
                       Zilch 
-                      AudioEngine 
                       UiWidget 
                       CodeTranslator
 ) 
@@ -141,7 +139,6 @@ target_link_libraries(ZeroLauncherSharedLibrary
                       Content 
                       Dash 
                       Zilch 
-                      AudioEngine 
                       UiWidget 
                       CodeTranslator
 ) 

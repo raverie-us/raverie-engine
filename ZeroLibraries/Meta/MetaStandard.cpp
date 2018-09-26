@@ -164,12 +164,14 @@ void MetaLibrary::Initialize()
   RegisterFunctionAttribute(Zilch::StaticAttribute)->AllowStatic(true);
   RegisterFunctionAttribute(Zilch::VirtualAttribute);
   RegisterFunctionAttribute(Zilch::OverrideAttribute);
+  RegisterFunctionAttribute(PropertyAttributes::cInternal);
   RegisterFunctionAttribute(FunctionAttributes::cDisplay)->AllowStatic(true);
 
   RegisterPropertyAttribute(Zilch::StaticAttribute)->AllowStatic(true);
   RegisterPropertyAttribute(Zilch::VirtualAttribute);
   RegisterPropertyAttribute(Zilch::OverrideAttribute);
   RegisterPropertyAttribute(PropertyAttributes::cProperty);
+  RegisterPropertyAttribute(PropertyAttributes::cInternal);
   RegisterPropertyAttribute(PropertyAttributes::cSerialize);
   RegisterPropertyAttribute(PropertyAttributes::cDeprecatedSerialized);
   RegisterPropertyAttribute(PropertyAttributes::cDisplay)->AllowStatic(true);

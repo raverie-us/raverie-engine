@@ -62,6 +62,9 @@ public:
 
 typedef BaseInList<BaseCog, Cog, &BaseCog::HierarchyLink> HierarchyList;
 
+/// A range that only iterates over diret children and checks for specific names.
+typedef ConditionalRange<HierarchyList::range, NameCondition> HierarchyListNameRange;
+
 //---------------------------------------------------------------------------------------------- Cog
 /// Game Object Composition class. This class is the foundational object for all
 /// dynamic objects in the game world. The Cog is a piece of logical interactive 
@@ -238,6 +241,8 @@ public:
   Cog* FindDirectChildByName(StringParam name);
   /// Returns a range of all children with the given name.
   HierarchyNameRange FindAllChildrenByName(StringParam name);
+  /// Returns a range of all direct children with the given name.
+  HierarchyListNameRange FindAllDirectChildrenByName(StringParam name);
   /// Returns the child object with the given id. This is only checks direct children.
   Cog* FindChildByChildId(Guid childId);
 

@@ -96,6 +96,7 @@
 #pragma comment(lib, "dbghelp.lib")
 #pragma comment(lib, "user32.lib")
 #pragma comment(lib, "Ws2_32.lib")
+#pragma comment(lib, "Avrt.lib")
 
 // Non-windows libraries that we link in
 #pragma comment(lib, "freetype28.lib")

@@ -112,10 +112,20 @@ void ObjectState::Combine(ObjectState* state)
 
   // Copy Child modifications
   forRange(ChildId& addedChild, state->GetAddedChildren())
-    mAddedChildren.Insert(addedChild);
+  {
+    if (mRemovedChildren.Contains(addedChild))
+      mRemovedChildren.Erase(addedChild);
+    else
+      mAddedChildren.Insert(addedChild);
+  }
 
   forRange(ChildId& removedChild, state->GetRemovedChildren())
-    mRemovedChildren.Insert(removedChild);
+  {
+    if (mAddedChildren.Contains(removedChild))
+      mAddedChildren.Erase(removedChild);
+    else
+      mRemovedChildren.Insert(removedChild);
+  }
 
   // Child order
   mChildOrderModified |= state->mChildOrderModified;

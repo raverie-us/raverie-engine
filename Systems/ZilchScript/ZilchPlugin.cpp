@@ -555,9 +555,14 @@ ZilchPluginSourceManager::~ZilchPluginSourceManager()
 {
 }
 
-void ZilchPluginSourceManager::ValidateName(Status& status, StringParam name)
+void ZilchPluginSourceManager::ValidateNewName(Status& status, StringParam name, BoundType* optionalType)
 {
-  ZilchDocumentResource::ValidateScriptName(status, name);
+  ZilchDocumentResource::ValidateNewScriptName(status, name);
+}
+
+void ZilchPluginSourceManager::ValidateRawName(Status& status, StringParam name, BoundType* optionalType)
+{
+  ZilchDocumentResource::ValidateRawScriptName(status, name);
 }
 
 bool ZilchPluginSourceManager::IsCompilingPlugins()

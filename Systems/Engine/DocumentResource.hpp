@@ -32,6 +32,7 @@ struct Completion
   String Name;
   String Description;
   String SignaturePathType;
+  bool Hidden;
   ResourceId AssociatedResourceId;
 };
 

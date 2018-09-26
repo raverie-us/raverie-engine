@@ -90,6 +90,7 @@ target_link_libraries(Content
                       Zilch
                       ${AssimpStatic}
                       ${NvttStatic}
+                      ${OpusStatic}
 )
 target_link_libraries(Engine
                       PUBLIC
@@ -117,6 +118,7 @@ target_link_libraries(Sound
                       PUBLIC
                       Common
                       Geometry
+                      ${OpusStatic}
 ) 
 target_link_libraries(Startup
                       PUBLIC

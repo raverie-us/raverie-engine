@@ -9,7 +9,8 @@
 
 namespace Zero
 {
-Math::Random gRandom;
+
+using namespace AudioConstants;
 
 //------------------------------------------------------------------------------------ Sound Emitter
 
@@ -117,22 +118,8 @@ SoundEmitter::~SoundEmitter()
     mAttenuator->RemoveAttenuationNode(mAttenuatorNode);
 
   // Disconnect emitter nodes and all nodes attached to this emitter
-  if (mSoundNodeOutput && mSoundNodeOutput->mNode)
-    mSoundNodeOutput->mNode->DisconnectThisAndAllInputs();
-
-  // Delete nodes
-  if (mEmitterObject)
-    mEmitterObject->DeleteThisNode();
-  if (mPitchNode)
-    mPitchNode->DeleteThisNode();
-  if (mVolumeNode)
-    mVolumeNode->DeleteThisNode();
-
-  // Stop sound nodes from doing anything in destructor
-  if (mSoundNodeInput)
-    mSoundNodeInput->mNode = nullptr;
   if (mSoundNodeOutput)
-    mSoundNodeOutput->mNode = nullptr;
+    mSoundNodeOutput->DisconnectThisAndAllInputs();
 }
 
 //**************************************************************************************************
@@ -164,50 +151,34 @@ void SoundEmitter::Initialize(CogInitializer& initializer)
     // Add emitter to the space
     mSpace->mEmitters.PushBack(this);
     // Add a new emitter to the audio engine
-    mEmitterObject = new Audio::EmitterNode("Emitter", mNodeID, mPrevPosition, Math::Vec3(0, 0, 0), this);
+    mEmitterObject = new EmitterNode("Emitter", mNodeID, mPrevPosition, Math::Vec3(0, 0, 0));
 
     // If directional, set directional information in audio engine
     if (mDirectional)
     {
-      mEmitterObject->SetDirectionalAngle(mEmitAngle, mRearVolume);
+      // Okay to call the threaded functions directly because it's not attached to anything yet
+      mEmitterObject->SetDirectionalAngleThreaded(mEmitAngle, mRearVolume);
 
-      Vec4 basisZ = mTransform->GetWorldMatrix().BasisZ();
-
-      mEmitterObject->SetForwardDirection(Vec3(basisZ.x, basisZ.y, basisZ.z));
+      mEmitterObject->SetForwardDirectionThreaded(Math::ToVector3(mTransform->GetWorldMatrix().BasisZ()));
     }
+
+    // Set the emitter node as the input
+    mSoundNodeInput = mEmitterObject;
 
     // Add a new pitch node below the emitter node
-    mPitchNode = new Audio::PitchNode("Emitter", mNodeID, this);
-    mPitchNode->SetPitch(Z::gSound->PitchToSemitones(mPitch), 0.0f);
-    mPitchNode->AddInput(mEmitterObject);
+    mPitchNode = new PitchNode("Emitter", mNodeID);
+    mPitchNode->SetPitch(mPitch);
+    mPitchNode->AddInputNode(mEmitterObject);
 
-    // Add a new volume node below the emitter node
-    mVolumeNode = new Audio::VolumeNode("Emitter", mNodeID, this);
-    mVolumeNode->SetVolume(mVolume, 0.0f);
-    mVolumeNode->AddInput(mPitchNode);
+    // Add a new volume node below the pitch node
+    mVolumeNode = new VolumeNode("Emitter", mNodeID);
+    mVolumeNode->SetVolume(mVolume);
+    mVolumeNode->AddInputNode(mPitchNode);
 
-    // Create the SoundNode for the OutputNode
-    SoundNode* outNode = new SoundNode();
-    // If the VolumeNode exists, set this as the output
-    if (mVolumeNode)
-      outNode->mNode = mVolumeNode;
-    else
-    {
-      // If no VolumeNode but PitchNode exists, set that as the output
-      if (mPitchNode)
-        outNode->mNode = mPitchNode;
-      // Otherwise set the EmitterNode as the output
-      else
-        outNode->mNode = mEmitterObject;
-    }
-    // Set the variables for the restrictions on the output node
-    outNode->mCanInsertBefore = false;
-    outNode->mCanRemove = false;
-    outNode->mCanReplace = false;
-    // Set the OutputNode handle
-    mSoundNodeOutput = outNode;
+    // Set the volume node as the output
+    mSoundNodeOutput = mVolumeNode;
 
-    // Set up attenuation and create the InputNode
+    // Set up attenuation 
     SetUpAttenuatorNode(mAttenuator);
 
     // Add to all existing listeners in the space
@@ -280,16 +251,15 @@ void SoundEmitter::SetVolume(float volume)
 //**************************************************************************************************
 void SoundEmitter::InterpolateVolume(float volume, float interpolationTime)
 {
-  mVolume = Math::Clamp(volume, 0.0f, Audio::MaxVolumeValue);
+  mVolume = Math::Clamp(volume, 0.0f, cMaxVolumeValue);
 
-  if (mVolumeNode)
-    mVolumeNode->SetVolume(mVolume, interpolationTime);
+  mVolumeNode->InterpolateVolume(mVolume, interpolationTime);
 }
 
 //**************************************************************************************************
 float SoundEmitter::GetDecibels()
 {
-  return Z::gSound->VolumeToDecibels(mVolume);
+  return VolumeToDecibels(mVolume);
 }
 
 //**************************************************************************************************
@@ -301,10 +271,9 @@ void SoundEmitter::SetDecibels(float decibels)
 //**************************************************************************************************
 void SoundEmitter::InterpolateDecibels(float decibels, float interpolationTime)
 {
-  mVolume = Math::Clamp(Z::gSound->DecibelsToVolume(decibels), 0.0f, Audio::MaxVolumeValue);
+  mVolume = Math::Clamp(DecibelsToVolume(decibels), 0.0f, cMaxVolumeValue);
 
-  if (mVolumeNode)
-    mVolumeNode->SetVolume(mVolume, interpolationTime);
+  mVolumeNode->InterpolateVolume(mVolume, interpolationTime);
 }
 
 //**************************************************************************************************
@@ -322,16 +291,15 @@ void SoundEmitter::SetPitch(float pitch)
 //**************************************************************************************************
 void SoundEmitter::InterpolatePitch(float pitch, float interpolationTime)
 {
-  mPitch = Math::Clamp(pitch, Audio::MinPitchValue, Audio::MaxPitchValue);
+  mPitch = Math::Clamp(pitch, cMinPitchValue, cMaxPitchValue);
 
-  if (mPitchNode)
-    mPitchNode->SetPitch(Z::gSound->PitchToSemitones(mPitch), interpolationTime);
+  mPitchNode->InterpolatePitch(mPitch, interpolationTime);
 }
 
 //**************************************************************************************************
 float SoundEmitter::GetSemitones()
 {
-  return Z::gSound->PitchToSemitones(mPitch);
+  return PitchToSemitones(mPitch);
 }
 
 //**************************************************************************************************
@@ -343,10 +311,9 @@ void SoundEmitter::SetSemitones(float pitch)
 //**************************************************************************************************
 void SoundEmitter::InterpolateSemitones(float pitch, float interpolationTime)
 {
-  mPitch = Math::Clamp(Z::gSound->SemitonesToPitch(pitch), Audio::MinPitchValue, Audio::MaxPitchValue);
+  mPitch = Math::Clamp(SemitonesToPitch(pitch), cMinPitchValue, cMaxPitchValue);
 
-  if (mPitchNode)
-    mPitchNode->SetPitch(pitch, interpolationTime);
+  mPitchNode->InterpolatePitch(mPitch, interpolationTime);
 }
 
 //**************************************************************************************************
@@ -358,21 +325,9 @@ bool SoundEmitter::GetPaused()
 //**************************************************************************************************
 void SoundEmitter::SetPaused(bool pause)
 {
-  if (mEmitterObject)
-  {
-    // Should be set to pause and is not currently paused
-    if (pause && !mIsPaused)
-    {
-      mIsPaused = true;
-      mEmitterObject->Pause();
-    }
-    // Should be set to un-paused and is currently paused
-    else if (!pause && mIsPaused)
-    {
-      mIsPaused = false;
-      mEmitterObject->Resume();
-    }
-  }
+  mIsPaused = pause;
+  EmitterNode* node = mEmitterObject;
+  Z::gSound->Mixer.AddTask(CreateFunctor(&EmitterNode::SetPausedThreaded, node, mIsPaused), node);
 }
 
 //**************************************************************************************************
@@ -427,8 +382,9 @@ float SoundEmitter::GetEmitAngle()
 void SoundEmitter::SetEmitAngle(float angleInDegrees)
 {
   mEmitAngle = Math::Clamp(angleInDegrees, 1.0f, 360.0f);
-  if (mEmitterObject)
-    mEmitterObject->SetDirectionalAngle(mEmitAngle, mRearVolume);
+  EmitterNode* node = mEmitterObject;
+  Z::gSound->Mixer.AddTask(CreateFunctor(&EmitterNode::SetDirectionalAngleThreaded, node,
+    mEmitAngle, mRearVolume), node);
 }
 
 //**************************************************************************************************
@@ -440,9 +396,10 @@ float SoundEmitter::GetRearVolume()
 //**************************************************************************************************
 void SoundEmitter::SetRearVolume(float minimumVolume)
 {
-  mRearVolume = Math::Clamp(minimumVolume, 0.0f, Audio::MaxVolumeValue);
-  if (mEmitterObject)
-    mEmitterObject->SetDirectionalAngle(mEmitAngle, mRearVolume);
+  mRearVolume = Math::Clamp(minimumVolume, 0.0f, cMaxVolumeValue);
+  EmitterNode* node = mEmitterObject;
+  Z::gSound->Mixer.AddTask(CreateFunctor(&EmitterNode::SetDirectionalAngleThreaded, node,
+    mEmitAngle, mRearVolume), node);
 }
 
 //**************************************************************************************************
@@ -484,8 +441,7 @@ HandleOf<SoundNode> SoundEmitter::GetOutputNode()
 //**************************************************************************************************
 void SoundEmitter::Update(float dt)
 {
-  if (!mEmitterObject)
-    return;
+  EmitterNode* node = mEmitterObject;
 
   // Get new position data
   Vec3 newPosition = mTransform->GetWorldTranslation();
@@ -499,8 +455,9 @@ void SoundEmitter::Update(float dt)
     if (dt > 0.0f)
       velocity *= (1.0f / dt);
 
-    // Update the audio engine with new data
-    mEmitterObject->SetPosition(newPosition, velocity);
+    // Update the emitter node with new data
+    Z::gSound->Mixer.AddTask(CreateFunctor(&EmitterNode::SetPositionThreaded, node,
+      newPosition, velocity), node);
 
     // If the emitter has an attenuator, update its position
     if (mAttenuatorNode)
@@ -522,14 +479,15 @@ void SoundEmitter::Update(float dt)
     Vec3 y = Vec3(by.x, by.y, by.z);
     Vec3 forward = x.Cross(y);
 
-    mEmitterObject->SetForwardDirection(forward);
+    Z::gSound->Mixer.AddTask(CreateFunctor(&EmitterNode::SetForwardDirectionThreaded, node,
+      forward), node);
   }
 
   // Check for SoundCue attenuator nodes with no input
   Array<InstanceAttenuation*> toDelete;
   forRange(InstanceAttenuation& info, mAttenuatorList.All())
   {
-    if (!info.mAttenuatorNode->mNode->HasInputs())
+    if (!info.mAttenuatorNode->mNode->GetHasInputs())
     {
       // If this node has no inputs, tell the attenuator to remove it
       info.mAttenuator->RemoveAttenuationNode(info.mAttenuatorNode);
@@ -547,10 +505,10 @@ void SoundEmitter::Update(float dt)
 //**************************************************************************************************
 HandleOf<SoundInstance> SoundEmitter::PlayCueInternal(SoundCue* cue, bool startPaused)
 {
-  if (!cue || !mEmitterObject)
+  if (!cue)
     return nullptr;
 
-  Audio::SoundNode* outputNode;
+  HandleOf<SoundNode> outputNode;
   // If the SoundCue has attenuation settings, get an attenuation node and store it
   SoundAttenuator* attenuator = cue->GetAttenuator();
   if (attenuator && attenuator->Name != "DefaultNoAttenuation")
@@ -566,11 +524,11 @@ HandleOf<SoundInstance> SoundEmitter::PlayCueInternal(SoundCue* cue, bool startP
         mAttenuatorList.PushBack(info);
         info->mAttenuatorNode->mNode->SetPosition(mPrevPosition);
         outputNode = info->mAttenuatorNode->mNode;
-        mEmitterObject->AddInput(outputNode);
+        mEmitterObject->AddInputNode(outputNode);
       }
       // If getting the attenuator node failed, use the emitter's input node
       else
-        outputNode = mSoundNodeInput->mNode;
+        outputNode = mSoundNodeInput;
     }
     // Otherwise, use the node already in the list
     else
@@ -578,7 +536,7 @@ HandleOf<SoundInstance> SoundEmitter::PlayCueInternal(SoundCue* cue, bool startP
   }
   // Use the emitter's input node (could be either attenuation or emitter node)
   else
-    outputNode = mSoundNodeInput->mNode;
+    outputNode = mSoundNodeInput;
 
   // Play the instance
   HandleOf<SoundInstance> instance = cue->PlayCue(mSpace, outputNode, startPaused);
@@ -591,7 +549,7 @@ bool SoundEmitter::CheckAttenuatorInputs()
 {
   forRange(InstanceAttenuation& info, mAttenuatorList.All())
   {
-    if (info.mAttenuatorNode->mNode->HasInputs())
+    if (info.mAttenuatorNode->mNode->GetHasInputs())
       return true;
   }
 
@@ -601,21 +559,6 @@ bool SoundEmitter::CheckAttenuatorInputs()
 //**************************************************************************************************
 void SoundEmitter::SetUpAttenuatorNode(SoundAttenuator* newAttenuator)
 {
-  if (!mEmitterObject)
-    return;
-
-  // If the input node object hasn't been created yet, create it
-  if (!mSoundNodeInput)
-  {
-    SoundNode* newNode = new SoundNode();
-    newNode->mNode = mEmitterObject;
-    newNode->mCanInsertAfter = false;
-    newNode->mCanInsertBefore = false;
-    newNode->mCanReplace = false;
-    newNode->mCanRemove = false;
-    mSoundNodeInput = newNode;
-  }
-
   SoundAttenuator* oldAttenuator = mAttenuator;
   SoundAttenuatorNode* oldNode = mAttenuatorNode;
 
@@ -632,7 +575,7 @@ void SoundEmitter::SetUpAttenuatorNode(SoundAttenuator* newAttenuator)
     // No attenuator node
     mAttenuatorNode = nullptr;
     // The input node is the emitter
-    mSoundNodeInput->mNode = mEmitterObject;
+    mSoundNodeInput = mEmitterObject;
   }
   else
   {
@@ -647,7 +590,7 @@ void SoundEmitter::SetUpAttenuatorNode(SoundAttenuator* newAttenuator)
         mAttenuatorNode->mNode->SetPosition(mPrevPosition);
 
         // Store the new node as the input node
-        mSoundNodeInput->mNode = mAttenuatorNode->mNode;
+        mSoundNodeInput = mAttenuatorNode->mNode;
         // Swap the new node with the old node in the graph
         oldNode->mNode->ReplaceWith(mAttenuatorNode->mNode);
 
@@ -665,23 +608,12 @@ void SoundEmitter::SetUpAttenuatorNode(SoundAttenuator* newAttenuator)
         mAttenuatorNode->mNode->SetPosition(mPrevPosition);
 
         // Store the new node as the input
-        mSoundNodeInput->mNode = mAttenuatorNode->mNode;
+        mSoundNodeInput = mAttenuatorNode->mNode;
         // Add the new node to the emitter node
-        mEmitterObject->AddInput(mAttenuatorNode->mNode);
+        mEmitterObject->AddInputNode(mAttenuatorNode->mNode);
       }
     }
   }
-}
-
-//**************************************************************************************************
-void SoundEmitter::SendAudioEvent(Audio::AudioEventTypes::Enum eventType)
-{
-  if (eventType == Audio::AudioEventTypes::InterpolationDone)
-  {
-    SoundEvent event;
-    DispatchEvent(Events::AudioInterpolationDone, &event);
-  }
-
 }
 
 //**************************************************************************************************

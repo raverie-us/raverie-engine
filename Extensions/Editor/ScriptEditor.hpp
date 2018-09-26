@@ -71,6 +71,7 @@ public:
   uint GetCount() override;
   String GetStringValueAt(DataIndex index) override;
   int Modified();
+  void FilterHidden();
 
   // Internal
   Array<Completion> mAll;

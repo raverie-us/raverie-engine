@@ -136,7 +136,12 @@ Resource* ResourceManager::CreateRuntimeInternal(StringParam name)
   return resource;
 }
 
-void ResourceManager::ValidateName(Status& status, StringParam name)
+void ResourceManager::ValidateNewName(Status& status, StringParam name, BoundType* optionalType)
+{
+  // Do nothing (assume its valid)
+}
+
+void ResourceManager::ValidateRawName(Status& status, StringParam name, BoundType* optionalType)
 {
   // Do nothing (assume its valid)
 }

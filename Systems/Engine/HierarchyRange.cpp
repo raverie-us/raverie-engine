@@ -22,6 +22,26 @@ bool NameCondition::operator()(const Cog* cog)
   return const_cast<Cog*>(cog)->GetName() == this->Name;
 }
 
+bool RootCondition::operator()(const Cog& cog)
+{
+  return const_cast<Cog&>(cog).GetParent() == nullptr;
+}
+
+bool RootCondition::operator()(const Cog* cog)
+{
+  return const_cast<Cog*>(cog)->GetParent() == nullptr;
+}
+
+bool RootNameCondition::operator()(const Cog& cog)
+{
+  return RootCondition::operator()(cog) && NameCondition::operator()(cog);
+}
+
+bool RootNameCondition::operator()(const Cog* cog)
+{
+  return RootCondition::operator()(cog) && NameCondition::operator()(cog);
+}
+
 HierarchyRange HierarchyRange::EntireTree(Cog* object)
 {
   return HierarchyRange(GetRoot(object));

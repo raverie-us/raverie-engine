@@ -68,7 +68,6 @@ void ZilchDocumentResource::OnCharacterAdded(ICodeEditor* editor, Rune value)
     AutoCompleteInfo info;
     GetAutoCompleteInfo(editor, info);
 
-
     Array<Completion> completions;
 
     if (info.IsLiteral && info.NearestType == ZilchTypeId(int))
@@ -81,6 +80,7 @@ void ZilchDocumentResource::OnCharacterAdded(ICodeEditor* editor, Rune value)
       completion.Name = entry.Name;
       completion.SignaturePathType = entry.Type;
       completion.AssociatedResourceId = entry.CodeUserDataU64;
+      completion.Hidden = entry.Hidden;
     }
 
     editor->ShowAutoComplete(completions, CompletionConfidence::Perfect);
@@ -309,28 +309,23 @@ void ZilchDocumentResource::FindPositionToGenerateFunction(ICodeEditor* editor, 
 }
 
 //**************************************************************************************************
-void ZilchDocumentResource::ValidateScriptName(Status& status, StringParam name)
+void ZilchDocumentResource::ValidateNewScriptName(Status& status, StringParam name)
 {
-  if(BoundType* existingType = MetaDatabase::GetInstance()->FindType(name))
+  // If we're making a new type, then we need to check if this name already exists.
+  if (BoundType* existingType = MetaDatabase::GetInstance()->FindType(name))
   {
     // We can replace proxies
     if(existingType->HasAttribute(ObjectAttributes::cProxy) == nullptr)
+    {
       status.SetFailed("A type already exists by that name");
+      return;
+    }
   }
+}
 
-  // Because we do component access off of cogs using the . operator, then it might
-  // conflict with an actual member of cog (name a component 'Destroy', what is Owner.Destroy?)
-  // We must do this for Space and GameSession also (technically GameSession and Space doubly hit Cog, but that's fine).
-  if(ZilchTypeId(Cog)->GetMember(name)   || ZilchTypeId(GameSession)->GetMember(name) ||
-     ZilchTypeId(Space)->GetMember(name) || ZilchTypeId(CogPath)->GetMember(name))
-  {
-    String message = String::Format(
-      "Components cannot have the same name as a property/method on Cog/Space/GameSession (this.Owner.%s would conflict)",
-      name.c_str());
-    status.SetFailed(message);
-    return;
-  }
-
+//**************************************************************************************************
+void ZilchDocumentResource::ValidateRawScriptName(Status& status, StringParam name)
+{
   // Make sure the user used a valid Zilch type name
   if(LibraryBuilder::CheckUpperIdentifier(name) == false)
   {
@@ -352,11 +347,9 @@ void ZilchDocumentResource::PrepForAutoComplete(ICodeEditor* editor, Project& pr
   Array<LibraryRef> libraries;
   GetLibraries(libraries);
 
-  String documentName = editor->GetDocumentDisplayName();
-
   for (uint i = 0; i < libraries.Size(); ++i)
     dependencies.PushBack(libraries[i]);
-  project.AddCodeFromString(allText, documentName, editor->GetDocumentResource());
+  project.AddCodeFromString(allText, mContentItem->GetFullPath(), editor->GetDocumentResource());
 }
 
 //**************************************************************************************************
@@ -366,7 +359,7 @@ void ZilchDocumentResource::AttemptGetDefinition(ICodeEditor* editor, size_t cur
   Module dependencies;
   PrepForAutoComplete(editor, project, dependencies);
 
-  project.GetDefinitionInfo(dependencies, cursorPosition, editor->GetDocumentDisplayName(), definition);
+  project.GetDefinitionInfo(dependencies, cursorPosition, mContentItem->GetFullPath(), definition);
 }
 
 //**************************************************************************************************
@@ -375,8 +368,9 @@ void ZilchDocumentResource::GetAutoCompleteInfo(ICodeEditor* editor, AutoComplet
   Project project;
   Module dependencies;
   PrepForAutoComplete(editor, project, dependencies);
-
-  project.GetAutoCompleteInfo(dependencies, editor->GetCaretPosition(), editor->GetDocumentDisplayName(), info);
+  
+  String cursorOrigin = mContentItem->GetFullPath();
+  project.GetAutoCompleteInfo(dependencies, editor->GetCaretPosition(), cursorOrigin, info);
 
   // Don't show types marked as hidden
   for (uint i = info.CompletionEntries.Size() - 1; i < info.CompletionEntries.Size(); --i)

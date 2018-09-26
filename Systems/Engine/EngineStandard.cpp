@@ -11,8 +11,10 @@ namespace Zero
 
 // Ranges
 ZilchDefineRange(HierarchyNameRange);
+ZilchDefineRange(HierarchyListNameRange);
 ZilchDefineRange(HierarchyRange);
 ZilchDefineRange(CogNameRange);
+ZilchDefineRange(CogRootNameRange);
 ZilchDefineRange(HierarchyList::range);
 ZilchDefineRange(HierarchyList::reverse_range);
 ZilchDefineRange(Space::range);
@@ -117,8 +119,10 @@ ZilchDefineStaticLibrary(EngineLibrary)
 
   // Ranges
   ZilchInitializeRange(HierarchyNameRange);
+  ZilchInitializeRange(HierarchyListNameRange);
   ZilchInitializeRange(HierarchyRange);
   ZilchInitializeRange(CogNameRange);
+  ZilchInitializeRange(CogRootNameRange);
   ZilchInitializeRangeAs(HierarchyList::range, "HierarchyListRange");
   ZilchInitializeRangeAs(HierarchyList::reverse_range, "HierarchyListReverseRange");
   ZilchInitializeRangeAs(Space::range, "SpaceRange");
@@ -474,6 +478,8 @@ bool EngineLibrary::Initialize(ZeroStartupSettings& settings)
   Joysticks::Initialize();
   LocalModifications::Initialize();
   ObjectStore::Initialize();
+  // Need to initialize zilch here as it can be used in the factory below.
+  ZilchManager::Initialize();
 
   Space* engineSpace = new Space();
   engineSpace->SetName("EngineSpace");

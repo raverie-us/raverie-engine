@@ -182,7 +182,7 @@ void TimeSpace::Update(float dt)
     mScaledClampedTimePassed += mScaledClampedDt;
 
     EventDispatcher* dispatcher = GetOwner()->GetDispatcher();
-    UpdateEvent updateEvent(mScaledClampedDt, mRealDt, mRealTimePassed, mScaledClampedTimePassed);
+    UpdateEvent updateEvent(mScaledClampedDt, mRealDt, mScaledClampedTimePassed, mRealTimePassed);
 
     {
       ProfileScopeTree("FrameUpdate", "TimeSystem", Color::PaleGoldenrod);

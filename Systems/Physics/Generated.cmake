@@ -182,6 +182,7 @@ target_sources(Physics
     ${CMAKE_CURRENT_LIST_DIR}/Joints/Contact.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Joints/CustomJoint.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Joints/CustomJoint.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Joints/DebugDrawFragments.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Joints/DebugDrawFragments.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Joints/FixedAngleJoint.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Joints/FixedAngleJoint.hpp

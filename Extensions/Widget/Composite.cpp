@@ -164,6 +164,20 @@ void Composite::DoLayout()
   mLayout->DoLayout(this, data);
 }
 
+void Composite::ShiftOntoScreen(Vec3 offset)
+{
+  Vec2 screenSize = this->GetParent()->GetSize();
+  Vec2 thisSize = this->GetSize();
+
+  if(offset.y + thisSize.y > screenSize.y)
+    offset.y -= (offset.y + thisSize.y) - screenSize.y;
+
+  if(offset.x + thisSize.x > screenSize.x)
+    offset.x -= (offset.x + thisSize.x) - screenSize.x;
+
+  this->SetTranslation(offset);
+}
+
 void Composite::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);

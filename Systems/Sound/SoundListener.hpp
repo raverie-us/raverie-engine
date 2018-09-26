@@ -11,8 +11,6 @@ namespace Zero
 {
 //----------------------------------------------------------------------------------- Sound Listener
 
-class SoundSpace;
-
 /// Uses the object's position to "hear" all SoundEmitters in the SoundSpace
 class SoundListener : public Component
 {
@@ -38,12 +36,12 @@ public:
   float GetAttenuationScale();
   void SetAttenuationScale(float scale);
 
-//internals
+// Internals
   Link<SoundListener> link;
   void Update(float invDt);
 
 private:
-  HandleOf<SoundNode> mSoundNode;
+  HandleOf<ListenerNode> mListenerNode;
   bool mActive;
   SoundSpace* mSpace;
   Transform* mTransform;
