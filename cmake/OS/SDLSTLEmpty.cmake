@@ -8,6 +8,7 @@ set(platform_library "SDLSTLEmpty")
 
 set(StaticExternals 
 Assimp
+Curl
 Freetype
 GL
 GLEW

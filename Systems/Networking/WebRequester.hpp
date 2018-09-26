@@ -126,11 +126,22 @@ public:
   /// The default is false.
   bool mSendEventsOnRequestThread;
 
+  /// If this value is non-zero, we will automatically cache a file in a temporary location for this many seconds when the response is OK.
+  /// Subsequent requests to the same URL will automatically return the last cached request.
+  /// If the request fails in any way, then we also return the last cached request even if it's expired.
+  /// Note that this is forced caching, and does not query the url to see if a newer version exists.
+  /// WARNING: This only caches by url, and does NOT use post data or request headers to differentiate a response.
+  /// Note that we will only get the WebResponseComplete event and no headers/partial data if the cache is found.
+  /// Also note that the cache finding is not executed on another thread, so mSendEventsOnRequestThread has no effect.
+  /// Currently can only cache data when StoreData is set to true.
+  /// Default is 0 (no caching).
+  u64 mForceCacheSeconds;
+
 private:
   AsyncWebRequest();
 
-  // Cancels the async web request when there is no dispatch object (we're shutting down).
-  void CancelIfNoThreadDispatch();
+  // If a file in the cache exists, this will send a completed response and return true.
+  bool SendCompletedCacheResponse(bool ignoreTime);
 
   // Occurs when we receive http headers.
   static void OnHeadersReceived(const Array<String>& headers, WebResponseCode::Enum code, WebRequest* request);
@@ -200,8 +211,16 @@ public:
   /// This will be an empty string if there was no error.
   String mError;
 
+  /// Gets the string value of header by index (e.g. "Content-Length: 1234");
   StringParam GetHeader(uint index);
+
+  /// Get how many headers were returned from the server.
   uint GetHeaderCount();
+
+  /// Reads the Data as if it were a Json document.
+  /// This should only be called on a WebResponseComplete event when StoredData is true.
+  /// The memory returned must be deleted by the user.
+  JsonValue* ReadJson(Status& status);
 
 private:
   /// Every time a request is cancelled we increment the version

@@ -240,8 +240,9 @@ void BugReportJob::Execute()
   AsyncWebRequest& request = *eventToSend->mRequest.Dereference();
   String response;
 
+  // TODO: Needs to be fixed for the GitHub API.
   StringBuilder bugReportUrl;
-  bugReportUrl.Append("https://bugs.zeroengine.io");
+  bugReportUrl.Append(Urls::cApiReportIssue);
 
   request.AddField("Key", "kcy43UsUp4Rz/X0OFnCHDmgZECqB9NZbUTdx7chShJA=");
   request.AddField("UserName", mUsername);
@@ -329,7 +330,10 @@ void BugReportJob::OnWebResponseComplete(WebResponseEvent* event)
     // If there are no task Id's in the response then direct to user to the latest bug reports
     if (taskIdMatches.Empty())
     {
-      DoNotifyWarning("Bug Reporter", "ZeroHub returned success, but did not include a TaskID. Please visit https://dev.zeroengine.io/u/latestbugs to find your task, or contact a ZeroHub administrator.");
+      String message = String::Format(
+        "ZeroHub returned success, but did not include a TaskID. Please visit %s to find your task, or contact a ZeroHub administrator.",
+        Urls::cUserLatestIssues);
+      DoNotifyWarning("Bug Reporter", message);
       return;
     }
 
@@ -337,7 +341,8 @@ void BugReportJob::OnWebResponseComplete(WebResponseEvent* event)
     String taskId = taskIdMatches.Front();
     StringBuilder notifyBuilder;
     notifyBuilder.Append(response);
-    notifyBuilder.Append("Bug URL: https://dev.zeroengine.io/");
+    notifyBuilder.Append("Bug URL: ");
+    notifyBuilder.Append(Urls::cUserSpecificIssue);
     notifyBuilder.Append(taskId);
 
     // Notify the user that their bug was submitted successfully
@@ -349,7 +354,7 @@ void BugReportJob::OnWebResponseComplete(WebResponseEvent* event)
     DoNotifyWarning("Bug Reporter", response);
 
     // Open the browser to the bug report form if the bug reporter failed to file the bug from the editor
-    Z::gEditor->ShowBrowser("https://dev.zeroengine.io/u/BugReport", "Bug Report Form");
+    Z::gEditor->ShowBrowser(Urls::cUserReportIssue, "Bug Report Form");
   }
 
   // We kept ourselves alive until the request was done by adding a reference count.

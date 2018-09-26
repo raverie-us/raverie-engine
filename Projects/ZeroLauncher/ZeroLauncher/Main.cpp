@@ -11,8 +11,6 @@
 namespace Zero
 {
 
-const String UrlRoot = "https://builds.zeroengine.io";
-
 //the startup function to run the version selector
 typedef int(*StartupFunction)(const char* workingDir);
 

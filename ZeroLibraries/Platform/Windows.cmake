@@ -35,6 +35,7 @@ target_link_libraries(Platform
                       ${WinHidStatic}
                       ${GLEWStatic}
                       ${CEFStatic}
+                      ${CurlStatic}
 )
 
 ################################################################################

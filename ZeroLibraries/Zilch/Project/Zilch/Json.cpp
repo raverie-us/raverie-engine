@@ -445,12 +445,6 @@ namespace Zilch
         {
           if (objectArrayStack.Empty())
           {
-            if(createdValue->Type != JsonValueType::Object)
-            {
-              errors.Raise(token.Location, ErrorCode::GenericError, "The root of a Json tree must be an object");
-              return nullptr;
-            }
-
             root = createdValue;
           }
           else

@@ -21,6 +21,8 @@ void CommonLibrary::Initialize()
   //Start the memory system used for all systems and containers.
   Memory::Root::Initialize();
 
+  WebRequest::Initialize();
+
   // Initialize platform socket library
   Zero::Status socketLibraryInitStatus;
   Zero::Socket::InitializeSocketLibrary(socketLibraryInitStatus);
@@ -49,6 +51,8 @@ void CommonLibrary::Shutdown()
   // For certain platforms (Emscripten) make sure that any
   // files saved in memory are persisted for the next run.
   PersistFiles();
+
+  WebRequest::Shutdown();
 
   // Uninitialize platform socket library
   Zero::Status socketLibraryUninitStatus;

@@ -104,6 +104,12 @@ public:
   // Returns true if a web request is actively running, false otherwise.
   bool IsRunning();
 
+  // Initializes the WebRequest data globally.
+  // Must be called at the start when no other threads are running.
+  static void Initialize();
+  // Cleans up the web request at the end.
+  static void Shutdown();
+
   // Shared:
   // Return the boundary used in multipart/form requests.
   String GetBoundary();
@@ -115,6 +121,8 @@ public:
   // Gets the headers concatenated with the standard HTTP newline (\r\n).
   // This also includes the content type header at the beginning.
   String GetNewlineSeparatedHeaders();
+  // The user agent we use for this version of Zero (use if possible).
+  String GetZeroUserAgent();
 
   // The data and callbacks must be set before calling Run.
   String mUrl;
@@ -131,7 +139,7 @@ public:
   // May be used to signal we're canceling.
   Atomic<bool> mCancel;
 
-  ZeroDeclarePrivateDataBytes(32);
+  ZeroDeclarePrivateDataBytes(64);
 };
 
 } // namespace Zero

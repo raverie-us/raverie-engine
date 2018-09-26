@@ -20,7 +20,7 @@ public:
   static BackgroundTask* DownloadToBuffer(StringParam url, StringParam fileName);
 
   typedef DownloadTaskJob ZilchSelf;
-  DownloadTaskJob(StringParam url);
+  DownloadTaskJob(StringParam url, u64 forceCacheSeconds = 0);
 
   /// Job Interface.
   void Execute() override;

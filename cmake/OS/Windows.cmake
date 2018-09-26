@@ -17,6 +17,7 @@ remove_definitions(-DMBCS -D_MBCS)
 set(StaticExternals 
 Assimp 
 CEF 
+Curl
 Freetype 
 GL 
 GLEW 

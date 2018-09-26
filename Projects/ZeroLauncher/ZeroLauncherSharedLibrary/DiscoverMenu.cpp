@@ -220,14 +220,6 @@ void DiscoverMenu::UpdateTransform()
 //******************************************************************************
 void DiscoverMenu::CreateTiles(Composite* parent)
 {
-  cstr zeroHubUrl = "https://dev.zeroengine.io";
-  cstr docUrl = "https://docs.zeroengine.io";
-  cstr zilchUrl = "https://zilch.zeroengine.io";
-  cstr roadmapUrl = "https://roadmap.zeroengine.io";
-  cstr digipenUrl = "https://www.digipen.edu";
-  cstr qaUrl = "https://ask.zeroengine.io/";
-  cstr marketUrl = "https://market.zeroengine.io";
-
   mTiles = new Composite(parent);
   mTiles->SetTranslation(Pixels(32, 27, 0));
   mTiles->SetSizing(SizePolicy::Fixed, Pixels(640, 328));
@@ -239,7 +231,7 @@ void DiscoverMenu::CreateTiles(Composite* parent)
     left->SetLayout(CreateStackLayout());
     {
       // Documentation tile
-      Composite* zeroHub = new DiscoverTile(left, "ZEROHUB", "TileTitleText", Pixels(74), zeroHubUrl);
+      Composite* zeroHub = new DiscoverTile(left, "ZEROHUB", "TileTitleText", Pixels(74), Urls::cUserZeroHub);
       zeroHub->SetSizing(SizePolicy::Fixed, Pixels(316, 170));
 
       // Spacer
@@ -250,14 +242,14 @@ void DiscoverMenu::CreateTiles(Composite* parent)
       bottom->SetLayout(CreateRowLayout());
       {
         // Zilch tile
-        Composite* zilch = new DiscoverTile(bottom, "ZILCH", "TileTitleTextMedium", Pixels(44), zilchUrl);
+        Composite* zilch = new DiscoverTile(bottom, "ZILCH", "TileTitleTextMedium", Pixels(44), Urls::cUserZilch);
         zilch->SetSizing(SizePolicy::Fixed, Pixels(154, 150));
 
         // Spacer
         CreateSpacer(bottom);
 
         // Roadmap
-        Composite* roadmap = new DiscoverTile(bottom, "ROADMAP", "TileTitleTextMedium", Pixels(44), roadmapUrl);
+        Composite* roadmap = new DiscoverTile(bottom, "ROADMAP", "TileTitleTextMedium", Pixels(44), Urls::cUserRoadmap);
         roadmap->SetSizing(SizePolicy::Fixed, Pixels(154, 150));
       }
     }
@@ -270,7 +262,7 @@ void DiscoverMenu::CreateTiles(Composite* parent)
     right->SetLayout(CreateStackLayout());
     {
       // Documentation tile
-      Composite* documentation = new DiscoverTile(right, "DOCUMENTATION", "TileTitleText", Pixels(74), docUrl);
+      Composite* documentation = new DiscoverTile(right, "DOCUMENTATION", "TileTitleText", Pixels(74), Urls::cUserDoc);
       documentation->SetSizing(SizePolicy::Fixed, Pixels(316, 252));
 
       // Spacer
@@ -281,14 +273,14 @@ void DiscoverMenu::CreateTiles(Composite* parent)
       bottom->SetLayout(CreateRowLayout());
       {
         // Market place
-        Composite* market = new DiscoverTile(bottom, "MARKET", "TileTitleTextSmall", Pixels(39), marketUrl);
+        Composite* market = new DiscoverTile(bottom, "MARKET", "TileTitleTextSmall", Pixels(39), Urls::cUserMarket);
         market->SetSizing(SizePolicy::Fixed, Pixels(240, 68));
 
         // Spacer
         CreateSpacer(bottom);
 
         // Q&A tile
-        Composite* questionAnswer = new DiscoverTile(bottom, "Q&A", "TileTitleTextSmall", Pixels(39), qaUrl);
+        Composite* questionAnswer = new DiscoverTile(bottom, "Q&A", "TileTitleTextSmall", Pixels(39), Urls::cUserQa);
         questionAnswer->SetSizing(SizePolicy::Fixed, Pixels(68, 68));
       }
     }
@@ -321,17 +313,33 @@ void DiscoverMenu::OnDeveloperNotesDownloaded(BackgroundTaskEvent* e)
     // Load the available builds into the version selector
     DownloadTaskJob* job = (DownloadTaskJob*)e->mTask->GetFinishedJob();
     
-    Array<DeveloperNotes> DevUpdates;
+    Array<DeveloperNotes> devUpdates;
 
-    Status status;
-    //load the data into an array
-    DataTreeLoader loader;
-    loader.OpenBuffer(status, job->GetData());
-    loader.SerializeFieldDefault("DevUpdates", DevUpdates, DevUpdates);
+    static const Regex cCodeRegex("<code>(([\r\n]|.)*?)</code>");
+    static const Regex cBodyRegex("Date: (.*)(([\r\n]|.)*)");;
 
-    for(uint i = 0; i < DevUpdates.Size(); ++i)
+    String html = job->GetData();
+    StringRange htmlRange = html.All();
+    Matches matches;
+
+    for (;;)
     {
-      DevUpdateEntry* entry = new DevUpdateEntry(mDevUpdatesArea, DevUpdates[i]);
+      cCodeRegex.Search(htmlRange, matches);
+      if (matches.Empty())
+        break;
+
+      htmlRange = matches.Suffix();
+
+      StringRange body = matches[1];
+      cBodyRegex.Search(body, matches);
+      if (matches.Empty())
+        continue;
+
+      DeveloperNotes& notes = devUpdates.PushBack();
+      notes.mDate = matches[1];
+      notes.mNotes = matches[2].Trim();
+
+      DevUpdateEntry* entry = new DevUpdateEntry(mDevUpdatesArea, notes);
       entry->SetSizing(SizeAxis::X, SizePolicy::Fixed, Pixels(260));
       entry->SizeToContents();
       mDevUpdateEntries.PushBack(entry);

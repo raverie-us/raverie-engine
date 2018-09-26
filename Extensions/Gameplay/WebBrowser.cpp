@@ -172,7 +172,7 @@ ZilchDefineType(WebBrowserSetup, builder, type)
   type->CreatableInScript = true;
 }
 
-const String cWebBrowserDefaultUrl("http://www.google.com");
+const String cWebBrowserDefaultUrl(Urls::cUserWebBrowserDefault);
 const IntVec2 cWebBrowserDefaultSize(1024, 1024);
 const bool cWebBrowserDefaultTransparent(false);
 const Vec4 cWebBrowserDefaultBackgroundColor(1.0f);

@@ -149,19 +149,10 @@ public:
   /// Check to see if there is a new launcher available
   void CheckForLauncherUpdates();
 
-  /// Check for launcher major updates (requires running a new installer)
-  void CheckForMajorLauncherUpdates();
-  /// Response for check if a new installer is available. May invoke the installer to close and restart the launcher.
-  void OnCheckForMajorLauncherUpdates(BackgroundTaskEvent* e);
   /// Prompt response for asking if a user wants to install a new major version (runs installer).
   void OnInstallMajorVersion(ModalConfirmEvent* e);
   /// Response for a launcher installer being downloaded.
   void OnMajorLauncherUpdateDownloaded(BackgroundTaskEvent* e);
-
-  /// Check if there is a new patch to the launcher (dll to download)
-  void CheckForLauncherPatch();
-  /// Response for a launcher patch (dll)
-  void OnCheckForLauncherPatch(BackgroundTaskEvent* e);
   /// Prompt response for asking if a user wants to install a new patch version (downloads/extracts/restarts).
   void OnInstallPatchVersion(ModalConfirmEvent* e);
   /// Response for a launcher patch being downloaded.
@@ -204,6 +195,7 @@ public:
   /// When the version list has been notified, we need to give the data
   /// to the version selector, and notify that they have been loaded.
   void OnPackageListing(BackgroundTaskEvent* taskEvent);
+  void OnLauncherListing(BackgroundTaskEvent* taskEvent);
   void OnTemplateListing(BackgroundTaskEvent* taskEvent);
   void OnNewBuildAvailable(Event* e);
   void CheckForForcedBuildUpdate();

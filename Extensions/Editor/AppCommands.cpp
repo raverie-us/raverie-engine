@@ -5,17 +5,17 @@ namespace Zero
 
 void OpenHelp()
 {
-  Os::SystemOpenNetworkFile("https://help.zeroengine.io");
+  Os::SystemOpenNetworkFile(Urls::cUserHelp);
 }
 
 void OpenZeroHub()
 {
-  Os::SystemOpenNetworkFile("https://dev.zeroengine.io");
+  Os::SystemOpenNetworkFile(Urls::cUserZeroHub);
 }
 
 void OpenDocumentation()
 {
-	Os::SystemOpenNetworkFile("https://docs.zeroengine.io");
+	Os::SystemOpenNetworkFile(Urls::cUserOnlineDocs);
 }
 
 void ExitEditor()

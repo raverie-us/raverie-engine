@@ -76,7 +76,7 @@ public:
   int mForcedUpdateVersion;
   static int mCurrentForcedUpdateVersionNumber;
   static float mDefaultReloadFrequency;
-  float mNewLauncherUpdateCheckFrequency;
+  float mNewestLauncherUpdateCheckFrequency;
 
   String mCachedData;
 

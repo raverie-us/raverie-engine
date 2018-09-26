@@ -57,10 +57,11 @@ BackgroundTask* DownloadTaskJob::DownloadToBuffer(StringParam url,
 }
 
 //******************************************************************************
-DownloadTaskJob::DownloadTaskJob(StringParam url)
+DownloadTaskJob::DownloadTaskJob(StringParam url, u64 forceCacheSeconds)
 {
   mRequest = AsyncWebRequest::Create();
   AsyncWebRequest* request = mRequest;
+  request->mForceCacheSeconds = forceCacheSeconds;
 
   // For platforms that support threading, we want to continue the web
   // response on a thread so it acts the same as a continued job.

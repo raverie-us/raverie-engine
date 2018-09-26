@@ -2221,7 +2221,7 @@ Actions* Cog::GetActions()
     if (!space)
       return nullptr;
 
-    mActionList = new Actions(space->has(ActionSpace));
+    mActionList = new Actions(HasOrAdd<ActionSpace>(space));
     mActionList->AddReference();
   }
   return mActionList;

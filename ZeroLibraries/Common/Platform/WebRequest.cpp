@@ -79,4 +79,12 @@ String WebRequest::GetNewlineSeparatedHeaders()
   return headers;
 }
 
+String WebRequest::GetZeroUserAgent()
+{
+  // We want to add the version, but we don't know about Engine here.
+  // Todo: Move versions into Common.
+  // We use this string because it lets servers know we can support many types of responses.
+  return "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36 Edge/12.0 Zero";
+}
+
 } // namespace Zero

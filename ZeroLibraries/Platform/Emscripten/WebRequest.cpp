@@ -114,4 +114,12 @@ bool WebRequest::IsRunning()
   return self->mIsRunning;
 }
 
+void WebRequest::Initialize()
+{
+}
+
+void WebRequest::Shutdown()
+{
+}
+
 } // namespace Zero

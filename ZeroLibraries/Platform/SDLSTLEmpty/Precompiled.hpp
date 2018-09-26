@@ -24,6 +24,10 @@
 #include <mach/mach_time.h>
 #endif
 
+// Curl
+#define CURL_STATICLIB
+#include "curl/curl.h"
+
 #include <new>
 #include <stdlib.h>
 #include <stdio.h>
@@ -37,6 +41,7 @@
 #ifdef PLATFORM_WINDOWS
 #pragma comment(lib, "freetype28.lib")
 #pragma comment(lib, "OpenGL32.Lib")
+#pragma comment(lib, "libcurl.lib")
 
 #ifdef ZeroRelease
 #pragma comment(lib, "zlib.lib")

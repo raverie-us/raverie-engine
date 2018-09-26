@@ -9,6 +9,7 @@
 #include "Common/CommonStandard.hpp"
 #include "Platform/PlatformStandard.hpp"
 
+#include "Urls.hpp"
 #include "FileSupport.hpp"
 #include "Profiler.hpp"
 #include "NameValidation.hpp"

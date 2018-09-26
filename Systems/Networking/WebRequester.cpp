@@ -22,6 +22,8 @@ namespace Events
   DefineEvent(WebResponseComplete);
 }
 
+static const String cCacheDirectory("ZeroCache");
+
 ZilchDefineType(AsyncWebRequest, builder, type)
 {
   ZeroBindDocumented();
@@ -116,6 +118,17 @@ String AsyncWebRequest::GetData()
   return mStoredData.ToString();
 }
 
+String GetCacheFile(StringParam url)
+{
+  // Make sure the URL is encoded to a valid file-name.
+  // We don't use post data or request headers here.
+  String fileName = UrlParamEncode(url);
+  String cacheDirectory = FilePath::Combine(GetTemporaryDirectory(), cCacheDirectory);
+  CreateDirectoryAndParents(cacheDirectory);
+  String cacheFile = FilePath::Combine(cacheDirectory, fileName);
+  return cacheFile;
+}
+
 void AsyncWebRequest::Run()
 {
   // Cancel the existing request (this won't do anything if it's not running).
@@ -123,6 +136,14 @@ void AsyncWebRequest::Run()
 
   // Clear stored data and progress.
   ClearResponseData();
+
+  // If we allow caching then we need to check if we already cached this file/url...
+  if (mForceCacheSeconds != 0)
+  {
+    // If we successfully loaded a file from the cache, then send the completed event and return.
+    if (SendCompletedCacheResponse(false))
+      return;
+  }
 
   // This data is immutable while running the request. We should never modify it.
   mRequest.mUrl = mUrl;
@@ -179,7 +200,8 @@ AsyncWebRequest::AsyncWebRequest() :
   mProgress(0.0f),
   mProgressType(ProgressType::None),
   mVersion(0),
-  mSendEventsOnRequestThread(false)
+  mSendEventsOnRequestThread(false),
+  mForceCacheSeconds(0)
 {
   mActiveRequestsLock.Lock();
   mActiveRequests.PushBack(this);
@@ -193,6 +215,53 @@ AsyncWebRequest::AsyncWebRequest() :
   ConnectThisTo(this, Events::WebResponseHeadersInternal, OnWebResponseHeadersInternal);
   ConnectThisTo(this, Events::WebResponsePartialDataInternal, OnWebResponsePartialDataInternal);
   ConnectThisTo(this, Events::WebResponseCompleteInternal, OnWebResponseCompleteInternal);
+}
+
+bool AsyncWebRequest::SendCompletedCacheResponse(bool ignoreTime)
+{
+  String cacheFile = GetCacheFile(mUrl);
+
+  if (FileExists(cacheFile))
+  {
+    // If we're withing the forced caching time...
+    s64 now = (s64)Time::GetTime();
+    s64 modifiedTime = (s64)GetFileModifiedTime(cacheFile);
+    s64 timeSinceModification = now - modifiedTime;
+    bool isWithinCacheTime = timeSinceModification <= (s64)mForceCacheSeconds;
+    if (ignoreTime || isWithinCacheTime)
+    {
+      // Attempt to read the file contents.
+      DataBlock block = ReadFileIntoDataBlock(cacheFile.c_str());
+      if (block.Data)
+      {
+        // Set all the event data.
+        WebResponseEvent* toSend = new WebResponseEvent();
+        toSend->mAsyncWebRequest = this;
+        toSend->mVersion = mVersion;
+        toSend->mTotalExpected = block.Size;
+        toSend->mTotalDownloaded = block.Size;
+        toSend->mProgress = 1.0f;
+        toSend->mProgressType = ProgressType::Normal;
+        toSend->mResponseCode = WebResponseCode::OK;
+        toSend->mData = String((cstr)block.Data, block.Size);
+
+        // Set all of our data.
+        mResponseCode = WebResponseCode::OK;
+        mTotalDownloaded = block.Size;
+        mTotalExpected = block.Size;
+        mProgress = 1.0f;
+        mProgressType = ProgressType::Normal;
+        mError = String();
+        if (mStoreData)
+          mStoredData.Append(toSend->mData);
+
+        DispatchEvent(Events::WebResponseComplete, toSend);
+        return true;
+      }
+    }
+  }
+
+  return false;
 }
 
 void AsyncWebRequest::OnHeadersReceived(const Array<String>& headers, WebResponseCode::Enum code, WebRequest* request)
@@ -329,10 +398,35 @@ void AsyncWebRequest::OnWebResponseCompleteInternal(WebResponseEvent* event)
   mProgress = 1.0f;
   event->mProgressType = mProgressType;
 
+  mError = event->mError;
+
   if (mStoreData)
+  {
     event->mData = mStoredData.ToString();
 
-  mError = event->mError;
+    // If the request came in OK from the server with no errors...
+    if (event->mResponseCode == WebResponseCode::OK && event->mError.Empty())
+    {
+      // If we allow caching then we need to check if we already cached this file/url...
+      if (mForceCacheSeconds != 0)
+      {
+        String cacheFile = GetCacheFile(mUrl);
+        WriteStringRangeToFile(cacheFile, event->mData);
+      }
+    }
+    else
+    {
+      // We failed the request, but if we have caching enabled then attempt to load the file
+      // from the cache and send it as a complete event (even though the request failed).
+      if (mForceCacheSeconds != 0)
+      {
+        // Early out, since we don't want to send the actual event.
+        if (SendCompletedCacheResponse(true))
+          return;
+      }
+    }
+  }
+
 
   DispatchEvent(Events::WebResponseComplete, event);
 }
@@ -373,6 +467,26 @@ uint WebResponseEvent::GetHeaderCount()
   return (uint)mResponseHeaders.Size();
 }
 
+JsonValue* WebResponseEvent::ReadJson(Status& status)
+{
+  if (mData.Empty())
+  {
+    status.SetFailed("Data was empty");
+    return nullptr;
+  }
+
+  static const String cOrigin = "WebResponseEvent";
+  CompilationErrors errors;
+  JsonValue* value = Zilch::JsonReader::ReadIntoTreeFromString(errors, mData, cOrigin, nullptr);
+  if (!value)
+  {
+    status.SetFailed("Failed to parse JSON");
+    return nullptr;
+  }
+
+  return value;
+}
+
 ZilchDefineType(WebRequester, builder, type)
 {
   ZeroBindComponent();
@@ -411,7 +525,7 @@ void WebRequester::Initialize(CogInitializer& initializer)
 
 void WebRequester::Serialize(Serializer& stream)
 {
-  stream.SerializeFieldDefault("Url", mSerializedUrl, String("http://www.w3.org/"));
+  stream.SerializeFieldDefault("Url", mSerializedUrl, String(Urls::cUserWebRequesterDefault));
   SerializeNameDefault(mCancelOnDestruction, true);
 }
 

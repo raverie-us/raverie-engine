@@ -36,14 +36,22 @@ void ZeroBuildContent::Serialize(Serializer& stream)
   SerializeNameDefault(mDisplayName, String());
   SerializeNameDefault(mPackageName, String());
   SerializeNameDefault(mTags, String());
+  SerializeNameDefault(mDownloadUrl, String());
 }
 
 void ZeroBuildContent::Initialize(CogInitializer& initializer)
 {
+  Parse();
+}
+
+void ZeroBuildContent::Parse()
+{
+  mTagSet.Clear();
+
   // Populate the tag set for easy querying. This set should stay
   // up-to-date as long as AddTag is called (no way to remove tags now)
   StringSplitRange range = mTags.Split(",");
-  for(; !range.Empty(); range.PopFront())
+  for (; !range.Empty(); range.PopFront())
     mTagSet.Insert(range.Front());
 }
 
@@ -135,18 +143,24 @@ void ZeroTemplate::Serialize(Serializer& stream)
   SerializeNameDefault(mTags, emptyStr);
 
   // Server side information (doesn't technically need to be saved locally, but whatever)
-  SerializeNameDefault(mTemplatePath, emptyStr);
-  SerializeNameDefault(mTemplateFileName, emptyStr);
+  SerializeNameDefault(mDownloadUrl, emptyStr);
   SerializeNameDefault(mIconUrl, emptyStr);
-  SerializeNameDefault(mPreviewUrl, emptyStr);
 }
 
 void ZeroTemplate::Initialize(CogInitializer& initializer)
 {
+  Parse();
+}
+
+void ZeroTemplate::Parse()
+{
+  mTagSet.Clear();
+  mBuildIds.Clear();
+
   // Populate the tag set for easy querying. This set should stay
   // up-to-date as long as AddTag is called (no way to remove tags now)
   StringSplitRange range = mTags.Split(",");
-  for(; !range.Empty(); range.PopFront())
+  for (; !range.Empty(); range.PopFront())
     mTagSet.Insert(range.Front());
 
   // Parse mVersionId into ranges of build ids, this could fail in which case
@@ -164,7 +178,7 @@ String ZeroTemplate::GetFullTemplateVersionName()
   // build a string that is SKU[Id1-Id2,Id3,Id4...etc...] for all build ids
   StringBuilder builder;
   builder.Append(mSKU);
-  builder.Append("[");
+  builder.Append("_");
   for(size_t i = 0; i < mBuildIds.Size(); ++i)
   {
     BuildIdRange& idRange = mBuildIds[i];
@@ -179,7 +193,6 @@ String ZeroTemplate::GetFullTemplateVersionName()
     if(i != mBuildIds.Size() - 1)
       builder.Append(",");
   }
-  builder.Append("]");
   return builder.ToString();
 }
 

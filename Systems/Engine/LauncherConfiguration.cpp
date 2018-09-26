@@ -51,8 +51,8 @@ void LauncherConfig::Serialize(Serializer& stream)
   SerializeNameDefault(mShowExperimentalBranches, false);
   SerializeNameDefault(mForcedUpdateVersion, 0);
   SerializeNameDefault(mAutoUpdateFrequencyInSeconds, mDefaultReloadFrequency);
-  float everyTwoHours = 60 * 60 * 2;
-  SerializeNameDefault(mNewLauncherUpdateCheckFrequency, everyTwoHours);
+  float everyTwelveHours = 60 * 60 * 12;
+  SerializeNameDefault(mNewestLauncherUpdateCheckFrequency, everyTwelveHours);
 }
 
 void LauncherConfig::ApplyCommandLineArguments(const StringMap& arguments)

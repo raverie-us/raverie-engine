@@ -73,6 +73,10 @@
 // Include OpenGl
 #include <GL/GL.h>
 
+// Curl
+#define CURL_STATICLIB
+#include "curl/curl.h"
+
 #ifdef min
 #undef min
 #endif
@@ -109,6 +113,8 @@
 #pragma comment(lib, "libcef_dll_wrapper_debug.lib")
 #pragma comment(lib, "glew32sd.lib")
 #endif
+
+#pragma comment(lib, "libcurl.lib")
 
 #pragma comment(linker,"\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \

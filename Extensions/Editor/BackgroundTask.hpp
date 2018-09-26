@@ -91,6 +91,7 @@ typedef void (*BackgroundTaskActivatedCallback)(BackgroundTask*, Job*);
 class BackgroundTask : public EventObject
 {
 public:
+  typedef BackgroundTask ZilchSelf;
   /// Constructor.
   BackgroundTask(BackgroundTaskJob* job);
   ~BackgroundTask();
@@ -149,6 +150,7 @@ private:
   friend class BackgroundTasks;
 
   void Completed();
+  void OnEngineUpdate(UpdateEvent* event);
 
   clock_t mStartTime;
 

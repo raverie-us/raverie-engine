@@ -34,8 +34,6 @@ public:
   VersionSelector(LauncherConfig* config);
   ~VersionSelector();
 
-  static String GetLauncherPhpUrl();
-
   // Finds what versions are currently installed and populates the internal version listings
   void FindInstalledVersions();
   void FindInstalledVersions(StringParam searchPath);
@@ -48,6 +46,8 @@ public:
 
   // Queue up a task to get the listing of versions from the server
   BackgroundTask* GetServerListing();
+  BackgroundTask* GetLauncherListing();
+  BackgroundTask* GetReleaseListing(StringParam url);
   // Updates the internal version listing based upon the results from GetServerListing
   void UpdatePackageListing(GetVersionListingTaskJob* job);
   void AddCustomBuild(StringParam buildPath, bool shouldInstall);
@@ -95,14 +95,12 @@ public:
   void ForceCloseRunningBuilds(ZeroBuild* build);
   /// Take all installed builds and uninstall->reinstall them (mostly for patching old issues).
   void ForceUpdateAllBuilds();
-  /// Run a background task to check if there's a new patch version of the launcher.
-  BackgroundTask* CheckForPatchLauncherUpdate();
+
   /// Run a background task to download a new patch version of the launcher.
-  BackgroundTask* DownloadPatchLauncherUpdate();
-  /// Run a background task to check if there's a new major version of the launcher.
-  BackgroundTask* CheckForMajorLauncherUpdate();
+  BackgroundTask* DownloadPatchLauncherUpdate(StringParam url);
   /// Run a background task to download a new major version of the launcher.
-  BackgroundTask* DownloadMajorLauncherUpdate();
+  BackgroundTask* DownloadMajorLauncherUpdate(StringParam url);
+
 
   /// Find the standalone that is the exact version desired by the project
   ZeroBuild* FindExactVersion(CachedProject* cachedProject);

@@ -9,8 +9,6 @@
 namespace Zero
 {
 
-const String BuildsUrlRoot = "https://builds.zeroengine.io/";
-
 namespace Events
 {
 
@@ -73,11 +71,6 @@ VersionSelector::~VersionSelector()
   DeleteObjectsInContainer(mTemplates);
   DeleteObjectsInContainer(mOldTemplates);
   DeleteObjectsInContainer(mReinstallTasks);
-}
-
-String VersionSelector::GetLauncherPhpUrl()
-{
-  return BuildsUrlRoot;
 }
 
 void VersionSelector::FindInstalledVersions()
@@ -155,7 +148,7 @@ void VersionSelector::LoadInstalledBuild(StringParam directoryPath, StringParam 
     if(isLegacy)
     {
       ZeroBuildContent* buildInfo = localBuild->GetBuildContent(false);
-      buildInfo->mChangeSetDate = String::Format("%s.%s.%s", year.c_str(), month.c_str(), day.c_str());
+      buildInfo->mChangeSetDate = String::Format("%s-%s-%s", year.c_str(), month.c_str(), day.c_str());
     }
 
     localBuild->SetBuildId(buildId);
@@ -193,14 +186,18 @@ void VersionSelector::SaveInstalledBuildsMeta()
 BackgroundTask* VersionSelector::GetServerListing()
 {
   ZPrint("Requesting build list from server.\n");
-  //start the task to get the version listing
-  String url = BuildString(GetLauncherPhpUrl(), "?Commands=RequestBuildList");
-  
-  // If we have dev config then add an extra command to get some extra templates (for testing)
-  DeveloperConfig* devConfig = mConfig->GetOwner()->has(DeveloperConfig);
-  if(devConfig != nullptr)
-    url = BuildString(url, "&DevTest");
+  return GetReleaseListing(Urls::cApiZeroBuilds);
+}
 
+BackgroundTask* VersionSelector::GetLauncherListing()
+{
+  ZPrint("Requesting launcher build list from server.\n");
+  return GetReleaseListing(Urls::cApiLauncherBuilds);
+}
+
+BackgroundTask* VersionSelector::GetReleaseListing(StringParam url)
+{
+  // Start the task to get the version listing
   GetVersionListingTaskJob* job = new GetVersionListingTaskJob(url);
   job->mName = "Version List";
   return Z::gBackgroundTasks->Execute(job, job->mName);
@@ -396,13 +393,11 @@ bool VersionSelector::InstallLocalTemplateProject(StringParam filePath)
   if(metaCog == nullptr)
   {
     String fileName = FilePath::GetFileNameWithoutExtension(filePath);
-    // Find a string that is [VersionNumber], this can include '.' ',' and '-' in order to specify ranges
-    String idGroupingRegex = "(\\[[\\w\\d\\.\\,\\-]+\\])";
-    // The expected file name is SKU[UserId][BuildId] where [UserId] is optional.
-    String regexStr = String::Format("(\\w+)%s?%s", idGroupingRegex.c_str(), idGroupingRegex.c_str());
 
+    // Find a string that is _VersionNumber, this can include '.' ',' and '-' in order to specify ranges
+    // The expected file name is SKU_UserId_BuildId where _UserId is optional.
     Matches matches;
-    Regex regex(regexStr);
+    Regex regex("(\\w+)(_[\\w\\d\\.\\,\\-]+)?_([\\w\\d\\.\\,\\-]+)");
     regex.Search(fileName, matches);
 
     // If we failed to find a match then notify the user
@@ -416,8 +411,7 @@ bool VersionSelector::InstallLocalTemplateProject(StringParam filePath)
     // Create the zero template component and set the sku and version id from what we parsed
     ZeroTemplate* zeroTemplate = HasOrAdd<ZeroTemplate>(metaCog);
     zeroTemplate->mSKU = matches[1];
-    String templateIds = matches[3];
-    zeroTemplate->mVersionId = templateIds.SubString(templateIds.Begin() + 1, templateIds.End() - 1);
+    zeroTemplate->mVersionId = matches[3];
     // Just default the display name to the sku name
     zeroTemplate->mDisplayName = zeroTemplate->mSKU;
     // Parse the ids into a more usable run-time format
@@ -537,14 +531,7 @@ void VersionSelector::FindDownloadedTemplatesRecursive(StringParam searchPath)
 BackgroundTask* VersionSelector::GetTemplateListing()
 {
   ZPrint("Checking server for project templates.\n");
-  String url = BuildString(GetLauncherPhpUrl(), "?Commands=RequestTemplateList");
-
-  // If we have dev config then add an extra command to get some extra templates (for testing)
-  DeveloperConfig* devConfig = mConfig->GetOwner()->has(DeveloperConfig);
-  if(devConfig != nullptr)
-    url = BuildString(url, ",&DevTest");
-
-  GetTemplateListingTaskJob* job = new GetTemplateListingTaskJob(url);
+  GetTemplateListingTaskJob* job = new GetTemplateListingTaskJob(Urls::cApiLauncherTemplates);
   job->mName = "Template List";
   return Z::gBackgroundTasks->Execute(job, job->mName);
 }
@@ -628,8 +615,7 @@ BackgroundTask* VersionSelector::DownloadTemplateProject(TemplateProject* projec
 {
   String templateUrl = project->GetTemplateUrl();
   ZPrint("Downloading template project '%s'.\n", templateUrl.c_str());
-  String url = BuildString(GetLauncherPhpUrl(), "?Commands=RequestTemplateProject&TemplatePath=", templateUrl);
-  DownloadTemplateTaskJob* job = new DownloadTemplateTaskJob(url, project);
+  DownloadTemplateTaskJob* job = new DownloadTemplateTaskJob(templateUrl, project);
 
   ZeroTemplate* zeroTemplate = project->GetZeroTemplate(true);
   job->mTemplateInstallLocation = FilePath::Combine(mConfig->GetTemplateInstallPath(), zeroTemplate->GetFullTemplateVersionName());
@@ -642,8 +628,8 @@ BackgroundTask* VersionSelector::DownloadTemplateProject(TemplateProject* projec
 BackgroundTask* VersionSelector::CreateProjectFromTemplate(TemplateProject* project, StringParam templateInstallPath, StringParam projectInstallPath, const BuildId& buildId,
                                                            const HashSet<String>& projectTags)
 {
-  String url = BuildString(GetLauncherPhpUrl(), "?Commands=RequestTemplateProject&TemplatePath=", project->GetTemplateUrl());
-  DownloadAndCreateTemplateTaskJob* job = new DownloadAndCreateTemplateTaskJob(url, project);
+  String templateUrl = project->GetTemplateUrl();
+  DownloadAndCreateTemplateTaskJob* job = new DownloadAndCreateTemplateTaskJob(templateUrl, project);
 
   job->mTemplateInstallLocation = templateInstallPath;
   job->mTemplateNameWithoutExtension = project->GetLocalTemplateFileName();
@@ -659,8 +645,7 @@ BackgroundTask* VersionSelector::CreateProjectFromTemplate(TemplateProject* proj
 BackgroundTask* VersionSelector::DownloadTemplateIcon(TemplateProject* project)
 {
   String iconUrl = project->GetIconUrl();
-  String url = BuildString(GetLauncherPhpUrl(), "?Commands=RequestTemplateIcon&IconPath=", iconUrl);
-  DownloadImageTaskJob* job = new DownloadImageTaskJob(url);
+  DownloadImageTaskJob* job = new DownloadImageTaskJob(iconUrl);
   job->mName = "Download Preview";
 
   return Z::gBackgroundTasks->Execute(job, job->mName);
@@ -674,8 +659,7 @@ BackgroundTask* VersionSelector::DownloadTemplatePreviews(TemplateProject* proje
 
 BackgroundTask* VersionSelector::DownloadDeveloperNotes()
 {
-  String url = BuildString(GetLauncherPhpUrl(), "?Commands=ListDevUpdates");
-  DownloadTaskJob* job = new DownloadTaskJob(url);
+  DownloadTaskJob* job = new DownloadTaskJob(Urls::cApiDevNotes, cCacheSeconds);
   job->mName = "Download DevUpdates";
 
   return Z::gBackgroundTasks->Execute(job, job->mName);
@@ -734,7 +718,7 @@ void VersionSelector::GetBuildIdFromArchive(StringParam buildPath, ZeroBuild& ze
   // If the old parsing method succeeded then make sure to set the release date
   if(oldFormatParsed)
   {
-    buildInfo->mChangeSetDate = String::Format("%s.%s.%s", year.c_str(), month.c_str(), day.c_str());
+    buildInfo->mChangeSetDate = String::Format("%s-%s-%s", year.c_str(), month.c_str(), day.c_str());
     return;
   }
 
@@ -756,7 +740,7 @@ void VersionSelector::GetBuildIdFromArchive(StringParam buildPath, ZeroBuild& ze
   buildId.mRevisionId = Math::Abs((int)HashString((char*)&dateTime, sizeof(CalendarDateTime)));
 
   // Also set the release date string
-  buildInfo->mChangeSetDate = String::Format("%d.%d.%d", dateTime.Year, dateTime.Month + 1, dateTime.Day);
+  buildInfo->mChangeSetDate = String::Format("%d-%d-%d", dateTime.Year, dateTime.Month + 1, dateTime.Day);
 }
 
 Cog* VersionSelector::ExtractLocalTemplateMetaAndImages(Archive& archive, File& file, StringParam metaFileName, bool extractImages)
@@ -835,14 +819,8 @@ BackgroundTask* VersionSelector::InstallVersion(ZeroBuild* standalone)
 
   //build the task to start the install
   BuildId buildId = standalone->GetBuildId();
-  String url = BuildString(GetLauncherPhpUrl(), "?Commands=RequestBuild&BuildId=", buildId.ToIdString());
-  // If we have dev config then add an extra command to get some extra templates (for testing)
-  DeveloperConfig* devConfig = mConfig->GetOwner()->has(DeveloperConfig);
-  if(devConfig != nullptr)
-    url = BuildString(url, "&DevTest");
-
-  DownloadStandaloneTaskJob* job = new DownloadStandaloneTaskJob(url);
-
+  String downloadUrl = standalone->GetDownloadUrl();
+  DownloadStandaloneTaskJob* job = new DownloadStandaloneTaskJob(downloadUrl);
 
   // Get the install path for this build
   standalone->mInstallLocation = GetDefaultInstallLocation(buildId);
@@ -955,26 +933,11 @@ void VersionSelector::ForceUpdateAllBuilds()
   }
 }
 
-BackgroundTask* VersionSelector::CheckForPatchLauncherUpdate()
-{
-  ZPrint("Checking for launcher patch update.\n");
-  // Ask if there's a new launcher installer given our current major version
-  BuildId currentBuild = BuildId::GetCurrentLauncherId();
-  String url = BuildString(GetLauncherPhpUrl(), "?Commands=ListVersionId&MajorId=", ToString(currentBuild.mMajorVersion));
-
-  DownloadTaskJob* job = new DownloadTaskJob(url);
-  job->mName = "Check For Patch Installer";
-
-  return Z::gBackgroundTasks->Execute(job, job->mName);
-}
-
-BackgroundTask* VersionSelector::DownloadPatchLauncherUpdate()
+BackgroundTask* VersionSelector::DownloadPatchLauncherUpdate(StringParam url)
 {
   ZPrint("Downloading launcher patch update.\n");
-  // Ask if there's a new launcher patch given our current major version
-  String majorVersionIdStr = ToString(GetLauncherMajorVersion());
-  String url = BuildString(GetLauncherPhpUrl(), "?Commands=RequestZeroLauncherPackage&MajorId=", majorVersionIdStr);
 
+  String majorVersionIdStr = ToString(GetLauncherMajorVersion());
   String launcherFolderName = FilePath::Combine(GetUserLocalDirectory(), BuildString("ZeroLauncher_", majorVersionIdStr, ".0"));
   DownloadLauncherPatchInstallerJob* job = new DownloadLauncherPatchInstallerJob(url, launcherFolderName);
   job->mName = "Download Patch Installer";
@@ -982,25 +945,9 @@ BackgroundTask* VersionSelector::DownloadPatchLauncherUpdate()
   return Z::gBackgroundTasks->Execute(job, job->mName);
 }
 
-BackgroundTask* VersionSelector::CheckForMajorLauncherUpdate()
-{
-  ZPrint("Checking for launcher major update.\n");
-  // Ask if there's a new launcher installer given our current major version
-  BuildId currentBuild = BuildId::GetCurrentLauncherId();
-  String url = BuildString(GetLauncherPhpUrl(), "?Commands=CheckForMajorLauncherUpdate&MajorId=", ToString(currentBuild.mMajorVersion));
-
-  CheckForLauncherMajorInstallerJob* job = new CheckForLauncherMajorInstallerJob(url);
-  job->mName = "Check For Major Installer";
-
-  return Z::gBackgroundTasks->Execute(job, job->mName);
-}
-
-BackgroundTask* VersionSelector::DownloadMajorLauncherUpdate()
+BackgroundTask* VersionSelector::DownloadMajorLauncherUpdate(StringParam url)
 {
   ZPrint("Downloading launcher major update.\n");
-  // Ask if there's a new launcher installer given our current major version
-  BuildId currentBuild = BuildId::GetCurrentLauncherId();
-  String url = BuildString(GetLauncherPhpUrl(), "?Commands=DownloadMajorLauncherUpdate");
 
   DownloadLauncherMajorInstallerJob* job = new DownloadLauncherMajorInstallerJob(url);
   job->mName = "Download Major Installer";

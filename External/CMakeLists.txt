@@ -18,6 +18,7 @@ set(CurrentDirectory ${CMAKE_CURRENT_LIST_DIR})
 set(AllPossibleStaticExternals 
     Assimp 
     CEF 
+    Curl 
     Freetype 
     GL 
     GLEW 
@@ -85,6 +86,7 @@ endforeach()
 # set lib paths
 set(AssimpPath ${CurrentDirectory}/Assimp)
 set(CEFPath ${CurrentDirectory}/CEF)
+set(CurlPath ${CurrentDirectory}/Curl)
 set(FreetypePath ${CurrentDirectory}/Freetype)
 set(GLPath ${CurrentDirectory}/GL)
 set(GLEWPath ${CurrentDirectory}/GLEW)

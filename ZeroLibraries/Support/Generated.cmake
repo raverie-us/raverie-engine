@@ -29,4 +29,6 @@ target_sources(Support
     ${CMAKE_CURRENT_LIST_DIR}/StringReplacement.cpp
     ${CMAKE_CURRENT_LIST_DIR}/StringReplacement.hpp
     ${CMAKE_CURRENT_LIST_DIR}/SupportStandard.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Urls.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Urls.hpp
 )

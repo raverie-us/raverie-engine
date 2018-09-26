@@ -288,6 +288,13 @@ void ZeroBuild::SetBuildId(const BuildId& buildId)
   buildContent->SetBuildId(buildId);
 }
 
+String ZeroBuild::GetDownloadUrl()
+{
+  ZeroBuildContent* zeroBuild = GetBuildContent(false);
+  if (zeroBuild != nullptr)
+    return zeroBuild->mDownloadUrl;
+  return String();
+}
 
 void ZeroBuild::SaveMetaFile(StringParam filePath)
 {
@@ -455,13 +462,13 @@ String TemplateProject::GetDisplayName()
 String TemplateProject::GetTemplateUrl()
 {
   ZeroTemplate* zeroTemplate = GetZeroTemplate(true);
-  return BuildString(zeroTemplate->mTemplatePath, "/", zeroTemplate->mTemplateFileName);
+  return zeroTemplate->mDownloadUrl;
 }
 
 String TemplateProject::GetIconUrl()
 {
   ZeroTemplate* zeroTemplate = GetZeroTemplate(true);
-  return BuildString(zeroTemplate->mTemplatePath, "/", zeroTemplate->mIconUrl);
+  return zeroTemplate->mIconUrl;
 }
 
 float TemplateProject::GetSortPriority()

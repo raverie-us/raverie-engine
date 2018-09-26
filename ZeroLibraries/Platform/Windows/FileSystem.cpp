@@ -266,8 +266,6 @@ bool SetFileToCurrentTime(StringParam filename)
     (LPFILETIME) NULL, 
     &fileTime);
 
-  VerifyWin(result, "Failed to set file time.");
-
   return result != 0;
 }
 

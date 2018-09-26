@@ -8,6 +8,8 @@
 
 namespace Zero
 {
+// We cache all requests for 4 hours (forced, we don't contact the server).
+const u64 cCacheSeconds = 60 * 60 * 4;
 
 //-------------------------------------------------------------------GetVersionListingTask
 // Get the possible versions of zero from the server.
@@ -213,22 +215,6 @@ public:
   /// Is there a new major-version installer for the launcher available?
   bool mIsNewPatchAvailable;
   String mRootDownloadLocation;
-};
-
-//-------------------------------------------------------------------DownloadLauncherMajorInstallerJob
-// A background task to check if there's a new major version installer for the launcher and if so download it.
-class CheckForLauncherMajorInstallerJob : public DownloadTaskJob
-{
-public:
-  typedef CheckForLauncherMajorInstallerJob ZilchSelf;
-  CheckForLauncherMajorInstallerJob(StringParam url);
-
-  /// Job Interface.
-  void Execute() override;
-  void OnReponse(WebResponseEvent* event);
-
-  /// Is there a new major-version installer for the launcher available?
-  bool mIsNewInstallerAvailable;
 };
 
 //-------------------------------------------------------------------DownloadLauncherMajorInstallerJob

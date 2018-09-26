@@ -99,6 +99,8 @@ public:
   BuildId GetBuildId();
   void SetBuildId(const BuildId& buildId);
 
+  String GetDownloadUrl();
+
   /// Save the stored meta cog to a file
   void SaveMetaFile(StringParam filePath);
   /// Save the store meta cog to a string. Needed to safely run on another

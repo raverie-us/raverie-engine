@@ -20,6 +20,9 @@ public:
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
 
+  /// Clears and re-parses the mTagSet from mTags.
+  void Parse();
+
   /// Information used to uniquely identify this build.
   BuildId GetBuildId();
   void SetBuildId(const BuildId& buildId);
@@ -35,7 +38,9 @@ public:
   // A display name for the build independent of the actual build name
   String mDisplayName;
   String mPackageName;
+  String mPackageExtension;
   String mTags;
+  String mDownloadUrl;
   HashSet<String> mTagSet;
 };
 
@@ -76,6 +81,9 @@ public:
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
 
+  /// Clears and re-parses the mTagSet from mTags and the mBuildIds.
+  void Parse();
+
   /// Get a string used to uniquely identify this template project. Built from the SKU and version id.
   String GetIdString();
   /// The full name of this template build from the SKU and version ranges.
@@ -105,15 +113,10 @@ public:
   /// A sorting bias. Projects are this priority then alphabetically by name.
   float mSortPriority;
 
-  /// The location of this template's data on the server. The template file
-  /// and all images should have urls relative to this 
-  String mTemplatePath;
   /// The name of the template file relative to the template path.
-  String mTemplateFileName;
+  String mDownloadUrl;
   /// The url of the icon to display for this template
   String mIconUrl;
-  /// A comma delimited list of preview images for the project. Currently not used.
-  String mPreviewUrl;
   
   /// A comma delimited of tags for this project.
   String mTags;

@@ -10,7 +10,7 @@ namespace Zero
 {
 
 //-------------------------------------------------------------------GetVersionListingTask
-GetVersionListingTaskJob::GetVersionListingTaskJob(StringParam url) : DownloadTaskJob(url)
+GetVersionListingTaskJob::GetVersionListingTaskJob(StringParam url) : DownloadTaskJob(url, cCacheSeconds)
 {
 }
 
@@ -38,22 +38,93 @@ void GetVersionListingTaskJob::PopulatePackageList()
 {
   Status status;
 
-  // Create a cog from the received data
-  DataTreeLoader loader;
-  loader.OpenBuffer(status, GetData());
-  Cog* rootCog = Z::gFactory->CreateFromStream(Z::gEngine->GetEngineSpace(), loader, 0, nullptr);
-  ReturnIf(rootCog == nullptr, , "Invalid root cog created from server list of builds");
+  static const String cOrigin = "GetVersionListingTaskJob";
+  String jsonData = GetData();
+  CompilationErrors errors;
+  JsonValue* jsonReleases = JsonReader::ReadIntoTreeFromString(errors, jsonData, cOrigin, nullptr);
+  ReturnIf(jsonReleases == nullptr, , "Invalid JsonValue created from GitHub API");
+
+  Space* space = Z::gEngine->GetEngineSpace();
   
-  // Walk all children and add them to our list of available build packages
-  HierarchyList::range children = rootCog->GetChildren();
-  for(; !children.Empty(); children.PopFront())
+  Archetype* emptyArchetype = ArchetypeManager::FindOrNull(CoreArchetypes::Empty);
+  ReturnIf(emptyArchetype == nullptr,, "Unable to find empty Cog Archetype");
+
+  static const String cJsonAssets("assets");
+  static const String cJsonName("name");
+  static const String cJsonDownloadUrl("browser_download_url");
+  static const String cJsonUpdatedAt("updated_at");
+  static const String cJsonBody("body");
+  
+  static const String cZeroEngineSetup("ZeroEngineSetup");
+  static const String cDevelop("Develop");
+
+  // Tags.Major.Minor.Patch.Revision.ShortChangeset-Platform.Extension
+  // Example: ZeroEngineSetup.1.5.0.1501.fb02756c46a4-Win32.zerobuild
+  static const Regex cNameRegex("([a-zA-Z0-9_,]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.([0-9a-fA-F]+)\\-([a-zA-Z0-9_]+)\\.([a-zA-Z0-9_]+)");
+
+  forRange(JsonValue* jsonRelease, jsonReleases->ArrayElements)
   {
-    mPackages.PushBack(&children.Front());
+    JsonValue* jsonAssets = jsonRelease->GetMember(cJsonAssets);
+
+    if (!jsonAssets)
+      continue;
+
+    // There should only be one, but this is safest to do.
+    forRange(JsonValue* jsonAsset, jsonAssets->ArrayElements)
+    {
+      String name = jsonAsset->MemberAsString(cJsonName);
+
+      Matches matches;
+      cNameRegex.Search(name, matches);
+
+      // Make sure the regular expression matched (if not, it may be some other release that's not a zerobuild).
+      if (matches.Empty())
+        continue;
+
+      Cog* cog = space->Create(emptyArchetype);
+      ReturnIf(cog == nullptr, , "Unable to create an empty Cog");
+      mPackages.PushBack(cog);
+      ZeroBuildContent* zeroBuildContent = HasOrAdd<ZeroBuildContent>(cog);
+      zeroBuildContent->mPackageName = name;
+
+      // 1    2     3     4     5        6              7
+      // Tags.Major.Minor.Patch.Revision.ShortChangeset-Platform.zerobuild
+      zeroBuildContent->mTags = matches[1].All();
+      if (zeroBuildContent->mTags == cZeroEngineSetup)
+        zeroBuildContent->mTags = cDevelop;
+      ToValue(matches[2].All(), zeroBuildContent->mBuildId.mMajorVersion);
+      ToValue(matches[3].All(), zeroBuildContent->mBuildId.mMinorVersion);
+      ToValue(matches[4].All(), zeroBuildContent->mBuildId.mPatchVersion);
+      ToValue(matches[5].All(), zeroBuildContent->mBuildId.mRevisionId);
+      zeroBuildContent->mBuildId.mShortChangeSet = matches[6].All();
+      zeroBuildContent->mBuildId.mPlatform = matches[7].All();
+      zeroBuildContent->mPackageExtension = matches[8].All();
+
+      zeroBuildContent->mChangeSetDate = jsonAsset->MemberAsString(cJsonUpdatedAt);
+
+      // Remove the time portion (otherwise, the date is in the exact format we expect: YYYY-MM-DD).
+      StringIterator begin = zeroBuildContent->mChangeSetDate.Begin();
+      StringIterator end = zeroBuildContent->mChangeSetDate.FindFirstOf(Rune('T')).Begin();
+      if (!end.Empty())
+        zeroBuildContent->mChangeSetDate = StringRange(begin, end);
+
+      zeroBuildContent->mDownloadUrl = jsonAsset->MemberAsString(cJsonDownloadUrl);
+
+      // Parse tags or anything else that we just populated (normally happens during Initialize).
+      zeroBuildContent->Parse();
+
+      String releaseNotes = jsonRelease->MemberAsString(cJsonBody);
+      if (!releaseNotes.Empty())
+      {
+        ZeroBuildReleaseNotes* zeroBuildReleaseNotes = HasOrAdd<ZeroBuildReleaseNotes>(cog);
+        zeroBuildReleaseNotes->mNotes = jsonRelease->MemberAsString(cJsonBody);
+      }
+    }
   }
 }
 
 //-------------------------------------------------------------------GetDataTask
-DownloadImageTaskJob::DownloadImageTaskJob(StringParam url) : DownloadTaskJob(url)
+DownloadImageTaskJob::DownloadImageTaskJob(StringParam url) : DownloadTaskJob(url, cCacheSeconds)
 {
   mImageWasInvalid = false;
 }
@@ -119,7 +190,7 @@ void LoadImageFromDiskTaskJob::Execute()
 }
 
 //-------------------------------------------------------------------GetDataTask
-GetDataTaskJob::GetDataTaskJob(StringParam url) : DownloadTaskJob(url)
+GetDataTaskJob::GetDataTaskJob(StringParam url) : DownloadTaskJob(url, cCacheSeconds)
 {
 
 }
@@ -149,7 +220,7 @@ void GetDataTaskJob::OnReponse(WebResponseEvent* event)
 }
 
 //-------------------------------------------------------------------DownloadStandaloneTask
-DownloadStandaloneTaskJob::DownloadStandaloneTaskJob(StringParam url) : DownloadTaskJob(url)
+DownloadStandaloneTaskJob::DownloadStandaloneTaskJob(StringParam url) : DownloadTaskJob(url, cCacheSeconds)
 {
 }
 
@@ -295,7 +366,7 @@ void DeleteDirectoryJob::Execute()
 }
 
 //-------------------------------------------------------------------GetTemplateListingTask
-GetTemplateListingTaskJob::GetTemplateListingTaskJob(StringParam url) : DownloadTaskJob(url)
+GetTemplateListingTaskJob::GetTemplateListingTaskJob(StringParam url) : DownloadTaskJob(url, cCacheSeconds)
 {
 
 }
@@ -323,23 +394,82 @@ void GetTemplateListingTaskJob::OnReponse(WebResponseEvent* event)
 void GetTemplateListingTaskJob::PopulateTemplateList()
 {
   Status status;
-  // Create a cog from the received data
-  DataTreeLoader loader;
-  loader.OpenBuffer(status, GetData());
-  Cog* rootCog = Z::gFactory->CreateFromStream(Z::gEngine->GetEngineSpace(), loader, 0, nullptr);
-  ReturnIf(rootCog == nullptr, , "Invalid root cog created from server list of builds");
 
-  // Walk all children and add them to our list of available build packages
-  HierarchyList::range children = rootCog->GetChildren();
-  for(; !children.Empty(); children.PopFront())
+  static const String cOrigin = "GetTemplateListingTaskJob";
+  String jsonData = GetData();
+  CompilationErrors errors;
+  JsonValue* jsonReleases = JsonReader::ReadIntoTreeFromString(errors, jsonData, cOrigin, nullptr);
+  ReturnIf(jsonReleases == nullptr, , "Invalid JsonValue created from GitHub API");
+
+  Space* space = Z::gEngine->GetEngineSpace();
+
+  Archetype* emptyArchetype = ArchetypeManager::FindOrNull(CoreArchetypes::Empty);
+  ReturnIf(emptyArchetype == nullptr, , "Unable to find empty Cog Archetype");
+
+  static const String cJsonAssets("assets");
+  static const String cJsonName("name");
+  static const String cJsonDownloadUrl("browser_download_url");
+  static const String cJsonUpdatedAt("updated_at");
+  static const String cJsonBody("body");
+
+  // Find a string that is _VersionNumber, this can include '.' ',' and '-' in order to specify ranges
+  // The expected file name is SKU_UserId_BuildId where _UserId is optional.
+  static const Regex cNameRegex("(\\w+)(_[\\w\\d\\.\\,\\-]+)?_([\\w\\d\\.\\,\\-]+)\\.zerotemplate");
+  static const size_t cNameRegexMatches = 4;
+
+  forRange(JsonValue* jsonRelease, jsonReleases->ArrayElements)
   {
-    mTemplates.PushBack(&children.Front());
+    JsonValue* jsonAssets = jsonRelease->GetMember(cJsonAssets);
+
+    if (!jsonAssets)
+      continue;
+
+    // There should only be one, but this is safest to do.
+    forRange(JsonValue* jsonAsset, jsonAssets->ArrayElements)
+    {
+      String name = jsonAsset->MemberAsString(cJsonName);
+
+      Matches matches;
+      cNameRegex.Search(name, matches);
+
+      // Make sure the regular expression matched (if not, it may be some other release that's not a zerotemplate).
+      // Specificially, if this is a png for the release then it will not match.
+      if (matches.Size() != cNameRegexMatches)
+        continue;
+
+      Cog* cog = space->Create(emptyArchetype);
+      ReturnIf(cog == nullptr, , "Unable to create an empty Cog");
+      mTemplates.PushBack(cog);
+      ZeroTemplate* zeroTemplate = HasOrAdd<ZeroTemplate>(cog);
+
+      zeroTemplate->mSKU = matches[1];
+      zeroTemplate->mVersionId = matches[3];
+
+      zeroTemplate->mDate = jsonAsset->MemberAsString(cJsonUpdatedAt);
+
+      // Remove the time portion (otherwise, the date is in the exact format we expect: YYYY-MM-DD).
+      StringIterator begin = zeroTemplate->mDate.Begin();
+      StringIterator end = zeroTemplate->mDate.FindFirstOf(Rune('T')).Begin();
+      if (!end.Empty())
+        zeroTemplate->mDate = StringRange(begin, end);
+
+      zeroTemplate->mDownloadUrl = jsonAsset->MemberAsString(cJsonDownloadUrl);
+
+      // The icon url is always the same as the template url, but with a png extension instead.
+      zeroTemplate->mIconUrl = zeroTemplate->mDownloadUrl.Replace(".zerotemplate", ".png");
+
+      zeroTemplate->mDisplayName = jsonRelease->MemberAsString(cJsonName);
+      zeroTemplate->mDescription = jsonRelease->MemberAsString(cJsonBody);
+
+      // Parse tags/build-ids and anything else that we just populated (normally happens during Initialize).
+      zeroTemplate->Parse();
+    }
   }
 }
 
 //-------------------------------------------------------------------DownloadTemplateTask
 DownloadTemplateTaskJob::DownloadTemplateTaskJob(StringParam templateUrl, TemplateProject* project)
-  : DownloadTaskJob(templateUrl)
+  : DownloadTaskJob(templateUrl, cCacheSeconds)
 {
   mTemplate = project;
 }
@@ -454,7 +584,8 @@ void DownloadAndCreateTemplateTaskJob::CreateFromTemplateFile(StringParam templa
 }
 
 //-------------------------------------------------------------------DownloadLauncherPatchInstallerJob
-DownloadLauncherPatchInstallerJob::DownloadLauncherPatchInstallerJob(StringParam url, StringParam rootDownloadLocation) : DownloadTaskJob(url)
+DownloadLauncherPatchInstallerJob::DownloadLauncherPatchInstallerJob(StringParam url, StringParam rootDownloadLocation)
+  : DownloadTaskJob(url, cCacheSeconds)
 {
   mRootDownloadLocation = rootDownloadLocation;
   mIsNewPatchAvailable = false;
@@ -518,35 +649,8 @@ String DownloadLauncherPatchInstallerJob::FindPatchId(Archive& archive)
   return String();
 }
 
-//-------------------------------------------------------------------CheckForLauncherMajorInstallerJob
-CheckForLauncherMajorInstallerJob::CheckForLauncherMajorInstallerJob(StringParam url) : DownloadTaskJob(url)
-{
-  mIsNewInstallerAvailable = false;
-}
-
-void CheckForLauncherMajorInstallerJob::Execute()
-{
-  AsyncWebRequest* request = mRequest;
-  ConnectThisTo(request, Events::WebResponseComplete, OnReponse);
-  DownloadTaskJob::Execute();
-}
-
-void CheckForLauncherMajorInstallerJob::OnReponse(WebResponseEvent* event)
-{
-  // Check if there's no new installer available, either from a failed request or getting no data back
-  String data = event->mData;
-  if(event->mResponseCode != WebResponseCode::OK || data.SizeInBytes() == 0)
-  {
-    mIsNewInstallerAvailable = false;
-    return;
-  }
-
-  // Otherwise, we have a new installer
-  mIsNewInstallerAvailable = true;
-}
-
 //-------------------------------------------------------------------DownloadLauncherMajorInstallerJob
-DownloadLauncherMajorInstallerJob::DownloadLauncherMajorInstallerJob(StringParam url) : DownloadTaskJob(url)
+DownloadLauncherMajorInstallerJob::DownloadLauncherMajorInstallerJob(StringParam url) : DownloadTaskJob(url, cCacheSeconds)
 {
   mIsNewInstallerAvailable = false;
 }

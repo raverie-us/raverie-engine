@@ -873,13 +873,12 @@ void PropertyWidgetObject::OnViewOnlineDocs(ObjectEvent* event)
     return;
 
   // View Website with Search pre-filled
-  // Set up Text
-  static const String prefix = "https://docsapi.zeroengine.io/?";
+  // TODO: This is NOT correct, but will at least open the wiki for now.
   String searchTerm = mNode->mObject.StoredType->Name;
   
   // Assemble URL
   StringBuilder builder;
-  builder.Append(prefix);
+  builder.Append(Urls::cUserOnlineDocs);
   builder.Append("BuildId=");
   builder.Append(GetBuildIdString());
   builder.Append("&ChangeSetDate=");
