@@ -1,4 +1,4 @@
-pushd %cd%
+pushd %~dp0
 
 set folder_name="VS2017_MSVC_Windows"
 rd %folder_name% /s/q

@@ -787,7 +787,7 @@ void SoundInstance::AddSamplesToBufferThreaded(BufferType* buffer, unsigned outp
   if (!SavedSamplesThreaded.Empty())
   {
     // Find out how many samples need to be copied over
-    unsigned samplesToCopy = Math::Min(SavedSamplesThreaded.Size(), outputFrames * outputChannels);
+    unsigned samplesToCopy = Math::Min((unsigned)SavedSamplesThreaded.Size(), outputFrames * outputChannels);
     // Add the saved samples to the end of the buffer
     AppendToBuffer(buffer, SavedSamplesThreaded, 0, samplesToCopy);
     // If there are more saved samples, erase the ones we copied
