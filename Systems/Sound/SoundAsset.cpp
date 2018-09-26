@@ -133,7 +133,7 @@ void DecompressedSoundAsset::DecodingCallback(DecodedPacket* packet)
 {
   // At the end of a file the actual decoded samples could be smaller than the size of the array
   // on the DecodedPacket object, so make sure we don't go past the size of mSamples
-  unsigned samplesCopied = Math::Min(packet->mSamples.Size(), mSamples.Size() - mSamplesAvailableShared);
+  unsigned samplesCopied = Math::Min((unsigned)packet->mSamples.Size(), (unsigned)(mSamples.Size() - mSamplesAvailableShared));
   // Copy the decoded samples into the array
   memcpy(mSamples.Data() + mSamplesAvailableShared, packet->mSamples.Data(),
     sizeof(float) * samplesCopied);
@@ -380,7 +380,7 @@ void StreamingSoundAsset::CopySamplesIntoBuffer(float* outputBuffer, unsigned sa
   }
 
   // Copy either the number of samples requested or the samples available, whichever is smaller
-  unsigned samplesCopied = Math::Min(samplesRequested, data->mSamples.Size() - sampleIndex);
+  unsigned samplesCopied = Math::Min(samplesRequested, (unsigned)(data->mSamples.Size() - sampleIndex));
   memcpy(outputBuffer, data->mSamples.Data() + sampleIndex, sizeof(float) * samplesCopied);
 
   // If we did not copy enough samples, keep trying (in case there is another decoded buffer available)

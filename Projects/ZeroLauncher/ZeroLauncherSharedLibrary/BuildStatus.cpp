@@ -249,7 +249,7 @@ BuildList::BuildList(Composite* parent, VersionSelector* versionSelector,
   mScrollArea->SetClientSize(clientSize);
 
   // Only display 4 entries then add the scroll bar
-  uint buildCount = Math::Min(4u, mEntries.Size());
+  uint buildCount = Math::Min(4u, (uint)mEntries.Size());
 
   float buildListHeight = float(buildCount) * selectorSize.y;
 
