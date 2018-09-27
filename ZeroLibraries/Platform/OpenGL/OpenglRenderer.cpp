@@ -39,28 +39,30 @@ extern "C"
 // RenderQueue structures should have semantics for setting shader parameters
 namespace
 {
-  const Zero::String cFrameTime("FrameTime");
-  const Zero::String cLogicTime("LogicTime");
-  const Zero::String cNearPlane("NearPlane");
-  const Zero::String cFarPlane("FarPlane");
-  const Zero::String cViewportSize("ViewportSize");
-  const Zero::String cInverseViewportSize("InverseViewportSize");
-  const Zero::String cObjectWorldPosition("ObjectWorldPosition");
+  const Zero::String cFrameTime("FrameData.FrameTime");
+  const Zero::String cLogicTime("FrameData.LogicTime");
+  const Zero::String cNearPlane("CameraData.NearPlane");
+  const Zero::String cFarPlane("CameraData.FarPlane");
+  const Zero::String cViewportSize("CameraData.ViewportSize");
+  const Zero::String cInverseViewportSize("CameraData.InverseViewportSize");
+  const Zero::String cObjectWorldPosition("CameraData.ObjectWorldPosition");
 
-  const Zero::String cLocalToWorld("LocalToWorld");
-  const Zero::String cWorldToLocal("WorldToLocal");
-  const Zero::String cWorldToView("WorldToView");
-  const Zero::String cViewToWorld("ViewToWorld");
-  const Zero::String cLocalToView("LocalToView");
-  const Zero::String cViewToLocal("ViewToLocal");
-  const Zero::String cLocalToWorldNormal("LocalToWorldNormal");
-  const Zero::String cWorldToLocalNormal("WorldToLocalNormal");
-  const Zero::String cLocalToViewNormal("LocalToViewNormal");
-  const Zero::String cViewToLocalNormal("ViewToLocalNormal");
-  const Zero::String cLocalToPerspective("LocalToPerspective");
-  const Zero::String cViewToPerspective("ViewToPerspective");
-  const Zero::String cPerspectiveToView("PerspectiveToView");
-  const Zero::String cZeroPerspectiveToApiPerspective("ZeroPerspectiveToApiPerspective");
+  const Zero::String cLocalToWorld("TransformData.LocalToWorld");
+  const Zero::String cWorldToLocal("TransformData.WorldToLocal");
+  const Zero::String cWorldToView("TransformData.WorldToView");
+  const Zero::String cViewToWorld("TransformData.ViewToWorld");
+  const Zero::String cLocalToView("TransformData.LocalToView");
+  const Zero::String cViewToLocal("TransformData.ViewToLocal");
+  const Zero::String cLocalToWorldNormal("TransformData.LocalToWorldNormal");
+  const Zero::String cWorldToLocalNormal("TransformData.WorldToLocalNormal");
+  const Zero::String cLocalToViewNormal("TransformData.LocalToViewNormal");
+  const Zero::String cViewToLocalNormal("TransformData.ViewToLocalNormal");
+  const Zero::String cLocalToPerspective("TransformData.LocalToPerspective");
+  const Zero::String cViewToPerspective("TransformData.ViewToPerspective");
+  const Zero::String cPerspectiveToView("TransformData.PerspectiveToView");
+  const Zero::String cZeroPerspectiveToApiPerspective("TransformData.ZeroPerspectiveToApiPerspective");
+
+  const Zero::String cSpriteSource("SpriteSource_SpriteSourceColor");
 }
 
 namespace Zero
@@ -1937,7 +1939,7 @@ void OpenglRenderer::DrawStreamed(ViewNode& viewNode, FrameNode& frameNode)
     if (textureId != 0)
     {
       BindTexture(textureData->mType, mNextTextureSlot, textureId, mDriverSupport.mSamplerObjects);
-      SetShaderParameter(ShaderInputType::Texture, "SpriteSource", &mNextTextureSlot);
+      SetShaderParameter(ShaderInputType::Texture, cSpriteSource, &mNextTextureSlot);
       ++mNextTextureSlot;
     }
   }
@@ -2124,7 +2126,7 @@ void OpenglRenderer::SetShaderParameters(u64 objectId, uint shaderInputsId, uint
 void OpenglRenderer::CreateShader(ShaderEntry& entry)
 {
 #ifdef ZeroExtraGlDebug
-  ZPrint("Compiling composite: %s\n", entry.mComposite.c_str());
+  ZPrint("Compiling shader: %s %s %s\n", entry.mCoreVertex.c_str(), entry.mComposite.c_str(), entry.mRenderPass.c_str());
 #endif
 
   ShaderKey shaderKey(entry.mComposite, StringPair(entry.mCoreVertex, entry.mRenderPass));

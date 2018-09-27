@@ -323,6 +323,52 @@ bool ZilchShaderGlslBackend::RunTranslationPass(ShaderTranslationPassResult& inp
 
   spirv_cross::ShaderResources resources = compiler.get_shader_resources();
 
+  // Forcing buffer typenames to match between different stages so that the uniform instance names can be the same.
+  for(auto &ubo : resources.uniform_buffers)
+  {
+    int id = compiler.get_decoration(ubo.id, spv::DecorationBinding);
+    String name = BuildString("Buffer", ToString(id));
+    
+    compiler.set_name(ubo.base_type_id, name.c_str());
+  }
+
+#ifdef PLATFORM_EMSCRIPTEN
+  // gles output is going to flatten input/output blocks and prepend the block name to each member.
+  // Forcing block typenames to match.
+  for(auto stageInput : resources.stage_inputs)
+  {
+    int isBlock = compiler.get_decoration(stageInput.base_type_id, spv::DecorationBlock);
+    if(isBlock == 1)
+    {
+      std::string name = "block";
+      compiler.set_name(stageInput.id, name);
+    }
+  }
+  for(auto stageOutput : resources.stage_outputs)
+  {
+    int isBlock = compiler.get_decoration(stageOutput.base_type_id, spv::DecorationBlock);
+    if(isBlock == 1)
+    {
+      std::string name = "block";
+      compiler.set_name(stageOutput.id, name);
+    }
+  }
+
+  // When target outputs get flattened the layout decorations do not get copied.
+  // gles requires the layout decorations when there are multiple output targets.
+  auto entryPoints = compiler.get_entry_points_and_stages();
+  auto entryPoint = entryPoints[0];
+  if(entryPoint.execution_model == spv::ExecutionModel::ExecutionModelFragment)
+  {
+    for(auto stageOutput : resources.stage_outputs)
+    {
+      auto resourceType = compiler.get_type(stageOutput.base_type_id);
+      for(size_t i = 0; i < resourceType.member_types.size(); ++i)
+        compiler.set_member_decoration(stageOutput.base_type_id, i, spv::DecorationLocation, i);
+    }
+  }
+#endif
+
   // Create a helper struct to pass a lot of data around
   GlslBackendInternalData internalData;
   internalData.mCompiler = &compiler;

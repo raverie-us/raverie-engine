@@ -1,6 +1,6 @@
 enum ShaderLanguage
 {
-  Glsl = 1,
+  Glsl = 0,
   Hlsl,
   SpirV
 }
