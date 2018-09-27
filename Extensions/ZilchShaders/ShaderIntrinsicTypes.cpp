@@ -18,7 +18,7 @@ template <OpType opType>
 Zilch::Function* AddFunction(Zilch::LibraryBuilder& builder, Zilch::BoundType* owner, Zilch::BoundType* returnType, StringParam fnName, ParameterArray& params)
 {
   Zilch::Function* zilchFn = builder.AddBoundFunction(owner, fnName, UnTranslatedBoundFunction, params, returnType, Zilch::FunctionOptions::Static);
-  zilchFn->UserData = ResolveSimpleFunction<opType>;
+  zilchFn->UserData = (void*)&ResolveSimpleFunction<opType>;
   return zilchFn;
 }
 
@@ -288,11 +288,11 @@ ZilchDefineType(ShaderIntrinsics, builder, type)
 
   Zilch::ParameterArray parameters = OneParameter(intType, "language");
   Zilch::Function* isLanguageFn = builder.AddBoundFunction(type, "IsLanguage", Zero::DummyBoundFunction, parameters, boolType, Zilch::FunctionOptions::Static);
-  isLanguageFn->UserData = ResolveIsLanguage;
+  isLanguageFn->UserData = (void*)&ResolveIsLanguage;
 
   parameters = ThreeParameters(intType, "language", intType, "minVersion", intType, "maxVersion");
   isLanguageFn = builder.AddBoundFunction(type, "IsLanguage", Zero::DummyBoundFunction, parameters, boolType, Zilch::FunctionOptions::Static);
-  isLanguageFn->UserData = ResolveIsLanguageMinMaxVersion;
+  isLanguageFn->UserData = (void*)&ResolveIsLanguageMinMaxVersion;
 }
 
 //------------------------------------------------------------------------Shader

@@ -1614,9 +1614,9 @@ void ZilchSpirVFrontEnd::GenerateEntryPoint(Zilch::GenericFunctionNode* node, Zi
     entryPointGeneration.DeclareVertexInterface(this, node, function, context);
   else if(fragmentType == FragmentType::Geometry)
     entryPointGeneration.DeclareGeometryInterface(this, node, function, context);
-  else
+  //else
     // @JoshD: Revisit
-    __debugbreak();
+    //__debugbreak();
 }
 
 void ZilchSpirVFrontEnd::WalkFunctionCallNode(Zilch::FunctionCallNode*& node, ZilchSpirVFrontEndContext* context)
@@ -2169,7 +2169,7 @@ void ZilchSpirVFrontEnd::WalkMemberAccessNode(Zilch::MemberAccessNode*& node, Zi
     else
     {
       // Validate this is right (haven't made code to hit this yet)
-      __debugbreak();
+      //__debugbreak();
 
       // Make the constant for the sub-index of the member with respect to the base
       ZilchShaderIRConstantLiteral* memberIndexLiteral = GetOrCreateConstantLiteral(memberIndex);
@@ -2579,7 +2579,7 @@ Zilch::Function* ZilchSpirVFrontEnd::GetSetter(Zilch::MemberAccessNode* memberAc
   int setterFlags = Zilch::IoMode::WriteLValue | Zilch::IoMode::StrictPropertySet;
   bool isSetter = memberAccessNode->IoUsage & setterFlags;
   if(!isSetter)
-    return false;
+    return nullptr;
 
   Zilch::Function* set = nullptr;
 

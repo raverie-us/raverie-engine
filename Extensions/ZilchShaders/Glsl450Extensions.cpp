@@ -240,7 +240,7 @@ void RegisterGlsl450Extensions(ZilchShaderIRLibrary* shaderLibrary, SpirVExtensi
 void AddGlslIntrinsic(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, SpirVExtensionLibrary* extLibrary, int glslOpId, StringParam fnName, const Zilch::ParameterArray& parameters, Zilch::BoundType* returnType)
 {
   Zilch::Function* fn = builder.AddBoundFunction(type, fnName, UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveGlslExtensionFunction;
+  fn->UserData = (void*)&ResolveGlslExtensionFunction;
   fn->ComplexUserData.WriteObject(ExtensionLibraryUserData(glslOpId, extLibrary));
 }
 

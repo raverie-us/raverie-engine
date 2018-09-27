@@ -240,12 +240,12 @@ void AddSampleImplicitLod(Zilch::LibraryBuilder& builder, Zilch::BoundType* type
 
   parameters = TwoParameters(set.mSampledImageType, "sampledImage", coordinateType, "coordinate");
   fn = builder.AddBoundFunction(type, "SampleImplicitLod", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveSimpleFunction<OpType::OpImageSampleImplicitLod>;
+  fn->UserData = (void*)&ResolveSimpleFunction<OpType::OpImageSampleImplicitLod>;
   fn->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
 
   parameters = ThreeParameters(set.mImageType, "image", set.mSamplerType, "sampler", coordinateType, "coordinate");
   fn = builder.AddBoundFunction(type, "SampleImplicitLod", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveSplitImageSamplerFunction<OpType::OpImageSampleImplicitLod>;
+  fn->UserData = (void*)&ResolveSplitImageSamplerFunction<OpType::OpImageSampleImplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone, set.mSampledImageType));
   fn->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
 }
@@ -258,12 +258,12 @@ void AddSampleExplicitLod(Zilch::LibraryBuilder& builder, Zilch::BoundType* type
 
   parameters = ThreeParameters(set.mSampledImageType, "sampledImage", coordinateType, "coordinate", lodType, "lod");
   fn = builder.AddBoundFunction(type, "SampleExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveCombinedSamplerFunction<OpType::OpImageSampleExplicitLod>;
+  fn->UserData = (void*)&ResolveCombinedSamplerFunction<OpType::OpImageSampleExplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(1, spv::ImageOperandsLodMask));
 
   parameters = FourParameters(set.mImageType, "image", set.mSamplerType, "sampler", coordinateType, "coordinate", lodType, "lod");
   fn = builder.AddBoundFunction(type, "SampleExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveSplitImageSamplerFunction<OpType::OpImageSampleExplicitLod>;
+  fn->UserData = (void*)&ResolveSplitImageSamplerFunction<OpType::OpImageSampleExplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(1, spv::ImageOperandsLodMask, set.mSampledImageType));
 }
 
@@ -275,12 +275,12 @@ void AddSampleGradExplicitLod(Zilch::LibraryBuilder& builder, Zilch::BoundType* 
 
   parameters = FourParameters(set.mSampledImageType, "sampledImage", coordinateType, "coordinate", derivativeType, "ddx", derivativeType, "ddy");
   fn = builder.AddBoundFunction(type, "SampleGradExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveCombinedSamplerFunction<OpType::OpImageSampleExplicitLod>;
+  fn->UserData = (void*)&ResolveCombinedSamplerFunction<OpType::OpImageSampleExplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(2, spv::ImageOperandsGradMask));
 
   parameters = FiveParameters(set.mImageType, "image", set.mSamplerType, "sampler", coordinateType, "coordinate", derivativeType, "ddx", derivativeType, "ddy");
   fn = builder.AddBoundFunction(type, "SampleGradExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveSplitImageSamplerFunction<OpType::OpImageSampleExplicitLod>;
+  fn->UserData = (void*)&ResolveSplitImageSamplerFunction<OpType::OpImageSampleExplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(2, spv::ImageOperandsGradMask, set.mSampledImageType));
 }
 
@@ -292,13 +292,13 @@ void AddSampleDrefImplicitLod(Zilch::LibraryBuilder& builder, Zilch::BoundType* 
 
   parameters = ThreeParameters(set.mSampledImageType, "sampledImage", coordinateType, "coordinate", depthType, "depth");
   fn = builder.AddBoundFunction(type, "SampleDRefImplicitLod", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveCombinedSamplerFunction<OpType::OpImageSampleDrefImplicitLod>;
+  fn->UserData = (void*)&ResolveCombinedSamplerFunction<OpType::OpImageSampleDrefImplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone));
   fn->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
 
   parameters = FourParameters(set.mImageType, "image", set.mSamplerType, "sampler", coordinateType, "coordinate", depthType, "depth");
   fn = builder.AddBoundFunction(type, "SampleDRefImplicitLod", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveSplitImageSamplerFunction<OpType::OpImageSampleDrefImplicitLod>;
+  fn->UserData = (void*)&ResolveSplitImageSamplerFunction<OpType::OpImageSampleDrefImplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone, set.mSampledImageType));
   fn->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
 }
@@ -311,12 +311,12 @@ void AddSampleDrefExplicitLod(Zilch::LibraryBuilder& builder, Zilch::BoundType* 
 
   parameters = FourParameters(set.mSampledImageType, "sampledImage", coordinateType, "coordinate", depthType, "depth", lodType, "lod");
   fn = builder.AddBoundFunction(type, "SampleDRefExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveCombinedSamplerFunction<OpType::OpImageSampleDrefExplicitLod>;
+  fn->UserData = (void*)&ResolveCombinedSamplerFunction<OpType::OpImageSampleDrefExplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(1, spv::ImageOperandsLodMask));
 
   parameters = FiveParameters(set.mImageType, "image", set.mSamplerType, "sampler", coordinateType, "coordinate", depthType, "depth", lodType, "lod");
   fn = builder.AddBoundFunction(type, "SampleDRefExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveSplitImageSamplerFunction<OpType::OpImageSampleDrefExplicitLod>;
+  fn->UserData = (void*)&ResolveSplitImageSamplerFunction<OpType::OpImageSampleDrefExplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(1, spv::ImageOperandsLodMask, set.mSampledImageType));
 }
 
@@ -328,13 +328,13 @@ void AddSampleProjImplicitLod(Zilch::LibraryBuilder& builder, Zilch::BoundType* 
 
   parameters = TwoParameters(set.mSampledImageType, "sampledImage", coordinateType, "coordinate");
   fn = builder.AddBoundFunction(type, "SampleProjImplicitLod", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveCombinedSamplerFunction<OpType::OpImageSampleProjImplicitLod>;
+  fn->UserData = (void*)&ResolveCombinedSamplerFunction<OpType::OpImageSampleProjImplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone));
   fn->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
 
   parameters = ThreeParameters(set.mImageType, "image", set.mSamplerType, "sampler", coordinateType, "coordinate");
   fn = builder.AddBoundFunction(type, "SampleProjImplicitLod", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveSplitImageSamplerFunction<OpType::OpImageSampleProjImplicitLod>;
+  fn->UserData = (void*)&ResolveSplitImageSamplerFunction<OpType::OpImageSampleProjImplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone, set.mSampledImageType));
   fn->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
 }
@@ -347,12 +347,12 @@ void AddSampleProjExplicitLod(Zilch::LibraryBuilder& builder, Zilch::BoundType* 
 
   parameters = ThreeParameters(set.mSampledImageType, "sampledImage", coordinateType, "coordinate", lodType, "lod");
   fn = builder.AddBoundFunction(type, "SampleProjExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveCombinedSamplerFunction<OpType::OpImageSampleProjExplicitLod>;
+  fn->UserData = (void*)&ResolveCombinedSamplerFunction<OpType::OpImageSampleProjExplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(1, spv::ImageOperandsLodMask));
 
   parameters = FourParameters(set.mImageType, "image", set.mSamplerType, "sampler", coordinateType, "coordinate", lodType, "lod");
   fn = builder.AddBoundFunction(type, "SampleProjExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveSplitImageSamplerFunction<OpType::OpImageSampleProjExplicitLod>;
+  fn->UserData = (void*)&ResolveSplitImageSamplerFunction<OpType::OpImageSampleProjExplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(1, spv::ImageOperandsLodMask, set.mSampledImageType));
 }
 
@@ -364,13 +364,13 @@ void AddSampleProjDrefImplicitLod(Zilch::LibraryBuilder& builder, Zilch::BoundTy
 
   parameters = ThreeParameters(set.mSampledImageType, "sampledImage", coordinateType, "coordinate", depthType, "depth");
   fn = builder.AddBoundFunction(type, "SampleProjDRefImplicitLod", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveCombinedSamplerFunction<OpType::OpImageSampleProjDrefImplicitLod>;
+  fn->UserData = (void*)&ResolveCombinedSamplerFunction<OpType::OpImageSampleProjDrefImplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone));
   fn->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
 
   parameters = FourParameters(set.mImageType, "image", set.mSamplerType, "sampler", coordinateType, "coordinate", depthType, "depth");
   fn = builder.AddBoundFunction(type, "SampleProjDRefImplicitLod", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveSplitImageSamplerFunction<OpType::OpImageSampleProjDrefImplicitLod>;
+  fn->UserData = (void*)&ResolveSplitImageSamplerFunction<OpType::OpImageSampleProjDrefImplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone, set.mSampledImageType));
   fn->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
 }
@@ -383,12 +383,12 @@ void AddSampleProjDrefExplicitLod(Zilch::LibraryBuilder& builder, Zilch::BoundTy
 
   parameters = FourParameters(set.mSampledImageType, "sampledImage", coordinateType, "coordinate", depthType, "depth", lodType, "lod");
   fn = builder.AddBoundFunction(type, "SampleProjDRefExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveCombinedSamplerFunction<OpType::OpImageSampleProjDrefExplicitLod>;
+  fn->UserData = (void*)&ResolveCombinedSamplerFunction<OpType::OpImageSampleProjDrefExplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(1, spv::ImageOperandsLodMask));
 
   parameters = FiveParameters(set.mImageType, "image", set.mSamplerType, "sampler", coordinateType, "coordinate", depthType, "depth", lodType, "lod");
   fn = builder.AddBoundFunction(type, "SampleProjDRefExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveSplitImageSamplerFunction<OpType::OpImageSampleProjDrefExplicitLod>;
+  fn->UserData = (void*)&ResolveSplitImageSamplerFunction<OpType::OpImageSampleProjDrefExplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(1, spv::ImageOperandsLodMask, set.mSampledImageType));
 }
 
@@ -400,12 +400,12 @@ void AddImageFetch(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, Sampl
 
   parameters = TwoParameters(set.mImageType, "image", coordianteType, "coordinate");
   fn = builder.AddBoundFunction(type, "ImageFetch", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveImageFunction<OpType::OpImageFetch>;
+  fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageFetch>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone));
   
   parameters = TwoParameters(set.mSampledImageType, "sampledImage", coordianteType, "coordinate");
   fn = builder.AddBoundFunction(type, "ImageFetch", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveImageFunction<OpType::OpImageFetch>;
+  fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageFetch>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone));
 }
 
@@ -417,12 +417,12 @@ void AddImageFetchLod(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, Sa
   
   parameters = ThreeParameters(set.mImageType, "image", coordianteType, "coordinate", lodType, "lod");
   fn = builder.AddBoundFunction(type, "ImageFetch", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveImageFunction<OpType::OpImageFetch>;
+  fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageFetch>;
   fn->ComplexUserData.WriteObject(ImageUserData(1, spv::ImageOperandsLodMask));
 
   parameters = ThreeParameters(set.mSampledImageType, "sampledImage", coordianteType, "coordinate", lodType, "lod");
   fn = builder.AddBoundFunction(type, "ImageFetch", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveImageFunction<OpType::OpImageFetch>;
+  fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageFetch>;
   fn->ComplexUserData.WriteObject(ImageUserData(1, spv::ImageOperandsLodMask));
 }
 
@@ -434,12 +434,12 @@ void AddImageQuerySizeLod(Zilch::LibraryBuilder& builder, Zilch::BoundType* type
 
   parameters = TwoParameters(set.mImageType, "image", lodType, "lod");
   fn = builder.AddBoundFunction(type, "ImageQuerySize", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveImageFunction<OpType::OpImageQuerySizeLod>;
+  fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageQuerySizeLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone));
 
   parameters = TwoParameters(set.mSampledImageType, "sampledImage", lodType, "lod");
   fn = builder.AddBoundFunction(type, "ImageQuerySize", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveImageFunction<OpType::OpImageQuerySizeLod>;
+  fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageQuerySizeLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone));
 }
 
@@ -450,22 +450,22 @@ void AddImageQuerySize(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, S
   // @JoshD: Backend Fix required
   //  parameters = OneParameter(baseSet.mImageType, "image");
   //  fn = builder.AddBoundFunction(type, "ImageQuerySize", UnTranslatedBoundFunction, parameters, int2Type, Zilch::FunctionOptions::Static);
-  //  fn->UserData = ResolveImageFunction<OpType::OpImageQuerySize>;
+  //  fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageQuerySize>;
   //  fn->ComplexUserData.WriteObject(ImageData(0, spv::ImageOperandsMaskNone));
   //
   //  parameters = OneParameter(baseSet.mSampledImageType, "sampledImage");
   //  fn = builder.AddBoundFunction(type, "ImageQuerySize", UnTranslatedBoundFunction, parameters, int2Type, Zilch::FunctionOptions::Static);
-  //  fn->UserData = ResolveImageFunction<OpType::OpImageQuerySize>;
+  //  fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageQuerySize>;
   //  fn->ComplexUserData.WriteObject(ImageData(0, spv::ImageOperandsMaskNone));
   //
   //  parameters = OneParameter(depthSet.mImageType, "image");
   //  fn = builder.AddBoundFunction(type, "ImageQuerySize", UnTranslatedBoundFunction, parameters, int2Type, Zilch::FunctionOptions::Static);
-  //  fn->UserData = ResolveImageFunction<OpType::OpImageQuerySize>;
+  //  fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageQuerySize>;
   //  fn->ComplexUserData.WriteObject(ImageData(0, spv::ImageOperandsMaskNone));
   //
   //  parameters = OneParameter(depthSet.mSampledImageType, "sampledImage");
   //  fn = builder.AddBoundFunction(type, "ImageQuerySize", UnTranslatedBoundFunction, parameters, int2Type, Zilch::FunctionOptions::Static);
-  //  fn->UserData = ResolveImageFunction<OpType::OpImageQuerySize>;
+  //  fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageQuerySize>;
   //  fn->ComplexUserData.WriteObject(ImageData(0, spv::ImageOperandsMaskNone));
 }
 
@@ -477,13 +477,13 @@ void AddImageQueryLod(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, Sa
 
   parameters = TwoParameters(set.mSampledImageType, "sampledImage", coordinateType, "coordinate");
   fn = builder.AddBoundFunction(type, "ImageQueryLod", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveCombinedSamplerFunction<OpType::OpImageQueryLod>;
+  fn->UserData = (void*)&ResolveCombinedSamplerFunction<OpType::OpImageQueryLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone, set.mSampledImageType));
   fn->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
 
   parameters = ThreeParameters(set.mImageType, "image", set.mSamplerType, "sampler", coordinateType, "coordinate");
   fn = builder.AddBoundFunction(type, "ImageQueryLod", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveSplitImageSamplerFunction<OpType::OpImageQueryLod>;
+  fn->UserData = (void*)&ResolveSplitImageSamplerFunction<OpType::OpImageQueryLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone, set.mSampledImageType));
   fn->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
 }
@@ -495,12 +495,12 @@ void AddImageQueryLevels(Zilch::LibraryBuilder& builder, Zilch::BoundType* type,
 
   parameters = OneParameter(set.mImageType, "image");
   fn = builder.AddBoundFunction(type, "ImageQueryLevels", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveImageFunction<OpType::OpImageQueryLevels>;
+  fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageQueryLevels>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone));
 
   parameters = OneParameter(set.mSampledImageType, "sampledImage");
   fn = builder.AddBoundFunction(type, "ImageQueryLevels", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
-  fn->UserData = ResolveImageFunction<OpType::OpImageQueryLevels>;
+  fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageQueryLevels>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone));
 }
 

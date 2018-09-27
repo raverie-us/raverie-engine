@@ -12,6 +12,11 @@
 #include "TypeTraits.hpp"
 #include "ContainerCommon.hpp"
 
+// Todo: Handle enum hash policies in a way that works for all compilers.
+// We need to make a specialization because the hash maps do not work with enums
+// On other compilers, the 'Enum' type is actually an int, which would produce a
+// duplicate definition compiler error since a specialization of int already exists.
+
 namespace Zero
 {
 

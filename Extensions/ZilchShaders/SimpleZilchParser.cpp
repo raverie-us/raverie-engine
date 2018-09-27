@@ -111,12 +111,12 @@ void SimpleZilchParser::WalkUnaryOperationNode(Zilch::UnaryOperatorNode*& node, 
 }
 void SimpleZilchParser::WalkBinaryOperationNode(Zilch::BinaryOperatorNode*& node, SimpleZilchParserContext* context)
 {
-  HashSet<Zilch::Grammar::Enum> noGroupingOps;
-  noGroupingOps.Insert(Zilch::Grammar::Assignment);
-  noGroupingOps.Insert(Zilch::Grammar::AssignmentAdd);
-  noGroupingOps.Insert(Zilch::Grammar::AssignmentSubtract);
-  noGroupingOps.Insert(Zilch::Grammar::AssignmentMultiply);
-  noGroupingOps.Insert(Zilch::Grammar::AssignmentDivide);
+  HashSet<int> noGroupingOps;
+  noGroupingOps.Insert((int)Zilch::Grammar::Assignment);
+  noGroupingOps.Insert((int)Zilch::Grammar::AssignmentAdd);
+  noGroupingOps.Insert((int)Zilch::Grammar::AssignmentSubtract);
+  noGroupingOps.Insert((int)Zilch::Grammar::AssignmentMultiply);
+  noGroupingOps.Insert((int)Zilch::Grammar::AssignmentDivide);
 
   bool needsGrouping = !noGroupingOps.Contains(node->OperatorInfo.Operator);
 

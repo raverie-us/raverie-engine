@@ -1070,20 +1070,20 @@ static int main_inner(int argc, char *argv[])
 	return EXIT_SUCCESS;
 }
 
-int main(int argc, char *argv[])
-{
-#ifdef SPIRV_CROSS_EXCEPTIONS_TO_ASSERTIONS
-	return main_inner(argc, argv);
-#else
-	// Make sure we catch the exception or it just disappears into the aether on Windows.
-	try
-	{
-		return main_inner(argc, argv);
-	}
-	catch (const std::exception &e)
-	{
-		fprintf(stderr, "SPIRV-Cross threw an exception: %s\n", e.what());
-		return EXIT_FAILURE;
-	}
-#endif
-}
+//int main(int argc, char *argv[])
+//{
+//#ifdef SPIRV_CROSS_EXCEPTIONS_TO_ASSERTIONS
+//	return main_inner(argc, argv);
+//#else
+//	// Make sure we catch the exception or it just disappears into the aether on Windows.
+//	try
+//	{
+//		return main_inner(argc, argv);
+//	}
+//	catch (const std::exception &e)
+//	{
+//		fprintf(stderr, "SPIRV-Cross threw an exception: %s\n", e.what());
+//		return EXIT_FAILURE;
+//	}
+//#endif
+//}

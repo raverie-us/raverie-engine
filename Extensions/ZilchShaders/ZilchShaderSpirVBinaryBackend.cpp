@@ -958,7 +958,7 @@ void ZilchShaderSpirVBinaryBackend::WriteIROp(BasicBlock* block, ZilchShaderIROp
       }
       else if(block->mBlockType == BlockType::Selection)
       {
-        __debugbreak();
+        //__debugbreak();
       }
       else
       {

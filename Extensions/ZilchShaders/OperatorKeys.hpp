@@ -34,7 +34,7 @@ struct UnaryOperatorKey
   size_t Hash() const;
   bool operator==(const UnaryOperatorKey& rhs) const;
 
-  Pair<Zilch::Type*, Zilch::Grammar::Enum> mPair;
+  Pair<Zilch::Type*, int> mPair;
 };
 
 //-------------------------------------------------------------------BinaryOperatorKey
@@ -49,7 +49,7 @@ struct BinaryOperatorKey
   bool operator==(const BinaryOperatorKey& rhs) const;
 
   typedef Pair<Zilch::Type*, Zilch::Type*> ZilchTypePair;
-  Pair<ZilchTypePair, Zilch::Grammar::Enum> mPair;
+  Pair<ZilchTypePair, int> mPair;
 };
 
 }//public Zero

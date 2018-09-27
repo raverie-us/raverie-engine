@@ -367,7 +367,7 @@ void ScalarBackupFieldResolver(ZilchSpirVFrontEnd* translator, Zilch::MemberAcce
   }
 
   // Deal with the remainder later
-  __debugbreak();
+  //__debugbreak();
 }
 
 void ResolveVectorComponentAccess(ZilchSpirVFrontEnd* translator, ZilchShaderIROp* selfInstance, ZilchShaderIRType* componentType, byte componentName, ZilchSpirVFrontEndContext* context)

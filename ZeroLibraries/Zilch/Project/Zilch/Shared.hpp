@@ -7,21 +7,6 @@
 #ifndef ZILCH_SHARED_HPP
 #define ZILCH_SHARED_HPP
 
-// We need to make a specialization because the hash maps do not work with enums
-// On other compilers, the 'Enum' type is actually an int, which would produce a
-// duplicate definition compiler error since a specialization of int already exists
-#ifdef COMPILER_MICROSOFT
-template<>
-struct ZeroShared Zero::HashPolicy<Zilch::Grammar::Enum> : public Zero::ComparePolicy<size_t>
-{
-public:
-  inline size_t operator()(const Zilch::Grammar::Enum& value) const
-  {
-    return HashUint(*(unsigned int*)&value);
-  }
-};
-#endif
-
 namespace Zilch
 {
   // What type of IO an expression allows

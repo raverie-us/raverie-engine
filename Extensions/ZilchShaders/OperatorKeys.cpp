@@ -36,13 +36,13 @@ bool TypeCastKey::operator==(const TypeCastKey& rhs) const
 UnaryOperatorKey::UnaryOperatorKey()
 {
   mPair.first = nullptr;
-  mPair.second = Zilch::Grammar::Invalid;
+  mPair.second = (int)Zilch::Grammar::Invalid;
 }
 
 UnaryOperatorKey::UnaryOperatorKey(Zilch::Type* type, Zilch::Grammar::Enum op)
 {
   mPair.first = type;
-  mPair.second = op;
+  mPair.second = (int)op;
 }
 
 size_t UnaryOperatorKey::Hash() const
@@ -61,14 +61,14 @@ BinaryOperatorKey::BinaryOperatorKey()
 {
   mPair.first.first = nullptr;
   mPair.first.second = nullptr;
-  mPair.second = Zilch::Grammar::Invalid;
+  mPair.second = (int)Zilch::Grammar::Invalid;
 }
 
 BinaryOperatorKey::BinaryOperatorKey(Zilch::Type* lhsType, Zilch::Type* rhsType, Zilch::Grammar::Enum op)
 {
   mPair.first.first = lhsType;
   mPair.first.second = rhsType;
-  mPair.second = op;
+  mPair.second = (int)op;
 }
 
 size_t BinaryOperatorKey::Hash() const
