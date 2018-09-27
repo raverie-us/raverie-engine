@@ -201,7 +201,6 @@ void GenerateGeometricFloatFunctions(SpirVExtensionLibrary* extLibrary, TypeGrou
     extLibrary->CreateExtInst(GetStaticFunction(mathType, "ReflectAcrossPlane", zilchTypeName, zilchTypeName), BasicExtensionFunction<GLSLstd450Reflect>);
     extLibrary->CreateExtInst(GetStaticFunction(mathType, "Refract", zilchTypeName, zilchTypeName, realName), BasicExtensionFunction<GLSLstd450Refract>);
   }
-
   
   extLibrary->CreateExtInst(GetStaticFunction(mathType, "Cross", real3Name, real3Name), BasicExtensionFunction<GLSLstd450Cross>);
 }
@@ -221,6 +220,7 @@ void CreateFloatMatrixFunctions(SpirVExtensionLibrary* extLibrary, TypeGroups& t
   }
 }
 
+// Registers callback functions for all of the glsl 450 extension library instructions that exist in zilch
 void RegisterGlsl450Extensions(ZilchShaderIRLibrary* shaderLibrary, SpirVExtensionLibrary* extLibrary, TypeGroups& types)
 {
   Zilch::Core& core = Zilch::Core::GetInstance();
@@ -237,6 +237,7 @@ void RegisterGlsl450Extensions(ZilchShaderIRLibrary* shaderLibrary, SpirVExtensi
   CreateFloatMatrixFunctions(extLibrary, types);
 }
 
+// Simple helper to look up a zich function via name and type and then map it to a glsl extension instruction
 void AddGlslIntrinsic(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, SpirVExtensionLibrary* extLibrary, int glslOpId, StringParam fnName, const Zilch::ParameterArray& parameters, Zilch::BoundType* returnType)
 {
   Zilch::Function* fn = builder.AddBoundFunction(type, fnName, UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
@@ -244,6 +245,7 @@ void AddGlslIntrinsic(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, Sp
   fn->ComplexUserData.WriteObject(ExtensionLibraryUserData(glslOpId, extLibrary));
 }
 
+/// Adds all relevant glsl extension operations to the ShaderIntrinsics type, including non-supported instructions in zilch. 
 void AddGlslExtensionIntrinsicOps(Zilch::LibraryBuilder& builder, SpirVExtensionLibrary* extLibrary, Zilch::BoundType* type, TypeGroups& types)
 {
   Zilch::BoundType* realType = types.mRealVectorTypes[0]->mZilchType;

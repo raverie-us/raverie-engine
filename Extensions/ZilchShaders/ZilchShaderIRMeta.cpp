@@ -9,6 +9,32 @@
 namespace Zero
 {
 
+//-------------------------------------------------------------------ShaderFieldKey
+ShaderFieldKey::ShaderFieldKey(StringParam fieldName, StringParam fieldType)
+{
+  Set(fieldName, fieldType);
+}
+
+void ShaderFieldKey::Set(StringParam fieldName, StringParam fieldType)
+{
+  mKey = BuildString(fieldName, ":", fieldType);
+}
+
+size_t ShaderFieldKey::Hash() const
+{
+  return mKey.Hash();
+}
+
+bool ShaderFieldKey::operator==(const ShaderFieldKey& other) const
+{
+  return mKey == other.mKey;
+}
+
+ShaderFieldKey::operator String() const
+{
+  return mKey;
+}
+
 //-------------------------------------------------------------------ShaderIRMeta
 bool ShaderIRMeta::ContainsAttribute(StringParam attributeName)
 {

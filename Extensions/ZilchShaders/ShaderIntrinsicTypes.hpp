@@ -21,17 +21,6 @@ class ShaderIntrinsics
   ZilchDeclareType(ShaderIntrinsics, TypeCopyMode::ReferenceType);
 };
 
-//------------------------------------------------------------------------Shader
-class Shader
-{
-  ZilchDeclareType(Shader, TypeCopyMode::ReferenceType);
-
-  static void AddInlineShaderCode(StringParam language, StringParam shaderCode);
-  static void AddInlineShaderCode(StringParam language, int minVersion, int maxVersion, StringParam shaderCode);
-  static bool IsLanguage(StringParam language);
-  static bool IsLanguage(StringParam language, int minVersion, int maxVersion);
-};
-
 //------------------------------------------------------------------------GeometryStreamUserData
 // Component data for input/output geometry stream types. Used for reflection purposes.
 struct GeometryStreamUserData

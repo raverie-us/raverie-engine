@@ -157,22 +157,34 @@ void FixedArrayExpressionInitializerResolver(ZilchSpirVFrontEnd* translator, Zil
   context->mCurrentBlock->AddOp(compositeConstructOp);
   context->PushIRStack(compositeConstructOp);
 
-  // If the initializer list was put on a variable then we're just attempting to
-  // set all of the values in a compact format. In this case the initial value of the 
-  // initializer node's variable will be a local variable reference (otherwise it's a
-  // function call for the constructor).
+  // If the initializer list was put on a variable then we're just
+  // attempting to set all of the values in a compact format.
   Zilch::LocalVariableNode* localVariableNode = Zilch::Type::DynamicCast<Zilch::LocalVariableNode*>(node->LeftOperand);
-  Zilch::LocalVariableReferenceNode* localVariableReferenceNode = nullptr;
   if(localVariableNode == nullptr)
     return;
 
-  // If it is a local variable reference then generate an additional set op.
-  localVariableReferenceNode = Zilch::Type::DynamicCast<Zilch::LocalVariableReferenceNode*>(localVariableNode->InitialValue);
-  if(localVariableReferenceNode != nullptr)
+  // In this case, the initial value of the initializer node will be the
+  // target variable to copy to. If this is a function call node then the this is 
+  // either the result from a function or a constructor call, both of which require no copy back.
+  Zilch::FunctionCallNode* functionCallNode = Zilch::Type::DynamicCast<Zilch::FunctionCallNode*>(localVariableNode->InitialValue);
+  if(functionCallNode != nullptr)
+    return;
+
+  // Otherwise, this is should be either a local variable reference
+  // or a member access (e.g. 'this.Array'). In either case this represents
+  // where to store back. As long as the result of the initial value is 
+  // actually a pointer type then we can store to it, otherwise something
+  // odd is happening (like array{1, 2} {1, 2}) so we report an error.
+  IZilchShaderIR* target = translator->WalkAndGetResult(localVariableNode->InitialValue, context);
+  ZilchShaderIROp* targetOp = target->As<ZilchShaderIROp>();
+  if(!targetOp->IsResultPointerType())
   {
-    IZilchShaderIR* target = translator->WalkAndGetResult(localVariableReferenceNode, context);
-    translator->BuildStoreOp(target, compositeConstructOp, context);
+    translator->SendTranslationError(node->Location, "Invalid array initializer list. The left hand side must be an l-value");
+    context->PushIRStack(translator->GenerateDummyIR(node, context));
+    return;
   }
+    
+  translator->BuildStoreOp(targetOp, compositeConstructOp, context);
 }
 
 void FixedArrayResolver(ZilchSpirVFrontEnd* translator, Zilch::BoundType* zilchFixedArrayType)

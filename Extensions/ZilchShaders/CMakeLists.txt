@@ -9,20 +9,13 @@ target_sources(ZilchShaders
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/ArithmeticInstructions.cpp
     ${CMAKE_CURRENT_LIST_DIR}/BitInstructions.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/CodeRangeMapping.cpp
     ${CMAKE_CURRENT_LIST_DIR}/CommonInstructions.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Compositor.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ConversionInstructions.cpp
     ${CMAKE_CURRENT_LIST_DIR}/EntryPointGeneration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ExtensionLibrary.cpp
     ${CMAKE_CURRENT_LIST_DIR}/FixedArray.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/GenericTranslation.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Glsl450Extensions.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/GlslTranslation.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/GlslTranslator.cpp
-    #${CMAKE_CURRENT_LIST_DIR}/HlslTranslator.cpp
     ${CMAKE_CURRENT_LIST_DIR}/LibraryTranslationHelpers.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/LibraryTranslator.cpp
     ${CMAKE_CURRENT_LIST_DIR}/LogicalInstructions.cpp
     ${CMAKE_CURRENT_LIST_DIR}/OperatorKeys.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
@@ -34,19 +27,13 @@ target_sources(ZilchShaders
     ${CMAKE_CURRENT_LIST_DIR}/ShaderIntrinsics.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ShaderIntrinsicTypes.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ShaderIRLibraryTranslation.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ShaderLibrary.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ShaderProject.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ShaderType.cpp
     ${CMAKE_CURRENT_LIST_DIR}/SimpleZilchParser.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/SimpleZilchShaderGenerator.cpp
     ${CMAKE_CURRENT_LIST_DIR}/SimpleZilchShaderIRGenerator.cpp
     ${CMAKE_CURRENT_LIST_DIR}/SpirVSpecializationConstantPass.cpp
     ${CMAKE_CURRENT_LIST_DIR}/StageRequirementsGatherer.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Translator.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/TranslatorContext.cpp
     ${CMAKE_CURRENT_LIST_DIR}/TypeDependencyCollector.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderGlslBackend.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIntrinsics.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ShaderIntrinsicsStaticZilchLibrary.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRCompositor.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRCore.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRLibrary.cpp
@@ -55,31 +42,20 @@ target_sources(ZilchShaders
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRProject.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRReflection.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRShared.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderSettingsLibrary.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderSharedSettings.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderSpirVBinaryBackend.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShadersStandard.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchSpirVDisassemblerBackend.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchSpirVFrontEnd.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchSpirVFrontEndValidation.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchSpirVSettings.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ZilchTypeCollector.cpp
 #  PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/BaseShaderIRTranslator.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/BaseShaderTranslator.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/CodeRangeMapping.hpp
     ${CMAKE_CURRENT_LIST_DIR}/CommonInstructions.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Compositor.hpp
     ${CMAKE_CURRENT_LIST_DIR}/EntryPointGeneration.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ExtensionLibrary.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ForwardDeclarations.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/GenericTranslation.hpp
     ${CMAKE_CURRENT_LIST_DIR}/GLSL.std.450.h
-    ${CMAKE_CURRENT_LIST_DIR}/GlslTranslation.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/GlslTranslator.hpp
-    #${CMAKE_CURRENT_LIST_DIR}/HlslTranslator.hpp
     ${CMAKE_CURRENT_LIST_DIR}/LibraryTranslationHelpers.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/LibraryTranslator.hpp
     ${CMAKE_CURRENT_LIST_DIR}/OperatorKeys.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ShaderAttributes.hpp
@@ -89,21 +65,15 @@ target_sources(ZilchShaders
     ${CMAKE_CURRENT_LIST_DIR}/ShaderImageIntrinsics.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ShaderIntrinsicTypes.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ShaderIRLibraryTranslation.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ShaderLibrary.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ShaderProject.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ShaderType.hpp
     ${CMAKE_CURRENT_LIST_DIR}/SimpleZilchParser.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/SimpleZilchShaderGenerator.hpp
     ${CMAKE_CURRENT_LIST_DIR}/SimpleZilchShaderIRGenerator.hpp
     ${CMAKE_CURRENT_LIST_DIR}/spirv.hpp
     ${CMAKE_CURRENT_LIST_DIR}/SpirVHelpers.hpp
     ${CMAKE_CURRENT_LIST_DIR}/SpirVSpecializationConstantPass.hpp
     ${CMAKE_CURRENT_LIST_DIR}/StageRequirementsGatherer.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Translator.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/TranslatorContext.hpp
     ${CMAKE_CURRENT_LIST_DIR}/TypeDependencyCollector.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderGlslBackend.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIntrinsics.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ShaderIntrinsicsStaticZilchLibrary.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRCompositor.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRCore.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRLibrary.hpp
@@ -113,13 +83,10 @@ target_sources(ZilchShaders
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRReflection.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRShared.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRTranslationPass.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderSettingsLibrary.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderSharedSettings.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderSpirVBinaryBackend.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShadersStandard.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchSpirVDisassemblerBackend.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchSpirVFrontEnd.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchSpirVFrontEndValidation.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchSpirVSettings.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ZilchTypeCollector.hpp
 )

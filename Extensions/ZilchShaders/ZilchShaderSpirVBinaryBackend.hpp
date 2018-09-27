@@ -9,19 +9,6 @@
 namespace Zero
 {
 
-//-------------------------------------------------------------------SpirVBinary
-class SpirVBinary
-{
-public:
-  void Add(uint32 word);
-  void Clear();
-
-  byte* Data();
-  size_t Size() const;
-
-  Array<uint32> mData;
-};
-
 //-------------------------------------------------------------------ZilchShaderToSpirVContext
 class ZilchShaderToSpirVContext
 {

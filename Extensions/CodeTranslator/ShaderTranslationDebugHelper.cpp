@@ -66,13 +66,14 @@ void FragmentSearchProvider::Search(SearchData& search, ZilchShaderIRLibrary* sh
 }
 
 //-------------------------------------------------------------------ShaderLanguageEntry
-ShaderLanguageEntry::ShaderLanguageEntry(BaseShaderTranslator* translator)
-{
-  mTranslator = translator;
-}
+//ShaderLanguageEntry::ShaderLanguageEntry(BaseShaderTranslator* translator)
+//{
+//  mTranslator = translator;
+//}
 String ShaderLanguageEntry::ToString(bool shortFormat) const
 {
-  return mTranslator->GetFullLanguageString();
+  //return mTranslator->GetFullLanguageString();
+  return String();
 }
 
 //-------------------------------------------------------------------ShaderTranslationEntry
@@ -98,9 +99,9 @@ ShaderTranslationDebugHelper::ShaderTranslationDebugHelper(Composite* parent)
   SetName("Shader Translation Debug Helper");
 
   // Set our allowed translation languages
-  mLanguages.PushBack(ShaderLanguageEntry(new Glsl130Translator()));
-  mLanguages.PushBack(ShaderLanguageEntry(new Glsl150Translator()));
-  mLanguages.PushBack(ShaderLanguageEntry(new Glsl300EsTranslator()));
+  //mLanguages.PushBack(ShaderLanguageEntry(new Glsl130Translator()));
+  //mLanguages.PushBack(ShaderLanguageEntry(new Glsl150Translator()));
+  //mLanguages.PushBack(ShaderLanguageEntry(new Glsl300EsTranslator()));
 
   // Create the root as a row layout
   SetLayout(CreateRowLayout());
@@ -278,126 +279,126 @@ void ShaderTranslationDebugHelper::OnScriptCompilationFailed(Event* event)
   // We failed to compile so null out the shader generator for as our "flag"
   mShaderGenerator = nullptr;
 }
-
-void ShaderTranslationDebugHelper::ValidateComposition(ZilchShaderGenerator& generator, ZilchFragmentInfo& info, FragmentType::Enum fragmentType)
-{
-  ShaderFragmentsInfoMap* fragmentMap = info.mFragmentMap;
-  if(fragmentMap == nullptr)
-    return;
-
-  // Keep track of errors if we found them (for formatting we group them together)
-  bool wasError = false;
-  StringBuilder errorsBuilder;
-  errorsBuilder.AppendFormat("%s Shaders:\n", FragmentType::Names[fragmentType]);
-
-  forRange(ShaderFragmentCompositeInfo* compositeInfo, fragmentMap->mFragments.Values())
-  {
-    forRange(ShaderFieldCompositeInfo& fieldInfo, compositeInfo->mFieldMap.Values())
-    {
-      if(fieldInfo.mInputError)
-      {
-        wasError = true;
-
-        // Get the shader field that had an error
-        String fragmentName = compositeInfo->mFragmentName;
-        String fieldName = fieldInfo.mZilchName;
-        ZilchShaderIRType* fragmentShaderType = generator.GetCurrentInternalProjectLibrary()->FindType(fragmentName);
-        ShaderIRFieldMeta* shaderField = fragmentShaderType->mMeta->FindField(fieldName);
-        // Build up a string of all of the attributes to make it easier for a user to see what went wrong
-        StringBuilder attributesBuilder;
-        forRange(ShaderIRAttribute& attribute, shaderField->mAttributes.All())
-        {
-          attributesBuilder.AppendFormat("[%s]", attribute.mAttributeName.c_str());
-        }
-
-        // Print out fragment and field with the error.
-        String attributesList = attributesBuilder.ToString();
-        // @JoshD: Need to update
-        //String noFallbackName = generator.mSettings->mSpirVNameSettings.mNoFallbackWarningAttributeName;
-        //errorsBuilder.AppendFormat("\tCouldn't resolve input attributes on '%s.%s'. Provided attributes were '%s'. "
-        //  "Input will fallback to the default value. To suppress this warning use the attribute '[%s]'.\n",
-        //  fragmentName.c_str(), fieldName.c_str(), attributesList.c_str(), noFallbackName.c_str());
-      }
-    }
-  }
-
-  // If we had an error then print out the full list for this fragment type.
-  if(wasError)
-  {
-    String errorStr = errorsBuilder.ToString();
-    ZPrint(errorStr.c_str());
-  }
-}
+//
+//void ShaderTranslationDebugHelper::ValidateComposition(ZilchShaderGenerator& generator, ZilchFragmentInfo& info, FragmentType::Enum fragmentType)
+//{
+//  ShaderFragmentsInfoMap* fragmentMap = info.mFragmentMap;
+//  if(fragmentMap == nullptr)
+//    return;
+//
+//  // Keep track of errors if we found them (for formatting we group them together)
+//  bool wasError = false;
+//  StringBuilder errorsBuilder;
+//  errorsBuilder.AppendFormat("%s Shaders:\n", FragmentType::Names[fragmentType]);
+//
+//  forRange(ShaderFragmentCompositeInfo* compositeInfo, fragmentMap->mFragments.Values())
+//  {
+//    forRange(ShaderFieldCompositeInfo& fieldInfo, compositeInfo->mFieldMap.Values())
+//    {
+//      if(fieldInfo.mInputError)
+//      {
+//        wasError = true;
+//
+//        // Get the shader field that had an error
+//        String fragmentName = compositeInfo->mFragmentName;
+//        String fieldName = fieldInfo.mZilchName;
+//        ZilchShaderIRType* fragmentShaderType = generator.GetCurrentInternalProjectLibrary()->FindType(fragmentName);
+//        ShaderIRFieldMeta* shaderField = fragmentShaderType->mMeta->FindField(fieldName);
+//        // Build up a string of all of the attributes to make it easier for a user to see what went wrong
+//        StringBuilder attributesBuilder;
+//        forRange(ShaderIRAttribute& attribute, shaderField->mAttributes.All())
+//        {
+//          attributesBuilder.AppendFormat("[%s]", attribute.mAttributeName.c_str());
+//        }
+//
+//        // Print out fragment and field with the error.
+//        String attributesList = attributesBuilder.ToString();
+//        // @JoshD: Need to update
+//        //String noFallbackName = generator.mSettings->mSpirVNameSettings.mNoFallbackWarningAttributeName;
+//        //errorsBuilder.AppendFormat("\tCouldn't resolve input attributes on '%s.%s'. Provided attributes were '%s'. "
+//        //  "Input will fallback to the default value. To suppress this warning use the attribute '[%s]'.\n",
+//        //  fragmentName.c_str(), fieldName.c_str(), attributesList.c_str(), noFallbackName.c_str());
+//      }
+//    }
+//  }
+//
+//  // If we had an error then print out the full list for this fragment type.
+//  if(wasError)
+//  {
+//    String errorStr = errorsBuilder.ToString();
+//    ZPrint(errorStr.c_str());
+//  }
+//}
 
 void ShaderTranslationDebugHelper::OnRunTranslation(Event* e)
 {
-  // Clear the old results
-  mTranslationEntries.Clear();
-  
-  // Get the core vertex, material, and render pass values
-  Material* material = MaterialManager::GetInstance()->Find(mMaterialTextBox->GetText());
-  ErrorIf(material ==  nullptr, "Invalid material selected");
-  String coreVertexName = mCoreVertexTextBox->GetText();
-  String renderPassName = mRenderPassTextBox->GetText();
-  String compositeName = material->mCompositeName;
-  String shaderName = BuildString(coreVertexName, compositeName, renderPassName);
-  int index = mTranslationModeComboBox->GetSelectedItem();
-  BaseShaderTranslator* translator = mLanguagesDataSource[index].mTranslator;
-  
-  // Generate a unique composite to represent this CoreVertex + Material + RenderPass
-  UniqueComposite composition;
-  composition.mName = compositeName;
-  composition.mFragmentNames = material->mFragmentNames;
-  composition.mFragmentNameMap.Append(composition.mFragmentNames.All());
-  HashMap<String, UniqueComposite> composites;
-  composites.Insert(compositeName, composition);
-  // Generate the shader
-  Shader shader;
-  shader.mComposite = compositeName;
-  shader.mCoreVertex = coreVertexName;
-  shader.mRenderPass = renderPassName;
-  shader.mName = shaderName;
-  ShaderSet shaders;
-  shaders.Insert(&shader);
-  
-  // Create and initialize the shader generator
-  ZilchShaderGenerator generator;
-  //generator.mTranslator = translator;
-  generator.Initialize();
-  // Store a pointer to it so we can access this in callbacks
-  // (no need to allocate and a fresh generate each time is more "proper")
-  mShaderGenerator = &generator;
-
-  // Listen for all compilation events on the zilch manager
-  ZilchManager* zilchManager = ZilchManager::GetInstance();
-  ConnectThisTo(zilchManager, Events::CompileZilchFragments, OnCompileZilchFragments);
-  ConnectThisTo(zilchManager, Events::ScriptsCompiledPrePatch, OnScriptsCompiledPrePatch);
-  ConnectThisTo(zilchManager, Events::ScriptCompilationFailed, OnScriptCompilationFailed);
-
-  // Force modify and recompile all zilch fragments
-  forRange(ResourceLibrary* resourceLibrary, Z::gResources->LoadedResourceLibraries.Values())
-    resourceLibrary->FragmentsModified();
-  zilchManager->TriggerCompileExternally();
-
-  // Disconnect all events for compilation
-  EventDispatcher* dispatcher = zilchManager->GetDispatcher();
-  dispatcher->DisconnectEvent(Events::CompileZilchFragments, this);
-  dispatcher->DisconnectEvent(Events::ScriptsCompiledPrePatch, this);
-  dispatcher->DisconnectEvent(Events::ScriptCompilationFailed, this);
-
-  // Check if compilation failed
-  if(mShaderGenerator == nullptr)
-  {
-    mScriptEditor->SetAllText("Compilation Failed");
-    return;
-  }
-  // Clear the generator since it'll go out of scope after this
-  mShaderGenerator = nullptr;
-  
-  // Build the shader library for this composite
-  Array<ShaderEntry> shaderEntries;
-  Array<ZilchShaderIRCompositor::ShaderDefinition> compositeDefinitions;
-  generator.BuildShaders(shaders, composites, shaderEntries, &compositeDefinitions);
+  //// Clear the old results
+  //mTranslationEntries.Clear();
+  //
+  //// Get the core vertex, material, and render pass values
+  //Material* material = MaterialManager::GetInstance()->Find(mMaterialTextBox->GetText());
+  //ErrorIf(material ==  nullptr, "Invalid material selected");
+  //String coreVertexName = mCoreVertexTextBox->GetText();
+  //String renderPassName = mRenderPassTextBox->GetText();
+  //String compositeName = material->mCompositeName;
+  //String shaderName = BuildString(coreVertexName, compositeName, renderPassName);
+  //int index = mTranslationModeComboBox->GetSelectedItem();
+  //BaseShaderTranslator* translator = mLanguagesDataSource[index].mTranslator;
+  //
+  //// Generate a unique composite to represent this CoreVertex + Material + RenderPass
+  //UniqueComposite composition;
+  //composition.mName = compositeName;
+  //composition.mFragmentNames = material->mFragmentNames;
+  //composition.mFragmentNameMap.Append(composition.mFragmentNames.All());
+  //HashMap<String, UniqueComposite> composites;
+  //composites.Insert(compositeName, composition);
+  //// Generate the shader
+  //Shader shader;
+  //shader.mComposite = compositeName;
+  //shader.mCoreVertex = coreVertexName;
+  //shader.mRenderPass = renderPassName;
+  //shader.mName = shaderName;
+  //ShaderSet shaders;
+  //shaders.Insert(&shader);
+  //
+  //// Create and initialize the shader generator
+  //ZilchShaderGenerator generator;
+  ////generator.mTranslator = translator;
+  //generator.Initialize();
+  //// Store a pointer to it so we can access this in callbacks
+  //// (no need to allocate and a fresh generate each time is more "proper")
+  //mShaderGenerator = &generator;
+  //
+  //// Listen for all compilation events on the zilch manager
+  //ZilchManager* zilchManager = ZilchManager::GetInstance();
+  //ConnectThisTo(zilchManager, Events::CompileZilchFragments, OnCompileZilchFragments);
+  //ConnectThisTo(zilchManager, Events::ScriptsCompiledPrePatch, OnScriptsCompiledPrePatch);
+  //ConnectThisTo(zilchManager, Events::ScriptCompilationFailed, OnScriptCompilationFailed);
+  //
+  //// Force modify and recompile all zilch fragments
+  //forRange(ResourceLibrary* resourceLibrary, Z::gResources->LoadedResourceLibraries.Values())
+  //  resourceLibrary->FragmentsModified();
+  //zilchManager->TriggerCompileExternally();
+  //
+  //// Disconnect all events for compilation
+  //EventDispatcher* dispatcher = zilchManager->GetDispatcher();
+  //dispatcher->DisconnectEvent(Events::CompileZilchFragments, this);
+  //dispatcher->DisconnectEvent(Events::ScriptsCompiledPrePatch, this);
+  //dispatcher->DisconnectEvent(Events::ScriptCompilationFailed, this);
+  //
+  //// Check if compilation failed
+  //if(mShaderGenerator == nullptr)
+  //{
+  //  mScriptEditor->SetAllText("Compilation Failed");
+  //  return;
+  //}
+  //// Clear the generator since it'll go out of scope after this
+  //mShaderGenerator = nullptr;
+  //
+  //// Build the shader library for this composite
+  //Array<ShaderEntry> shaderEntries;
+  //Array<ZilchShaderIRCompositor::ShaderDefinition> compositeDefinitions;
+  //generator.BuildShaders(shaders, composites, shaderEntries, &compositeDefinitions);
   
   // @JoshD: Need to update
   // Add an entry for each shader stage, both for the zilch and shader composite results

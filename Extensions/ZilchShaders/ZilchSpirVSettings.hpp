@@ -30,6 +30,25 @@ DeclareBitFieldBitwiseOperators(ShaderStage::Enum);
 ShaderStage::Enum FragmentTypeToShaderStage(FragmentType::Enum fragmentType);
 
 //-------------------------------------------------------------------SpirVNameSettings
+/// Extra data to store for our allowed attributes.
+/// Currently only used to hide attributes from code completion.
+struct AttributeInfo
+{
+  AttributeInfo()
+  {
+    mHidden = false;
+  }
+  AttributeInfo(bool hidden)
+  {
+    mHidden = hidden;
+  }
+
+  bool mHidden;
+};
+
+//-------------------------------------------------------------------SpirVNameSettings
+/// Name settings used in the ZilchSpirV translator. This allows
+/// configuring various attribute names, function names, etc...
 class SpirVNameSettings
 {
 public:
@@ -208,20 +227,20 @@ public:
 };
 
 //-------------------------------------------------------------------ZilchShaderSpirVSettings
-// Various callbacks used throughout shader translation for customization of code emission.
+/// Various callbacks used throughout shader translation for customization of code emission.
 class CallbackSettings
 {
 public:
   CallbackSettings();
 
   typedef void(*ShaderCompositeCallback)(CompositorCallbackData& callbackData, void* userData);
-  // Set a callback that is called right before the composited shader is emitted.
-  // Allows modifying inputs and outputs, in particular allows forced HardwareBuiltIns like Position.
+  /// Set a callback that is called right before the composited shader is emitted.
+  /// Allows modifying inputs and outputs, in particular allows forced HardwareBuiltIns like Position.
   void SetCompositeCallback(ShaderCompositeCallback callback, void* userData);
 
   typedef void(*AppendVertexCallback)(AppendCallbackData& callbackData, void* userData);
-  // Callback to allow custom spirv emission in the Append function for geometry shader output streams.
-  // Allows custom handling of things like the BuiltIn Position to account for different api transforms.
+  /// Callback to allow custom spirv emission in the Append function for geometry shader output streams.
+  /// Allows custom handling of things like the BuiltIn Position to account for different api transforms.
   void SetAppendCallback(AppendVertexCallback callback, void* userData);
 
   void* mCompositeCallbackUserData;
@@ -232,16 +251,16 @@ public:
 };
 
 //-------------------------------------------------------------------ZilchShaderErrorSettings
-// A collection of error settings. Currently, mostly for dealing with errors that only
-// matter if the compositor is not part of the expected work-flow.
+/// A collection of error settings. Currently, mostly for dealing with errors that only
+/// matter if the compositor is not part of the expected work-flow.
 class ZilchShaderErrorSettings
 {
 public:
   ZilchShaderErrorSettings();
 
-  // Should the front-end translator emit errors if a fragment type is missing the 'Main' function.
-  // This is only an error if the compositor is run on the fragment. The error can be moved to the
-  // front-end to make errors immediately known instead of only upon compositing.
+  /// Should the front-end translator emit errors if a fragment type is missing the 'Main' function.
+  /// This is only an error if the compositor is run on the fragment. The error can be moved to the
+  /// front-end to make errors immediately known instead of only upon compositing.
   bool mFrontEndErrorOnNoMainFunction;
 };
 

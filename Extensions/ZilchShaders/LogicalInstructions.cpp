@@ -24,6 +24,8 @@ void ResolveLogicalUnaryOp(ZilchSpirVFrontEnd* translator, Zilch::UnaryOperatorN
   translator->PerformUnaryOp(unaryOpNode, opType, context);
 }
 
+// Resolves the Any/All NonZero functions which convert a vector of bools to
+// a single bool. If the input is a bool type then this is a no-op.
 void ResolveAnyAllNonZero(ZilchSpirVFrontEnd* translator, Zilch::FunctionCallNode* functionCallNode, OpType op, ZilchSpirVFrontEndContext* context)
 {
   ZilchShaderIRType* boolInputType = translator->FindType(functionCallNode->Arguments[0]->ResultType, functionCallNode);
@@ -46,12 +48,14 @@ void ResolveAllNonZero(ZilchSpirVFrontEnd* translator, Zilch::FunctionCallNode* 
   ResolveAnyAllNonZero(translator, functionCallNode, OpType::OpAll, context);
 }
 
-
 void ResolveAnyNonZero(ZilchSpirVFrontEnd* translator, Zilch::FunctionCallNode* functionCallNode, Zilch::MemberAccessNode* memberAccessNode, ZilchSpirVFrontEndContext* context)
 {
   ResolveAnyAllNonZero(translator, functionCallNode, OpType::OpAny, context);
 }
 
+// Resolves the logical or/and operators. This is significantly more complicated then it
+// might seem because of short-circuit evaluation. These actually don't use the LogicalOr/And
+// instructions but instead convert to a if/else chain.
 void ResolveLogicalOrAnd(ZilchSpirVFrontEnd* translator, Zilch::BinaryOperatorNode* binaryOpNode, bool isOr, ZilchSpirVFrontEndContext* context)
 {
   // Walk the left hand operator (this can change the current block)
@@ -123,6 +127,9 @@ void ResolveLogicalAnd(ZilchSpirVFrontEnd* translator, Zilch::BinaryOperatorNode
   ResolveLogicalOrAnd(translator, binaryOpNode, false, context);
 }
 
+// Register function callbacks for all logical operations (see Relational and Logical Instructions in the spir-v spec).
+// Some functions aren't implemented here as zilch doesn't have a corresponding function.
+// Everything else should be implemented on the ShaderIntrinsics type.
 void RegisterLogicalOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types)
 {
   Zilch::Core& core = Zilch::Core::GetInstance();
@@ -160,12 +167,13 @@ void RegisterLogicalOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* sh
     opResolvers.RegisterBinaryOpResolver(zilchType, zilchType, Zilch::Grammar::LessThanOrEqualTo, ResolveLogicalBinaryOp<OpType::OpSLessThanEqual>);
   }
 
+  // Register bool scalar ops
   opResolvers.RegisterBinaryOpResolver(boolType, boolType, Zilch::Grammar::Equality, ResolveLogicalBinaryOp<OpType::OpLogicalEqual>);
   opResolvers.RegisterBinaryOpResolver(boolType, boolType, Zilch::Grammar::Inequality, ResolveLogicalBinaryOp<OpType::OpLogicalNotEqual>);
   opResolvers.RegisterBinaryOpResolver(boolType, boolType, Zilch::Grammar::LogicalOr, ResolveLogicalOr);
   opResolvers.RegisterBinaryOpResolver(boolType, boolType, Zilch::Grammar::LogicalAnd, ResolveLogicalAnd);
 
-  // Register ops that are on all integer vector types
+  // Register ops that are on all boolean vector types
   for(size_t i = 0; i < types.mBooleanVectorTypes.Size(); ++i)
   {
     Zilch::BoundType* zilchType = types.mBooleanVectorTypes[i]->mZilchType;

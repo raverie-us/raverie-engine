@@ -11,8 +11,6 @@ namespace Zero
 
 void ResolveOpBitcast(ZilchSpirVFrontEnd* translator, Zilch::FunctionCallNode* functionCallNode, Zilch::MemberAccessNode* memberAccessNode, ZilchSpirVFrontEndContext* context)
 {
-  BasicBlock* currentBlock = context->GetCurrentBlock();
-
   ZilchShaderIRType* resultType = translator->FindType(functionCallNode->ResultType, functionCallNode);
   
   IZilchShaderIR* operand = translator->WalkAndGetValueTypeResult(functionCallNode->Arguments[0], context);
@@ -28,9 +26,9 @@ void ResolveOpCast(ZilchSpirVFrontEnd* translator, Zilch::TypeCastNode* node, Zi
 
 void ResolveFromBoolCast(ZilchSpirVFrontEnd* translator, Zilch::TypeCastNode* node, IZilchShaderIR* zero, IZilchShaderIR* one, ZilchSpirVFrontEndContext* context)
 {
-  BasicBlock* currentBlock = context->GetCurrentBlock();
   ZilchShaderIROp* condition = translator->WalkAndGetValueTypeResult(node->Operand, context);
   ZilchShaderIRType* destType = translator->FindType(node->ResultType, node);
+  BasicBlock* currentBlock = context->GetCurrentBlock();
   IZilchShaderIR* operation = translator->GenerateFromBoolCast(currentBlock, condition, destType, zero, one, context);
   context->PushIRStack(operation);
 }
@@ -72,11 +70,17 @@ void ResolveRealToBoolCast(ZilchSpirVFrontEnd* translator, Zilch::TypeCastNode* 
   ResolveToBoolCast(translator, node, OpType::OpFOrdNotEqual, zero, context);
 }
 
+// Register function callbacks for all conversion operations (see Conversion Instructions in the spir-v spec).
+// Some functions aren't implemented here as zilch doesn't have a corresponding function.
+// Everything else should be implemented on the ShaderIntrinsics type.
 void RegisterConversionOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types)
 {
   Zilch::Core& core = Zilch::Core::GetInstance();
   OperatorResolvers& opResolvers = shaderLibrary->mOperatorResolvers;
 
+  // Iterate over all dimensions of vector types (including scalar) to build
+  // all supported conversions. Note: Bool conversions are not explicit instructions
+  // in spir-v and must be generated from multiple instructions.
   for(size_t i = 0; i < types.mRealVectorTypes.Size(); ++i)
   {
     Zilch::BoundType* floatType = types.mRealVectorTypes[i]->mZilchType;
@@ -93,6 +97,7 @@ void RegisterConversionOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary*
     opResolvers.RegisterTypeCastOpResolver(floatType, boolType, ResolveRealToBoolCast);
   }
 
+  // Reinterpret cast is only supported between int and real (scalar) in zilch.
   Zilch::BoundType* realType = core.RealType;
   Zilch::BoundType* intType = core.IntegerType;
   // Register the re-interpret cast functions

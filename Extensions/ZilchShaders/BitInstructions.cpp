@@ -18,6 +18,9 @@ void ResolveIntBitCount(ZilchSpirVFrontEnd* translator, Zilch::FunctionCallNode*
   context->PushIRStack(bitCountOp);
 }
 
+// Register function callbacks for all bit operations (see Bit Instructions in the spir-v spec).
+// Some functions aren't implemented here as zilch doesn't have a corresponding function.
+// Everything else should be implemented on the ShaderIntrinsics type.
 void RegisterBitOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types)
 {
   Zilch::Core& core = Zilch::Core::GetInstance();

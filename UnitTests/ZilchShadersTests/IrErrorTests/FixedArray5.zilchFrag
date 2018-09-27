@@ -1,0 +1,11 @@
+[Pixel][UnitTest]
+struct FixedArrayTest5
+{
+  var Data : FixedArray[Real, 3];
+  [EntryPoint]
+  function Main()
+  {
+    // Add is illegal outside of the initializer
+    this.Data.Add(1.0);
+  }
+}

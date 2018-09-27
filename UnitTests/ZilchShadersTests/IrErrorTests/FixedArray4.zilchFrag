@@ -1,5 +1,5 @@
 [Pixel][UnitTest]
-struct FixedArrayTest3
+struct FixedArrayTest4
 {
   var Data : FixedArray[Real, 3];
   [EntryPoint]

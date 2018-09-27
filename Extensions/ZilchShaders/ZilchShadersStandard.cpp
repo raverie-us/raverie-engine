@@ -6,6 +6,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
+#include "ShaderErrors.hpp"
+
 namespace Zilch
 {
 
@@ -83,7 +85,6 @@ ZilchDefineStaticLibrary(ShaderIntrinsicsLibrary)
   ZilchInitializeType(GeometryStreamUserData);
   ZilchInitializeType(GeometryFragmentUserData);
 
-  ZilchInitializeType(Shader);
   // @Nate: These have to be uncommented for new shaders
   ZilchInitializeType(ShaderIntrinsics);
   ZilchInitializeType(Sampler);
@@ -137,3 +138,18 @@ ZilchDefineStaticLibrary(ShaderIntrinsicsLibrary)
 }
 
 }//namespace Zilch
+
+namespace Zero
+{
+
+//-------------------------------------------------------------------ShaderSettingsLibrary
+ZilchDefineStaticLibrary(ShaderSettingsLibrary)
+{
+  builder.CreatableInScriptDefault = false;
+
+  ZilchInitializeType(TranslationErrorEvent);
+  ZilchInitializeType(ValidationErrorEvent);
+  ZilchInitializeType(SpecializationConstantEvent);
+}
+
+}//namespace Zero

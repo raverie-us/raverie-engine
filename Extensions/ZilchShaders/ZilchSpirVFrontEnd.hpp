@@ -131,7 +131,7 @@ public:
   void WalkMemberAccessFunctionCall(Array<IZilchShaderIR*>& arguments, Zilch::MemberAccessNode* memberAccessNode, ZilchShaderIRFunction* shaderFunction, ZilchSpirVFrontEndContext* context);
   ZilchShaderIROp* GenerateFunctionCall(ZilchShaderIRFunction* shaderFunction, ZilchSpirVFrontEndContext* context);
   ZilchShaderIROp* GenerateFunctionCall(BasicBlock* block, ZilchShaderIRFunction* shaderFunction, ZilchSpirVFrontEndContext* context);
-  void WalkMemberAccessExtensionInstructionCallNode(Zilch::FunctionCallNode*& node, Zilch::MemberAccessNode* memberAccessNode, ExtensionInstruction* extensionInstruction, ZilchSpirVFrontEndContext* context);
+  void WalkMemberAccessExtensionInstructionCallNode(Zilch::FunctionCallNode*& node, Zilch::MemberAccessNode* memberAccessNode, SpirVExtensionInstruction* extensionInstruction, ZilchSpirVFrontEndContext* context);
 
   void WalkLocalVariable(Zilch::LocalVariableNode*& node, ZilchSpirVFrontEndContext* context);
   void WalkStaticTypeOrCreationCallNode(Zilch::StaticTypeNode*& node, ZilchSpirVFrontEndContext* context);

@@ -27,34 +27,6 @@ void ZilchTranslationErrorCallback(TranslationErrorEvent* e)
   __debugbreak();
 }
 
-void TestRenderer(SimpleZilchShaderGenerator& shaderGenerator, BaseRenderer& renderer, ErrorReporter& reporter)
-{
-  // Test individual fragment compilation
-  //TestShaderCompilationOfDirectory(shaderGenerator, renderer, "Tests", reporter);
-  // Test composite compilation and linking
-  //TestCompilationAndLinkingOfCompositesInDirectory(shaderGenerator, renderer, "CompositeTests", reporter);
-  // Test composite running results (run the shader and compare against zilch)
-  //TestRuntime(shaderGenerator, renderer, "RunningTests", reporter);
-}
-
-// Simple helper to contain common data for a language test
-class ShaderLanguageTestData
-{
-public:
-
-  SimpleZilchShaderGenerator mShaderGenerator;
-  BaseRenderer* mRenderer;
-  ErrorReporter* mErrorReporter;
-
-  ShaderLanguageTestData(BaseRenderer* renderer, BaseShaderTranslator* translator, ErrorReporter* reporter)
-    : mShaderGenerator(translator)
-  {
-    mRenderer = renderer;
-    mErrorReporter = reporter;
-  }
-};
-
-
 void RunTests()
 {
   // Hook up a listener to print all output to the visual studio console

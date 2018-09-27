@@ -9,6 +9,7 @@
 namespace Zero
 {
 
+// Resolves a binary operator node given the expected return type.
 void ResolveBinaryOp(ZilchSpirVFrontEnd* translator, Zilch::BinaryOperatorNode* binaryOpNode, OpType opType, ZilchSpirVFrontEndContext* context)
 {
   if(binaryOpNode->OperatorInfo.Io & Zilch::IoMode::WriteLValue)
@@ -17,6 +18,9 @@ void ResolveBinaryOp(ZilchSpirVFrontEnd* translator, Zilch::BinaryOperatorNode* 
     translator->PerformBinaryOp(binaryOpNode, opType, context);
 }
 
+// Resolves a binary operator node where the lhs and rhs of the node have already been resolved.
+// This can be necessary when one of the sides in the node has to undergo a transformation first
+// (e.g vector / scalar has to first promote the scalar to a vector)
 void ResolveBinaryOp(ZilchSpirVFrontEnd* translator, Zilch::BinaryOperatorNode* binaryOpNode, OpType opType, IZilchShaderIR* lhs, IZilchShaderIR* rhs, ZilchSpirVFrontEndContext* context)
 {
   if(binaryOpNode->OperatorInfo.Io & Zilch::IoMode::WriteLValue)
@@ -77,7 +81,7 @@ void ResolveSimpleStaticBinaryFunctionOp(ZilchSpirVFrontEnd* translator, Zilch::
   ResolveStaticBinaryFunctionOp(translator, functionCallNode, opType, context);
 }
 
-// Some binary functions are special and have to be flipped in order due to the column vs. row major differences of zilch and spirv.
+// Some binary functions are special and have to be flipped due to the column vs. row major differences of zilch and spirv.
 void ResolveFlippedStaticBinaryFunctionOp(ZilchSpirVFrontEnd* translator, Zilch::FunctionCallNode* functionCallNode, OpType opType, ZilchSpirVFrontEndContext* context)
 {
   // Get the result type
@@ -109,11 +113,12 @@ void ResolveMatrixTranspose(ZilchSpirVFrontEnd* translator, Zilch::FunctionCallN
   // Walk each operand
   IZilchShaderIR* operand = translator->WalkAndGetValueTypeResult(functionCallNode->Arguments[0], context);
 
-  // Generate the fmod op
+  // Generate the transpose op
   IZilchShaderIR* operationOp = translator->BuildCurrentBlockIROp(OpType::OpTranspose, resultType, operand, context);
   context->PushIRStack(operationOp);
 }
 
+// Register function callbacks for the various arithmetic operators (see Arithmetic Instructions in the spir-v spec).
 void RegisterArithmeticOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types)
 {
   Zilch::Core& core = Zilch::Core::GetInstance();
@@ -188,6 +193,8 @@ void RegisterArithmeticOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary*
   }
 
   // Register ops that are only on int vector types (no scalars). Some of these are because of zilch and not spirv.
+  // @JoshD: SpirV doesn't have any actual vector operations on integers.
+  // Some could be supported using more complicated instructions (e.g. vector * scalar = vector * vector(scalar))
   for(size_t i = 1; i < types.mIntegerVectorTypes.Size(); ++i)
   {
     Zilch::BoundType* zilchType = types.mIntegerVectorTypes[i]->mZilchType;
@@ -199,6 +206,7 @@ void RegisterArithmeticOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary*
     //translator->mBinaryOpInstructions[BinaryOpTypeId(vectorScalarTypePair, Zilch::Grammar::AssignmentMultiply)] = OpType::OpVectorTimesScalar;
   }
 
+  // Register all real matrix instructions.
   for(size_t y = 2; y <= 4; ++y)
   {
     for(size_t x = 2; x <= 4; ++x)

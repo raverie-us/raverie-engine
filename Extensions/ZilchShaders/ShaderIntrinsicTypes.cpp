@@ -295,36 +295,6 @@ ZilchDefineType(ShaderIntrinsics, builder, type)
   isLanguageFn->UserData = (void*)&ResolveIsLanguageMinMaxVersion;
 }
 
-//------------------------------------------------------------------------Shader
-void Shader::AddInlineShaderCode(StringParam language, StringParam shaderCode)
-{
-  //pretend to add code here...
-}
-
-void Shader::AddInlineShaderCode(StringParam language, int minVersion, int maxVersion, StringParam shaderCode)
-{
-
-}
-
-bool Shader::IsLanguage(StringParam language)
-{
-  return false;
-}
-
-bool Shader::IsLanguage(StringParam language, int minVersion, int maxVersion)
-{
-  return false;
-}
-
-ZilchDefineType(Shader, builder, type)
-{
-  ZilchFullBindMethod(builder, type, &Shader::AddInlineShaderCode, (void(*)(StringParam, StringParam)), "AddInlineShaderCode", "language, shaderCode");
-  ZilchFullBindMethod(builder, type, &Shader::AddInlineShaderCode, (void(*)(StringParam, int, int, StringParam)), "AddInlineShaderCode", "language, minVersion, maxVersion, shaderCode");
-  ZilchFullBindMethod(builder, type, &Shader::IsLanguage, (bool(*)(StringParam)), "IsLanguage", "language");
-  ZilchFullBindMethod(builder, type, &Shader::IsLanguage, (bool(*)(StringParam, int, int)), "IsLanguage", "language, minVersion, maxVersion");
-}
-
-
 //-------------------------------------------------------------------GeometryStreamUserData
 ZilchDefineType(GeometryStreamUserData, builder, type)
 {

@@ -1,0 +1,14 @@
+[Pixel][UnitTest]
+struct FixedArrayTest5
+{
+  var Data : FixedArray[Real, 3] = FixedArray[Real, 3]();
+  
+  [EntryPoint]
+  function Main()
+  {
+    this.Data {1.0, 2.0, 3.0};
+    
+    var localArray = FixedArray[Integer, 2]();
+    localArray {2, 3};
+  }
+}

@@ -9,19 +9,23 @@
 namespace Zero
 {
 
-ExtensionInstruction::ExtensionInstruction()
+//-------------------------------------------------------------------SpirVExtensionInstruction
+SpirVExtensionInstruction::SpirVExtensionInstruction()
 {
   mResolverFn = nullptr;
 }
 
-ExtensionInstruction* SpirVExtensionLibrary::CreateExtInst(Zilch::Function* zilchFn, ExtensionInstructionResolverFn resolverFn)
+//-------------------------------------------------------------------SpirVExtensionLibrary
+SpirVExtensionInstruction* SpirVExtensionLibrary::CreateExtInst(Zilch::Function* zilchFn, SpirVExtensionInstructionResolverFn resolverFn)
 {
   ErrorIf(zilchFn == nullptr, "Invalid zilch function");
   ErrorIf(mExtensions.ContainsKey(zilchFn), "Extension already exists");
-  ExtensionInstruction* instruction = new ExtensionInstruction();
+
+  SpirVExtensionInstruction* instruction = new SpirVExtensionInstruction();
   instruction->mResolverFn = resolverFn;
   instruction->mLibrary = this;
   mExtensions[zilchFn] = instruction;
+  // Store this extension instruction in the owning library
   mOwningLibrary->mExtensionInstructions.InsertOrError(zilchFn, instruction);
   return instruction;
 }

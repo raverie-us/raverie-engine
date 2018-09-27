@@ -226,12 +226,12 @@ ZilchShaderIRFunction* ZilchShaderIRModule::FindFunction(Zilch::Function* zilchF
   return nullptr;
 }
 
-ExtensionInstruction* ZilchShaderIRModule::FindExtensionInstruction(Zilch::Function* zilchFunction, bool checkDependencies)
+SpirVExtensionInstruction* ZilchShaderIRModule::FindExtensionInstruction(Zilch::Function* zilchFunction, bool checkDependencies)
 {
   for(size_t i = 0; i < Size(); ++i)
   {
     ZilchShaderIRLibrary* library = (*this)[i];
-    ExtensionInstruction* result = library->FindExtensionInstruction(zilchFunction, checkDependencies);
+    SpirVExtensionInstruction* result = library->FindExtensionInstruction(zilchFunction, checkDependencies);
     if(result != nullptr)
       return result;
   }
@@ -545,9 +545,9 @@ ZilchShaderIRFunction* ZilchShaderIRLibrary::FindFunction(Zilch::Function* zilch
   return mDependencies->FindFunction(zilchFunction, checkDependencies);
 }
 
-ExtensionInstruction* ZilchShaderIRLibrary::FindExtensionInstruction(Zilch::Function* zilchFunction, bool checkDependencies)
+SpirVExtensionInstruction* ZilchShaderIRLibrary::FindExtensionInstruction(Zilch::Function* zilchFunction, bool checkDependencies)
 {
-  ExtensionInstruction* result = mExtensionInstructions.FindValue(zilchFunction, nullptr);
+  SpirVExtensionInstruction* result = mExtensionInstructions.FindValue(zilchFunction, nullptr);
   if(result != nullptr)
     return result;
 

@@ -33,11 +33,11 @@ class ShaderLanguageEntry
 {
 public:
   ShaderLanguageEntry() {};
-  ShaderLanguageEntry(BaseShaderTranslator* translator);
+  //ShaderLanguageEntry(BaseShaderTranslator* translator);
   String ToString(bool shortFormat = false) const;
 
   // The translator to use. This also signifies the target translation language name.
-  BaseShaderTranslatorRef mTranslator;
+  //BaseShaderTranslatorRef mTranslator;
 };
 
 //-------------------------------------------------------------------ShaderTranslationEntry
@@ -82,7 +82,7 @@ private:
   void OnCompileZilchFragments(ZilchCompileFragmentEvent* event);
   void OnScriptsCompiledPrePatch(ZilchCompileEvent* event);
   void OnScriptCompilationFailed(Event* event);
-  void ValidateComposition(ZilchShaderGenerator& generator, ZilchFragmentInfo& info, FragmentType::Enum fragmentType);
+  //void ValidateComposition(ZilchShaderGenerator& generator, ZilchFragmentInfo& info, FragmentType::Enum fragmentType);
   void OnRunTranslation(Event* e);
   void OnScriptDisplayChanged(Event* e);
 

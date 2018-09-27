@@ -16,7 +16,7 @@ ZilchDeclareEvent(ValidationError, ValidationErrorEvent);
 }//namespace Events
 
 //-------------------------------------------------------------------TranslationErrorEvent
-// An error event for when translation fails
+/// An error event for when translation fails
 class TranslationErrorEvent : public Zilch::EventData
 {
 public:
@@ -44,7 +44,7 @@ class ValidationErrorEvent : public Zilch::EventData
 };
 
 //-------------------------------------------------------------------ShaderCompilationErrors
-// Event handler for sending shader compilation errors as well as translation errors.
+/// Event handler for sending shader compilation errors as well as translation errors.
 class ShaderCompilationErrors : public Zilch::EventHandler
 {
 public:

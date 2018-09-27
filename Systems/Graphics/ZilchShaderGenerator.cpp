@@ -7,37 +7,6 @@ namespace Zero
 {
 
 //**************************************************************************************************
-void CustomEmitVertexCallback(ShaderCodeBuilder& builder, ZilchShaderSettingsRef& settings, EmitVertexCallbackData& data)
-{
-  ShaderDefinitionSettings& shaderSettings = settings->mShaderDefinitionSettings;
-  NameSettings& nameSettings = settings->mNameSettings;
-
-  String fragmentPerspectivePositionName = "PerspectivePosition";
-
-  // If the api perspective transform exists and the fragment contains the fragment perspective position (not the composite name)
-  ShaderFieldKey apiPerspectiveTransformKey("ZeroPerspectiveToApiPerspective", "Real4x4");
-  if(shaderSettings.mBuiltIns.ContainsKey(apiPerspectiveTransformKey) &&
-     data.mFragmentOutputStructShaderType->mFieldMap.ContainsKey(fragmentPerspectivePositionName))
-  {
-    // Write: "compositeOut.ApiPerspectivePosition = Math.Multiply(`compositeName`.ZeroPerspectiveToApiPerspective, fragmentOut.PerspectivePosition)"
-    builder << builder.EmitIndent() << data.mCompositeOutVarName << "." << nameSettings.mPerspectivePositionName << " = Math.Multiply(";
-    builder << data.mCompositedShaderTypeName << ".ZeroPerspectiveToApiPerspective, ";
-    builder << data.mFragmentOutVarName << "." << fragmentPerspectivePositionName << ");" << builder.EmitLineReturn();
-  }
-}
-
-//**************************************************************************************************
-BaseShaderTranslator* CreateShaderTranslator()
-{
-  // We need to eventually have Platform select this.
-#if defined(PLATFORM_EMSCRIPTEN)
-  return new Glsl300EsTranslator();
-#else
-  return new Glsl150Translator();
-#endif
-}
-
-//**************************************************************************************************
 ZilchShaderGenerator* CreateZilchShaderGenerator()
 {
   ZilchShaderGenerator* shaderGenerator = new ZilchShaderGenerator();
@@ -208,8 +177,8 @@ void ZilchShaderGenerator::InitializeSpirV()
   mCoreLibrary = coreLibrary.GetLibrary();
 
   // Create the intrinsics library and parse it
-  ZilchShaderIntrinsics::InitializeInstance();
-  ZilchShaderIntrinsics& shaderIntrinsics = ZilchShaderIntrinsics::GetInstance();
+  ShaderIntrinsicsStaticZilchLibrary::InitializeInstance();
+  ShaderIntrinsicsStaticZilchLibrary& shaderIntrinsics = ShaderIntrinsicsStaticZilchLibrary::GetInstance();
   shaderIntrinsics.Parse(mFrontEndTranslator);
   mShaderIntrinsicsLibrary = shaderIntrinsics.GetLibrary();
 

@@ -36,8 +36,8 @@ public:
   virtual String OnTranslate();
 
   // Helper functions
-  void CompileAndTranslateFragments(SimpleZilchShaderGenerator& shaderGenerator);
-  void TranslateMaterial(SimpleZilchShaderGenerator& shaderGenerator, Material* material);
+  //void CompileAndTranslateFragments(SimpleZilchShaderGenerator& shaderGenerator);
+  //void TranslateMaterial(SimpleZilchShaderGenerator& shaderGenerator, Material* material);
   
   // The Connect macro doesn't seem to work when trying to connect from a derived type on a base class function,
   // hence this function allows easy connection on a resource type being modified.
@@ -110,14 +110,14 @@ public:
   virtual void SetTranslatedEditor();
   virtual void SaveCheck();
   virtual void Build();
-  virtual void BuildFinalShader(ShaderTypeTranslation& shaderResult);
+  //virtual void BuildFinalShader(ShaderTypeTranslation& shaderResult);
 
   void SetLexer(uint lexer);
   void OnSaveCheck(SavingEvent* e);
   void OnBuild(Event* e);
   void OnLeftMouseDown(MouseEvent* e);
 
-  CodeRangeMapping* FindRange(int positionWithinParent, CodeRangeMapping* current);
+  //CodeRangeMapping* FindRange(int positionWithinParent, CodeRangeMapping* current);
   
   ScriptEditor* mSourceEditor;
   Splitter* mSplitter;
@@ -136,7 +136,7 @@ public:
   virtual void SetTranslatedEditor() override;
   virtual void SaveCheck() override;
   virtual void Build() override;
-  virtual void BuildFinalShader(ShaderTypeTranslation& shaderResult) override;
+  //virtual void BuildFinalShader(ShaderTypeTranslation& shaderResult) override;
 
   void SetResource(ZilchFragment* fragment);
   
@@ -154,7 +154,7 @@ public:
 
   void SetTranslatedEditor() override;
   void Build() override;
-  void BuildFinalShader(ShaderTypeTranslation& shaderResult) override;
+  //void BuildFinalShader(ShaderTypeTranslation& shaderResult) override;
 
   void SetResource(Material* material);
   void SetDisplayMode(TranslationDisplayMode::Enum displayMode);
