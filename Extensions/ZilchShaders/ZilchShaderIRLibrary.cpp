@@ -393,7 +393,7 @@ GlobalVariableData* ZilchShaderIRLibrary::FindGlobalVariable(ZilchShaderIROp* gl
   // Otherwise check all of our dependencies (if we have any)
   if(mDependencies == nullptr)
     return nullptr;
-  return mDependencies->FindGlobalVariable(zilchField, checkDependencies);
+  return mDependencies->FindGlobalVariable(globalInstance, checkDependencies);
 }
 
 void ZilchShaderIRLibrary::RegisterTemplateResolver(const TemplateTypeKey& templateKey, TemplateTypeIRResloverFn resolver)
