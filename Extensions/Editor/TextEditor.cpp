@@ -340,6 +340,52 @@ void TextEditor::SetLexer(uint lexer)
       break;
     }
 
+    case Lexer::SpirV:
+    {
+      StringBuilder opCodesBuilder;
+      Array<String> opCodeNames = GetOpcodeNames();
+      for(size_t i = 0; i < opCodeNames.Size(); ++i)
+      {
+        String opName = opCodeNames[i];
+        // OpCode names don't include the "Op" in the beginning to manually add it.
+        opCodesBuilder.AppendFormat("Op%s ", opName.c_str());
+      }
+      String opCodes = opCodesBuilder.ToString();
+
+      // Hardcoded as there's not clean tools right now to parse this from spirv.
+      // In the interest of time this was manually grabbed from the header but should eventually be updated.
+      const char languages[] = "Unknown ESSL GLSL OpenCL_C OpenCL_CPP HLSL";
+      const char executionModels[] = "Vertex TessellationControl TessellationEvaluation Geometry Fragment GLCompute Kernel";
+      const char addressingModels[] = "Logical Physical32 Physical64";
+      const char storageClasses[] = "UniformConstant Input Uniform Output Workgroup CrossWorkgroup Private Function Generic PushConstant AtomicCounter Image StorageBuffer";
+      const char decorations[] = "RelaxedPrecision SpecId Block BufferBlock RowMajor ColMajor ArrayStride MatrixStride GLSLShared GLSLPacked CPacked BuiltIn NoPerspective Flat Patch Centroid Sample Invariant Restrict Aliased Volatile Constant Coherent NonWritable NonReadable Uniform SaturatedConversion Stream Location Component Index Binding DescriptorSet Offset XfbBuffer XfbStride FuncParamAttr FPRoundingMode FPFastMathMode LinkageAttributes NoContraction InputAttachmentIndex Alignment MaxByteOffset AlignmentId MaxByteOffsetId ExplicitInterpAMD OverrideCoverageNV PassthroughNV ViewportRelativeNV SecondaryViewportRelativeNV NonUniformEXT HlslCounterBufferGOOGLE HlslSemanticGOOGLE";
+      const char builtIns[] = "Position PointSize ClipDistance CullDistance VertexId InstanceId PrimitiveId InvocationId Layer ViewportIndex TessLevelOuter TessLevelInner TessCoord PatchVertices FragCoord PointCoord FrontFacing SampleId SamplePosition SampleMask FragDepth HelperInvocation NumWorkgroups WorkgroupSize WorkgroupId LocalInvocationId GlobalInvocationId LocalInvocationIndex WorkDim GlobalSize EnqueuedWorkgroupSize GlobalOffset GlobalLinearId SubgroupSize SubgroupMaxSize NumSubgroups NumEnqueuedSubgroups SubgroupId SubgroupLocalInvocationId VertexIndex InstanceIndex SubgroupEqMask SubgroupEqMaskKHR SubgroupGeMask SubgroupGeMaskKHR SubgroupGtMask SubgroupGtMaskKHR SubgroupLeMask SubgroupLeMaskKHR SubgroupLtMask SubgroupLtMaskKHR BaseVertex BaseInstance DrawIndex DeviceIndex ViewIndex BaryCoordNoPerspAMD BaryCoordNoPerspCentroidAMD BaryCoordNoPerspSampleAMD BaryCoordSmoothAMD BaryCoordSmoothCentroidAMD BaryCoordSmoothSampleAMD BaryCoordPullModelAMD FragStencilRefEXT ViewportMaskNV SecondaryPositionNV SecondaryViewportMaskNV PositionPerViewNV ViewportMaskPerViewNV FullyCoveredEXT";
+      const char capabilities[] = "Matrix Shader Geometry Tessellation Addresses Linkage Kernel Vector16 Float16Buffer Float16 Float64 Int64 Int64Atomics ImageBasic ImageReadWrite ImageMipmap Pipes Groups DeviceEnqueue LiteralSampler AtomicStorage Int16 TessellationPointSize GeometryPointSize ImageGatherExtended StorageImageMultisample UniformBufferArrayDynamicIndexing SampledImageArrayDynamicIndexing StorageBufferArrayDynamicIndexing StorageImageArrayDynamicIndexing ClipDistance CullDistance ImageCubeArray SampleRateShading ImageRect SampledRect GenericPointer Int8 InputAttachment SparseResidency MinLod Sampled1D Image1D SampledCubeArray SampledBuffer ImageBuffer ImageMSArray StorageImageExtendedFormats ImageQuery DerivativeControl InterpolationFunction TransformFeedback GeometryStreams StorageImageReadWithoutFormat StorageImageWriteWithoutFormat MultiViewport SubgroupDispatch NamedBarrier PipeStorage GroupNonUniform GroupNonUniformVote GroupNonUniformArithmetic GroupNonUniformBallot GroupNonUniformShuffle GroupNonUniformShuffleRelative GroupNonUniformClustered GroupNonUniformQuad SubgroupBallotKHR DrawParameters SubgroupVoteKHR StorageBuffer16BitAccess StorageUniformBufferBlock16 StorageUniform16 UniformAndStorageBuffer16BitAccess StoragePushConstant16 StorageInputOutput16 DeviceGroup MultiView VariablePointersStorageBuffer VariablePointers AtomicStorageOps SampleMaskPostDepthCoverage StorageBuffer8BitAccess UniformAndStorageBuffer8BitAccess StoragePushConstant8 Float16ImageAMD ImageGatherBiasLodAMD FragmentMaskAMD StencilExportEXT ImageReadWriteLodAMD SampleMaskOverrideCoverageNV GeometryShaderPassthroughNV ShaderViewportIndexLayerEXT ShaderViewportIndexLayerNV ShaderViewportMaskNV ShaderStereoViewNV PerViewAttributesNV FragmentFullyCoveredEXT GroupNonUniformPartitionedNV ShaderNonUniformEXT RuntimeDescriptorArrayEXT InputAttachmentArrayDynamicIndexingEXT UniformTexelBufferArrayDynamicIndexingEXT StorageTexelBufferArrayDynamicIndexingEXT UniformBufferArrayNonUniformIndexingEXT SampledImageArrayNonUniformIndexingEXT StorageBufferArrayNonUniformIndexingEXT StorageImageArrayNonUniformIndexingEXT InputAttachmentArrayNonUniformIndexingEXT UniformTexelBufferArrayNonUniformIndexingEXT StorageTexelBufferArrayNonUniformIndexingEXT SubgroupShuffleINTEL SubgroupBufferBlockIOINTEL SubgroupImageBlockIOINTEL";
+
+      StringBuilder specialBuilder;
+      specialBuilder.Append(languages);
+      specialBuilder.Append(" ");
+      specialBuilder.Append(executionModels);
+      specialBuilder.Append(" ");
+      specialBuilder.Append(addressingModels);
+      specialBuilder.Append(" ");
+      specialBuilder.Append(storageClasses);
+      specialBuilder.Append(" ");
+      specialBuilder.Append(decorations);
+      specialBuilder.Append(" ");
+      specialBuilder.Append(builtIns);
+      specialBuilder.Append(" ");
+      specialBuilder.Append(capabilities);
+      String specialWords = specialBuilder.ToString();
+
+      SendEditor(SCI_SETLEXER, SCLEX_CPP, 0);
+      SendEditor(SCI_SETKEYWORDS, 0, (uptr_t)opCodes.c_str());
+      SendEditor(SCI_SETKEYWORDS, 1, (uptr_t)specialWords.c_str());
+
+      mLineNumbers = true;
+      break;
+    }
+
     case Lexer::Shader:
     {
       const char cppKeywords[] =
@@ -840,6 +886,7 @@ void TextEditor::SetColorScheme(ColorScheme& scheme)
       break;
     }
     case Lexer::Shader:
+    case Lexer::SpirV:
     case Lexer::Cpp:
     {
       SetCommonLexerStyles(scheme);
