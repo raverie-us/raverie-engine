@@ -11,11 +11,6 @@ set(unit_tests_binary_dir ${unit_tests_out}/Out/${supported_configs})
 #set(unit_tests_intermediates_dir ${unit_tests_out}/Int/${supported_configs})
 
 ################################################################################
-# Define any user options specific to this folder
-################################################################################
-option(generate_with_zilch_shader_tests "If set to 'ON', project will be generated with the zilch shader unit tests included." OFF)
-
-################################################################################
 # define all of the libraries that are in this folder
 ################################################################################
 add_executable(ContainersTests "")
