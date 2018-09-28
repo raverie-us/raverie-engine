@@ -67,7 +67,6 @@ target_sources(ZilchShaders
     ${CMAKE_CURRENT_LIST_DIR}/ShaderIRLibraryTranslation.hpp
     ${CMAKE_CURRENT_LIST_DIR}/SimpleZilchParser.hpp
     ${CMAKE_CURRENT_LIST_DIR}/SimpleZilchShaderIRGenerator.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/spirv.hpp
     ${CMAKE_CURRENT_LIST_DIR}/SpirVHelpers.hpp
     ${CMAKE_CURRENT_LIST_DIR}/SpirVSpecializationConstantPass.hpp
     ${CMAKE_CURRENT_LIST_DIR}/StageRequirementsGatherer.hpp

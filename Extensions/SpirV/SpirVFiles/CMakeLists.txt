@@ -147,7 +147,6 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
             -Zc:inline
             -MDd
             -nologo
-            -WX
             -D_SCL_SECURE_NO_WARNINGS
             ${common_flags}
     )
