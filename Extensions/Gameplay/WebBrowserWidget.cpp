@@ -79,7 +79,7 @@ WebBrowserWidget::WebBrowserWidget(Composite* composite, const WebBrowserSetup& 
 
   ConnectThisTo(Z::gEngine, Events::EngineUpdate, OnEngineUpdate);
 
-  ConnectThisTo(mAddressText, Events::TextSubmit, OnAddressTextSubmit);
+  ConnectThisTo(mAddressText, Events::TextEnter, OnAddressTextEnter);
 
   ConnectThisTo(browser, Events::WebBrowserPopup, OnWebBrowserPopup);
   ConnectThisTo(browser, Events::WebBrowserPointQuery, OnWebBrowserPointQuery);
@@ -200,7 +200,7 @@ void WebBrowserWidget::OnReloadPressed(ObjectEvent* event)
   mBrowser->Reload(useCache);
 }
 
-void WebBrowserWidget::OnAddressTextSubmit(ObjectEvent* event)
+void WebBrowserWidget::OnAddressTextEnter(ObjectEvent* event)
 {
   mBrowser->SetUrl(mAddressText->GetText());
 }

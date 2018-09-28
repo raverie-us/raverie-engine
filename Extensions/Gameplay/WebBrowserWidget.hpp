@@ -19,7 +19,7 @@ public:
   void OnBackPressed(ObjectEvent* event);
   void OnForwardPressed(ObjectEvent* event);
   void OnReloadPressed(ObjectEvent* event);
-  void OnAddressTextSubmit(ObjectEvent* event);
+  void OnAddressTextEnter(ObjectEvent* event);
 
   void OnWebBrowserPopup(WebBrowserPopupCreateEvent* event);
   void OnWebBrowserPointQuery(WebBrowserPointQueryEvent* event);
