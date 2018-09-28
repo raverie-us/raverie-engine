@@ -186,19 +186,40 @@ ImportOptions::~ImportOptions()
 void ImportOptions::Initialize(Array<String>& files, ContentLibrary* library)
 {
   mLibrary = library;
+  Array<String> invalidFiles;
 
   for(uint i = 0; i < files.Size(); ++i)
   {
     String fullPath = files[i];
 
     // Strip the path
-    String fileName = SanitizeContentFilename(FilePath::GetFileName(fullPath.All()));
+    String originalFilename = FilePath::GetFileName(fullPath.All());
+    String fileName = SanitizeContentFilename(originalFilename);
+    
+    // Check to see if the filename contained any valid characters
+    if (fileName == Zilch::EmptyUpperIdentifier && !originalFilename.Contains(Zilch::EmptyUpperIdentifier))
+    {
+      invalidFiles.PushBack(originalFilename);
+      continue;
+    }
 
      // Check to see if it already exists
      if(mLibrary->FindContentItemByFileName(fileName))
        mConflictedFiles.PushBack(fullPath);
      else
-        mFiles.PushBack(fullPath);
+       mFiles.PushBack(fullPath);
+  }
+
+  // If there are any invalid filenames create a do notify error message
+  if (!invalidFiles.Empty())
+  {
+    StringBuilder builder;
+    builder.Append(invalidFiles.Front());
+    for (unsigned i = 1; i < invalidFiles.Size(); ++i)
+      builder.AppendFormat(", %s", invalidFiles[i].c_str());
+    
+    String errorMessage = String::Format("The following files do not contain any valid characters: %s", builder.ToString().c_str());
+    DoNotifyError("File Import Failed", errorMessage);
   }
 
   BuildOptions();
