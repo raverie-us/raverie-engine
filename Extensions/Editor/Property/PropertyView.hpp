@@ -40,6 +40,8 @@ public:
   PropertyView(Composite* parent);
   virtual ~PropertyView();
 
+  void DisconnectAllObjects();
+
   /// Set the object to be edited. If no property interface is given,
   /// the current interface (default if none was ever set) will be used.
   /// If it's a multi selection, the instance should be the Selection object.

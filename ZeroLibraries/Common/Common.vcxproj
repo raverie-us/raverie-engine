@@ -57,6 +57,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CommonStandard.cpp" />
+    <ClCompile Include="ContainerCommon.cpp" />
     <ClCompile Include="Containers\BitStream.cpp" />
     <ClCompile Include="Containers\ByteBuffer.cpp" />
     <ClCompile Include="Diagnostic\Console.cpp" />

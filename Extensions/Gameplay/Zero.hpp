@@ -49,11 +49,12 @@ public:
 class ZilchScriptConnection : public EventConnection
 {
 public:
-  ZilchScriptConnection(DelegateParam delagate);
+  ZilchScriptConnection(EventDispatcher* dispatcher, StringParam eventId, DelegateParam delagate);
   ~ZilchScriptConnection();
 
   void RaiseError(StringParam message) override;
   void Invoke(Event* event) override;
+  DataBlock GetFunctionPointer() override;
 
   size_t mStatePatchId;
   Delegate mDelegate;

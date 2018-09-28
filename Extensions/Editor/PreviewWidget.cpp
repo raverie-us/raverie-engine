@@ -78,7 +78,7 @@ PreviewWidget* PreviewWidgetGroup::AddPreviewWidget(StringParam name, HandlePara
 {
   // Create the preview
   PreviewWidget* preview = ResourcePreview::CreatePreviewWidget(this, name,
-                                                       instance, minImportance);
+                                                                instance, minImportance);
 
   if(preview == nullptr)
     return nullptr;
@@ -117,7 +117,7 @@ void PreviewWidgetGroup::UpdateTransform()
 
   Vec2 padding = SnapToPixels((dimension - Vec2(1,1)) * Vec2(cPadding, cPadding));
   itemSize -= SnapToPixels(padding / dimension);
-  
+
   for(int x = 0; x < iDimensions.x; ++x)
   {
     for(int y = 0; y < iDimensions.y; ++y)
@@ -194,7 +194,7 @@ ZilchDefineType(PreviewWidgetFactory, builder, type)
 
 //******************************************************************************
 PreviewWidget* ResourcePreview::CreatePreviewWidget(Composite* parent, StringParam name, HandleParam instance,
-                                            PreviewImportance::Enum minImportance)
+                                                    PreviewImportance::Enum minImportance)
 {
   PreviewWidgetFactory* tileFactory = PreviewWidgetFactory::GetInstance();
 

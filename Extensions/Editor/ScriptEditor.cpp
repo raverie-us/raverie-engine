@@ -1861,7 +1861,9 @@ ScriptEditor* CreateScriptEditor(Composite* parent, ResourceDocument* doc)
   else
     editor->SetLexer(Lexer::Text);
 
-  editor->UseTextEditorConfig();
+  // SetLexer overrides some of the text config settings so we need to apply the config to
+  // set our script editor to the correct configured state
+  editor->UpdateConfig(editor->GetConfig());
 
   return editor;
 }

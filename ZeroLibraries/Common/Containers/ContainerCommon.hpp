@@ -476,9 +476,13 @@ void DeleteObjectsInContainer(containerType& container)
 
 struct DataBlock
 {
-  DataBlock() : Data(nullptr), Size(0) {};
-  DataBlock(byte* data, size_t size):Data(data), Size(size) {};
-  operator bool(){return Data != nullptr;}
+  DataBlock();
+  DataBlock(byte* data, size_t size);
+  operator bool();
+  bool operator==(DataBlock& lhs);
+  bool operator!=(DataBlock& lhs);
+  size_t Hash();
+
   byte* Data;
   size_t Size;
 };

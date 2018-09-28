@@ -99,7 +99,7 @@ void CameraViewportDrawer::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameB
 //--------------------------------------------- Space Preview Mouse Manipulation
 SpacePreviewMouseDrag::SpacePreviewMouseDrag(Mouse* mouse, SpacePreview* preview)
   : MouseManipulation(mouse, preview),
-    mPreview(preview)
+  mPreview(preview)
 {
 }
 
@@ -157,7 +157,7 @@ SpacePreview::SpacePreview(PreviewWidgetInitializer& initializer, StringParam ob
     // Do not update the space
     space->has(TimeSpace)->SetPaused(true);
   }
-    
+
   uint creationFlags = CreationFlags::Editing | CreationFlags::Preview;
   Cog* camera = Z::gFactory->Create(space, CoreArchetypes::PreviewCamera, creationFlags, Z::gEditor->GetEditGameSession());
   mCameraViewportDrawer = new CameraViewportDrawer(this, camera);
@@ -372,8 +372,12 @@ void SpacePreview::AnimatePreview(PreviewAnimate::Enum value)
 {
   mPreviewAnimate = value;
   Space* space = mSpace;
-  if(space)
+  if (space)
+  {
+    // Attempt to disconnect the event before connecting to it to avoid duplicate event connections
+    space->GetDispatcher()->DisconnectEvent(Events::FrameUpdate, this);
     ConnectThisTo(space, Events::FrameUpdate, OnUpdate);
+  }
 }
 
 //****************************************************************************
@@ -385,7 +389,7 @@ void SpacePreview::UpdateTransform()
 
 //----------------------------------------------------------- Material Grid Tile
 MaterialPreview::MaterialPreview(PreviewWidgetInitializer& initializer)
-    : SpacePreview(initializer)
+  : SpacePreview(initializer)
 {
   Material* material = initializer.Object.Get<Material*>();
   if (Cog* object = mObject)
@@ -477,7 +481,7 @@ ArchetypePreview::ArchetypePreview(PreviewWidgetInitializer& initializer)
   : SpacePreview(initializer, initializer.Object.Get<Archetype*>()->ResourceIdName)
 {
   UpdateViewDistance(Vec3(-1.0f));
-    
+
   if (Cog* cog = (Cog*)mObject)
   {
     Aabb aabb = GetAabb(cog);
@@ -538,7 +542,7 @@ Handle AnimationPreview::GetEditObject()
 {
   if(Cog* object = mObject)
     return object;
-    
+
   return Handle();
 }
 
@@ -637,7 +641,7 @@ void TilePaletteSourcePreview::SizeToContents()
     mTilePaletteView->mTileSize = (int)Math::Floor(mSize.y / float(paletteTiles.y));
 }
 
-  //****************************************************************************
+//****************************************************************************
 void TilePaletteSourcePreview::UpdateTransform()
 {
   if (mSource.IsNull())
@@ -854,8 +858,8 @@ GameArchetypePreview::GameArchetypePreview(PreviewWidgetInitializer& initializer
   }
   else
   {
-    mObject = (GameSession*)Z::gFactory->CreateCheckedType(ZilchTypeId(GameSession), nullptr, 
-      archetype->Name, CreationFlags::Editing | CreationFlags::Preview, nullptr);
+    mObject = (GameSession*)Z::gFactory->CreateCheckedType(ZilchTypeId(GameSession), nullptr,
+                   archetype->Name, CreationFlags::Editing | CreationFlags::Preview, nullptr);
     UsingEditorGameSession = false;
   }
 }
