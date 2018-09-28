@@ -670,22 +670,22 @@ bool ZilchShaderGenerator::BuildShaders(ShaderSet& shaders, HashMap<String, Uniq
 
       bool success = true;
       Array<TranslationPassResultRef> vertexPipelineResults;
-      success = CompilePipeline(vertexShader, pipelineDescription, vertexPipelineResults);
-      entry.mVertexShader = vertexPipelineResults.Back()->mByteStream.ToString();
+      success &= CompilePipeline(vertexShader, pipelineDescription, vertexPipelineResults);
 
       Array<TranslationPassResultRef> geometryPipelineResults;
-      if(geometryShader != nullptr)
-      {
-        success = CompilePipeline(geometryShader, pipelineDescription, geometryPipelineResults);
-        entry.mGeometryShader = geometryPipelineResults.Back()->mByteStream.ToString();
-      }
+      if (geometryShader != nullptr)
+        success &= CompilePipeline(geometryShader, pipelineDescription, geometryPipelineResults);
 
       Array<TranslationPassResultRef> pixelPipelineResults;
-      success = CompilePipeline(pixelShader, pipelineDescription, pixelPipelineResults);
-      entry.mPixelShader = pixelPipelineResults.Back()->mByteStream.ToString();
+      success &= CompilePipeline(pixelShader, pipelineDescription, pixelPipelineResults);
 
-      if(!success)
+      if (!success)
         return false;
+
+      entry.mVertexShader = vertexPipelineResults.Back()->mByteStream.ToString();
+      if (geometryShader != nullptr)
+        entry.mGeometryShader = geometryPipelineResults.Back()->mByteStream.ToString();
+      entry.mPixelShader = pixelPipelineResults.Back()->mByteStream.ToString();
     }
   }
 
@@ -760,24 +760,37 @@ ShaderInput ZilchShaderGenerator::CreateShaderInput(StringParam fragmentName, St
   if (fieldMeta == nullptr)
     return shaderInput;
 
-  // @Nate: Needs reflection
-  //if (type == ShaderInputType::Texture)
-  //{
-  //  shaderInput.mTranslatedInputName = GenerateMangledName(shaderType->mZilchName, inputName);
-  //
-  //  // Check for sampler settings overrides
-  //  forRange (ShaderAttribute& attribute, field->mAttributes.All())
-  //  {
-  //    if (mSamplerAttributeValues.ContainsKey(attribute.mAttributeName))
-  //      SamplerSettings::AddValue(shaderInput.mSamplerSettings, mSamplerAttributeValues[attribute.mAttributeName]);
-  //  }
-  //}
-  //else
-  //  shaderInput.mTranslatedInputName = GenerateFieldUniformName(field);
+  Any valueCopy = value;
+
+  // Ideally this should be using shader reflection.
+  // For now, this is just getting names exactly as they will appear in glsl so long as
+  // the ZilchShaderGenerator does not change its setup and naming schemes.
+  if (type == ShaderInputType::Texture)
+  {
+    shaderInput.mTranslatedInputName = GenerateSpirVPropertyName(inputName, fragmentName);
+  
+    // Check for sampler settings overrides.
+    forRange (ShaderIRAttribute& attribute, fieldMeta->mAttributes.All())
+    {
+      if (mSamplerAttributeValues.ContainsKey(attribute.mAttributeName))
+        SamplerSettings::AddValue(shaderInput.mSamplerSettings, mSamplerAttributeValues[attribute.mAttributeName]);
+    }
+  }
+  else
+  {
+    shaderInput.mTranslatedInputName = BuildString("Material.", GenerateSpirVPropertyName(inputName, fragmentName));
+    // SPIR-V doesn't allow boolean uniforms so we convert boolean inputs from Zilch to integers.
+    if (type == ShaderInputType::Bool)
+    {
+      shaderInput.mTranslatedInputName = BuildString(shaderInput.mTranslatedInputName, "_Boolean");
+      type = ShaderInputType::Int;
+      valueCopy = Any((int)value.Get<bool>());
+    }
+  }
   
   // If unsuccessful returned ShaderInput's type will be Invalid, otherwise it will be the passed in type
   shaderInput.mShaderInputType = type;
-  ShaderInputSetValue(shaderInput, value);
+  ShaderInputSetValue(shaderInput, valueCopy);
 
   return shaderInput;
 }
