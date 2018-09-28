@@ -52,7 +52,7 @@
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <DelayLoadDLLs>dbghelp.dll;</DelayLoadDLLs>
-      <AdditionalDependencies>Ws2_32.lib;Wldap32.lib;zlib.lib;libcurl.lib;Avrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Ws2_32.lib;Wldap32.lib;zlib.lib;libcurl.lib;Avrt.lib;opus.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -62,7 +62,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Link>
-      <AdditionalLibraryDirectories>$(ZERO_SOURCE)\External\Curl\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ZERO_SOURCE)\External\Curl\lib\Debug;$(ZERO_SOURCE)Systems\Sound;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
@@ -72,7 +72,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(ZERO_SOURCE)\External\Curl\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ZERO_SOURCE)\External\Curl\lib\Release;$(ZERO_SOURCE)Systems\Sound;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Production|Win32'">
@@ -80,7 +80,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(ZERO_SOURCE)\External\Curl\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ZERO_SOURCE)\External\Curl\lib\Release;$(ZERO_SOURCE)Systems\Sound;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
@@ -188,9 +188,6 @@
     </ProjectReference>
     <ProjectReference Include="$(ZERO_SOURCE)\Extensions\ZilchShaders\ZilchShaders.vcxproj">
       <Project>{34f0e1c6-c7fc-405f-9bf3-2cdbf6bbaaf7}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\ZeroLibraries\AudioEngine\AudioEngine.vcxproj">
-      <Project>{fa3c580e-8e06-466a-8eb1-34bb2efed4fa}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\..\ZeroLibraries\Zilch\Project\Zilch\Zilch.vcxproj">
       <Project>{f3973b0b-d2ab-4f7d-8e81-fe0dc7cde27d}</Project>

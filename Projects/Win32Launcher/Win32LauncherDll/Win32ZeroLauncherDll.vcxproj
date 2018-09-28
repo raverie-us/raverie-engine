@@ -45,7 +45,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ZERO_SOURCE)\External\GLEW\lib;$(ZERO_SOURCE)\External\freetype\lib;$(ZERO_SOURCE)\External\WinHid\lib;$(ZERO_SOURCE)\External\CEF\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Ws2_32.lib;Wldap32.lib;libcurl.lib;Avrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Ws2_32.lib;Wldap32.lib;libcurl.lib;Avrt.lib;opus.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <DelayLoadDLLs>dbghelp.dll;libcef.dll;</DelayLoadDLLs>
     </Link>
     <PostBuildEvent>
@@ -73,7 +73,7 @@ COPY /Y "$(OutDir)\..\ChromeSubProcess\ChromeSubProcess.exe" "$(OutDir)\ChromeSu
       <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(ZERO_SOURCE)\External\Curl\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ZERO_SOURCE)\External\Curl\lib\Debug;$(ZERO_SOURCE)Systems\Sound;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -83,7 +83,7 @@ COPY /Y "$(OutDir)\..\ChromeSubProcess\ChromeSubProcess.exe" "$(OutDir)\ChromeSu
       <IntrinsicFunctions>true</IntrinsicFunctions>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(ZERO_SOURCE)\External\Curl\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ZERO_SOURCE)\External\Curl\lib\Release;$(ZERO_SOURCE)Systems\Sound;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Production|Win32'">
@@ -93,7 +93,7 @@ COPY /Y "$(OutDir)\..\ChromeSubProcess\ChromeSubProcess.exe" "$(OutDir)\ChromeSu
       <IntrinsicFunctions>true</IntrinsicFunctions>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(ZERO_SOURCE)\External\Curl\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ZERO_SOURCE)\External\Curl\lib\Release;$(ZERO_SOURCE)Systems\Sound;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
@@ -227,9 +227,6 @@ COPY /Y "$(OutDir)\..\ChromeSubProcess\ChromeSubProcess.exe" "$(OutDir)\ChromeSu
     </ProjectReference>
     <ProjectReference Include="..\..\..\Systems\Startup\Startup.vcxproj">
       <Project>{d435e236-c996-4e7d-a4d6-dcdc20cc835d}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\ZeroLibraries\AudioEngine\AudioEngine.vcxproj">
-      <Project>{fa3c580e-8e06-466a-8eb1-34bb2efed4fa}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\..\ZeroLibraries\Zilch\Project\Zilch\Zilch.vcxproj">
       <Project>{f3973b0b-d2ab-4f7d-8e81-fe0dc7cde27d}</Project>
