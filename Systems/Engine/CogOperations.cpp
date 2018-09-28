@@ -214,6 +214,28 @@ Archetype* UploadToArchetype(OperationQueue* queue, Cog* cog, StringParam archet
   }
   else
   {
+    // If the cog already has a base archetype, then we need to be
+    // careful that we're not uploading to the base archetype itself
+    if (cog->mArchetype != nullptr)
+    {
+      if (Archetype* baseArchetype = cog->mArchetype->GetBaseArchetype())
+      {
+        // The archetype we're uploading to cannot be in the base chain
+        while (baseArchetype)
+        {
+          if (baseArchetype == archetype)
+          {
+            DoNotifyError("Archetype", "Cannot upload to an archetype whose base inherits from itself in the base chain");
+              delete op;
+            return nullptr;
+          }
+
+          // Iterate up the base inheritance chain
+          baseArchetype = baseArchetype->GetBaseArchetype();
+        }
+      }
+    }
+
     op->mNewArchetype = archetype;
 
     if (baseArchetype)
