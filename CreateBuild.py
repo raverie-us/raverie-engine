@@ -103,7 +103,8 @@ def VerifyPlatform(buildPlatform, system):
     return False
 
 def PlatformCompleted(buildPlatform):
-  global PlatformsBuilt += 1
+  global PlatformsBuilt
+  PlatformsBuilt += 1
   print "Completed " + buildPlatform
   
 def BuildWin32():
