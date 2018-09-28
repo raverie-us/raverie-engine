@@ -568,10 +568,21 @@ void GeometryContent::BuildContent(BuildOptions& options)
         options.Failure = true;
         options.Message = String::Format("Failed to process Geometry. File '%s', See above Geometry Processor Error.", Filename.c_str());
 
-        // then remove the content items that were added because importing failed
-        String metaFile = BuildString(fullFilePath, ".meta");
-        DeleteFile(metaFile);
-        DeleteFile(fullFilePath);
+        // Get our projects content folder
+        ProjectSettings* projectSettings = Z::gEngine->GetProjectSettings();
+        String contentDirectory = FilePath::Normalize(projectSettings->GetContentFolder());
+
+        // If importing the item failed delete the content item but only if that item
+        // is in the projects local content folder since it was copied and will fail
+        // to be processed each time the project is opened until the user deletes the files
+        // manually. Otherwise a core resource failed and should not be deleted.
+        String fileDirectory = FilePath::Normalize(FilePath::GetDirectoryPath(fullFilePath));
+        if (fileDirectory == contentDirectory)
+        {
+          String metaFile = BuildString(fullFilePath, ".meta");
+          DeleteFile(metaFile);
+          DeleteFile(fullFilePath);
+        }
         return;
       }
       // let editor side importing know we have to load/reload the scene graph or textures
