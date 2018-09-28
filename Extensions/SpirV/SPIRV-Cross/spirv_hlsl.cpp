@@ -784,7 +784,7 @@ void CompilerHLSL::emit_io_block(const SPIRVariable &var)
 void CompilerHLSL::emit_interface_block_in_struct(const SPIRVariable &var, unordered_set<uint32_t> &active_locations)
 {
 	auto &execution = get_entry_point();
-	auto &type = get<SPIRType>(var.basetype);
+	auto type = get<SPIRType>(var.basetype);
 
 	string binding;
 	bool use_location_number = true;
@@ -793,6 +793,8 @@ void CompilerHLSL::emit_interface_block_in_struct(const SPIRVariable &var, unord
 	{
 		binding = join(legacy ? "COLOR" : "SV_Target", get_decoration(var.self, DecorationLocation));
 		use_location_number = false;
+		if (legacy) // COLOR must be a four-component vector on legacy shader model targets (HLSL ERR_COLOR_4COMP)
+			type.vecsize = 4;
 	}
 
 	const auto get_vacant_location = [&]() -> uint32_t {
@@ -2374,7 +2376,19 @@ void CompilerHLSL::emit_hlsl_entry_point()
 				    !is_builtin_variable(var) && interface_variable_exists_in_entry_point(var.self))
 				{
 					auto name = to_name(var.self);
-					statement("stage_output.", name, " = ", name, ";");
+
+					if (legacy && execution.model == ExecutionModelFragment)
+					{
+						string output_filler;
+						for (uint32_t size = type.vecsize; size < 4; ++size)
+							output_filler += ", 0.0";
+
+						statement("stage_output.", name, " = float4(", name, output_filler, ");");
+					}
+					else
+					{
+						statement("stage_output.", name, " = ", name, ";");
+					}
 				}
 			}
 		}
@@ -3527,6 +3541,8 @@ void CompilerHLSL::emit_access_chain(const Instruction &instruction)
 			bool need_transpose;
 			base = access_chain(ops[2], &ops[3], to_plain_buffer_length, get<SPIRType>(ops[0]), &need_transpose);
 		}
+		else if (chain)
+			base = chain->base;
 		else
 			base = to_expression(ops[2]);
 
@@ -3575,10 +3591,23 @@ void CompilerHLSL::emit_access_chain(const Instruction &instruction)
 void CompilerHLSL::emit_atomic(const uint32_t *ops, uint32_t length, spv::Op op)
 {
 	const char *atomic_op = nullptr;
-	auto value_expr = to_expression(ops[op == OpAtomicCompareExchange ? 6 : 5]);
+
+	string value_expr;
+	if (op != OpAtomicIDecrement && op != OpAtomicIIncrement)
+		value_expr = to_expression(ops[op == OpAtomicCompareExchange ? 6 : 5]);
 
 	switch (op)
 	{
+	case OpAtomicIIncrement:
+		atomic_op = "InterlockedAdd";
+		value_expr = "1";
+		break;
+
+	case OpAtomicIDecrement:
+		atomic_op = "InterlockedAdd";
+		value_expr = "-1";
+		break;
+
 	case OpAtomicISub:
 		atomic_op = "InterlockedAdd";
 		value_expr = join("-", enclose_expression(value_expr));
@@ -3624,9 +3653,6 @@ void CompilerHLSL::emit_atomic(const uint32_t *ops, uint32_t length, spv::Op op)
 	default:
 		SPIRV_CROSS_THROW("Unknown atomic opcode.");
 	}
-
-	if (length < 6)
-		SPIRV_CROSS_THROW("Not enough data for opcode.");
 
 	uint32_t result_type = ops[0];
 	uint32_t id = ops[1];
@@ -4285,6 +4311,8 @@ void CompilerHLSL::emit_instruction(const Instruction &instruction)
 	case OpAtomicOr:
 	case OpAtomicXor:
 	case OpAtomicIAdd:
+	case OpAtomicIIncrement:
+	case OpAtomicIDecrement:
 	{
 		emit_atomic(ops, instruction.length, opcode);
 		break;
