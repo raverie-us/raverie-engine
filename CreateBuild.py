@@ -83,13 +83,8 @@ def RunEmmake(makeDirectory):
   if (os.path.isfile("C:/emsdk/emscripten/" + EmscriptenVersion + "/emmake.bat")):
     PrintFlush("Check: 'emmake.bat' exists")
   makeDirectory = os.path.abspath(makeDirectory)
-
-  makeName = "make"
-  if (os.path.isfile("C:/MinGW/bin/mingw32-make.exe")):
-    makeName = "mingw32-make"
-    PrintFlush("Using mingw32-make")
-
-  os.system("emmake " + makeName + " -j --directory=\"" + makeDirectory + "\"")
+  
+  os.system("emmake \"C:/MinGW/bin/mingw32-make.exe\" -j --directory=\"" + makeDirectory + "\"")
   PrintFlush("Completed RunEmmake " + makeDirectory)
 
 def GetZerobuildPath(buildPlatform):
