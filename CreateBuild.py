@@ -1,6 +1,7 @@
 import atexit
 import os
 import platform
+import psutil
 import re
 import sys
 import zipfile
@@ -83,8 +84,11 @@ def RunEmmake(makeDirectory):
   if (os.path.isfile("C:/emsdk/emscripten/" + EmscriptenVersion + "/emmake.bat")):
     PrintFlush("Check: 'emmake.bat' exists")
   makeDirectory = os.path.abspath(makeDirectory)
-  
-  os.system("emmake \"C:/MinGW/bin/mingw32-make.exe\" -j --directory=\"" + makeDirectory + "\"")
+
+  # Use half our CPUs for building. This allows the computer to continue running, and saves on memory.
+  cores = max(psutil.cpu_count() / 2, 1)
+
+  os.system("emmake \"C:/MinGW/bin/mingw32-make.exe\" -j " + cores + " --directory=\"" + makeDirectory + "\"")
   PrintFlush("Completed RunEmmake " + makeDirectory)
 
 def GetZerobuildPath(buildPlatform):
