@@ -1,8 +1,9 @@
+import atexit
 import os
-import zipfile
-import re
 import platform
+import re
 import sys
+import zipfile
 
 BuildPlatformWin32 = "Win32"
 BuildPlatformEmscripten32 = "Emscripten32"
@@ -68,10 +69,14 @@ def RunCmake(cmakeCmdFile):
 
 def RunMsbuild(slnFile):
   slnFile = os.path.abspath(slnFile)
-  os.system("C:/Progra~2/MSBuild/14.0/Bin/amd64/msbuild \"" + slnFile + "\" /verbosity:minimal /m:8 /t:Build /p:Configuration=Release")
+  os.system("C:/Progra~2/MSBuild/14.0/Bin/amd64/msbuild /verbosity:quiet /maxcpucount:8 /target:Build /property:Configuration=Release /consoleloggerparameters:ErrorsOnly \"" + slnFile + "\"")
   print "Completed RunMsbuild " + slnFile
 
 def RunEmmake(makeDirectory):
+  if (os.path.isfile("C:/emsdk/emscripten/" + EmscriptenVersion + "/emmake")):
+    print "Check: 'emmake' exists"
+  if (os.path.isfile("C:/emsdk/emscripten/" + EmscriptenVersion + "/emmake.bat")):
+    print "Check: 'emmake.bat' exists"
   makeDirectory = os.path.abspath(makeDirectory)
   os.system("emmake mingw32-make -j --directory=\"" + makeDirectory + "\"")
   print "Completed RunEmmake " + makeDirectory
@@ -159,11 +164,22 @@ def BuildEmscripten32():
     os.environ["JAVA_HOME"                  ] = "C:/emsdk/java/8.152_64bit"
     os.environ["EMSCRIPTEN"                 ] = "C:/emsdk/emscripten/" + EmscriptenVersion
   
+  # Check for sh.exe (it cannot be allowed to exist in the PATH).
+  # The correct logic here would be to parse all directories in the PATH and then walk through all files in each directory, looking for sh.exe.
+  # For now, since we're targing the build server (AppVeyor) we know where the instance of sh.exe is within the path.
+  shPath = "C:/Program Files/Git/usr/bin/sh.exe"
+  if (os.path.isfile(shPath)):
+    backupPath = shPath + ".bak"
+    os.rename(shPath, backupPath)
+    def RenameShBack():
+      os.rename(backupPath, shPath)
+    atexit.register(RenameShBack)
+
   workingDir = os.getcwd()
   
   # Install names such as sdk-1.38.12-64bit
   installName = "sdk-" + EmscriptenVersion + "-64bit"
-  
+
   os.chdir(emsdkDir)
   os.system("git pull")
   os.system("emsdk update-tags")
