@@ -1,7 +1,7 @@
 import atexit
+import multiprocessing
 import os
 import platform
-import psutil
 import re
 import sys
 import zipfile
@@ -86,7 +86,7 @@ def RunEmmake(makeDirectory):
   makeDirectory = os.path.abspath(makeDirectory)
 
   # Use half our CPUs for building. This allows the computer to continue running, and saves on memory.
-  cores = max(psutil.cpu_count() / 2, 1)
+  cores = max(multiprocessing.cpu_count() / 2, 1)
 
   os.system("emmake \"C:/MinGW/bin/mingw32-make.exe\" -j " + cores + " --directory=\"" + makeDirectory + "\"")
   PrintFlush("Completed RunEmmake " + makeDirectory)
