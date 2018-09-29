@@ -7,6 +7,9 @@ import sys
 BuildPlatformWin32 = "Win32"
 BuildPlatformEmscripten32 = "Emscripten32"
 
+# Current version of the emscripten SDK that we build with.
+EmscriptenVersion = "1.38.12"
+
 PlatformsBuilt = 0
 
 # Easily zip up a directory, but the don't include the full path in the zip.
@@ -65,7 +68,7 @@ def RunCmake(cmakeCmdFile):
 
 def RunMsbuild(slnFile):
   slnFile = os.path.abspath(slnFile)
-  os.system("C:/Progra~2/MSBuild/14.0/Bin/amd64/msbuild \"" + slnFile + "\" /m:8 /t:Build /p:Configuration=Release")
+  os.system("C:/Progra~2/MSBuild/14.0/Bin/amd64/msbuild \"" + slnFile + "\" /verbosity:minimal /m:8 /t:Build /p:Configuration=Release")
   print "Completed RunMsbuild " + slnFile
 
 def RunEmmake(makeDirectory):
@@ -124,12 +127,6 @@ def BuildEmscripten32():
   if (not VerifyPlatform(BuildPlatformEmscripten32, "Windows")):
     return
   
-  # Current version of the emscripten SDK that we build with.
-  emscriptenVersion = "1.38.12"
-  
-  # Install names such as sdk-1.38.12-64bit
-  installName = "sdk-" + emscriptenVersion + "-64bit"
-  
   # Example: C:\emsdk\emscripten\1.38.12
   emscriptenDir = os.environ.get('EMSCRIPTEN')
   emsdkDir = None
@@ -137,14 +134,35 @@ def BuildEmscripten32():
   # The emsdk directory is two directories above the emscripten directory.
   if (emscriptenDir):
     emsdkDir = os.path.join(emscriptenDir, "..", "..")
-  
-  if (not emsdkDir):
+  else:
     emsdkDir = "C:/emsdk"
-    emscriptenDir = os.path.join(emsdkDir, "emscripten", emscriptenVersion)
+    emscriptenDir = os.path.join(emsdkDir, "emscripten", EmscriptenVersion)
     # Git will create the directory for us.
     os.system("git clone https://github.com/juj/emsdk.git C:/emsdk")
+    
+    print "Setting Emscripten PATH variables"
+    os.environ["PATH"] += os.pathsep + "C:/emsdk"
+    os.environ["PATH"] += os.pathsep + "C:/emsdk/clang/e" + EmscriptenVersion + "_64bit"
+    os.environ["PATH"] += os.pathsep + "C:/emsdk/node/8.9.1_64bit/bin"
+    os.environ["PATH"] += os.pathsep + "C:/emsdk/python/2.7.13.1_64bit/python-2.7.13.amd64"
+    os.environ["PATH"] += os.pathsep + "C:/emsdk/java/8.152_64bit/bin"
+    os.environ["PATH"] += os.pathsep + "C:/emsdk/emscripten/" + EmscriptenVersion
+    
+    print "Setting Emscripten environment variables"
+    os.environ["EMSDK"                      ] = "C:/emsdk"
+    os.environ["EM_CONFIG"                  ] = "C:/Users/appveyor/.emscripten"
+    os.environ["LLVM_ROOT"                  ] = "C:/emsdk/clang/e" + EmscriptenVersion + "_64bit"
+    os.environ["EMSCRIPTEN_NATIVE_OPTIMIZER"] = "C:/emsdk/clang/e" + EmscriptenVersion + "_64bit/optimizer.exe"
+    os.environ["BINARYEN_ROOT"              ] = "C:/emsdk/clang/e" + EmscriptenVersion + "_64bit/binaryen"
+    os.environ["EMSDK_NODE"                 ] = "C:/emsdk/node/8.9.1_64bit/bin/node.exe"
+    os.environ["EMSDK_PYTHON"               ] = "C:/emsdk/python/2.7.13.1_64bit/python-2.7.13.amd64/python.exe"
+    os.environ["JAVA_HOME"                  ] = "C:/emsdk/java/8.152_64bit"
+    os.environ["EMSCRIPTEN"                 ] = "C:/emsdk/emscripten/" + EmscriptenVersion
   
   workingDir = os.getcwd()
+  
+  # Install names such as sdk-1.38.12-64bit
+  installName = "sdk-" + EmscriptenVersion + "-64bit"
   
   os.chdir(emsdkDir)
   os.system("git pull")
