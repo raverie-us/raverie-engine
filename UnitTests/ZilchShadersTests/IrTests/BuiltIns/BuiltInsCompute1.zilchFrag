@@ -1,0 +1,18 @@
+// All built-ins
+[Compute][UnitTest]
+struct BuiltInsCompute1
+{
+  // Inputs
+  [HardwareBuiltInInput] var GlobalInvocationId : Integer3;
+  [HardwareBuiltInInput] var LocalInvocationId : Integer3;
+  [HardwareBuiltInInput] var LocalInvocationIndex : Integer;
+  [HardwareBuiltInInput] var NumWorkgroups : Integer3;
+  [HardwareBuiltInInput] var WorkgroupId : Integer3;
+  [HardwareBuiltInInput] var WorkgroupSize : Integer3;
+  
+  [EntryPoint]
+  function Main()
+  {
+    
+  }
+}

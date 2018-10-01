@@ -1,0 +1,9 @@
+// Bad parameter name
+[UnitTest][Compute(localSizeW : 3)]
+struct BadCompute1
+{
+  [EntryPoint]
+  function Main()
+  {
+  }
+}
