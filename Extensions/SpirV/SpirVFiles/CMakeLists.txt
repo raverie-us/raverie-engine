@@ -136,6 +136,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
             -W3
             -wd"4302" 
             -wd"4305"
+            -wd"4800"
             -Gd
             -EHsc
             -Gm
