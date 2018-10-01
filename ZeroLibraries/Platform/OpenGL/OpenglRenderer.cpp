@@ -63,6 +63,7 @@ namespace
   const Zero::String cZeroPerspectiveToApiPerspective("TransformData.ZeroPerspectiveToApiPerspective");
 
   const Zero::String cSpriteSource("SpriteSource_SpriteSourceColor");
+  const Zero::String cSpriteSourceCubePreview("SpriteSource_TextureCubePreview");
 }
 
 namespace Zero
@@ -1939,7 +1940,10 @@ void OpenglRenderer::DrawStreamed(ViewNode& viewNode, FrameNode& frameNode)
     if (textureId != 0)
     {
       BindTexture(textureData->mType, mNextTextureSlot, textureId, mDriverSupport.mSamplerObjects);
-      SetShaderParameter(ShaderInputType::Texture, cSpriteSource, &mNextTextureSlot);
+      if (textureData->mType == TextureType::TextureCube)
+        SetShaderParameter(ShaderInputType::Texture, cSpriteSourceCubePreview, &mNextTextureSlot);
+      else
+        SetShaderParameter(ShaderInputType::Texture, cSpriteSource, &mNextTextureSlot);
       ++mNextTextureSlot;
     }
   }

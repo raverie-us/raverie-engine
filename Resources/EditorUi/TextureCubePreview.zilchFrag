@@ -34,21 +34,15 @@ struct TextureCubePreview
     
     // Rotation around the Y
     var yRotate = this.SkyboxPreviewInput.W * 0.125 + -this.SkyboxPreviewInput.X * 0.005;
-    var yRotateMatrix = Real4x4(0);
-    yRotateMatrix.M00 =  Math.Cos(yRotate);
-    yRotateMatrix.M20 =  Math.Sin(yRotate);
-    yRotateMatrix.M02 = -Math.Sin(yRotate);
-    yRotateMatrix.M22 =  Math.Cos(yRotate);
-    yRotateMatrix.M11 =  1;
+    var ySin = Math.Sin(yRotate);
+    var yCos = Math.Cos(yRotate);
+    var yRotateMatrix = Real4x4(yCos, 0, -ySin, 0, 0, 1, 0, 0, ySin, 0, yCos, 0, 0, 0, 0, 1);
     
     // Rotation around the X
     var xRotate = -this.SkyboxPreviewInput.Y * 0.005;
-    var xRotateMatrix = Real4x4(0);
-    xRotateMatrix.M00 =  1;
-    xRotateMatrix.M11 =  Math.Cos(xRotate);
-    xRotateMatrix.M12 =  Math.Sin(xRotate);
-    xRotateMatrix.M21 = -Math.Sin(xRotate);
-    xRotateMatrix.M22 =  Math.Cos(xRotate);
+    var xSin = Math.Sin(xRotate);
+    var xCos = Math.Cos(xRotate);
+    var xRotateMatrix = Real4x4(1, 0, 0, 0, 0, xCos, xSin, 0, 0, -xSin, xCos, 0, 0, 0, 0, 1);
     
     // Apply the final transformation to the sample direction
     var finalRotation = Math.Multiply(yRotateMatrix, xRotateMatrix);
