@@ -1281,10 +1281,11 @@ string CompilerGLSL::layout_for_variable(const SPIRVariable &var)
 			attr.push_back(join("set = ", dec.set));
 	}
 
-  // ZERO EDIT force legacy until renderer implements uniform buffers.
 	// GL 3.0/GLSL 1.30 is not considered legacy, but it doesn't have UBOs ...
-	//bool can_use_buffer_blocks = (options.es && options.version >= 300) || (!options.es && options.version >= 140);
-	bool can_use_buffer_blocks = false;
+	bool can_use_buffer_blocks = (options.es && options.version >= 300) || (!options.es && options.version >= 140);
+	// ZERO EDIT force legacy until renderer implements uniform buffers.
+	if(options.force_legacy)
+		can_use_buffer_blocks = false;
 
 	bool can_use_binding;
 	if (options.es)
@@ -1442,14 +1443,19 @@ void CompilerGLSL::emit_push_constant_block_glsl(const SPIRVariable &var)
 
 void CompilerGLSL::emit_buffer_block(const SPIRVariable &var)
 {
-  // ZERO EDIT force legacy until renderer implements uniform buffers.
-	//if (flattened_buffer_blocks.count(var.self))
-	//	emit_buffer_block_flattened(var);
-	//else if (is_legacy() || (!options.es && options.version == 130))
-	//	emit_buffer_block_legacy(var);
-	//else
-	//	emit_buffer_block_native(var);
-  emit_buffer_block_legacy(var);
+	// ZERO EDIT force legacy until renderer implements uniform buffers.
+	if(options.force_legacy)
+	{
+		emit_buffer_block_legacy(var);
+		return;
+	}
+
+	if (flattened_buffer_blocks.count(var.self))
+		emit_buffer_block_flattened(var);
+	else if (is_legacy() || (!options.es && options.version == 130))
+		emit_buffer_block_legacy(var);
+	else
+		emit_buffer_block_native(var);
 }
 
 void CompilerGLSL::emit_buffer_block_legacy(const SPIRVariable &var)

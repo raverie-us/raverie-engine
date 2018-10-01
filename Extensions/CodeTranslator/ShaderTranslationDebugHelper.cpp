@@ -214,7 +214,7 @@ SearchView* ShaderTranslationDebugHelper::CreateFragmentSearchView(StringParam a
 
 void ShaderTranslationDebugHelper::CreateGlslShaderLanguageEntry(int version, bool es)
 {
-  ZilchShaderGlslBackend* glslBackend = new ZilchShaderGlslBackend();
+  ZeroZilchShaderGlslBackend* glslBackend = new ZeroZilchShaderGlslBackend();
   glslBackend->mTargetVersion = version;
   glslBackend->mTargetGlslEs = es;
 

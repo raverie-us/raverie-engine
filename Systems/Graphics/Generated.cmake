@@ -103,6 +103,8 @@ target_sources(Graphics
     ${CMAKE_CURRENT_LIST_DIR}/UtilityStructures.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ViewportInterface.hpp
     ${CMAKE_CURRENT_LIST_DIR}/VisibilityFlag.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroZilchShaderGlslBackend.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroZilchShaderGlslBackend.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchFragment.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchFragment.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderGenerator.cpp

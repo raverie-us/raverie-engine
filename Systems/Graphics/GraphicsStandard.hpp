@@ -57,6 +57,7 @@ public:
 #include "ViewportInterface.hpp"
 #include "VisibilityFlag.hpp"
 #include "ZilchFragment.hpp"
+#include "ZeroZilchShaderGlslBackend.hpp"
 #include "ZilchShaderGenerator.hpp"
 
 // Some Dependencies

@@ -553,7 +553,7 @@ bool ZilchShaderGenerator::BuildShaders(ShaderSet& shaders, HashMap<String, Uniq
   ShaderPipelineDescription pipelineDescription;
   pipelineDescription.mToolPasses.PushBack(new SpirVSpecializationConstantPass());
   pipelineDescription.mToolPasses.PushBack(new SpirVOptimizerPass());
-  ZilchShaderGlslBackend* backend = new ZilchShaderGlslBackend();
+  ZeroZilchShaderGlslBackend* backend = new ZeroZilchShaderGlslBackend();
   pipelineDescription.mBackend = backend;
 
 #ifdef PLATFORM_EMSCRIPTEN
