@@ -32,12 +32,14 @@ public:
 class ShaderLanguageEntry
 {
 public:
-  ShaderLanguageEntry() {};
-  //ShaderLanguageEntry(BaseShaderTranslator* translator);
+  ShaderLanguageEntry();
+
   String ToString(bool shortFormat = false) const;
 
-  // The translator to use. This also signifies the target translation language name.
-  //BaseShaderTranslatorRef mTranslator;
+  String mName;
+  
+  typedef Zilch::Ref<ZilchShaderIRBackend> BackendPassRef;
+  BackendPassRef mBackend;
 };
 
 //-------------------------------------------------------------------ShaderTranslationEntry
@@ -64,6 +66,7 @@ public:
 class ShaderTranslationDebugHelper : public Composite
 {
 public:
+  typedef Zilch::Ref<ShaderTranslationPassResult> TranslationPassResultRef;
   typedef ShaderTranslationDebugHelper ZilchSelf;
   ShaderTranslationDebugHelper(Composite* parent);
 
@@ -72,6 +75,8 @@ private:
   SearchView* CreateSearchView(SearchProvider* searchProvider, Array<String>& hiddenTags);
   // Helper to create a search view for filtering fragments by an attribute
   SearchView* CreateFragmentSearchView(StringParam attribute);
+
+  void CreateGlslShaderLanguageEntry(int version, bool es);
 
   void OnCoreVertexClicked(Event* e);
   void OnCoreVertexSelected(SearchViewEvent* e);
@@ -86,12 +91,17 @@ private:
   void OnRunTranslation(Event* e);
   void OnScriptDisplayChanged(Event* e);
 
+  ZilchShaderIRLibraryRef BuildShaderLibrary(ZilchShaderGenerator& generator, ZilchShaderIRCompositor::ShaderDefinition& shaderDef);
+  bool CompilePipeline(ZilchShaderIRType* shaderType, ShaderPipelineDescription& pipeline,
+    Array<TranslationPassResultRef>& pipelineResults, Array<TranslationPassResultRef>& debugPipelineResults);
+
   TextBox* mCoreVertexTextBox;
   TextBox* mMaterialTextBox;
   TextBox* mRenderPassTextBox;
   ComboBox* mTranslationModeComboBox;
   ScriptEditor* mScriptEditor;
   ListBox* mAvailableScriptsListBox;
+  TextCheckBox* mOptimizerCheckBox;
   FloatingSearchView* mActiveSearch;
   ZilchShaderGenerator* mShaderGenerator;
 
@@ -101,6 +111,8 @@ private:
   LanguageArray mLanguages;
   // The results from translation
   TranslationEntryArray mTranslationEntries;
+
+  ZilchShaderIRProject mShaderProject;
   
   // Data sources needed for binding
   ContainerSource<LanguageArray> mLanguagesDataSource;

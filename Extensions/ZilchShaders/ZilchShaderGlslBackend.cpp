@@ -9,16 +9,92 @@
 namespace Zero
 {
 
-struct GlslBackendInternalData
+//-------------------------------------------------------------------GlslBackendInternalData
+GlslBackendInternalData::GlslBackendInternalData()
 {
-  HashSet<int> mImageBindings;
-  HashSet<String> mGeneratedSampledImage;
-  spirv_cross::CompilerGLSL* mCompiler;
-  spirv_cross::ShaderResources* mResources;
-  ShaderTranslationPassResult* mOutputResult;
-};
+  mCompiler = nullptr;
+  mResources = nullptr;
+  mOutputResult = nullptr;
+}
 
-void FixInterfaceBlockNames(GlslBackendInternalData& internalData)
+//-------------------------------------------------------------------ZilchShaderGlslBackend
+ZilchShaderGlslBackend::ZilchShaderGlslBackend()
+{
+  mTargetVersion = 150;
+  mTargetGlslEs = false;
+}
+
+String ZilchShaderGlslBackend::GetExtension()
+{
+  return "glsl";
+}
+
+bool ZilchShaderGlslBackend::RunTranslationPass(ShaderTranslationPassResult& inputData, ShaderTranslationPassResult& outputData)
+{
+  mErrorLog.Clear();
+
+  ShaderByteStream& inputByteStream = inputData.mByteStream;
+  uint32_t* data = (uint32_t*)inputByteStream.Data();
+  uint32 wordCount = inputByteStream.WordCount();
+
+  spirv_cross::CompilerGLSL compiler(data, wordCount);
+  // Set options
+  spirv_cross::CompilerGLSL::Options opts = compiler.get_common_options();
+  opts.version = mTargetVersion;
+  //mTargetGlslEs = true;
+  opts.es = mTargetGlslEs;
+  //opts.version = 300;
+  compiler.set_common_options(opts);
+
+  spirv_cross::ShaderResources resources = compiler.get_shader_resources();
+
+  // Create a helper struct to pass a lot of data around
+  GlslBackendInternalData internalData;
+  internalData.mCompiler = &compiler;
+  internalData.mResources = &resources;
+  internalData.mOutputResult = &outputData;
+
+  // Deal with split image samplers by combining them
+  compiler.build_dummy_sampler_for_combined_images();
+  compiler.build_combined_image_samplers();
+
+  // Deal with glsl matching interface blocks by name
+  FixInterfaceBlockNames(internalData);
+  // Find what binding ids we use for sampled images
+  FindUsedSampledImageBindings(internalData);
+  // Combined sampled images (via the backend) don't get binding ids.
+  // Assign ids based upon what is available.
+  HandleCompiledSampledImages(internalData);
+
+  // Fetch the resources again (since we modified them)
+  resources = compiler.get_shader_resources();
+  internalData.mResources = &resources;
+  // Extract reflection data now that we've done all modifications
+  ExtractResourceReflectionData(internalData);
+  outputData.mReflectionData.mShaderTypeName = inputData.mReflectionData.mShaderTypeName;
+
+  bool success = true;
+  try
+  {
+    std::string source = compiler.compile();
+    outputData.mByteStream.Load(source.c_str(), source.size());
+  }
+  catch(const std::exception& e)
+  {
+    success = false;
+    mErrorLog = e.what();
+  }
+
+  return success;
+}
+
+String ZilchShaderGlslBackend::GetErrorLog()
+{
+  return mErrorLog;
+}
+
+
+void ZilchShaderGlslBackend::FixInterfaceBlockNames(GlslBackendInternalData& internalData)
 {
   spirv_cross::CompilerGLSL* compiler = internalData.mCompiler;
   spirv_cross::ShaderResources* resources = internalData.mResources;
@@ -39,7 +115,7 @@ void FixInterfaceBlockNames(GlslBackendInternalData& internalData)
   }
 }
 
-void FindUsedSampledImageBindings(GlslBackendInternalData& internalData)
+void ZilchShaderGlslBackend::FindUsedSampledImageBindings(GlslBackendInternalData& internalData)
 {
   spirv_cross::CompilerGLSL* compiler = internalData.mCompiler;
   spirv_cross::ShaderResources* resources = internalData.mResources;
@@ -62,7 +138,7 @@ void FindUsedSampledImageBindings(GlslBackendInternalData& internalData)
   }
 }
 
-void HandleCompiledSampledImages(GlslBackendInternalData& internalData)
+void ZilchShaderGlslBackend::HandleCompiledSampledImages(GlslBackendInternalData& internalData)
 {
   spirv_cross::CompilerGLSL* compiler = internalData.mCompiler;
   spirv_cross::ShaderResources* resources = internalData.mResources;
@@ -102,7 +178,7 @@ void HandleCompiledSampledImages(GlslBackendInternalData& internalData)
 // Any type that isn't a struct doesn't have a name returned from spirv_cross.
 // To generate this name (mostly for debug) we have to make a large conditional
 // table to map this to zero's names.
-void PopulateTypeName(GlslBackendInternalData& internalData, spirv_cross::SPIRType& spirVType, ShaderResourceReflectionData& reflectionData)
+void ZilchShaderGlslBackend::PopulateTypeName(GlslBackendInternalData& internalData, spirv_cross::SPIRType& spirVType, ShaderResourceReflectionData& reflectionData)
 {
   spirv_cross::CompilerGLSL* compiler = internalData.mCompiler;
 
@@ -169,7 +245,7 @@ void PopulateTypeName(GlslBackendInternalData& internalData, spirv_cross::SPIRTy
   // @JoshD: Deal with arrays later?
 }
 
-void PopulateMemberTypeInfo(GlslBackendInternalData& internalData, spirv_cross::SPIRType& parentType, int memberIndex, ShaderResourceReflectionData& reflectionData, bool isInterfaceType)
+void ZilchShaderGlslBackend::PopulateMemberTypeInfo(GlslBackendInternalData& internalData, spirv_cross::SPIRType& parentType, int memberIndex, ShaderResourceReflectionData& reflectionData, bool isInterfaceType)
 {
   spirv_cross::CompilerGLSL* compiler = internalData.mCompiler;
 
@@ -195,7 +271,7 @@ void PopulateMemberTypeInfo(GlslBackendInternalData& internalData, spirv_cross::
     reflectionData.mOffsetInBytes = compiler->type_struct_member_offset(parentType, memberIndex);
 }
 
-void PopulateTypeInfo(GlslBackendInternalData& internalData, spirv_cross::SPIRType& spirvType, ShaderResourceReflectionData& reflectionData, bool isInterfaceType)
+void ZilchShaderGlslBackend::PopulateTypeInfo(GlslBackendInternalData& internalData, spirv_cross::SPIRType& spirvType, ShaderResourceReflectionData& reflectionData, bool isInterfaceType)
 {
   spirv_cross::CompilerGLSL* compiler = internalData.mCompiler;
   PopulateTypeName(internalData, spirvType, reflectionData);
@@ -212,7 +288,7 @@ void PopulateTypeInfo(GlslBackendInternalData& internalData, spirv_cross::SPIRTy
     reflectionData.mSizeInBytes = compiler->get_declared_struct_size(spirvType);
 }
 
-void ExtractResourceReflection(GlslBackendInternalData& internalData, spirv_cross::Resource& resource, Array<ShaderStageResource>& results, bool isInterfaceType)
+void ZilchShaderGlslBackend::ExtractResourceReflection(GlslBackendInternalData& internalData, spirv_cross::Resource& resource, Array<ShaderStageResource>& results, bool isInterfaceType)
 {
   spirv_cross::CompilerGLSL* compiler = internalData.mCompiler;
   spirv_cross::ShaderResources* resources = internalData.mResources;
@@ -260,14 +336,14 @@ void ExtractResourceReflection(GlslBackendInternalData& internalData, spirv_cros
   }
 }
 
-void ExtractResourcesReflection(GlslBackendInternalData& internalData, std::vector<spirv_cross::Resource>& resources, Array<ShaderStageResource>& results, bool isInterfaceType)
+void ZilchShaderGlslBackend::ExtractResourcesReflection(GlslBackendInternalData& internalData, std::vector<spirv_cross::Resource>& resources, Array<ShaderStageResource>& results, bool isInterfaceType)
 {
   // Extract each resource independently
   for(size_t i = 0; i < resources.size(); ++i)
     ExtractResourceReflection(internalData, resources[i], results, isInterfaceType);
 }
 
-void ExtractResourceReflectionData(GlslBackendInternalData& internalData)
+void ZilchShaderGlslBackend::ExtractResourceReflectionData(GlslBackendInternalData& internalData)
 {
   ShaderStageInterfaceReflection& stageReflection = internalData.mOutputResult->mReflectionData;
   spirv_cross::ShaderResources* resources = internalData.mResources;
@@ -280,7 +356,7 @@ void ExtractResourceReflectionData(GlslBackendInternalData& internalData)
   // aren't backed in the same way by physical memory.
   ExtractResourcesReflection(internalData, resources->stage_inputs, stageReflection.mStageInputs, true);
   ExtractResourcesReflection(internalData, resources->stage_outputs, stageReflection.mStageOutputs, true);
-  
+
   // We already dealt with the Image/Sampler -> SampledImage remappings when
   // extracting resource info. We didn't however deal with non-remapped sampled images.
   // To do this simply walk over all un-visited sampled images and mark that they mapped to themselves.
@@ -292,126 +368,6 @@ void ExtractResourceReflectionData(GlslBackendInternalData& internalData)
     stageReflection.mSampledImageRemappings[name].mSampledImageRemappings.PushBack(name);
     internalData.mGeneratedSampledImage.Insert(name);
   }
-}
-
-//-------------------------------------------------------------------ZilchShaderGlslBackend
-ZilchShaderGlslBackend::ZilchShaderGlslBackend()
-{
-  mTargetVersion = 150;
-  mTargetGlslEs = false;
-}
-
-String ZilchShaderGlslBackend::GetExtension()
-{
-  return "glsl";
-}
-
-bool ZilchShaderGlslBackend::RunTranslationPass(ShaderTranslationPassResult& inputData, ShaderTranslationPassResult& outputData)
-{
-  mErrorLog.Clear();
-
-  ShaderByteStream& inputByteStream = inputData.mByteStream;
-  uint32_t* data = (uint32_t*)inputByteStream.Data();
-  uint32 wordCount = inputByteStream.WordCount();
-
-  spirv_cross::CompilerGLSL compiler(data, wordCount);
-  // Set options
-  spirv_cross::CompilerGLSL::Options opts = compiler.get_common_options();
-  opts.version = mTargetVersion;
-  opts.es = mTargetGlslEs;
-  compiler.set_common_options(opts);
-
-  spirv_cross::ShaderResources resources = compiler.get_shader_resources();
-
-  // Forcing buffer typenames to match between different stages so that the uniform instance names can be the same.
-  for(auto &ubo : resources.uniform_buffers)
-  {
-    int id = compiler.get_decoration(ubo.id, spv::DecorationBinding);
-    String name = BuildString("Buffer", ToString(id));
-    
-    compiler.set_name(ubo.base_type_id, name.c_str());
-  }
-
-#ifdef PLATFORM_EMSCRIPTEN
-  // gles output is going to flatten input/output blocks and prepend the block name to each member.
-  // Forcing block typenames to match.
-  for(auto stageInput : resources.stage_inputs)
-  {
-    int isBlock = compiler.get_decoration(stageInput.base_type_id, spv::DecorationBlock);
-    if(isBlock == 1)
-    {
-      std::string name = "block";
-      compiler.set_name(stageInput.id, name);
-    }
-  }
-  for(auto stageOutput : resources.stage_outputs)
-  {
-    int isBlock = compiler.get_decoration(stageOutput.base_type_id, spv::DecorationBlock);
-    if(isBlock == 1)
-    {
-      std::string name = "block";
-      compiler.set_name(stageOutput.id, name);
-    }
-  }
-
-  // When target outputs get flattened the layout decorations do not get copied.
-  // gles requires the layout decorations when there are multiple output targets.
-  auto entryPoints = compiler.get_entry_points_and_stages();
-  auto entryPoint = entryPoints[0];
-  if(entryPoint.execution_model == spv::ExecutionModel::ExecutionModelFragment)
-  {
-    for(auto stageOutput : resources.stage_outputs)
-    {
-      auto resourceType = compiler.get_type(stageOutput.base_type_id);
-      for(size_t i = 0; i < resourceType.member_types.size(); ++i)
-        compiler.set_member_decoration(stageOutput.base_type_id, i, spv::DecorationLocation, i);
-    }
-  }
-#endif
-
-  // Create a helper struct to pass a lot of data around
-  GlslBackendInternalData internalData;
-  internalData.mCompiler = &compiler;
-  internalData.mResources = &resources;
-  internalData.mOutputResult = &outputData;
-
-  // Deal with split image samplers by combining them
-  compiler.build_dummy_sampler_for_combined_images();
-  compiler.build_combined_image_samplers();
-
-  // Deal with glsl matching interface blocks by name
-  FixInterfaceBlockNames(internalData);
-  // Find what binding ids we use for sampled images
-  FindUsedSampledImageBindings(internalData);
-  // Combined sampled images (via the backend) don't get binding ids.
-  // Assign ids based upon what is available.
-  HandleCompiledSampledImages(internalData);
-
-  // Fetch the resources again (since we modified them)
-  resources = compiler.get_shader_resources();
-  internalData.mResources = &resources;
-  // Extract reflection data now that we've done all modifications
-  ExtractResourceReflectionData(internalData);
-  outputData.mReflectionData.mShaderTypeName = inputData.mReflectionData.mShaderTypeName;
-
-  bool success = true;
-  try
-  {
-    std::string source = compiler.compile();
-    outputData.mByteStream.Load(source.c_str(), source.size());
-  }
-  catch(const std::exception& e)
-  {
-    success = false;
-    mErrorLog = e.what();
-  }
-
-  return success;
-}
-
-String ZilchShaderGlslBackend::GetErrorLog()
-{
-  return mErrorLog;
 }
 
 }//namespace Zero

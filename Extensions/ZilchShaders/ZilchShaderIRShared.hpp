@@ -300,4 +300,8 @@ String GenerateSpirVPropertyName(StringParam fieldName, StringParam ownerType);
 /// Given a field name (after any extra mangling) and the owning class type, generate the property name used to uniquely identify the field.
 String GenerateSpirVPropertyName(StringParam fieldName, ZilchShaderIRType* ownerType);
 
+/// Get all spirv opocode string names. The returned strings don't contain
+/// the leading "Op" that the disassembler generates.
+Array<String> GetOpcodeNames();
+
 }//namespace Zero

@@ -15,7 +15,8 @@
 #include "ShaderErrors.hpp"
 #include "ShaderCodeBuilder.hpp"
 
-#include "spirv.hpp"
+// Grab the latest unified spirv file. Update when switching spirv versions
+#include "SpirV/SpirVFiles/external/SPIRV-Headers/include/spirv/unified1/spirv.hpp"
 #include "SpirVHelpers.hpp"
 #include "ZilchShaderIRMeta.hpp"
 #include "ZilchShaderIRReflection.hpp"

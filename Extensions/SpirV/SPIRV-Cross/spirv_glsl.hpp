@@ -65,6 +65,10 @@ public:
 		// Debug option to always emit temporary variables for all expressions.
 		bool force_temporary = false;
 
+		// ZERO EDIT
+		// Required until zero updates to use uniform buffers
+		bool force_legacy = false;
+
 		// If true, Vulkan GLSL features are used instead of GL-compatible features.
 		// Mostly useful for debugging SPIR-V files.
 		bool vulkan_semantics = false;
@@ -205,6 +209,7 @@ protected:
 	virtual void emit_function_prototype(SPIRFunction &func, const Bitset &return_flags);
 
 	SPIRBlock *current_emitting_block = nullptr;
+	SPIRBlock *current_emitting_switch = nullptr;
 
 	virtual void emit_instruction(const Instruction &instr);
 	void emit_block_instructions(SPIRBlock &block);
@@ -227,7 +232,7 @@ protected:
 	virtual void emit_struct_member(const SPIRType &type, uint32_t member_type_id, uint32_t index,
 	                                const std::string &qualifier = "", uint32_t base_offset = 0);
 	virtual std::string image_type_glsl(const SPIRType &type, uint32_t id = 0);
-	virtual std::string constant_expression(const SPIRConstant &c);
+	std::string constant_expression(const SPIRConstant &c);
 	std::string constant_op_expression(const SPIRConstantOp &cop);
 	virtual std::string constant_expression_vector(const SPIRConstant &c, uint32_t vector);
 	virtual void emit_fixup();
@@ -325,6 +330,10 @@ protected:
 
 	std::unordered_set<std::string> local_variable_names;
 	std::unordered_set<std::string> resource_names;
+	std::unordered_set<std::string> block_input_names;
+	std::unordered_set<std::string> block_output_names;
+	std::unordered_set<std::string> block_ubo_names;
+	std::unordered_set<std::string> block_ssbo_names;
 	std::unordered_map<std::string, std::unordered_set<uint64_t>> function_overloads;
 
 	bool processing_entry_point = false;
@@ -359,6 +368,7 @@ protected:
 		bool allow_truncated_access_chain = false;
 		bool supports_extensions = false;
 		bool supports_empty_struct = false;
+		bool array_is_value_type = true;
 	} backend;
 
 	void emit_struct(SPIRType &type);
@@ -448,6 +458,7 @@ protected:
 	std::string enclose_expression(const std::string &expr);
 	void strip_enclosed_expression(std::string &expr);
 	std::string to_member_name(const SPIRType &type, uint32_t index);
+	virtual std::string to_member_reference(const SPIRVariable *var, const SPIRType &type, uint32_t index);
 	std::string type_to_glsl_constructor(const SPIRType &type);
 	std::string argument_decl(const SPIRFunction::Parameter &arg);
 	virtual std::string to_qualifiers_glsl(uint32_t id);
@@ -549,6 +560,7 @@ protected:
 	void find_static_extensions();
 
 	std::string emit_for_loop_initializers(const SPIRBlock &block);
+	void emit_while_loop_initializers(const SPIRBlock &block);
 	bool for_loop_initializers_are_same_type(const SPIRBlock &block);
 	bool optimize_read_modify_write(const SPIRType &type, const std::string &lhs, const std::string &rhs);
 	void fixup_image_load_store_access();
@@ -567,7 +579,7 @@ protected:
 	std::string convert_float_to_string(const SPIRConstant &value, uint32_t col, uint32_t row);
 	std::string convert_double_to_string(const SPIRConstant &value, uint32_t col, uint32_t row);
 
-	std::string convert_separate_image_to_combined(uint32_t id);
+	std::string convert_separate_image_to_expression(uint32_t id);
 
 	// Builtins in GLSL are always specific signedness, but the SPIR-V can declare them
 	// as either unsigned or signed.

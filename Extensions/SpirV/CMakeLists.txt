@@ -90,7 +90,6 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
             -Zc:inline
             -MDd
             -nologo
-            -WX
             ${common_flags}
     )
 else()

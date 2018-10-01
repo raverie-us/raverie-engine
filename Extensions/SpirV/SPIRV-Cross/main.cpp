@@ -244,8 +244,14 @@ static void print_resources(const Compiler &compiler, const char *tag, const vec
 		uint32_t fallback_id = !is_push_constant && is_block ? res.base_type_id : res.id;
 
 		uint32_t block_size = 0;
+		uint32_t runtime_array_stride = 0;
 		if (is_sized_block)
-			block_size = uint32_t(compiler.get_declared_struct_size(compiler.get_type(res.base_type_id)));
+		{
+			auto &base_type = compiler.get_type(res.base_type_id);
+			block_size = uint32_t(compiler.get_declared_struct_size(base_type));
+			runtime_array_stride = uint32_t(compiler.get_declared_struct_size_runtime_array(base_type, 1) -
+			                                compiler.get_declared_struct_size_runtime_array(base_type, 0));
+		}
 
 		Bitset mask;
 		if (print_ssbo)
@@ -273,7 +279,11 @@ static void print_resources(const Compiler &compiler, const char *tag, const vec
 		if (mask.get(DecorationNonWritable))
 			fprintf(stderr, " readonly");
 		if (is_sized_block)
+		{
 			fprintf(stderr, " (BlockSize : %u bytes)", block_size);
+			if (runtime_array_stride)
+				fprintf(stderr, " (Unsized array stride: %u bytes)", runtime_array_stride);
+		}
 
 		uint32_t counter_id = 0;
 		if (print_ssbo && compiler.buffer_get_hlsl_counter_buffer(res.id, counter_id))
@@ -479,6 +489,8 @@ struct CLIArguments
 	bool yflip = false;
 	bool sso = false;
 	bool support_nonzero_baseinstance = true;
+	bool msl_swizzle_texture_samples = false;
+	bool msl_ios = false;
 	vector<PLSArg> pls_in;
 	vector<PLSArg> pls_out;
 	vector<Remap> remaps;
@@ -530,6 +542,8 @@ static void print_help()
 	                "\t[--cpp-interface-name <name>]\n"
 	                "\t[--msl]\n"
 	                "\t[--msl-version <MMmmpp>]\n"
+	                "\t[--msl-swizzle-texture-samples]\n"
+	                "\t[--msl-ios]\n"
 	                "\t[--hlsl]\n"
 	                "\t[--reflect]\n"
 	                "\t[--shader-model]\n"
@@ -693,6 +707,8 @@ static int main_inner(int argc, char *argv[])
 	cbs.add("--vulkan-semantics", [&args](CLIParser &) { args.vulkan_semantics = true; });
 	cbs.add("--flatten-multidimensional-arrays", [&args](CLIParser &) { args.flatten_multidimensional_arrays = true; });
 	cbs.add("--no-420pack-extension", [&args](CLIParser &) { args.use_420pack_extension = false; });
+	cbs.add("--msl-swizzle-texture-samples", [&args](CLIParser &) { args.msl_swizzle_texture_samples = true; });
+	cbs.add("--msl-ios", [&args](CLIParser &) { args.msl_ios = true; });
 	cbs.add("--extension", [&args](CLIParser &parser) { args.extensions.push_back(parser.next_string()); });
 	cbs.add("--rename-entry-point", [&args](CLIParser &parser) {
 		auto old_name = parser.next_string();
@@ -812,6 +828,9 @@ static int main_inner(int argc, char *argv[])
 		auto msl_opts = msl_comp->get_msl_options();
 		if (args.set_msl_version)
 			msl_opts.msl_version = args.msl_version;
+		msl_opts.swizzle_texture_samples = args.msl_swizzle_texture_samples;
+		if (args.msl_ios)
+			msl_opts.platform = CompilerMSL::Options::iOS;
 		msl_comp->set_msl_options(msl_opts);
 	}
 	else if (args.hlsl)
@@ -819,7 +838,8 @@ static int main_inner(int argc, char *argv[])
 	else
 	{
 		combined_image_samplers = !args.vulkan_semantics;
-		build_dummy_sampler = true;
+		if (!args.vulkan_semantics)
+			build_dummy_sampler = true;
 		compiler = unique_ptr<CompilerGLSL>(new CompilerGLSL(read_spirv_file(args.input)));
 	}
 

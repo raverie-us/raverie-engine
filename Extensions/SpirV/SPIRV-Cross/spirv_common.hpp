@@ -664,6 +664,9 @@ struct SPIRBlock : IVariant
 	// If the continue block is complex, fallback to "dumb" for loops.
 	bool complex_continue = false;
 
+	// Do we need a ladder variable to defer breaking out of a loop construct after a switch block?
+	bool need_ladder_break = false;
+
 	// The dominating block which this block might be within.
 	// Used in continue; blocks to determine if we really need to write continue.
 	uint32_t loop_dominator = 0;
@@ -753,13 +756,15 @@ struct SPIRFunction : IVariant
 		arguments.push_back({ parameter_type, id, 0u, 0u, alias_global_variable });
 	}
 
-	// Statements to be emitted when the function returns.
+	// Hooks to be run when the function returns.
 	// Mostly used for lowering internal data structures onto flattened structures.
-	std::vector<std::string> fixup_statements_out;
+	// Need to defer this, because they might rely on things which change during compilation.
+	std::vector<std::function<void()>> fixup_hooks_out;
 
-	// Statements to be emitted when the function begins.
+	// Hooks to be run when the function begins.
 	// Mostly used for populating internal data structures from flattened structures.
-	std::vector<std::string> fixup_statements_in;
+	// Need to defer this, because they might rely on things which change during compilation.
+	std::vector<std::function<void()>> fixup_hooks_in;
 
 	bool active = false;
 	bool flush_undeclared = true;
@@ -1217,6 +1222,7 @@ struct Meta
 		Bitset decoration_flags;
 		spv::BuiltIn builtin_type;
 		uint32_t location = 0;
+		uint32_t component = 0;
 		uint32_t set = 0;
 		uint32_t binding = 0;
 		uint32_t offset = 0;
@@ -1231,6 +1237,7 @@ struct Meta
 	Decoration decoration;
 	std::vector<Decoration> members;
 	uint32_t sampler = 0;
+	uint32_t image = 0;
 
 	std::unordered_map<uint32_t, uint32_t> decoration_word_offset;
 
@@ -1290,6 +1297,12 @@ private:
 static inline bool type_is_floating_point(const SPIRType &type)
 {
 	return type.basetype == SPIRType::Half || type.basetype == SPIRType::Float || type.basetype == SPIRType::Double;
+}
+
+static inline bool type_is_integral(const SPIRType &type)
+{
+	return type.basetype == SPIRType::Int || type.basetype == SPIRType::UInt || type.basetype == SPIRType::Int64 ||
+	       type.basetype == SPIRType::UInt64;
 }
 } // namespace spirv_cross
 
