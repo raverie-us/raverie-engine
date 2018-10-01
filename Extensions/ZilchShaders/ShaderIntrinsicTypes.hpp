@@ -54,4 +54,16 @@ struct GeometryFragmentUserData
   Zero::ZilchShaderIRType* mOutputStreamType;
 };
 
+//------------------------------------------------------------------------ComputeFragmentUserData
+/// User data for a compute shader to know what data was parsed from the [Compute] attribute.
+struct ComputeFragmentUserData
+{
+  ZilchDeclareType(ComputeFragmentUserData, TypeCopyMode::ReferenceType);
+  ComputeFragmentUserData();
+
+  int mLocalSizeX;
+  int mLocalSizeY;
+  int mLocalSizeZ;
+};
+
 }//namespace Zilch

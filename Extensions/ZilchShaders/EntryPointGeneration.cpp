@@ -499,6 +499,7 @@ void EntryPointGeneration::DeclareVertexInterface(ZilchSpirVFrontEnd* translator
 
   DecorateImagesAndSamplers(currentType, entryPointInfo);
   CopyReflectionDataToEntryPoint(entryPointInfo, interfaceInfo);
+  WriteExecutionModeOriginUpperLeft(entryPointInfo);
 }
 
 void EntryPointGeneration::DeclareGeometryInterface(ZilchSpirVFrontEnd* translator, Zilch::GenericFunctionNode* node, ZilchShaderIRFunction* function, ZilchSpirVFrontEndContext* context)
@@ -556,6 +557,8 @@ void EntryPointGeneration::DeclareGeometryInterface(ZilchSpirVFrontEnd* translat
   // Add geometry shader stage specific execution mode values
   BasicBlock* executionModes = &entryPointInfo->mExecutionModes;
   ZilchShaderIRFunction* entryPointFn = entryPointInfo->mEntryPointFn;
+
+  WriteExecutionModeOriginUpperLeft(entryPointInfo);
 
   SpirVNameSettings& nameSettings = translator->mSettings->mNameSettings;
   // Write out the max vertices value
@@ -621,6 +624,65 @@ void EntryPointGeneration::DeclarePixelInterface(ZilchSpirVFrontEnd* translator,
 
   DecorateImagesAndSamplers(currentType, entryPointInfo);
   CopyReflectionDataToEntryPoint(entryPointInfo, interfaceInfo);
+  WriteExecutionModeOriginUpperLeft(entryPointInfo);
+}
+
+void EntryPointGeneration::DeclareComputeInterface(ZilchSpirVFrontEnd* translator, Zilch::GenericFunctionNode* node, ZilchShaderIRFunction* function, ZilchSpirVFrontEndContext* context)
+{
+  Clear();
+
+  mTranslator = translator;
+  mContext = context;
+
+  ZilchShaderIRType* currentType = context->mCurrentType;
+
+  // Generate the basic entry point (a copy inputs + copy outputs
+  // function that is called by the actual main function)
+  EntryPointHelperFunctionData copyInputsData = GenerateCopyHelper(function, "CopyInputs");
+  EntryPointHelperFunctionData copyOutputsData = GenerateCopyHelper(function, "CopyOutputs");
+
+  BuildBasicEntryPoint(node, function, copyInputsData.mFunction, copyOutputsData.mFunction);
+  EntryPointInfo* entryPointInfo = currentType->mEntryPoint;
+
+  // Collect all interface parameters for this shader (inputs, outputs, uniforms, etc...)
+  ShaderInterfaceInfo interfaceInfo;
+  CollectInterfaceVariables(function, interfaceInfo, ShaderStage::Compute);
+
+  // Pixel inputs have to be a block struct
+  interfaceInfo.mInputs.mIsStruct = true;
+  interfaceInfo.mInputs.mStorageClass = spv::StorageClassInput;
+  interfaceInfo.mInputs.mName = "In";
+  interfaceInfo.mInputs.mTypeDecorations.PushBack(InterfaceInfoGroup::DecorationParam(spv::DecorationBlock));
+  interfaceInfo.mInputs.mInstanceDecorations.PushBack(InterfaceInfoGroup::DecorationParam(spv::DecorationLocation, 0));
+  // Pixel outputs can be a struct but cannot be a block
+  interfaceInfo.mOutputs.mIsStruct = true;
+  interfaceInfo.mOutputs.mStorageClass = spv::StorageClassOutput;
+  interfaceInfo.mOutputs.mName = "Out";
+  // By decorating the struct with a location all of the members are automatically assigned locations
+  interfaceInfo.mOutputs.mInstanceDecorations.PushBack(InterfaceInfoGroup::DecorationParam(spv::DecorationLocation, 0));
+  // Also decorate uniforms
+  DecorateUniformGroups(interfaceInfo);
+  AddFlatDecorations(interfaceInfo.mInputs);
+
+  // Now we can generically write out all stage input/output/uniform/built-in groups
+  DeclareStageBlocks(interfaceInfo, entryPointInfo, copyInputsData, copyOutputsData);
+
+  // Make sure to add the terminator op for both functions
+  copyInputsData.mBlock->mTerminatorOp = translator->BuildIROp(copyInputsData.mBlock, OpType::OpReturn, nullptr, context);
+  copyOutputsData.mBlock->mTerminatorOp = translator->BuildIROp(copyOutputsData.mBlock, OpType::OpReturn, nullptr, context);
+
+  DecorateImagesAndSamplers(currentType, entryPointInfo);
+  CopyReflectionDataToEntryPoint(entryPointInfo, interfaceInfo);
+  
+  // Get the user data for the compute shader
+  Zilch::ComputeFragmentUserData* computeUserData = currentType->mZilchType->Has<Zilch::ComputeFragmentUserData>();
+  // Write out the local size execution mode
+  BasicBlock* block = &entryPointInfo->mExecutionModes;
+  ZilchShaderIROp* executionModeOp = mTranslator->BuildIROp(block, OpType::OpExecutionMode, nullptr, entryPointInfo->mEntryPointFn, context);
+  executionModeOp->mArguments.PushBack(translator->GetOrCreateConstantIntegerLiteral(spv::ExecutionModeLocalSize));
+  executionModeOp->mArguments.PushBack(translator->GetOrCreateConstantIntegerLiteral(computeUserData->mLocalSizeX));
+  executionModeOp->mArguments.PushBack(translator->GetOrCreateConstantIntegerLiteral(computeUserData->mLocalSizeY));
+  executionModeOp->mArguments.PushBack(translator->GetOrCreateConstantIntegerLiteral(computeUserData->mLocalSizeZ));
 }
 
 void EntryPointGeneration::Clear()
@@ -1368,12 +1430,7 @@ InterfaceInfoGroup* EntryPointGeneration::ProcessBuiltIn(ZilchShaderIRFunction* 
   ZilchSpirVFrontEndContext* context = mContext;
   ZilchShaderSpirVSettings* settings = translator->mSettings;
 
-  // @JoshD: Cleanup
-  FragmentType::Enum fragmentType = FragmentType::Vertex;
-  if(shaderStage == ShaderStage::Pixel)
-    fragmentType = FragmentType::Pixel;
-  else if(shaderStage == ShaderStage::Geometry)
-    fragmentType = FragmentType::Geometry;
+  FragmentType::Enum fragmentType = ShaderStageToFragmentType(shaderStage);
 
   // Get the built-ins map we read from depending on if this is an input or output
   BuiltInStageDescription::FieldKeyToBlockMap* mappings = nullptr;
@@ -2158,6 +2215,13 @@ Zilch::BoundType* EntryPointGeneration::ConvertInterfaceType(Zilch::BoundType* i
   else if(inputType == ZilchTypeId(Zilch::Boolean4))
     return ZilchTypeId(Zilch::Integer4);
   return inputType;
+}
+
+void EntryPointGeneration::WriteExecutionModeOriginUpperLeft(EntryPointInfo* entryPointInfo)
+{
+  BasicBlock* block = &entryPointInfo->mExecutionModes;
+  ZilchShaderIRConstantLiteral* literalOp = mTranslator->GetOrCreateConstantIntegerLiteral(spv::ExecutionModeOriginUpperLeft);
+  mTranslator->BuildIROp(block, OpType::OpExecutionMode, nullptr, entryPointInfo->mEntryPointFn, literalOp, mContext);
 }
 
 ZilchShaderIROp* EntryPointGeneration::FindField(ShaderFieldKey& fieldKey, Array<ShaderInterfaceType*>& interfaces, BasicBlock* block, spv::StorageClass storageClass)

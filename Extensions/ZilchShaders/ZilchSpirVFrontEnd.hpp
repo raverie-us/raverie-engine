@@ -87,6 +87,8 @@ public:
   // Validates that none of the given attribute names are also present. Needed to have exclusive attribute combinations.
   void ValidateAttributeExclusions(ShaderIRAttribute* shaderAttribute, ShaderIRAttributeList& shaderAttributeList, Array<String>& exclusions);
   void ValidateHardwareBuiltIn(ShaderIRFieldMeta* fieldMeta, ShaderIRAttribute* shaderAttribute, bool isInput);
+  void ValidateAndParseComputeAttributeParameters(ShaderIRAttribute* shaderAttribute, ShaderIRTypeMeta* typeMeta);
+  void ValidateLocalSize(ShaderIRAttributeParameter& param, int max, int& toStore);
 
   String BuildFunctionTypeString(Zilch::Function* zilchFunction, ZilchSpirVFrontEndContext* context);
   String BuildFunctionTypeString(Zilch::BoundType* zilchReturnType, Array<Zilch::Type*>& signature, ZilchSpirVFrontEndContext* context);

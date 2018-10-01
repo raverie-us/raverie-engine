@@ -29,6 +29,7 @@
 #include "ZilchShaderIRProject.hpp"
 #include "ZilchShaderIRCore.hpp"
 #include "LibraryTranslationHelpers.hpp"
+#include "CommonInstructions.hpp"
 #include "ShaderImageIntrinsics.hpp"
 #include "ShaderIntrinsicTypes.hpp"
 

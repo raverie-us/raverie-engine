@@ -294,6 +294,11 @@ void ZilchSpirVFrontEnd::ParseAttributes(Zilch::Array<Zilch::Attribute>& zilchAt
     {
       fragmentTypeAttributeIndices.PushBack(i);
     }
+    else if(attributeName == nameSettings.mComputeAttribute)
+    {
+      fragmentTypeAttributeIndices.PushBack(i);
+      ValidateAndParseComputeAttributeParameters(shaderAttribute, typeMeta);
+    }
     else if(attributeName == nameSettings.mStorageClassAttribute)
     {
       ValidateSingleParamAttribute(shaderAttribute, String(), Zilch::ConstantType::Integer, true);
@@ -700,6 +705,48 @@ void ZilchSpirVFrontEnd::ValidateHardwareBuiltIn(ShaderIRFieldMeta* fieldMeta, S
   }
 }
 
+void ZilchSpirVFrontEnd::ValidateAndParseComputeAttributeParameters(ShaderIRAttribute* shaderAttribute, ShaderIRTypeMeta* typeMeta)
+{
+  SpirVNameSettings& nameSettings = mSettings->mNameSettings;
+  // Create the user data for the compute fragment to store the parameters we parse from the attribute.
+  Zilch::HandleOf<Zilch::ComputeFragmentUserData> handle = ZilchAllocate(Zilch::ComputeFragmentUserData);
+  // Default all local sizes to 1 (they're all optional)
+  handle->mLocalSizeX = 1;
+  handle->mLocalSizeY = 1;
+  handle->mLocalSizeZ = 1;
+  typeMeta->mZilchType->Add(*handle);
+
+  for(size_t i = 0; i < shaderAttribute->mParameters.Size(); ++i)
+  {
+    ShaderIRAttributeParameter& param = shaderAttribute->mParameters[i];
+    String paramName = param.GetName();
+    if(paramName == nameSettings.mComputeLocalSizeXParam)
+      ValidateLocalSize(param, 128, handle->mLocalSizeX);
+    else if(paramName == nameSettings.mComputeLocalSizeYParam)
+      ValidateLocalSize(param, 128, handle->mLocalSizeY);
+    else if(paramName == nameSettings.mComputeLocalSizeZParam)
+      ValidateLocalSize(param, 64, handle->mLocalSizeZ);
+    else
+    {
+      String msg = String::Format("Attribute paramater '%s' is invalid.", paramName.c_str());
+      SendTranslationError(param.GetLocation(), msg);
+    }
+  }
+}
+
+void ZilchSpirVFrontEnd::ValidateLocalSize(ShaderIRAttributeParameter& param, int max, int& toStore)
+{
+  int intValue = param.GetIntValue();
+  if(intValue <= 0 || intValue > max)
+  {
+    String msg = String::Format("Parameter '%s' must be in the range of [1, %d].",
+      param.GetName().c_str(), max);
+    SendTranslationError(param.GetLocation(), msg);
+    return;
+  }
+  toStore = intValue;
+}
+
 String ZilchSpirVFrontEnd::BuildFunctionTypeString(Zilch::Function* zilchFunction, ZilchSpirVFrontEndContext* context)
 {
   // Get the return type of the function (use void if there isn't one)
@@ -1025,13 +1072,17 @@ void ZilchSpirVFrontEnd::CollectClassTypes(Zilch::ClassNode*& node, ZilchSpirVFr
   ZilchShaderIRType* type = MakeStructType(mLibrary, zilchName, node->Type, spv::StorageClassFunction);
   type->mDebugResultName = zilchName;
 
+  SpirVNameSettings& nameSettings = mSettings->mNameSettings;
+
   ShaderIRTypeMeta* typeMeta = MakeShaderTypeMeta(type, &node->Attributes);
-  if(typeMeta->mAttributes.FindFirstAttribute("Pixel"))
+  if(typeMeta->mAttributes.FindFirstAttribute(nameSettings.mPixelAttribute))
     typeMeta->mFragmentType = FragmentType::Pixel;
-  else if(typeMeta->mAttributes.FindFirstAttribute("Vertex"))
+  else if(typeMeta->mAttributes.FindFirstAttribute(nameSettings.mVertexAttribute))
     typeMeta->mFragmentType = FragmentType::Vertex;
-  else if(typeMeta->mAttributes.FindFirstAttribute("Geometry"))
+  else if(typeMeta->mAttributes.FindFirstAttribute(nameSettings.mGeometryAttribute))
     typeMeta->mFragmentType = FragmentType::Geometry;
+  else if(typeMeta->mAttributes.FindFirstAttribute(nameSettings.mComputeAttribute))
+    typeMeta->mFragmentType = FragmentType::Compute;
   
   context->mCurrentType = type;
 
@@ -1218,7 +1269,9 @@ void ZilchSpirVFrontEnd::PreWalkMainFunction(Zilch::FunctionNode*& node, ZilchSp
       currentType->mHasMainFunction = true;
     }
   }
-  else if(fragmentType == FragmentType::Vertex || fragmentType == FragmentType::Pixel)
+  else if(fragmentType == FragmentType::Vertex ||
+          fragmentType == FragmentType::Pixel || 
+          fragmentType == FragmentType::Compute)
   {
     if(node->Parameters.Size() != 0)
       return;
@@ -1614,6 +1667,8 @@ void ZilchSpirVFrontEnd::GenerateEntryPoint(Zilch::GenericFunctionNode* node, Zi
     entryPointGeneration.DeclareVertexInterface(this, node, function, context);
   else if(fragmentType == FragmentType::Geometry)
     entryPointGeneration.DeclareGeometryInterface(this, node, function, context);
+  else if(fragmentType == FragmentType::Compute)
+    entryPointGeneration.DeclareComputeInterface(this, node, function, context);
   //else
     // @JoshD: Revisit
     //__debugbreak();

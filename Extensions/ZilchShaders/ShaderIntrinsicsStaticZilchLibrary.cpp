@@ -77,6 +77,7 @@ void ShaderIntrinsicsStaticZilchLibrary::Parse(ZilchSpirVFrontEnd* translator)
 
   // Register the template resolver for fixed array
   shaderLibrary->RegisterTemplateResolver("FixedArray[Type,Integer]", FixedArrayResolver);
+  shaderLibrary->RegisterTemplateResolver("RuntimeArray[Type]", RuntimeArrayResolver);
 
   shaderLibrary->RegisterTemplateResolver("PointInput[Type]", GeometryStreamInputResolver);
   shaderLibrary->RegisterTemplateResolver("LineInput[Type]", GeometryStreamInputResolver);

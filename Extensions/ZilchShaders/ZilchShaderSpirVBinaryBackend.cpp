@@ -170,6 +170,16 @@ void ZilchShaderSpirVBinaryBackend::GenerateDummyMain(ZilchShaderIRType* type, Z
   collector.mReferencedFunctions.InsertOrError(main);
   entryPointInfo->mEntryPointFn = main;
 
+  // Force add the execution mode for the dummy entry point
+  ZilchShaderIROp* executionModeOp = new ZilchShaderIROp(OpType::OpExecutionMode);
+  ZilchShaderIRConstantLiteral* executionModeLiteral = new ZilchShaderIRConstantLiteral((int)spv::ExecutionModeOriginUpperLeft);
+  executionModeOp->mResultType = nullptr;
+  executionModeOp->mArguments.PushBack(main);
+  executionModeOp->mArguments.PushBack(executionModeLiteral);
+  entryPointInfo->mExecutionModes.AddOp(executionModeOp);
+  // We own the literal instruction
+  mOwnedInstructions.PushBack(executionModeLiteral);
+
   // Mark geometry shaders as such
   if(type->mMeta->mFragmentType == FragmentType::Geometry)
     entryPointInfo->mCapabilities.PushBack(spv::CapabilityGeometry);
@@ -430,6 +440,8 @@ void ZilchShaderSpirVBinaryBackend::WriteHeader(ZilchShaderIRType* type, ZilchSh
       executionModel = spv::ExecutionModelVertex;
     else if(type->mMeta->mFragmentType == FragmentType::Geometry)
       executionModel = spv::ExecutionModelGeometry;
+    else if(type->mMeta->mFragmentType == FragmentType::Compute)
+      executionModel = spv::ExecutionModelGLCompute;
     //else
     //  __debugbreak();
 
@@ -448,10 +460,6 @@ void ZilchShaderSpirVBinaryBackend::WriteHeader(ZilchShaderIRType* type, ZilchSh
   {
     EntryPointInfo* entryPoint = context->mEntryPoints[i];
     ZilchShaderIRFunction* entryPointFn = entryPoint->mEntryPointFn;
-    // @JoshD: Move to entry point generation
-    int entryPointId = context->FindId(entryPointFn);
-    streamWriter.WriteInstruction(3, OpType::OpExecutionMode, entryPointId, spv::ExecutionModeOriginUpperLeft);
-
     // Write out any extra execution mode instructions
     WriteBlockInstructions(&entryPoint->mExecutionModes, entryPoint->mExecutionModes.mLines, context);
   }
@@ -670,6 +678,12 @@ void ZilchShaderSpirVBinaryBackend::WriteType(ZilchShaderIRType* type, ZilchShad
     int componentTypeId = context->FindId(componentType);
     int lengthId = context->FindId(type->mParameters[1]);
     streamWriter.WriteInstruction(4, OpType::OpTypeArray, context->FindId(type), componentTypeId, lengthId);
+  }
+  else if(type->mBaseType == ShaderIRTypeBaseType::RuntimeArray)
+  {
+    ZilchShaderIRType* componentType = type->mParameters[0]->As<ZilchShaderIRType>();
+    int componentTypeId = context->FindId(componentType);
+    streamWriter.WriteInstruction(3, OpType::OpTypeRuntimeArray, context->FindId(type), componentTypeId);
   }
   else if(type->mBaseType == ShaderIRTypeBaseType::Struct)
   {

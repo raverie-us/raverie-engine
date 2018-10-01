@@ -293,6 +293,7 @@ public:
   void DeclareVertexInterface(ZilchSpirVFrontEnd* translator, Zilch::GenericFunctionNode* node, ZilchShaderIRFunction* function, ZilchSpirVFrontEndContext* context);
   void DeclareGeometryInterface(ZilchSpirVFrontEnd* translator, Zilch::GenericFunctionNode* node, ZilchShaderIRFunction* function, ZilchSpirVFrontEndContext* context);
   void DeclarePixelInterface(ZilchSpirVFrontEnd* translator, Zilch::GenericFunctionNode* node, ZilchShaderIRFunction* function, ZilchSpirVFrontEndContext* context);
+  void DeclareComputeInterface(ZilchSpirVFrontEnd* translator, Zilch::GenericFunctionNode* node, ZilchShaderIRFunction* function, ZilchSpirVFrontEndContext* context);
 
   void Clear();
 
@@ -374,6 +375,9 @@ public:
   // Some types aren't allowed in any interface declarations (uniform/in/out).
   // This function converts them to the next best thing (e.g. bool -> int)
   Zilch::BoundType* ConvertInterfaceType(Zilch::BoundType* inputType);
+
+  // Write the execution mode for the pixel origin for this entry point.
+  void WriteExecutionModeOriginUpperLeft(EntryPointInfo* entryPointInfo);
 
   // Finds a field from a collection of interface types. If necessary, any new op-codes will
   // be written into the given block and the provided storage class will be used.

@@ -131,6 +131,7 @@ void AddGlslExtensionIntrinsicOps(Zilch::LibraryBuilder& builder, SpirVExtension
 void RegisterShaderIntrinsics(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary);
 void RegisterColorsOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types);
 void FixedArrayResolver(ZilchSpirVFrontEnd* translator, Zilch::BoundType* zilchFixedArrayType);
+void RuntimeArrayResolver(ZilchSpirVFrontEnd* translator, Zilch::BoundType* zilchRuntimeArrayType);
 void GeometryStreamInputResolver(ZilchSpirVFrontEnd* translator, Zilch::BoundType* zilchFixedArrayType);
 void GeometryStreamOutputResolver(ZilchSpirVFrontEnd* translator, Zilch::BoundType* zilchFixedArrayType);
 

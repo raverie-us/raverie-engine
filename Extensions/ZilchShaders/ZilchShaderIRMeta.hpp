@@ -12,7 +12,7 @@ namespace Zero
 class ZilchShaderIRLibrary;
 class ShaderIRTypeMeta;
 
-DeclareEnum4(FragmentType, Vertex, Pixel, Geometry, None);
+DeclareEnum5(FragmentType, Vertex, Pixel, Geometry, Compute, None);
 
 //-------------------------------------------------------------------ShaderFieldKey
 /// A typed string for looking up shader fields. This is a specific type to help avoid ambiguities on

@@ -17,7 +17,22 @@ ShaderStage::Enum FragmentTypeToShaderStage(FragmentType::Enum fragmentType)
     return ShaderStage::Geometry;
   if(fragmentType == FragmentType::Pixel)
     return ShaderStage::Pixel;
+  if(fragmentType == FragmentType::Compute)
+    return ShaderStage::Compute;
   return (ShaderStage::Enum)0;
+}
+
+FragmentType::Enum ShaderStageToFragmentType(ShaderStage::Enum shaderStage)
+{
+  if(shaderStage & ShaderStage::Vertex)
+    return FragmentType::Vertex;
+  if(shaderStage & ShaderStage::Geometry)
+    return FragmentType::Geometry;
+  if(shaderStage & ShaderStage::Pixel)
+    return FragmentType::Pixel;
+  if(shaderStage & ShaderStage::Compute)
+    return FragmentType::Compute;
+  return (FragmentType::Enum)0;
 }
 
 //-------------------------------------------------------------------UniformBufferDescription
@@ -46,6 +61,10 @@ SpirVNameSettings::SpirVNameSettings()
   mVertexAttribute = "Vertex";
   mGeometryAttribute = "Geometry";
   mPixelAttribute = "Pixel";
+  mComputeAttribute = "Compute";
+  mComputeLocalSizeXParam = "localSizeX";
+  mComputeLocalSizeYParam = "localSizeY";
+  mComputeLocalSizeZParam = "localSizeZ";
   mMaxVerticesParam = "maxVertices";
 
   // Make an array for easy indexing of fragment type attribute names
@@ -96,6 +115,7 @@ SpirVNameSettings::SpirVNameSettings()
   mAllowedClassAttributes.Insert(mVertexAttribute, AttributeInfo());
   mAllowedClassAttributes.Insert(mGeometryAttribute, AttributeInfo());
   mAllowedClassAttributes.Insert(mPixelAttribute, AttributeInfo());
+  mAllowedClassAttributes.Insert(mComputeAttribute, AttributeInfo());
   mAllowedClassAttributes.Insert(mStorageClassAttribute, AttributeInfo(true));
   mAllowedClassAttributes.Insert(mNonCopyableAttributeName, AttributeInfo(true));
   mAllowedClassAttributes.Insert(mUnitTestAttribute, AttributeInfo(true));
@@ -615,6 +635,7 @@ void ZilchShaderSpirVSettings::InitializeBuiltIns()
   Zilch::BoundType* real2Type = ZilchTypeId(Zilch::Real2);
   Zilch::BoundType* real4Type = ZilchTypeId(Zilch::Real4);
   Zilch::BoundType* intType = ZilchTypeId(Zilch::Integer);
+  Zilch::BoundType* int3Type = ZilchTypeId(Zilch::Integer3);
   Zilch::BoundType* boolType = ZilchTypeId(Zilch::Boolean);
 
   BuiltInStageDescription& vertexDescriptions = mBuiltIns[FragmentType::Vertex];
@@ -643,6 +664,14 @@ void ZilchShaderSpirVSettings::InitializeBuiltIns()
   // SpirV currently doesn't support this as a pixel input. Seems to be a bug (I filed it and am waiting).
   // Seems to only cause problems currently in the validator.
   pixelDescriptions.mInputGlobals.AddField(intType, "PrimitiveId", spv::BuiltInPrimitiveId, hardwareBuiltInInput);
+
+  BuiltInStageDescription& computeDescriptions = mBuiltIns[FragmentType::Compute];
+  computeDescriptions.mInputGlobals.AddField(int3Type, "GlobalInvocationId", spv::BuiltInGlobalInvocationId, hardwareBuiltInInput);
+  computeDescriptions.mInputGlobals.AddField(int3Type, "LocalInvocationId", spv::BuiltInLocalInvocationId, hardwareBuiltInInput);
+  computeDescriptions.mInputGlobals.AddField(intType, "LocalInvocationIndex", spv::BuiltInLocalInvocationIndex, hardwareBuiltInInput);
+  computeDescriptions.mInputGlobals.AddField(int3Type, "NumWorkgroups", spv::BuiltInNumWorkgroups, hardwareBuiltInInput);
+  computeDescriptions.mInputGlobals.AddField(int3Type, "WorkgroupId", spv::BuiltInWorkgroupId, hardwareBuiltInInput);
+  computeDescriptions.mInputGlobals.AddField(int3Type, "WorkgroupSize", spv::BuiltInWorkgroupSize, hardwareBuiltInInput);
 }
 
 

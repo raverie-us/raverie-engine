@@ -84,6 +84,7 @@ ZilchDefineStaticLibrary(ShaderIntrinsicsLibrary)
   // BoundType Components
   ZilchInitializeType(GeometryStreamUserData);
   ZilchInitializeType(GeometryFragmentUserData);
+  ZilchInitializeType(ComputeFragmentUserData);
 
   // @Nate: These have to be uncommented for new shaders
   ZilchInitializeType(ShaderIntrinsics);
@@ -105,6 +106,15 @@ ZilchDefineStaticLibrary(ShaderIntrinsicsLibrary)
     sizeParam.Name = "Size";
     sizeParam.Type = ConstantType::Integer;
     builder.AddTemplateInstantiator("FixedArray", InstantiateFixedArray, templateTypes, nullptr);
+  }
+
+  // Bind the runtime array type instantiator (creates the different arrays when instantiated)
+  {
+    Array<Zilch::TemplateParameter> templateTypes;
+    TemplateParameter& typeParam = templateTypes.PushBack();
+    typeParam.Name = "Type";
+    typeParam.Type = ConstantType::Type;
+    builder.AddTemplateInstantiator("RuntimeArray", InstantiateRuntimeArray, templateTypes, nullptr);
   }
 
   // Create the geometry shader input/output types

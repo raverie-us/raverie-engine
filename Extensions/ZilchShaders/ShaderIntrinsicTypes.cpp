@@ -363,4 +363,17 @@ ZilchShaderIRType* GeometryFragmentUserData::GetOutputVertexType()
   return subType;
 }
 
+//-------------------------------------------------------------------ComputeFragmentUserData
+ZilchDefineType(ComputeFragmentUserData, builder, type)
+{
+  ZilchBindDefaultCopyDestructor();
+}
+
+ComputeFragmentUserData::ComputeFragmentUserData()
+{
+  mLocalSizeX = 1;
+  mLocalSizeY = 1;
+  mLocalSizeZ = 1;
+}
+
 }//namespace Zilch

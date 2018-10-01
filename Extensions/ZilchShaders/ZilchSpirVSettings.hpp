@@ -28,6 +28,10 @@ DeclareBitField6(ShaderStage, Vertex, PreTesselation, PostTesselation, Geometry,
 DeclareBitFieldBitwiseOperators(ShaderStage::Enum);
 
 ShaderStage::Enum FragmentTypeToShaderStage(FragmentType::Enum fragmentType);
+/// Converts the shader stage bit field to a fragment type.
+/// This will pick the first found shader stage
+/// (since multiple can be set) using the defined order.
+FragmentType::Enum ShaderStageToFragmentType(ShaderStage::Enum shaderStage);
 
 //-------------------------------------------------------------------SpirVNameSettings
 /// Extra data to store for our allowed attributes.
@@ -78,6 +82,11 @@ public:
   String mVertexAttribute;
   String mGeometryAttribute;
   String mPixelAttribute;
+  String mComputeAttribute;
+  String mComputeLocalSizeXParam;
+  String mComputeLocalSizeYParam;
+  String mComputeLocalSizeZParam;
+
   Array<String> mFragmentTypeAttributes;
   Array<String> mRequiresAttributes;
   

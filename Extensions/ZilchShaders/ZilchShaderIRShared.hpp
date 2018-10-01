@@ -5,7 +5,7 @@ namespace Zero
 
 DeclareEnum7(ZilchShaderIRBaseType, Op, ConstantLiteral, DataType, Function, Block, Comment, Extension);
 DeclareEnum3(BlockType, Direct, Selection, Loop);
-DeclareEnum14(ShaderIRTypeBaseType, Bool, Float, Int, Vector, Matrix, Struct, Image, Sampler, SampledImage, FixedArray, Void, Function, Pointer, Unknown)
+DeclareEnum15(ShaderIRTypeBaseType, Bool, Float, Int, Vector, Matrix, Struct, Image, Sampler, SampledImage, FixedArray, RuntimeArray, Void, Function, Pointer, Unknown)
 
 typedef spv::Op OpType;
 class ZilchShaderIRLibrary;
