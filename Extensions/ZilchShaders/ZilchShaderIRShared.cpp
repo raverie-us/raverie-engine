@@ -119,7 +119,15 @@ void ZilchShaderIRType::AddMember(ZilchShaderIRType* memberType, StringParam mem
 
   int index = mParameters.Size() - 1;
   mMemberNamesToIndex[memberName] = index;
-  mMemberKeysToIndex[ShaderFieldKey(memberName, memberType->mZilchType->ToString())] = index;
+
+  // Either use the use the zilch type name if possible, otherwise
+  // this type doesn't actually exist as a zilch type
+  // (e.g. RuntimeArray internal type) so use the spirv name instead.
+  String memberTypeName = memberType->mName;
+  if(memberType->mZilchType != nullptr)
+    memberTypeName = memberType->mZilchType->ToString();
+  
+  mMemberKeysToIndex[ShaderFieldKey(memberName, memberTypeName)] = index;
 }
 
 String ZilchShaderIRType::GetMemberName(size_t memberIndex)
@@ -136,7 +144,7 @@ String ZilchShaderIRType::GetMemberName(size_t memberIndex)
   return String();
 }
 
-ZilchShaderIRType* ZilchShaderIRType::GetSubType(int index)
+ZilchShaderIRType* ZilchShaderIRType::GetSubType(int index) const
 {
   bool supportsSubTypes = mBaseType == ShaderIRTypeBaseType::Struct ||
     mBaseType == ShaderIRTypeBaseType::Function;
@@ -172,9 +180,35 @@ size_t ZilchShaderIRType::GetByteSize() const
   }
   else if(mBaseType == ShaderIRTypeBaseType::FixedArray)
   {
-    return GetByteAlignment() * mComponents;
+    // The actual size of a fixed array is the number of elements times the array stride.
+    // The array stride is the size of the contained item rounded up based upon the max alignment
+    ZilchShaderIRType* elementType = mParameters[0]->As<ZilchShaderIRType>();
+    size_t elementByteSize = elementType->GetByteSize();
+    size_t alignment = GetByteAlignment();
+    size_t itemSize = GetSizeAfterAlignment(elementByteSize, alignment);
+    return itemSize * mComponents;
   }
-  // Ignore structs for now
+  else if(mBaseType == ShaderIRTypeBaseType::Struct)
+  {
+    // Each element has to actually be properly aligned in order to get the
+    // correct size though otherwise this can drift very wildly.
+    // For example struct { float A; vec3 B; float C; vec3 D; }
+    // Is actually size 16 + 16 + 16 + 12 = 60 due to vec3 having 
+    // to be aligned on 16 byte boundaries.
+    size_t size = 0;
+    for(size_t i = 0; i < mParameters.Size(); ++i)
+    {
+      ZilchShaderIRType* memberType = GetSubType(i);
+      size_t alignment = memberType->GetByteAlignment();
+      size_t memberSize = memberType->GetByteSize();
+      // Fix the current offset to be at the required alignment for this member.
+      size = GetSizeAfterAlignment(size, alignment);
+      // Then add the member size exactly as is (no padding
+      // is required unless another element follows)
+      size += memberSize;
+    }
+    return size;
+  }
   Error("Unknown type for byte size");
   return 0;
 }
@@ -209,6 +243,17 @@ size_t ZilchShaderIRType::GetByteAlignment() const
       elementType->mBaseType == ShaderIRTypeBaseType::Vector)
       return 16;
     return elementType->GetByteAlignment();
+  }
+  else if(mBaseType == ShaderIRTypeBaseType::Struct)
+  {
+    // The alignment of a struct is the max alignment of all of its members
+    size_t alignment = 0;
+    for(size_t i = 0; i < mParameters.Size(); ++i)
+    {
+      ZilchShaderIRType* elementType = GetSubType(i);
+      alignment = Math::Max(elementType->GetByteAlignment(), alignment);
+    }
+    return alignment;
   }
   // Ignore structs for now
   Error("Unknown type for byte size");
@@ -246,7 +291,8 @@ bool ZilchShaderIRType::IsGlobalType() const
   // Check the value of the storage class
   spv::StorageClass storageClass = (spv::StorageClass)storageClassAttribute->mParameters[0].GetIntValue();
   if(storageClass == spv::StorageClass::StorageClassUniformConstant ||
-    storageClass == spv::StorageClassUniform)
+    storageClass == spv::StorageClassUniform ||
+    storageClass == spv::StorageClassStorageBuffer)
     return true;
   return false;
 }
@@ -302,6 +348,16 @@ int GetStride(ZilchShaderIRType* type, float baseAlignment)
   size_t typeSize = type->GetByteSize();
   int stride = (int)(baseAlignment * Math::Ceil(typeSize / baseAlignment));
   return stride;
+}
+
+size_t GetSizeAfterAlignment(size_t size, size_t baseAlignment)
+{
+  // Get the remainder to add
+  size_t remainder = baseAlignment - (size % baseAlignment);
+  // Mod with the required alignment to get offset 0 when needed
+  size_t alignmentOffset = remainder % baseAlignment;
+  size += alignmentOffset;
+  return size;
 }
 
 TemplateTypeKey GenerateTemplateTypeKey(Zilch::BoundType* zilchType)

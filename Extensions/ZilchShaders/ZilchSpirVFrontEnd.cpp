@@ -156,6 +156,8 @@ ZilchShaderIRType* ZilchSpirVFrontEnd::FindOrCreateInterfaceType(ZilchShaderIRLi
     builder.Append("_Output");
   else if(storageClass == spv::StorageClassUniform)
     builder.Append("_Uniform");
+  else if(storageClass == spv::StorageClassStorageBuffer)
+    builder.Append("_StorageBuffer");
   else
   {
     Error("Unknown storage class");
@@ -1139,19 +1141,25 @@ void ZilchSpirVFrontEnd::PreWalkTemplateTypes(ZilchSpirVFrontEndContext* context
   for(; !boundTypes.Empty(); boundTypes.PopFront())
   {
     Zilch::BoundType* boundType = boundTypes.Front().second;
-    if(boundType->TemplateBaseName.Empty())
-      continue;
-
-    // Deal with already having a translation for the type
-    if(mLibrary->FindType(boundType) != nullptr)
-      continue;
-
-    // Check if we have a resolver for this template type
-    TemplateTypeKey key = GenerateTemplateTypeKey(boundType);
-    TemplateTypeIRResloverFn resolver = mLibrary->FindTemplateResolver(key);
-    if(resolver != nullptr)
-      resolver(this, boundType);
+    PreWalkTemplateType(boundType, context);
   }
+}
+
+void ZilchSpirVFrontEnd::PreWalkTemplateType(Zilch::BoundType* zilchType, ZilchSpirVFrontEndContext* context)
+{
+  // Make sure this is actually a template
+  if(zilchType->TemplateBaseName.Empty())
+    return;
+
+  // Deal with already having a translation for the type
+  if(mLibrary->FindType(zilchType) != nullptr)
+    return;
+
+  // Check if we have a resolver for this template type
+  TemplateTypeKey key = GenerateTemplateTypeKey(zilchType);
+  TemplateTypeIRResloverFn resolver = mLibrary->FindTemplateResolver(key);
+  if(resolver != nullptr)
+    resolver(this, zilchType);
 }
 
 void ZilchSpirVFrontEnd::PreWalkClassVariables(Zilch::MemberVariableNode*& node, ZilchSpirVFrontEndContext* context)
@@ -1176,6 +1184,14 @@ void ZilchSpirVFrontEnd::PreWalkClassVariables(Zilch::MemberVariableNode*& node,
   fieldMeta->mZilchType = Zilch::BoundType::GetBoundType(node->ResultType);
   fieldMeta->mZilchProperty = node->CreatedProperty;
   ParseAttributes(node->CreatedField->Attributes, &node->Attributes, fieldMeta);
+
+  // If this is a runtime array (only detectable by the
+  // zilch type's template name) then add a global runtime array.
+  if(memberType->mZilchType->TemplateBaseName == SpirVNameSettings::mRuntimeArrayTypeName)
+  {
+    AddRuntimeArray(node, memberType, context);
+    return;
+  }
 
   // Check to see if this has a forced storage class
   ShaderIRAttribute* storageClassAttribute = memberType->FindFirstAttribute(SpirVNameSettings::mStorageClassAttribute);
@@ -1202,6 +1218,57 @@ void ZilchSpirVFrontEnd::PreWalkClassVariables(Zilch::MemberVariableNode*& node,
 
   // Only actual add the member if this member belongs to the class (not global)
   currentType->AddMember(memberType, node->Name.Token);
+}
+
+void ZilchSpirVFrontEnd::AddRuntimeArray(Zilch::MemberVariableNode* node, ZilchShaderIRType* varType, ZilchSpirVFrontEndContext* context)
+{
+  // Make sure no constructor call exists (illegal as this type
+  // must be constructed by the client api not by the shader)
+  if(node->InitialValue != nullptr)
+  {
+    String typeName = node->ResultType->ToString();
+    String msg = String::Format("Type '%s' does not support an explicit constructor call.", typeName.c_str());
+    SendTranslationError(node->InitialValue->Location, msg);
+    return;
+  }
+
+  ZilchShaderIRType* zilchRuntimeArrayType = varType;
+  ZilchShaderIRType* actualRuntimeArrayType = varType->mParameters[0]->As<ZilchShaderIRType>();
+  ZilchShaderIRType* containedType = actualRuntimeArrayType->mParameters[0]->As<ZilchShaderIRType>();
+
+  // The glsl backend doesn't seem to properly support this (or it's a glsl error).
+  // If the fixed array is put in a struct this all works though.
+  // This error has to be reported here instead of during template parsing since
+  // this is the only place a location is actually known.
+  if(containedType->mBaseType == ShaderIRTypeBaseType::FixedArray)
+  {
+    String msg = "Runtime array cannot directly contain a FixedArray. Please put the FixedArray in a struct.";
+    SendTranslationError(node->Location, msg);
+    return;
+  }
+  // Runtime arrays also cannot contain runtime arrays.
+  if(containedType->mZilchType->TemplateBaseName == SpirVNameSettings::mRuntimeArrayTypeName)
+  {
+    SendTranslationError(node->Location, "Runtime arrays cannot contain runtime arrays");
+    return;
+  }
+  
+  // Make a variable of the wrapper struct type
+  ZilchShaderIROp* globalVar = BuildIROpNoBlockAdd(OpType::OpVariable, zilchRuntimeArrayType->mPointerType, context);
+  // Runtime array structs must be of storage class storage buffer
+  ZilchShaderIRConstantLiteral* storageClassLiteral = GetOrCreateConstantIntegerLiteral((int)spv::StorageClassStorageBuffer);
+  globalVar->mArguments.PushBack(storageClassLiteral);
+  // Mangle the variable name like other globals (including the fragment type name).
+  globalVar->mDebugResultName = GenerateSpirVPropertyName(node->Name.Token, context->mCurrentType);
+  // Add this field to our globals (so we can find it later)
+  ErrorIf(mLibrary->mZilchFieldToGlobalVariable.ContainsKey(node->CreatedField), "Global variable already exists");
+
+  // Create global variable data to store the instance and initializer function
+  GlobalVariableData* globalData = new GlobalVariableData();
+  mLibrary->mZilchFieldToGlobalVariable[node->CreatedField] = globalData;
+  globalData->mInstance = globalVar;
+  // Also map the instance for the backend
+  mLibrary->mGlobalVariableToZilchField[globalData->mInstance] = node->CreatedField;
 }
 
 void ZilchSpirVFrontEnd::AddGlobalVariable(Zilch::MemberVariableNode* node, ZilchShaderIRType* varType, spv::StorageClass storageClass, ZilchSpirVFrontEndContext* context)
@@ -2215,9 +2282,9 @@ void ZilchSpirVFrontEnd::WalkMemberAccessNode(Zilch::MemberAccessNode*& node, Zi
     {
       // Make the constant for the sub-index of the member with respect to the base
       ZilchShaderIROp* memberIndexConstant = GetIntegerConstant(memberIndex, context);
-
-      // Build the member access operation
-      ZilchShaderIROp* memberAccessOp = BuildCurrentBlockIROp(OpType::OpAccessChain, memberType->mPointerType, operandResultOp, memberIndexConstant, context);
+      // Generate a member access to reference this member.
+      // Note: This must have the same storage class as the left operand.
+      ZilchShaderIROp* memberAccessOp = BuildCurrentBlockAccessChain(memberType, operandResultOp, memberIndexConstant, context);
       context->PushIRStack(memberAccessOp);
     }
     // @JoshD: Validate (have to find op-code to generate this)
@@ -3073,11 +3140,59 @@ ZilchShaderIROp* ZilchSpirVFrontEnd::BuildCurrentBlockIROp(OpType opType, ZilchS
   return BuildIROp(context->GetCurrentBlock(), opType, resultType, arg0, arg1, arg2, context);
 }
 
+ZilchShaderIROp* ZilchSpirVFrontEnd::BuildCurrentBlockAccessChain(ZilchShaderIRType* baseResultType, ZilchShaderIROp* selfInstance, IZilchShaderIR* arg0, ZilchSpirVFrontEndContext* context)
+{
+  ZilchShaderIRType* resultPointerType = baseResultType->GetPointerType();
+
+  // We have to declare the access chain with the same storage class as
+  // the self instance. This shows up primarily with runtime arrays
+  // (e.g. accessing the internal data has to be uniform storage class).
+  // To avoid creating a duplicate type, only do this if the storage
+  // class isn't function, otherwise we already have the correct pointer type.
+  spv::StorageClass resultStorageClass = selfInstance->mResultType->mStorageClass;
+  if(resultStorageClass != spv::StorageClassFunction)
+    resultPointerType = FindOrCreatePointerInterfaceType(mLibrary, baseResultType, resultStorageClass);
+
+  ZilchShaderIROp* accessChainOp = BuildCurrentBlockIROp(OpType::OpAccessChain, resultPointerType, selfInstance, context);
+  accessChainOp->mArguments.PushBack(arg0);
+  return accessChainOp;
+}
+
+ZilchShaderIROp* ZilchSpirVFrontEnd::BuildCurrentBlockAccessChain(ZilchShaderIRType* baseResultType, ZilchShaderIROp* selfInstance, IZilchShaderIR* arg0, IZilchShaderIR* arg1, ZilchSpirVFrontEndContext* context)
+{
+  ZilchShaderIROp* accessChainOp = BuildCurrentBlockAccessChain(baseResultType, selfInstance, arg0, context);
+  accessChainOp->mArguments.PushBack(arg1);
+  return accessChainOp;
+}
+
+ZilchShaderIROp* ZilchSpirVFrontEnd::BuildDecorationOp(BasicBlock* block, IZilchShaderIR* decorationTarget, spv::Decoration decorationType, ZilchSpirVFrontEndContext* context)
+{
+  ZilchShaderIRConstantLiteral* decorationTypeLiteral = GetOrCreateConstantIntegerLiteral(decorationType);
+  return BuildIROp(block, OpType::OpDecorate, nullptr, decorationTarget, decorationTypeLiteral, context);
+}
+
 ZilchShaderIROp* ZilchSpirVFrontEnd::BuildDecorationOp(BasicBlock* block, IZilchShaderIR* decorationTarget, spv::Decoration decorationType, int decorationValue, ZilchSpirVFrontEndContext* context)
 {
   ZilchShaderIRConstantLiteral* decorationTypeLiteral = GetOrCreateConstantIntegerLiteral(decorationType);
   ZilchShaderIRConstantLiteral* decorationValueLiteral = GetOrCreateConstantIntegerLiteral(decorationValue);
   return BuildIROp(block, OpType::OpDecorate, nullptr, decorationTarget, decorationTypeLiteral, decorationValueLiteral, context);
+}
+
+ZilchShaderIROp* ZilchSpirVFrontEnd::BuildMemberDecorationOp(BasicBlock* block, IZilchShaderIR* decorationTarget, int memberOffset, spv::Decoration decorationType, ZilchSpirVFrontEndContext* context)
+{
+  ZilchShaderIROp* resultOp = BuildIROp(block, OpType::OpMemberDecorate, nullptr, decorationTarget, context);
+  resultOp->mArguments.PushBack(GetOrCreateConstantIntegerLiteral(memberOffset));
+  resultOp->mArguments.PushBack(GetOrCreateConstantIntegerLiteral(decorationType));
+  return resultOp;
+}
+
+ZilchShaderIROp* ZilchSpirVFrontEnd::BuildMemberDecorationOp(BasicBlock* block, IZilchShaderIR* decorationTarget, int memberOffset, spv::Decoration decorationType, int decorationValue, ZilchSpirVFrontEndContext* context)
+{
+  ZilchShaderIROp* resultOp = BuildIROp(block, OpType::OpMemberDecorate, nullptr, decorationTarget, context);
+  resultOp->mArguments.PushBack(GetOrCreateConstantIntegerLiteral(memberOffset));
+  resultOp->mArguments.PushBack(GetOrCreateConstantIntegerLiteral(decorationType));
+  resultOp->mArguments.PushBack(GetOrCreateConstantIntegerLiteral(decorationValue));
+  return resultOp;
 }
 
 ZilchShaderIRConstantLiteral* ZilchSpirVFrontEnd::GetOrCreateConstantIntegerLiteral(int value)

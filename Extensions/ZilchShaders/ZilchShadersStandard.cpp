@@ -28,6 +28,24 @@ BoundType* InstantiateFixedArray(LibraryBuilder& builder, StringParam baseName, 
   return arrayType;
 }
 
+BoundType* InstantiateRuntimeArray(LibraryBuilder& builder, StringParam baseName, StringParam fullyQualifiedName, const Array<Constant>& templateTypes, const void* userData)
+{
+  Core& core = Core::GetInstance();
+  Type* templateType = templateTypes[0].TypeValue;
+  // Bind the arraytype
+  BoundType* arrayType = builder.AddBoundType(fullyQualifiedName, TypeCopyMode::ValueType, 0);
+  Attribute* storageAttribute = arrayType->AddAttribute(Zero::SpirVNameSettings::mStorageClassAttribute);
+  storageAttribute->AddParameter(spv::StorageClassStorageBuffer);
+  arrayType->AddAttribute(Zero::SpirVNameSettings::mNonCopyableAttributeName);
+
+  // Bind all of the array's functions and properties (stubbed out since we're only using this for translation)
+  builder.AddBoundFunction(arrayType, "Get", Zero::DummyBoundFunction, OneParameter(core.IntegerType, "index"), templateType, Zilch::FunctionOptions::None);
+  builder.AddBoundFunction(arrayType, "Set", Zero::DummyBoundFunction, TwoParameters(core.IntegerType, "index", templateType, "value"), core.VoidType, Zilch::FunctionOptions::None);
+  builder.AddBoundGetterSetter(arrayType, "Count", core.IntegerType, nullptr, Zero::DummyBoundFunction, Zilch::MemberOptions::None);
+
+  return arrayType;
+}
+
 BoundType* InstantiateGeometryInput(LibraryBuilder& builder, StringParam baseName, StringParam fullyQualifiedName, const Array<Constant>& templateTypes, const void* userData)
 {
   Core& core = Core::GetInstance();
@@ -110,11 +128,12 @@ ZilchDefineStaticLibrary(ShaderIntrinsicsLibrary)
 
   // Bind the runtime array type instantiator (creates the different arrays when instantiated)
   {
+    String runtimeArrayTypeName = Zero::SpirVNameSettings::mRuntimeArrayTypeName;
     Array<Zilch::TemplateParameter> templateTypes;
     TemplateParameter& typeParam = templateTypes.PushBack();
     typeParam.Name = "Type";
     typeParam.Type = ConstantType::Type;
-    builder.AddTemplateInstantiator("RuntimeArray", InstantiateRuntimeArray, templateTypes, nullptr);
+    builder.AddTemplateInstantiator(runtimeArrayTypeName, InstantiateRuntimeArray, templateTypes, nullptr);
   }
 
   // Create the geometry shader input/output types

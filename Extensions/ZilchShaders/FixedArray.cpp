@@ -193,6 +193,10 @@ void FixedArrayResolver(ZilchSpirVFrontEnd* translator, Zilch::BoundType* zilchF
 
   // Get the template arguments
   Zilch::Type* zilchElementType = zilchFixedArrayType->TemplateArguments[0].TypeValue;
+  // Deal with nested template types that haven't already been resolved
+  Zilch::BoundType* zilchElementBoundType = Zilch::Type::GetBoundType(zilchElementType);
+  if(!zilchElementBoundType->TemplateBaseName.Empty())
+    translator->PreWalkTemplateType(zilchElementBoundType, translator->mContext);
   ZilchShaderIRType* elementType = translator->FindType(zilchElementType, nullptr);
   int length = (int)zilchFixedArrayType->TemplateArguments[1].IntegerValue;
 
@@ -217,6 +221,124 @@ void FixedArrayResolver(ZilchSpirVFrontEnd* translator, Zilch::BoundType* zilchF
   typeResolver.RegisterFunctionResolver(GetMemberOverloadedFunction(zilchFixedArrayType, Zilch::OperatorSet, intTypeName, zilchElementType->ToString()), ResolveFixedArraySet);
   typeResolver.RegisterFunctionResolver(GetInstanceProperty(zilchFixedArrayType, "Count")->Get, ResolveFixedArrayCount);
   typeResolver.mExpressionInitializerListResolver = FixedArrayExpressionInitializerResolver;
+}
+
+void ResolveRuntimeArrayGet(ZilchSpirVFrontEnd* translator, Zilch::FunctionCallNode* functionCallNode, Zilch::MemberAccessNode* memberAccessNode, ZilchSpirVFrontEndContext* context)
+{
+  // Get the 'this' array type and component type (from the containing struct type)
+  Zilch::Type* zilchArrayType = memberAccessNode->LeftOperand->ResultType;
+  ZilchShaderIRType* structArrayType = translator->FindType(zilchArrayType, memberAccessNode->LeftOperand);
+  ZilchShaderIRType* spirvArrayType = structArrayType->mParameters[0]->As<ZilchShaderIRType>();
+  ZilchShaderIRType* elementType = spirvArrayType->mParameters[0]->As<ZilchShaderIRType>();
+
+  // Get the index operator (must be a value type)
+  IZilchShaderIR* indexArgument = translator->WalkAndGetResult(functionCallNode->Arguments[0], context);
+  ZilchShaderIROp* indexOperand = translator->GetOrGenerateValueTypeFromIR(indexArgument, context);
+
+  // Walk the left operand to get the wrapper struct type
+  ZilchShaderIROp* constant0 = translator->GetIntegerConstant(0, context);
+  IZilchShaderIR* leftOperand = translator->WalkAndGetResult(memberAccessNode->LeftOperand, context);
+
+  // To get the actual data we'll do a double access chain. Argument 0 will
+  // be the index to get the spirv runtime array (always index 0),
+  // then argument 1 will be the index into the array.
+  // Note: We have to do a special access chain so the result type is of the correct storage class (uniform)
+  ZilchShaderIROp* selfInstance = translator->GetOrGeneratePointerTypeFromIR(leftOperand, context);
+  IZilchShaderIR* accessChainOp = translator->BuildCurrentBlockAccessChain(elementType, selfInstance, constant0, indexOperand, context);
+
+  context->PushIRStack(accessChainOp);
+}
+
+void ResolveRuntimeArraySet(ZilchSpirVFrontEnd* translator, Zilch::FunctionCallNode* functionCallNode, Zilch::MemberAccessNode* memberAccessNode, ZilchSpirVFrontEndContext* context)
+{
+  // Get the 'this' array type and component type
+  Zilch::Type* zilchArrayType = memberAccessNode->LeftOperand->ResultType;
+  ZilchShaderIRType* structArrayType = translator->FindType(zilchArrayType, memberAccessNode->LeftOperand);
+  ZilchShaderIRType* spirvArrayType = structArrayType->mParameters[0]->As<ZilchShaderIRType>();
+  ZilchShaderIRType* elementType = spirvArrayType->mParameters[0]->As<ZilchShaderIRType>();
+
+  // Get the index operator (must be a value type)
+  IZilchShaderIR* indexArgument = translator->WalkAndGetResult(functionCallNode->Arguments[0], context);
+  ZilchShaderIROp* indexOperand = translator->GetOrGenerateValueTypeFromIR(indexArgument, context);
+
+  // Generate the access chain to get the element within the array
+  ZilchShaderIROp* constant0 = translator->GetIntegerConstant(0, context);
+  IZilchShaderIR* leftOperand = translator->WalkAndGetResult(memberAccessNode->LeftOperand, context);
+  ZilchShaderIROp* selfInstance = translator->GetOrGeneratePointerTypeFromIR(leftOperand, context);
+  IZilchShaderIR* accessChainOp = translator->BuildCurrentBlockAccessChain(elementType, selfInstance, constant0, indexOperand, context);
+
+  // Get the source value
+  IZilchShaderIR* sourceIR = translator->WalkAndGetResult(functionCallNode->Arguments[1], context);
+
+  // Store the source into the target
+  BasicBlock* currentBlock = context->GetCurrentBlock();
+  translator->BuildStoreOp(currentBlock, accessChainOp, sourceIR, context);
+}
+
+void ResolveRuntimeArrayCount(ZilchSpirVFrontEnd* translator, Zilch::FunctionCallNode* functionCallNode, Zilch::MemberAccessNode* memberAccessNode, ZilchSpirVFrontEndContext* context)
+{
+  // The runtime array length instruction is a bit odd as it requires the struct
+  // the array is contained in as well as the member index offset into the struct
+  // for where the runtime array is actually contained.
+  ZilchShaderIRType* intType = translator->FindType(ZilchTypeId(int), functionCallNode);
+  // Get the wrapper struct instance that contains the real runtime array
+  IZilchShaderIR* structOwnerOp = translator->WalkAndGetResult(memberAccessNode->LeftOperand, context);
+  // We create the runtime array wrapper struct such that the real array is always at member index 0
+  ZilchShaderIRConstantLiteral* zeroLiteral = translator->GetOrCreateConstantIntegerLiteral(0);
+  IZilchShaderIR* lengthResult = translator->BuildCurrentBlockIROp(OpType::OpArrayLength, intType, structOwnerOp, zeroLiteral, context);
+  context->PushIRStack(lengthResult);
+}
+
+void RuntimeArrayResolver(ZilchSpirVFrontEnd* translator, Zilch::BoundType* zilchRuntimeArrayType)
+{
+  // Runtime arrays have to be created in an odd way. Per the Vulkan spec,
+  // OpTypeRuntimeArray must only be used for the last member of an OpTypeStruct.
+  // That is, a runtime array must be declared as (glsl sample):
+  //buffer StructTypeName
+  //{
+  //  float ActualRuntimeArray[];
+  //} InstanceVarName;
+  // To do this the zilch runtime array is translated as the wrapper struct
+  // that contains the spirv runtime array since all op codes must go through the struct's instance variable.
+
+  ZilchShaderIRLibrary* shaderLibrary = translator->mLibrary;
+
+  // Get the template arguments
+  Zilch::Type* zilchElementType = zilchRuntimeArrayType->TemplateArguments[0].TypeValue;
+  // Deal with nested template types that haven't already been resolved
+  Zilch::BoundType* zilchElementBoundType = Zilch::Type::GetBoundType(zilchElementType);
+  if(!zilchElementBoundType->TemplateBaseName.Empty())
+    translator->PreWalkTemplateType(zilchElementBoundType, translator->mContext);
+
+  ZilchShaderIRType* elementType = translator->FindType(zilchElementType, nullptr);
+
+  // The name of the wrapper struct type name must match the zilch runtime 
+  // array type name since the front end will be searching for the type by
+  // this name. Make the internal runtime array type name something unique.
+  String zilchTypeName = zilchRuntimeArrayType->Name;
+  String internalArrayName = BuildString("SpirV", zilchTypeName);
+
+  // Create the true runtime array type
+  ZilchShaderIRType* runtimeArrayType = translator->MakeTypeAndPointer(shaderLibrary, ShaderIRTypeBaseType::RuntimeArray, internalArrayName, nullptr, spv::StorageClassStorageBuffer);
+  runtimeArrayType->mParameters.PushBack(elementType);
+  translator->MakeShaderTypeMeta(runtimeArrayType, nullptr);
+
+  // Now generate the wrapper struct around the runtime array
+  ZilchShaderIRType* wrapperStructType = translator->MakeStructType(shaderLibrary, zilchTypeName, zilchRuntimeArrayType, spv::StorageClassStorageBuffer);
+  wrapperStructType->AddMember(runtimeArrayType, "Data");
+  // Always use the actual type name with "Buffer" appended for the wrapper type name
+  wrapperStructType->mDebugResultName = BuildString(zilchTypeName, "Buffer");
+  translator->MakeShaderTypeMeta(wrapperStructType, nullptr);
+
+  Zilch::BoundType* intType = ZilchTypeId(int);
+  String intTypeName = intType->Name;
+
+  // Register resolvers for the few functions we care about.
+  // Note: Add is illegal since this is provided by the client
+  TypeResolvers& typeResolver = shaderLibrary->mTypeResolvers[zilchRuntimeArrayType];
+  typeResolver.RegisterFunctionResolver(GetMemberOverloadedFunction(zilchRuntimeArrayType, Zilch::OperatorGet, intTypeName), ResolveRuntimeArrayGet);
+  typeResolver.RegisterFunctionResolver(GetMemberOverloadedFunction(zilchRuntimeArrayType, Zilch::OperatorSet, intTypeName, zilchElementType->ToString()), ResolveRuntimeArraySet);
+  typeResolver.RegisterFunctionResolver(GetInstanceProperty(zilchRuntimeArrayType, "Count")->Get, ResolveRuntimeArrayCount);
 }
 
 void GeometryStreamInputResolver(ZilchSpirVFrontEnd* translator, Zilch::BoundType* zilchInputStreamType)

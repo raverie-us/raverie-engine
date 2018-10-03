@@ -62,6 +62,7 @@ public:
   static String mStorageClassAttribute;
   static String mNameOverrideParam;
   static String mRequiresPixelAttribute;
+  static String mRuntimeArrayTypeName;
 
   String mInputAttribute;
   String mFragmentInputAttribute;

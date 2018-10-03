@@ -497,7 +497,7 @@ void EntryPointGeneration::DeclareVertexInterface(ZilchSpirVFrontEnd* translator
   copyInputsData.mBlock->mTerminatorOp = translator->BuildIROp(copyInputsData.mBlock, OpType::OpReturn, nullptr, context);
   copyOutputsData.mBlock->mTerminatorOp = translator->BuildIROp(copyOutputsData.mBlock, OpType::OpReturn, nullptr, context);
 
-  DecorateImagesAndSamplers(currentType, entryPointInfo);
+  FindAndDecorateGlobals(currentType, entryPointInfo);
   CopyReflectionDataToEntryPoint(entryPointInfo, interfaceInfo);
   WriteExecutionModeOriginUpperLeft(entryPointInfo);
 }
@@ -622,7 +622,7 @@ void EntryPointGeneration::DeclarePixelInterface(ZilchSpirVFrontEnd* translator,
   copyInputsData.mBlock->mTerminatorOp = translator->BuildIROp(copyInputsData.mBlock, OpType::OpReturn, nullptr, context);
   copyOutputsData.mBlock->mTerminatorOp = translator->BuildIROp(copyOutputsData.mBlock, OpType::OpReturn, nullptr, context);
 
-  DecorateImagesAndSamplers(currentType, entryPointInfo);
+  FindAndDecorateGlobals(currentType, entryPointInfo);
   CopyReflectionDataToEntryPoint(entryPointInfo, interfaceInfo);
   WriteExecutionModeOriginUpperLeft(entryPointInfo);
 }
@@ -665,13 +665,14 @@ void EntryPointGeneration::DeclareComputeInterface(ZilchSpirVFrontEnd* translato
   AddFlatDecorations(interfaceInfo.mInputs);
 
   // Now we can generically write out all stage input/output/uniform/built-in groups
+  // @JoshD: There's a chance that uniforms/interface blocks aren't supported the same way in compute shaders.
   DeclareStageBlocks(interfaceInfo, entryPointInfo, copyInputsData, copyOutputsData);
 
   // Make sure to add the terminator op for both functions
   copyInputsData.mBlock->mTerminatorOp = translator->BuildIROp(copyInputsData.mBlock, OpType::OpReturn, nullptr, context);
   copyOutputsData.mBlock->mTerminatorOp = translator->BuildIROp(copyOutputsData.mBlock, OpType::OpReturn, nullptr, context);
 
-  DecorateImagesAndSamplers(currentType, entryPointInfo);
+  FindAndDecorateGlobals(currentType, entryPointInfo);
   CopyReflectionDataToEntryPoint(entryPointInfo, interfaceInfo);
   
   // Get the user data for the compute shader
@@ -887,7 +888,7 @@ void EntryPointGeneration::WriteGeometryStageInterface(ZilchShaderIRFunction* fu
   DeleteObjectsInContainer(inputStreamInterfaceTypes);
   DeleteObjectsInContainer(inputVertexInterfaceTypes);
 
-  DecorateImagesAndSamplers(context->mCurrentType, entryPointInfo);
+  FindAndDecorateGlobals(context->mCurrentType, entryPointInfo);
   CopyReflectionDataToEntryPoint(entryPointInfo, compositeInterfaceInfo);
 }
 
@@ -1840,7 +1841,7 @@ void EntryPointGeneration::AddOffsetDecorations(InterfaceInfoGroup& infoGroup)
   ZilchSpirVFrontEnd* translator = mTranslator;
   ZilchSpirVFrontEndContext* context = mContext;
 
-  int currentByteOffset = 0;
+  size_t currentByteOffset = 0;
   InterfaceInfoGroup::FieldList& fieldList = infoGroup.mFields;
   for(size_t i = 0; i < fieldList.Size(); ++i)
   {
@@ -1853,11 +1854,8 @@ void EntryPointGeneration::AddOffsetDecorations(InterfaceInfoGroup& infoGroup)
     // Roughly speaking, alignment is 1 float, 2 float, and 4 float.
     size_t requiredAlignment = memberType->GetByteAlignment();
     size_t requiredSize = memberType->GetByteSize();
-    // Get the remainder to add
-    size_t remainder = requiredAlignment - (currentByteOffset % requiredAlignment);
-    // Mod with the required alignment to get offset 0 when needed
-    size_t alignmentOffset = remainder % requiredAlignment;
-    currentByteOffset += alignmentOffset;
+    // Compute the starting byte offset so it lines up with this type's required alignment
+    currentByteOffset = GetSizeAfterAlignment(currentByteOffset, requiredAlignment);
 
     // Add the offset decoration
     fieldInfo.mDecorations.PushBack(InterfaceInfoGroup::DecorationParam(spv::DecorationOffset, currentByteOffset));
@@ -2005,7 +2003,7 @@ void EntryPointGeneration::WriteMemberDecorations(Array<InterfaceInfoGroup::Deco
   }
 }
 
-void EntryPointGeneration::DecorateImagesAndSamplers(ZilchShaderIRType* currentType, EntryPointInfo* entryPointInfo)
+void EntryPointGeneration::FindAndDecorateGlobals(ZilchShaderIRType* currentType, EntryPointInfo* entryPointInfo)
 {
   // SpirV spec section 14.5.2: uniform constants must have descriptor set and binding decorations specified.
   // Unfortunately, there's currently no way in the entry point generation to know what samplers are used as
@@ -2018,6 +2016,15 @@ void EntryPointGeneration::DecorateImagesAndSamplers(ZilchShaderIRType* currentT
 
   TypeDependencyCollector collector(currentType->mShaderLibrary);
   collector.Collect(currentType);
+
+  DecorateImagesAndSamplers(collector, entryPointInfo);
+  DecorateRuntimeArrays(collector, entryPointInfo);
+}
+
+void EntryPointGeneration::DecorateImagesAndSamplers(TypeDependencyCollector& collector, EntryPointInfo* entryPointInfo)
+{
+  ZilchSpirVFrontEnd* translator = mTranslator;
+  ZilchSpirVFrontEndContext* context = mContext;
 
   // Keep track of used sampler and image ids (they can overlap).
   HashSet<int> samplerIds;
@@ -2079,6 +2086,208 @@ void EntryPointGeneration::DecorateImagesAndSamplers(ZilchShaderIRType* currentT
     resourceInfo->mReflectionData.mBinding = resourceBindingId;
     resourceInfo->mReflectionData.mTypeName = opValueType->mZilchType->ToString();
   }
+}
+
+void EntryPointGeneration::DecorateRuntimeArrays(TypeDependencyCollector& collector, EntryPointInfo* entryPointInfo)
+{
+  // Decorating runtime arrays is a little complicated and could
+  // use some refactoring to avoid code duplication
+
+  ZilchSpirVFrontEnd* translator = mTranslator;
+  ZilchSpirVFrontEndContext* context = mContext;
+  BasicBlock* decorationBlock = &entryPointInfo->mDecorations;
+
+  int bindingId = 0;
+  int descriptorSetId = 0;
+  AutoDeclare(range, collector.mReferencedGlobals.All());
+  for(; !range.Empty(); range.PopFront())
+  {
+    // Get the base type of this global variable
+    ZilchShaderIROp* globalVarInstance = range.Front();
+    ZilchShaderIRType* opValueType = globalVarInstance->GetValueType();
+    Zilch::BoundType* zilchType = opValueType->mZilchType;
+
+    // Only visit runtime array types (the struct that wraps the actual spirv runtime array)
+    if(zilchType == nullptr || zilchType->TemplateBaseName != SpirVNameSettings::mRuntimeArrayTypeName)
+      continue;
+
+    // Get all of the related types of a runtime array
+    ZilchShaderIRType* zilchRuntimeArrayType = opValueType;
+    ZilchShaderIRType* spirvRuntimeArrayType = zilchRuntimeArrayType->mParameters[0]->As<ZilchShaderIRType>();
+    ZilchShaderIRType* elementType = spirvRuntimeArrayType->mParameters[0]->As<ZilchShaderIRType>();
+
+    // Decorate the instance with the correct binding and descriptor set
+    translator->BuildDecorationOp(decorationBlock, globalVarInstance, spv::DecorationBinding, bindingId, context);
+    translator->BuildDecorationOp(decorationBlock, globalVarInstance, spv::DecorationDescriptorSet, descriptorSetId, context);
+    ++bindingId;
+
+    // Decorate the struct wrapper type. This requires
+    // marking it as a block and adding the offset of the actual runtime array.
+    translator->BuildDecorationOp(decorationBlock, opValueType, spv::DecorationBlock, context);
+    translator->BuildMemberDecorationOp(decorationBlock, opValueType, 0, spv::DecorationOffset, 0, context);
+
+    // Create a new reflection object for the runtime array.
+    ShaderStageInterfaceReflection& stageReflectionData = entryPointInfo->mStageReflectionData;
+    ShaderStageResource& stageResource = stageReflectionData.mStructedStorageBuffers.PushBack();
+    ShaderResourceReflectionData& reflectionData = stageResource.mReflectionData;
+    // Fill out common data like names and binding ids
+    reflectionData.mInstanceName = globalVarInstance->mDebugResultName;
+    reflectionData.mBinding = bindingId;
+    reflectionData.mDescriptorSet = descriptorSetId;
+    reflectionData.mTypeName = zilchRuntimeArrayType->mName;
+
+    // Now actually recurse on the runtime array declarations as
+    // this can be a struct of structs or other complicated things.
+    AddRuntimeArrayDecorations(decorationBlock, zilchRuntimeArrayType, spirvRuntimeArrayType, elementType, stageResource);
+  }
+}
+
+void EntryPointGeneration::AddRuntimeArrayDecorations(BasicBlock* decorationBlock, ZilchShaderIRType* zilchRuntimeArrayType, ZilchShaderIRType* spirvRuntimeArrayType, ZilchShaderIRType* elementType, ShaderStageResource& stageResource)
+{
+  ZilchSpirVFrontEnd* translator = mTranslator;
+  ZilchSpirVFrontEndContext* context = mContext;
+
+  ShaderResourceReflectionData& reflectionData = stageResource.mReflectionData;
+
+  // Walk over the element type and determine its size and required
+  // alignment. Also decorate the type if required.
+  size_t maxAlignment = 0;
+  size_t totalSize = 0;
+  switch(elementType->mBaseType)
+  {
+    // This is a struct, we have to recursively decorate the struct
+    // (reflection won't grab nested struct data but this will generate valid spirv)
+    case ShaderIRTypeBaseType::Struct:
+    {
+      RecursivelyDecorateStructType(decorationBlock, elementType, stageResource);
+      totalSize = reflectionData.mSizeInBytes;
+      maxAlignment = reflectionData.mStride;
+      break;
+    }
+    // This case should never happen as an error should already be generated.
+    case ShaderIRTypeBaseType::FixedArray:
+    {
+      translator->SendTranslationError(nullptr, "Runtime array cannot directly contain a FixedArray.");
+      maxAlignment = elementType->GetByteAlignment();
+      totalSize = elementType->GetByteSize();
+      break;
+    }
+    // Matrices are almost the same as everything else, they just need a few extra declarations.
+    // In particular a matrix needs to have column/row major specified and its stride.
+    case ShaderIRTypeBaseType::Matrix:
+    {
+      maxAlignment = elementType->GetByteAlignment();
+      totalSize = elementType->GetByteSize();
+
+      // Hardcode stride to size of a vec4 for performance reasons.
+      // @JoshD: Maybe make a packing option for this later?
+      int matrixStride = 16;
+      translator->BuildMemberDecorationOp(decorationBlock, zilchRuntimeArrayType, 0, spv::DecorationMatrixStride, matrixStride, context);
+      translator->BuildMemberDecorationOp(decorationBlock, zilchRuntimeArrayType, 0, spv::DecorationColMajor, context);
+      break;
+    }
+    default:
+    {
+      // For everything else, just get the byte alignment and size
+      maxAlignment = elementType->GetByteAlignment();
+      totalSize = elementType->GetByteSize();
+      break;
+    }
+  }
+  // Compute the stride of this type, making sure to pad out to the correct alignment
+  int stride = GetSizeAfterAlignment(totalSize, maxAlignment);
+  reflectionData.mSizeInBytes = totalSize;
+  reflectionData.mStride = stride;
+  // Now we can actually decorate the runtime array's rull stride
+  translator->BuildDecorationOp(decorationBlock, spirvRuntimeArrayType, spv::DecorationArrayStride, stride, context);
+}
+
+void EntryPointGeneration::RecursivelyDecorateStructType(BasicBlock* decorationBlock, ZilchShaderIRType* structType, ShaderStageResource& stageResource)
+{
+  // This function is nearly a copy of another one but it operates on different types.
+  // This was created to deal with runtime array, but really needs to be unified at a later point in time.
+
+  // Deal with non-struct types (makes recursion easier)
+  if(structType->mBaseType != ShaderIRTypeBaseType::Struct)
+    return;
+
+  ZilchSpirVFrontEnd* translator = mTranslator;
+  ZilchSpirVFrontEndContext* context = mContext;
+
+  ShaderResourceReflectionData& reflectionData = stageResource.mReflectionData;
+
+  size_t maxAlignment = 0;
+  size_t currentByteOffset = 0;
+
+  // Walk all parameters in the struct and figure out how to decorate them
+  for(size_t i = 0; i < structType->mParameters.Size(); ++i)
+  {
+    // Find the type of the member
+    ZilchShaderIRType* memberType = structType->mParameters[i]->As<ZilchShaderIRType>();
+
+    // Different types have different alignment requirements.
+    // Roughly speaking, alignment is 1 float, 2 float, and 4 float.
+    size_t requiredSize = memberType->GetByteSize();
+    size_t requiredAlignment = memberType->GetByteAlignment();
+    maxAlignment = Math::Max(requiredAlignment, maxAlignment);
+    currentByteOffset = GetSizeAfterAlignment(currentByteOffset, requiredAlignment);
+
+    // Decorate the offset of this member within the struct
+    translator->BuildMemberDecorationOp(decorationBlock, structType, i, spv::DecorationOffset, currentByteOffset, context);
+
+    // Store the offset and size of this field in the reflection data
+    ShaderResourceReflectionData& fieldReflectionData = stageResource.mMembers.PushBack();
+    fieldReflectionData.mTypeName = memberType->mName;
+    fieldReflectionData.mInstanceName = structType->GetMemberName(i);
+    fieldReflectionData.mOffsetInBytes = currentByteOffset;
+    fieldReflectionData.mSizeInBytes = requiredSize;
+
+    // Matrices require the row/column decoration and the stride
+    if(memberType->mBaseType == ShaderIRTypeBaseType::Matrix)
+    {
+      // Hardcode stride to size of a vec4 for performance reasons.
+      // @JoshD: Maybe make a packing option for this later?
+      int matrixStride = 16;
+      translator->BuildMemberDecorationOp(decorationBlock, structType, i, spv::DecorationMatrixStride, matrixStride, context);
+      translator->BuildMemberDecorationOp(decorationBlock, structType, i, spv::DecorationColMajor, context);
+      fieldReflectionData.mStride = matrixStride;
+    }
+    // Structs have to be recursively decorated.
+    else if(memberType->mBaseType == ShaderIRTypeBaseType::Struct)
+    {
+      // @JoshD: Currently stage resources don't support nested structures.
+      // This will generate valid spir-v but eventually needs to be updated to support proper reflection data.
+      ShaderStageResource subData;
+      RecursivelyDecorateStructType(decorationBlock, memberType, subData);
+      fieldReflectionData.mStride = subData.mReflectionData.mStride;
+      fieldReflectionData.mSizeInBytes = subData.mReflectionData.mSizeInBytes;
+    }
+    // Fixed arrays need the array stride decoration.
+    // Additionally all recursive types might need to be decorated.
+    else if(memberType->mBaseType == ShaderIRTypeBaseType::FixedArray)
+    {
+      // Get the stride of the element type (everything less than
+      // 16 bytes has to be padded up to 16 bytes in a fixed array)
+      ZilchShaderIRType* elementType = memberType->mParameters[0]->As<ZilchShaderIRType>();
+      int stride = GetStride(elementType, 16.0f);
+      translator->BuildDecorationOp(decorationBlock, memberType, spv::DecorationArrayStride, stride, context);
+
+      // Recursively decorate the contained type. If this is a
+      // struct it could have further requirements about alignment, etc...
+      // @JoshD: At some point the reflection data needs to be dealt with here.
+      ShaderStageResource subData;
+      RecursivelyDecorateStructType(decorationBlock, elementType, subData);
+    }
+
+    // Increment the current offset by the size of this type (not alignment)
+    currentByteOffset += requiredSize;
+  }
+  size_t totalSize = currentByteOffset;
+
+  // Compute the stride of this type, making sure to pad out the the correct alignment.
+  int stride = GetSizeAfterAlignment(totalSize, maxAlignment);
+  reflectionData.mSizeInBytes = totalSize;
+  reflectionData.mStride = stride;
 }
 
 int EntryPointGeneration::FindBindingId(HashSet<int>& usedIds)

@@ -102,7 +102,9 @@ public:
 
   void PreWalkClassNode(Zilch::ClassNode*& node, ZilchSpirVFrontEndContext* context);
   void PreWalkTemplateTypes(ZilchSpirVFrontEndContext* context);
+  void PreWalkTemplateType(Zilch::BoundType* zilchType, ZilchSpirVFrontEndContext* context);
   void PreWalkClassVariables(Zilch::MemberVariableNode*& node, ZilchSpirVFrontEndContext* context);
+  void AddRuntimeArray(Zilch::MemberVariableNode* node, ZilchShaderIRType* varType, ZilchSpirVFrontEndContext* context);
   void AddGlobalVariable(Zilch::MemberVariableNode* node, ZilchShaderIRType* varType, spv::StorageClass storageClass, ZilchSpirVFrontEndContext* context);
   void PreWalkClassConstructor(Zilch::ConstructorNode*& node, ZilchSpirVFrontEndContext* context);
   void PreWalkClassFunction(Zilch::FunctionNode*& node, ZilchSpirVFrontEndContext* context); 
@@ -218,7 +220,12 @@ public:
   ZilchShaderIROp* BuildCurrentBlockIROp(OpType opType, ZilchShaderIRType* resultType, IZilchShaderIR* arg0, ZilchSpirVFrontEndContext* context);
   ZilchShaderIROp* BuildCurrentBlockIROp(OpType opType, ZilchShaderIRType* resultType, IZilchShaderIR* arg0, IZilchShaderIR* arg1, ZilchSpirVFrontEndContext* context);
   ZilchShaderIROp* BuildCurrentBlockIROp(OpType opType, ZilchShaderIRType* resultType, IZilchShaderIR* arg0, IZilchShaderIR* arg1, IZilchShaderIR* arg2, ZilchSpirVFrontEndContext* context);
+  ZilchShaderIROp* BuildCurrentBlockAccessChain(ZilchShaderIRType* baseResultType, ZilchShaderIROp* selfInstance, IZilchShaderIR* arg0, ZilchSpirVFrontEndContext* context);
+  ZilchShaderIROp* BuildCurrentBlockAccessChain(ZilchShaderIRType* baseResultType, ZilchShaderIROp* selfInstance, IZilchShaderIR* arg0, IZilchShaderIR* arg1, ZilchSpirVFrontEndContext* context);
+  ZilchShaderIROp* BuildDecorationOp(BasicBlock* block, IZilchShaderIR* decorationTarget, spv::Decoration decorationType, ZilchSpirVFrontEndContext* context);
   ZilchShaderIROp* BuildDecorationOp(BasicBlock* block, IZilchShaderIR* decorationTarget, spv::Decoration decorationType, int decorationValue, ZilchSpirVFrontEndContext* context);
+  ZilchShaderIROp* BuildMemberDecorationOp(BasicBlock* block, IZilchShaderIR* decorationTarget, int memberOffset, spv::Decoration decorationType, ZilchSpirVFrontEndContext* context);
+  ZilchShaderIROp* BuildMemberDecorationOp(BasicBlock* block, IZilchShaderIR* decorationTarget, int memberOffset, spv::Decoration decorationType, int decorationValue, ZilchSpirVFrontEndContext* context);
   ZilchShaderIRConstantLiteral* GetOrCreateConstantIntegerLiteral(int value);
   ZilchShaderIRConstantLiteral* GetOrCreateConstantLiteral(Zilch::Any value);
   ZilchShaderIROp* BuildOpVariable(ZilchShaderIRType* resultType, ZilchSpirVFrontEndContext* context);

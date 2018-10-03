@@ -66,6 +66,7 @@ struct ShaderStageInterfaceReflection
   Array<ShaderStageResource> mSamplers;
   Array<ShaderStageResource> mImages;
   Array<ShaderStageResource> mSampledImages;
+  Array<ShaderStageResource> mStructedStorageBuffers;
 
   /// An individual sampler, image, or sampled image can turn into one or more of all sampler/image types.
   /// This stores what renames happened (a few technically can't happen such as image to sampler).

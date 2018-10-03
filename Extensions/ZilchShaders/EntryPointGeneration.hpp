@@ -16,6 +16,8 @@ class EntryPointGeneration;
 namespace Zero
 {
 
+class TypeDependencyCollector;
+
 //-------------------------------------------------------------------EntryPointHelperFunctionData
 /// Simple class to group common data together to make it easier to pass between functions.
 class EntryPointHelperFunctionData
@@ -359,7 +361,14 @@ public:
   void AddFlatDecorations(InterfaceInfoGroup& infoGroup);
   void WriteTypeDecorations(Array<InterfaceInfoGroup::DecorationParam>& decorations, BasicBlock* decorationBlock, IZilchShaderIR* toDecorate);
   void WriteMemberDecorations(Array<InterfaceInfoGroup::DecorationParam>& decorations, BasicBlock* decorationBlock, IZilchShaderIR* toDecorate, ZilchShaderIRConstantLiteral* memberIndexLiteral);
-  void DecorateImagesAndSamplers(ZilchShaderIRType* currentType, EntryPointInfo* entryPointInfo);
+  void FindAndDecorateGlobals(ZilchShaderIRType* currentType, EntryPointInfo* entryPointInfo);
+  void DecorateImagesAndSamplers(TypeDependencyCollector& collector, EntryPointInfo* entryPointInfo);
+  void DecorateRuntimeArrays(TypeDependencyCollector& collector, EntryPointInfo* entryPointInfo);
+  /// Add decorations for a runtime array struct.
+  void AddRuntimeArrayDecorations(BasicBlock* decorationBlock, ZilchShaderIRType* zilchRuntimeArrayType, ZilchShaderIRType* spirvRuntimeArrayType, ZilchShaderIRType* elementType, ShaderStageResource& stageResource);
+  /// Recursively decorate a struct (currently setup for runtime arrays)
+  void RecursivelyDecorateStructType(BasicBlock* decorationBlock, ZilchShaderIRType* structType, ShaderStageResource& stageResource);
+
   int FindBindingId(HashSet<int>& usedIds);
   int FindBindingId(HashSet<int>& usedIds1, HashSet<int>& usedIds2);
 

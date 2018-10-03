@@ -189,6 +189,7 @@ bool TypeDependencyCollector::IsGlobalStorageClass(spv::StorageClass storageClas
 {
   return storageClass == spv::StorageClassUniform ||
     storageClass == spv::StorageClassUniformConstant || 
+    storageClass == spv::StorageClassStorageBuffer || 
     storageClass == spv::StorageClassInput || 
     storageClass == spv::StorageClassOutput || 
     storageClass == spv::StorageClassPrivate;

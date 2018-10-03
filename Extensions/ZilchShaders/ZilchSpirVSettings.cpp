@@ -40,6 +40,7 @@ String SpirVNameSettings::mNonCopyableAttributeName = "NonCopyable";
 String SpirVNameSettings::mStorageClassAttribute = "StorageClass";
 String SpirVNameSettings::mNameOverrideParam = "name";
 String SpirVNameSettings::mRequiresPixelAttribute = "RequiresPixel";
+String SpirVNameSettings::mRuntimeArrayTypeName = "RuntimeArray";
 
 SpirVNameSettings::SpirVNameSettings()
 {

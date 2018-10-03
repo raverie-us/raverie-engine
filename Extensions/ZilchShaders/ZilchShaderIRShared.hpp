@@ -221,7 +221,7 @@ public:
   void AddMember(ZilchShaderIRType* memberType, StringParam memberName);
 
   /// Gets a sub-type at the given index from this type. Sub types are only valid on structs/functions.
-  ZilchShaderIRType* GetSubType(int index);
+  ZilchShaderIRType* GetSubType(int index) const;
   /// Returns the number of sub-types contained. Only valid on structs/functions.
   size_t GetSubTypeCount();
   /// Finds a sub-member's name via the member index. For debug names only now.
@@ -289,6 +289,7 @@ bool IsScalarType(ZilchShaderIRType* compositeType);
 ZilchShaderIRType* GetImageTypeFromSampledImage(ZilchShaderIRType* samplerType);
 /// Returns the required stride of the given type with a base alignment factor (rounds up to nearest multiple of alignment)
 int GetStride(ZilchShaderIRType* type, float baseAlignment);
+size_t GetSizeAfterAlignment(size_t size, size_t baseAlignment);
 
 // Generate a unique identifier for a template type with no filled in arguments.
 // Used for finding 'base' template types.
