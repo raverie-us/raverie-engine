@@ -1,0 +1,16 @@
+[Pixel][UnitTest]
+struct RuntimeArray3
+{
+  var Data : RuntimeArray[Real];
+  
+  // Must be passed by ref
+  function Helper(data : RuntimeArray[Real])
+  {
+  }
+  
+  [EntryPoint]
+  function Main()
+  {
+    this.Helper(this.Data);
+  }
+}

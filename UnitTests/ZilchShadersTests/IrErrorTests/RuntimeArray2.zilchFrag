@@ -1,0 +1,10 @@
+[Pixel][UnitTest]
+struct RuntimeArray2
+{
+  [EntryPoint]
+  function Main()
+  {
+    // Local declaration is illegal
+    var data = RuntimeArray[Real]();
+  }
+}

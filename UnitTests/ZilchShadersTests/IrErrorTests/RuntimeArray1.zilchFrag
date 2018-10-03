@@ -1,0 +1,11 @@
+[Pixel][UnitTest]
+struct RuntimeArray1
+{
+  // Constructor is illegal
+  var Data : RuntimeArray[Real] = RuntimeArray[Real]();
+  
+  [EntryPoint]
+  function Main()
+  {
+  }
+}

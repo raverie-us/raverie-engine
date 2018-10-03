@@ -1,0 +1,13 @@
+[Pixel][UnitTest]
+struct RuntimeArray5
+{
+  // Nested runtime arrays are illegal.
+  var Data : RuntimeArray[RuntimeArray[Real2]];
+  
+  [EntryPoint]
+  function Main()
+  {
+    var count = this.Data.Count;
+    var particle = this.Data[0];
+  }
+}

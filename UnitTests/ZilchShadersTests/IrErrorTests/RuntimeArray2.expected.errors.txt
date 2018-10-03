@@ -1,0 +1,2 @@
+  IrErrorTests\RuntimeArray2.zilchFrag(8) in Main: Type 'RuntimeArray[Real]' cannot be copied.:
+  Type 'RuntimeArray[Real]' cannot be copied.

@@ -1,0 +1,15 @@
+[Pixel][UnitTest]
+struct RuntimeArray4
+{
+  var Real2x2s : RuntimeArray[Real2x2];
+  var Real3x3s : RuntimeArray[Real3x3];
+  var Real4x4s : RuntimeArray[Real4x4];
+  
+  [EntryPoint]
+  function Main()
+  {
+    var r2x2 = this.Real2x2s[0];
+    var r3x3 = this.Real3x3s[0];
+    var r4x4 = this.Real4x4s[0];
+  }
+}

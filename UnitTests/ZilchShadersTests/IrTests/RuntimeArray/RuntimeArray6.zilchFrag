@@ -1,0 +1,20 @@
+struct ParticleData
+{
+  var Scalar : Real;
+  var Uv : Real2;
+  var Velocity : Real3;
+  var Position : Real4;
+}
+
+[Pixel][UnitTest]
+struct RuntimeArray6
+{
+  var Data : RuntimeArray[ParticleData];
+  
+  [EntryPoint]
+  function Main()
+  {
+    var count = this.Data.Count;
+    var particle = this.Data[0];
+  }
+}

@@ -1,0 +1,14 @@
+[Pixel][UnitTest]
+struct RuntimeArray4
+{
+  // Cannot have a runtime array that directly contains a
+  // fixed array. The fixed array must be in a struct.
+  var Data : RuntimeArray[FixedArray[Real2, 5]];
+  
+  [EntryPoint]
+  function Main()
+  {
+    var count = this.Data.Count;
+    var particle = this.Data[0];
+  }
+}
