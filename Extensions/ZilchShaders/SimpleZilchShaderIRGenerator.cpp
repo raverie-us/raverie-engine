@@ -623,7 +623,7 @@ ZilchShaderSpirVSettings* SimpleZilchShaderIRGenerator::CreateUnitTestSettings(S
   UniformBufferDescription transformData(2);
   transformData.mDebugName = "TransformData";
   transformData.AddField(real4x4Type, "LocalToWorld");
-  transformData.AddField(real4x4Type, "PerspectiveToApiPerspective");
+  transformData.AddField(real4x4Type, nameSettings.mPerspectiveToApiPerspectiveName);
   settings->AddUniformBufferDescription(transformData);
 
   settings->AutoSetDefaultUniformBufferDescription();
@@ -658,6 +658,7 @@ ZilchShaderSpirVSettings* SimpleZilchShaderIRGenerator::CreateUnitTestSettings(S
 
 ZilchShaderSpirVSettings* SimpleZilchShaderIRGenerator::CreateZeroSettings(SpirVNameSettings& nameSettings)
 {
+  nameSettings.mPerspectiveToApiPerspectiveName = "ZeroPerspectiveToApiPerspective";
   ZilchShaderSpirVSettings* settings = new ZilchShaderSpirVSettings(nameSettings);
 
   Zilch::BoundType* realType = ZilchTypeId(Zilch::Real);
@@ -726,7 +727,7 @@ ZilchShaderSpirVSettings* SimpleZilchShaderIRGenerator::CreateZeroSettings(SpirV
 
 
   // Set zilch fragment names for spirv built-ins
-  settings->SetHardwareBuiltInName(spv::BuiltInPosition, "ApiPerspectivePosition");
+  settings->SetHardwareBuiltInName(spv::BuiltInPosition, nameSettings.mPerspectiveToApiPerspectiveName);
 
   settings->SetMaxSimultaneousRenderTargets(4);
   settings->SetRenderTargetName("Target0", 0);

@@ -59,6 +59,7 @@ void ZilchShaderGenerator::InitializeSpirV()
 {
   SpirVNameSettings nameSettings;
 
+  nameSettings.mPerspectiveToApiPerspectiveName = "ZeroPerspectiveToApiPerspective";
   nameSettings.mAllowedClassAttributes.Insert("Protected", AttributeInfo());
   nameSettings.mAllowedClassAttributes.Insert("CoreVertex", AttributeInfo());
   nameSettings.mAllowedClassAttributes.Insert("RenderPass", AttributeInfo());
@@ -143,7 +144,7 @@ void ZilchShaderGenerator::InitializeSpirV()
   transformData.AddField(real4x4Type, "LocalToPerspective");
   transformData.AddField(real4x4Type, "ViewToPerspective");
   transformData.AddField(real4x4Type, "PerspectiveToView");
-  transformData.AddField(real4x4Type, "ZeroPerspectiveToApiPerspective");
+  transformData.AddField(real4x4Type, nameSettings.mPerspectiveToApiPerspectiveName);
   settings->AddUniformBufferDescription(transformData);
 
   //UniformBufferDescription miscData(3);

@@ -933,6 +933,7 @@ void EntryPointGeneration::CollectGeometryStreamTypes(ZilchShaderIRFunction* fun
 void EntryPointGeneration::DeclareGeometryVertexInputs(GeometryStageInfo& stageInfo, EntryPointInfo* entryPointInfo, ShaderInterfaceInfo& vertexInputInterfaceInfo, EntryPointHelperFunctionData& copyInputsData, ZilchShaderIROp* copyInputsStreamVar, Array<ShaderInterfaceType*>& inputStreamInterfaceTypes, Array<ShaderInterfaceType*>& inputVertexInterfaceTypes)
 {
   BasicBlock* copyInputsBlock = copyInputsData.mBlock;
+  String baseShaderName = stageInfo.mShaderType->mName;
 
   // Declare the input vertex stream type and sub-type (no built-ins)
   {
@@ -945,8 +946,9 @@ void EntryPointGeneration::DeclareGeometryVertexInputs(GeometryStageInfo& stageI
 
     GeometryInOutTypeInfo geometryInfo;
     geometryInfo.mArraySize = stageInfo.mInputStreamType->mParameters[1];
-    geometryInfo.mItemTypeName = "VertexInType";
-    geometryInfo.mArrayTypeName = "VertexInStreamType";
+    // Name has to be mangled if more than one geometry shader exists in a library
+    geometryInfo.mItemTypeName = BuildString("VertexInType_", baseShaderName);
+    geometryInfo.mArrayTypeName = BuildString("VertexInStreamType", baseShaderName);
     geometryInfo.mInstanceName = "In";
 
     ShaderInterfaceStructArray* arrayInterfaceType = DeclareGeometryVertexInput(interfaceGroup, entryPointInfo, geometryInfo, inputStreamInterfaceTypes, inputVertexInterfaceTypes);
@@ -965,8 +967,8 @@ void EntryPointGeneration::DeclareGeometryVertexInputs(GeometryStageInfo& stageI
 
     GeometryInOutTypeInfo geometryInfo;
     geometryInfo.mArraySize = stageInfo.mInputStreamType->mParameters[1];
-    geometryInfo.mItemTypeName = "BuiltInVertexInType";
-    geometryInfo.mArrayTypeName = "BuiltInVertexInStreamType";
+    geometryInfo.mItemTypeName = BuildString("BuiltInVertexInType", baseShaderName);
+    geometryInfo.mArrayTypeName = BuildString("BuiltInVertexInStreamType", baseShaderName);
     // Currently the backend requires this be named "gl_in" or the translation won't work
     geometryInfo.mInstanceName = "gl_in";
 
@@ -2500,7 +2502,7 @@ void EntryPointGeneration::PerspectiveTransformAppendVertexCallback(AppendCallba
   ZilchShaderIROp* apiPerspectivePosition = self->FindField(apiPerspectivePositionKey, *callbackData.mOutputVertexInterfaceTypes, block, spv::StorageClassOutput);
 
   // Find the api perspective transform matrix from all of the uniform buffers available
-  ShaderFieldKey perspectiveTransformKey("PerspectiveToApiPerspective", real4x4TypeName);
+  ShaderFieldKey perspectiveTransformKey(nameSettings.mPerspectiveToApiPerspectiveName, real4x4TypeName);
   ZilchShaderIROp* transformMatrixOp = self->FindField(perspectiveTransformKey, self->mUniforms, block, spv::StorageClassUniform);
 
   // If we have all three variables then we can write a transform

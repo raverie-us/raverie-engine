@@ -1191,7 +1191,7 @@ void ZilchShaderIRCompositor::ApiPerspectivePositionCallback(CompositorCallbackD
   vertexLinkingInfo.mHardwareOutputs.InsertOrIgnore(ShaderFieldKey("ApiPerspectivePosition", real4TypeName));
 
   // Force the api perspective matrix transform to exist
-  stageLinkingInfo->mPrimitiveLinkingInfo.AddResolvedField("PerspectiveToApiPerspective", real4x4TypeName, nameSettings.mAppBuiltInInputAttribute);
+  stageLinkingInfo->mPrimitiveLinkingInfo.AddResolvedField(nameSettings.mPerspectiveToApiPerspectiveName, real4x4TypeName, nameSettings.mAppBuiltInInputAttribute);
 }
 
 }//namespace Zero

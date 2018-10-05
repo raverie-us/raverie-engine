@@ -24,14 +24,14 @@
                OpMemberName %GeoData 3 "MyInt2"
                OpName %OutputStream "OutputStream"
                OpMemberName %OutputStream 0 "Output"
-               OpName %VertexInType "VertexInType"
-               OpMemberName %VertexInType 0 "MyVar1_Boolean"
-               OpMemberName %VertexInType 5 "MyVar3"
-               OpMemberName %VertexInType 1 "MyVar1"
-               OpMemberName %VertexInType 3 "MyVar2"
-               OpMemberName %VertexInType 4 "MyVar3_Boolean3"
-               OpMemberName %VertexInType 2 "MyVar2_Boolean2"
-               OpName %VertexInStreamType "VertexInStreamType"
+               OpName %VertexInType_GeometryBools "VertexInType_GeometryBools"
+               OpMemberName %VertexInType_GeometryBools 0 "MyVar1_Boolean"
+               OpMemberName %VertexInType_GeometryBools 5 "MyVar3"
+               OpMemberName %VertexInType_GeometryBools 1 "MyVar1"
+               OpMemberName %VertexInType_GeometryBools 3 "MyVar2"
+               OpMemberName %VertexInType_GeometryBools 4 "MyVar3_Boolean3"
+               OpMemberName %VertexInType_GeometryBools 2 "MyVar2_Boolean2"
+               OpName %VertexInStreamTypeGeometryBools "VertexInStreamTypeGeometryBools"
                OpName %GeometryBoolsOut "GeometryBoolsOut"
                OpMemberName %GeometryBoolsOut 0 "MyVar1_Boolean"
                OpMemberName %GeometryBoolsOut 5 "MyVar3"
@@ -71,7 +71,7 @@
                OpName %zero_0 "zero"
                OpName %one_0 "one"
                OpName %InitializeGlobals "InitializeGlobals"
-               OpDecorate %VertexInType Block
+               OpDecorate %VertexInType_GeometryBools Block
                OpDecorate %In Location 0
                OpDecorate %GeometryBoolsOut Block
                OpDecorate %Out Location 0
@@ -109,11 +109,11 @@
          %27 = OpTypeFunction %void %_ptr_Function_GeometryBools %_ptr_Function__arr_GeoData_int_3 %_ptr_Function_OutputStream
          %28 = OpTypeFunction %void %_ptr_Function_GeometryBools
          %29 = OpTypeFunction %void %_ptr_Function_GeometryBools %_ptr_Function__arr_GeoData_int_3
-%VertexInType = OpTypeStruct %int %int %v2int %v2int %v3int %v3int
-%_ptr_Input_VertexInType = OpTypePointer Input %VertexInType
-%VertexInStreamType = OpTypeArray %VertexInType %int_3
-%_ptr_Input_VertexInStreamType = OpTypePointer Input %VertexInStreamType
-         %In = OpVariable %_ptr_Input_VertexInStreamType Input
+%VertexInType_GeometryBools = OpTypeStruct %int %int %v2int %v2int %v3int %v3int
+%_ptr_Input_VertexInType_GeometryBools = OpTypePointer Input %VertexInType_GeometryBools
+%VertexInStreamTypeGeometryBools = OpTypeArray %VertexInType_GeometryBools %int_3
+%_ptr_Input_VertexInStreamTypeGeometryBools = OpTypePointer Input %VertexInStreamTypeGeometryBools
+         %In = OpVariable %_ptr_Input_VertexInStreamTypeGeometryBools Input
 %_ptr_Input_int = OpTypePointer Input %int
 %_ptr_Input_v2int = OpTypePointer Input %v2int
 %_ptr_Input_v3int = OpTypePointer Input %v3int
@@ -179,7 +179,7 @@
      %self_4 = OpFunctionParameter %_ptr_Function_GeometryBools
 %inputStream = OpFunctionParameter %_ptr_Function__arr_GeoData_int_3
          %89 = OpLabel
-         %90 = OpAccessChain %_ptr_Input_VertexInType %In %int_0
+         %90 = OpAccessChain %_ptr_Input_VertexInType_GeometryBools %In %int_0
          %91 = OpAccessChain %_ptr_Function_GeoData %inputStream %int_0
          %92 = OpAccessChain %_ptr_Function_bool %91 %int_0
          %93 = OpAccessChain %_ptr_Input_int %90 %int_0
@@ -210,7 +210,7 @@
         %113 = OpAccessChain %_ptr_Input_v3int %90 %int_5
         %114 = OpLoad %v3int %113
                OpStore %112 %114
-        %115 = OpAccessChain %_ptr_Input_VertexInType %In %int_1
+        %115 = OpAccessChain %_ptr_Input_VertexInType_GeometryBools %In %int_1
         %116 = OpAccessChain %_ptr_Function_GeoData %inputStream %int_1
         %117 = OpAccessChain %_ptr_Function_bool %116 %int_0
         %118 = OpAccessChain %_ptr_Input_int %115 %int_0
@@ -241,7 +241,7 @@
         %138 = OpAccessChain %_ptr_Input_v3int %115 %int_5
         %139 = OpLoad %v3int %138
                OpStore %137 %139
-        %140 = OpAccessChain %_ptr_Input_VertexInType %In %int_2
+        %140 = OpAccessChain %_ptr_Input_VertexInType_GeometryBools %In %int_2
         %141 = OpAccessChain %_ptr_Function_GeoData %inputStream %int_2
         %142 = OpAccessChain %_ptr_Function_bool %141 %int_0
         %143 = OpAccessChain %_ptr_Input_int %140 %int_0

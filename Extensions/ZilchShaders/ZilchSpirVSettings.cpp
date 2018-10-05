@@ -68,6 +68,8 @@ SpirVNameSettings::SpirVNameSettings()
   mComputeLocalSizeZParam = "localSizeZ";
   mMaxVerticesParam = "maxVertices";
 
+  mPerspectiveToApiPerspectiveName = "PerspectiveToApiPerspective";
+
   // Make an array for easy indexing of fragment type attribute names
   mFragmentTypeAttributes.Resize(FragmentType::Size);
   mFragmentTypeAttributes[FragmentType::Vertex] = mVertexAttribute;

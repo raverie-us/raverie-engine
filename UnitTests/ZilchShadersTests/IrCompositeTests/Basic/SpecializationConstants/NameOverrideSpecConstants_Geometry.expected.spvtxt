@@ -31,9 +31,9 @@
                OpName %NameOverrideSpecConstants_GeometryTransformData "NameOverrideSpecConstants_GeometryTransformData"
                OpMemberName %NameOverrideSpecConstants_GeometryTransformData 0 "LocalToWorld"
                OpMemberName %NameOverrideSpecConstants_GeometryTransformData 1 "PerspectiveToApiPerspective"
-               OpName %BuiltInVertexInType "BuiltInVertexInType"
-               OpMemberName %BuiltInVertexInType 0 "ApiPerspectivePosition"
-               OpName %BuiltInVertexInStreamType "BuiltInVertexInStreamType"
+               OpName %BuiltInVertexInTypeNameOverrideSpecConstants_Geometry "BuiltInVertexInTypeNameOverrideSpecConstants_Geometry"
+               OpMemberName %BuiltInVertexInTypeNameOverrideSpecConstants_Geometry 0 "ApiPerspectivePosition"
+               OpName %BuiltInVertexInStreamTypeNameOverrideSpecConstants_Geometry "BuiltInVertexInStreamTypeNameOverrideSpecConstants_Geometry"
                OpName %NameOverrideSpecConstants_Geometrygl_out "NameOverrideSpecConstants_Geometrygl_out"
                OpMemberName %NameOverrideSpecConstants_Geometrygl_out 0 "ApiPerspectivePosition"
                OpName %TransformData "TransformData"
@@ -115,8 +115,8 @@
                OpMemberDecorate %NameOverrideSpecConstants_GeometryTransformData 1 ColMajor
                OpDecorate %TransformData DescriptorSet 0
                OpDecorate %TransformData Binding 2
-               OpDecorate %BuiltInVertexInType Block
-               OpMemberDecorate %BuiltInVertexInType 0 BuiltIn Position
+               OpDecorate %BuiltInVertexInTypeNameOverrideSpecConstants_Geometry Block
+               OpMemberDecorate %BuiltInVertexInTypeNameOverrideSpecConstants_Geometry 0 BuiltIn Position
                OpDecorate %NameOverrideSpecConstants_Geometrygl_out Block
                OpMemberDecorate %NameOverrideSpecConstants_Geometrygl_out 0 BuiltIn Position
                OpDecorate %Position_GeometryOverride_X_NameOverrideSpecConstants_Geometry SpecId 1
@@ -182,11 +182,11 @@
 %NameOverrideSpecConstants_GeometryTransformData = OpTypeStruct %mat4v4float %mat4v4float
 %_ptr_Uniform_NameOverrideSpecConstants_GeometryTransformData = OpTypePointer Uniform %NameOverrideSpecConstants_GeometryTransformData
 %TransformData = OpVariable %_ptr_Uniform_NameOverrideSpecConstants_GeometryTransformData Uniform
-%BuiltInVertexInType = OpTypeStruct %v4float
-%_ptr_Input_BuiltInVertexInType = OpTypePointer Input %BuiltInVertexInType
-%BuiltInVertexInStreamType = OpTypeArray %BuiltInVertexInType %int_3
-%_ptr_Input_BuiltInVertexInStreamType = OpTypePointer Input %BuiltInVertexInStreamType
-      %gl_in = OpVariable %_ptr_Input_BuiltInVertexInStreamType Input
+%BuiltInVertexInTypeNameOverrideSpecConstants_Geometry = OpTypeStruct %v4float
+%_ptr_Input_BuiltInVertexInTypeNameOverrideSpecConstants_Geometry = OpTypePointer Input %BuiltInVertexInTypeNameOverrideSpecConstants_Geometry
+%BuiltInVertexInStreamTypeNameOverrideSpecConstants_Geometry = OpTypeArray %BuiltInVertexInTypeNameOverrideSpecConstants_Geometry %int_3
+%_ptr_Input_BuiltInVertexInStreamTypeNameOverrideSpecConstants_Geometry = OpTypePointer Input %BuiltInVertexInStreamTypeNameOverrideSpecConstants_Geometry
+      %gl_in = OpVariable %_ptr_Input_BuiltInVertexInStreamTypeNameOverrideSpecConstants_Geometry Input
 %_ptr_Input_v4float = OpTypePointer Input %v4float
       %int_2 = OpConstant %int 2
          %52 = OpTypeFunction %void
@@ -344,19 +344,19 @@
         %173 = OpAccessChain %_ptr_Function_mat4v4float %self_11 %int_0
         %174 = OpLoad %mat4v4float %172
                OpStore %173 %174
-        %175 = OpAccessChain %_ptr_Input_BuiltInVertexInType %gl_in %int_0
+        %175 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeNameOverrideSpecConstants_Geometry %gl_in %int_0
         %176 = OpAccessChain %_ptr_Function_NameOverrideSpecConstants_GeoIn %inputStream %int_0
         %177 = OpAccessChain %_ptr_Function_v4float %176 %int_0
         %178 = OpAccessChain %_ptr_Input_v4float %175 %int_0
         %179 = OpLoad %v4float %178
                OpStore %177 %179
-        %180 = OpAccessChain %_ptr_Input_BuiltInVertexInType %gl_in %int_1_0
+        %180 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeNameOverrideSpecConstants_Geometry %gl_in %int_1_0
         %181 = OpAccessChain %_ptr_Function_NameOverrideSpecConstants_GeoIn %inputStream %int_1_0
         %182 = OpAccessChain %_ptr_Function_v4float %181 %int_0
         %183 = OpAccessChain %_ptr_Input_v4float %180 %int_0
         %184 = OpLoad %v4float %183
                OpStore %182 %184
-        %185 = OpAccessChain %_ptr_Input_BuiltInVertexInType %gl_in %int_2
+        %185 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeNameOverrideSpecConstants_Geometry %gl_in %int_2
         %186 = OpAccessChain %_ptr_Function_NameOverrideSpecConstants_GeoIn %inputStream %int_2
         %187 = OpAccessChain %_ptr_Function_v4float %186 %int_0
         %188 = OpAccessChain %_ptr_Input_v4float %185 %int_0
@@ -399,7 +399,7 @@
 %outDataLocal_0 = OpVariable %_ptr_Function_GeometryData Function
                OpStore %outDataLocal_0 %outputData_0
         %215 = OpAccessChain %_ptr_Output_v4float %gl_out %int_0
-        %216 = OpAccessChain %_ptr_Input_BuiltInVertexInType %gl_in %vertexId_0
+        %216 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeNameOverrideSpecConstants_Geometry %gl_in %vertexId_0
         %217 = OpAccessChain %_ptr_Input_v4float %216 %int_0
         %218 = OpLoad %v4float %217
                OpStore %215 %218

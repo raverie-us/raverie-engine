@@ -27,12 +27,12 @@
                OpName %GeometryInOuts6TransformData "GeometryInOuts6TransformData"
                OpMemberName %GeometryInOuts6TransformData 0 "LocalToWorld"
                OpMemberName %GeometryInOuts6TransformData 1 "PerspectiveToApiPerspective"
-               OpName %VertexInType "VertexInType"
-               OpMemberName %VertexInType 0 "LocalNormal"
-               OpName %VertexInStreamType "VertexInStreamType"
-               OpName %BuiltInVertexInType "BuiltInVertexInType"
-               OpMemberName %BuiltInVertexInType 0 "ApiPerspectivePosition"
-               OpName %BuiltInVertexInStreamType "BuiltInVertexInStreamType"
+               OpName %VertexInType_GeometryInOuts6 "VertexInType_GeometryInOuts6"
+               OpMemberName %VertexInType_GeometryInOuts6 0 "LocalNormal"
+               OpName %VertexInStreamTypeGeometryInOuts6 "VertexInStreamTypeGeometryInOuts6"
+               OpName %BuiltInVertexInTypeGeometryInOuts6 "BuiltInVertexInTypeGeometryInOuts6"
+               OpMemberName %BuiltInVertexInTypeGeometryInOuts6 0 "ApiPerspectivePosition"
+               OpName %BuiltInVertexInStreamTypeGeometryInOuts6 "BuiltInVertexInStreamTypeGeometryInOuts6"
                OpName %GeometryInOuts6Out "GeometryInOuts6Out"
                OpMemberName %GeometryInOuts6Out 0 "Color"
                OpMemberName %GeometryInOuts6Out 1 "WorldNormal"
@@ -88,10 +88,10 @@
                OpMemberDecorate %GeometryInOuts6TransformData 1 ColMajor
                OpDecorate %TransformData DescriptorSet 0
                OpDecorate %TransformData Binding 2
-               OpDecorate %VertexInType Block
+               OpDecorate %VertexInType_GeometryInOuts6 Block
                OpDecorate %In Location 0
-               OpDecorate %BuiltInVertexInType Block
-               OpMemberDecorate %BuiltInVertexInType 0 BuiltIn Position
+               OpDecorate %BuiltInVertexInTypeGeometryInOuts6 Block
+               OpMemberDecorate %BuiltInVertexInTypeGeometryInOuts6 0 BuiltIn Position
                OpDecorate %GeometryInOuts6Out Block
                OpDecorate %Out Location 0
                OpDecorate %GeometryInOuts6gl_out Block
@@ -134,17 +134,17 @@
 %GeometryInOuts6TransformData = OpTypeStruct %mat4v4float %mat4v4float
 %_ptr_Uniform_GeometryInOuts6TransformData = OpTypePointer Uniform %GeometryInOuts6TransformData
 %TransformData = OpVariable %_ptr_Uniform_GeometryInOuts6TransformData Uniform
-%VertexInType = OpTypeStruct %v3float
-%_ptr_Input_VertexInType = OpTypePointer Input %VertexInType
-%VertexInStreamType = OpTypeArray %VertexInType %int_1
-%_ptr_Input_VertexInStreamType = OpTypePointer Input %VertexInStreamType
-         %In = OpVariable %_ptr_Input_VertexInStreamType Input
+%VertexInType_GeometryInOuts6 = OpTypeStruct %v3float
+%_ptr_Input_VertexInType_GeometryInOuts6 = OpTypePointer Input %VertexInType_GeometryInOuts6
+%VertexInStreamTypeGeometryInOuts6 = OpTypeArray %VertexInType_GeometryInOuts6 %int_1
+%_ptr_Input_VertexInStreamTypeGeometryInOuts6 = OpTypePointer Input %VertexInStreamTypeGeometryInOuts6
+         %In = OpVariable %_ptr_Input_VertexInStreamTypeGeometryInOuts6 Input
 %_ptr_Input_v3float = OpTypePointer Input %v3float
-%BuiltInVertexInType = OpTypeStruct %v4float
-%_ptr_Input_BuiltInVertexInType = OpTypePointer Input %BuiltInVertexInType
-%BuiltInVertexInStreamType = OpTypeArray %BuiltInVertexInType %int_1
-%_ptr_Input_BuiltInVertexInStreamType = OpTypePointer Input %BuiltInVertexInStreamType
-      %gl_in = OpVariable %_ptr_Input_BuiltInVertexInStreamType Input
+%BuiltInVertexInTypeGeometryInOuts6 = OpTypeStruct %v4float
+%_ptr_Input_BuiltInVertexInTypeGeometryInOuts6 = OpTypePointer Input %BuiltInVertexInTypeGeometryInOuts6
+%BuiltInVertexInStreamTypeGeometryInOuts6 = OpTypeArray %BuiltInVertexInTypeGeometryInOuts6 %int_1
+%_ptr_Input_BuiltInVertexInStreamTypeGeometryInOuts6 = OpTypePointer Input %BuiltInVertexInStreamTypeGeometryInOuts6
+      %gl_in = OpVariable %_ptr_Input_BuiltInVertexInStreamTypeGeometryInOuts6 Input
 %_ptr_Input_v4float = OpTypePointer Input %v4float
          %45 = OpTypeFunction %void
 %_ptr_Output_v4float = OpTypePointer Output %v4float
@@ -266,13 +266,13 @@
         %141 = OpAccessChain %_ptr_Function_mat4v4float %self_6 %int_0
         %142 = OpLoad %mat4v4float %140
                OpStore %141 %142
-        %143 = OpAccessChain %_ptr_Input_VertexInType %In %int_0
+        %143 = OpAccessChain %_ptr_Input_VertexInType_GeometryInOuts6 %In %int_0
         %144 = OpAccessChain %_ptr_Function_InputData %inputStream %int_0
         %145 = OpAccessChain %_ptr_Function_v3float %144 %int_0
         %146 = OpAccessChain %_ptr_Input_v3float %143 %int_0
         %147 = OpLoad %v3float %146
                OpStore %145 %147
-        %148 = OpAccessChain %_ptr_Input_BuiltInVertexInType %gl_in %int_0
+        %148 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeGeometryInOuts6 %gl_in %int_0
         %149 = OpAccessChain %_ptr_Function_InputData %inputStream %int_0
         %150 = OpAccessChain %_ptr_Function_v4float %149 %int_1
         %151 = OpAccessChain %_ptr_Input_v4float %148 %int_0

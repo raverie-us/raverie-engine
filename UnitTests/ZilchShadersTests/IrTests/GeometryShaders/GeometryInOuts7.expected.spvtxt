@@ -22,13 +22,13 @@
                OpMemberName %InputData 2 "ApiPerspectivePosition"
                OpName %OutputStream "OutputStream"
                OpMemberName %OutputStream 0 "Output"
-               OpName %VertexInType "VertexInType"
-               OpMemberName %VertexInType 1 "Normal"
-               OpMemberName %VertexInType 0 "Color"
-               OpName %VertexInStreamType "VertexInStreamType"
-               OpName %BuiltInVertexInType "BuiltInVertexInType"
-               OpMemberName %BuiltInVertexInType 0 "ApiPerspectivePosition"
-               OpName %BuiltInVertexInStreamType "BuiltInVertexInStreamType"
+               OpName %VertexInType_GeometryInOuts7 "VertexInType_GeometryInOuts7"
+               OpMemberName %VertexInType_GeometryInOuts7 1 "Normal"
+               OpMemberName %VertexInType_GeometryInOuts7 0 "Color"
+               OpName %VertexInStreamTypeGeometryInOuts7 "VertexInStreamTypeGeometryInOuts7"
+               OpName %BuiltInVertexInTypeGeometryInOuts7 "BuiltInVertexInTypeGeometryInOuts7"
+               OpMemberName %BuiltInVertexInTypeGeometryInOuts7 0 "ApiPerspectivePosition"
+               OpName %BuiltInVertexInStreamTypeGeometryInOuts7 "BuiltInVertexInStreamTypeGeometryInOuts7"
                OpName %GeometryInOuts7Out "GeometryInOuts7Out"
                OpMemberName %GeometryInOuts7Out 1 "Normal"
                OpMemberName %GeometryInOuts7Out 0 "Color"
@@ -67,10 +67,10 @@
                OpName %outDataLocal "outDataLocal"
                OpName %InitializeGlobals "InitializeGlobals"
                OpDecorate %PrimitiveId BuiltIn PrimitiveId
-               OpDecorate %VertexInType Block
+               OpDecorate %VertexInType_GeometryInOuts7 Block
                OpDecorate %In Location 0
-               OpDecorate %BuiltInVertexInType Block
-               OpMemberDecorate %BuiltInVertexInType 0 BuiltIn Position
+               OpDecorate %BuiltInVertexInTypeGeometryInOuts7 Block
+               OpMemberDecorate %BuiltInVertexInTypeGeometryInOuts7 0 BuiltIn Position
                OpDecorate %GeometryInOuts7Out Block
                OpDecorate %Out Location 0
                OpDecorate %GeometryInOuts7gl_out Block
@@ -106,18 +106,18 @@
          %25 = OpTypeFunction %void %_ptr_Function_GeometryInOuts7 %_ptr_Function__arr_InputData_int_3
 %_ptr_Input_int = OpTypePointer Input %int
 %PrimitiveId = OpVariable %_ptr_Input_int Input
-%VertexInType = OpTypeStruct %v4float %v3float
-%_ptr_Input_VertexInType = OpTypePointer Input %VertexInType
-%VertexInStreamType = OpTypeArray %VertexInType %int_3
-%_ptr_Input_VertexInStreamType = OpTypePointer Input %VertexInStreamType
-         %In = OpVariable %_ptr_Input_VertexInStreamType Input
+%VertexInType_GeometryInOuts7 = OpTypeStruct %v4float %v3float
+%_ptr_Input_VertexInType_GeometryInOuts7 = OpTypePointer Input %VertexInType_GeometryInOuts7
+%VertexInStreamTypeGeometryInOuts7 = OpTypeArray %VertexInType_GeometryInOuts7 %int_3
+%_ptr_Input_VertexInStreamTypeGeometryInOuts7 = OpTypePointer Input %VertexInStreamTypeGeometryInOuts7
+         %In = OpVariable %_ptr_Input_VertexInStreamTypeGeometryInOuts7 Input
 %_ptr_Input_v4float = OpTypePointer Input %v4float
 %_ptr_Input_v3float = OpTypePointer Input %v3float
-%BuiltInVertexInType = OpTypeStruct %v4float
-%_ptr_Input_BuiltInVertexInType = OpTypePointer Input %BuiltInVertexInType
-%BuiltInVertexInStreamType = OpTypeArray %BuiltInVertexInType %int_3
-%_ptr_Input_BuiltInVertexInStreamType = OpTypePointer Input %BuiltInVertexInStreamType
-      %gl_in = OpVariable %_ptr_Input_BuiltInVertexInStreamType Input
+%BuiltInVertexInTypeGeometryInOuts7 = OpTypeStruct %v4float
+%_ptr_Input_BuiltInVertexInTypeGeometryInOuts7 = OpTypePointer Input %BuiltInVertexInTypeGeometryInOuts7
+%BuiltInVertexInStreamTypeGeometryInOuts7 = OpTypeArray %BuiltInVertexInTypeGeometryInOuts7 %int_3
+%_ptr_Input_BuiltInVertexInStreamTypeGeometryInOuts7 = OpTypePointer Input %BuiltInVertexInStreamTypeGeometryInOuts7
+      %gl_in = OpVariable %_ptr_Input_BuiltInVertexInStreamTypeGeometryInOuts7 Input
          %37 = OpTypeFunction %void
 %_ptr_Output_v4float = OpTypePointer Output %v4float
 %GeometryInOuts7Out = OpTypeStruct %v4float %v3float
@@ -188,7 +188,7 @@
          %95 = OpAccessChain %_ptr_Function_int %self_4 %int_0
          %96 = OpLoad %int %PrimitiveId
                OpStore %95 %96
-         %97 = OpAccessChain %_ptr_Input_VertexInType %In %int_0
+         %97 = OpAccessChain %_ptr_Input_VertexInType_GeometryInOuts7 %In %int_0
          %98 = OpAccessChain %_ptr_Function_InputData %inputStream %int_0
          %99 = OpAccessChain %_ptr_Function_v4float %98 %int_0
         %100 = OpAccessChain %_ptr_Input_v4float %97 %int_0
@@ -198,7 +198,7 @@
         %103 = OpAccessChain %_ptr_Input_v3float %97 %int_1
         %104 = OpLoad %v3float %103
                OpStore %102 %104
-        %105 = OpAccessChain %_ptr_Input_VertexInType %In %int_1
+        %105 = OpAccessChain %_ptr_Input_VertexInType_GeometryInOuts7 %In %int_1
         %106 = OpAccessChain %_ptr_Function_InputData %inputStream %int_1
         %107 = OpAccessChain %_ptr_Function_v4float %106 %int_0
         %108 = OpAccessChain %_ptr_Input_v4float %105 %int_0
@@ -208,7 +208,7 @@
         %111 = OpAccessChain %_ptr_Input_v3float %105 %int_1
         %112 = OpLoad %v3float %111
                OpStore %110 %112
-        %113 = OpAccessChain %_ptr_Input_VertexInType %In %int_2
+        %113 = OpAccessChain %_ptr_Input_VertexInType_GeometryInOuts7 %In %int_2
         %114 = OpAccessChain %_ptr_Function_InputData %inputStream %int_2
         %115 = OpAccessChain %_ptr_Function_v4float %114 %int_0
         %116 = OpAccessChain %_ptr_Input_v4float %113 %int_0
@@ -218,19 +218,19 @@
         %119 = OpAccessChain %_ptr_Input_v3float %113 %int_1
         %120 = OpLoad %v3float %119
                OpStore %118 %120
-        %121 = OpAccessChain %_ptr_Input_BuiltInVertexInType %gl_in %int_0
+        %121 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeGeometryInOuts7 %gl_in %int_0
         %122 = OpAccessChain %_ptr_Function_InputData %inputStream %int_0
         %123 = OpAccessChain %_ptr_Function_v4float %122 %int_2
         %124 = OpAccessChain %_ptr_Input_v4float %121 %int_0
         %125 = OpLoad %v4float %124
                OpStore %123 %125
-        %126 = OpAccessChain %_ptr_Input_BuiltInVertexInType %gl_in %int_1
+        %126 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeGeometryInOuts7 %gl_in %int_1
         %127 = OpAccessChain %_ptr_Function_InputData %inputStream %int_1
         %128 = OpAccessChain %_ptr_Function_v4float %127 %int_2
         %129 = OpAccessChain %_ptr_Input_v4float %126 %int_0
         %130 = OpLoad %v4float %129
                OpStore %128 %130
-        %131 = OpAccessChain %_ptr_Input_BuiltInVertexInType %gl_in %int_2
+        %131 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeGeometryInOuts7 %gl_in %int_2
         %132 = OpAccessChain %_ptr_Function_InputData %inputStream %int_2
         %133 = OpAccessChain %_ptr_Function_v4float %132 %int_2
         %134 = OpAccessChain %_ptr_Input_v4float %131 %int_0

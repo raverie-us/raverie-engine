@@ -36,14 +36,14 @@
                OpName %Vertex_Geometry_Pixel_GeometryTransformData "Vertex_Geometry_Pixel_GeometryTransformData"
                OpMemberName %Vertex_Geometry_Pixel_GeometryTransformData 0 "LocalToWorld"
                OpMemberName %Vertex_Geometry_Pixel_GeometryTransformData 1 "PerspectiveToApiPerspective"
-               OpName %VertexInType "VertexInType"
-               OpMemberName %VertexInType 1 "Color"
-               OpMemberName %VertexInType 0 "Uv"
-               OpMemberName %VertexInType 2 "Time"
-               OpName %VertexInStreamType "VertexInStreamType"
-               OpName %BuiltInVertexInType "BuiltInVertexInType"
-               OpMemberName %BuiltInVertexInType 0 "ApiPerspectivePosition"
-               OpName %BuiltInVertexInStreamType "BuiltInVertexInStreamType"
+               OpName %VertexInType_Vertex_Geometry_Pixel_Geometry "VertexInType_Vertex_Geometry_Pixel_Geometry"
+               OpMemberName %VertexInType_Vertex_Geometry_Pixel_Geometry 1 "Color"
+               OpMemberName %VertexInType_Vertex_Geometry_Pixel_Geometry 0 "Uv"
+               OpMemberName %VertexInType_Vertex_Geometry_Pixel_Geometry 2 "Time"
+               OpName %VertexInStreamTypeVertex_Geometry_Pixel_Geometry "VertexInStreamTypeVertex_Geometry_Pixel_Geometry"
+               OpName %BuiltInVertexInTypeVertex_Geometry_Pixel_Geometry "BuiltInVertexInTypeVertex_Geometry_Pixel_Geometry"
+               OpMemberName %BuiltInVertexInTypeVertex_Geometry_Pixel_Geometry 0 "ApiPerspectivePosition"
+               OpName %BuiltInVertexInStreamTypeVertex_Geometry_Pixel_Geometry "BuiltInVertexInStreamTypeVertex_Geometry_Pixel_Geometry"
                OpName %Vertex_Geometry_Pixel_GeometryOut "Vertex_Geometry_Pixel_GeometryOut"
                OpMemberName %Vertex_Geometry_Pixel_GeometryOut 1 "Color"
                OpMemberName %Vertex_Geometry_Pixel_GeometryOut 0 "Uv"
@@ -124,10 +124,10 @@
                OpMemberDecorate %Vertex_Geometry_Pixel_GeometryTransformData 1 ColMajor
                OpDecorate %TransformData DescriptorSet 0
                OpDecorate %TransformData Binding 2
-               OpDecorate %VertexInType Block
+               OpDecorate %VertexInType_Vertex_Geometry_Pixel_Geometry Block
                OpDecorate %In Location 0
-               OpDecorate %BuiltInVertexInType Block
-               OpMemberDecorate %BuiltInVertexInType 0 BuiltIn Position
+               OpDecorate %BuiltInVertexInTypeVertex_Geometry_Pixel_Geometry Block
+               OpMemberDecorate %BuiltInVertexInTypeVertex_Geometry_Pixel_Geometry 0 BuiltIn Position
                OpDecorate %Vertex_Geometry_Pixel_GeometryOut Block
                OpDecorate %Out Location 0
                OpDecorate %Vertex_Geometry_Pixel_Geometrygl_out Block
@@ -185,19 +185,19 @@
 %Vertex_Geometry_Pixel_GeometryTransformData = OpTypeStruct %mat4v4float %mat4v4float
 %_ptr_Uniform_Vertex_Geometry_Pixel_GeometryTransformData = OpTypePointer Uniform %Vertex_Geometry_Pixel_GeometryTransformData
 %TransformData = OpVariable %_ptr_Uniform_Vertex_Geometry_Pixel_GeometryTransformData Uniform
-%VertexInType = OpTypeStruct %v2float %v4float %float
-%_ptr_Input_VertexInType = OpTypePointer Input %VertexInType
-%VertexInStreamType = OpTypeArray %VertexInType %int_3
-%_ptr_Input_VertexInStreamType = OpTypePointer Input %VertexInStreamType
-         %In = OpVariable %_ptr_Input_VertexInStreamType Input
+%VertexInType_Vertex_Geometry_Pixel_Geometry = OpTypeStruct %v2float %v4float %float
+%_ptr_Input_VertexInType_Vertex_Geometry_Pixel_Geometry = OpTypePointer Input %VertexInType_Vertex_Geometry_Pixel_Geometry
+%VertexInStreamTypeVertex_Geometry_Pixel_Geometry = OpTypeArray %VertexInType_Vertex_Geometry_Pixel_Geometry %int_3
+%_ptr_Input_VertexInStreamTypeVertex_Geometry_Pixel_Geometry = OpTypePointer Input %VertexInStreamTypeVertex_Geometry_Pixel_Geometry
+         %In = OpVariable %_ptr_Input_VertexInStreamTypeVertex_Geometry_Pixel_Geometry Input
 %_ptr_Input_v2float = OpTypePointer Input %v2float
 %_ptr_Input_v4float = OpTypePointer Input %v4float
 %_ptr_Input_float = OpTypePointer Input %float
-%BuiltInVertexInType = OpTypeStruct %v4float
-%_ptr_Input_BuiltInVertexInType = OpTypePointer Input %BuiltInVertexInType
-%BuiltInVertexInStreamType = OpTypeArray %BuiltInVertexInType %int_3
-%_ptr_Input_BuiltInVertexInStreamType = OpTypePointer Input %BuiltInVertexInStreamType
-      %gl_in = OpVariable %_ptr_Input_BuiltInVertexInStreamType Input
+%BuiltInVertexInTypeVertex_Geometry_Pixel_Geometry = OpTypeStruct %v4float
+%_ptr_Input_BuiltInVertexInTypeVertex_Geometry_Pixel_Geometry = OpTypePointer Input %BuiltInVertexInTypeVertex_Geometry_Pixel_Geometry
+%BuiltInVertexInStreamTypeVertex_Geometry_Pixel_Geometry = OpTypeArray %BuiltInVertexInTypeVertex_Geometry_Pixel_Geometry %int_3
+%_ptr_Input_BuiltInVertexInStreamTypeVertex_Geometry_Pixel_Geometry = OpTypePointer Input %BuiltInVertexInStreamTypeVertex_Geometry_Pixel_Geometry
+      %gl_in = OpVariable %_ptr_Input_BuiltInVertexInStreamTypeVertex_Geometry_Pixel_Geometry Input
          %60 = OpTypeFunction %void
 %_ptr_Output_v2float = OpTypePointer Output %v2float
 %Vertex_Geometry_Pixel_GeometryOut = OpTypeStruct %v2float %v4float %float
@@ -359,7 +359,7 @@
         %179 = OpAccessChain %_ptr_Function_mat4v4float %self_11 %int_0
         %180 = OpLoad %mat4v4float %178
                OpStore %179 %180
-        %181 = OpAccessChain %_ptr_Input_VertexInType %In %int_0
+        %181 = OpAccessChain %_ptr_Input_VertexInType_Vertex_Geometry_Pixel_Geometry %In %int_0
         %182 = OpAccessChain %_ptr_Function_Vertex_Geometry_Pixel_GeoIn %inputStream %int_0
         %183 = OpAccessChain %_ptr_Function_v2float %182 %int_0
         %184 = OpAccessChain %_ptr_Input_v2float %181 %int_0
@@ -373,7 +373,7 @@
         %190 = OpAccessChain %_ptr_Input_float %181 %int_2
         %191 = OpLoad %float %190
                OpStore %189 %191
-        %192 = OpAccessChain %_ptr_Input_VertexInType %In %int_1
+        %192 = OpAccessChain %_ptr_Input_VertexInType_Vertex_Geometry_Pixel_Geometry %In %int_1
         %193 = OpAccessChain %_ptr_Function_Vertex_Geometry_Pixel_GeoIn %inputStream %int_1
         %194 = OpAccessChain %_ptr_Function_v2float %193 %int_0
         %195 = OpAccessChain %_ptr_Input_v2float %192 %int_0
@@ -387,7 +387,7 @@
         %201 = OpAccessChain %_ptr_Input_float %192 %int_2
         %202 = OpLoad %float %201
                OpStore %200 %202
-        %203 = OpAccessChain %_ptr_Input_VertexInType %In %int_2
+        %203 = OpAccessChain %_ptr_Input_VertexInType_Vertex_Geometry_Pixel_Geometry %In %int_2
         %204 = OpAccessChain %_ptr_Function_Vertex_Geometry_Pixel_GeoIn %inputStream %int_2
         %205 = OpAccessChain %_ptr_Function_v2float %204 %int_0
         %206 = OpAccessChain %_ptr_Input_v2float %203 %int_0
@@ -401,19 +401,19 @@
         %212 = OpAccessChain %_ptr_Input_float %203 %int_2
         %213 = OpLoad %float %212
                OpStore %211 %213
-        %214 = OpAccessChain %_ptr_Input_BuiltInVertexInType %gl_in %int_0
+        %214 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeVertex_Geometry_Pixel_Geometry %gl_in %int_0
         %215 = OpAccessChain %_ptr_Function_Vertex_Geometry_Pixel_GeoIn %inputStream %int_0
         %216 = OpAccessChain %_ptr_Function_v4float %215 %int_3
         %217 = OpAccessChain %_ptr_Input_v4float %214 %int_0
         %218 = OpLoad %v4float %217
                OpStore %216 %218
-        %219 = OpAccessChain %_ptr_Input_BuiltInVertexInType %gl_in %int_1
+        %219 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeVertex_Geometry_Pixel_Geometry %gl_in %int_1
         %220 = OpAccessChain %_ptr_Function_Vertex_Geometry_Pixel_GeoIn %inputStream %int_1
         %221 = OpAccessChain %_ptr_Function_v4float %220 %int_3
         %222 = OpAccessChain %_ptr_Input_v4float %219 %int_0
         %223 = OpLoad %v4float %222
                OpStore %221 %223
-        %224 = OpAccessChain %_ptr_Input_BuiltInVertexInType %gl_in %int_2
+        %224 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeVertex_Geometry_Pixel_Geometry %gl_in %int_2
         %225 = OpAccessChain %_ptr_Function_Vertex_Geometry_Pixel_GeoIn %inputStream %int_2
         %226 = OpAccessChain %_ptr_Function_v4float %225 %int_3
         %227 = OpAccessChain %_ptr_Input_v4float %224 %int_0
@@ -468,22 +468,22 @@
 %outDataLocal_0 = OpVariable %_ptr_Function_GeometryData Function
                OpStore %outDataLocal_0 %outputData_0
         %263 = OpAccessChain %_ptr_Output_v2float %Out %int_0
-        %264 = OpAccessChain %_ptr_Input_VertexInType %In %vertexId_0
+        %264 = OpAccessChain %_ptr_Input_VertexInType_Vertex_Geometry_Pixel_Geometry %In %vertexId_0
         %265 = OpAccessChain %_ptr_Input_v2float %264 %int_0
         %266 = OpLoad %v2float %265
                OpStore %263 %266
         %267 = OpAccessChain %_ptr_Output_v4float %Out %int_1
-        %268 = OpAccessChain %_ptr_Input_VertexInType %In %vertexId_0
+        %268 = OpAccessChain %_ptr_Input_VertexInType_Vertex_Geometry_Pixel_Geometry %In %vertexId_0
         %269 = OpAccessChain %_ptr_Input_v4float %268 %int_1
         %270 = OpLoad %v4float %269
                OpStore %267 %270
         %271 = OpAccessChain %_ptr_Output_float %Out %int_2
-        %272 = OpAccessChain %_ptr_Input_VertexInType %In %vertexId_0
+        %272 = OpAccessChain %_ptr_Input_VertexInType_Vertex_Geometry_Pixel_Geometry %In %vertexId_0
         %273 = OpAccessChain %_ptr_Input_float %272 %int_2
         %274 = OpLoad %float %273
                OpStore %271 %274
         %275 = OpAccessChain %_ptr_Output_v4float %gl_out %int_0
-        %276 = OpAccessChain %_ptr_Input_BuiltInVertexInType %gl_in %vertexId_0
+        %276 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeVertex_Geometry_Pixel_Geometry %gl_in %vertexId_0
         %277 = OpAccessChain %_ptr_Input_v4float %276 %int_0
         %278 = OpLoad %v4float %277
                OpStore %275 %278

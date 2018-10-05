@@ -93,7 +93,6 @@ String ZilchShaderGlslBackend::GetErrorLog()
   return mErrorLog;
 }
 
-
 void ZilchShaderGlslBackend::FixInterfaceBlockNames(GlslBackendInternalData& internalData)
 {
   spirv_cross::CompilerGLSL* compiler = internalData.mCompiler;
@@ -102,16 +101,34 @@ void ZilchShaderGlslBackend::FixInterfaceBlockNames(GlslBackendInternalData& int
   // Name all input/output interface blocks the same (so they match).
   // Note: Vertex inputs and pixel outputs are not interface blocks.
   // Note: Also assuming there's only one block per stage (per attachment of in/out)
+  // Note: There can actually be more than one block per stage if you include
+  // built-ins (e.g. gl_Position). The only reasonable way it looks like these can be
+  // identified is that they don't contain a decoration for location.
   spv::ExecutionModel executionMode = compiler->get_execution_model();
   if(!resources->stage_inputs.empty() && executionMode != spv::ExecutionModelVertex)
   {
-    int id = resources->stage_inputs[0].base_type_id;
-    compiler->set_name(id, "block");
+    for(size_t i = 0; i < resources->stage_inputs.size(); ++i)
+    {
+      spirv_cross::Resource& resource = resources->stage_inputs[i];
+      if(compiler->has_decoration(resource.id, spv::DecorationLocation))
+      {
+        compiler->set_name(resource.base_type_id, "block");
+        break;
+      }
+    }
   }
   if(!resources->stage_outputs.empty() && executionMode != spv::ExecutionModelFragment)
   {
     int id = resources->stage_outputs[0].base_type_id;
-    compiler->set_name(id, "block");
+    for(size_t i = 0; i < resources->stage_outputs.size(); ++i)
+    {
+      spirv_cross::Resource& resource = resources->stage_outputs[i];
+      if(compiler->has_decoration(resource.id, spv::DecorationLocation))
+      {
+        compiler->set_name(resource.base_type_id, "block");
+        break;
+      }
+    }
   }
 }
 
@@ -368,6 +385,7 @@ void ZilchShaderGlslBackend::ExtractResourceReflectionData(GlslBackendInternalDa
     stageReflection.mSampledImageRemappings[name].mSampledImageRemappings.PushBack(name);
     internalData.mGeneratedSampledImage.Insert(name);
   }
+  ExtractResourcesReflection(internalData, resources->storage_buffers, stageReflection.mStructedStorageBuffers, false);
 }
 
 }//namespace Zero

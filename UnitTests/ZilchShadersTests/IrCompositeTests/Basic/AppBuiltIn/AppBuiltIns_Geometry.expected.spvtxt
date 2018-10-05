@@ -36,9 +36,9 @@
                OpName %AppBuiltIns_GeometryTransformData "AppBuiltIns_GeometryTransformData"
                OpMemberName %AppBuiltIns_GeometryTransformData 0 "LocalToWorld"
                OpMemberName %AppBuiltIns_GeometryTransformData 1 "PerspectiveToApiPerspective"
-               OpName %BuiltInVertexInType "BuiltInVertexInType"
-               OpMemberName %BuiltInVertexInType 0 "ApiPerspectivePosition"
-               OpName %BuiltInVertexInStreamType "BuiltInVertexInStreamType"
+               OpName %BuiltInVertexInTypeAppBuiltIns_Geometry "BuiltInVertexInTypeAppBuiltIns_Geometry"
+               OpMemberName %BuiltInVertexInTypeAppBuiltIns_Geometry 0 "ApiPerspectivePosition"
+               OpName %BuiltInVertexInStreamTypeAppBuiltIns_Geometry "BuiltInVertexInStreamTypeAppBuiltIns_Geometry"
                OpName %AppBuiltIns_Geometrygl_out "AppBuiltIns_Geometrygl_out"
                OpMemberName %AppBuiltIns_Geometrygl_out 0 "ApiPerspectivePosition"
                OpName %Frame_Data "Frame Data"
@@ -118,8 +118,8 @@
                OpMemberDecorate %AppBuiltIns_GeometryTransformData 1 ColMajor
                OpDecorate %TransformData DescriptorSet 0
                OpDecorate %TransformData Binding 2
-               OpDecorate %BuiltInVertexInType Block
-               OpMemberDecorate %BuiltInVertexInType 0 BuiltIn Position
+               OpDecorate %BuiltInVertexInTypeAppBuiltIns_Geometry Block
+               OpMemberDecorate %BuiltInVertexInTypeAppBuiltIns_Geometry 0 BuiltIn Position
                OpDecorate %AppBuiltIns_Geometrygl_out Block
                OpMemberDecorate %AppBuiltIns_Geometrygl_out 0 BuiltIn Position
       %float = OpTypeFloat 32
@@ -179,11 +179,11 @@
 %AppBuiltIns_GeometryTransformData = OpTypeStruct %mat4v4float %mat4v4float
 %_ptr_Uniform_AppBuiltIns_GeometryTransformData = OpTypePointer Uniform %AppBuiltIns_GeometryTransformData
 %TransformData = OpVariable %_ptr_Uniform_AppBuiltIns_GeometryTransformData Uniform
-%BuiltInVertexInType = OpTypeStruct %v4float
-%_ptr_Input_BuiltInVertexInType = OpTypePointer Input %BuiltInVertexInType
-%BuiltInVertexInStreamType = OpTypeArray %BuiltInVertexInType %int_3
-%_ptr_Input_BuiltInVertexInStreamType = OpTypePointer Input %BuiltInVertexInStreamType
-      %gl_in = OpVariable %_ptr_Input_BuiltInVertexInStreamType Input
+%BuiltInVertexInTypeAppBuiltIns_Geometry = OpTypeStruct %v4float
+%_ptr_Input_BuiltInVertexInTypeAppBuiltIns_Geometry = OpTypePointer Input %BuiltInVertexInTypeAppBuiltIns_Geometry
+%BuiltInVertexInStreamTypeAppBuiltIns_Geometry = OpTypeArray %BuiltInVertexInTypeAppBuiltIns_Geometry %int_3
+%_ptr_Input_BuiltInVertexInStreamTypeAppBuiltIns_Geometry = OpTypePointer Input %BuiltInVertexInStreamTypeAppBuiltIns_Geometry
+      %gl_in = OpVariable %_ptr_Input_BuiltInVertexInStreamTypeAppBuiltIns_Geometry Input
 %_ptr_Input_v4float = OpTypePointer Input %v4float
          %55 = OpTypeFunction %void
 %_ptr_Output_v4float = OpTypePointer Output %v4float
@@ -351,19 +351,19 @@
         %180 = OpAccessChain %_ptr_Function_mat4v4float %self_11 %int_2
         %181 = OpLoad %mat4v4float %179
                OpStore %180 %181
-        %182 = OpAccessChain %_ptr_Input_BuiltInVertexInType %gl_in %int_0
+        %182 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeAppBuiltIns_Geometry %gl_in %int_0
         %183 = OpAccessChain %_ptr_Function_AppBuiltIns_GeoIn %inputStream %int_0
         %184 = OpAccessChain %_ptr_Function_v4float %183 %int_0
         %185 = OpAccessChain %_ptr_Input_v4float %182 %int_0
         %186 = OpLoad %v4float %185
                OpStore %184 %186
-        %187 = OpAccessChain %_ptr_Input_BuiltInVertexInType %gl_in %int_1_0
+        %187 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeAppBuiltIns_Geometry %gl_in %int_1_0
         %188 = OpAccessChain %_ptr_Function_AppBuiltIns_GeoIn %inputStream %int_1_0
         %189 = OpAccessChain %_ptr_Function_v4float %188 %int_0
         %190 = OpAccessChain %_ptr_Input_v4float %187 %int_0
         %191 = OpLoad %v4float %190
                OpStore %189 %191
-        %192 = OpAccessChain %_ptr_Input_BuiltInVertexInType %gl_in %int_2
+        %192 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeAppBuiltIns_Geometry %gl_in %int_2
         %193 = OpAccessChain %_ptr_Function_AppBuiltIns_GeoIn %inputStream %int_2
         %194 = OpAccessChain %_ptr_Function_v4float %193 %int_0
         %195 = OpAccessChain %_ptr_Input_v4float %192 %int_0
@@ -406,7 +406,7 @@
 %outDataLocal_0 = OpVariable %_ptr_Function_GeometryData Function
                OpStore %outDataLocal_0 %outputData_0
         %222 = OpAccessChain %_ptr_Output_v4float %gl_out %int_0
-        %223 = OpAccessChain %_ptr_Input_BuiltInVertexInType %gl_in %vertexId_0
+        %223 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeAppBuiltIns_Geometry %gl_in %vertexId_0
         %224 = OpAccessChain %_ptr_Input_v4float %223 %int_0
         %225 = OpLoad %v4float %224
                OpStore %222 %225

@@ -43,17 +43,17 @@
                OpName %Booleans_GeometryTransformData "Booleans_GeometryTransformData"
                OpMemberName %Booleans_GeometryTransformData 0 "LocalToWorld"
                OpMemberName %Booleans_GeometryTransformData 1 "PerspectiveToApiPerspective"
-               OpName %VertexInType "VertexInType"
-               OpMemberName %VertexInType 2 "MyVar1_Boolean"
-               OpMemberName %VertexInType 5 "MyVar3"
-               OpMemberName %VertexInType 1 "MyVar2"
-               OpMemberName %VertexInType 3 "MyVar1"
-               OpMemberName %VertexInType 4 "MyVar3_Boolean3"
-               OpMemberName %VertexInType 0 "MyVar2_Boolean2"
-               OpName %VertexInStreamType "VertexInStreamType"
-               OpName %BuiltInVertexInType "BuiltInVertexInType"
-               OpMemberName %BuiltInVertexInType 0 "ApiPerspectivePosition"
-               OpName %BuiltInVertexInStreamType "BuiltInVertexInStreamType"
+               OpName %VertexInType_Booleans_Geometry "VertexInType_Booleans_Geometry"
+               OpMemberName %VertexInType_Booleans_Geometry 2 "MyVar1_Boolean"
+               OpMemberName %VertexInType_Booleans_Geometry 5 "MyVar3"
+               OpMemberName %VertexInType_Booleans_Geometry 1 "MyVar2"
+               OpMemberName %VertexInType_Booleans_Geometry 3 "MyVar1"
+               OpMemberName %VertexInType_Booleans_Geometry 4 "MyVar3_Boolean3"
+               OpMemberName %VertexInType_Booleans_Geometry 0 "MyVar2_Boolean2"
+               OpName %VertexInStreamTypeBooleans_Geometry "VertexInStreamTypeBooleans_Geometry"
+               OpName %BuiltInVertexInTypeBooleans_Geometry "BuiltInVertexInTypeBooleans_Geometry"
+               OpMemberName %BuiltInVertexInTypeBooleans_Geometry 0 "ApiPerspectivePosition"
+               OpName %BuiltInVertexInStreamTypeBooleans_Geometry "BuiltInVertexInStreamTypeBooleans_Geometry"
                OpName %Booleans_GeometryOut "Booleans_GeometryOut"
                OpMemberName %Booleans_GeometryOut 0 "MyVar1_Boolean"
                OpMemberName %Booleans_GeometryOut 5 "MyVar3"
@@ -143,10 +143,10 @@
                OpMemberDecorate %Booleans_GeometryTransformData 1 ColMajor
                OpDecorate %TransformData DescriptorSet 0
                OpDecorate %TransformData Binding 2
-               OpDecorate %VertexInType Block
+               OpDecorate %VertexInType_Booleans_Geometry Block
                OpDecorate %In Location 0
-               OpDecorate %BuiltInVertexInType Block
-               OpMemberDecorate %BuiltInVertexInType 0 BuiltIn Position
+               OpDecorate %BuiltInVertexInTypeBooleans_Geometry Block
+               OpMemberDecorate %BuiltInVertexInTypeBooleans_Geometry 0 BuiltIn Position
                OpDecorate %Booleans_GeometryOut Block
                OpDecorate %Out Location 0
                OpDecorate %Booleans_Geometrygl_out Block
@@ -216,19 +216,19 @@
 %Booleans_GeometryTransformData = OpTypeStruct %mat4v4float %mat4v4float
 %_ptr_Uniform_Booleans_GeometryTransformData = OpTypePointer Uniform %Booleans_GeometryTransformData
 %TransformData = OpVariable %_ptr_Uniform_Booleans_GeometryTransformData Uniform
-%VertexInType = OpTypeStruct %v2int %v2int %int %int %v3int %v3int
-%_ptr_Input_VertexInType = OpTypePointer Input %VertexInType
-%VertexInStreamType = OpTypeArray %VertexInType %int_3
-%_ptr_Input_VertexInStreamType = OpTypePointer Input %VertexInStreamType
-         %In = OpVariable %_ptr_Input_VertexInStreamType Input
+%VertexInType_Booleans_Geometry = OpTypeStruct %v2int %v2int %int %int %v3int %v3int
+%_ptr_Input_VertexInType_Booleans_Geometry = OpTypePointer Input %VertexInType_Booleans_Geometry
+%VertexInStreamTypeBooleans_Geometry = OpTypeArray %VertexInType_Booleans_Geometry %int_3
+%_ptr_Input_VertexInStreamTypeBooleans_Geometry = OpTypePointer Input %VertexInStreamTypeBooleans_Geometry
+         %In = OpVariable %_ptr_Input_VertexInStreamTypeBooleans_Geometry Input
 %_ptr_Input_v2int = OpTypePointer Input %v2int
 %_ptr_Input_int = OpTypePointer Input %int
 %_ptr_Input_v3int = OpTypePointer Input %v3int
-%BuiltInVertexInType = OpTypeStruct %v4float
-%_ptr_Input_BuiltInVertexInType = OpTypePointer Input %BuiltInVertexInType
-%BuiltInVertexInStreamType = OpTypeArray %BuiltInVertexInType %int_3
-%_ptr_Input_BuiltInVertexInStreamType = OpTypePointer Input %BuiltInVertexInStreamType
-      %gl_in = OpVariable %_ptr_Input_BuiltInVertexInStreamType Input
+%BuiltInVertexInTypeBooleans_Geometry = OpTypeStruct %v4float
+%_ptr_Input_BuiltInVertexInTypeBooleans_Geometry = OpTypePointer Input %BuiltInVertexInTypeBooleans_Geometry
+%BuiltInVertexInStreamTypeBooleans_Geometry = OpTypeArray %BuiltInVertexInTypeBooleans_Geometry %int_3
+%_ptr_Input_BuiltInVertexInStreamTypeBooleans_Geometry = OpTypePointer Input %BuiltInVertexInStreamTypeBooleans_Geometry
+      %gl_in = OpVariable %_ptr_Input_BuiltInVertexInStreamTypeBooleans_Geometry Input
 %_ptr_Input_v4float = OpTypePointer Input %v4float
          %67 = OpTypeFunction %void
 %_ptr_Output_int = OpTypePointer Output %int
@@ -430,7 +430,7 @@
         %221 = OpAccessChain %_ptr_Function_mat4v4float %self_11 %int_0
         %222 = OpLoad %mat4v4float %220
                OpStore %221 %222
-        %223 = OpAccessChain %_ptr_Input_VertexInType %In %int_0
+        %223 = OpAccessChain %_ptr_Input_VertexInType_Booleans_Geometry %In %int_0
         %224 = OpAccessChain %_ptr_Function_Booleans_GeoIn %inputStream %int_0
         %225 = OpAccessChain %_ptr_Function_v2bool %224 %int_0
         %226 = OpAccessChain %_ptr_Input_v2int %223 %int_0
@@ -461,7 +461,7 @@
         %246 = OpAccessChain %_ptr_Input_v3int %223 %int_5
         %247 = OpLoad %v3int %246
                OpStore %245 %247
-        %248 = OpAccessChain %_ptr_Input_VertexInType %In %int_1
+        %248 = OpAccessChain %_ptr_Input_VertexInType_Booleans_Geometry %In %int_1
         %249 = OpAccessChain %_ptr_Function_Booleans_GeoIn %inputStream %int_1
         %250 = OpAccessChain %_ptr_Function_v2bool %249 %int_0
         %251 = OpAccessChain %_ptr_Input_v2int %248 %int_0
@@ -492,7 +492,7 @@
         %271 = OpAccessChain %_ptr_Input_v3int %248 %int_5
         %272 = OpLoad %v3int %271
                OpStore %270 %272
-        %273 = OpAccessChain %_ptr_Input_VertexInType %In %int_2
+        %273 = OpAccessChain %_ptr_Input_VertexInType_Booleans_Geometry %In %int_2
         %274 = OpAccessChain %_ptr_Function_Booleans_GeoIn %inputStream %int_2
         %275 = OpAccessChain %_ptr_Function_v2bool %274 %int_0
         %276 = OpAccessChain %_ptr_Input_v2int %273 %int_0
@@ -523,19 +523,19 @@
         %296 = OpAccessChain %_ptr_Input_v3int %273 %int_5
         %297 = OpLoad %v3int %296
                OpStore %295 %297
-        %298 = OpAccessChain %_ptr_Input_BuiltInVertexInType %gl_in %int_0
+        %298 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeBooleans_Geometry %gl_in %int_0
         %299 = OpAccessChain %_ptr_Function_Booleans_GeoIn %inputStream %int_0
         %300 = OpAccessChain %_ptr_Function_v4float %299 %int_6
         %301 = OpAccessChain %_ptr_Input_v4float %298 %int_0
         %302 = OpLoad %v4float %301
                OpStore %300 %302
-        %303 = OpAccessChain %_ptr_Input_BuiltInVertexInType %gl_in %int_1
+        %303 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeBooleans_Geometry %gl_in %int_1
         %304 = OpAccessChain %_ptr_Function_Booleans_GeoIn %inputStream %int_1
         %305 = OpAccessChain %_ptr_Function_v4float %304 %int_6
         %306 = OpAccessChain %_ptr_Input_v4float %303 %int_0
         %307 = OpLoad %v4float %306
                OpStore %305 %307
-        %308 = OpAccessChain %_ptr_Input_BuiltInVertexInType %gl_in %int_2
+        %308 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeBooleans_Geometry %gl_in %int_2
         %309 = OpAccessChain %_ptr_Function_Booleans_GeoIn %inputStream %int_2
         %310 = OpAccessChain %_ptr_Function_v4float %309 %int_6
         %311 = OpAccessChain %_ptr_Input_v4float %308 %int_0
@@ -609,12 +609,12 @@
 %outDataLocal_0 = OpVariable %_ptr_Function_GeoData Function
                OpStore %outDataLocal_0 %outputData_0
         %363 = OpAccessChain %_ptr_Output_int %Out %int_0
-        %364 = OpAccessChain %_ptr_Input_VertexInType %In %vertexId_0
+        %364 = OpAccessChain %_ptr_Input_VertexInType_Booleans_Geometry %In %vertexId_0
         %365 = OpAccessChain %_ptr_Input_int %364 %int_2
         %366 = OpLoad %int %365
                OpStore %363 %366
         %367 = OpAccessChain %_ptr_Output_int %Out %int_1
-        %368 = OpAccessChain %_ptr_Input_VertexInType %In %vertexId_0
+        %368 = OpAccessChain %_ptr_Input_VertexInType_Booleans_Geometry %In %vertexId_0
         %369 = OpAccessChain %_ptr_Input_int %368 %int_3
         %370 = OpLoad %int %369
                OpStore %367 %370
@@ -630,17 +630,17 @@
         %379 = OpLoad %v2int %378
                OpStore %377 %379
         %380 = OpAccessChain %_ptr_Output_v3int %Out %int_4
-        %381 = OpAccessChain %_ptr_Input_VertexInType %In %vertexId_0
+        %381 = OpAccessChain %_ptr_Input_VertexInType_Booleans_Geometry %In %vertexId_0
         %382 = OpAccessChain %_ptr_Input_v3int %381 %int_4
         %383 = OpLoad %v3int %382
                OpStore %380 %383
         %384 = OpAccessChain %_ptr_Output_v3int %Out %int_5
-        %385 = OpAccessChain %_ptr_Input_VertexInType %In %vertexId_0
+        %385 = OpAccessChain %_ptr_Input_VertexInType_Booleans_Geometry %In %vertexId_0
         %386 = OpAccessChain %_ptr_Input_v3int %385 %int_5
         %387 = OpLoad %v3int %386
                OpStore %384 %387
         %388 = OpAccessChain %_ptr_Output_v4float %gl_out %int_0
-        %389 = OpAccessChain %_ptr_Input_BuiltInVertexInType %gl_in %vertexId_0
+        %389 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeBooleans_Geometry %gl_in %vertexId_0
         %390 = OpAccessChain %_ptr_Input_v4float %389 %int_0
         %391 = OpLoad %v4float %390
                OpStore %388 %391

@@ -19,9 +19,9 @@
                OpMemberName %InputData 0 "ApiPerspectivePosition"
                OpName %OutputStream "OutputStream"
                OpMemberName %OutputStream 0 "Output"
-               OpName %BuiltInVertexInType "BuiltInVertexInType"
-               OpMemberName %BuiltInVertexInType 0 "ApiPerspectivePosition"
-               OpName %BuiltInVertexInStreamType "BuiltInVertexInStreamType"
+               OpName %BuiltInVertexInTypeGeometryInOuts1 "BuiltInVertexInTypeGeometryInOuts1"
+               OpMemberName %BuiltInVertexInTypeGeometryInOuts1 0 "ApiPerspectivePosition"
+               OpName %BuiltInVertexInStreamTypeGeometryInOuts1 "BuiltInVertexInStreamTypeGeometryInOuts1"
                OpName %GeometryInOuts1gl_out "GeometryInOuts1gl_out"
                OpMemberName %GeometryInOuts1gl_out 0 "ApiPerspectivePosition"
                OpName %gl_in "gl_in"
@@ -52,8 +52,8 @@
                OpName %vertexId "vertexId"
                OpName %outDataLocal "outDataLocal"
                OpName %InitializeGlobals "InitializeGlobals"
-               OpDecorate %BuiltInVertexInType Block
-               OpMemberDecorate %BuiltInVertexInType 0 BuiltIn Position
+               OpDecorate %BuiltInVertexInTypeGeometryInOuts1 Block
+               OpMemberDecorate %BuiltInVertexInTypeGeometryInOuts1 0 BuiltIn Position
                OpDecorate %GeometryInOuts1gl_out Block
                OpMemberDecorate %GeometryInOuts1gl_out 0 BuiltIn Position
         %int = OpTypeInt 32 1
@@ -80,11 +80,11 @@
          %21 = OpTypeFunction %void %_ptr_Function_GeometryInOuts1 %_ptr_Function__arr_InputData_int_3 %_ptr_Function_OutputStream
          %22 = OpTypeFunction %void %_ptr_Function_GeometryInOuts1
          %23 = OpTypeFunction %void %_ptr_Function_GeometryInOuts1 %_ptr_Function__arr_InputData_int_3
-%BuiltInVertexInType = OpTypeStruct %v4float
-%_ptr_Input_BuiltInVertexInType = OpTypePointer Input %BuiltInVertexInType
-%BuiltInVertexInStreamType = OpTypeArray %BuiltInVertexInType %int_3
-%_ptr_Input_BuiltInVertexInStreamType = OpTypePointer Input %BuiltInVertexInStreamType
-      %gl_in = OpVariable %_ptr_Input_BuiltInVertexInStreamType Input
+%BuiltInVertexInTypeGeometryInOuts1 = OpTypeStruct %v4float
+%_ptr_Input_BuiltInVertexInTypeGeometryInOuts1 = OpTypePointer Input %BuiltInVertexInTypeGeometryInOuts1
+%BuiltInVertexInStreamTypeGeometryInOuts1 = OpTypeArray %BuiltInVertexInTypeGeometryInOuts1 %int_3
+%_ptr_Input_BuiltInVertexInStreamTypeGeometryInOuts1 = OpTypePointer Input %BuiltInVertexInStreamTypeGeometryInOuts1
+      %gl_in = OpVariable %_ptr_Input_BuiltInVertexInStreamTypeGeometryInOuts1 Input
 %_ptr_Input_v4float = OpTypePointer Input %v4float
       %int_1 = OpConstant %int 1
       %int_2 = OpConstant %int 2
@@ -136,19 +136,19 @@
      %self_4 = OpFunctionParameter %_ptr_Function_GeometryInOuts1
 %inputStream = OpFunctionParameter %_ptr_Function__arr_InputData_int_3
          %70 = OpLabel
-         %71 = OpAccessChain %_ptr_Input_BuiltInVertexInType %gl_in %int_0
+         %71 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeGeometryInOuts1 %gl_in %int_0
          %72 = OpAccessChain %_ptr_Function_InputData %inputStream %int_0
          %73 = OpAccessChain %_ptr_Function_v4float %72 %int_0
          %74 = OpAccessChain %_ptr_Input_v4float %71 %int_0
          %75 = OpLoad %v4float %74
                OpStore %73 %75
-         %76 = OpAccessChain %_ptr_Input_BuiltInVertexInType %gl_in %int_1
+         %76 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeGeometryInOuts1 %gl_in %int_1
          %77 = OpAccessChain %_ptr_Function_InputData %inputStream %int_1
          %78 = OpAccessChain %_ptr_Function_v4float %77 %int_0
          %79 = OpAccessChain %_ptr_Input_v4float %76 %int_0
          %80 = OpLoad %v4float %79
                OpStore %78 %80
-         %81 = OpAccessChain %_ptr_Input_BuiltInVertexInType %gl_in %int_2
+         %81 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeGeometryInOuts1 %gl_in %int_2
          %82 = OpAccessChain %_ptr_Function_InputData %inputStream %int_2
          %83 = OpAccessChain %_ptr_Function_v4float %82 %int_0
          %84 = OpAccessChain %_ptr_Input_v4float %81 %int_0
