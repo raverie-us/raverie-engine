@@ -68,6 +68,7 @@ SpirVNameSettings::SpirVNameSettings()
   mComputeLocalSizeZParam = "localSizeZ";
   mMaxVerticesParam = "maxVertices";
 
+  mApiPerspectivePositionName = "ApiPerspectivePosition";
   mPerspectiveToApiPerspectiveName = "PerspectiveToApiPerspective";
 
   // Make an array for easy indexing of fragment type attribute names

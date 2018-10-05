@@ -1185,10 +1185,10 @@ void ZilchShaderIRCompositor::ApiPerspectivePositionCallback(CompositorCallbackD
   String real4x4TypeName = ZilchTypeId(Zilch::Real4x4)->Name;
   StageAttachmentLinkingInfo& vertexLinkingInfo = stageLinkingInfo->mVertexLinkingInfo;
   // Force ApiPerspectivePosition to be a hardware input and output
-  vertexLinkingInfo.AddResolvedField("ApiPerspectivePosition", real4TypeName, nameSettings.mHardwareBuiltInInputAttribute);
-  vertexLinkingInfo.mHardwareInputs.InsertOrIgnore(ShaderFieldKey("ApiPerspectivePosition", real4TypeName));
-  vertexLinkingInfo.AddResolvedField("ApiPerspectivePosition", real4TypeName, nameSettings.mHardwareBuiltInOutputAttribute);
-  vertexLinkingInfo.mHardwareOutputs.InsertOrIgnore(ShaderFieldKey("ApiPerspectivePosition", real4TypeName));
+  vertexLinkingInfo.AddResolvedField(nameSettings.mApiPerspectivePositionName, real4TypeName, nameSettings.mHardwareBuiltInInputAttribute);
+  vertexLinkingInfo.mHardwareInputs.InsertOrIgnore(ShaderFieldKey(nameSettings.mApiPerspectivePositionName, real4TypeName));
+  vertexLinkingInfo.AddResolvedField(nameSettings.mApiPerspectivePositionName, real4TypeName, nameSettings.mHardwareBuiltInOutputAttribute);
+  vertexLinkingInfo.mHardwareOutputs.InsertOrIgnore(ShaderFieldKey(nameSettings.mApiPerspectivePositionName, real4TypeName));
 
   // Force the api perspective matrix transform to exist
   stageLinkingInfo->mPrimitiveLinkingInfo.AddResolvedField(nameSettings.mPerspectiveToApiPerspectiveName, real4x4TypeName, nameSettings.mAppBuiltInInputAttribute);

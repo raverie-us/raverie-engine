@@ -638,7 +638,7 @@ ZilchShaderSpirVSettings* SimpleZilchShaderIRGenerator::CreateUnitTestSettings(S
   settings->mVertexDefinitions.AddField(int4Type, "BoneIndices");
 
   // Set zilch fragment names for spirv built-ins
-  settings->SetHardwareBuiltInName(spv::BuiltInPosition, "ApiPerspectivePosition");
+  settings->SetHardwareBuiltInName(spv::BuiltInPosition, nameSettings.mApiPerspectivePositionName);
 
   settings->SetMaxSimultaneousRenderTargets(4);
   settings->SetRenderTargetName("Target0", 0);
@@ -720,14 +720,14 @@ ZilchShaderSpirVSettings* SimpleZilchShaderIRGenerator::CreateZeroSettings(SpirV
   transformData.AddField(real4x4Type, "LocalToPerspective");
   transformData.AddField(real4x4Type, "ViewToPerspective");
   transformData.AddField(real4x4Type, "PerspectiveToView");
-  transformData.AddField(real4x4Type, "PerspectiveToApiPerspective");
+  transformData.AddField(real4x4Type, nameSettings.mPerspectiveToApiPerspectiveName);
   settings->AddUniformBufferDescription(transformData);
 
   settings->AutoSetDefaultUniformBufferDescription();
 
 
   // Set zilch fragment names for spirv built-ins
-  settings->SetHardwareBuiltInName(spv::BuiltInPosition, nameSettings.mPerspectiveToApiPerspectiveName);
+  settings->SetHardwareBuiltInName(spv::BuiltInPosition, nameSettings.mApiPerspectivePositionName);
 
   settings->SetMaxSimultaneousRenderTargets(4);
   settings->SetRenderTargetName("Target0", 0);

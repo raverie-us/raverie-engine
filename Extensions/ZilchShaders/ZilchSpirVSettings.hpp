@@ -97,6 +97,7 @@ public:
   String mEntryPointAttributeName;
   String mUnitTestAttribute;
   String mSpecializationConstantAttribute;
+  String mApiPerspectivePositionName;
   String mPerspectiveToApiPerspectiveName;
   
   Array<String> mInputSubAttributes;

@@ -2498,7 +2498,7 @@ void EntryPointGeneration::PerspectiveTransformAppendVertexCallback(AppendCallba
 
   // Find the api perspective position field pointer from the output interface types
   // (should find the hardware built-in interface block)
-  ShaderFieldKey apiPerspectivePositionKey("ApiPerspectivePosition", real4TypeName);
+  ShaderFieldKey apiPerspectivePositionKey(nameSettings.mApiPerspectivePositionName, real4TypeName);
   ZilchShaderIROp* apiPerspectivePosition = self->FindField(apiPerspectivePositionKey, *callbackData.mOutputVertexInterfaceTypes, block, spv::StorageClassOutput);
 
   // Find the api perspective transform matrix from all of the uniform buffers available
