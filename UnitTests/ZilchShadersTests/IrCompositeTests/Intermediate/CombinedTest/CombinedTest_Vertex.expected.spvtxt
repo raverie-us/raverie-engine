@@ -7,7 +7,6 @@
                OpCapability Shader
                OpMemoryModel Logical GLSL450
                OpEntryPoint Vertex %EntryPoint_Main "EntryPoint_Main" %Uv %LocalPosition %Out %VertexId %InstanceId
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
                OpSource Unknown 100
                OpName %CombinedTest_Vertex "CombinedTest_Vertex"
                OpMemberName %CombinedTest_Vertex 6 "Property2_Vertex1"

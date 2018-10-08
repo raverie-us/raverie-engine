@@ -7,7 +7,6 @@
                OpCapability Shader
                OpMemoryModel Logical GLSL450
                OpEntryPoint Vertex %EntryPoint_Main "EntryPoint_Main" %Out
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
                OpSource Unknown 100
                OpName %Vertex_Vertex "Vertex_Vertex"
                OpMemberName %Vertex_Vertex 1 "Stage_Target1_Real4"

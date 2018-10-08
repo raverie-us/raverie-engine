@@ -7,7 +7,6 @@
                OpCapability Shader
                OpMemoryModel Logical GLSL450
                OpEntryPoint Vertex %EntryPoint_Main "EntryPoint_Main" %Uv %LocalPosition %Out %VertexId %InstanceId
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
                OpSource Unknown 100
                OpName %VertexFirst_VertexFinal_PixelFirst_PixelFinal_Vertex "VertexFirst_VertexFinal_PixelFirst_PixelFinal_Vertex"
                OpMemberName %VertexFirst_VertexFinal_PixelFirst_PixelFinal_Vertex 7 "Property2_VertexFinal"

@@ -8,7 +8,6 @@
                OpCapability Geometry
                OpMemoryModel Logical GLSL450
                OpEntryPoint Geometry %EntryPoint_Main "EntryPoint_Main" %In %gl_in %Out %gl_out
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
                OpExecutionMode %EntryPoint_Main OutputVertices 5
                OpExecutionMode %EntryPoint_Main InputLines
                OpExecutionMode %EntryPoint_Main OutputLineStrip

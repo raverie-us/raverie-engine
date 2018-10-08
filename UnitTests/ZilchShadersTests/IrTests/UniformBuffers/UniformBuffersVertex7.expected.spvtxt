@@ -7,7 +7,6 @@
                OpCapability Shader
                OpMemoryModel Logical GLSL450
                OpEntryPoint Vertex %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
                OpSource Unknown 100
                OpName %UniformBuffersVertex7 "UniformBuffersVertex7"
                OpMemberName %UniformBuffersVertex7 1 "R3x3"

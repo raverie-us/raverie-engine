@@ -7,7 +7,6 @@
                OpCapability Shader
                OpMemoryModel Logical GLSL450
                OpEntryPoint Vertex %EntryPoint_Main "EntryPoint_Main" %InstanceId %PerVertexOut
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
                OpSource Unknown 100
                OpName %BuiltInsVertex4 "BuiltInsVertex4"
                OpMemberName %BuiltInsVertex4 0 "InstanceId"

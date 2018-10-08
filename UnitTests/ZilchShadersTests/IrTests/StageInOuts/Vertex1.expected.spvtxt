@@ -7,7 +7,6 @@
                OpCapability Shader
                OpMemoryModel Logical GLSL450
                OpEntryPoint Vertex %EntryPoint_Main "EntryPoint_Main" %Scalar %Uv %LocalNormal %BoneIndices %Color %Out
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
                OpSource Unknown 100
                OpName %Vertex1 "Vertex1"
                OpMemberName %Vertex1 0 "Scalar"

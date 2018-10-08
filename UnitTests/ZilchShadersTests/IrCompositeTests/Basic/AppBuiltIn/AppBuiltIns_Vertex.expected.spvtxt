@@ -7,7 +7,6 @@
                OpCapability Shader
                OpMemoryModel Logical GLSL450
                OpEntryPoint Vertex %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
                OpSource Unknown 100
                OpName %AppBuiltIns_Vertex "AppBuiltIns_Vertex"
                OpMemberName %AppBuiltIns_Vertex 0 "LogicTime"

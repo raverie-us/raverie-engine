@@ -7,7 +7,6 @@
                OpCapability Shader
                OpMemoryModel Logical GLSL450
                OpEntryPoint Vertex %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
                OpSource Unknown 100
                OpName %NameOverrideProperties_Vertex "NameOverrideProperties_Vertex"
                OpMemberName %NameOverrideProperties_Vertex 1 "Value_VertexOverride"

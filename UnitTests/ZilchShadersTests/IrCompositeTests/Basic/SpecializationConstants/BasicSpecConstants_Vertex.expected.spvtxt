@@ -7,7 +7,6 @@
                OpCapability Shader
                OpMemoryModel Logical GLSL450
                OpEntryPoint Vertex %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
                OpSource Unknown 100
                OpName %BasicSpecConstants_Vertex "BasicSpecConstants_Vertex"
                OpMemberName %BasicSpecConstants_Vertex 0 "Dummy"
