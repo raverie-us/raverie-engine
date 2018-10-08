@@ -499,7 +499,6 @@ void EntryPointGeneration::DeclareVertexInterface(ZilchSpirVFrontEnd* translator
 
   FindAndDecorateGlobals(currentType, entryPointInfo);
   CopyReflectionDataToEntryPoint(entryPointInfo, interfaceInfo);
-  WriteExecutionModeOriginUpperLeft(entryPointInfo);
 }
 
 void EntryPointGeneration::DeclareGeometryInterface(ZilchSpirVFrontEnd* translator, Zilch::GenericFunctionNode* node, ZilchShaderIRFunction* function, ZilchSpirVFrontEndContext* context)
@@ -557,8 +556,6 @@ void EntryPointGeneration::DeclareGeometryInterface(ZilchSpirVFrontEnd* translat
   // Add geometry shader stage specific execution mode values
   BasicBlock* executionModes = &entryPointInfo->mExecutionModes;
   ZilchShaderIRFunction* entryPointFn = entryPointInfo->mEntryPointFn;
-
-  WriteExecutionModeOriginUpperLeft(entryPointInfo);
 
   SpirVNameSettings& nameSettings = translator->mSettings->mNameSettings;
   // Write out the max vertices value
