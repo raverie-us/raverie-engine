@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "val/validation_state.h"
+#include "source/val/validation_state.h"
 
 #include <cassert>
 #include <stack>
+#include <utility>
 
-#include "opcode.h"
+#include "source/opcode.h"
+#include "source/spirv_target_env.h"
+#include "source/val/basic_block.h"
+#include "source/val/construct.h"
+#include "source/val/function.h"
 #include "spirv-tools/libspirv.h"
-#include "spirv_target_env.h"
-#include "val/basic_block.h"
-#include "val/construct.h"
-#include "val/function.h"
 
 namespace spvtools {
 namespace val {
@@ -150,7 +151,8 @@ spv_result_t CountInstructions(void* user_data,
 ValidationState_t::ValidationState_t(const spv_const_context ctx,
                                      const spv_const_validator_options opt,
                                      const uint32_t* words,
-                                     const size_t num_words)
+                                     const size_t num_words,
+                                     const uint32_t max_warnings)
     : context_(ctx),
       options_(opt),
       words_(words),
@@ -169,14 +171,14 @@ ValidationState_t::ValidationState_t(const spv_const_context ctx,
       grammar_(ctx),
       addressing_model_(SpvAddressingModelMax),
       memory_model_(SpvMemoryModelMax),
-      in_function_(false) {
+      in_function_(false),
+      num_of_warnings_(0),
+      max_num_of_warnings_(max_warnings) {
   assert(opt && "Validator options may not be Null.");
 
   const auto env = context_->target_env;
 
   if (spvIsVulkanEnv(env)) {
-    features_.non_monotonic_struct_member_offsets = true;
-
     // Vulkan 1.1 includes VK_KHR_relaxed_block_layout in core.
     if (env != SPV_ENV_VULKAN_1_0) {
       features_.env_relaxed_block_layout = true;
@@ -292,7 +294,18 @@ bool ValidationState_t::IsOpcodeInCurrentLayoutSection(SpvOp op) {
 }
 
 DiagnosticStream ValidationState_t::diag(spv_result_t error_code,
-                                         const Instruction* inst) const {
+                                         const Instruction* inst) {
+  if (error_code == SPV_WARNING) {
+    if (num_of_warnings_ == max_num_of_warnings_) {
+      DiagnosticStream({0, 0, 0}, context_->consumer, "", error_code)
+          << "Other warnings have been suppressed.\n";
+    }
+    if (num_of_warnings_ >= max_num_of_warnings_) {
+      return DiagnosticStream({0, 0, 0}, nullptr, "", error_code);
+    }
+    ++num_of_warnings_;
+  }
+
   std::string disassembly;
   if (inst) disassembly = Disassemble(*inst);
 
@@ -316,6 +329,12 @@ const Function& ValidationState_t::current_function() const {
 
 const Function* ValidationState_t::function(uint32_t id) const {
   const auto it = id_to_function_.find(id);
+  if (it == id_to_function_.end()) return nullptr;
+  return it->second;
+}
+
+Function* ValidationState_t::function(uint32_t id) {
+  auto it = id_to_function_.find(id);
   if (it == id_to_function_.end()) return nullptr;
   return it->second;
 }
@@ -385,6 +404,7 @@ void ValidationState_t::RegisterExtension(Extension ext) {
 
   switch (ext) {
     case kSPV_AMD_gpu_shader_half_float:
+    case kSPV_AMD_gpu_shader_half_float_fetch:
       // SPV_AMD_gpu_shader_half_float enables float16 type.
       // https://github.com/KhronosGroup/SPIRV-Tools/issues/1375
       features_.declare_float16_type = true;
@@ -455,17 +475,7 @@ spv_result_t ValidationState_t::RegisterFunctionEnd() {
 
 Instruction* ValidationState_t::AddOrderedInstruction(
     const spv_parsed_instruction_t* inst) {
-  if (in_function_body()) {
-    ordered_instructions_.emplace_back(inst, &current_function(),
-                                       current_function().current_block());
-    if (in_block() &&
-        spvOpcodeIsBlockTerminator(static_cast<SpvOp>(inst->opcode))) {
-      current_function().current_block()->set_terminator(
-          &ordered_instructions_.back());
-    }
-  } else {
-    ordered_instructions_.emplace_back(inst, nullptr, nullptr);
-  }
+  ordered_instructions_.emplace_back(inst);
   ordered_instructions_.back().SetLineNum(ordered_instructions_.size());
   return &ordered_instructions_.back();
 }
@@ -865,7 +875,7 @@ std::tuple<bool, bool, uint32_t> ValidationState_t::EvalInt32IfConst(
   assert(inst);
   const uint32_t type = inst->type_id();
 
-  if (!IsIntScalarType(type) || GetBitWidth(type) != 32) {
+  if (type == 0 || !IsIntScalarType(type) || GetBitWidth(type) != 32) {
     return std::make_tuple(false, false, 0);
   }
 

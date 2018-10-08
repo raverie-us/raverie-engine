@@ -14,11 +14,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "local_single_store_elim_pass.h"
+#include "source/opt/local_single_store_elim_pass.h"
 
-#include "cfa.h"
-#include "iterator.h"
-#include "latest_version_glsl_std_450_header.h"
+#include "source/cfa.h"
+#include "source/latest_version_glsl_std_450_header.h"
+#include "source/opt/iterator.h"
 
 namespace spvtools {
 namespace opt {
@@ -113,6 +113,12 @@ void LocalSingleStoreElimPass::InitExtensionWhiteList() {
       "SPV_GOOGLE_hlsl_functionality1",
       "SPV_NV_shader_subgroup_partitioned",
       "SPV_EXT_descriptor_indexing",
+      "SPV_NV_fragment_shader_barycentric",
+      "SPV_NV_compute_shader_derivatives",
+      "SPV_NV_shader_image_footprint",
+      "SPV_NV_shading_rate",
+      "SPV_NV_mesh_shader",
+      "SPV_NVX_raytracing",
   });
 }
 bool LocalSingleStoreElimPass::ProcessVariable(Instruction* var_inst) {

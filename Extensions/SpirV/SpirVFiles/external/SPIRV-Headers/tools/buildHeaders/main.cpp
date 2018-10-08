@@ -106,16 +106,16 @@ bool ProcessArguments(int argc, char* argv[])
     return true;
 }
 
-//int main(int argc, char* argv[])
-//{
-//    if (argc < 2 || ! ProcessArguments(argc, argv)) {
-//        Usage();
-//        return 1;
-//    }
-//
-//    spv::jsonToSpirv(jsonPath);
-//    if (Options & EOptionPrintHeader)
-//        spv::PrintHeader(Language, std::cout);
-//
-//    return 0;
-//}
+int main(int argc, char* argv[])
+{
+    if (argc < 2 || ! ProcessArguments(argc, argv)) {
+        Usage();
+        return 1;
+    }
+
+    spv::jsonToSpirv(jsonPath);
+    if (Options & EOptionPrintHeader)
+        spv::PrintHeader(Language, std::cout);
+
+    return 0;
+}

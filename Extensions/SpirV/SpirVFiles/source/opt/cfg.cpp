@@ -12,11 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "cfg.h"
-#include "cfa.h"
-#include "ir_builder.h"
-#include "ir_context.h"
-#include "module.h"
+#include "source/opt/cfg.h"
+
+#include <memory>
+#include <utility>
+
+#include "source/cfa.h"
+#include "source/opt/ir_builder.h"
+#include "source/opt/ir_context.h"
+#include "source/opt/module.h"
 
 namespace spvtools {
 namespace opt {
@@ -193,14 +197,9 @@ BasicBlock* CFG::SplitLoopHeader(BasicBlock* bb) {
     ++iter;
   }
 
-  std::unique_ptr<BasicBlock> newBlock(
-      bb->SplitBasicBlock(context, context->TakeNextId(), iter));
+  BasicBlock* new_header =
+      bb->SplitBasicBlock(context, context->TakeNextId(), iter);
 
-  // Insert the new bb in the correct position
-  auto insert_pos = header_it;
-  ++insert_pos;
-  BasicBlock* new_header = &*insert_pos.InsertBefore(std::move(newBlock));
-  new_header->SetParent(fn);
   uint32_t new_header_id = new_header->id();
   context->AnalyzeDefUse(new_header->GetLabelInst());
 

@@ -12,18 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef LIBSPIRV_OPT_CONSTRUCTS_H_
-#define LIBSPIRV_OPT_CONSTRUCTS_H_
+#ifndef SOURCE_OPT_FUNCTION_H_
+#define SOURCE_OPT_FUNCTION_H_
 
 #include <algorithm>
 #include <functional>
 #include <memory>
+#include <string>
 #include <utility>
 #include <vector>
 
-#include "basic_block.h"
-#include "instruction.h"
-#include "iterator.h"
+#include "source/opt/basic_block.h"
+#include "source/opt/instruction.h"
+#include "source/opt/iterator.h"
 
 namespace spvtools {
 namespace opt {
@@ -124,6 +125,10 @@ class Function {
   // is always added to |options|.
   std::string PrettyPrint(uint32_t options = 0u) const;
 
+  // Dump this function on stderr.  Useful when running interactive
+  // debuggers.
+  void Dump() const;
+
  private:
   // The OpFunction instruction that begins the definition of this function.
   std::unique_ptr<Instruction> def_inst_;
@@ -186,4 +191,4 @@ inline void Function::SetFunctionEnd(std::unique_ptr<Instruction> end_inst) {
 }  // namespace opt
 }  // namespace spvtools
 
-#endif  // LIBSPIRV_OPT_CONSTRUCTS_H_
+#endif  // SOURCE_OPT_FUNCTION_H_

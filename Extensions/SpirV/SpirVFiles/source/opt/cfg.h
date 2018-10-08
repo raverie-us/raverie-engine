@@ -12,15 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef LIBSPIRV_OPT_CFG_H_
-#define LIBSPIRV_OPT_CFG_H_
-
-#include "basic_block.h"
+#ifndef SOURCE_OPT_CFG_H_
+#define SOURCE_OPT_CFG_H_
 
 #include <algorithm>
 #include <list>
 #include <unordered_map>
 #include <unordered_set>
+#include <vector>
+
+#include "source/opt/basic_block.h"
 
 namespace spvtools {
 namespace opt {
@@ -77,8 +78,13 @@ class CFG {
       BasicBlock* bb, const std::function<void(BasicBlock*)>& f);
 
   // Registers |blk| as a basic block in the cfg, this also updates the
-  // predecessor lists of each successor of |blk|.
+  // predecessor lists of each successor of |blk|. |blk| must have a terminator
+  // instruction at the end of the block.
   void RegisterBlock(BasicBlock* blk) {
+    assert(blk->begin() != blk->end() &&
+           "Basic blocks must have a terminator before registering.");
+    assert(blk->tail()->IsBlockTerminator() &&
+           "Basic blocks must have a terminator before registering.");
     uint32_t blk_id = blk->id();
     id2block_[blk_id] = blk;
     AddEdges(blk);
@@ -167,4 +173,4 @@ class CFG {
 }  // namespace opt
 }  // namespace spvtools
 
-#endif  // LIBSPIRV_OPT_CFG_H_
+#endif  // SOURCE_OPT_CFG_H_

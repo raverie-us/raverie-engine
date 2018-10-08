@@ -22,6 +22,7 @@ target_sources(SPIRV-Tools
     ${CMAKE_CURRENT_LIST_DIR}/print.cpp
     ${CMAKE_CURRENT_LIST_DIR}/software_version.cpp
     ${CMAKE_CURRENT_LIST_DIR}/spirv_endian.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/spirv_optimizer_options.cpp
     ${CMAKE_CURRENT_LIST_DIR}/spirv_stats.cpp
     ${CMAKE_CURRENT_LIST_DIR}/spirv_target_env.cpp
     ${CMAKE_CURRENT_LIST_DIR}/spirv_validator_options.cpp
@@ -53,6 +54,7 @@ target_sources(SPIRV-Tools
     ${CMAKE_CURRENT_LIST_DIR}/spirv_constant.h
     ${CMAKE_CURRENT_LIST_DIR}/spirv_definition.h
     ${CMAKE_CURRENT_LIST_DIR}/spirv_endian.h
+    ${CMAKE_CURRENT_LIST_DIR}/spirv_optimizer_options.h
     ${CMAKE_CURRENT_LIST_DIR}/spirv_stats.h
     ${CMAKE_CURRENT_LIST_DIR}/spirv_target_env.h
     ${CMAKE_CURRENT_LIST_DIR}/spirv_validator_options.h

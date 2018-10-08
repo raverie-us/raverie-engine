@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "function.h"
+#include "source/opt/function.h"
 
 #include <ostream>
 #include <sstream>
@@ -92,6 +92,10 @@ BasicBlock* Function::InsertBasicBlockAfter(
 std::ostream& operator<<(std::ostream& str, const Function& func) {
   str << func.PrettyPrint();
   return str;
+}
+
+void Function::Dump() const {
+  std::cerr << "Function #" << result_id() << "\n" << *this << "\n";
 }
 
 std::string Function::PrettyPrint(uint32_t options) const {

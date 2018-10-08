@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef LIBSPIRV_OPT_DECORATION_MANAGER_H_
-#define LIBSPIRV_OPT_DECORATION_MANAGER_H_
+#ifndef SOURCE_OPT_DECORATION_MANAGER_H_
+#define SOURCE_OPT_DECORATION_MANAGER_H_
 
 #include <functional>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
-#include "instruction.h"
-#include "module.h"
+#include "source/opt/instruction.h"
+#include "source/opt/module.h"
 
 namespace spvtools {
 namespace opt {
@@ -36,11 +36,22 @@ class DecorationManager {
   }
   DecorationManager() = delete;
 
-  // Removes all decorations from |id| (either directly or indirectly) for
-  // which |pred| returns true.
-  // If |id| is a group ID, OpGroupDecorate and OpGroupMemberDecorate will be
-  // removed if they have no targets left, and OpDecorationGroup will be
-  // removed if the group is not applied to anyone and contains no decorations.
+  // Changes all of the decorations (direct and through groups) where |pred| is
+  // true and that apply to |id| so that they no longer apply to |id|.
+  //
+  // If |id| is part of a group, it will be removed from the group if it
+  // does not use all of the group's decorations, or, if there are no
+  // decorations that apply to the group.
+  //
+  // If decoration groups become empty, the |OpGroupDecorate| and
+  // |OpGroupMemberDecorate| instructions will be killed.
+  //
+  // Decoration instructions that apply directly to |id| will be killed.
+  //
+  // If |id| is a decoration group and all of the group's decorations are
+  // removed, then the |OpGroupDecorate| and
+  // |OpGroupMemberDecorate| for the group will be killed, but not the defining
+  // |OpDecorationGroup| instruction.
   void RemoveDecorationsFrom(uint32_t id,
                              std::function<bool(const Instruction&)> pred =
                                  [](const Instruction&) { return true; });
@@ -91,6 +102,12 @@ class DecorationManager {
   // This function does not check if the id |to| is already decorated.
   void CloneDecorations(uint32_t from, uint32_t to);
 
+  // Same as above, but only clone the decoration if the decoration operand is
+  // in |decorations_to_copy|.  This function has the extra restriction that
+  // |from| and |to| must not be an object, not a type.
+  void CloneDecorations(uint32_t from, uint32_t to,
+                        const std::vector<SpvDecoration>& decorations_to_copy);
+
   // Informs the decoration manager of a new decoration that it needs to track.
   void AddDecoration(Instruction* inst);
 
@@ -133,4 +150,4 @@ class DecorationManager {
 }  // namespace opt
 }  // namespace spvtools
 
-#endif  // LIBSPIRV_OPT_DECORATION_MANAGER_H_
+#endif  // SOURCE_OPT_DECORATION_MANAGER_H_

@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "fold_spec_constant_op_and_composite_pass.h"
+#include "source/opt/fold_spec_constant_op_and_composite_pass.h"
 
 #include <algorithm>
 #include <initializer_list>
 #include <tuple>
 
-#include "constants.h"
-#include "fold.h"
-#include "ir_context.h"
-#include "make_unique.h"
+#include "source/opt/constants.h"
+#include "source/opt/fold.h"
+#include "source/opt/ir_context.h"
+#include "source/util/make_unique.h"
 
 namespace spvtools {
 namespace opt {
@@ -279,11 +279,10 @@ Instruction* FoldSpecConstantOpAndCompositePass::DoVectorShuffle(
            "Literal index out of bound of the concatenated vector");
     selected_components.push_back(concatenated_components[literal]);
   }
-  auto new_vec_const =
-      new analysis::VectorConstant(result_vec_type, selected_components);
+  auto new_vec_const = MakeUnique<analysis::VectorConstant>(
+      result_vec_type, selected_components);
   auto reg_vec_const =
-      context()->get_constant_mgr()->RegisterConstant(new_vec_const);
-  if (reg_vec_const != new_vec_const) delete new_vec_const;
+      context()->get_constant_mgr()->RegisterConstant(std::move(new_vec_const));
   return context()->get_constant_mgr()->BuildInstructionAndAddToModule(
       reg_vec_const, pos);
 }
@@ -302,9 +301,9 @@ bool IsValidTypeForComponentWiseOperation(const analysis::Type* type) {
   } else if (auto* it = type->AsInteger()) {
     if (it->width() == 32) return true;
   } else if (auto* vt = type->AsVector()) {
-    if (vt->element_type()->AsBool())
+    if (vt->element_type()->AsBool()) {
       return true;
-    else if (auto* vit = vt->element_type()->AsInteger()) {
+    } else if (auto* vit = vt->element_type()->AsInteger()) {
       if (vit->width() == 32) return true;
     }
   }
@@ -368,11 +367,10 @@ Instruction* FoldSpecConstantOpAndCompositePass::DoComponentWiseOperation(
         assert(false && "Failed to create constants with 32-bit word");
       }
     }
-    auto new_vec_const = new analysis::VectorConstant(result_type->AsVector(),
-                                                      result_vector_components);
-    auto reg_vec_const =
-        context()->get_constant_mgr()->RegisterConstant(new_vec_const);
-    if (reg_vec_const != new_vec_const) delete new_vec_const;
+    auto new_vec_const = MakeUnique<analysis::VectorConstant>(
+        result_type->AsVector(), result_vector_components);
+    auto reg_vec_const = context()->get_constant_mgr()->RegisterConstant(
+        std::move(new_vec_const));
     return context()->get_constant_mgr()->BuildInstructionAndAddToModule(
         reg_vec_const, pos);
   } else {

@@ -12,13 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef LIBSPIRV_OPT_IR_BUILDER_H_
-#define LIBSPIRV_OPT_IR_BUILDER_H_
+#ifndef SOURCE_OPT_IR_BUILDER_H_
+#define SOURCE_OPT_IR_BUILDER_H_
 
-#include "opt/basic_block.h"
-#include "opt/constants.h"
-#include "opt/instruction.h"
-#include "opt/ir_context.h"
+#include <limits>
+#include <memory>
+#include <utility>
+#include <vector>
+
+#include "source/opt/basic_block.h"
+#include "source/opt/constants.h"
+#include "source/opt/instruction.h"
+#include "source/opt/ir_context.h"
 
 namespace spvtools {
 namespace opt {
@@ -63,6 +68,20 @@ class InstructionBuilder {
         {{spv_operand_type_t::SPV_OPERAND_TYPE_ID, {merge_id}},
          {spv_operand_type_t::SPV_OPERAND_TYPE_SELECTION_CONTROL,
           {selection_control}}}));
+    return AddInstruction(std::move(new_branch_merge));
+  }
+
+  // Creates a new loop merge instruction.
+  // The id |merge_id| is the basic block id of the merge block.
+  // |continue_id| is the id of the continue block.
+  // |loop_control| are the loop control flags to be added to the instruction.
+  Instruction* AddLoopMerge(uint32_t merge_id, uint32_t continue_id,
+                            uint32_t loop_control = SpvLoopControlMaskNone) {
+    std::unique_ptr<Instruction> new_branch_merge(new Instruction(
+        GetContext(), SpvOpLoopMerge, 0, 0,
+        {{spv_operand_type_t::SPV_OPERAND_TYPE_ID, {merge_id}},
+         {spv_operand_type_t::SPV_OPERAND_TYPE_ID, {continue_id}},
+         {spv_operand_type_t::SPV_OPERAND_TYPE_LOOP_CONTROL, {loop_control}}}));
     return AddInstruction(std::move(new_branch_merge));
   }
 
@@ -413,4 +432,4 @@ class InstructionBuilder {
 }  // namespace opt
 }  // namespace spvtools
 
-#endif  // LIBSPIRV_OPT_IR_BUILDER_H_
+#endif  // SOURCE_OPT_IR_BUILDER_H_

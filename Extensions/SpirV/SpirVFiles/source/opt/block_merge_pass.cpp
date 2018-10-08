@@ -14,26 +14,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "block_merge_pass.h"
+#include "source/opt/block_merge_pass.h"
 
-#include "ir_context.h"
-#include "iterator.h"
+#include <vector>
+
+#include "source/opt/ir_context.h"
+#include "source/opt/iterator.h"
 
 namespace spvtools {
 namespace opt {
-
-void BlockMergePass::KillInstAndName(Instruction* inst) {
-  std::vector<Instruction*> to_kill;
-  get_def_use_mgr()->ForEachUser(inst, [&to_kill](Instruction* user) {
-    if (user->opcode() == SpvOpName) {
-      to_kill.push_back(user);
-    }
-  });
-  for (auto i : to_kill) {
-    context()->KillInst(i);
-  }
-  context()->KillInst(inst);
-}
 
 bool BlockMergePass::MergeBlocks(Function* func) {
   bool modified = false;
@@ -53,14 +42,6 @@ bool BlockMergePass::MergeBlocks(Function* func) {
       continue;
     }
 
-    bool pred_is_header = IsHeader(&*bi);
-    bool succ_is_header = IsHeader(lab_id);
-    if (pred_is_header && succ_is_header) {
-      // Cannot merge two headers together.
-      ++bi;
-      continue;
-    }
-
     bool pred_is_merge = IsMerge(&*bi);
     bool succ_is_merge = IsMerge(lab_id);
     if (pred_is_merge && succ_is_merge) {
@@ -70,7 +51,16 @@ bool BlockMergePass::MergeBlocks(Function* func) {
     }
 
     Instruction* merge_inst = bi->GetMergeInst();
+    bool pred_is_header = IsHeader(&*bi);
     if (pred_is_header && lab_id != merge_inst->GetSingleWordInOperand(0u)) {
+      bool succ_is_header = IsHeader(lab_id);
+      if (pred_is_header && succ_is_header) {
+        // Cannot merge two headers together when the successor is not the merge
+        // block of the predecessor.
+        ++bi;
+        continue;
+      }
+
       // If this is a header block and the successor is not its merge, we must
       // be careful about which blocks we are willing to merge together.
       // OpLoopMerge must be followed by a conditional or unconditional branch.
@@ -114,7 +104,7 @@ bool BlockMergePass::MergeBlocks(Function* func) {
       }
     }
     context()->ReplaceAllUsesWith(lab_id, bi->id());
-    KillInstAndName(sbi->GetLabelInst());
+    context()->KillInst(sbi->GetLabelInst());
     (void)sbi.Erase();
     // Reprocess block.
     modified = true;

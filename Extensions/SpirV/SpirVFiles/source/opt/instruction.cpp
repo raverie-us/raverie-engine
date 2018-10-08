@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "instruction.h"
+#include "source/opt/instruction.h"
 
 #include <initializer_list>
 
-#include "disassemble.h"
-#include "fold.h"
-#include "ir_context.h"
-#include "reflect.h"
+#include "source/disassemble.h"
+#include "source/opt/fold.h"
+#include "source/opt/ir_context.h"
+#include "source/opt/reflect.h"
 
 namespace spvtools {
 namespace opt {
@@ -538,6 +538,10 @@ std::string Instruction::PrettyPrint(uint32_t options) const {
 std::ostream& operator<<(std::ostream& str, const Instruction& inst) {
   str << inst.PrettyPrint();
   return str;
+}
+
+void Instruction::Dump() const {
+  std::cerr << "Instruction #" << unique_id() << "\n" << *this << "\n";
 }
 
 bool Instruction::IsOpcodeCodeMotionSafe() const {

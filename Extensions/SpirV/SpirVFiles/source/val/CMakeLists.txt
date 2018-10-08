@@ -11,6 +11,7 @@ target_sources(SPIRV-Tools
     ${CMAKE_CURRENT_LIST_DIR}/instruction.cpp
     ${CMAKE_CURRENT_LIST_DIR}/validate.cpp
     ${CMAKE_CURRENT_LIST_DIR}/validate_adjacency.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/validate_annotation.cpp
     ${CMAKE_CURRENT_LIST_DIR}/validate_arithmetics.cpp
     ${CMAKE_CURRENT_LIST_DIR}/validate_atomics.cpp
     ${CMAKE_CURRENT_LIST_DIR}/validate_barriers.cpp
@@ -19,11 +20,15 @@ target_sources(SPIRV-Tools
     ${CMAKE_CURRENT_LIST_DIR}/validate_capability.cpp
     ${CMAKE_CURRENT_LIST_DIR}/validate_cfg.cpp
     ${CMAKE_CURRENT_LIST_DIR}/validate_composites.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/validate_constants.cpp
     ${CMAKE_CURRENT_LIST_DIR}/validate_conversion.cpp
     ${CMAKE_CURRENT_LIST_DIR}/validate_datarules.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/validate_debug.cpp
     ${CMAKE_CURRENT_LIST_DIR}/validate_decorations.cpp
     ${CMAKE_CURRENT_LIST_DIR}/validate_derivatives.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/validate_execution_limitations.cpp
     ${CMAKE_CURRENT_LIST_DIR}/validate_ext_inst.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/validate_function.cpp
     ${CMAKE_CURRENT_LIST_DIR}/validate_id.cpp
     ${CMAKE_CURRENT_LIST_DIR}/validate_image.cpp
     ${CMAKE_CURRENT_LIST_DIR}/validate_instruction.cpp
@@ -32,8 +37,10 @@ target_sources(SPIRV-Tools
     ${CMAKE_CURRENT_LIST_DIR}/validate_literals.cpp
     ${CMAKE_CURRENT_LIST_DIR}/validate_logicals.cpp
     ${CMAKE_CURRENT_LIST_DIR}/validate_memory.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/validate_mode_setting.cpp
     ${CMAKE_CURRENT_LIST_DIR}/validate_non_uniform.cpp
     ${CMAKE_CURRENT_LIST_DIR}/validate_primitives.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/validate_type.cpp
     ${CMAKE_CURRENT_LIST_DIR}/validate_type_unique.cpp
     ${CMAKE_CURRENT_LIST_DIR}/validation_state.cpp
 #  PUBLIC

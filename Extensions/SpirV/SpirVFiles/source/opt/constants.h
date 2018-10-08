@@ -12,21 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef LIBSPIRV_OPT_CONSTANTS_H_
-#define LIBSPIRV_OPT_CONSTANTS_H_
+#ifndef SOURCE_OPT_CONSTANTS_H_
+#define SOURCE_OPT_CONSTANTS_H_
 
 #include <cinttypes>
+#include <map>
 #include <memory>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
 #include <vector>
 
-#include "make_unique.h"
-#include "module.h"
-#include "type_manager.h"
-#include "types.h"
-#include "util/hex_float.h"
+#include "source/opt/module.h"
+#include "source/opt/type_manager.h"
+#include "source/opt/types.h"
+#include "source/util/hex_float.h"
+#include "source/util/make_unique.h"
 
 namespace spvtools {
 namespace opt {
@@ -116,7 +117,7 @@ class Constant {
   int64_t GetS64() const;
 
   // Returns true if the constant is a zero or a composite containing 0s.
-  virtual bool IsZero() const { return false; };
+  virtual bool IsZero() const { return false; }
 
   const Type* type() const { return type_; }
 
@@ -480,10 +481,11 @@ struct ConstantEqual {
       const auto& composite2 = c2->AsCompositeConstant();
       return composite2 &&
              composite1->GetComponents() == composite2->GetComponents();
-    } else if (c1->AsNullConstant())
+    } else if (c1->AsNullConstant()) {
       return c2->AsNullConstant() != nullptr;
-    else
+    } else {
       assert(false && "Tried to compare two invalid Constant instances.");
+    }
     return false;
   }
 };
@@ -576,8 +578,11 @@ class ConstantManager {
   // Registers a new constant |cst| in the constant pool. If the constant
   // existed already, it returns a pointer to the previously existing Constant
   // in the pool. Otherwise, it returns |cst|.
-  const Constant* RegisterConstant(const Constant* cst) {
-    auto ret = const_pool_.insert(cst);
+  const Constant* RegisterConstant(std::unique_ptr<Constant> cst) {
+    auto ret = const_pool_.insert(cst.get());
+    if (ret.second) {
+      owned_constants_.emplace_back(std::move(cst));
+    }
     return *ret.first;
   }
 
@@ -631,7 +636,7 @@ class ConstantManager {
   // type, either Bool, Integer or Float. If any of the rules above failed, the
   // creation will fail and nullptr will be returned. If the vector is empty,
   // a NullConstant instance will be created with the given type.
-  const Constant* CreateConstant(
+  std::unique_ptr<Constant> CreateConstant(
       const Type* type,
       const std::vector<uint32_t>& literal_words_or_ids) const;
 
@@ -678,10 +683,14 @@ class ConstantManager {
 
   // The constant pool.  All created constants are registered here.
   std::unordered_set<const Constant*, ConstantHash, ConstantEqual> const_pool_;
+
+  // The constant that are owned by the constant manager.  Every constant in
+  // |const_pool_| should be in |owned_constants_| as well.
+  std::vector<std::unique_ptr<Constant>> owned_constants_;
 };
 
 }  // namespace analysis
 }  // namespace opt
 }  // namespace spvtools
 
-#endif  // LIBSPIRV_OPT_CONSTANTS_H_
+#endif  // SOURCE_OPT_CONSTANTS_H_

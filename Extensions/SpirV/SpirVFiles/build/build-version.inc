@@ -1,1 +1,1 @@
-"v2018.5-dev", "SPIRV-Tools v2018.5-dev 3111c6f727674210f5920d1afe3d43401a97bde2"
+"v2018.6-dev", "SPIRV-Tools v2018.6-dev 8f54f9bfd7a86115924142ad639e550e9df92f7c"

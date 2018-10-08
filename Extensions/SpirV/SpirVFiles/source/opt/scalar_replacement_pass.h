@@ -12,16 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef LIBSPIRV_OPT_SCALAR_REPLACEMENT_PASS_H_
-#define LIBSPIRV_OPT_SCALAR_REPLACEMENT_PASS_H_
+#ifndef SOURCE_OPT_SCALAR_REPLACEMENT_PASS_H_
+#define SOURCE_OPT_SCALAR_REPLACEMENT_PASS_H_
 
 #include <cstdio>
-
-#include "function.h"
-#include "pass.h"
-#include "type_manager.h"
-
+#include <memory>
 #include <queue>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
+
+#include "source/opt/function.h"
+#include "source/opt/pass.h"
+#include "source/opt/type_manager.h"
 
 namespace spvtools {
 namespace opt {
@@ -166,6 +169,11 @@ class ScalarReplacementPass : public Pass {
   // |type| must be a vector or matrix type.
   size_t GetNumElements(const Instruction* type) const;
 
+  // Returns true if |id| is a specialization constant.
+  //
+  // |id| must be registered definition.
+  bool IsSpecConstant(uint32_t id) const;
+
   // Returns an id for a pointer to |id|.
   uint32_t GetOrCreatePointerType(uint32_t id);
 
@@ -226,4 +234,4 @@ class ScalarReplacementPass : public Pass {
 }  // namespace opt
 }  // namespace spvtools
 
-#endif  // LIBSPIRV_OPT_SCALAR_REPLACEMENT_PASS_H_
+#endif  // SOURCE_OPT_SCALAR_REPLACEMENT_PASS_H_

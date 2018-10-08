@@ -12,16 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "scalar_replacement_pass.h"
+#include "source/opt/scalar_replacement_pass.h"
 
-#include "enum_string_mapping.h"
-#include "extensions.h"
-#include "make_unique.h"
-#include "reflect.h"
-#include "types.h"
-
+#include <algorithm>
 #include <queue>
 #include <tuple>
+#include <utility>
+
+#include "source/enum_string_mapping.h"
+#include "source/extensions.h"
+#include "source/opt/reflect.h"
+#include "source/opt/types.h"
+#include "source/util/make_unique.h"
 
 namespace spvtools {
 namespace opt {
@@ -498,6 +500,12 @@ size_t ScalarReplacementPass::GetNumElements(const Instruction* type) const {
   return len;
 }
 
+bool ScalarReplacementPass::IsSpecConstant(uint32_t id) const {
+  const Instruction* inst = get_def_use_mgr()->GetDef(id);
+  assert(inst);
+  return spvOpcodeIsSpecConstant(inst->opcode());
+}
+
 Instruction* ScalarReplacementPass::GetStorageType(
     const Instruction* inst) const {
   assert(inst->opcode() == SpvOpVariable);
@@ -534,7 +542,12 @@ bool ScalarReplacementPass::CheckType(const Instruction* typeInst) const {
         return false;
       return true;
     case SpvOpTypeArray:
-      if (IsLargerThanSizeLimit(GetArrayLength(typeInst))) return false;
+      if (IsSpecConstant(typeInst->GetSingleWordInOperand(1u))) {
+        return false;
+      }
+      if (IsLargerThanSizeLimit(GetArrayLength(typeInst))) {
+        return false;
+      }
       return true;
       // TODO(alanbaker): Develop some heuristics for when this should be
       // re-enabled.

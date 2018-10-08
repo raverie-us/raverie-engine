@@ -18,6 +18,7 @@ target_sources(SPIRV-Tools
     ${CMAKE_CURRENT_LIST_DIR}/huffman_codec.h
     ${CMAKE_CURRENT_LIST_DIR}/ilist.h
     ${CMAKE_CURRENT_LIST_DIR}/ilist_node.h
+    ${CMAKE_CURRENT_LIST_DIR}/make_unique.h
     ${CMAKE_CURRENT_LIST_DIR}/move_to_front.h
     ${CMAKE_CURRENT_LIST_DIR}/parse_number.h
     ${CMAKE_CURRENT_LIST_DIR}/small_vector.h

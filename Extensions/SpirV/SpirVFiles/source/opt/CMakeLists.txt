@@ -81,6 +81,7 @@ target_sources(SPIRV-Tools-opt
     ${CMAKE_CURRENT_LIST_DIR}/strength_reduction_pass.cpp
     ${CMAKE_CURRENT_LIST_DIR}/strip_debug_info_pass.cpp
     ${CMAKE_CURRENT_LIST_DIR}/strip_reflect_info_pass.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/struct_cfg_analysis.cpp
     ${CMAKE_CURRENT_LIST_DIR}/types.cpp
     ${CMAKE_CURRENT_LIST_DIR}/type_manager.cpp
     ${CMAKE_CURRENT_LIST_DIR}/unify_const_pass.cpp
@@ -169,6 +170,7 @@ target_sources(SPIRV-Tools-opt
     ${CMAKE_CURRENT_LIST_DIR}/strength_reduction_pass.h
     ${CMAKE_CURRENT_LIST_DIR}/strip_debug_info_pass.h
     ${CMAKE_CURRENT_LIST_DIR}/strip_reflect_info_pass.h
+    ${CMAKE_CURRENT_LIST_DIR}/struct_cfg_analysis.h
     ${CMAKE_CURRENT_LIST_DIR}/tree_iterator.h
     ${CMAKE_CURRENT_LIST_DIR}/types.h
     ${CMAKE_CURRENT_LIST_DIR}/type_manager.h

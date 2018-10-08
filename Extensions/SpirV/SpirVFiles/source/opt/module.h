@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef LIBSPIRV_OPT_MODULE_H_
-#define LIBSPIRV_OPT_MODULE_H_
+#ifndef SOURCE_OPT_MODULE_H_
+#define SOURCE_OPT_MODULE_H_
 
 #include <functional>
 #include <memory>
 #include <utility>
 #include <vector>
 
-#include "function.h"
-#include "instruction.h"
-#include "iterator.h"
+#include "source/opt/function.h"
+#include "source/opt/instruction.h"
+#include "source/opt/iterator.h"
 
 namespace spvtools {
 namespace opt {
@@ -53,14 +53,22 @@ class Module {
   // Sets the header to the given |header|.
   void SetHeader(const ModuleHeader& header) { header_ = header; }
 
-  // Sets the Id bound.
-  void SetIdBound(uint32_t bound) { header_.bound = bound; }
+  // Sets the Id bound.  The Id bound cannot be set to 0.
+  void SetIdBound(uint32_t bound) {
+    assert(bound != 0);
+    header_.bound = bound;
+  }
 
   // Returns the Id bound.
   uint32_t IdBound() { return header_.bound; }
 
   // Returns the current Id bound and increases it to the next available value.
-  uint32_t TakeNextIdBound() { return header_.bound++; }
+  // If the id bound has already reached its maximum value, then 0 is returned.
+  // The maximum value for the id bound is obtained from the context.  If there
+  // is none, then the minimum that limit can be according to the spir-v
+  // specification.
+  // TODO(1841): Update the uses to check for a 0 return value.
+  uint32_t TakeNextIdBound();
 
   // Appends a capability instruction to this module.
   inline void AddCapability(std::unique_ptr<Instruction> c);
@@ -473,4 +481,4 @@ inline Module::const_iterator Module::cend() const {
 }  // namespace opt
 }  // namespace spvtools
 
-#endif  // LIBSPIRV_OPT_MODULE_H_
+#endif  // SOURCE_OPT_MODULE_H_

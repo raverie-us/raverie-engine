@@ -17,6 +17,7 @@
 #include "source/val/validate.h"
 
 #include <cassert>
+#include <string>
 #include <unordered_set>
 
 #include "source/diagnostic.h"
@@ -82,6 +83,7 @@ bool IsSupportOptionalVulkan_1_0(uint32_t capability) {
     case SpvCapabilityStorageImageReadWithoutFormat:
     case SpvCapabilityStorageImageWriteWithoutFormat:
     case SpvCapabilityMultiViewport:
+    case SpvCapabilityInt64Atomics:
       return true;
   }
   return false;

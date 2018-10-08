@@ -12,10 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef LIBSPIRV_OPT_COPY_PROP_H_
-#define LIBSPIRV_OPT_COPY_PROP_H_
+#ifndef SOURCE_OPT_COPY_PROP_ARRAYS_H_
+#define SOURCE_OPT_COPY_PROP_ARRAYS_H_
 
-#include "mem_pass.h"
+#include <memory>
+#include <vector>
+
+#include "source/opt/mem_pass.h"
 
 namespace spvtools {
 namespace opt {
@@ -95,18 +98,21 @@ class CopyPropagateArrays : public MemPass {
 
     // Returns the type id of the pointer type that can be used to point to this
     // memory object.
-    uint32_t GetPointerTypeId() const {
+    uint32_t GetPointerTypeId(const CopyPropagateArrays* pass) const {
+      analysis::DefUseManager* def_use_mgr =
+          GetVariable()->context()->get_def_use_mgr();
       analysis::TypeManager* type_mgr =
           GetVariable()->context()->get_type_mgr();
-      const analysis::Pointer* pointer_type =
-          type_mgr->GetType(GetVariable()->type_id())->AsPointer();
-      const analysis::Type* var_type = pointer_type->pointee_type();
-      const analysis::Type* member_type =
-          type_mgr->GetMemberType(var_type, GetAccessIds());
-      uint32_t member_type_id = type_mgr->GetId(member_type);
-      assert(member_type != 0);
+
+      Instruction* var_pointer_inst =
+          def_use_mgr->GetDef(GetVariable()->type_id());
+
+      uint32_t member_type_id = pass->GetMemberTypeId(
+          var_pointer_inst->GetSingleWordInOperand(1), GetAccessIds());
+
       uint32_t member_pointer_type_id = type_mgr->FindPointerToType(
-          member_type_id, pointer_type->storage_class());
+          member_type_id, static_cast<SpvStorageClass>(
+                              var_pointer_inst->GetSingleWordInOperand(0)));
       return member_pointer_type_id;
     }
 
@@ -220,9 +226,15 @@ class CopyPropagateArrays : public MemPass {
   // the only store that does so.  Note it does not look through OpAccessChain
   // instruction, so partial stores are not considered.
   Instruction* FindStoreInstruction(const Instruction* var_inst) const;
+
+  // Return the type id of the member of the type |id| access using
+  // |access_chain|. The elements of |access_chain| are to be interpreted the
+  // same way the indexes are used in an |OpCompositeExtract| instruction.
+  uint32_t GetMemberTypeId(uint32_t id,
+                           const std::vector<uint32_t>& access_chain) const;
 };
 
 }  // namespace opt
 }  // namespace spvtools
 
-#endif  // LIBSPIRV_OPT_COPY_PROP_H_
+#endif  // SOURCE_OPT_COPY_PROP_ARRAYS_H_

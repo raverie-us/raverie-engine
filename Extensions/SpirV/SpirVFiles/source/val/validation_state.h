@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef LIBSPIRV_VAL_VALIDATIONSTATE_H_
-#define LIBSPIRV_VAL_VALIDATIONSTATE_H_
+#ifndef SOURCE_VAL_VALIDATION_STATE_H_
+#define SOURCE_VAL_VALIDATION_STATE_H_
 
+#include <map>
 #include <set>
 #include <string>
 #include <tuple>
@@ -22,17 +23,17 @@
 #include <unordered_set>
 #include <vector>
 
-#include "assembly_grammar.h"
-#include "decoration.h"
-#include "diagnostic.h"
-#include "disassemble.h"
-#include "enum_set.h"
-#include "latest_version_spirv_header.h"
+#include "source/assembly_grammar.h"
+#include "source/diagnostic.h"
+#include "source/disassemble.h"
+#include "source/enum_set.h"
+#include "source/latest_version_spirv_header.h"
+#include "source/spirv_definition.h"
+#include "source/spirv_validator_options.h"
+#include "source/val/decoration.h"
+#include "source/val/function.h"
+#include "source/val/instruction.h"
 #include "spirv-tools/libspirv.h"
-#include "spirv_definition.h"
-#include "spirv_validator_options.h"
-#include "val/function.h"
-#include "val/instruction.h"
 
 namespace spvtools {
 namespace val {
@@ -82,10 +83,6 @@ class ValidationState_t {
     // Allow OpTypeInt with 8 bit width?
     bool declare_int8_type = false;
 
-    // Allow non-monotonic offsets for struct members?
-    // Vulkan permits this.
-    bool non_monotonic_struct_member_offsets = false;
-
     // Target environment uses relaxed block layout.
     // This is true for Vulkan 1.1 or later.
     bool env_relaxed_block_layout = false;
@@ -93,7 +90,8 @@ class ValidationState_t {
 
   ValidationState_t(const spv_const_context context,
                     const spv_const_validator_options opt,
-                    const uint32_t* words, const size_t num_words);
+                    const uint32_t* words, const size_t num_words,
+                    const uint32_t max_warnings);
 
   /// Returns the context
   spv_const_context context() const { return context_; }
@@ -172,7 +170,7 @@ class ValidationState_t {
   /// Determines if the op instruction is part of the current section
   bool IsOpcodeInCurrentLayoutSection(SpvOp op);
 
-  DiagnosticStream diag(spv_result_t error_code, const Instruction* inst) const;
+  DiagnosticStream diag(spv_result_t error_code, const Instruction* inst);
 
   /// Returns the function states
   std::vector<Function>& functions();
@@ -183,6 +181,7 @@ class ValidationState_t {
 
   /// Returns function state with the given id, or nullptr if no such function.
   const Function* function(uint32_t id) const;
+  Function* function(uint32_t id);
 
   /// Returns true if the called after a function instruction but before the
   /// function end instruction
@@ -642,9 +641,13 @@ class ValidationState_t {
   /// module which can (indirectly) call the function.
   std::unordered_map<uint32_t, std::vector<uint32_t>> function_to_entry_points_;
   const std::vector<uint32_t> empty_ids_;
+
+  /// Variables used to reduce the number of diagnostic messages.
+  uint32_t num_of_warnings_;
+  uint32_t max_num_of_warnings_;
 };
 
 }  // namespace val
 }  // namespace spvtools
 
-#endif  /// LIBSPIRV_VAL_VALIDATIONSTATE_H_
+#endif  // SOURCE_VAL_VALIDATION_STATE_H_

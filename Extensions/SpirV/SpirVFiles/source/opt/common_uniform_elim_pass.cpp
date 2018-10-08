@@ -14,9 +14,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "common_uniform_elim_pass.h"
-#include "cfa.h"
-#include "ir_context.h"
+#include "source/opt/common_uniform_elim_pass.h"
+#include "source/cfa.h"
+#include "source/opt/ir_context.h"
 
 namespace spvtools {
 namespace opt {
@@ -284,7 +284,7 @@ bool CommonUniformElimPass::UniformAccessChainConvert(Function* func) {
       inst = ReplaceAndDeleteLoad(inst, replId, ptrInst);
       inst = inst->InsertBefore(std::move(newInsts));
       modified = true;
-    };
+    }
   }
   return modified;
 }
@@ -573,6 +573,12 @@ void CommonUniformElimPass::InitExtensions() {
       "SPV_GOOGLE_hlsl_functionality1",
       "SPV_NV_shader_subgroup_partitioned",
       "SPV_EXT_descriptor_indexing",
+      "SPV_NV_fragment_shader_barycentric",
+      "SPV_NV_compute_shader_derivatives",
+      "SPV_NV_shader_image_footprint",
+      "SPV_NV_shading_rate",
+      "SPV_NV_mesh_shader",
+      "SPV_NVX_raytracing",
   });
 }
 
