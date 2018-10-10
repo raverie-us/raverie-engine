@@ -50,8 +50,9 @@ public:
   SpirVSpecializationConstantPass();
   bool RunTranslationPass(ShaderTranslationPassResult& inputData, ShaderTranslationPassResult& outputData) override;
 
-  /// Helper that sets all constant values on the optimizer.
-  void SetSpecializationValues(spvtools::Optimizer& optimizer, ShaderStageInterfaceReflection& stageReflection, HashMap<int, String>& overrides);
+  void GetSpecializationFlags(Array<String>& outFlags, ShaderStageInterfaceReflection& inputStageReflection, ShaderStageInterfaceReflection& outputStageReflection);
+  /// Helper that filles out an array of flags for the optimizer.
+  void SetSpecializationValues(Array<String>& outFlags, HashMap<int, String>& overrides);
 
   /// Should all specialization constants be frozen after setting values?
   /// Needed in-order for optimizations to bake-out constants in all further passes.

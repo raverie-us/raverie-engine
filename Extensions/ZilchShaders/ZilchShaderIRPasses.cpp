@@ -6,6 +6,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
+#include "spirv_optimizer_options.h"
+
 namespace Zero
 {
 
@@ -15,35 +17,96 @@ BaseSpirVOptimizerPass::BaseSpirVOptimizerPass()
   mTargetEnv = SPV_ENV_UNIVERSAL_1_3;
 }
 
-bool BaseSpirVOptimizerPass::RunOptimizer(spvtools::Optimizer& optimizer, ShaderByteStream& inputByteStream, ShaderByteStream& outputByteStream)
+bool BaseSpirVOptimizerPass::RunOptimizer(int primaryPass, Array<String>& flags, ShaderByteStream& inputByteStream, ShaderByteStream& outputByteStream)
 {
-  mErrorLog.Clear();
+  bool success = true;
 
-  StringBuilder builder;
-  // Set the message consumer to just append the message into a string builder
-  optimizer.SetMessageConsumer([&builder](spv_message_level_t level, const char* source,
-    const spv_position_t& position,
-    const char* message) {
-    builder.Append(message);
-    builder.Append("\n");
-  });
+  spv_context context = spvContextCreate((spv_target_env)mTargetEnv);
+  spv_diagnostic diagnostic = nullptr;
+  
+  // Create the options object with the given pass and flags
+  spv_optimizer_options options;
+  CreateOptimizerOptions(options, primaryPass, flags);
+  
+  // Construct spirv binary data from out byte stream
+  uint32_t wordCount = inputByteStream.WordCount();
+  uint32_t* code = (uint32_t*)inputByteStream.Data();
+  spv_const_binary_t binary{code, wordCount};
 
+  // Run the actual optimizer
+  spv_binary binaryOut;
+  spv_result_t result = spvOptimizeWithOptions(context, options, &binary, &binaryOut, &diagnostic);
 
-  uint32_t* data = (uint32_t*)inputByteStream.Data();
-  uint32 wordCount = inputByteStream.WordCount();
-
-  std::vector<uint32_t> optimizerBinaryOutput;
-  bool success = optimizer.Run(data, wordCount, &optimizerBinaryOutput);
-  if(!success)
+  // On success, load the result into the output stream
+  if(result == SPV_SUCCESS)
   {
-    mErrorLog = builder.ToString();
-    return false;
+    success = true;
+    outputByteStream.LoadWords(binaryOut->code, binaryOut->wordCount);
+  }
+  else
+  {
+    // Otherwise, report the error
+    success = false;
+    mErrorLog = SpirvDiagnosticToString(diagnostic);
   }
 
-  byte* outByteData = (byte*)optimizerBinaryOutput.data();
-  size_t outByteSize = optimizerBinaryOutput.size() * 4;
-  outputByteStream.Load(outByteData, outByteSize);
-  return true;
+  // Destroy the spirv structures in reverse order (just in case)
+  spvBinaryDestroy(binaryOut);
+  spvDiagnosticDestroy(diagnostic);
+  DestroyOptimizerOptions(options);
+  spvContextDestroy(context);
+  return success;
+}
+
+void BaseSpirVOptimizerPass::CreateOptimizerOptions(spv_optimizer_options& options, int primaryPass, Array<String>& flags)
+{
+  options = spvOptimizerOptionsCreate();
+  // We always assume the validator should never be run (that's a separate pass).
+  spvOptimizerOptionsSetRunValidator(options, false);
+  // Set the primary pass.
+  options->passes_ = (spv_optimizer_passes_t)primaryPass;
+  // Set any extra flags
+  SetOptimizerOptionsFlags(options, flags);
+}
+
+void BaseSpirVOptimizerPass::SetOptimizerOptionsFlags(spv_optimizer_options& options, Array<String>& flags)
+{
+  size_t flagsCount = flags.Size();
+  // Allocate an array of c-strings (one extra for null)
+  options->flags_ = new char*[flagsCount + 1];
+  options->flags_[flagsCount] = nullptr;
+  // Copy over each individual flag
+  for(size_t i = 0; i < flagsCount; ++i)
+  {
+    String& srcFlag = flags[i];
+    char*& destFlag = options->flags_[i];
+    size_t flagSize = srcFlag.SizeInBytes();
+    // Allocate the memory for the destination flag (one extra for null)
+    destFlag = new char[flagSize + 1];
+    destFlag[flagSize] = 0;
+    // Copy the actual string data
+    memcpy(destFlag, srcFlag.Data(), flagSize);
+  }
+}
+
+void BaseSpirVOptimizerPass::DestroyOptimizerOptions(spv_optimizer_options& options)
+{
+  int flagIndex = 0;
+  // Deallocate each individual flag followed by the 'array'.
+  while(true)
+  {
+    char* flag = options->flags_[flagIndex];
+    if(flag == nullptr)
+      return;
+
+    delete flag;
+    ++flagIndex;
+  }
+  delete options->flags_;
+  options->flags_ = nullptr;
+
+  // Destroy the actual options object
+  spvOptimizerOptionsDestroy(options);
 }
 
 String BaseSpirVOptimizerPass::GetErrorLog()
@@ -54,16 +117,12 @@ String BaseSpirVOptimizerPass::GetErrorLog()
 //-------------------------------------------------------------------SpirVOptimizerPass
 bool SpirVOptimizerPass::RunTranslationPass(ShaderTranslationPassResult& inputData, ShaderTranslationPassResult& outputData)
 {
-  spvtools::Optimizer optimizer((spv_target_env)mTargetEnv);
-
-  // Currently the performance pass crashes on several shaders but the size pass doesn't. Temporarily use this?
-  optimizer.RegisterSizePasses();
-
-  bool success = RunOptimizer(optimizer, inputData.mByteStream, outputData.mByteStream);
+  Array<String> flags;
+  bool success = RunOptimizer(SPV_OPTIMIZER_SIZE_PASS, flags, inputData.mByteStream, outputData.mByteStream);
   
+  // By default, all of the reflection data is the same as the input stage
   if(success)
     outputData.mReflectionData = inputData.mReflectionData;
-
   return success;
 }
 
@@ -77,53 +136,34 @@ bool SpirVValidatorPass::RunTranslationPass(ShaderTranslationPassResult& inputDa
 {
   mErrorLog.Clear();
 
-  spvtools::ValidatorOptions options;
-  spvtools::SpirvTools tools((spv_target_env)mTargetEnv);
+  bool success = true;
 
-  StringBuilder builder;
-  tools.SetMessageConsumer([&builder](spv_message_level_t level, const char*,
-    const spv_position_t& position,
-    const char* message) {
-    switch(level) {
-      case SPV_MSG_FATAL:
-      case SPV_MSG_INTERNAL_ERROR:
-      case SPV_MSG_ERROR:
-        builder.Append("error: ");
-        builder.Append(ToString(position.index));
-        builder.Append(": ");
-        builder.Append(message);
-        builder.Append("\n");
-        break;
-      case SPV_MSG_WARNING:
-        builder.Append("warning: ");
-        builder.Append(ToString(position.index));
-        builder.Append(": ");
-        builder.Append(message);
-        builder.Append("\n");
-        break;
-      case SPV_MSG_INFO:
-        builder.Append("info: ");
-        builder.Append(ToString(position.index));
-        builder.Append(": ");
-        builder.Append(message);
-        builder.Append("\n");
-        break;
-      default:
-        break;
-    }
-  });
+  spv_diagnostic diagnostic = nullptr;
+  spv_context context = spvContextCreate((spv_target_env)mTargetEnv);
+  spv_validator_options options = spvValidatorOptionsCreate();
 
-  ShaderByteStream& inputByteStream = inputData.mByteStream;
-  uint32_t* data = (uint32_t*)inputByteStream.Data();
-  uint32 wordCount = inputByteStream.WordCount();
+  // Construct spirv binary data from out byte stream
+  uint32_t wordCount = inputData.mByteStream.WordCount();
+  uint32_t* code = (uint32_t*)inputData.mByteStream.Data();
+  spv_const_binary_t binary{code, wordCount};
 
-  bool success = tools.Validate(data, wordCount, options);
-  if(!success)
+  spv_result_t result = spvValidateWithOptions(context, options, &binary, &diagnostic);
+
+  // If there's failure for any reason
+  if(result != SPV_SUCCESS)
   {
-    mErrorLog = builder.ToString();
+    success = false;
+
+    // Store the error log.
+    mErrorLog = SpirvDiagnosticToString(diagnostic);
     outputData.mByteStream.Load(mErrorLog);
     outputData.mReflectionData = inputData.mReflectionData;
   }
+
+  // Destroy the spirv structures in reverse order (just in case)
+  spvDiagnosticDestroy(diagnostic);
+  spvValidatorOptionsDestroy(options);
+  spvContextDestroy(context);
 
   return success;
 }

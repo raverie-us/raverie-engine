@@ -46,6 +46,9 @@ public:
   void Load(const char* source, size_t sizeInBytes);
   /// Load memory into this byte stream (copies data).
   void Load(const byte* source, size_t sizeInBytes);
+  /// Load memory from an array of words (copies data).
+  /// Simple helper to avoid copying word->byte conversions everywhere.
+  void LoadWords(const uint32* data, size_t wordCount);
 
   /// Save to an array of words (zero's array)
   void SaveTo(Array<uint32>& words);

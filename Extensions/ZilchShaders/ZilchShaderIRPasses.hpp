@@ -6,11 +6,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-namespace spvtools
-{
-  class Optimizer;
-}//namespace spvtools
-
 namespace Zero
 {
 
@@ -25,10 +20,27 @@ class BaseSpirVOptimizerPass : public ZilchShaderIRTranslationPass
 {
 public:
   BaseSpirVOptimizerPass();
-  bool RunOptimizer(spvtools::Optimizer& optimizer, ShaderByteStream& inputByteStream, ShaderByteStream& outputByteStream);
   String GetErrorLog() override;
 
-  // The spirv target environment to run.
+protected:
+  /// Run the optimzer with the given primary pass and flags.
+  /// Operates on the given input stream and writes to the given output stream.
+  /// Primarily a helper for the several passes that use the optimizer.
+  bool RunOptimizer(int primaryPass, Array<String>& flags, ShaderByteStream& inputByteStream, ShaderByteStream& outputByteStream);
+
+  // Helpers
+
+  /// Create the optimizer options given a primary pass and extra flags to apply.
+  void CreateOptimizerOptions(spv_optimizer_options& options, int primaryPass, Array<String>& flags);
+  /// Helper to set extra flags on the options (requires low-level c-style work).
+  void SetOptimizerOptionsFlags(spv_optimizer_options& options, Array<String>& flags);
+  /// Destroys the optizer options (including the extra flags).
+  /// This could change if the optimizer ever gets proper c-api support (this is a custom implementation).
+  void DestroyOptimizerOptions(spv_optimizer_options& options);
+
+public:
+
+  /// The spirv target environment to run.
   int mTargetEnv;
   String mErrorLog;
 };

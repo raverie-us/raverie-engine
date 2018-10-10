@@ -18,12 +18,22 @@
 #include "source/spirv_validator_options.h"
 #include "spirv-tools/libspirv.h"
 
+// Zero Edit: Adding enum for default optimizer passes
+typedef enum spv_optimizer_passes_t {
+  SPV_OPTIMIZER_NO_PASS,
+  SPV_OPTIMIZER_PERFORMANCE_PASS,
+  SPV_OPTIMIZER_SIZE_PASS,
+  SPV_OPTIMIZER_LEGALIZATION_PASS
+} spv_optimizer_passes_t;
+
 // Manages command line options passed to the SPIR-V Validator. New struct
 // members may be added for any new option.
 struct spv_optimizer_options_t {
   spv_optimizer_options_t()
       : run_validator_(true),
         val_options_(),
+        flags_(nullptr),
+        passes_(SPV_OPTIMIZER_SIZE_PASS),
         max_id_bound_(kDefaultMaxIdBound) {}
 
   // When true the validator will be run before optimizations are run.
@@ -36,5 +46,10 @@ struct spv_optimizer_options_t {
   // this value must be at least 0x3FFFFF, but implementations can allow for a
   // higher value.
   uint32_t max_id_bound_;
+
+  // Zero Edit: Assumed to be filled out and owned by the client.\
+  // Client is also responsible for freeing memory.
+  spv_optimizer_passes_t passes_;
+  char** flags_;
 };
 #endif  // SOURCE_SPIRV_OPTIMIZER_OPTIONS_H_

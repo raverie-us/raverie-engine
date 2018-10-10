@@ -6,6 +6,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
+#include "libspirv.h"
+#include "spirv_optimizer_options.h"
+
 namespace Zero
 {
 
@@ -39,34 +42,46 @@ SpirVSpecializationConstantPass::SpirVSpecializationConstantPass()
 
 bool SpirVSpecializationConstantPass::RunTranslationPass(ShaderTranslationPassResult& inputData, ShaderTranslationPassResult& outputData)
 {
+  mErrorLog.Clear();
+
   // By default, all of the reflection data is the same as the input stage
   outputData.mReflectionData = inputData.mReflectionData;
-  ShaderStageInterfaceReflection& stageReflection = outputData.mReflectionData;
 
-  spvtools::Optimizer optimizer((spv_target_env)mTargetEnv);
-  String flag = String::Format("--set-spec-const-default-value=%d:%s", 1, "1,2,3");
-  optimizer.RegisterPassFromFlag(flag.c_str());
+  Array<String> flags;
+  // Get the flags for specializations
+  GetSpecializationFlags(flags, inputData.mReflectionData, outputData.mReflectionData);
+  bool success = true;
+  // Only run the optimizer if there's specialization constant flags.
+  if(!flags.Empty())
+      success = RunOptimizer(SPV_OPTIMIZER_NO_PASS, flags, inputData.mByteStream, outputData.mByteStream);
+  else
+    // Otherwise, just copy over the stream data
+    outputData.mByteStream.Load(inputData.mByteStream.Data(), inputData.mByteStream.ByteCount());
 
-  // Query for any constants unique to this pass (such as fragment properties)
-  SpecializationConstantEvent toSend;
-  toSend.mSpecializationConstantPass = this;
-  toSend.mInputReflectionData = &inputData.mReflectionData;
-  EventSend(this, Events::CollectSpecializationConstants, &toSend);
-  SetSpecializationValues(optimizer, stageReflection, toSend.mSpecializationOverridesById);
-
-  if(mFreezeAllConstants)
-  {
-    optimizer.RegisterPassFromFlag("--freeze-spec-const");
-    // Freezing constants means that these are no longer valid specialization
-    // constants to set so we need to clear them from reflection.
-    stageReflection.mSpecializationConstants.Clear();
-  }
-
-  bool success = RunOptimizer(optimizer, inputData.mByteStream, outputData.mByteStream);
   return success;
 }
 
-void SpirVSpecializationConstantPass::SetSpecializationValues(spvtools::Optimizer& optimizer, ShaderStageInterfaceReflection& stageReflection, HashMap<int, String>& overrides)
+void SpirVSpecializationConstantPass::GetSpecializationFlags(Array<String>& outFlags, ShaderStageInterfaceReflection& inputStageReflection, ShaderStageInterfaceReflection& outputStageReflection)
+{
+  // Query for any constants unique to this pass (such as fragment properties)
+  SpecializationConstantEvent toSend;
+  toSend.mSpecializationConstantPass = this;
+  toSend.mInputReflectionData = &inputStageReflection;
+  EventSend(this, Events::CollectSpecializationConstants, &toSend);
+
+  // Convert these flags into a better working format
+  SetSpecializationValues(outFlags, toSend.mSpecializationOverridesById);
+  // If requested, freeze all constants (optimizer only supports all or nothing)
+  if(mFreezeAllConstants)
+  {
+    outFlags.PushBack("--freeze-spec-const");
+    // Freezing constants means that these are no longer valid specialization
+    // constants to set so we need to clear them from reflection.
+    outputStageReflection.mSpecializationConstants.Clear();
+  }
+}
+
+void SpirVSpecializationConstantPass::SetSpecializationValues(Array<String>& outFlags, HashMap<int, String>& overrides)
 {
   AutoDeclare(range, overrides.All());
   for(; !range.Empty(); range.PopFront())
@@ -77,7 +92,7 @@ void SpirVSpecializationConstantPass::SetSpecializationValues(spvtools::Optimize
 
     // If the id exists, set the default value (has to be by string at the moment)
     String flag = String::Format("--set-spec-const-default-value=%d:%s", specConstantId, specConstantValue.c_str());
-    optimizer.RegisterPassFromFlag(flag.c_str());
+    outFlags.PushBack(flag);
   }
 }
 

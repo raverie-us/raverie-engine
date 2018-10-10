@@ -6,6 +6,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 
+struct spv_diagnostic_t;
+typedef spv_diagnostic_t* spv_diagnostic;
+struct spv_optimizer_options_t;
+typedef spv_optimizer_options_t* spv_optimizer_options;
+
 namespace Zero
 {
 
@@ -39,6 +44,10 @@ public:
   virtual String GetErrorLog() { return String(); }
 
   ZilchRefLink(ZilchShaderIRTranslationPass);
+
+protected:
+  /// Internal helper that converts a spirv diagnostic object into a string.
+  String SpirvDiagnosticToString(spv_diagnostic& diagnostic);
 };
 
 //-------------------------------------------------------------------ZilchShaderIRBackend

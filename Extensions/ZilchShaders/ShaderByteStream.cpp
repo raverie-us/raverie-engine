@@ -124,6 +124,12 @@ void ShaderByteStream::Load(const byte* source, size_t sizeInBytes)
   memcpy(mData.Data(), source, sizeInBytes);
 }
 
+void ShaderByteStream::LoadWords(const uint32* data, size_t wordCount)
+{
+  size_t byteCount = wordCount * 4;
+  Load((const byte*)data, byteCount);
+}
+
 void ShaderByteStream::SaveTo(Array<uint32>& words)
 {
   size_t sizeInBytes = mData.Size();

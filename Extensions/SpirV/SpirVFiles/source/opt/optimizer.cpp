@@ -746,3 +746,66 @@ Optimizer::PassToken CreateCombineAccessChainsPass() {
       MakeUnique<opt::CombineAccessChains>());
 }
 }  // namespace spvtools
+
+
+// ZeroEdit
+spv_result_t spvOptimizeWithOptions(
+  const spv_const_context context, const spv_const_optimizer_options options,
+  const spv_const_binary binary, spv_binary* pBinary, spv_diagnostic* diagnostic)
+{
+  spvDiagnosticDestroy(*diagnostic);
+  std::vector<uint32_t> optimizerBinaryOutput;
+
+  spvtools::Optimizer optimizer(context->target_env);
+
+  // Set the message consumer to store the first error found
+  optimizer.SetMessageConsumer([&diagnostic]
+  (spv_message_level_t level, const char* source, const spv_position_t& position, const char* message)
+  {
+    // Only store the first error that is found
+    if(*diagnostic != nullptr)
+      return;
+
+      auto p = position;
+      spvDiagnosticDestroy(*diagnostic);  // Avoid memory leak.
+      *diagnostic = spvDiagnosticCreate(&p, message);
+  });
+
+  // Register primary passes
+  if(options->passes_ == SPV_OPTIMIZER_PERFORMANCE_PASS)
+    optimizer.RegisterPerformancePasses();
+  else if(options->passes_ == SPV_OPTIMIZER_SIZE_PASS)
+    optimizer.RegisterSizePasses();
+  else if(options->passes_ == SPV_OPTIMIZER_LEGALIZATION_PASS)
+    optimizer.RegisterLegalizationPasses();
+
+  // Register any optional passes
+  if(options->flags_ != nullptr)
+  {
+    size_t flagIndex = 0;
+    while(true)
+    {
+      char* flag = options->flags_[flagIndex];
+      if(flag == nullptr)
+        break;
+      optimizer.RegisterPassFromFlag(flag);
+      ++flagIndex;
+    }
+  }
+  
+  bool success = optimizer.Run(binary->code, binary->wordCount, &optimizerBinaryOutput);
+
+  // Create the c-api output data. This could be improved by making a custom
+  // allocator for std::vector that fills out this data to potentially avoid a copy.
+  spv_binary binaryOut = new spv_binary_t();
+  binaryOut->wordCount = optimizerBinaryOutput.size();
+  binaryOut->code = new uint32_t[binaryOut->wordCount + 1];
+  memcpy(binaryOut->code, optimizerBinaryOutput.data(), binaryOut->wordCount * sizeof(uint32_t));
+  binaryOut->code[binaryOut->wordCount] = 0;
+
+  *pBinary = binaryOut;
+  // Simplified error code (would have to get more than a bool from the optimizer)
+  if(success)
+    return SPV_SUCCESS;
+  return SPV_ERROR_INTERNAL;
+}

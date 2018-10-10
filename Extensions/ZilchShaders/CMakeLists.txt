@@ -45,6 +45,7 @@ target_sources(ZilchShaders
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRShared.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderSpirVBinaryBackend.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShadersStandard.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRTranslationPass.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchSpirVDisassemblerBackend.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchSpirVFrontEnd.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchSpirVFrontEndValidation.cpp

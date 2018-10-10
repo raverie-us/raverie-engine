@@ -9,7 +9,7 @@
 #include "ZilchShadersStandard.hpp"
 
 #include "source/spirv_target_env.h"
+#include "spirv-tools/libspirv.h"
 #include "source/spirv_validator_options.h"
-#include "spirv-tools/optimizer.hpp"
-#include "spirv-tools/libspirv.hpp"
+#include "spirv_optimizer_options.h"
 #include "SpirV/SPIRV-Cross/spirv_glsl.hpp"
