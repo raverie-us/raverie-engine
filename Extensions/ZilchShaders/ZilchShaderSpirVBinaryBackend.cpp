@@ -108,7 +108,7 @@ void ZilchShaderSpirVBinaryBackend::TranslateType(ZilchShaderIRType* type, Shade
   GenerateFunctionIds(collector.mReferencedFunctions, &context);
 
   // Write out the boiler-plate header
-  WriteHeader(type, &context, collector);
+  WriteHeader(&context, collector);
   // Write all debug information (names, source code, etc...)
   WriteDebug(collector.mReferencedTypes, &context);
   WriteDebug(collector.mReferencedGlobals, &context);
@@ -378,7 +378,7 @@ void ZilchShaderSpirVBinaryBackend::GenerateBlockLineIds(BasicBlock* block, Zilc
   }
 }
 
-void ZilchShaderSpirVBinaryBackend::WriteHeader(ZilchShaderIRType* type, ZilchShaderToSpirVContext* context, TypeDependencyCollector& typeCollector)
+void ZilchShaderSpirVBinaryBackend::WriteHeader(ZilchShaderToSpirVContext* context, TypeDependencyCollector& typeCollector)
 {
   ShaderStreamWriter& streamWriter = *context->mStreamWriter;
 

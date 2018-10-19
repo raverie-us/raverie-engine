@@ -67,7 +67,7 @@ private:
   void GenerateFunctionBlockIds(ZilchShaderIRFunction* function, ZilchShaderToSpirVContext* context);
   void GenerateBlockLineIds(BasicBlock* block, ZilchShaderToSpirVContext* context);
 
-  void WriteHeader(ZilchShaderIRType* type, ZilchShaderToSpirVContext* context, TypeDependencyCollector& typeCollector);
+  void WriteHeader(ZilchShaderToSpirVContext* context, TypeDependencyCollector& typeCollector);
   void WriteDebug(TypeList& types, ZilchShaderToSpirVContext* context);
   void WriteDebug(ZilchShaderIRType* type, ZilchShaderToSpirVContext* context);
   void WriteDebug(FunctionList& functions, ZilchShaderToSpirVContext* context);
