@@ -982,6 +982,15 @@ void ZilchShaderSpirVBinaryBackend::WriteIROp(BasicBlock* block, ZilchShaderIROp
       WriteIROpGeneric(op, context);
       break;
     }
+    // Arguments that don't have a return type so the size of the opcode is 1 + the number of arguments.
+    case OpType::OpImageWrite:
+    {
+      // Now count the arguments to get the total instruction size
+      int16 totalSize = 1 + (int16)op->mArguments.Size();
+      streamWriter.WriteInstruction(totalSize, (int)op->mOpType);
+      WriteIROpArguments(op, context);
+      break;
+    }
     default:
     {
       WriteIROpGeneric(op, context);

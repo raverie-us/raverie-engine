@@ -108,6 +108,7 @@ ZilchDefineStaticLibrary(ShaderIntrinsicsLibrary)
   ZilchInitializeType(ShaderIntrinsics);
   ZilchInitializeType(Sampler);
   ZilchInitializeType(Image2d);
+  ZilchInitializeType(StorageImage2d);
   ZilchInitializeType(DepthImage2d);
   ZilchInitializeType(ImageCube);
   ZilchInitializeType(SampledImage2d);

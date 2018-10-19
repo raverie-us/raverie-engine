@@ -55,13 +55,14 @@ void ShaderIntrinsicsStaticZilchLibrary::Parse(ZilchSpirVFrontEnd* translator)
   Zilch::Library* zilchLibrary = shaderLibrary->mZilchLibrary;
 
   // Grabbed a bunch of zilch types
-  Zilch::BoundType* zilchSamplerType = zilchLibrary->BoundTypes.FindValue("Sampler", nullptr);
-  Zilch::BoundType* zilchImage2d = zilchLibrary->BoundTypes.FindValue("Image2d", nullptr);
-  Zilch::BoundType* zilchDepthImage2d = zilchLibrary->BoundTypes.FindValue("DepthImage2d", nullptr);
-  Zilch::BoundType* zilchImageCube = zilchLibrary->BoundTypes.FindValue("ImageCube", nullptr);
-  Zilch::BoundType* zilchSampledImage2d = zilchLibrary->BoundTypes.FindValue("SampledImage2d", nullptr);
-  Zilch::BoundType* zilchSampledDepthImage2d = zilchLibrary->BoundTypes.FindValue("SampledDepthImage2d", nullptr);
-  Zilch::BoundType* zilchSampledImageCube = zilchLibrary->BoundTypes.FindValue("SampledImageCube", nullptr);
+  Zilch::BoundType* zilchSamplerType = ZilchTypeId(Zilch::Sampler);
+  Zilch::BoundType* zilchImage2d = ZilchTypeId(Zilch::Image2d);
+  Zilch::BoundType* zilchDepthImage2d = ZilchTypeId(Zilch::DepthImage2d);
+  Zilch::BoundType* zilchImageCube = ZilchTypeId(Zilch::ImageCube);
+  Zilch::BoundType* zilchSampledImage2d = ZilchTypeId(Zilch::SampledImage2d);
+  Zilch::BoundType* zilchSampledDepthImage2d = ZilchTypeId(Zilch::SampledDepthImage2d);
+  Zilch::BoundType* zilchSampledImageCube = ZilchTypeId(Zilch::SampledImageCube);
+  Zilch::BoundType* zilchStorageImage2d = ZilchTypeId(Zilch::StorageImage2d);
 
   // Create the sampler type
   ZilchShaderIRType* samplerType = translator->MakeTypeAndPointer(shaderLibrary, ShaderIRTypeBaseType::Sampler, zilchSamplerType->Name, zilchSamplerType, spv::StorageClassUniformConstant);
@@ -71,6 +72,7 @@ void ShaderIntrinsicsStaticZilchLibrary::Parse(ZilchSpirVFrontEnd* translator)
   CreateImageAndSampler(translator, shaderLibrary, core.RealType, zilchImage2d, zilchSampledImage2d, spv::Dim2D, 0);
   CreateImageAndSampler(translator, shaderLibrary, core.RealType, zilchDepthImage2d, zilchSampledDepthImage2d, spv::Dim2D, 1);
   CreateImageAndSampler(translator, shaderLibrary, core.RealType, zilchImageCube, zilchSampledImageCube, spv::DimCube, 0);
+  CreateStorageImage(translator, shaderLibrary, core.RealType, zilchStorageImage2d, spv::Dim2D, 0, spv::ImageFormatRgba32f);
 
 
   RegisterShaderIntrinsics(translator, shaderLibrary);
@@ -115,6 +117,23 @@ void ShaderIntrinsicsStaticZilchLibrary::CreateImageAndSampler(ZilchSpirVFrontEn
   ZilchShaderIRType* sampledImageType = translator->MakeTypeAndPointer(shaderLibrary, ShaderIRTypeBaseType::SampledImage, zilchSampledImageType->Name, zilchSampledImageType, spv::StorageClassUniformConstant);
   sampledImageType->mParameters.PushBack(imageType);
   translator->MakeShaderTypeMeta(sampledImageType, nullptr);
+}
+
+void ShaderIntrinsicsStaticZilchLibrary::CreateStorageImage(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary,
+  Zilch::BoundType* zilchSampledType, Zilch::BoundType* zilchImageType,
+  int dimension, int depthMode, int imageFormat)
+{
+  ZilchShaderIRType* sampledType = shaderLibrary->FindType(zilchSampledType);
+  // Create the base image type for a sampled image
+  ZilchShaderIRType* imageType = translator->MakeTypeAndPointer(shaderLibrary, ShaderIRTypeBaseType::Image, zilchImageType->Name, zilchImageType, spv::StorageClassUniformConstant);
+  imageType->mParameters.PushBack(sampledType);//SampledType
+  imageType->mParameters.PushBack(translator->GetOrCreateConstantIntegerLiteral(dimension));//Dim
+  imageType->mParameters.PushBack(translator->GetOrCreateConstantIntegerLiteral(depthMode));//Depth
+  imageType->mParameters.PushBack(translator->GetOrCreateConstantIntegerLiteral(0));//Arrayed
+  imageType->mParameters.PushBack(translator->GetOrCreateConstantIntegerLiteral(0));//MultiSampled
+  imageType->mParameters.PushBack(translator->GetOrCreateConstantIntegerLiteral(2));//Sampled
+  imageType->mParameters.PushBack(translator->GetOrCreateConstantIntegerLiteral(imageFormat));
+  translator->MakeShaderTypeMeta(imageType, nullptr);
 }
 
 void ShaderIntrinsicsStaticZilchLibrary::PopulateStageRequirementsData(ZilchShaderIRLibrary* shaderLibrary)

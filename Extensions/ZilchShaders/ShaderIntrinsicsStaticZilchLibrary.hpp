@@ -29,6 +29,9 @@ private:
   void CreateImageAndSampler(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary,
     Zilch::BoundType* zilchSampledType, Zilch::BoundType* zilchImageType, Zilch::BoundType* zilchSampledImageType,
     int dimension, int depthMode);
+  void CreateStorageImage(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary,
+    Zilch::BoundType* zilchSampledType, Zilch::BoundType* zilchImageType,
+    int dimension, int depthMode, int imageFormat);
 
   void PopulateStageRequirementsData(ZilchShaderIRLibrary* shaderLibrary);
 

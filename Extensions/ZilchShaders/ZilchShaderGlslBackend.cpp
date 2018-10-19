@@ -386,6 +386,7 @@ void ZilchShaderGlslBackend::ExtractResourceReflectionData(GlslBackendInternalDa
     internalData.mGeneratedSampledImage.Insert(name);
   }
   ExtractResourcesReflection(internalData, resources->storage_buffers, stageReflection.mStructedStorageBuffers, false);
+  ExtractResourcesReflection(internalData, resources->storage_images, stageReflection.mStorageImages, true);
 }
 
 }//namespace Zero

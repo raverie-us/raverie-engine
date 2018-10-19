@@ -36,6 +36,7 @@ target_sources(ZilchShaders
     ${CMAKE_CURRENT_LIST_DIR}/ShaderIntrinsicsStaticZilchLibrary.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRCompositor.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRCore.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRExtendedTypes.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRLibrary.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRMeta.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRPasses.cpp
@@ -75,6 +76,7 @@ target_sources(ZilchShaders
     ${CMAKE_CURRENT_LIST_DIR}/ShaderIntrinsicsStaticZilchLibrary.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRCompositor.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRCore.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRExtendedTypes.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRLibrary.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRMeta.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderIRPasses.hpp

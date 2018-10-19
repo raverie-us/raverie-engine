@@ -21,6 +21,7 @@
 #include "ZilchShaderIRMeta.hpp"
 #include "ZilchShaderIRReflection.hpp"
 #include "ZilchShaderIRShared.hpp"
+#include "ZilchShaderIRExtendedTypes.hpp"
 #include "ZilchSpirVSettings.hpp"
 #include "ExtensionLibrary.hpp"
 #include "OperatorKeys.hpp"

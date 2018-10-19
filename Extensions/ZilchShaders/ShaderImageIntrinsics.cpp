@@ -29,6 +29,15 @@ ZilchDefineType(Image2d, builder, type)
   storageAttribute->AddParameter(spv::StorageClassUniformConstant);
 }
 
+//-------------------------------------------------------------------StorageImage2d
+ZilchDefineType(StorageImage2d, builder, type)
+{
+  type->AddAttribute(SpirVNameSettings::mNonCopyableAttributeName);
+  // Mark the required storage class on this type. Used in the front end translation.
+  Attribute* storageAttribute = type->AddAttribute(SpirVNameSettings::mStorageClassAttribute);
+  storageAttribute->AddParameter(spv::StorageClassUniformConstant);
+}
+
 //-------------------------------------------------------------------DepthImage2d
 ZilchDefineType(DepthImage2d, builder, type)
 {
@@ -447,26 +456,24 @@ void AddImageQuerySize(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, S
 {
   Zilch::Function* fn = nullptr;
   ParameterArray parameters;
-  // @JoshD: Backend Fix required
-  //  parameters = OneParameter(baseSet.mImageType, "image");
-  //  fn = builder.AddBoundFunction(type, "ImageQuerySize", UnTranslatedBoundFunction, parameters, int2Type, Zilch::FunctionOptions::Static);
-  //  fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageQuerySize>;
-  //  fn->ComplexUserData.WriteObject(ImageData(0, spv::ImageOperandsMaskNone));
-  //
-  //  parameters = OneParameter(baseSet.mSampledImageType, "sampledImage");
-  //  fn = builder.AddBoundFunction(type, "ImageQuerySize", UnTranslatedBoundFunction, parameters, int2Type, Zilch::FunctionOptions::Static);
-  //  fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageQuerySize>;
-  //  fn->ComplexUserData.WriteObject(ImageData(0, spv::ImageOperandsMaskNone));
-  //
-  //  parameters = OneParameter(depthSet.mImageType, "image");
-  //  fn = builder.AddBoundFunction(type, "ImageQuerySize", UnTranslatedBoundFunction, parameters, int2Type, Zilch::FunctionOptions::Static);
-  //  fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageQuerySize>;
-  //  fn->ComplexUserData.WriteObject(ImageData(0, spv::ImageOperandsMaskNone));
-  //
-  //  parameters = OneParameter(depthSet.mSampledImageType, "sampledImage");
-  //  fn = builder.AddBoundFunction(type, "ImageQuerySize", UnTranslatedBoundFunction, parameters, int2Type, Zilch::FunctionOptions::Static);
-  //  fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageQuerySize>;
-  //  fn->ComplexUserData.WriteObject(ImageData(0, spv::ImageOperandsMaskNone));
+
+  Zilch::BoundType* imageType = set.mImageType;
+  if(imageType != nullptr)
+  {
+    parameters = OneParameter(imageType, "image");
+    fn = builder.AddBoundFunction(type, "ImageQuerySize", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
+    fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageQuerySize>;
+    fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone));
+  }
+  
+  Zilch::BoundType* sampledImageType = set.mSampledImageType;
+  if(sampledImageType != nullptr)
+  {
+    parameters = OneParameter(sampledImageType, "sampledImage");
+    fn = builder.AddBoundFunction(type, "ImageQuerySize", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
+    fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageQuerySize>;
+    fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone));
+  }
 }
 
 void AddImageQueryLod(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, SampledImageSet& set,
@@ -504,6 +511,36 @@ void AddImageQueryLevels(Zilch::LibraryBuilder& builder, Zilch::BoundType* type,
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone));
 }
 
+void AddImageRead(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, SampledImageSet& set, Zilch::BoundType* coordinateType, Zilch::BoundType* returnType)
+{
+  Zilch::BoundType* imageType = set.mImageType;
+  if(imageType == nullptr)
+    return;
+
+  Zilch::Function* fn = nullptr;
+  ParameterArray parameters;
+
+  parameters = TwoParameters(imageType, "image", coordinateType, "coordinate");
+  fn = builder.AddBoundFunction(type, "ImageRead", UnTranslatedBoundFunction, parameters, returnType, Zilch::FunctionOptions::Static);
+  fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageRead>;
+  fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone, nullptr));
+}
+
+void AddImageWrite(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, SampledImageSet& set, Zilch::BoundType* coordinateType, Zilch::BoundType* texelType)
+{
+  Zilch::BoundType* imageType = set.mImageType;
+  if(imageType == nullptr)
+    return;
+
+  Zilch::Function* fn = nullptr;
+  ParameterArray parameters;
+
+  parameters = ThreeParameters(imageType, "image", coordinateType, "coordinate", texelType, "texel");
+  fn = builder.AddBoundFunction(type, "ImageWrite", UnTranslatedBoundFunction, parameters, ZilchTypeId(void), Zilch::FunctionOptions::Static);
+  fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageWrite>;
+  fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone, nullptr));
+}
+
 void AddImageFunctions(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, TypeGroups& types)
 {
   Zilch::BoundType* intType = types.mIntegerVectorTypes[0]->mZilchType;
@@ -529,6 +566,11 @@ void AddImageFunctions(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, T
   samplerCubeSet.mSamplerType = samplerType;
   samplerCubeSet.mImageType = ZilchTypeId(ImageCube);
   samplerCubeSet.mSampledImageType = ZilchTypeId(SampledImageCube);
+
+  SampledImageSet storageImage2dSet;
+  storageImage2dSet.mSamplerType = nullptr;
+  storageImage2dSet.mImageType = ZilchTypeId(StorageImage2d);
+  storageImage2dSet.mSampledImageType = nullptr;
 
   // Sample Implicit Lod
   AddSampleImplicitLod(builder, type, sampler2dSet, real2Type, real4Type);
@@ -562,8 +604,9 @@ void AddImageFunctions(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, T
   AddImageQuerySizeLod(builder, type, sampler2dDepthSet, intType, int2Type);
   AddImageQuerySizeLod(builder, type, samplerCubeSet, intType, int2Type);
   // Image Query Size
-  AddImageQuerySize(builder, type, sampler2dSet, int2Type);
-  AddImageQuerySize(builder, type, sampler2dDepthSet, int2Type);
+  // @JoshD: Backend fix required for these functions
+  //AddImageQuerySize(builder, type, sampler2dSet, int2Type);
+  //AddImageQuerySize(builder, type, sampler2dDepthSet, int2Type);
   // Image Query Lod
   AddImageQueryLod(builder, type, sampler2dSet, real2Type, real2Type);
   AddImageQueryLod(builder, type, sampler2dDepthSet, real2Type, real2Type);
@@ -572,6 +615,11 @@ void AddImageFunctions(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, T
   AddImageQueryLevels(builder, type, sampler2dSet, intType);
   AddImageQueryLevels(builder, type, sampler2dDepthSet, intType);
   AddImageQueryLevels(builder, type, samplerCubeSet, intType);
+
+  // Read/Write images
+  AddImageRead(builder, type, storageImage2dSet, int2Type, real4Type);
+  AddImageWrite(builder, type, storageImage2dSet, int2Type, real4Type);
+  AddImageQuerySize(builder, type, storageImage2dSet, int2Type);
 }
 
 }//namespace Zero

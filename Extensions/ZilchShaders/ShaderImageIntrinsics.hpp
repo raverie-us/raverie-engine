@@ -21,6 +21,12 @@ class Image2d
   ZilchDeclareType(Image2d, TypeCopyMode::ValueType);
 };
 
+//------------------------------------------------------------------------StorageImage2d
+class StorageImage2d
+{
+  ZilchDeclareType(StorageImage2d, TypeCopyMode::ValueType);
+};
+
 //------------------------------------------------------------------------DepthImage2d
 class DepthImage2d
 {
@@ -82,6 +88,12 @@ namespace Zero
 // (to make it easier to bind a bunch of functions on this "grouping")
 struct SampledImageSet
 {
+  SampledImageSet()
+  {
+    mSamplerType = nullptr;
+    mImageType = nullptr;
+    mSampledImageType = nullptr;
+  }
   Zilch::BoundType* mSamplerType;
   Zilch::BoundType* mImageType;
   Zilch::BoundType* mSampledImageType;

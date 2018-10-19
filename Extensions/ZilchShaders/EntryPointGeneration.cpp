@@ -499,6 +499,7 @@ void EntryPointGeneration::DeclareVertexInterface(ZilchSpirVFrontEnd* translator
 
   FindAndDecorateGlobals(currentType, entryPointInfo);
   CopyReflectionDataToEntryPoint(entryPointInfo, interfaceInfo);
+  entryPointInfo->mFragmentType = FragmentType::Vertex;
 }
 
 void EntryPointGeneration::DeclareGeometryInterface(ZilchSpirVFrontEnd* translator, Zilch::GenericFunctionNode* node, ZilchShaderIRFunction* function, ZilchSpirVFrontEndContext* context)
@@ -573,6 +574,7 @@ void EntryPointGeneration::DeclareGeometryInterface(ZilchSpirVFrontEnd* translat
   // Write out the output stream execution type (e.g. Points/Lines)
   modeLiteral = translator->GetOrCreateConstantIntegerLiteral(stageInfo.mOutputStreamUserData->mExecutionMode);
   translator->BuildIROp(executionModes, OpType::OpExecutionMode, nullptr, entryPointFn, modeLiteral, context);
+  entryPointInfo->mFragmentType = FragmentType::Geometry;
 }
 
 void EntryPointGeneration::DeclarePixelInterface(ZilchSpirVFrontEnd* translator, Zilch::GenericFunctionNode* node, ZilchShaderIRFunction* function, ZilchSpirVFrontEndContext* context)
@@ -622,6 +624,7 @@ void EntryPointGeneration::DeclarePixelInterface(ZilchSpirVFrontEnd* translator,
   FindAndDecorateGlobals(currentType, entryPointInfo);
   CopyReflectionDataToEntryPoint(entryPointInfo, interfaceInfo);
   WriteExecutionModeOriginUpperLeft(entryPointInfo);
+  entryPointInfo->mFragmentType = FragmentType::Pixel;
 }
 
 void EntryPointGeneration::DeclareComputeInterface(ZilchSpirVFrontEnd* translator, Zilch::GenericFunctionNode* node, ZilchShaderIRFunction* function, ZilchSpirVFrontEndContext* context)
@@ -681,6 +684,7 @@ void EntryPointGeneration::DeclareComputeInterface(ZilchSpirVFrontEnd* translato
   executionModeOp->mArguments.PushBack(translator->GetOrCreateConstantIntegerLiteral(computeUserData->mLocalSizeX));
   executionModeOp->mArguments.PushBack(translator->GetOrCreateConstantIntegerLiteral(computeUserData->mLocalSizeY));
   executionModeOp->mArguments.PushBack(translator->GetOrCreateConstantIntegerLiteral(computeUserData->mLocalSizeZ));
+  entryPointInfo->mFragmentType = FragmentType::Compute;
 }
 
 void EntryPointGeneration::Clear()
@@ -2045,8 +2049,18 @@ void EntryPointGeneration::DecorateImagesAndSamplers(TypeDependencyCollector& co
     ShaderStageInterfaceReflection::SampledImageRemappings* remappings = nullptr;
     if(baseType == ShaderIRTypeBaseType::Image)
     {
+      // An image might be used with a sampler or it might be a storage image.
+      // We read the 'Sampled' parameter of the image type to determine which one
+      // it is and add the corresponding reflection data 
+      // (storage images have to be bound differently so they need to be marked separately)
+      ZilchShaderIRImageType imageType(opValueType);
+      int sampledNumber = imageType.GetSampled();
+      if(sampledNumber == 2)
+        resourceInfo = &stageReflectionData.mStorageImages.PushBack();
+      else
+        resourceInfo = &stageReflectionData.mImages.PushBack();
+
       resourceBindingId = FindBindingId(imageIds);
-      resourceInfo = &stageReflectionData.mImages.PushBack();
       remappings = &stageReflectionData.mImageRemappings[resourceName];
       remappings->mImageRemappings.PushBack(resourceName);
     }
