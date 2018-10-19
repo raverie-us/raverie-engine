@@ -153,6 +153,8 @@ public:
 
   /// The entry point function
   ZilchShaderIRFunction* mEntryPointFn;
+  /// What kind of fragment type this entry point is.
+  FragmentType::Enum mFragmentType;
   /// The global variable initializer function that the entry point will call.
   /// The back-end translation will replace this with a new function that actually
   /// calls all referenced global variable initializers.

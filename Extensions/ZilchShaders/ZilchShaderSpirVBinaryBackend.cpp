@@ -434,13 +434,13 @@ void ZilchShaderSpirVBinaryBackend::WriteHeader(ZilchShaderIRType* type, ZilchSh
     totalSize += (int16)entryPoint->mInterface.Size();
 
     int executionModel = spv::ExecutionModelFragment;
-    if(type->mMeta->mFragmentType == FragmentType::Pixel)
+    if(entryPoint->mFragmentType == FragmentType::Pixel)
       executionModel = spv::ExecutionModelFragment;
-    else if(type->mMeta->mFragmentType == FragmentType::Vertex)
+    else if(entryPoint->mFragmentType == FragmentType::Vertex)
       executionModel = spv::ExecutionModelVertex;
-    else if(type->mMeta->mFragmentType == FragmentType::Geometry)
+    else if(entryPoint->mFragmentType == FragmentType::Geometry)
       executionModel = spv::ExecutionModelGeometry;
-    else if(type->mMeta->mFragmentType == FragmentType::Compute)
+    else if(entryPoint->mFragmentType == FragmentType::Compute)
       executionModel = spv::ExecutionModelGLCompute;
     //else
     //  __debugbreak();

@@ -62,6 +62,7 @@ void BasicBlock::AddOp(IZilchShaderIR* op)
 
 EntryPointInfo::EntryPointInfo()
 {
+  mFragmentType = FragmentType::None;
   mEntryPointFn = nullptr;
   mGlobalsInitializerFunction = nullptr;
 }
