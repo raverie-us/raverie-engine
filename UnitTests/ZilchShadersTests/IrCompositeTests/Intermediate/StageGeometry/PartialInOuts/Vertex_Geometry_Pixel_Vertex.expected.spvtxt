@@ -6,7 +6,7 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Vertex %EntryPoint_Main "EntryPoint_Main" %Color %Uv %Out
+               OpEntryPoint Vertex %EntryPoint_Main_Vertex_Geometry_Pixel_Vertex "EntryPoint_Main_Vertex_Geometry_Pixel_Vertex" %Color %Uv %Out
                OpSource Unknown 100
                OpName %Vertex_Geometry_Pixel_Vertex "Vertex_Geometry_Pixel_Vertex"
                OpMemberName %Vertex_Geometry_Pixel_Vertex 1 "Stage_Time_Real"
@@ -42,7 +42,7 @@
                OpName %self_5 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_6 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_Vertex_Geometry_Pixel_Vertex "EntryPoint_Main_Vertex_Geometry_Pixel_Vertex"
                OpName %self_7 "self"
                OpName %InitializeGlobals "InitializeGlobals"
                OpDecorate %Color Location 4
@@ -188,7 +188,7 @@
                OpStore %105 %107
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %27
+%EntryPoint_Main_Vertex_Geometry_Pixel_Vertex = OpFunction %void None %27
         %109 = OpLabel
      %self_7 = OpVariable %_ptr_Function_Vertex_Geometry_Pixel_Vertex Function
         %111 = OpFunctionCall %void %InitializeGlobals

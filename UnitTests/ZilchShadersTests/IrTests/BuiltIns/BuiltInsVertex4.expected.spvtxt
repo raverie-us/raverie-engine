@@ -6,7 +6,7 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Vertex %EntryPoint_Main "EntryPoint_Main" %InstanceId %PerVertexOut
+               OpEntryPoint Vertex %EntryPoint_Main_BuiltInsVertex4 "EntryPoint_Main_BuiltInsVertex4" %InstanceId %PerVertexOut
                OpSource Unknown 100
                OpName %BuiltInsVertex4 "BuiltInsVertex4"
                OpMemberName %BuiltInsVertex4 0 "InstanceId"
@@ -26,7 +26,7 @@
                OpName %self_2 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_3 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_BuiltInsVertex4 "EntryPoint_Main_BuiltInsVertex4"
                OpName %self_4 "self"
                OpName %InitializeGlobals "InitializeGlobals"
                OpDecorate %InstanceId BuiltIn InstanceId
@@ -91,7 +91,7 @@
                OpStore %43 %45
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %17
+%EntryPoint_Main_BuiltInsVertex4 = OpFunction %void None %17
          %47 = OpLabel
      %self_4 = OpVariable %_ptr_Function_BuiltInsVertex4 Function
          %49 = OpFunctionCall %void %InitializeGlobals

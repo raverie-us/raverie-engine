@@ -7,8 +7,8 @@
                OpCapability Shader
           %2 = OpExtInstImport "GLSL.std.450"
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_ACos "EntryPoint_Main_ACos"
+               OpExecutionMode %EntryPoint_Main_ACos OriginUpperLeft
                OpSource Unknown 100
                OpName %ACos "ACos"
                OpMemberName %ACos 0 "Dummy"
@@ -110,7 +110,7 @@
                OpName %self_15 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_16 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_ACos "EntryPoint_Main_ACos"
                OpName %self_17 "self"
                OpName %InitializeGlobals "InitializeGlobals"
         %int = OpTypeInt 32 1
@@ -608,7 +608,7 @@
         %372 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %45
+%EntryPoint_Main_ACos = OpFunction %void None %45
         %374 = OpLabel
     %self_17 = OpVariable %_ptr_Function_ACos Function
         %376 = OpFunctionCall %void %InitializeGlobals

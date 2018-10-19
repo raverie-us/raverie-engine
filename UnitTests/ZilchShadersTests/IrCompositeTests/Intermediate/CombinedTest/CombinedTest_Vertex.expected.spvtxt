@@ -6,7 +6,7 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Vertex %EntryPoint_Main "EntryPoint_Main" %Uv %LocalPosition %Out %VertexId %InstanceId
+               OpEntryPoint Vertex %EntryPoint_Main_CombinedTest_Vertex "EntryPoint_Main_CombinedTest_Vertex" %Uv %LocalPosition %Out %VertexId %InstanceId
                OpSource Unknown 100
                OpName %CombinedTest_Vertex "CombinedTest_Vertex"
                OpMemberName %CombinedTest_Vertex 6 "Property2_Vertex1"
@@ -108,7 +108,7 @@
                OpName %self_11 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_12 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_CombinedTest_Vertex "EntryPoint_Main_CombinedTest_Vertex"
                OpName %self_13 "self"
                OpName %InitializeGlobals "InitializeGlobals"
                OpDecorate %Uv Location 1
@@ -582,7 +582,7 @@
                OpStore %327 %329
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %37
+%EntryPoint_Main_CombinedTest_Vertex = OpFunction %void None %37
         %331 = OpLabel
     %self_13 = OpVariable %_ptr_Function_CombinedTest_Vertex Function
         %333 = OpFunctionCall %void %InitializeGlobals

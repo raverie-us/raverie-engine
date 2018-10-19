@@ -7,8 +7,8 @@
                OpCapability Shader
           %2 = OpExtInstImport "GLSL.std.450"
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_RotationQuaternionBetween "EntryPoint_Main_RotationQuaternionBetween"
+               OpExecutionMode %EntryPoint_Main_RotationQuaternionBetween OriginUpperLeft
                OpSource Unknown 100
                OpName %RotationQuaternionBetween "RotationQuaternionBetween"
                OpMemberName %RotationQuaternionBetween 0 "Dummy"
@@ -54,7 +54,7 @@
                OpName %self_3 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_4 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_RotationQuaternionBetween "EntryPoint_Main_RotationQuaternionBetween"
                OpName %self_5 "self"
                OpName %InitializeGlobals "InitializeGlobals"
         %int = OpTypeInt 32 1
@@ -222,7 +222,7 @@
         %125 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %23
+%EntryPoint_Main_RotationQuaternionBetween = OpFunction %void None %23
         %127 = OpLabel
      %self_5 = OpVariable %_ptr_Function_RotationQuaternionBetween Function
         %129 = OpFunctionCall %void %InitializeGlobals

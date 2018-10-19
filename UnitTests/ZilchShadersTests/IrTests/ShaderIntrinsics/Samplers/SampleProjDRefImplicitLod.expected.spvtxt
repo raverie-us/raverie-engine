@@ -6,8 +6,8 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_SampleProjDRefImplicitLod "EntryPoint_Main_SampleProjDRefImplicitLod"
+               OpExecutionMode %EntryPoint_Main_SampleProjDRefImplicitLod OriginUpperLeft
                OpSource Unknown 100
                OpName %SampleProjDRefImplicitLod "SampleProjDRefImplicitLod"
                OpMemberName %SampleProjDRefImplicitLod 0 "Uv"
@@ -26,7 +26,7 @@
                OpName %self_2 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_3 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_SampleProjDRefImplicitLod "EntryPoint_Main_SampleProjDRefImplicitLod"
                OpName %self_4 "self"
                OpName %InitializeGlobals "InitializeGlobals"
                OpDecorate %SampledDepthImage_SampleProjDRefImplicitLod Binding 0
@@ -106,7 +106,7 @@
          %57 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %19
+%EntryPoint_Main_SampleProjDRefImplicitLod = OpFunction %void None %19
          %59 = OpLabel
      %self_4 = OpVariable %_ptr_Function_SampleProjDRefImplicitLod Function
          %61 = OpFunctionCall %void %InitializeGlobals

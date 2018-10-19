@@ -6,8 +6,8 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_LogicalOrAnd "EntryPoint_Main_LogicalOrAnd"
+               OpExecutionMode %EntryPoint_Main_LogicalOrAnd OriginUpperLeft
                OpSource Unknown 100
                OpName %LogicalOrAnd "LogicalOrAnd"
                OpMemberName %LogicalOrAnd 0 "Dummy"
@@ -87,7 +87,7 @@
                OpName %self_6 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_7 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_LogicalOrAnd "EntryPoint_Main_LogicalOrAnd"
                OpName %self_8 "self"
                OpName %InitializeGlobals "InitializeGlobals"
         %int = OpTypeInt 32 1
@@ -311,7 +311,7 @@
         %126 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %11
+%EntryPoint_Main_LogicalOrAnd = OpFunction %void None %11
         %128 = OpLabel
      %self_8 = OpVariable %_ptr_Function_LogicalOrAnd Function
         %130 = OpFunctionCall %void %InitializeGlobals

@@ -7,8 +7,8 @@
                OpCapability Shader
                OpCapability ImageQuery
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_SamplerTest "EntryPoint_Main_SamplerTest"
+               OpExecutionMode %EntryPoint_Main_SamplerTest OriginUpperLeft
                OpSource Unknown 100
                OpName %SamplerTest "SamplerTest"
                OpMemberName %SamplerTest 2 "Ddy"
@@ -70,7 +70,7 @@
                OpName %self_9 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_10 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_SamplerTest "EntryPoint_Main_SamplerTest"
                OpName %self_11 "self"
                OpName %InitializeGlobals "InitializeGlobals"
                OpDecorate %Sampler_SamplerTest Binding 0
@@ -291,7 +291,7 @@
         %167 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %32
+%EntryPoint_Main_SamplerTest = OpFunction %void None %32
         %169 = OpLabel
     %self_11 = OpVariable %_ptr_Function_SamplerTest Function
         %171 = OpFunctionCall %void %InitializeGlobals

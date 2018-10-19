@@ -7,8 +7,8 @@
                OpCapability Shader
                OpCapability ImageQuery
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_ImageQueryLod "EntryPoint_Main_ImageQueryLod"
+               OpExecutionMode %EntryPoint_Main_ImageQueryLod OriginUpperLeft
                OpSource Unknown 100
                OpName %ImageQueryLod "ImageQueryLod"
                OpMemberName %ImageQueryLod 0 "Uv"
@@ -31,7 +31,7 @@
                OpName %self_2 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_3 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_ImageQueryLod "EntryPoint_Main_ImageQueryLod"
                OpName %self_4 "self"
                OpName %InitializeGlobals "InitializeGlobals"
                OpDecorate %SampledImage_ImageQueryLod Binding 0
@@ -157,7 +157,7 @@
          %91 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %29
+%EntryPoint_Main_ImageQueryLod = OpFunction %void None %29
          %93 = OpLabel
      %self_4 = OpVariable %_ptr_Function_ImageQueryLod Function
          %95 = OpFunctionCall %void %InitializeGlobals

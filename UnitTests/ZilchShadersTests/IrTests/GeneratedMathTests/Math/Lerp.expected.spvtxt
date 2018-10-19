@@ -7,8 +7,8 @@
                OpCapability Shader
           %2 = OpExtInstImport "GLSL.std.450"
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_Lerp "EntryPoint_Main_Lerp"
+               OpExecutionMode %EntryPoint_Main_Lerp OriginUpperLeft
                OpSource Unknown 100
                OpName %Lerp "Lerp"
                OpMemberName %Lerp 0 "Dummy"
@@ -340,7 +340,7 @@
                OpName %self_27 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_28 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_Lerp "EntryPoint_Main_Lerp"
                OpName %self_29 "self"
                OpName %InitializeGlobals "InitializeGlobals"
         %int = OpTypeInt 32 1
@@ -1831,7 +1831,7 @@
        %1150 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %57
+%EntryPoint_Main_Lerp = OpFunction %void None %57
        %1152 = OpLabel
     %self_29 = OpVariable %_ptr_Function_Lerp Function
        %1154 = OpFunctionCall %void %InitializeGlobals

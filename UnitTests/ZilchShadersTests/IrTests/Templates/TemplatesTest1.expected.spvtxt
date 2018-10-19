@@ -6,8 +6,8 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_TemplatesTest1 "EntryPoint_Main_TemplatesTest1"
+               OpExecutionMode %EntryPoint_Main_TemplatesTest1 OriginUpperLeft
                OpSource Unknown 100
                OpName %TemplatesTest1 "TemplatesTest1"
                OpMemberName %TemplatesTest1 0 "Dummy"
@@ -54,7 +54,7 @@
                OpName %self_11 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_12 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_TemplatesTest1 "EntryPoint_Main_TemplatesTest1"
                OpName %self_13 "self"
                OpName %InitializeGlobals "InitializeGlobals"
         %int = OpTypeInt 32 1
@@ -203,7 +203,7 @@
         %108 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %25
+%EntryPoint_Main_TemplatesTest1 = OpFunction %void None %25
         %110 = OpLabel
     %self_13 = OpVariable %_ptr_Function_TemplatesTest1 Function
         %112 = OpFunctionCall %void %InitializeGlobals

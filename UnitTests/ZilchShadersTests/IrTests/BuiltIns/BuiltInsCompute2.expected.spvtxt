@@ -6,8 +6,8 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint GLCompute %EntryPoint_Main "EntryPoint_Main" %GlobalInvocationId %LocalInvocationId %LocalInvocationIndex %NumWorkgroups %WorkgroupId %WorkgroupSize
-               OpExecutionMode %EntryPoint_Main LocalSize 1 1 1
+               OpEntryPoint GLCompute %EntryPoint_Main_BuiltInsCompute2 "EntryPoint_Main_BuiltInsCompute2" %GlobalInvocationId %LocalInvocationId %LocalInvocationIndex %NumWorkgroups %WorkgroupId %WorkgroupSize
+               OpExecutionMode %EntryPoint_Main_BuiltInsCompute2 LocalSize 1 1 1
                OpSource Unknown 100
                OpName %BuiltInsCompute2 "BuiltInsCompute2"
                OpMemberName %BuiltInsCompute2 4 "GroupId"
@@ -32,7 +32,7 @@
                OpName %self_2 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_3 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_BuiltInsCompute2 "EntryPoint_Main_BuiltInsCompute2"
                OpName %self_4 "self"
                OpName %InitializeGlobals "InitializeGlobals"
                OpDecorate %GlobalInvocationId BuiltIn GlobalInvocationId
@@ -126,7 +126,7 @@
          %64 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %13
+%EntryPoint_Main_BuiltInsCompute2 = OpFunction %void None %13
          %66 = OpLabel
      %self_4 = OpVariable %_ptr_Function_BuiltInsCompute2 Function
          %68 = OpFunctionCall %void %InitializeGlobals

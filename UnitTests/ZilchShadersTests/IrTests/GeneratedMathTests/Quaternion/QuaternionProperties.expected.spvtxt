@@ -6,8 +6,8 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_QuaternionProperties "EntryPoint_Main_QuaternionProperties"
+               OpExecutionMode %EntryPoint_Main_QuaternionProperties OriginUpperLeft
                OpSource Unknown 100
                OpName %QuaternionProperties "QuaternionProperties"
                OpMemberName %QuaternionProperties 0 "Dummy"
@@ -1394,7 +1394,7 @@
                OpName %self_345 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_346 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_QuaternionProperties "EntryPoint_Main_QuaternionProperties"
                OpName %self_347 "self"
                OpName %InitializeGlobals "InitializeGlobals"
         %int = OpTypeInt 32 1
@@ -6898,7 +6898,7 @@
        %4056 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %20
+%EntryPoint_Main_QuaternionProperties = OpFunction %void None %20
        %4058 = OpLabel
    %self_347 = OpVariable %_ptr_Function_QuaternionProperties Function
        %4060 = OpFunctionCall %void %InitializeGlobals

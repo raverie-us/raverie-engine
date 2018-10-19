@@ -6,8 +6,8 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_Vertex_Pixel "EntryPoint_Main_Vertex_Pixel"
+               OpExecutionMode %EntryPoint_Main_Vertex_Pixel OriginUpperLeft
                OpSource Unknown 100
                OpName %Vertex_Pixel "Vertex_Pixel"
                OpMemberName %Vertex_Pixel 0 "Dummy"
@@ -21,7 +21,7 @@
                OpName %self_2 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_3 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_Vertex_Pixel "EntryPoint_Main_Vertex_Pixel"
                OpName %self_4 "self"
                OpName %InitializeGlobals "InitializeGlobals"
         %int = OpTypeInt 32 1
@@ -58,7 +58,7 @@
          %25 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %9
+%EntryPoint_Main_Vertex_Pixel = OpFunction %void None %9
          %27 = OpLabel
      %self_4 = OpVariable %_ptr_Function_Vertex_Pixel Function
          %29 = OpFunctionCall %void %InitializeGlobals

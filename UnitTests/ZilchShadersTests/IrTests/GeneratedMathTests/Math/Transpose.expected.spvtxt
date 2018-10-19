@@ -6,8 +6,8 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_Transpose "EntryPoint_Main_Transpose"
+               OpExecutionMode %EntryPoint_Main_Transpose OriginUpperLeft
                OpSource Unknown 100
                OpName %Transpose "Transpose"
                OpMemberName %Transpose 0 "Dummy"
@@ -57,7 +57,7 @@
                OpName %self_11 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_12 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_Transpose "EntryPoint_Main_Transpose"
                OpName %self_13 "self"
                OpName %InitializeGlobals "InitializeGlobals"
         %int = OpTypeInt 32 1
@@ -247,7 +247,7 @@
         %142 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %35
+%EntryPoint_Main_Transpose = OpFunction %void None %35
         %144 = OpLabel
     %self_13 = OpVariable %_ptr_Function_Transpose Function
         %146 = OpFunctionCall %void %InitializeGlobals

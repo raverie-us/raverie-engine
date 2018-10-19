@@ -6,8 +6,8 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_Integer2Properties "EntryPoint_Main_Integer2Properties"
+               OpExecutionMode %EntryPoint_Main_Integer2Properties OriginUpperLeft
                OpSource Unknown 100
                OpName %Integer2Properties "Integer2Properties"
                OpMemberName %Integer2Properties 0 "Dummy"
@@ -180,7 +180,7 @@
                OpName %self_41 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_42 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_Integer2Properties "EntryPoint_Main_Integer2Properties"
                OpName %self_43 "self"
                OpName %InitializeGlobals "InitializeGlobals"
         %int = OpTypeInt 32 1
@@ -774,7 +774,7 @@
         %408 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %17
+%EntryPoint_Main_Integer2Properties = OpFunction %void None %17
         %410 = OpLabel
     %self_43 = OpVariable %_ptr_Function_Integer2Properties Function
         %412 = OpFunctionCall %void %InitializeGlobals

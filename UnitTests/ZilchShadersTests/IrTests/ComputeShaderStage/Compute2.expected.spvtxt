@@ -6,8 +6,8 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint GLCompute %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main LocalSize 1 2 3
+               OpEntryPoint GLCompute %EntryPoint_Main_Compute2 "EntryPoint_Main_Compute2"
+               OpExecutionMode %EntryPoint_Main_Compute2 LocalSize 1 2 3
                OpSource Unknown 100
                OpName %Compute2 "Compute2"
                OpMemberName %Compute2 0 "Dummy"
@@ -21,7 +21,7 @@
                OpName %self_2 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_3 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_Compute2 "EntryPoint_Main_Compute2"
                OpName %self_4 "self"
                OpName %InitializeGlobals "InitializeGlobals"
         %int = OpTypeInt 32 1
@@ -58,7 +58,7 @@
          %25 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %9
+%EntryPoint_Main_Compute2 = OpFunction %void None %9
          %27 = OpLabel
      %self_4 = OpVariable %_ptr_Function_Compute2 Function
          %29 = OpFunctionCall %void %InitializeGlobals

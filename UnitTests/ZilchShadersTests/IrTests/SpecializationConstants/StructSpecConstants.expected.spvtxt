@@ -6,8 +6,8 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_StructSpecConstants "EntryPoint_Main_StructSpecConstants"
+               OpExecutionMode %EntryPoint_Main_StructSpecConstants OriginUpperLeft
                OpSource Unknown 100
                OpName %StructSpecConstants "StructSpecConstants"
                OpMemberName %StructSpecConstants 0 "Dummy"
@@ -52,7 +52,7 @@
                OpName %self_6 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_7 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_StructSpecConstants "EntryPoint_Main_StructSpecConstants"
                OpName %self_8 "self"
                OpName %InitializeGlobals "InitializeGlobals"
                OpDecorate %ConstantMySubStruct1_IntValue_StructSpecConstants SpecId 1
@@ -166,7 +166,7 @@
          %79 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %21
+%EntryPoint_Main_StructSpecConstants = OpFunction %void None %21
          %81 = OpLabel
      %self_8 = OpVariable %_ptr_Function_StructSpecConstants Function
          %83 = OpFunctionCall %void %InitializeGlobals

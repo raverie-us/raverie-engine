@@ -6,8 +6,8 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_EnumCasts "EntryPoint_Main_EnumCasts"
+               OpExecutionMode %EntryPoint_Main_EnumCasts OriginUpperLeft
                OpSource Unknown 100
                OpName %EnumCasts "EnumCasts"
                OpMemberName %EnumCasts 0 "Dummy"
@@ -28,7 +28,7 @@
                OpName %self_4 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_5 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_EnumCasts "EntryPoint_Main_EnumCasts"
                OpName %self_6 "self"
                OpName %InitializeGlobals "InitializeGlobals"
         %int = OpTypeInt 32 1
@@ -85,7 +85,7 @@
          %38 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %9
+%EntryPoint_Main_EnumCasts = OpFunction %void None %9
          %40 = OpLabel
      %self_6 = OpVariable %_ptr_Function_EnumCasts Function
          %42 = OpFunctionCall %void %InitializeGlobals

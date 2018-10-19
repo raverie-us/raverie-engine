@@ -6,8 +6,8 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main" %FragCoord %FrontFacing %FragDepth
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_BuiltInsPixel3 "EntryPoint_Main_BuiltInsPixel3" %FragCoord %FrontFacing %FragDepth
+               OpExecutionMode %EntryPoint_Main_BuiltInsPixel3 OriginUpperLeft
                OpSource Unknown 100
                OpName %BuiltInsPixel3 "BuiltInsPixel3"
                OpMemberName %BuiltInsPixel3 2 "FrontFacing"
@@ -26,7 +26,7 @@
                OpName %self_2 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_3 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_BuiltInsPixel3 "EntryPoint_Main_BuiltInsPixel3"
                OpName %self_4 "self"
                OpName %InitializeGlobals "InitializeGlobals"
                OpDecorate %FragCoord BuiltIn FragCoord
@@ -99,7 +99,7 @@
                OpStore %FragDepth %52
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %18
+%EntryPoint_Main_BuiltInsPixel3 = OpFunction %void None %18
          %54 = OpLabel
      %self_4 = OpVariable %_ptr_Function_BuiltInsPixel3 Function
          %56 = OpFunctionCall %void %InitializeGlobals

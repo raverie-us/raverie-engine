@@ -6,7 +6,7 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Vertex %EntryPoint_Main "EntryPoint_Main"
+               OpEntryPoint Vertex %EntryPoint_Main_UniformBuffersVertex1 "EntryPoint_Main_UniformBuffersVertex1"
                OpSource Unknown 100
                OpName %UniformBuffersVertex1 "UniformBuffersVertex1"
                OpMemberName %UniformBuffersVertex1 4 "ViewportSize"
@@ -39,7 +39,7 @@
                OpName %self_2 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_3 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_UniformBuffersVertex1 "EntryPoint_Main_UniformBuffersVertex1"
                OpName %self_4 "self"
                OpName %InitializeGlobals "InitializeGlobals"
                OpDecorate %UniformBuffersVertex1Frame_Data Block
@@ -166,7 +166,7 @@
          %85 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %27
+%EntryPoint_Main_UniformBuffersVertex1 = OpFunction %void None %27
          %87 = OpLabel
      %self_4 = OpVariable %_ptr_Function_UniformBuffersVertex1 Function
          %89 = OpFunctionCall %void %InitializeGlobals

@@ -6,8 +6,8 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main" %Out
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_Basic_Pixel "EntryPoint_Main_Basic_Pixel" %Out
+               OpExecutionMode %EntryPoint_Main_Basic_Pixel OriginUpperLeft
                OpSource Unknown 100
                OpName %Basic_Pixel "Basic_Pixel"
                OpMemberName %Basic_Pixel 1 "Stage_Target1_Real4"
@@ -42,7 +42,7 @@
                OpName %self_5 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_6 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_Basic_Pixel "EntryPoint_Main_Basic_Pixel"
                OpName %self_7 "self"
                OpName %InitializeGlobals "InitializeGlobals"
                OpDecorate %Out Location 0
@@ -177,7 +177,7 @@
                OpStore %98 %100
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %21
+%EntryPoint_Main_Basic_Pixel = OpFunction %void None %21
         %102 = OpLabel
      %self_7 = OpVariable %_ptr_Function_Basic_Pixel Function
         %104 = OpFunctionCall %void %InitializeGlobals

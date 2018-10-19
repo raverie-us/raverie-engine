@@ -6,8 +6,8 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_Real3x3Constructors "EntryPoint_Main_Real3x3Constructors"
+               OpExecutionMode %EntryPoint_Main_Real3x3Constructors OriginUpperLeft
                OpSource Unknown 100
                OpName %Real3x3Constructors "Real3x3Constructors"
                OpMemberName %Real3x3Constructors 0 "M3x3"
@@ -33,7 +33,7 @@
                OpName %self_6 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_7 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_Real3x3Constructors "EntryPoint_Main_Real3x3Constructors"
                OpName %self_8 "self"
                OpName %InitializeGlobals "InitializeGlobals"
       %float = OpTypeFloat 32
@@ -247,7 +247,7 @@
         %162 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %15
+%EntryPoint_Main_Real3x3Constructors = OpFunction %void None %15
         %164 = OpLabel
      %self_8 = OpVariable %_ptr_Function_Real3x3Constructors Function
         %166 = OpFunctionCall %void %InitializeGlobals

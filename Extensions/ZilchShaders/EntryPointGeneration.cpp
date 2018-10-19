@@ -710,7 +710,8 @@ void EntryPointGeneration::CreateEntryPointFunction(Zilch::GenericFunctionNode* 
   ZilchShaderIRFunction* entryPointFn = currentType->CreateFunction(translator->mLibrary);
   context->mCurrentFunction = entryPointFn;
   entryPoint->mEntryPointFn = entryPointFn;
-  entryPointFn->mDebugResultName = BuildString("EntryPoint_", function->mName);
+  // Make the entry point funciton name unique by including the name of the current type.
+  entryPointFn->mDebugResultName = BuildString("EntryPoint_", function->mName, "_", context->mCurrentType->mName);
   entryPointFn->mName = entryPointFn->mDebugResultName;
   Array<Zilch::Type*> signature;
   translator->GenerateFunctionType(node, entryPointFn, ZilchTypeId(void), signature, context);

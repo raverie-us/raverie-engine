@@ -7,10 +7,10 @@
                OpCapability Shader
                OpCapability Geometry
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Geometry %EntryPoint_Main "EntryPoint_Main" %In %gl_in %Out %gl_out
-               OpExecutionMode %EntryPoint_Main OutputVertices 3
-               OpExecutionMode %EntryPoint_Main Triangles
-               OpExecutionMode %EntryPoint_Main OutputTriangleStrip
+               OpEntryPoint Geometry %EntryPoint_Main_Vertex_Geometry_Pixel_Geometry "EntryPoint_Main_Vertex_Geometry_Pixel_Geometry" %In %gl_in %Out %gl_out
+               OpExecutionMode %EntryPoint_Main_Vertex_Geometry_Pixel_Geometry OutputVertices 3
+               OpExecutionMode %EntryPoint_Main_Vertex_Geometry_Pixel_Geometry Triangles
+               OpExecutionMode %EntryPoint_Main_Vertex_Geometry_Pixel_Geometry OutputTriangleStrip
                OpSource Unknown 100
                OpName %Vertex_Geometry_Pixel_Geometry "Vertex_Geometry_Pixel_Geometry"
                OpMemberName %Vertex_Geometry_Pixel_Geometry 0 "PerspectiveToApiPerspective"
@@ -99,7 +99,7 @@
                OpName %CopyInputs_Main "CopyInputs_Main"
                OpName %self_11 "self"
                OpName %inputStream "inputStream"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_Vertex_Geometry_Pixel_Geometry "EntryPoint_Main_Vertex_Geometry_Pixel_Geometry"
                OpName %self_12 "self"
                OpName %inputStream_0 "inputStream"
                OpName %outputStream "outputStream"
@@ -420,7 +420,7 @@
                OpStore %226 %228
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %60
+%EntryPoint_Main_Vertex_Geometry_Pixel_Geometry = OpFunction %void None %60
         %230 = OpLabel
     %self_12 = OpVariable %_ptr_Function_Vertex_Geometry_Pixel_Geometry Function
 %inputStream_0 = OpVariable %_ptr_Function__arr_Vertex_Geometry_Pixel_GeoIn_int_3 Function

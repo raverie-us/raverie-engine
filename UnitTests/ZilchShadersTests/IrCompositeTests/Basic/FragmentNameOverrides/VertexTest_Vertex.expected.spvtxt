@@ -6,7 +6,7 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Vertex %EntryPoint_Main "EntryPoint_Main"
+               OpEntryPoint Vertex %EntryPoint_Main_VertexTest_Vertex "EntryPoint_Main_VertexTest_Vertex"
                OpSource Unknown 100
                OpName %VertexTest_Vertex "VertexTest_Vertex"
                OpMemberName %VertexTest_Vertex 0 "Dummy"
@@ -60,7 +60,7 @@
                OpName %self_11 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_12 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_VertexTest_Vertex "EntryPoint_Main_VertexTest_Vertex"
                OpName %self_13 "self"
                OpName %InitializeGlobals "InitializeGlobals"
         %int = OpTypeInt 32 1
@@ -255,7 +255,7 @@
         %138 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %22
+%EntryPoint_Main_VertexTest_Vertex = OpFunction %void None %22
         %140 = OpLabel
     %self_13 = OpVariable %_ptr_Function_VertexTest_Vertex Function
         %142 = OpFunctionCall %void %InitializeGlobals

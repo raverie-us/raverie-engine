@@ -6,7 +6,7 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Vertex %EntryPoint_Main "EntryPoint_Main" %Uv %LocalPosition %Out %VertexId %InstanceId
+               OpEntryPoint Vertex %EntryPoint_Main_VertexFirst_VertexFinal_PixelFirst_PixelFinal_Vertex "EntryPoint_Main_VertexFirst_VertexFinal_PixelFirst_PixelFinal_Vertex" %Uv %LocalPosition %Out %VertexId %InstanceId
                OpSource Unknown 100
                OpName %VertexFirst_VertexFinal_PixelFirst_PixelFinal_Vertex "VertexFirst_VertexFinal_PixelFirst_PixelFinal_Vertex"
                OpMemberName %VertexFirst_VertexFinal_PixelFirst_PixelFinal_Vertex 7 "Property2_VertexFinal"
@@ -75,7 +75,7 @@
                OpName %self_8 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_9 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_VertexFirst_VertexFinal_PixelFirst_PixelFinal_Vertex "EntryPoint_Main_VertexFirst_VertexFinal_PixelFirst_PixelFinal_Vertex"
                OpName %self_10 "self"
                OpName %InitializeGlobals "InitializeGlobals"
                OpDecorate %Uv Location 1
@@ -374,7 +374,7 @@
                OpStore %204 %206
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %40
+%EntryPoint_Main_VertexFirst_VertexFinal_PixelFirst_PixelFinal_Vertex = OpFunction %void None %40
         %208 = OpLabel
     %self_10 = OpVariable %_ptr_Function_VertexFirst_VertexFinal_PixelFirst_PixelFinal_Vertex Function
         %210 = OpFunctionCall %void %InitializeGlobals

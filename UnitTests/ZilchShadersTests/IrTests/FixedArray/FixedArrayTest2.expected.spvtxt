@@ -6,8 +6,8 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_FixedArrayTest2 "EntryPoint_Main_FixedArrayTest2"
+               OpExecutionMode %EntryPoint_Main_FixedArrayTest2 OriginUpperLeft
                OpSource Unknown 100
                OpName %FixedArrayTest2 "FixedArrayTest2"
                OpMemberName %FixedArrayTest2 0 "Data"
@@ -23,7 +23,7 @@
                OpName %self_2 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_3 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_FixedArrayTest2 "EntryPoint_Main_FixedArrayTest2"
                OpName %self_4 "self"
                OpName %InitializeGlobals "InitializeGlobals"
       %float = OpTypeFloat 32
@@ -109,7 +109,7 @@
          %68 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %21
+%EntryPoint_Main_FixedArrayTest2 = OpFunction %void None %21
          %70 = OpLabel
      %self_4 = OpVariable %_ptr_Function_FixedArrayTest2 Function
          %72 = OpFunctionCall %void %InitializeGlobals

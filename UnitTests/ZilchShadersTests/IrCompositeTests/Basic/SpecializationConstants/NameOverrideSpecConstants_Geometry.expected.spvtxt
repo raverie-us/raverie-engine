@@ -7,10 +7,10 @@
                OpCapability Shader
                OpCapability Geometry
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Geometry %EntryPoint_Main "EntryPoint_Main" %gl_in %gl_out
-               OpExecutionMode %EntryPoint_Main OutputVertices 3
-               OpExecutionMode %EntryPoint_Main Triangles
-               OpExecutionMode %EntryPoint_Main OutputTriangleStrip
+               OpEntryPoint Geometry %EntryPoint_Main_NameOverrideSpecConstants_Geometry "EntryPoint_Main_NameOverrideSpecConstants_Geometry" %gl_in %gl_out
+               OpExecutionMode %EntryPoint_Main_NameOverrideSpecConstants_Geometry OutputVertices 3
+               OpExecutionMode %EntryPoint_Main_NameOverrideSpecConstants_Geometry Triangles
+               OpExecutionMode %EntryPoint_Main_NameOverrideSpecConstants_Geometry OutputTriangleStrip
                OpSource Unknown 100
                OpName %NameOverrideSpecConstants_Geometry "NameOverrideSpecConstants_Geometry"
                OpMemberName %NameOverrideSpecConstants_Geometry 0 "PerspectiveToApiPerspective"
@@ -90,7 +90,7 @@
                OpName %CopyInputs_Main "CopyInputs_Main"
                OpName %self_11 "self"
                OpName %inputStream "inputStream"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_NameOverrideSpecConstants_Geometry "EntryPoint_Main_NameOverrideSpecConstants_Geometry"
                OpName %self_12 "self"
                OpName %inputStream_0 "inputStream"
                OpName %outputStream "outputStream"
@@ -363,7 +363,7 @@
                OpStore %187 %189
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %52
+%EntryPoint_Main_NameOverrideSpecConstants_Geometry = OpFunction %void None %52
         %191 = OpLabel
     %self_12 = OpVariable %_ptr_Function_NameOverrideSpecConstants_Geometry Function
 %inputStream_0 = OpVariable %_ptr_Function__arr_NameOverrideSpecConstants_GeoIn_int_3 Function

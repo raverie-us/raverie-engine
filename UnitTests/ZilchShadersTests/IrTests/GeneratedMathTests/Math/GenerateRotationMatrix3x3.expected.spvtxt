@@ -7,8 +7,8 @@
                OpCapability Shader
           %2 = OpExtInstImport "GLSL.std.450"
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_GenerateRotationMatrix3x3 "EntryPoint_Main_GenerateRotationMatrix3x3"
+               OpExecutionMode %EntryPoint_Main_GenerateRotationMatrix3x3 OriginUpperLeft
                OpSource Unknown 100
                OpName %GenerateRotationMatrix3x3 "GenerateRotationMatrix3x3"
                OpMemberName %GenerateRotationMatrix3x3 0 "Dummy"
@@ -54,7 +54,7 @@
                OpName %self_4 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_5 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_GenerateRotationMatrix3x3 "EntryPoint_Main_GenerateRotationMatrix3x3"
                OpName %self_6 "self"
                OpName %InitializeGlobals "InitializeGlobals"
         %int = OpTypeInt 32 1
@@ -344,7 +344,7 @@
         %239 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %23
+%EntryPoint_Main_GenerateRotationMatrix3x3 = OpFunction %void None %23
         %241 = OpLabel
      %self_6 = OpVariable %_ptr_Function_GenerateRotationMatrix3x3 Function
         %243 = OpFunctionCall %void %InitializeGlobals

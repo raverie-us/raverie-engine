@@ -7,8 +7,8 @@
                OpCapability Shader
                OpCapability ImageQuery
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_ImageQuerySize "EntryPoint_Main_ImageQuerySize"
+               OpExecutionMode %EntryPoint_Main_ImageQuerySize OriginUpperLeft
                OpSource Unknown 100
                OpName %ImageQuerySize "ImageQuerySize"
                OpMemberName %ImageQuerySize 0 "Dummy"
@@ -30,7 +30,7 @@
                OpName %self_2 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_3 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_ImageQuerySize "EntryPoint_Main_ImageQuerySize"
                OpName %self_4 "self"
                OpName %InitializeGlobals "InitializeGlobals"
                OpDecorate %Image_ImageQuerySize Binding 0
@@ -135,7 +135,7 @@
          %73 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %25
+%EntryPoint_Main_ImageQuerySize = OpFunction %void None %25
          %75 = OpLabel
      %self_4 = OpVariable %_ptr_Function_ImageQuerySize Function
          %77 = OpFunctionCall %void %InitializeGlobals

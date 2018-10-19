@@ -7,8 +7,8 @@
                OpCapability Shader
           %2 = OpExtInstImport "GLSL.std.450"
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_Distance "EntryPoint_Main_Distance"
+               OpExecutionMode %EntryPoint_Main_Distance OriginUpperLeft
                OpSource Unknown 100
                OpName %Distance "Distance"
                OpMemberName %Distance 0 "Dummy"
@@ -37,7 +37,7 @@
                OpName %self_5 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_6 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_Distance "EntryPoint_Main_Distance"
                OpName %self_7 "self"
                OpName %InitializeGlobals "InitializeGlobals"
         %int = OpTypeInt 32 1
@@ -134,7 +134,7 @@
          %71 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %18
+%EntryPoint_Main_Distance = OpFunction %void None %18
          %73 = OpLabel
      %self_7 = OpVariable %_ptr_Function_Distance Function
          %75 = OpFunctionCall %void %InitializeGlobals

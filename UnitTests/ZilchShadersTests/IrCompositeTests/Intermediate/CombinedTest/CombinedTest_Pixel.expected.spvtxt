@@ -6,8 +6,8 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main" %In %FragCoord %PointCoord
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_CombinedTest_Pixel "EntryPoint_Main_CombinedTest_Pixel" %In %FragCoord %PointCoord
+               OpExecutionMode %EntryPoint_Main_CombinedTest_Pixel OriginUpperLeft
                OpSource Unknown 100
                OpName %CombinedTest_Pixel "CombinedTest_Pixel"
                OpMemberName %CombinedTest_Pixel 7 "Property6_Pixel1"
@@ -116,7 +116,7 @@
                OpName %self_11 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_12 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_CombinedTest_Pixel "EntryPoint_Main_CombinedTest_Pixel"
                OpName %self_13 "self"
                OpName %InitializeGlobals "InitializeGlobals"
                OpDecorate %CombinedTest_PixelIn Block
@@ -627,7 +627,7 @@
         %357 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %37
+%EntryPoint_Main_CombinedTest_Pixel = OpFunction %void None %37
         %359 = OpLabel
     %self_13 = OpVariable %_ptr_Function_CombinedTest_Pixel Function
         %361 = OpFunctionCall %void %InitializeGlobals

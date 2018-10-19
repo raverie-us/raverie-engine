@@ -6,7 +6,7 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Vertex %EntryPoint_Main "EntryPoint_Main"
+               OpEntryPoint Vertex %EntryPoint_Main_HardwareBuiltIn2_Vertex "EntryPoint_Main_HardwareBuiltIn2_Vertex"
                OpSource Unknown 100
                OpName %HardwareBuiltIn2_Vertex "HardwareBuiltIn2_Vertex"
                OpMemberName %HardwareBuiltIn2_Vertex 0 "Dummy"
@@ -20,7 +20,7 @@
                OpName %self_2 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_3 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_HardwareBuiltIn2_Vertex "EntryPoint_Main_HardwareBuiltIn2_Vertex"
                OpName %self_4 "self"
                OpName %InitializeGlobals "InitializeGlobals"
         %int = OpTypeInt 32 1
@@ -57,7 +57,7 @@
          %25 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %9
+%EntryPoint_Main_HardwareBuiltIn2_Vertex = OpFunction %void None %9
          %27 = OpLabel
      %self_4 = OpVariable %_ptr_Function_HardwareBuiltIn2_Vertex Function
          %29 = OpFunctionCall %void %InitializeGlobals

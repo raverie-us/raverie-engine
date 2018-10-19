@@ -6,8 +6,8 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_StructConstructors "EntryPoint_Main_StructConstructors"
+               OpExecutionMode %EntryPoint_Main_StructConstructors OriginUpperLeft
                OpSource Unknown 100
                OpName %StructConstructors "StructConstructors"
                OpMemberName %StructConstructors 0 "Dummy"
@@ -39,7 +39,7 @@
                OpName %self_7 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_8 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_StructConstructors "EntryPoint_Main_StructConstructors"
                OpName %self_9 "self"
                OpName %InitializeGlobals "InitializeGlobals"
         %int = OpTypeInt 32 1
@@ -148,7 +148,7 @@
          %78 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %18
+%EntryPoint_Main_StructConstructors = OpFunction %void None %18
          %80 = OpLabel
      %self_9 = OpVariable %_ptr_Function_StructConstructors Function
          %82 = OpFunctionCall %void %InitializeGlobals

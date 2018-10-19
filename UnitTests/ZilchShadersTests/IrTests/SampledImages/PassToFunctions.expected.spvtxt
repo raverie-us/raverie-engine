@@ -6,8 +6,8 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_PassToFunctions "EntryPoint_Main_PassToFunctions"
+               OpExecutionMode %EntryPoint_Main_PassToFunctions OriginUpperLeft
                OpSource Unknown 100
                OpName %PassToFunctions "PassToFunctions"
                OpMemberName %PassToFunctions 0 "Uv"
@@ -32,7 +32,7 @@
                OpName %self_4 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_5 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_PassToFunctions "EntryPoint_Main_PassToFunctions"
                OpName %self_6 "self"
                OpName %InitializeGlobals "InitializeGlobals"
                OpDecorate %SampledImage_PassToFunctions Binding 0
@@ -127,7 +127,7 @@
          %69 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %23
+%EntryPoint_Main_PassToFunctions = OpFunction %void None %23
          %71 = OpLabel
      %self_6 = OpVariable %_ptr_Function_PassToFunctions Function
          %73 = OpFunctionCall %void %InitializeGlobals

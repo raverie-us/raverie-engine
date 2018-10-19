@@ -6,8 +6,8 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_BoolIntrinsicTests "EntryPoint_Main_BoolIntrinsicTests"
+               OpExecutionMode %EntryPoint_Main_BoolIntrinsicTests OriginUpperLeft
                OpSource Unknown 100
                OpName %BoolIntrinsicTests "BoolIntrinsicTests"
                OpMemberName %BoolIntrinsicTests 0 "Dummy"
@@ -88,7 +88,7 @@
                OpName %self_2 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_3 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_BoolIntrinsicTests "EntryPoint_Main_BoolIntrinsicTests"
                OpName %self_4 "self"
                OpName %InitializeGlobals "InitializeGlobals"
         %int = OpTypeInt 32 1
@@ -407,7 +407,7 @@
         %229 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %9
+%EntryPoint_Main_BoolIntrinsicTests = OpFunction %void None %9
         %231 = OpLabel
      %self_4 = OpVariable %_ptr_Function_BoolIntrinsicTests Function
         %233 = OpFunctionCall %void %InitializeGlobals

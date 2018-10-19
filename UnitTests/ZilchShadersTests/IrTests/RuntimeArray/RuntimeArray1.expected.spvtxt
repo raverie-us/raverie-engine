@@ -6,8 +6,8 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_RuntimeArray1 "EntryPoint_Main_RuntimeArray1"
+               OpExecutionMode %EntryPoint_Main_RuntimeArray1 OriginUpperLeft
                OpSource Unknown 100
                OpName %RuntimeArray1 "RuntimeArray1"
                OpMemberName %RuntimeArray1 0 "Dummy"
@@ -26,7 +26,7 @@
                OpName %self_2 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_3 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_RuntimeArray1 "EntryPoint_Main_RuntimeArray1"
                OpName %self_4 "self"
                OpName %InitializeGlobals "InitializeGlobals"
                OpDecorate %Data_RuntimeArray1 Binding 0
@@ -87,7 +87,7 @@
          %41 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %16
+%EntryPoint_Main_RuntimeArray1 = OpFunction %void None %16
          %43 = OpLabel
      %self_4 = OpVariable %_ptr_Function_RuntimeArray1 Function
          %45 = OpFunctionCall %void %InitializeGlobals

@@ -6,8 +6,8 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_EnumMemberVariable "EntryPoint_Main_EnumMemberVariable"
+               OpExecutionMode %EntryPoint_Main_EnumMemberVariable OriginUpperLeft
                OpSource Unknown 100
                OpName %EnumMemberVariable "EnumMemberVariable"
                OpMemberName %EnumMemberVariable 0 "Value1"
@@ -21,7 +21,7 @@
                OpName %self_2 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_3 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_EnumMemberVariable "EntryPoint_Main_EnumMemberVariable"
                OpName %self_4 "self"
                OpName %InitializeGlobals "InitializeGlobals"
         %int = OpTypeInt 32 1
@@ -61,7 +61,7 @@
          %27 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %9
+%EntryPoint_Main_EnumMemberVariable = OpFunction %void None %9
          %29 = OpLabel
      %self_4 = OpVariable %_ptr_Function_EnumMemberVariable Function
          %31 = OpFunctionCall %void %InitializeGlobals

@@ -6,8 +6,8 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_NestedIfs "EntryPoint_Main_NestedIfs"
+               OpExecutionMode %EntryPoint_Main_NestedIfs OriginUpperLeft
                OpSource Unknown 100
                OpName %NestedIfs "NestedIfs"
                OpMemberName %NestedIfs 0 "Dummy"
@@ -93,7 +93,7 @@
                OpName %self_7 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_8 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_NestedIfs "EntryPoint_Main_NestedIfs"
                OpName %self_9 "self"
                OpName %InitializeGlobals "InitializeGlobals"
         %int = OpTypeInt 32 1
@@ -397,7 +397,7 @@
         %179 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %12
+%EntryPoint_Main_NestedIfs = OpFunction %void None %12
         %181 = OpLabel
      %self_9 = OpVariable %_ptr_Function_NestedIfs Function
         %183 = OpFunctionCall %void %InitializeGlobals

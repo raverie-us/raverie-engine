@@ -6,8 +6,8 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main" %In %Out %FragCoord %PointCoord
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_VertexFirst_VertexFinal_PixelFirst_PixelFinal_Pixel "EntryPoint_Main_VertexFirst_VertexFinal_PixelFirst_PixelFinal_Pixel" %In %Out %FragCoord %PointCoord
+               OpExecutionMode %EntryPoint_Main_VertexFirst_VertexFinal_PixelFirst_PixelFinal_Pixel OriginUpperLeft
                OpSource Unknown 100
                OpName %VertexFirst_VertexFinal_PixelFirst_PixelFinal_Pixel "VertexFirst_VertexFinal_PixelFirst_PixelFinal_Pixel"
                OpMemberName %VertexFirst_VertexFinal_PixelFirst_PixelFinal_Pixel 9 "Stage_Target1_Real4"
@@ -82,7 +82,7 @@
                OpName %self_8 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_9 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_VertexFirst_VertexFinal_PixelFirst_PixelFinal_Pixel "EntryPoint_Main_VertexFirst_VertexFinal_PixelFirst_PixelFinal_Pixel"
                OpName %self_10 "self"
                OpName %InitializeGlobals "InitializeGlobals"
                OpDecorate %VertexFirst_VertexFinal_PixelFirst_PixelFinal_PixelIn Block
@@ -402,7 +402,7 @@
                OpStore %222 %224
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %41
+%EntryPoint_Main_VertexFirst_VertexFinal_PixelFirst_PixelFinal_Pixel = OpFunction %void None %41
         %226 = OpLabel
     %self_10 = OpVariable %_ptr_Function_VertexFirst_VertexFinal_PixelFirst_PixelFinal_Pixel Function
         %228 = OpFunctionCall %void %InitializeGlobals

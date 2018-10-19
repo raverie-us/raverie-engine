@@ -7,10 +7,10 @@
                OpCapability Shader
                OpCapability Geometry
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Geometry %EntryPoint_Main "EntryPoint_Main" %In %Out
-               OpExecutionMode %EntryPoint_Main OutputVertices 5
-               OpExecutionMode %EntryPoint_Main Triangles
-               OpExecutionMode %EntryPoint_Main OutputTriangleStrip
+               OpEntryPoint Geometry %EntryPoint_Main_GeometryBools "EntryPoint_Main_GeometryBools" %In %Out
+               OpExecutionMode %EntryPoint_Main_GeometryBools OutputVertices 5
+               OpExecutionMode %EntryPoint_Main_GeometryBools Triangles
+               OpExecutionMode %EntryPoint_Main_GeometryBools OutputTriangleStrip
                OpSource Unknown 100
                OpName %GeometryBools "GeometryBools"
                OpMemberName %GeometryBools 0 "Dummy"
@@ -56,7 +56,7 @@
                OpName %CopyInputs_Main "CopyInputs_Main"
                OpName %self_4 "self"
                OpName %inputStream "inputStream"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_GeometryBools "EntryPoint_Main_GeometryBools"
                OpName %self_5 "self"
                OpName %inputStream_0 "inputStream"
                OpName %outputStream "outputStream"
@@ -273,7 +273,7 @@
                OpStore %162 %164
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %37
+%EntryPoint_Main_GeometryBools = OpFunction %void None %37
         %166 = OpLabel
      %self_5 = OpVariable %_ptr_Function_GeometryBools Function
 %inputStream_0 = OpVariable %_ptr_Function__arr_GeoData_int_3 Function

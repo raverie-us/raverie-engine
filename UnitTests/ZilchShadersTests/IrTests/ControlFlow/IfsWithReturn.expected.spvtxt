@@ -6,8 +6,8 @@
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main "EntryPoint_Main"
-               OpExecutionMode %EntryPoint_Main OriginUpperLeft
+               OpEntryPoint Fragment %EntryPoint_Main_IfsWithReturn "EntryPoint_Main_IfsWithReturn"
+               OpExecutionMode %EntryPoint_Main_IfsWithReturn OriginUpperLeft
                OpSource Unknown 100
                OpName %IfsWithReturn "IfsWithReturn"
                OpMemberName %IfsWithReturn 0 "Distance"
@@ -69,7 +69,7 @@
                OpName %self_5 "self"
                OpName %CopyOutputs_Main "CopyOutputs_Main"
                OpName %self_6 "self"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_IfsWithReturn "EntryPoint_Main_IfsWithReturn"
                OpName %self_7 "self"
                OpName %InitializeGlobals "InitializeGlobals"
       %float = OpTypeFloat 32
@@ -255,7 +255,7 @@
         %111 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %16
+%EntryPoint_Main_IfsWithReturn = OpFunction %void None %16
         %113 = OpLabel
      %self_7 = OpVariable %_ptr_Function_IfsWithReturn Function
         %115 = OpFunctionCall %void %InitializeGlobals

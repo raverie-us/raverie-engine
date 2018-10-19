@@ -7,10 +7,10 @@
                OpCapability Shader
                OpCapability Geometry
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Geometry %EntryPoint_Main "EntryPoint_Main" %PrimitiveId %gl_in %gl_out
-               OpExecutionMode %EntryPoint_Main OutputVertices 3
-               OpExecutionMode %EntryPoint_Main Triangles
-               OpExecutionMode %EntryPoint_Main OutputTriangleStrip
+               OpEntryPoint Geometry %EntryPoint_Main_HardwareBuiltIn1_Geometry "EntryPoint_Main_HardwareBuiltIn1_Geometry" %PrimitiveId %gl_in %gl_out
+               OpExecutionMode %EntryPoint_Main_HardwareBuiltIn1_Geometry OutputVertices 3
+               OpExecutionMode %EntryPoint_Main_HardwareBuiltIn1_Geometry Triangles
+               OpExecutionMode %EntryPoint_Main_HardwareBuiltIn1_Geometry OutputTriangleStrip
                OpSource Unknown 100
                OpName %HardwareBuiltIn1_Geometry "HardwareBuiltIn1_Geometry"
                OpMemberName %HardwareBuiltIn1_Geometry 0 "PrimitiveId"
@@ -83,7 +83,7 @@
                OpName %CopyInputs_Main "CopyInputs_Main"
                OpName %self_11 "self"
                OpName %inputStream "inputStream"
-               OpName %EntryPoint_Main "EntryPoint_Main"
+               OpName %EntryPoint_Main_HardwareBuiltIn1_Geometry "EntryPoint_Main_HardwareBuiltIn1_Geometry"
                OpName %self_12 "self"
                OpName %inputStream_0 "inputStream"
                OpName %outputStream "outputStream"
@@ -344,7 +344,7 @@
                OpStore %180 %182
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main = OpFunction %void None %53
+%EntryPoint_Main_HardwareBuiltIn1_Geometry = OpFunction %void None %53
         %184 = OpLabel
     %self_12 = OpVariable %_ptr_Function_HardwareBuiltIn1_Geometry Function
 %inputStream_0 = OpVariable %_ptr_Function__arr_HardwareBuiltIn1_GeoIn_int_3 Function
