@@ -1,0 +1,97 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 51
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_ImageRead "EntryPoint_Main_ImageRead"
+               OpExecutionMode %EntryPoint_Main_ImageRead OriginUpperLeft
+               OpSource Unknown 100
+               OpName %ImageRead "ImageRead"
+               OpMemberName %ImageRead 0 "Dummy"
+               OpName %StorageImage_ImageRead "StorageImage_ImageRead"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %coordinate "coordinate"
+               OpName %data "data"
+               OpName %PreConstructor_ImageRead "PreConstructor_ImageRead"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_ImageRead "EntryPoint_Main_ImageRead"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %StorageImage_ImageRead Binding 0
+               OpDecorate %StorageImage_ImageRead DescriptorSet 0
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+  %ImageRead = OpTypeStruct %int
+%_ptr_Function_ImageRead = OpTypePointer Function %ImageRead
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_ImageRead
+      %v2int = OpTypeVector %int 2
+%_ptr_Function_v2int = OpTypePointer Function %v2int
+      %int_0 = OpConstant %int 0
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+         %13 = OpTypeImage %float 2D 0 0 0 2 Rgba32f
+%_ptr_UniformConstant_13 = OpTypePointer UniformConstant %13
+%StorageImage_ImageRead = OpVariable %_ptr_UniformConstant_13 UniformConstant
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+         %17 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_ImageRead
+         %22 = OpLabel
+ %coordinate = OpVariable %_ptr_Function_v2int Function
+       %data = OpVariable %_ptr_Function_v4float Function
+         %25 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %coordinate %25
+         %26 = OpLoad %13 %StorageImage_ImageRead
+         %27 = OpLoad %v2int %coordinate
+         %28 = OpImageRead %v4float %26 %27
+               OpStore %data %28
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_ImageRead = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_ImageRead
+         %31 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_ImageRead
+         %34 = OpLabel
+         %35 = OpFunctionCall %void %PreConstructor_ImageRead %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_ImageRead
+         %38 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_ImageRead
+         %41 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_ImageRead = OpFunction %void None %17
+         %43 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_ImageRead Function
+         %45 = OpFunctionCall %void %InitializeGlobals
+         %46 = OpFunctionCall %void %DefaultConstructor %self_4
+         %47 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %48 = OpFunctionCall %void %Main %self_4
+         %49 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %17
+         %50 = OpLabel
+               OpReturn
+               OpFunctionEnd

@@ -1,0 +1,13 @@
+[Pixel][UnitTest]
+struct ImageWrite
+{
+  var StorageImage : StorageImage2d;
+  
+  [EntryPoint]
+  function Main()
+  {
+    var coordinate = Integer2();
+    var data = Real4(1.0, 2.0, 3.0, 4.0);
+    ShaderIntrinsics.ImageWrite(this.StorageImage, coordinate, data);
+  }
+}

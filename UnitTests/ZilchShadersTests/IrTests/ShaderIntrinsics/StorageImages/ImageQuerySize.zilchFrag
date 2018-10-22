@@ -1,0 +1,11 @@
+[Pixel][UnitTest]
+struct ImageQuerySize
+{
+  var StorageImage : StorageImage2d;
+  
+  [EntryPoint]
+  function Main()
+  {
+    var size = ShaderIntrinsics.ImageQuerySize(this.StorageImage);
+  }
+}

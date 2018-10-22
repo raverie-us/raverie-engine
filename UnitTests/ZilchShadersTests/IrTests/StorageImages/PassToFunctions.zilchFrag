@@ -1,0 +1,25 @@
+[Pixel][UnitTest]
+struct PassToFunctions
+{
+  var Coordinate : Integer2;
+  
+  var StorageImage : StorageImage2d;
+  
+  function Read(image : ref StorageImage2d) : Real4
+  {
+    return ShaderIntrinsics.ImageRead(*image, this.Coordinate);
+  }
+  
+  function Write(image : ref StorageImage2d)
+  {
+    ShaderIntrinsics.ImageWrite(*image, this.Coordinate, Real4());
+  }
+  
+  [EntryPoint]
+  function Main()
+  {
+    var color = Real4();
+    color = this.Read(&this.StorageImage);
+    this.Write(&this.StorageImage);
+  }
+}
