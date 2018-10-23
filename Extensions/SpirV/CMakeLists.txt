@@ -13,7 +13,9 @@ set(CurrentDirectory ${CMAKE_CURRENT_LIST_DIR})
 ################################################################################
 add_library(SPIRV-Cross "")
 
-add_subdirectory(SpirVFiles)
+if(generate_spirv_projects)
+  add_subdirectory(SpirVFiles)
+endif()
 
 ################################################################################
 # Explicitly define the folders as they are not organized how we want

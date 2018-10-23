@@ -8,12 +8,24 @@ get_filename_component(ParentDirectory ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 # get our current directory
 set(CurrentDirectory ${CMAKE_CURRENT_LIST_DIR})
 
+if(use_spirv_shared_library)
+  set(SpirVToolsCompileOptions
+        -DSPIRV_TOOLS_IMPLEMENTATION
+        -DSPIRV_TOOLS_SHAREDLIB
+  )
+endif()
+
 ################################################################################
 # define all of the libraries that are in this folder
 ################################################################################
 add_library(SPIRV-Tools "")
-add_library(SPIRV-Tools-opt "")
 
+if (use_spirv_shared_library)
+  add_library(SPIRV-Tools-opt SHARED "")
+else ()
+  add_library(SPIRV-Tools-opt "")
+endif ()
+  
 ################################################################################
 # Explicitly define the folders as they are not organized how we want
 ################################################################################
@@ -139,7 +151,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
             -wd"4800"
             -Gd
             -EHsc
-            -Gm
+            -MP
             -GR-
             -fp:fast 
             -Zc:forScope 
@@ -149,7 +161,9 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
             -MDd
             -nologo
             -D_SCL_SECURE_NO_WARNINGS
+            ${SpirVToolsCompileOptions}
             ${common_flags}
+            -Gm-
     )
 else()
     zero_multitarget_compile_options(
@@ -183,6 +197,37 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         STATIC_LIBRARY_FLAGS "${common_library_flags}"
         STATIC_LIBRARY_FLAGS_RELEASE "/LTCG"
     )
+endif()
+
+
+if (use_spirv_shared_library)
+  add_custom_command(
+    TARGET SPIRV-Tools-opt POST_BUILD
+    # Copies spirv optimizer dll to the external folder location
+    COMMAND ${CMAKE_COMMAND} -E copy   
+    # input folder
+    ${zero_binary_dir}/SPIRV-Tools-opt/SPIRV-Tools-opt.dll
+    #output folder
+    ${zero_core_path}/External/SpirVTools/bin/SPIRV-Tools-opt.dll
+  )
+  add_custom_command(
+    TARGET SPIRV-Tools-opt POST_BUILD
+    # Copies spirv optimizer lib to the external folder location
+    COMMAND ${CMAKE_COMMAND} -E copy   
+    # input folder
+    ${zero_binary_dir}/SPIRV-Tools-opt/SPIRV-Tools-opt.lib
+    #output folder
+    ${zero_core_path}/External/SpirVTools/lib/${platform}/${bit}/SPIRV-Tools-opt.lib
+  )
+  add_custom_command(
+    TARGET SPIRV-Tools-opt POST_BUILD
+    # Copies spirv include files (required or static linking fails due to missing directory and how cmake was setup)
+    COMMAND ${CMAKE_COMMAND} -E copy_directory   
+    # input folder
+    ${CurrentDirectory}/include
+    #output folder
+    ${zero_core_path}/External/SpirVTools/include
+  )
 endif()
 
 ################################################################################

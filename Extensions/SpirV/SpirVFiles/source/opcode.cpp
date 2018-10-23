@@ -584,3 +584,26 @@ bool spvOpcodeIsScalarizable(SpvOp opcode) {
       return false;
   }
 }
+
+// ZeroEdit
+spv_result_t spvGetOpcodeNames(spv_target_env env, spv_opcodes_t* opCodes)
+{
+  spv_opcode_table table;
+  spvOpcodeTableGet(&table, SPV_ENV_UNIVERSAL_1_2);
+
+  // Convert each opcode to string
+  opCodes->count = table->count;
+  opCodes->opcode_names = new const char*[opCodes->count + 1];
+  for(size_t i = 0; i < table->count; ++i)
+  {
+    auto entry = table->entries[i];
+    opCodes->opcode_names[i] = spvOpcodeString(entry.opcode);
+  }
+
+  return SPV_SUCCESS;
+}
+
+void spvDestroyOpcodeNames(spv_opcodes_t* opCodes)
+{
+  delete[] opCodes->opcode_names;
+}

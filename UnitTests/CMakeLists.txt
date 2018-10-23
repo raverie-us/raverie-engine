@@ -6,8 +6,8 @@
 set(CurrentDirectory ${CMAKE_CURRENT_LIST_DIR})
 
 set(unit_tests_out ${zero_unit_test_dir}/BuildOutput)
-set(unit_tests_library_dir ${unit_tests_out}/Out/${supported_configs})
-set(unit_tests_binary_dir ${unit_tests_out}/Out/${supported_configs})
+set(unit_tests_library_dir ${unit_tests_out}/Out/${configuration}/${supported_configs})
+set(unit_tests_binary_dir ${unit_tests_out}/Out/${configuration}/${supported_configs})
 #set(unit_tests_intermediates_dir ${unit_tests_out}/Int/${supported_configs})
 
 ################################################################################
@@ -38,7 +38,7 @@ set_target_properties(ZilchShadersTests  PROPERTIES FOLDER "UnitTests")
 
 # Zilch Shader unit tests need the working directory to be set to where the unit
 # tests are so it can write output files (to be committed) in the same directory.
-set_target_properties(ZilchShadersTests PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${zero_core_path}/UnitTests/ZilchShaders/")
+set_target_properties(ZilchShadersTests PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${zero_core_path}/UnitTests/ZilchShadersTests/")
 
 ################################################################################
 # include filelists for each library
@@ -175,16 +175,21 @@ target_link_libraries(ZilchShadersTests
                       Common
                       ZilchShaders
                       SPIRV-Cross
-                      SPIRV-Tools
-                      SPIRV-Tools-opt
                       Serialization
                       Support
                       Geometry
                       Meta
                       Platform
                       Zilch
+                      SPIRV-Cross
                       ${FreetypeStatic}
 )
+if(NOT use_spirv_shared_library)
+  target_link_libraries(ZilchShadersTests
+                        PUBLIC
+                        SPIRV-Tools-opt
+                        )
+endif()
 ################################################################################
 # set the output directories for all of our targets
 ################################################################################
@@ -198,8 +203,8 @@ zero_multitarget_output_directories(
     SerializationTests
     SSETests
     ZilchShadersTests
-    LIBRARY_DIRECTORY ${unit_test_library_dir}
-    RUNTIME_DIRECTORY ${unit_test_binary_dir}
+    LIBRARY_DIRECTORY ${unit_tests_library_dir}
+    RUNTIME_DIRECTORY ${unit_tests_binary_dir}
 )
 
 ################################################################################
@@ -257,6 +262,19 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
     )
     
 endif()
+
+################################################################################
+# Post build steps
+################################################################################
+if(use_spirv_shared_library)
+  copy_multiple_shared_objects(
+      ZilchShadersTests
+      OUTPUT_DIRECTORY ${unit_tests_binary_dir}
+      SHARED_OBJECT_LOCATIONS
+      ${SpirVToolsSharedPath}
+  )
+endif()
+
 ################################################################################
 # Group source into folders
 ################################################################################
