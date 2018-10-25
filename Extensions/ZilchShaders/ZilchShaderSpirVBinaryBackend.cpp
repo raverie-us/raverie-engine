@@ -123,6 +123,81 @@ void ZilchShaderSpirVBinaryBackend::TranslateType(ZilchShaderIRType* type, Shade
   WriteFunctions(collector.mReferencedFunctions, &context);
 }
 
+void ZilchShaderSpirVBinaryBackend::TranslateLibrary(ZilchShaderIRLibrary* library, ShaderStreamWriter& writer, ShaderStageInterfaceReflection& reflectionData)
+{
+  Clear();
+  mLastLibrary = library;
+
+  // Setup the context
+  ZilchShaderToSpirVContext context;
+  context.mStreamWriter = &writer;
+  context.mReflectionData = &reflectionData;
+
+  TypeDependencyCollector collector(library);
+  
+  for(size_t i = 0; i < library->mOwnedTypes.Size(); ++i)
+  {
+    ZilchShaderIRType* type = library->mOwnedTypes[i];
+    if(type->mEntryPoint != nullptr)
+    {
+      collector.Collect(type);
+      context.mEntryPoints.PushBack(type->mEntryPoint);
+    }
+  }
+  // Walk the global initializers and generate and apply late bound functions
+  GenerateGlobalsInitializerFunction(collector, &context);
+
+  // @JoshD: Late bound functions 'potentially' require each entry point to be independently generated
+  for(size_t i = 0; i < context.mEntryPoints.Size(); ++i)
+  {
+    EntryPointInfo* entryPoint = context.mEntryPoints[i];
+    reflectionData = entryPoint->mStageReflectionData;
+    RegisterLateBoundFunctions(entryPoint->mLateBoundFunctions, collector, &context);
+  }
+  RegisterLateBoundFunctions(mExtraLateBoundFunctions, collector, &context);
+
+  // Shouldn't need to go over these since the copy inputs/outputs functions
+  // should contain these, but leave these in in case generation changes
+  for(size_t i = 0; i < context.mEntryPoints.Size(); ++i)
+  {
+    EntryPointInfo* entryPoint = context.mEntryPoints[i];
+    collector.Collect(&entryPoint->mVariables);
+    // Make sure that every variable was added as a global
+    for(size_t i = 0; i < entryPoint->mVariables.mLines.Size(); ++i)
+    {
+      IZilchShaderIR* varIR = entryPoint->mVariables.mLines[i];
+      ZilchShaderIROp* varOp = varIR->As<ZilchShaderIROp>();
+      ErrorIf(!collector.mReferencedGlobals.ContainsKey(varOp), "Entry point variable wasn't added to globals");
+    }
+  }
+
+  // Collect any capability requirements from decorations
+  AddDecorationCapabilities(collector, &context);
+
+  // Now we have everything we need to reference so generate ids for everything
+
+  GenerateListIds(collector.mReferencedImports, &context);
+  GenerateListIds(collector.mReferencedTypes, &context);
+  GenerateListIds(collector.mReferencedConstants, &context);
+  GenerateListIds(collector.mReferencedGlobals, &context);
+  GenerateFunctionIds(collector.mReferencedFunctions, &context);
+
+  // Write out the boiler-plate header
+  WriteHeader(&context, collector);
+  // Write all debug information (names, source code, etc...)
+  WriteDebug(collector.mReferencedTypes, &context);
+  WriteDebug(collector.mReferencedGlobals, &context);
+  WriteDebug(collector.mReferencedConstants, &context);
+  WriteDebug(collector.mReferencedFunctions, &context);
+  // Decorations (declaring inputs, uniforms, etc...)
+  WriteDecorations(&context);
+  WriteSpecializationConstantBindingDecorations(collector, &context);
+
+  // Write out types, globals, and constants in one "block" based upon the order they were found.
+  WriteTypesGlobalsAndConstants(collector.mTypesConstantsAndGlobals, &context);
+  WriteFunctions(collector.mReferencedFunctions, &context);
+}
+
 void ZilchShaderSpirVBinaryBackend::ValidateIdMap(ZilchShaderToSpirVContext* context)
 {
   for(auto range = context->mGeneratedId.All(); !range.Empty(); range.PopFront())

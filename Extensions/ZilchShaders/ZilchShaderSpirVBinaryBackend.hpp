@@ -41,6 +41,10 @@ public:
   void TranslateType(ZilchShaderIRType* type, ShaderStreamWriter& writer, ShaderStageInterfaceReflection& reflectionData);
 
 private:
+  // Prototype of generating one library with multiple entry points.
+  // Not currently used or tested. Also would need to be updated for multiple reflection objects.
+  void TranslateLibrary(ZilchShaderIRLibrary* library, ShaderStreamWriter& writer, ShaderStageInterfaceReflection& reflectionData);
+
   // Debugging helper
   void ValidateIdMap(ZilchShaderToSpirVContext* context);
 
