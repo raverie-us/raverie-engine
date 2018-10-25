@@ -2055,8 +2055,7 @@ void EntryPointGeneration::DecorateImagesAndSamplers(TypeDependencyCollector& co
       // it is and add the corresponding reflection data 
       // (storage images have to be bound differently so they need to be marked separately)
       ZilchShaderIRImageType imageType(opValueType);
-      int sampledNumber = imageType.GetSampled();
-      if(sampledNumber == 2)
+      if(imageType.IsStorageImage())
         resourceInfo = &stageReflectionData.mStorageImages.PushBack();
       else
         resourceInfo = &stageReflectionData.mImages.PushBack();

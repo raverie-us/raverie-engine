@@ -64,6 +64,20 @@ public:
     Array<int> mSamplerIds;
   };
 
+  /// Describes how to find the reflection data for a ssbo.
+  struct StructuredStorageBufferRemappingData
+  {
+    /// The index into the reflection data of the final stage.
+    size_t mIndex;
+  };
+
+  /// Describes how to find the reflection data for a storage image.
+  struct StorageImageRemappingData
+  {
+    /// The index into the reflection data of the final stage.
+    size_t mIndex;
+  };
+
   /// Lookup data for a fragment. Contains information about how to turn a
   /// property into a location in the overall stage reflection data.
   struct FragmentLookup
@@ -76,20 +90,28 @@ public:
     HashMap<String, SampledImageRemappingData> mSamplers;
     /// Map of properties (by name) of images. This can turn into any number of images and sampled images.
     HashMap<String, SampledImageRemappingData> mImages;
+    /// Map of properties (by name) of storage images to their reflection data index.
+    HashMap<String, StorageImageRemappingData> mStorageImages;
+    /// Map of properties (by name) of structured storage buffers to their reflection data index.
+    HashMap<String, StructuredStorageBufferRemappingData> mStructedStorageBuffers;
   };
 
   /// Build the cached reflection data for quick access for a shader.
   /// This will walk all of the results from the passes and 'merge' them together to get a quick jump table. 
   void CreateReflectionData(ZilchShaderIRLibrary* shaderLibrary, ShaderStageDescription& stageDef, Array<PassResultRef>& passResults);
 
-  /// Find the reflection data for a uniform given the fragment and property. Returns null if the property can't be find.
+  /// Find the reflection data for a uniform given the fragment and property. Returns null if the property can't be found.
   ShaderResourceReflectionData* FindUniformReflectionData(ZilchShaderIRType* fragmentType, StringParam propertyName);
-  /// Finds the all potential images, samplers, and sampled images that the given SampledImage property results in.
+  /// Finds all potential images, samplers, and sampled images that the given SampledImage property results in.
   void FindSampledImageReflectionData(ZilchShaderIRType* fragmentType, StringParam propertyName, Array<ShaderResourceReflectionData*>& results);
-  /// Finds the all potential images and sampled images that the given Image property results in.
+  /// Finds all potential images and sampled images that the given Image property results in.
   void FindImageReflectionData(ZilchShaderIRType* fragmentType, StringParam propertyName, Array<ShaderResourceReflectionData*>& results);
-  /// Finds the all potential samplers and sampled images that the given Sampler property results in.
+  /// Finds all potential samplers and sampled images that the given Sampler property results in.
   void FindSamplerReflectionData(ZilchShaderIRType* fragmentType, StringParam propertyName, Array<ShaderResourceReflectionData*>& results);
+  /// Find the reflection data for a storage image given the fragment and property. Returns null if the property can't be found.
+  ShaderResourceReflectionData* FindStorageImage(ZilchShaderIRType* fragmentType, StringParam propertyName);
+  /// Find the reflection data for a structed storage buffer given the fragment and property. Returns null if the property can't be found.
+  ShaderResourceReflectionData* FindStructedStorageBuffer(ZilchShaderIRType* fragmentType, StringParam propertyName);
 
   /// Map lookup of fragment name to property information about the fragment.
   HashMap<String, FragmentLookup> mFragmentLookup;
@@ -123,6 +145,9 @@ private:
 
   /// Fills out information for an individual search map (e.g. sampler/image) given the property name.
   void PopulateSamplerAndImageData(HashMap<String, SampledImageRemappingData>& searchMap, StringParam propertyName, Array<ShaderResourceReflectionData*>& results);
+
+  /// Create reflectiond ata for simple opaque types (e.g. storage image and ssbos).
+  void CreateSimpleOpaqueTypeReflectionData(ZilchShaderIRLibrary* shaderLibrary, ShaderStageDescription& stageDef, Array<PassResultRef>& passResults);
 };
 
 //-------------------------------------------------------------------SimpleZilchShaderGenerator

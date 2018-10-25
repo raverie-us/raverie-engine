@@ -5,6 +5,7 @@
 namespace Zero
 {
 
+//-------------------------------------------------------------------ZilchShaderIRImageType
 ZilchShaderIRImageType::ZilchShaderIRImageType()
 {
   mIRType = nullptr;
@@ -62,6 +63,11 @@ int ZilchShaderIRImageType::GetFormat()
   return GetIntegerConstantParameterValue(6);
 }
 
+bool ZilchShaderIRImageType::IsStorageImage()
+{
+  return GetSampled() == 2;
+}
+
 int ZilchShaderIRImageType::GetIntegerConstantParameterValue(int parameterIndex)
 {
   IZilchShaderIR* parameter = mIRType->mParameters[parameterIndex];
@@ -70,6 +76,47 @@ int ZilchShaderIRImageType::GetIntegerConstantParameterValue(int parameterIndex)
     return -1;
   int value = constantLiteral->mValue.Get<int>();
   return value;
+}
+
+//-------------------------------------------------------------------ZilchShaderIRRuntimeArrayType
+ZilchShaderIRRuntimeArrayType::ZilchShaderIRRuntimeArrayType()
+{
+  mIRType = nullptr;
+}
+
+bool ZilchShaderIRRuntimeArrayType::Load(ZilchShaderIRType* type)
+{
+  ShaderIRTypeMeta* typeMeta = type->mMeta;
+  if(typeMeta == nullptr)
+    return false;
+
+  Zilch::BoundType* zilchType = typeMeta->mZilchType;
+  if(zilchType == nullptr)
+    return false;
+
+  // Only visit runtime array types (the struct that wraps the actual spirv runtime array)
+  if(zilchType->TemplateBaseName != SpirVNameSettings::mRuntimeArrayTypeName)
+    return false;
+
+  mIRType = type;
+  return true;
+}
+
+ZilchShaderIRType* ZilchShaderIRRuntimeArrayType::GetSpirVRuntimeArrayType()
+{
+  if(mIRType == nullptr)
+    return nullptr;
+
+  return mIRType->mParameters[0]->As<ZilchShaderIRType>();
+}
+
+ZilchShaderIRType* ZilchShaderIRRuntimeArrayType::GetContainedType()
+{
+  ZilchShaderIRType* spirVRuntimeArrayType = GetSpirVRuntimeArrayType();
+  if(spirVRuntimeArrayType == nullptr)
+    return nullptr;
+
+  return spirVRuntimeArrayType->mParameters[0]->As<ZilchShaderIRType>();
 }
 
 }//namespace Zero

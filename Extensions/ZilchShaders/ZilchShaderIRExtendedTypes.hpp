@@ -33,8 +33,31 @@ public:
   /// The image format. Returns type of spv::ImageFormat.
   int GetFormat();
 
+  /// Helper to determine if this is a storage image (cannot be used with a sampler).
+  bool IsStorageImage();
+
   //-----------------------------------------------------------------Internal
   int GetIntegerConstantParameterValue(int parameterIndex);
+
+  ZilchShaderIRType* mIRType;
+};
+
+//-------------------------------------------------------------------ZilchShaderIRRuntimeArrayType
+/// Simple wrapper around a runtime array type. Contains helpers to look up various underlying type data.
+class ZilchShaderIRRuntimeArrayType
+{
+public:
+  ZilchShaderIRRuntimeArrayType();
+
+  /// Load the given ir type. Returns false if the type isn't a runtime array.
+  bool Load(ZilchShaderIRType* type);
+
+  /// Returns the actual underlying spirv runtime array type.
+  /// The type generated for zilch's RuntimeArray is actually the
+  /// struct wrapper around the spirv runtime array.
+  ZilchShaderIRType* GetSpirVRuntimeArrayType();
+  /// Returns the contained data type of the runtime array.
+  ZilchShaderIRType* GetContainedType();
 
   ZilchShaderIRType* mIRType;
 };

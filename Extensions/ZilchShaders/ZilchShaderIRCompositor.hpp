@@ -93,8 +93,11 @@ public:
 
   ZilchShaderIRCompositor();
 
-  // @JoshD: Make compositing compute shaders separate
+  /// Composite a shader for the rendering pipeline. Doesn't handle compute fragments and only allows one geometry fragment.
   bool Composite(ShaderDefinition& shaderDef, const ShaderCapabilities& capabilities, ZilchShaderSpirVSettingsRef& settings);
+  /// Composite a compute shader. Only currently handles one compute fragment.
+  /// This basically takes care of attribute re-mappings and reflection data.
+  bool CompositeCompute(ShaderDefinition& shaderDef, const ShaderCapabilities& capabilities, ZilchShaderSpirVSettingsRef& settings);
 
   //-------------------------------------------------------------------Internal
   struct StageLinkingInfo;
@@ -129,6 +132,7 @@ public:
   void GenerateZilchComposite(StageLinkingInfo* currentStage, ShaderStageDescription& stageResults, ShaderIRAttributeList& extraAttributes);
   void GenerateBasicZilchComposite(StageLinkingInfo* currentStage, ShaderStageDescription& stageResults, ShaderIRAttributeList& extraAttributes);
   void GenerateGeometryZilchComposite(StageLinkingInfo* currentStage, ShaderStageDescription& stageResults, ShaderIRAttributeList& extraAttributes);
+  void GenerateComputeZilchComposite(StageLinkingInfo* currentStage, ShaderStageDescription& stageResults, ShaderIRAttributeList& extraAttributes);
   void CreateFragmentAndCopyInputs(StageLinkingInfo* currentStage, ShaderCodeBuilder& builder, StringParam currentClassName, ZilchShaderIRType* fragmentType, StringParam fragmentVarName);
   void DeclareFieldsInOrder(ShaderCodeBuilder& builder, StageAttachmentLinkingInfo& linkingInfo, OrderedHashSet<ShaderFieldKey>& orderMap);
   void DeclareFieldsWithAttribute(ShaderCodeBuilder& builder, StageAttachmentLinkingInfo& linkingInfo, OrderedHashSet<ShaderFieldKey>& fieldSet, StringParam attributeName);

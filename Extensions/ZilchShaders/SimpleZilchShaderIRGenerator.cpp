@@ -17,6 +17,7 @@ void SimplifiedShaderReflectionData::CreateReflectionData(ZilchShaderIRLibrary* 
 
   CreateUniformReflectionData(shaderLibrary, stageDef, passResults);
   CreateSamplerAndImageReflectionData(shaderLibrary, stageDef, passResults);
+  CreateSimpleOpaqueTypeReflectionData(shaderLibrary, stageDef, passResults);
 }
 
 ShaderResourceReflectionData* SimplifiedShaderReflectionData::FindUniformReflectionData(ZilchShaderIRType* fragmentType, StringParam propertyName)
@@ -71,6 +72,34 @@ void SimplifiedShaderReflectionData::FindSamplerReflectionData(ZilchShaderIRType
     return;
 
   PopulateSamplerAndImageData(fragmentLookup->mSamplers, propertyName, results);
+}
+
+ShaderResourceReflectionData* SimplifiedShaderReflectionData::FindStorageImage(ZilchShaderIRType* fragmentType, StringParam propertyName)
+{
+  FragmentLookup* fragmentLookup = mFragmentLookup.FindPointer(fragmentType->mMeta->mZilchName);
+  if(fragmentLookup == nullptr)
+    return nullptr;
+
+  // Find the uniform data for the given property name
+  StorageImageRemappingData* storageImageData = fragmentLookup->mStorageImages.FindPointer(propertyName);
+  if(storageImageData == nullptr)
+    return nullptr;
+
+  return &mReflection.mStorageImages[storageImageData->mIndex].mReflectionData;
+}
+
+ShaderResourceReflectionData* SimplifiedShaderReflectionData::FindStructedStorageBuffer(ZilchShaderIRType* fragmentType, StringParam propertyName)
+{
+  FragmentLookup* fragmentLookup = mFragmentLookup.FindPointer(fragmentType->mMeta->mZilchName);
+  if(fragmentLookup == nullptr)
+    return nullptr;
+
+  // Find the uniform data for the given property name
+  StructuredStorageBufferRemappingData* ssboData = fragmentLookup->mStructedStorageBuffers.FindPointer(propertyName);
+  if(ssboData == nullptr)
+    return nullptr;
+
+  return &mReflection.mStructedStorageBuffers[ssboData->mIndex].mReflectionData;
 }
 
 void SimplifiedShaderReflectionData::CreateUniformReflectionData(ZilchShaderIRLibrary* shaderLibrary, ShaderStageDescription& stageDef, Array<PassResultRef>& passResults)
@@ -251,6 +280,11 @@ void SimplifiedShaderReflectionData::CreateSamplerAndImageReflectionData(ZilchSh
       }
       else if(shaderType->mBaseType == ShaderIRTypeBaseType::Image)
       {
+        // Make sure this image type isn't a storage image
+        ZilchShaderIRImageType imageType;
+        if(!imageType.Load(shaderType) || imageType.IsStorageImage())
+          continue;
+
         SampledImageRemappings* resourceMappings = firstPassData.mImageRemappings.FindPointer(propertyName);
         if(resourceMappings == nullptr)
           continue;
@@ -367,6 +401,70 @@ void SimplifiedShaderReflectionData::PopulateSamplerAndImageData(HashMap<String,
   {
     int index = remapData->mSampledImageIds[i];
     results.PushBack(&mReflection.mSampledImages[index].mReflectionData);
+  }
+}
+
+void SimplifiedShaderReflectionData::CreateSimpleOpaqueTypeReflectionData(ZilchShaderIRLibrary* shaderLibrary, ShaderStageDescription& stageDef, Array<PassResultRef>& passResults)
+{
+  // @JoshD: Currently hardcode this to only look at the last stage.
+  // Currently nothing renames variables between stages so this is reasonable.
+  ShaderStageInterfaceReflection* lastStageData = &passResults.Back()->mReflectionData;
+  Array<ShaderStageResource>& storageImages = lastStageData->mStorageImages;
+  Array<ShaderStageResource>& storageBuffers = lastStageData->mStructedStorageBuffers;
+  HashMap<String, StructuredStorageBufferRemappingData> storageBufferMappings;
+  HashMap<String, StorageImageRemappingData> storageImageMappings;
+
+  // Map all structured storage buffers by name to their index in the final stage
+  for(size_t i = 0; i < storageBuffers.Size(); ++i)
+  {
+    ShaderStageResource& storageBufferResource = storageBuffers[i];
+    String resourceName = storageBufferResource.mReflectionData.mInstanceName;
+    storageBufferMappings[resourceName].mIndex = i;
+  }
+  // Map all storage images by name to their index in the final stage
+  for(size_t i = 0; i < storageImages.Size(); ++i)
+  {
+    ShaderStageResource& resource = storageImages[i];
+    String resourceName = resource.mReflectionData.mInstanceName;
+    storageImageMappings[resourceName].mIndex = i;
+  }
+
+  // Walk all fragments looking for properties to map to simple opaque types
+  AutoDeclare(fragRange, stageDef.mFragmentDescriptions->All());
+  for(; !fragRange.Empty(); fragRange.PopFront())
+  {
+    ZilchShaderIRCompositor::ShaderFragmentDescription* fragDesc = fragRange.Front().second;
+
+    FragmentLookup& fragLookup = mFragmentLookup[fragDesc->mMeta->mZilchName];
+    AutoDeclare(propRange, fragDesc->mFieldDescriptions.All());
+    for(; !propRange.Empty(); propRange.PopFront())
+    {
+      ZilchShaderIRCompositor::ShaderFieldDescription& fieldDesc = propRange.Front().second;
+      String fieldName = fieldDesc.mMeta->mZilchName;
+      String propertyName = fieldDesc.mFieldPropertyName;
+      ZilchShaderIRType* shaderType = shaderLibrary->FindType(fieldDesc.mMeta->mZilchType);
+
+      // Check if this is a runtime array
+      ZilchShaderIRRuntimeArrayType runtimeArrayType;
+      if(runtimeArrayType.Load(shaderType))
+      {
+        StructuredStorageBufferRemappingData* remappingData = storageBufferMappings.FindPointer(propertyName);
+        // Store the remapped data if it exists
+        if(remappingData != nullptr)
+          fragLookup.mStructedStorageBuffers[fieldName] = *remappingData;
+        continue;
+      }
+      // Check if this is a storage image
+      ZilchShaderIRImageType imageType;
+      if(imageType.Load(shaderType) && imageType.IsStorageImage())
+      {
+        StorageImageRemappingData* remappingData = storageImageMappings.FindPointer(propertyName);
+        // Store the remapped data if it exists
+        if(remappingData != nullptr)
+          fragLookup.mStorageImages[fieldName] = *remappingData;
+        continue;
+      }
+    }
   }
 }
 
