@@ -1,8 +1,5 @@
 #include "Precompiled.hpp"
 
-#include "table.h"
-#include "opcode.h"
-
 namespace Zero
 {
 
@@ -392,16 +389,17 @@ String GenerateSpirVPropertyName(StringParam fieldName, ZilchShaderIRType* owner
 Array<String> GetOpcodeNames()
 {
   // Get all opcodes from spirv (hardcode the language for now...)
-  spv_opcode_table table;
-  spvOpcodeTableGet(&table, SPV_ENV_UNIVERSAL_1_2);
+  spv_opcodes_t opCodeNames;
+  spvGetOpcodeNames(SPV_ENV_UNIVERSAL_1_2, &opCodeNames);
 
   // Convert each opcode to string
   Array<String> results;
-  for(size_t i = 0; i < table->count; ++i)
+  for(size_t i = 0; i < opCodeNames.count; ++i)
   {
-    auto entry = table->entries[i];
-    results.PushBack(spvOpcodeString(entry.opcode));
+    results.PushBack(opCodeNames.opcode_names[i]);
   }
+  spvDestroyOpcodeNames(&opCodeNames);
+
   return results;
 }
 
