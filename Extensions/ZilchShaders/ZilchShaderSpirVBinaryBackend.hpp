@@ -55,6 +55,9 @@ private:
   typedef OrderedHashSet<ZilchShaderExtensionImport*> ImportList;
   typedef OrderedHashMap<ZilchShaderIRFunction*, ZilchShaderIRFunction*> LateBoundFunctionMap;
 
+  /// Helper function to emit the given entry points and their dependencies out to spirv binary.
+  void EmitSpirvBinary(TypeDependencyCollector& collector, ZilchShaderToSpirVContext* context);
+
   void GenerateDummyMain(ZilchShaderIRType* type, ZilchShaderIRLibrary* library, TypeDependencyCollector& collector, ZilchShaderToSpirVContext* context);
   void GenerateGlobalsInitializerFunction(TypeDependencyCollector& collector, ZilchShaderToSpirVContext* context);
   void RegisterLateBoundFunctions(LateBoundFunctionMap& lateBoundFunctionMap, TypeDependencyCollector& collector, ZilchShaderToSpirVContext* context);
