@@ -205,6 +205,9 @@ size_t ZilchShaderIRType::GetByteSize() const
       // is required unless another element follows)
       size += memberSize;
     }
+    // Vulkan Spec: A struct has a base alignment equal to the largest base alignment
+    // of any of its memebers rounded up to a multiple of 16.
+    size = GetSizeAfterAlignment(size, 16);
     return size;
   }
   Error("Unknown type for byte size");
