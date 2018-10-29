@@ -7,7 +7,6 @@ target_sources(SPIRV-Tools
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/SPIRV-Headers/tools/buildHeaders/header.cpp
     ${CMAKE_CURRENT_LIST_DIR}/SPIRV-Headers/tools/buildHeaders/jsonToSpirv.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/SPIRV-Headers/tools/buildHeaders/main.cpp
     ${CMAKE_CURRENT_LIST_DIR}/SPIRV-Headers/tools/buildHeaders/jsoncpp/dist/jsoncpp.cpp
 #  PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/SPIRV-Headers/include/spirv/1.0/GLSL.std.450.h
