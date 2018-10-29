@@ -1,0 +1,170 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 88
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_RealImplements "EntryPoint_Main_RealImplements"
+               OpExecutionMode %EntryPoint_Main_RealImplements OriginUpperLeft
+               OpSource Unknown 100
+               OpName %RealImplements "RealImplements"
+               OpMemberName %RealImplements 0 "Dummy"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %max "max"
+               OpName %posMin "posMin"
+               OpName %negMax "negMax"
+               OpName %min "min"
+               OpName %x "x"
+               OpName %zero "zero"
+               OpName %axis "axis"
+               OpName %PositiveMax "PositiveMax"
+               OpName %PositiveValueClosestToZero "PositiveValueClosestToZero"
+               OpName %NegativeValueClosestToZero "NegativeValueClosestToZero"
+               OpName %NegativeMin "NegativeMin"
+               OpName %XAxis "XAxis"
+               OpName %Zero "Zero"
+               OpName %GetAxis "GetAxis"
+               OpName %value "value"
+               OpName %value_Local "value_Local"
+               OpName %ifTrue0 "ifTrue0"
+               OpName %ifMerge0 "ifMerge0"
+               OpName %PreConstructor_RealImplements "PreConstructor_RealImplements"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_RealImplements "EntryPoint_Main_RealImplements"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%RealImplements = OpTypeStruct %int
+%_ptr_Function_RealImplements = OpTypePointer Function %RealImplements
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_RealImplements
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+         %11 = OpTypeFunction %float
+%float_3_40282002e_38 = OpConstant %float 3.40282002e+38
+%float_0x1_ffff84pn127 = OpConstant %float 0x1.ffff84p-127
+      %int_1 = OpConstant %int 1
+      %int_0 = OpConstant %int 0
+         %12 = OpTypeFunction %float %int
+       %bool = OpTypeBool
+%_ptr_Function_bool = OpTypePointer Function %bool
+    %int_1_0 = OpConstant %int 1
+         %15 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_RealImplements
+         %23 = OpLabel
+        %max = OpVariable %_ptr_Function_float Function
+     %posMin = OpVariable %_ptr_Function_float Function
+     %negMax = OpVariable %_ptr_Function_float Function
+        %min = OpVariable %_ptr_Function_float Function
+          %x = OpVariable %_ptr_Function_float Function
+       %zero = OpVariable %_ptr_Function_float Function
+       %axis = OpVariable %_ptr_Function_float Function
+         %31 = OpFunctionCall %float %PositiveMax
+               OpStore %max %31
+         %32 = OpFunctionCall %float %PositiveValueClosestToZero
+               OpStore %posMin %32
+         %33 = OpFunctionCall %float %NegativeValueClosestToZero
+               OpStore %negMax %33
+         %34 = OpFunctionCall %float %NegativeMin
+               OpStore %min %34
+         %35 = OpFunctionCall %float %XAxis
+               OpStore %x %35
+         %36 = OpFunctionCall %float %Zero
+               OpStore %zero %36
+         %37 = OpFunctionCall %float %GetAxis %int_1_0
+               OpStore %axis %37
+               OpReturn
+               OpFunctionEnd
+%PositiveMax = OpFunction %float None %11
+         %39 = OpLabel
+               OpReturnValue %float_3_40282002e_38
+               OpFunctionEnd
+%PositiveValueClosestToZero = OpFunction %float None %11
+         %41 = OpLabel
+               OpReturnValue %float_0x1_ffff84pn127
+               OpFunctionEnd
+%NegativeValueClosestToZero = OpFunction %float None %11
+         %43 = OpLabel
+         %44 = OpFunctionCall %float %PositiveValueClosestToZero
+         %45 = OpFNegate %float %44
+               OpReturnValue %45
+               OpFunctionEnd
+%NegativeMin = OpFunction %float None %11
+         %47 = OpLabel
+         %48 = OpFunctionCall %float %PositiveMax
+         %49 = OpFNegate %float %48
+               OpReturnValue %49
+               OpFunctionEnd
+      %XAxis = OpFunction %float None %11
+         %51 = OpLabel
+         %52 = OpConvertSToF %float %int_1
+               OpReturnValue %52
+               OpFunctionEnd
+       %Zero = OpFunction %float None %11
+         %54 = OpLabel
+         %55 = OpConvertSToF %float %int_0
+               OpReturnValue %55
+               OpFunctionEnd
+    %GetAxis = OpFunction %float None %12
+      %value = OpFunctionParameter %int
+         %58 = OpLabel
+%value_Local = OpVariable %_ptr_Function_int Function
+               OpStore %value_Local %value
+         %60 = OpLoad %int %value_Local
+         %61 = OpIEqual %bool %60 %int_0
+               OpSelectionMerge %ifMerge0 None
+               OpBranchConditional %61 %ifTrue0 %ifMerge0
+    %ifTrue0 = OpLabel
+         %63 = OpConvertSToF %float %int_1
+               OpReturnValue %63
+   %ifMerge0 = OpLabel
+         %65 = OpConvertSToF %float %int_0
+               OpReturnValue %65
+               OpFunctionEnd
+%PreConstructor_RealImplements = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_RealImplements
+         %68 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_RealImplements
+         %71 = OpLabel
+         %72 = OpFunctionCall %void %PreConstructor_RealImplements %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_RealImplements
+         %75 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_RealImplements
+         %78 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_RealImplements = OpFunction %void None %15
+         %80 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_RealImplements Function
+         %82 = OpFunctionCall %void %InitializeGlobals
+         %83 = OpFunctionCall %void %DefaultConstructor %self_4
+         %84 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %85 = OpFunctionCall %void %Main %self_4
+         %86 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %15
+         %87 = OpLabel
+               OpReturn
+               OpFunctionEnd

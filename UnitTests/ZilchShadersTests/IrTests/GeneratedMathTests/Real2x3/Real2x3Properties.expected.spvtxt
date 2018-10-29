@@ -1,0 +1,337 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 181
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_Real2x3Properties "EntryPoint_Main_Real2x3Properties"
+               OpExecutionMode %EntryPoint_Main_Real2x3Properties OriginUpperLeft
+               OpSource Unknown 100
+               OpName %Real2x3Properties "Real2x3Properties"
+               OpMemberName %Real2x3Properties 0 "Dummy"
+               OpName %Test_Count_Integer "Test_Count_Integer"
+               OpName %self "self"
+               OpName %instance "instance"
+               OpName %value "value"
+               OpName %Count "Count"
+               OpName %self_0 "self"
+               OpName %Count_0 "Count"
+               OpName %CountX "CountX"
+               OpName %CountY "CountY"
+               OpName %Test_StaticCount_Integer "Test_StaticCount_Integer"
+               OpName %self_1 "self"
+               OpName %value_0 "value"
+               OpName %Test_CountX_Integer "Test_CountX_Integer"
+               OpName %self_2 "self"
+               OpName %instance_0 "instance"
+               OpName %value_1 "value"
+               OpName %CountX_0 "CountX"
+               OpName %self_3 "self"
+               OpName %Test_StaticCountX_Integer "Test_StaticCountX_Integer"
+               OpName %self_4 "self"
+               OpName %value_2 "value"
+               OpName %Test_CountY_Integer "Test_CountY_Integer"
+               OpName %self_5 "self"
+               OpName %instance_1 "instance"
+               OpName %value_3 "value"
+               OpName %CountY_0 "CountY"
+               OpName %self_6 "self"
+               OpName %Test_StaticCountY_Integer "Test_StaticCountY_Integer"
+               OpName %self_7 "self"
+               OpName %value_4 "value"
+               OpName %Test_M00_Real "Test_M00_Real"
+               OpName %self_8 "self"
+               OpName %instance_2 "instance"
+               OpName %value_5 "value"
+               OpName %Test_M01_Real "Test_M01_Real"
+               OpName %self_9 "self"
+               OpName %instance_3 "instance"
+               OpName %value_6 "value"
+               OpName %Test_M02_Real "Test_M02_Real"
+               OpName %self_10 "self"
+               OpName %instance_4 "instance"
+               OpName %value_7 "value"
+               OpName %Test_M10_Real "Test_M10_Real"
+               OpName %self_11 "self"
+               OpName %instance_5 "instance"
+               OpName %value_8 "value"
+               OpName %Test_M11_Real "Test_M11_Real"
+               OpName %self_12 "self"
+               OpName %instance_6 "instance"
+               OpName %value_9 "value"
+               OpName %Test_M12_Real "Test_M12_Real"
+               OpName %self_13 "self"
+               OpName %instance_7 "instance"
+               OpName %value_10 "value"
+               OpName %Main "Main"
+               OpName %self_14 "self"
+               OpName %PreConstructor_Real2x3Properties "PreConstructor_Real2x3Properties"
+               OpName %self_15 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_16 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_17 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_18 "self"
+               OpName %EntryPoint_Main_Real2x3Properties "EntryPoint_Main_Real2x3Properties"
+               OpName %self_19 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%Real2x3Properties = OpTypeStruct %int
+%_ptr_Function_Real2x3Properties = OpTypePointer Function %Real2x3Properties
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_Real2x3Properties
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+    %float_0 = OpConstant %float 0
+%mat2v3float = OpTypeMatrix %v3float 2
+%_ptr_Function_mat2v3float = OpTypePointer Function %mat2v3float
+         %15 = OpTypeFunction %int %_ptr_Function_mat2v3float
+         %16 = OpTypeFunction %int
+      %int_3 = OpConstant %int 3
+      %int_2 = OpConstant %int 2
+      %int_0 = OpConstant %int 0
+      %int_1 = OpConstant %int 1
+    %int_2_0 = OpConstant %int 2
+         %17 = OpTypeFunction %void
+%Test_Count_Integer = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_Real2x3Properties
+         %26 = OpLabel
+   %instance = OpVariable %_ptr_Function_mat2v3float Function
+      %value = OpVariable %_ptr_Function_int Function
+         %29 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+         %30 = OpCompositeConstruct %mat2v3float %29 %29
+               OpStore %instance %30
+         %31 = OpFunctionCall %int %Count %instance
+               OpStore %value %31
+               OpReturn
+               OpFunctionEnd
+      %Count = OpFunction %int None %15
+     %self_0 = OpFunctionParameter %_ptr_Function_mat2v3float
+         %34 = OpLabel
+         %35 = OpFunctionCall %int %Count_0
+               OpReturnValue %35
+               OpFunctionEnd
+    %Count_0 = OpFunction %int None %16
+         %37 = OpLabel
+         %38 = OpFunctionCall %int %CountX
+         %39 = OpFunctionCall %int %CountY
+         %40 = OpIMul %int %38 %39
+               OpReturnValue %40
+               OpFunctionEnd
+     %CountX = OpFunction %int None %16
+         %42 = OpLabel
+               OpReturnValue %int_3
+               OpFunctionEnd
+     %CountY = OpFunction %int None %16
+         %44 = OpLabel
+               OpReturnValue %int_2
+               OpFunctionEnd
+%Test_StaticCount_Integer = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_Real2x3Properties
+         %47 = OpLabel
+    %value_0 = OpVariable %_ptr_Function_int Function
+         %49 = OpFunctionCall %int %Count_0
+               OpStore %value_0 %49
+               OpReturn
+               OpFunctionEnd
+%Test_CountX_Integer = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_Real2x3Properties
+         %52 = OpLabel
+ %instance_0 = OpVariable %_ptr_Function_mat2v3float Function
+    %value_1 = OpVariable %_ptr_Function_int Function
+         %55 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+         %56 = OpCompositeConstruct %mat2v3float %55 %55
+               OpStore %instance_0 %56
+         %57 = OpFunctionCall %int %CountX_0 %instance_0
+               OpStore %value_1 %57
+               OpReturn
+               OpFunctionEnd
+   %CountX_0 = OpFunction %int None %15
+     %self_3 = OpFunctionParameter %_ptr_Function_mat2v3float
+         %60 = OpLabel
+         %61 = OpFunctionCall %int %CountX
+               OpReturnValue %61
+               OpFunctionEnd
+%Test_StaticCountX_Integer = OpFunction %void None %8
+     %self_4 = OpFunctionParameter %_ptr_Function_Real2x3Properties
+         %64 = OpLabel
+    %value_2 = OpVariable %_ptr_Function_int Function
+         %66 = OpFunctionCall %int %CountX
+               OpStore %value_2 %66
+               OpReturn
+               OpFunctionEnd
+%Test_CountY_Integer = OpFunction %void None %8
+     %self_5 = OpFunctionParameter %_ptr_Function_Real2x3Properties
+         %69 = OpLabel
+ %instance_1 = OpVariable %_ptr_Function_mat2v3float Function
+    %value_3 = OpVariable %_ptr_Function_int Function
+         %72 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+         %73 = OpCompositeConstruct %mat2v3float %72 %72
+               OpStore %instance_1 %73
+         %74 = OpFunctionCall %int %CountY_0 %instance_1
+               OpStore %value_3 %74
+               OpReturn
+               OpFunctionEnd
+   %CountY_0 = OpFunction %int None %15
+     %self_6 = OpFunctionParameter %_ptr_Function_mat2v3float
+         %77 = OpLabel
+         %78 = OpFunctionCall %int %CountY
+               OpReturnValue %78
+               OpFunctionEnd
+%Test_StaticCountY_Integer = OpFunction %void None %8
+     %self_7 = OpFunctionParameter %_ptr_Function_Real2x3Properties
+         %81 = OpLabel
+    %value_4 = OpVariable %_ptr_Function_int Function
+         %83 = OpFunctionCall %int %CountY
+               OpStore %value_4 %83
+               OpReturn
+               OpFunctionEnd
+%Test_M00_Real = OpFunction %void None %8
+     %self_8 = OpFunctionParameter %_ptr_Function_Real2x3Properties
+         %86 = OpLabel
+ %instance_2 = OpVariable %_ptr_Function_mat2v3float Function
+    %value_5 = OpVariable %_ptr_Function_float Function
+         %89 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+         %90 = OpCompositeConstruct %mat2v3float %89 %89
+               OpStore %instance_2 %90
+         %91 = OpAccessChain %_ptr_Function_float %instance_2 %int_0 %int_0
+         %92 = OpLoad %float %91
+               OpStore %value_5 %92
+         %93 = OpAccessChain %_ptr_Function_float %instance_2 %int_0 %int_0
+               OpStore %93 %float_0
+               OpReturn
+               OpFunctionEnd
+%Test_M01_Real = OpFunction %void None %8
+     %self_9 = OpFunctionParameter %_ptr_Function_Real2x3Properties
+         %96 = OpLabel
+ %instance_3 = OpVariable %_ptr_Function_mat2v3float Function
+    %value_6 = OpVariable %_ptr_Function_float Function
+         %99 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %100 = OpCompositeConstruct %mat2v3float %99 %99
+               OpStore %instance_3 %100
+        %101 = OpAccessChain %_ptr_Function_float %instance_3 %int_0 %int_1
+        %102 = OpLoad %float %101
+               OpStore %value_6 %102
+        %103 = OpAccessChain %_ptr_Function_float %instance_3 %int_0 %int_1
+               OpStore %103 %float_0
+               OpReturn
+               OpFunctionEnd
+%Test_M02_Real = OpFunction %void None %8
+    %self_10 = OpFunctionParameter %_ptr_Function_Real2x3Properties
+        %106 = OpLabel
+ %instance_4 = OpVariable %_ptr_Function_mat2v3float Function
+    %value_7 = OpVariable %_ptr_Function_float Function
+        %109 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %110 = OpCompositeConstruct %mat2v3float %109 %109
+               OpStore %instance_4 %110
+        %111 = OpAccessChain %_ptr_Function_float %instance_4 %int_0 %int_2_0
+        %112 = OpLoad %float %111
+               OpStore %value_7 %112
+        %113 = OpAccessChain %_ptr_Function_float %instance_4 %int_0 %int_2_0
+               OpStore %113 %float_0
+               OpReturn
+               OpFunctionEnd
+%Test_M10_Real = OpFunction %void None %8
+    %self_11 = OpFunctionParameter %_ptr_Function_Real2x3Properties
+        %116 = OpLabel
+ %instance_5 = OpVariable %_ptr_Function_mat2v3float Function
+    %value_8 = OpVariable %_ptr_Function_float Function
+        %119 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %120 = OpCompositeConstruct %mat2v3float %119 %119
+               OpStore %instance_5 %120
+        %121 = OpAccessChain %_ptr_Function_float %instance_5 %int_1 %int_0
+        %122 = OpLoad %float %121
+               OpStore %value_8 %122
+        %123 = OpAccessChain %_ptr_Function_float %instance_5 %int_1 %int_0
+               OpStore %123 %float_0
+               OpReturn
+               OpFunctionEnd
+%Test_M11_Real = OpFunction %void None %8
+    %self_12 = OpFunctionParameter %_ptr_Function_Real2x3Properties
+        %126 = OpLabel
+ %instance_6 = OpVariable %_ptr_Function_mat2v3float Function
+    %value_9 = OpVariable %_ptr_Function_float Function
+        %129 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %130 = OpCompositeConstruct %mat2v3float %129 %129
+               OpStore %instance_6 %130
+        %131 = OpAccessChain %_ptr_Function_float %instance_6 %int_1 %int_1
+        %132 = OpLoad %float %131
+               OpStore %value_9 %132
+        %133 = OpAccessChain %_ptr_Function_float %instance_6 %int_1 %int_1
+               OpStore %133 %float_0
+               OpReturn
+               OpFunctionEnd
+%Test_M12_Real = OpFunction %void None %8
+    %self_13 = OpFunctionParameter %_ptr_Function_Real2x3Properties
+        %136 = OpLabel
+ %instance_7 = OpVariable %_ptr_Function_mat2v3float Function
+   %value_10 = OpVariable %_ptr_Function_float Function
+        %139 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %140 = OpCompositeConstruct %mat2v3float %139 %139
+               OpStore %instance_7 %140
+        %141 = OpAccessChain %_ptr_Function_float %instance_7 %int_1 %int_2_0
+        %142 = OpLoad %float %141
+               OpStore %value_10 %142
+        %143 = OpAccessChain %_ptr_Function_float %instance_7 %int_1 %int_2_0
+               OpStore %143 %float_0
+               OpReturn
+               OpFunctionEnd
+       %Main = OpFunction %void None %8
+    %self_14 = OpFunctionParameter %_ptr_Function_Real2x3Properties
+        %146 = OpLabel
+        %147 = OpFunctionCall %void %Test_Count_Integer %self_14
+        %148 = OpFunctionCall %void %Test_StaticCount_Integer %self_14
+        %149 = OpFunctionCall %void %Test_CountX_Integer %self_14
+        %150 = OpFunctionCall %void %Test_StaticCountX_Integer %self_14
+        %151 = OpFunctionCall %void %Test_CountY_Integer %self_14
+        %152 = OpFunctionCall %void %Test_StaticCountY_Integer %self_14
+        %153 = OpFunctionCall %void %Test_M00_Real %self_14
+        %154 = OpFunctionCall %void %Test_M01_Real %self_14
+        %155 = OpFunctionCall %void %Test_M02_Real %self_14
+        %156 = OpFunctionCall %void %Test_M10_Real %self_14
+        %157 = OpFunctionCall %void %Test_M11_Real %self_14
+        %158 = OpFunctionCall %void %Test_M12_Real %self_14
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_Real2x3Properties = OpFunction %void None %8
+    %self_15 = OpFunctionParameter %_ptr_Function_Real2x3Properties
+        %161 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+    %self_16 = OpFunctionParameter %_ptr_Function_Real2x3Properties
+        %164 = OpLabel
+        %165 = OpFunctionCall %void %PreConstructor_Real2x3Properties %self_16
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+    %self_17 = OpFunctionParameter %_ptr_Function_Real2x3Properties
+        %168 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+    %self_18 = OpFunctionParameter %_ptr_Function_Real2x3Properties
+        %171 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_Real2x3Properties = OpFunction %void None %17
+        %173 = OpLabel
+    %self_19 = OpVariable %_ptr_Function_Real2x3Properties Function
+        %175 = OpFunctionCall %void %InitializeGlobals
+        %176 = OpFunctionCall %void %DefaultConstructor %self_19
+        %177 = OpFunctionCall %void %CopyInputs_Main %self_19
+        %178 = OpFunctionCall %void %Main %self_19
+        %179 = OpFunctionCall %void %CopyOutputs_Main %self_19
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %17
+        %180 = OpLabel
+               OpReturn
+               OpFunctionEnd

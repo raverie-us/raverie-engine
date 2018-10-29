@@ -1,0 +1,142 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 80
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_ExtensionMethods2 "EntryPoint_Main_ExtensionMethods2"
+               OpExecutionMode %EntryPoint_Main_ExtensionMethods2 OriginUpperLeft
+               OpSource Unknown 100
+               OpName %ExtensionMethods2 "ExtensionMethods2"
+               OpMemberName %ExtensionMethods2 0 "Dummy"
+               OpName %Clear "Clear"
+               OpName %self "self"
+               OpName %ComponentSum "ComponentSum"
+               OpName %self_0 "self"
+               OpName %Two "Two"
+               OpName %Two_0 "Two"
+               OpName %Main "Main"
+               OpName %self_1 "self"
+               OpName %r3 "r3"
+               OpName %r2 "r2"
+               OpName %sum "sum"
+               OpName %PreConstructor_ExtensionMethods2 "PreConstructor_ExtensionMethods2"
+               OpName %self_2 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_3 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_4 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_5 "self"
+               OpName %EntryPoint_Main_ExtensionMethods2 "EntryPoint_Main_ExtensionMethods2"
+               OpName %self_6 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%ExtensionMethods2 = OpTypeStruct %int
+%_ptr_Function_ExtensionMethods2 = OpTypePointer Function %ExtensionMethods2
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+         %12 = OpTypeFunction %void %_ptr_Function_v3float
+      %int_0 = OpConstant %int 0
+    %float_0 = OpConstant %float 0
+      %int_1 = OpConstant %int 1
+      %int_2 = OpConstant %int 2
+         %13 = OpTypeFunction %float %_ptr_Function_v3float
+         %14 = OpTypeFunction %v3float
+    %float_2 = OpConstant %float 2
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+         %17 = OpTypeFunction %v2float
+         %18 = OpTypeFunction %void %_ptr_Function_ExtensionMethods2
+         %19 = OpTypeFunction %void
+      %Clear = OpFunction %void None %12
+       %self = OpFunctionParameter %_ptr_Function_v3float
+         %27 = OpLabel
+         %28 = OpAccessChain %_ptr_Function_float %self %int_0
+               OpStore %28 %float_0
+         %29 = OpAccessChain %_ptr_Function_float %self %int_1
+               OpStore %29 %float_0
+         %30 = OpAccessChain %_ptr_Function_float %self %int_2
+               OpStore %30 %float_0
+               OpReturn
+               OpFunctionEnd
+%ComponentSum = OpFunction %float None %13
+     %self_0 = OpFunctionParameter %_ptr_Function_v3float
+         %33 = OpLabel
+         %34 = OpAccessChain %_ptr_Function_float %self_0 %int_0
+         %35 = OpAccessChain %_ptr_Function_float %self_0 %int_1
+         %36 = OpLoad %float %34
+         %37 = OpLoad %float %35
+         %38 = OpFAdd %float %36 %37
+         %39 = OpAccessChain %_ptr_Function_float %self_0 %int_2
+         %40 = OpLoad %float %39
+         %41 = OpFAdd %float %38 %40
+               OpReturnValue %41
+               OpFunctionEnd
+        %Two = OpFunction %v3float None %14
+         %43 = OpLabel
+         %44 = OpCompositeConstruct %v3float %float_2 %float_2 %float_2
+               OpReturnValue %44
+               OpFunctionEnd
+      %Two_0 = OpFunction %v2float None %17
+         %46 = OpLabel
+         %47 = OpCompositeConstruct %v2float %float_2 %float_2
+               OpReturnValue %47
+               OpFunctionEnd
+       %Main = OpFunction %void None %18
+     %self_1 = OpFunctionParameter %_ptr_Function_ExtensionMethods2
+         %50 = OpLabel
+         %r3 = OpVariable %_ptr_Function_v3float Function
+         %r2 = OpVariable %_ptr_Function_v2float Function
+        %sum = OpVariable %_ptr_Function_float Function
+         %54 = OpFunctionCall %v3float %Two
+               OpStore %r3 %54
+         %55 = OpFunctionCall %v2float %Two_0
+               OpStore %r2 %55
+         %56 = OpFunctionCall %float %ComponentSum %r3
+               OpStore %sum %56
+         %57 = OpFunctionCall %void %Clear %r3
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_ExtensionMethods2 = OpFunction %void None %18
+     %self_2 = OpFunctionParameter %_ptr_Function_ExtensionMethods2
+         %60 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %18
+     %self_3 = OpFunctionParameter %_ptr_Function_ExtensionMethods2
+         %63 = OpLabel
+         %64 = OpFunctionCall %void %PreConstructor_ExtensionMethods2 %self_3
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %18
+     %self_4 = OpFunctionParameter %_ptr_Function_ExtensionMethods2
+         %67 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %18
+     %self_5 = OpFunctionParameter %_ptr_Function_ExtensionMethods2
+         %70 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_ExtensionMethods2 = OpFunction %void None %19
+         %72 = OpLabel
+     %self_6 = OpVariable %_ptr_Function_ExtensionMethods2 Function
+         %74 = OpFunctionCall %void %InitializeGlobals
+         %75 = OpFunctionCall %void %DefaultConstructor %self_6
+         %76 = OpFunctionCall %void %CopyInputs_Main %self_6
+         %77 = OpFunctionCall %void %Main %self_6
+         %78 = OpFunctionCall %void %CopyOutputs_Main %self_6
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %19
+         %79 = OpLabel
+               OpReturn
+               OpFunctionEnd

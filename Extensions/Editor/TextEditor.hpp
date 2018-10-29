@@ -45,7 +45,7 @@ public:
 DeclareEnum3(LinePosition, Beginning, Middle, End);
 
 // CustomIndicator is always last.
-DeclareEnum6(Lexer, Text, Cpp, Python, Console, Shader, Zilch);
+DeclareEnum7(Lexer, Text, Cpp, Python, Console, Shader, Zilch, SpirV);
 
 DeclareEnum13(IndicatorStyle, Plain,
                               Squiggle,

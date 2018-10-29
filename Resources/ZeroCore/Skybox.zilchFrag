@@ -2,12 +2,12 @@
 [Pixel][PostProcess]
 struct Skybox
 {
-  [BuiltInInput] var PerspectiveToView : Real4x4;
-  [BuiltInInput] var ViewToWorld : Real4x4;
+  [AppBuiltInInput] var PerspectiveToView : Real4x4;
+  [AppBuiltInInput] var ViewToWorld : Real4x4;
   
   [StageInput] var PerspectivePosition : Real4;
   
-  [Input] var Skybox : SamplerCube;
+  [Input] var Skybox : SampledImageCube;
 
   [Output] var Target0 : Real4;
   

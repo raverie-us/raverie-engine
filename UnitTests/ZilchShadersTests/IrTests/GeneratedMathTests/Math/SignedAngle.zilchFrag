@@ -1,0 +1,17 @@
+[Pixel][UnitTest]
+struct SignedAngle
+{
+  function Test_Static_Real3_Real3_Real3()
+  {
+    var p0_ = Real3();
+    var p1_ = Real3();
+    var up_ = Real3();
+    var result = Math.SignedAngle(p0_, p1_, up_);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Real3_Real3_Real3();
+  }
+}

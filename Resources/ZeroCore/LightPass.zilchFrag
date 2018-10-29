@@ -2,7 +2,7 @@
 [Pixel][RenderPass]
 struct LightPass
 {
-  [BuiltInInput] var ViewportSize : Real2;
+  [AppBuiltInInput] var ViewportSize : Real2;
   
   [StageInput] var PerspectivePosition : Real4;
   
@@ -13,7 +13,7 @@ struct LightPass
   [FragmentInput] var GeoSpecular : Real;
   [FragmentInput] var GeoPosition : Real3;
   
-  [Input] var DitherTexture : Sampler2d;
+  [Input] var DitherTexture : SampledImage2d;
   
   [Input] var LightDirection : Real3 = Real3(0.0, 1.0, 0.0);
   [Input] var LightColor : Real3 = Real3(1.0);

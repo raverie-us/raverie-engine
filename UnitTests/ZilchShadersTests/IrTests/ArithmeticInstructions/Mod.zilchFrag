@@ -1,0 +1,42 @@
+struct IntHelper[Type]
+{
+  [Static]
+  function Test()
+  {
+    var lhs = Type();
+    var rhs = Type();
+    var result = lhs % rhs;
+    result %= rhs;
+  }
+}
+
+struct FloatHelper[Type]
+{
+  [Static]
+  function Test()
+  {
+    var lhs = Type();
+    var rhs = Type();
+    var result = lhs % rhs;
+    result %= rhs;
+    result = Math.FMod(lhs, rhs);
+  }
+}
+
+[Pixel][UnitTest]
+struct Mod
+{
+  [EntryPoint]
+  function Main()
+  {
+    FloatHelper[Real].Test();
+    FloatHelper[Real2].Test();
+    FloatHelper[Real3].Test();
+    FloatHelper[Real4].Test();
+    
+    IntHelper[Integer].Test();
+    IntHelper[Integer2].Test();
+    IntHelper[Integer3].Test();
+    IntHelper[Integer4].Test();
+  }
+}

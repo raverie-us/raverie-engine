@@ -1,0 +1,17 @@
+struct InputData
+{
+  [StageInput][StageOutput] var Color : Real4;
+  [StageInput][StageOutput] var Normal : Real3;
+}
+
+[Geometry(maxVertices : 5)][UnitTest]
+struct GeometryInOuts2
+{
+  [EntryPoint]
+  function Main(input : ref TriangleInput[InputData], output : ref TriangleOutput[InputData])
+  {
+    var outData = input[0];
+    output.Append(outData, 0);
+    output.Restart();
+  }
+}

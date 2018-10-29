@@ -1,0 +1,1847 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 1160
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+          %2 = OpExtInstImport "GLSL.std.450"
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_SmoothStep "EntryPoint_Main_SmoothStep"
+               OpExecutionMode %EntryPoint_Main_SmoothStep OriginUpperLeft
+               OpSource Unknown 100
+               OpName %SmoothStep "SmoothStep"
+               OpMemberName %SmoothStep 0 "Dummy"
+               OpName %Test_Static_Real_Real_Real "Test_Static_Real_Real_Real"
+               OpName %self "self"
+               OpName %min_ "min_"
+               OpName %max_ "max_"
+               OpName %x_ "x_"
+               OpName %result "result"
+               OpName %Test_Static_Real2_Real2_Real "Test_Static_Real2_Real2_Real"
+               OpName %self_0 "self"
+               OpName %min__0 "min_"
+               OpName %max__0 "max_"
+               OpName %t_ "t_"
+               OpName %result_0 "result"
+               OpName %SmoothStep_0 "SmoothStep"
+               OpName %min "min"
+               OpName %max "max"
+               OpName %t "t"
+               OpName %min_Local "min_Local"
+               OpName %max_Local "max_Local"
+               OpName %t_Local "t_Local"
+               OpName %tVec "tVec"
+               OpName %Test_Static_Real2_Real2_Real2 "Test_Static_Real2_Real2_Real2"
+               OpName %self_1 "self"
+               OpName %min__1 "min_"
+               OpName %max__1 "max_"
+               OpName %x__0 "x_"
+               OpName %result_1 "result"
+               OpName %Test_Static_Real2x2_Real2x2_Real "Test_Static_Real2x2_Real2x2_Real"
+               OpName %self_2 "self"
+               OpName %min__2 "min_"
+               OpName %max__2 "max_"
+               OpName %t__0 "t_"
+               OpName %result_2 "result"
+               OpName %SmoothStep_1 "SmoothStep"
+               OpName %min_0 "min"
+               OpName %max_0 "max"
+               OpName %t_0 "t"
+               OpName %min_Local_0 "min_Local"
+               OpName %max_Local_0 "max_Local"
+               OpName %t_Local_0 "t_Local"
+               OpName %result_3 "result"
+               OpName %Test_Static_Real2x2_Real2x2_Real2x2 "Test_Static_Real2x2_Real2x2_Real2x2"
+               OpName %self_3 "self"
+               OpName %min__3 "min_"
+               OpName %max__3 "max_"
+               OpName %x__1 "x_"
+               OpName %result_4 "result"
+               OpName %SmoothStep_2 "SmoothStep"
+               OpName %min_1 "min"
+               OpName %max_1 "max"
+               OpName %x "x"
+               OpName %min_Local_1 "min_Local"
+               OpName %max_Local_1 "max_Local"
+               OpName %x_Local "x_Local"
+               OpName %result_5 "result"
+               OpName %Test_Static_Real2x3_Real2x3_Real "Test_Static_Real2x3_Real2x3_Real"
+               OpName %self_4 "self"
+               OpName %min__4 "min_"
+               OpName %max__4 "max_"
+               OpName %t__1 "t_"
+               OpName %result_6 "result"
+               OpName %SmoothStep_3 "SmoothStep"
+               OpName %min_2 "min"
+               OpName %max_2 "max"
+               OpName %t_1 "t"
+               OpName %min_Local_2 "min_Local"
+               OpName %max_Local_2 "max_Local"
+               OpName %t_Local_1 "t_Local"
+               OpName %result_7 "result"
+               OpName %SmoothStep_4 "SmoothStep"
+               OpName %min_3 "min"
+               OpName %max_3 "max"
+               OpName %t_2 "t"
+               OpName %min_Local_3 "min_Local"
+               OpName %max_Local_3 "max_Local"
+               OpName %t_Local_2 "t_Local"
+               OpName %tVec_0 "tVec"
+               OpName %Test_Static_Real2x3_Real2x3_Real2x3 "Test_Static_Real2x3_Real2x3_Real2x3"
+               OpName %self_5 "self"
+               OpName %min__5 "min_"
+               OpName %max__5 "max_"
+               OpName %x__2 "x_"
+               OpName %result_8 "result"
+               OpName %SmoothStep_5 "SmoothStep"
+               OpName %min_4 "min"
+               OpName %max_4 "max"
+               OpName %x_0 "x"
+               OpName %min_Local_4 "min_Local"
+               OpName %max_Local_4 "max_Local"
+               OpName %x_Local_0 "x_Local"
+               OpName %result_9 "result"
+               OpName %Test_Static_Real2x4_Real2x4_Real "Test_Static_Real2x4_Real2x4_Real"
+               OpName %self_6 "self"
+               OpName %min__6 "min_"
+               OpName %max__6 "max_"
+               OpName %t__2 "t_"
+               OpName %result_10 "result"
+               OpName %SmoothStep_6 "SmoothStep"
+               OpName %min_5 "min"
+               OpName %max_5 "max"
+               OpName %t_3 "t"
+               OpName %min_Local_5 "min_Local"
+               OpName %max_Local_5 "max_Local"
+               OpName %t_Local_3 "t_Local"
+               OpName %result_11 "result"
+               OpName %SmoothStep_7 "SmoothStep"
+               OpName %min_6 "min"
+               OpName %max_6 "max"
+               OpName %t_4 "t"
+               OpName %min_Local_6 "min_Local"
+               OpName %max_Local_6 "max_Local"
+               OpName %t_Local_4 "t_Local"
+               OpName %tVec_1 "tVec"
+               OpName %Test_Static_Real2x4_Real2x4_Real2x4 "Test_Static_Real2x4_Real2x4_Real2x4"
+               OpName %self_7 "self"
+               OpName %min__7 "min_"
+               OpName %max__7 "max_"
+               OpName %x__3 "x_"
+               OpName %result_12 "result"
+               OpName %SmoothStep_8 "SmoothStep"
+               OpName %min_7 "min"
+               OpName %max_7 "max"
+               OpName %x_1 "x"
+               OpName %min_Local_7 "min_Local"
+               OpName %max_Local_7 "max_Local"
+               OpName %x_Local_1 "x_Local"
+               OpName %result_13 "result"
+               OpName %Test_Static_Real3_Real3_Real "Test_Static_Real3_Real3_Real"
+               OpName %self_8 "self"
+               OpName %min__8 "min_"
+               OpName %max__8 "max_"
+               OpName %t__3 "t_"
+               OpName %result_14 "result"
+               OpName %Test_Static_Real3_Real3_Real3 "Test_Static_Real3_Real3_Real3"
+               OpName %self_9 "self"
+               OpName %min__9 "min_"
+               OpName %max__9 "max_"
+               OpName %x__4 "x_"
+               OpName %result_15 "result"
+               OpName %Test_Static_Real3x2_Real3x2_Real "Test_Static_Real3x2_Real3x2_Real"
+               OpName %self_10 "self"
+               OpName %min__10 "min_"
+               OpName %max__10 "max_"
+               OpName %t__4 "t_"
+               OpName %result_16 "result"
+               OpName %SmoothStep_9 "SmoothStep"
+               OpName %min_8 "min"
+               OpName %max_8 "max"
+               OpName %t_5 "t"
+               OpName %min_Local_8 "min_Local"
+               OpName %max_Local_8 "max_Local"
+               OpName %t_Local_5 "t_Local"
+               OpName %result_17 "result"
+               OpName %Test_Static_Real3x2_Real3x2_Real3x2 "Test_Static_Real3x2_Real3x2_Real3x2"
+               OpName %self_11 "self"
+               OpName %min__11 "min_"
+               OpName %max__11 "max_"
+               OpName %x__5 "x_"
+               OpName %result_18 "result"
+               OpName %SmoothStep_10 "SmoothStep"
+               OpName %min_9 "min"
+               OpName %max_9 "max"
+               OpName %x_2 "x"
+               OpName %min_Local_9 "min_Local"
+               OpName %max_Local_9 "max_Local"
+               OpName %x_Local_2 "x_Local"
+               OpName %result_19 "result"
+               OpName %Test_Static_Real3x3_Real3x3_Real "Test_Static_Real3x3_Real3x3_Real"
+               OpName %self_12 "self"
+               OpName %min__12 "min_"
+               OpName %max__12 "max_"
+               OpName %t__5 "t_"
+               OpName %result_20 "result"
+               OpName %SmoothStep_11 "SmoothStep"
+               OpName %min_10 "min"
+               OpName %max_10 "max"
+               OpName %t_6 "t"
+               OpName %min_Local_10 "min_Local"
+               OpName %max_Local_10 "max_Local"
+               OpName %t_Local_6 "t_Local"
+               OpName %result_21 "result"
+               OpName %Test_Static_Real3x3_Real3x3_Real3x3 "Test_Static_Real3x3_Real3x3_Real3x3"
+               OpName %self_13 "self"
+               OpName %min__13 "min_"
+               OpName %max__13 "max_"
+               OpName %x__6 "x_"
+               OpName %result_22 "result"
+               OpName %SmoothStep_12 "SmoothStep"
+               OpName %min_11 "min"
+               OpName %max_11 "max"
+               OpName %x_3 "x"
+               OpName %min_Local_11 "min_Local"
+               OpName %max_Local_11 "max_Local"
+               OpName %x_Local_3 "x_Local"
+               OpName %result_23 "result"
+               OpName %Test_Static_Real3x4_Real3x4_Real "Test_Static_Real3x4_Real3x4_Real"
+               OpName %self_14 "self"
+               OpName %min__14 "min_"
+               OpName %max__14 "max_"
+               OpName %t__6 "t_"
+               OpName %result_24 "result"
+               OpName %SmoothStep_13 "SmoothStep"
+               OpName %min_12 "min"
+               OpName %max_12 "max"
+               OpName %t_7 "t"
+               OpName %min_Local_12 "min_Local"
+               OpName %max_Local_12 "max_Local"
+               OpName %t_Local_7 "t_Local"
+               OpName %result_25 "result"
+               OpName %Test_Static_Real3x4_Real3x4_Real3x4 "Test_Static_Real3x4_Real3x4_Real3x4"
+               OpName %self_15 "self"
+               OpName %min__15 "min_"
+               OpName %max__15 "max_"
+               OpName %x__7 "x_"
+               OpName %result_26 "result"
+               OpName %SmoothStep_14 "SmoothStep"
+               OpName %min_13 "min"
+               OpName %max_13 "max"
+               OpName %x_4 "x"
+               OpName %min_Local_13 "min_Local"
+               OpName %max_Local_13 "max_Local"
+               OpName %x_Local_4 "x_Local"
+               OpName %result_27 "result"
+               OpName %Test_Static_Real4_Real4_Real "Test_Static_Real4_Real4_Real"
+               OpName %self_16 "self"
+               OpName %min__16 "min_"
+               OpName %max__16 "max_"
+               OpName %t__7 "t_"
+               OpName %result_28 "result"
+               OpName %Test_Static_Real4_Real4_Real4 "Test_Static_Real4_Real4_Real4"
+               OpName %self_17 "self"
+               OpName %min__17 "min_"
+               OpName %max__17 "max_"
+               OpName %x__8 "x_"
+               OpName %result_29 "result"
+               OpName %Test_Static_Real4x2_Real4x2_Real "Test_Static_Real4x2_Real4x2_Real"
+               OpName %self_18 "self"
+               OpName %min__18 "min_"
+               OpName %max__18 "max_"
+               OpName %t__8 "t_"
+               OpName %result_30 "result"
+               OpName %SmoothStep_15 "SmoothStep"
+               OpName %min_14 "min"
+               OpName %max_14 "max"
+               OpName %t_8 "t"
+               OpName %min_Local_14 "min_Local"
+               OpName %max_Local_14 "max_Local"
+               OpName %t_Local_8 "t_Local"
+               OpName %result_31 "result"
+               OpName %Test_Static_Real4x2_Real4x2_Real4x2 "Test_Static_Real4x2_Real4x2_Real4x2"
+               OpName %self_19 "self"
+               OpName %min__19 "min_"
+               OpName %max__19 "max_"
+               OpName %x__9 "x_"
+               OpName %result_32 "result"
+               OpName %SmoothStep_16 "SmoothStep"
+               OpName %min_15 "min"
+               OpName %max_15 "max"
+               OpName %x_5 "x"
+               OpName %min_Local_15 "min_Local"
+               OpName %max_Local_15 "max_Local"
+               OpName %x_Local_5 "x_Local"
+               OpName %result_33 "result"
+               OpName %Test_Static_Real4x3_Real4x3_Real "Test_Static_Real4x3_Real4x3_Real"
+               OpName %self_20 "self"
+               OpName %min__20 "min_"
+               OpName %max__20 "max_"
+               OpName %t__9 "t_"
+               OpName %result_34 "result"
+               OpName %SmoothStep_17 "SmoothStep"
+               OpName %min_16 "min"
+               OpName %max_16 "max"
+               OpName %t_9 "t"
+               OpName %min_Local_16 "min_Local"
+               OpName %max_Local_16 "max_Local"
+               OpName %t_Local_9 "t_Local"
+               OpName %result_35 "result"
+               OpName %Test_Static_Real4x3_Real4x3_Real4x3 "Test_Static_Real4x3_Real4x3_Real4x3"
+               OpName %self_21 "self"
+               OpName %min__21 "min_"
+               OpName %max__21 "max_"
+               OpName %x__10 "x_"
+               OpName %result_36 "result"
+               OpName %SmoothStep_18 "SmoothStep"
+               OpName %min_17 "min"
+               OpName %max_17 "max"
+               OpName %x_6 "x"
+               OpName %min_Local_17 "min_Local"
+               OpName %max_Local_17 "max_Local"
+               OpName %x_Local_6 "x_Local"
+               OpName %result_37 "result"
+               OpName %Test_Static_Real4x4_Real4x4_Real "Test_Static_Real4x4_Real4x4_Real"
+               OpName %self_22 "self"
+               OpName %min__22 "min_"
+               OpName %max__22 "max_"
+               OpName %t__10 "t_"
+               OpName %result_38 "result"
+               OpName %SmoothStep_19 "SmoothStep"
+               OpName %min_18 "min"
+               OpName %max_18 "max"
+               OpName %t_10 "t"
+               OpName %min_Local_18 "min_Local"
+               OpName %max_Local_18 "max_Local"
+               OpName %t_Local_10 "t_Local"
+               OpName %result_39 "result"
+               OpName %Test_Static_Real4x4_Real4x4_Real4x4 "Test_Static_Real4x4_Real4x4_Real4x4"
+               OpName %self_23 "self"
+               OpName %min__23 "min_"
+               OpName %max__23 "max_"
+               OpName %x__11 "x_"
+               OpName %result_40 "result"
+               OpName %SmoothStep_20 "SmoothStep"
+               OpName %min_19 "min"
+               OpName %max_19 "max"
+               OpName %x_7 "x"
+               OpName %min_Local_19 "min_Local"
+               OpName %max_Local_19 "max_Local"
+               OpName %x_Local_7 "x_Local"
+               OpName %result_41 "result"
+               OpName %Main "Main"
+               OpName %self_24 "self"
+               OpName %PreConstructor_SmoothStep "PreConstructor_SmoothStep"
+               OpName %self_25 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_26 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_27 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_28 "self"
+               OpName %EntryPoint_Main_SmoothStep "EntryPoint_Main_SmoothStep"
+               OpName %self_29 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+ %SmoothStep = OpTypeStruct %int
+%_ptr_Function_SmoothStep = OpTypePointer Function %SmoothStep
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %9 = OpTypeFunction %void %_ptr_Function_SmoothStep
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %float_0 = OpConstant %float 0
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+         %14 = OpTypeFunction %v2float %v2float %v2float %float
+%mat2v2float = OpTypeMatrix %v2float 2
+%_ptr_Function_mat2v2float = OpTypePointer Function %mat2v2float
+         %17 = OpTypeFunction %mat2v2float %mat2v2float %mat2v2float %float
+  %float_0_0 = OpConstant %float 0
+      %int_0 = OpConstant %int 0
+      %int_1 = OpConstant %int 1
+         %18 = OpTypeFunction %mat2v2float %mat2v2float %mat2v2float %mat2v2float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+%mat2v3float = OpTypeMatrix %v3float 2
+%_ptr_Function_mat2v3float = OpTypePointer Function %mat2v3float
+         %23 = OpTypeFunction %mat2v3float %mat2v3float %mat2v3float %float
+         %24 = OpTypeFunction %v3float %v3float %v3float %float
+         %25 = OpTypeFunction %mat2v3float %mat2v3float %mat2v3float %mat2v3float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+%mat2v4float = OpTypeMatrix %v4float 2
+%_ptr_Function_mat2v4float = OpTypePointer Function %mat2v4float
+         %30 = OpTypeFunction %mat2v4float %mat2v4float %mat2v4float %float
+         %31 = OpTypeFunction %v4float %v4float %v4float %float
+         %32 = OpTypeFunction %mat2v4float %mat2v4float %mat2v4float %mat2v4float
+%mat3v2float = OpTypeMatrix %v2float 3
+%_ptr_Function_mat3v2float = OpTypePointer Function %mat3v2float
+         %35 = OpTypeFunction %mat3v2float %mat3v2float %mat3v2float %float
+      %int_2 = OpConstant %int 2
+         %36 = OpTypeFunction %mat3v2float %mat3v2float %mat3v2float %mat3v2float
+%mat3v3float = OpTypeMatrix %v3float 3
+%_ptr_Function_mat3v3float = OpTypePointer Function %mat3v3float
+         %39 = OpTypeFunction %mat3v3float %mat3v3float %mat3v3float %float
+         %40 = OpTypeFunction %mat3v3float %mat3v3float %mat3v3float %mat3v3float
+%mat3v4float = OpTypeMatrix %v4float 3
+%_ptr_Function_mat3v4float = OpTypePointer Function %mat3v4float
+         %43 = OpTypeFunction %mat3v4float %mat3v4float %mat3v4float %float
+         %44 = OpTypeFunction %mat3v4float %mat3v4float %mat3v4float %mat3v4float
+%mat4v2float = OpTypeMatrix %v2float 4
+%_ptr_Function_mat4v2float = OpTypePointer Function %mat4v2float
+         %47 = OpTypeFunction %mat4v2float %mat4v2float %mat4v2float %float
+      %int_3 = OpConstant %int 3
+         %48 = OpTypeFunction %mat4v2float %mat4v2float %mat4v2float %mat4v2float
+%mat4v3float = OpTypeMatrix %v3float 4
+%_ptr_Function_mat4v3float = OpTypePointer Function %mat4v3float
+         %51 = OpTypeFunction %mat4v3float %mat4v3float %mat4v3float %float
+         %52 = OpTypeFunction %mat4v3float %mat4v3float %mat4v3float %mat4v3float
+%mat4v4float = OpTypeMatrix %v4float 4
+%_ptr_Function_mat4v4float = OpTypePointer Function %mat4v4float
+         %55 = OpTypeFunction %mat4v4float %mat4v4float %mat4v4float %float
+         %56 = OpTypeFunction %mat4v4float %mat4v4float %mat4v4float %mat4v4float
+         %57 = OpTypeFunction %void
+%Test_Static_Real_Real_Real = OpFunction %void None %9
+       %self = OpFunctionParameter %_ptr_Function_SmoothStep
+         %66 = OpLabel
+       %min_ = OpVariable %_ptr_Function_float Function
+       %max_ = OpVariable %_ptr_Function_float Function
+         %x_ = OpVariable %_ptr_Function_float Function
+     %result = OpVariable %_ptr_Function_float Function
+               OpStore %min_ %float_0
+               OpStore %max_ %float_0
+               OpStore %x_ %float_0
+         %71 = OpLoad %float %min_
+         %72 = OpLoad %float %max_
+         %73 = OpLoad %float %x_
+         %74 = OpExtInst %float %2 SmoothStep %71 %72 %73
+               OpStore %result %74
+               OpReturn
+               OpFunctionEnd
+%Test_Static_Real2_Real2_Real = OpFunction %void None %9
+     %self_0 = OpFunctionParameter %_ptr_Function_SmoothStep
+         %77 = OpLabel
+     %min__0 = OpVariable %_ptr_Function_v2float Function
+     %max__0 = OpVariable %_ptr_Function_v2float Function
+         %t_ = OpVariable %_ptr_Function_float Function
+   %result_0 = OpVariable %_ptr_Function_v2float Function
+         %82 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %min__0 %82
+         %83 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %max__0 %83
+               OpStore %t_ %float_0
+         %84 = OpLoad %v2float %min__0
+         %85 = OpLoad %v2float %max__0
+         %86 = OpLoad %float %t_
+         %87 = OpFunctionCall %v2float %SmoothStep_0 %84 %85 %86
+               OpStore %result_0 %87
+               OpReturn
+               OpFunctionEnd
+%SmoothStep_0 = OpFunction %v2float None %14
+        %min = OpFunctionParameter %v2float
+        %max = OpFunctionParameter %v2float
+          %t = OpFunctionParameter %float
+         %92 = OpLabel
+  %min_Local = OpVariable %_ptr_Function_v2float Function
+  %max_Local = OpVariable %_ptr_Function_v2float Function
+    %t_Local = OpVariable %_ptr_Function_float Function
+       %tVec = OpVariable %_ptr_Function_v2float Function
+               OpStore %min_Local %min
+               OpStore %max_Local %max
+               OpStore %t_Local %t
+         %97 = OpLoad %float %t_Local
+         %98 = OpCompositeConstruct %v2float %97 %97
+               OpStore %tVec %98
+         %99 = OpLoad %v2float %min_Local
+        %100 = OpLoad %v2float %max_Local
+        %101 = OpLoad %v2float %tVec
+        %102 = OpExtInst %v2float %2 SmoothStep %99 %100 %101
+               OpReturnValue %102
+               OpFunctionEnd
+%Test_Static_Real2_Real2_Real2 = OpFunction %void None %9
+     %self_1 = OpFunctionParameter %_ptr_Function_SmoothStep
+        %105 = OpLabel
+     %min__1 = OpVariable %_ptr_Function_v2float Function
+     %max__1 = OpVariable %_ptr_Function_v2float Function
+       %x__0 = OpVariable %_ptr_Function_v2float Function
+   %result_1 = OpVariable %_ptr_Function_v2float Function
+        %110 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %min__1 %110
+        %111 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %max__1 %111
+        %112 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %x__0 %112
+        %113 = OpLoad %v2float %min__1
+        %114 = OpLoad %v2float %max__1
+        %115 = OpLoad %v2float %x__0
+        %116 = OpExtInst %v2float %2 SmoothStep %113 %114 %115
+               OpStore %result_1 %116
+               OpReturn
+               OpFunctionEnd
+%Test_Static_Real2x2_Real2x2_Real = OpFunction %void None %9
+     %self_2 = OpFunctionParameter %_ptr_Function_SmoothStep
+        %119 = OpLabel
+     %min__2 = OpVariable %_ptr_Function_mat2v2float Function
+     %max__2 = OpVariable %_ptr_Function_mat2v2float Function
+       %t__0 = OpVariable %_ptr_Function_float Function
+   %result_2 = OpVariable %_ptr_Function_mat2v2float Function
+        %124 = OpCompositeConstruct %v2float %float_0 %float_0
+        %125 = OpCompositeConstruct %mat2v2float %124 %124
+               OpStore %min__2 %125
+        %126 = OpCompositeConstruct %v2float %float_0 %float_0
+        %127 = OpCompositeConstruct %mat2v2float %126 %126
+               OpStore %max__2 %127
+               OpStore %t__0 %float_0
+        %128 = OpLoad %mat2v2float %min__2
+        %129 = OpLoad %mat2v2float %max__2
+        %130 = OpLoad %float %t__0
+        %131 = OpFunctionCall %mat2v2float %SmoothStep_1 %128 %129 %130
+               OpStore %result_2 %131
+               OpReturn
+               OpFunctionEnd
+%SmoothStep_1 = OpFunction %mat2v2float None %17
+      %min_0 = OpFunctionParameter %mat2v2float
+      %max_0 = OpFunctionParameter %mat2v2float
+        %t_0 = OpFunctionParameter %float
+        %136 = OpLabel
+%min_Local_0 = OpVariable %_ptr_Function_mat2v2float Function
+%max_Local_0 = OpVariable %_ptr_Function_mat2v2float Function
+  %t_Local_0 = OpVariable %_ptr_Function_float Function
+   %result_3 = OpVariable %_ptr_Function_mat2v2float Function
+               OpStore %min_Local_0 %min_0
+               OpStore %max_Local_0 %max_0
+               OpStore %t_Local_0 %t_0
+        %141 = OpCompositeConstruct %v2float %float_0_0 %float_0_0
+        %142 = OpCompositeConstruct %mat2v2float %141 %141
+               OpStore %result_3 %142
+        %143 = OpAccessChain %_ptr_Function_v2float %result_3 %int_0
+        %144 = OpAccessChain %_ptr_Function_v2float %min_Local_0 %int_0
+        %145 = OpAccessChain %_ptr_Function_v2float %max_Local_0 %int_0
+        %146 = OpLoad %v2float %144
+        %147 = OpLoad %v2float %145
+        %148 = OpLoad %float %t_Local_0
+        %149 = OpFunctionCall %v2float %SmoothStep_0 %146 %147 %148
+               OpStore %143 %149
+        %150 = OpAccessChain %_ptr_Function_v2float %result_3 %int_1
+        %151 = OpAccessChain %_ptr_Function_v2float %min_Local_0 %int_1
+        %152 = OpAccessChain %_ptr_Function_v2float %max_Local_0 %int_1
+        %153 = OpLoad %v2float %151
+        %154 = OpLoad %v2float %152
+        %155 = OpLoad %float %t_Local_0
+        %156 = OpFunctionCall %v2float %SmoothStep_0 %153 %154 %155
+               OpStore %150 %156
+        %157 = OpLoad %mat2v2float %result_3
+               OpReturnValue %157
+               OpFunctionEnd
+%Test_Static_Real2x2_Real2x2_Real2x2 = OpFunction %void None %9
+     %self_3 = OpFunctionParameter %_ptr_Function_SmoothStep
+        %160 = OpLabel
+     %min__3 = OpVariable %_ptr_Function_mat2v2float Function
+     %max__3 = OpVariable %_ptr_Function_mat2v2float Function
+       %x__1 = OpVariable %_ptr_Function_mat2v2float Function
+   %result_4 = OpVariable %_ptr_Function_mat2v2float Function
+        %165 = OpCompositeConstruct %v2float %float_0 %float_0
+        %166 = OpCompositeConstruct %mat2v2float %165 %165
+               OpStore %min__3 %166
+        %167 = OpCompositeConstruct %v2float %float_0 %float_0
+        %168 = OpCompositeConstruct %mat2v2float %167 %167
+               OpStore %max__3 %168
+        %169 = OpCompositeConstruct %v2float %float_0 %float_0
+        %170 = OpCompositeConstruct %mat2v2float %169 %169
+               OpStore %x__1 %170
+        %171 = OpLoad %mat2v2float %min__3
+        %172 = OpLoad %mat2v2float %max__3
+        %173 = OpLoad %mat2v2float %x__1
+        %174 = OpFunctionCall %mat2v2float %SmoothStep_2 %171 %172 %173
+               OpStore %result_4 %174
+               OpReturn
+               OpFunctionEnd
+%SmoothStep_2 = OpFunction %mat2v2float None %18
+      %min_1 = OpFunctionParameter %mat2v2float
+      %max_1 = OpFunctionParameter %mat2v2float
+          %x = OpFunctionParameter %mat2v2float
+        %179 = OpLabel
+%min_Local_1 = OpVariable %_ptr_Function_mat2v2float Function
+%max_Local_1 = OpVariable %_ptr_Function_mat2v2float Function
+    %x_Local = OpVariable %_ptr_Function_mat2v2float Function
+   %result_5 = OpVariable %_ptr_Function_mat2v2float Function
+               OpStore %min_Local_1 %min_1
+               OpStore %max_Local_1 %max_1
+               OpStore %x_Local %x
+        %184 = OpCompositeConstruct %v2float %float_0_0 %float_0_0
+        %185 = OpCompositeConstruct %mat2v2float %184 %184
+               OpStore %result_5 %185
+        %186 = OpAccessChain %_ptr_Function_v2float %result_5 %int_0
+        %187 = OpAccessChain %_ptr_Function_v2float %min_Local_1 %int_0
+        %188 = OpLoad %v2float %187
+        %189 = OpAccessChain %_ptr_Function_v2float %max_Local_1 %int_0
+        %190 = OpLoad %v2float %189
+        %191 = OpAccessChain %_ptr_Function_v2float %x_Local %int_0
+        %192 = OpLoad %v2float %191
+        %193 = OpExtInst %v2float %2 SmoothStep %188 %190 %192
+               OpStore %186 %193
+        %194 = OpAccessChain %_ptr_Function_v2float %result_5 %int_1
+        %195 = OpAccessChain %_ptr_Function_v2float %min_Local_1 %int_1
+        %196 = OpLoad %v2float %195
+        %197 = OpAccessChain %_ptr_Function_v2float %max_Local_1 %int_1
+        %198 = OpLoad %v2float %197
+        %199 = OpAccessChain %_ptr_Function_v2float %x_Local %int_1
+        %200 = OpLoad %v2float %199
+        %201 = OpExtInst %v2float %2 SmoothStep %196 %198 %200
+               OpStore %194 %201
+        %202 = OpLoad %mat2v2float %result_5
+               OpReturnValue %202
+               OpFunctionEnd
+%Test_Static_Real2x3_Real2x3_Real = OpFunction %void None %9
+     %self_4 = OpFunctionParameter %_ptr_Function_SmoothStep
+        %205 = OpLabel
+     %min__4 = OpVariable %_ptr_Function_mat2v3float Function
+     %max__4 = OpVariable %_ptr_Function_mat2v3float Function
+       %t__1 = OpVariable %_ptr_Function_float Function
+   %result_6 = OpVariable %_ptr_Function_mat2v3float Function
+        %210 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %211 = OpCompositeConstruct %mat2v3float %210 %210
+               OpStore %min__4 %211
+        %212 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %213 = OpCompositeConstruct %mat2v3float %212 %212
+               OpStore %max__4 %213
+               OpStore %t__1 %float_0
+        %214 = OpLoad %mat2v3float %min__4
+        %215 = OpLoad %mat2v3float %max__4
+        %216 = OpLoad %float %t__1
+        %217 = OpFunctionCall %mat2v3float %SmoothStep_3 %214 %215 %216
+               OpStore %result_6 %217
+               OpReturn
+               OpFunctionEnd
+%SmoothStep_3 = OpFunction %mat2v3float None %23
+      %min_2 = OpFunctionParameter %mat2v3float
+      %max_2 = OpFunctionParameter %mat2v3float
+        %t_1 = OpFunctionParameter %float
+        %222 = OpLabel
+%min_Local_2 = OpVariable %_ptr_Function_mat2v3float Function
+%max_Local_2 = OpVariable %_ptr_Function_mat2v3float Function
+  %t_Local_1 = OpVariable %_ptr_Function_float Function
+   %result_7 = OpVariable %_ptr_Function_mat2v3float Function
+               OpStore %min_Local_2 %min_2
+               OpStore %max_Local_2 %max_2
+               OpStore %t_Local_1 %t_1
+        %227 = OpCompositeConstruct %v3float %float_0_0 %float_0_0 %float_0_0
+        %228 = OpCompositeConstruct %mat2v3float %227 %227
+               OpStore %result_7 %228
+        %229 = OpAccessChain %_ptr_Function_v3float %result_7 %int_0
+        %230 = OpAccessChain %_ptr_Function_v3float %min_Local_2 %int_0
+        %231 = OpAccessChain %_ptr_Function_v3float %max_Local_2 %int_0
+        %232 = OpLoad %v3float %230
+        %233 = OpLoad %v3float %231
+        %234 = OpLoad %float %t_Local_1
+        %235 = OpFunctionCall %v3float %SmoothStep_4 %232 %233 %234
+               OpStore %229 %235
+        %236 = OpAccessChain %_ptr_Function_v3float %result_7 %int_1
+        %237 = OpAccessChain %_ptr_Function_v3float %min_Local_2 %int_1
+        %238 = OpAccessChain %_ptr_Function_v3float %max_Local_2 %int_1
+        %239 = OpLoad %v3float %237
+        %240 = OpLoad %v3float %238
+        %241 = OpLoad %float %t_Local_1
+        %242 = OpFunctionCall %v3float %SmoothStep_4 %239 %240 %241
+               OpStore %236 %242
+        %243 = OpLoad %mat2v3float %result_7
+               OpReturnValue %243
+               OpFunctionEnd
+%SmoothStep_4 = OpFunction %v3float None %24
+      %min_3 = OpFunctionParameter %v3float
+      %max_3 = OpFunctionParameter %v3float
+        %t_2 = OpFunctionParameter %float
+        %248 = OpLabel
+%min_Local_3 = OpVariable %_ptr_Function_v3float Function
+%max_Local_3 = OpVariable %_ptr_Function_v3float Function
+  %t_Local_2 = OpVariable %_ptr_Function_float Function
+     %tVec_0 = OpVariable %_ptr_Function_v3float Function
+               OpStore %min_Local_3 %min_3
+               OpStore %max_Local_3 %max_3
+               OpStore %t_Local_2 %t_2
+        %253 = OpLoad %float %t_Local_2
+        %254 = OpCompositeConstruct %v3float %253 %253 %253
+               OpStore %tVec_0 %254
+        %255 = OpLoad %v3float %min_Local_3
+        %256 = OpLoad %v3float %max_Local_3
+        %257 = OpLoad %v3float %tVec_0
+        %258 = OpExtInst %v3float %2 SmoothStep %255 %256 %257
+               OpReturnValue %258
+               OpFunctionEnd
+%Test_Static_Real2x3_Real2x3_Real2x3 = OpFunction %void None %9
+     %self_5 = OpFunctionParameter %_ptr_Function_SmoothStep
+        %261 = OpLabel
+     %min__5 = OpVariable %_ptr_Function_mat2v3float Function
+     %max__5 = OpVariable %_ptr_Function_mat2v3float Function
+       %x__2 = OpVariable %_ptr_Function_mat2v3float Function
+   %result_8 = OpVariable %_ptr_Function_mat2v3float Function
+        %266 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %267 = OpCompositeConstruct %mat2v3float %266 %266
+               OpStore %min__5 %267
+        %268 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %269 = OpCompositeConstruct %mat2v3float %268 %268
+               OpStore %max__5 %269
+        %270 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %271 = OpCompositeConstruct %mat2v3float %270 %270
+               OpStore %x__2 %271
+        %272 = OpLoad %mat2v3float %min__5
+        %273 = OpLoad %mat2v3float %max__5
+        %274 = OpLoad %mat2v3float %x__2
+        %275 = OpFunctionCall %mat2v3float %SmoothStep_5 %272 %273 %274
+               OpStore %result_8 %275
+               OpReturn
+               OpFunctionEnd
+%SmoothStep_5 = OpFunction %mat2v3float None %25
+      %min_4 = OpFunctionParameter %mat2v3float
+      %max_4 = OpFunctionParameter %mat2v3float
+        %x_0 = OpFunctionParameter %mat2v3float
+        %280 = OpLabel
+%min_Local_4 = OpVariable %_ptr_Function_mat2v3float Function
+%max_Local_4 = OpVariable %_ptr_Function_mat2v3float Function
+  %x_Local_0 = OpVariable %_ptr_Function_mat2v3float Function
+   %result_9 = OpVariable %_ptr_Function_mat2v3float Function
+               OpStore %min_Local_4 %min_4
+               OpStore %max_Local_4 %max_4
+               OpStore %x_Local_0 %x_0
+        %285 = OpCompositeConstruct %v3float %float_0_0 %float_0_0 %float_0_0
+        %286 = OpCompositeConstruct %mat2v3float %285 %285
+               OpStore %result_9 %286
+        %287 = OpAccessChain %_ptr_Function_v3float %result_9 %int_0
+        %288 = OpAccessChain %_ptr_Function_v3float %min_Local_4 %int_0
+        %289 = OpLoad %v3float %288
+        %290 = OpAccessChain %_ptr_Function_v3float %max_Local_4 %int_0
+        %291 = OpLoad %v3float %290
+        %292 = OpAccessChain %_ptr_Function_v3float %x_Local_0 %int_0
+        %293 = OpLoad %v3float %292
+        %294 = OpExtInst %v3float %2 SmoothStep %289 %291 %293
+               OpStore %287 %294
+        %295 = OpAccessChain %_ptr_Function_v3float %result_9 %int_1
+        %296 = OpAccessChain %_ptr_Function_v3float %min_Local_4 %int_1
+        %297 = OpLoad %v3float %296
+        %298 = OpAccessChain %_ptr_Function_v3float %max_Local_4 %int_1
+        %299 = OpLoad %v3float %298
+        %300 = OpAccessChain %_ptr_Function_v3float %x_Local_0 %int_1
+        %301 = OpLoad %v3float %300
+        %302 = OpExtInst %v3float %2 SmoothStep %297 %299 %301
+               OpStore %295 %302
+        %303 = OpLoad %mat2v3float %result_9
+               OpReturnValue %303
+               OpFunctionEnd
+%Test_Static_Real2x4_Real2x4_Real = OpFunction %void None %9
+     %self_6 = OpFunctionParameter %_ptr_Function_SmoothStep
+        %306 = OpLabel
+     %min__6 = OpVariable %_ptr_Function_mat2v4float Function
+     %max__6 = OpVariable %_ptr_Function_mat2v4float Function
+       %t__2 = OpVariable %_ptr_Function_float Function
+  %result_10 = OpVariable %_ptr_Function_mat2v4float Function
+        %311 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+        %312 = OpCompositeConstruct %mat2v4float %311 %311
+               OpStore %min__6 %312
+        %313 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+        %314 = OpCompositeConstruct %mat2v4float %313 %313
+               OpStore %max__6 %314
+               OpStore %t__2 %float_0
+        %315 = OpLoad %mat2v4float %min__6
+        %316 = OpLoad %mat2v4float %max__6
+        %317 = OpLoad %float %t__2
+        %318 = OpFunctionCall %mat2v4float %SmoothStep_6 %315 %316 %317
+               OpStore %result_10 %318
+               OpReturn
+               OpFunctionEnd
+%SmoothStep_6 = OpFunction %mat2v4float None %30
+      %min_5 = OpFunctionParameter %mat2v4float
+      %max_5 = OpFunctionParameter %mat2v4float
+        %t_3 = OpFunctionParameter %float
+        %323 = OpLabel
+%min_Local_5 = OpVariable %_ptr_Function_mat2v4float Function
+%max_Local_5 = OpVariable %_ptr_Function_mat2v4float Function
+  %t_Local_3 = OpVariable %_ptr_Function_float Function
+  %result_11 = OpVariable %_ptr_Function_mat2v4float Function
+               OpStore %min_Local_5 %min_5
+               OpStore %max_Local_5 %max_5
+               OpStore %t_Local_3 %t_3
+        %328 = OpCompositeConstruct %v4float %float_0_0 %float_0_0 %float_0_0 %float_0_0
+        %329 = OpCompositeConstruct %mat2v4float %328 %328
+               OpStore %result_11 %329
+        %330 = OpAccessChain %_ptr_Function_v4float %result_11 %int_0
+        %331 = OpAccessChain %_ptr_Function_v4float %min_Local_5 %int_0
+        %332 = OpAccessChain %_ptr_Function_v4float %max_Local_5 %int_0
+        %333 = OpLoad %v4float %331
+        %334 = OpLoad %v4float %332
+        %335 = OpLoad %float %t_Local_3
+        %336 = OpFunctionCall %v4float %SmoothStep_7 %333 %334 %335
+               OpStore %330 %336
+        %337 = OpAccessChain %_ptr_Function_v4float %result_11 %int_1
+        %338 = OpAccessChain %_ptr_Function_v4float %min_Local_5 %int_1
+        %339 = OpAccessChain %_ptr_Function_v4float %max_Local_5 %int_1
+        %340 = OpLoad %v4float %338
+        %341 = OpLoad %v4float %339
+        %342 = OpLoad %float %t_Local_3
+        %343 = OpFunctionCall %v4float %SmoothStep_7 %340 %341 %342
+               OpStore %337 %343
+        %344 = OpLoad %mat2v4float %result_11
+               OpReturnValue %344
+               OpFunctionEnd
+%SmoothStep_7 = OpFunction %v4float None %31
+      %min_6 = OpFunctionParameter %v4float
+      %max_6 = OpFunctionParameter %v4float
+        %t_4 = OpFunctionParameter %float
+        %349 = OpLabel
+%min_Local_6 = OpVariable %_ptr_Function_v4float Function
+%max_Local_6 = OpVariable %_ptr_Function_v4float Function
+  %t_Local_4 = OpVariable %_ptr_Function_float Function
+     %tVec_1 = OpVariable %_ptr_Function_v4float Function
+               OpStore %min_Local_6 %min_6
+               OpStore %max_Local_6 %max_6
+               OpStore %t_Local_4 %t_4
+        %354 = OpLoad %float %t_Local_4
+        %355 = OpCompositeConstruct %v4float %354 %354 %354 %354
+               OpStore %tVec_1 %355
+        %356 = OpLoad %v4float %min_Local_6
+        %357 = OpLoad %v4float %max_Local_6
+        %358 = OpLoad %v4float %tVec_1
+        %359 = OpExtInst %v4float %2 SmoothStep %356 %357 %358
+               OpReturnValue %359
+               OpFunctionEnd
+%Test_Static_Real2x4_Real2x4_Real2x4 = OpFunction %void None %9
+     %self_7 = OpFunctionParameter %_ptr_Function_SmoothStep
+        %362 = OpLabel
+     %min__7 = OpVariable %_ptr_Function_mat2v4float Function
+     %max__7 = OpVariable %_ptr_Function_mat2v4float Function
+       %x__3 = OpVariable %_ptr_Function_mat2v4float Function
+  %result_12 = OpVariable %_ptr_Function_mat2v4float Function
+        %367 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+        %368 = OpCompositeConstruct %mat2v4float %367 %367
+               OpStore %min__7 %368
+        %369 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+        %370 = OpCompositeConstruct %mat2v4float %369 %369
+               OpStore %max__7 %370
+        %371 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+        %372 = OpCompositeConstruct %mat2v4float %371 %371
+               OpStore %x__3 %372
+        %373 = OpLoad %mat2v4float %min__7
+        %374 = OpLoad %mat2v4float %max__7
+        %375 = OpLoad %mat2v4float %x__3
+        %376 = OpFunctionCall %mat2v4float %SmoothStep_8 %373 %374 %375
+               OpStore %result_12 %376
+               OpReturn
+               OpFunctionEnd
+%SmoothStep_8 = OpFunction %mat2v4float None %32
+      %min_7 = OpFunctionParameter %mat2v4float
+      %max_7 = OpFunctionParameter %mat2v4float
+        %x_1 = OpFunctionParameter %mat2v4float
+        %381 = OpLabel
+%min_Local_7 = OpVariable %_ptr_Function_mat2v4float Function
+%max_Local_7 = OpVariable %_ptr_Function_mat2v4float Function
+  %x_Local_1 = OpVariable %_ptr_Function_mat2v4float Function
+  %result_13 = OpVariable %_ptr_Function_mat2v4float Function
+               OpStore %min_Local_7 %min_7
+               OpStore %max_Local_7 %max_7
+               OpStore %x_Local_1 %x_1
+        %386 = OpCompositeConstruct %v4float %float_0_0 %float_0_0 %float_0_0 %float_0_0
+        %387 = OpCompositeConstruct %mat2v4float %386 %386
+               OpStore %result_13 %387
+        %388 = OpAccessChain %_ptr_Function_v4float %result_13 %int_0
+        %389 = OpAccessChain %_ptr_Function_v4float %min_Local_7 %int_0
+        %390 = OpLoad %v4float %389
+        %391 = OpAccessChain %_ptr_Function_v4float %max_Local_7 %int_0
+        %392 = OpLoad %v4float %391
+        %393 = OpAccessChain %_ptr_Function_v4float %x_Local_1 %int_0
+        %394 = OpLoad %v4float %393
+        %395 = OpExtInst %v4float %2 SmoothStep %390 %392 %394
+               OpStore %388 %395
+        %396 = OpAccessChain %_ptr_Function_v4float %result_13 %int_1
+        %397 = OpAccessChain %_ptr_Function_v4float %min_Local_7 %int_1
+        %398 = OpLoad %v4float %397
+        %399 = OpAccessChain %_ptr_Function_v4float %max_Local_7 %int_1
+        %400 = OpLoad %v4float %399
+        %401 = OpAccessChain %_ptr_Function_v4float %x_Local_1 %int_1
+        %402 = OpLoad %v4float %401
+        %403 = OpExtInst %v4float %2 SmoothStep %398 %400 %402
+               OpStore %396 %403
+        %404 = OpLoad %mat2v4float %result_13
+               OpReturnValue %404
+               OpFunctionEnd
+%Test_Static_Real3_Real3_Real = OpFunction %void None %9
+     %self_8 = OpFunctionParameter %_ptr_Function_SmoothStep
+        %407 = OpLabel
+     %min__8 = OpVariable %_ptr_Function_v3float Function
+     %max__8 = OpVariable %_ptr_Function_v3float Function
+       %t__3 = OpVariable %_ptr_Function_float Function
+  %result_14 = OpVariable %_ptr_Function_v3float Function
+        %412 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %min__8 %412
+        %413 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %max__8 %413
+               OpStore %t__3 %float_0
+        %414 = OpLoad %v3float %min__8
+        %415 = OpLoad %v3float %max__8
+        %416 = OpLoad %float %t__3
+        %417 = OpFunctionCall %v3float %SmoothStep_4 %414 %415 %416
+               OpStore %result_14 %417
+               OpReturn
+               OpFunctionEnd
+%Test_Static_Real3_Real3_Real3 = OpFunction %void None %9
+     %self_9 = OpFunctionParameter %_ptr_Function_SmoothStep
+        %420 = OpLabel
+     %min__9 = OpVariable %_ptr_Function_v3float Function
+     %max__9 = OpVariable %_ptr_Function_v3float Function
+       %x__4 = OpVariable %_ptr_Function_v3float Function
+  %result_15 = OpVariable %_ptr_Function_v3float Function
+        %425 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %min__9 %425
+        %426 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %max__9 %426
+        %427 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %x__4 %427
+        %428 = OpLoad %v3float %min__9
+        %429 = OpLoad %v3float %max__9
+        %430 = OpLoad %v3float %x__4
+        %431 = OpExtInst %v3float %2 SmoothStep %428 %429 %430
+               OpStore %result_15 %431
+               OpReturn
+               OpFunctionEnd
+%Test_Static_Real3x2_Real3x2_Real = OpFunction %void None %9
+    %self_10 = OpFunctionParameter %_ptr_Function_SmoothStep
+        %434 = OpLabel
+    %min__10 = OpVariable %_ptr_Function_mat3v2float Function
+    %max__10 = OpVariable %_ptr_Function_mat3v2float Function
+       %t__4 = OpVariable %_ptr_Function_float Function
+  %result_16 = OpVariable %_ptr_Function_mat3v2float Function
+        %439 = OpCompositeConstruct %v2float %float_0 %float_0
+        %440 = OpCompositeConstruct %mat3v2float %439 %439 %439
+               OpStore %min__10 %440
+        %441 = OpCompositeConstruct %v2float %float_0 %float_0
+        %442 = OpCompositeConstruct %mat3v2float %441 %441 %441
+               OpStore %max__10 %442
+               OpStore %t__4 %float_0
+        %443 = OpLoad %mat3v2float %min__10
+        %444 = OpLoad %mat3v2float %max__10
+        %445 = OpLoad %float %t__4
+        %446 = OpFunctionCall %mat3v2float %SmoothStep_9 %443 %444 %445
+               OpStore %result_16 %446
+               OpReturn
+               OpFunctionEnd
+%SmoothStep_9 = OpFunction %mat3v2float None %35
+      %min_8 = OpFunctionParameter %mat3v2float
+      %max_8 = OpFunctionParameter %mat3v2float
+        %t_5 = OpFunctionParameter %float
+        %451 = OpLabel
+%min_Local_8 = OpVariable %_ptr_Function_mat3v2float Function
+%max_Local_8 = OpVariable %_ptr_Function_mat3v2float Function
+  %t_Local_5 = OpVariable %_ptr_Function_float Function
+  %result_17 = OpVariable %_ptr_Function_mat3v2float Function
+               OpStore %min_Local_8 %min_8
+               OpStore %max_Local_8 %max_8
+               OpStore %t_Local_5 %t_5
+        %456 = OpCompositeConstruct %v2float %float_0_0 %float_0_0
+        %457 = OpCompositeConstruct %mat3v2float %456 %456 %456
+               OpStore %result_17 %457
+        %458 = OpAccessChain %_ptr_Function_v2float %result_17 %int_0
+        %459 = OpAccessChain %_ptr_Function_v2float %min_Local_8 %int_0
+        %460 = OpAccessChain %_ptr_Function_v2float %max_Local_8 %int_0
+        %461 = OpLoad %v2float %459
+        %462 = OpLoad %v2float %460
+        %463 = OpLoad %float %t_Local_5
+        %464 = OpFunctionCall %v2float %SmoothStep_0 %461 %462 %463
+               OpStore %458 %464
+        %465 = OpAccessChain %_ptr_Function_v2float %result_17 %int_1
+        %466 = OpAccessChain %_ptr_Function_v2float %min_Local_8 %int_1
+        %467 = OpAccessChain %_ptr_Function_v2float %max_Local_8 %int_1
+        %468 = OpLoad %v2float %466
+        %469 = OpLoad %v2float %467
+        %470 = OpLoad %float %t_Local_5
+        %471 = OpFunctionCall %v2float %SmoothStep_0 %468 %469 %470
+               OpStore %465 %471
+        %472 = OpAccessChain %_ptr_Function_v2float %result_17 %int_2
+        %473 = OpAccessChain %_ptr_Function_v2float %min_Local_8 %int_2
+        %474 = OpAccessChain %_ptr_Function_v2float %max_Local_8 %int_2
+        %475 = OpLoad %v2float %473
+        %476 = OpLoad %v2float %474
+        %477 = OpLoad %float %t_Local_5
+        %478 = OpFunctionCall %v2float %SmoothStep_0 %475 %476 %477
+               OpStore %472 %478
+        %479 = OpLoad %mat3v2float %result_17
+               OpReturnValue %479
+               OpFunctionEnd
+%Test_Static_Real3x2_Real3x2_Real3x2 = OpFunction %void None %9
+    %self_11 = OpFunctionParameter %_ptr_Function_SmoothStep
+        %482 = OpLabel
+    %min__11 = OpVariable %_ptr_Function_mat3v2float Function
+    %max__11 = OpVariable %_ptr_Function_mat3v2float Function
+       %x__5 = OpVariable %_ptr_Function_mat3v2float Function
+  %result_18 = OpVariable %_ptr_Function_mat3v2float Function
+        %487 = OpCompositeConstruct %v2float %float_0 %float_0
+        %488 = OpCompositeConstruct %mat3v2float %487 %487 %487
+               OpStore %min__11 %488
+        %489 = OpCompositeConstruct %v2float %float_0 %float_0
+        %490 = OpCompositeConstruct %mat3v2float %489 %489 %489
+               OpStore %max__11 %490
+        %491 = OpCompositeConstruct %v2float %float_0 %float_0
+        %492 = OpCompositeConstruct %mat3v2float %491 %491 %491
+               OpStore %x__5 %492
+        %493 = OpLoad %mat3v2float %min__11
+        %494 = OpLoad %mat3v2float %max__11
+        %495 = OpLoad %mat3v2float %x__5
+        %496 = OpFunctionCall %mat3v2float %SmoothStep_10 %493 %494 %495
+               OpStore %result_18 %496
+               OpReturn
+               OpFunctionEnd
+%SmoothStep_10 = OpFunction %mat3v2float None %36
+      %min_9 = OpFunctionParameter %mat3v2float
+      %max_9 = OpFunctionParameter %mat3v2float
+        %x_2 = OpFunctionParameter %mat3v2float
+        %501 = OpLabel
+%min_Local_9 = OpVariable %_ptr_Function_mat3v2float Function
+%max_Local_9 = OpVariable %_ptr_Function_mat3v2float Function
+  %x_Local_2 = OpVariable %_ptr_Function_mat3v2float Function
+  %result_19 = OpVariable %_ptr_Function_mat3v2float Function
+               OpStore %min_Local_9 %min_9
+               OpStore %max_Local_9 %max_9
+               OpStore %x_Local_2 %x_2
+        %506 = OpCompositeConstruct %v2float %float_0_0 %float_0_0
+        %507 = OpCompositeConstruct %mat3v2float %506 %506 %506
+               OpStore %result_19 %507
+        %508 = OpAccessChain %_ptr_Function_v2float %result_19 %int_0
+        %509 = OpAccessChain %_ptr_Function_v2float %min_Local_9 %int_0
+        %510 = OpLoad %v2float %509
+        %511 = OpAccessChain %_ptr_Function_v2float %max_Local_9 %int_0
+        %512 = OpLoad %v2float %511
+        %513 = OpAccessChain %_ptr_Function_v2float %x_Local_2 %int_0
+        %514 = OpLoad %v2float %513
+        %515 = OpExtInst %v2float %2 SmoothStep %510 %512 %514
+               OpStore %508 %515
+        %516 = OpAccessChain %_ptr_Function_v2float %result_19 %int_1
+        %517 = OpAccessChain %_ptr_Function_v2float %min_Local_9 %int_1
+        %518 = OpLoad %v2float %517
+        %519 = OpAccessChain %_ptr_Function_v2float %max_Local_9 %int_1
+        %520 = OpLoad %v2float %519
+        %521 = OpAccessChain %_ptr_Function_v2float %x_Local_2 %int_1
+        %522 = OpLoad %v2float %521
+        %523 = OpExtInst %v2float %2 SmoothStep %518 %520 %522
+               OpStore %516 %523
+        %524 = OpAccessChain %_ptr_Function_v2float %result_19 %int_2
+        %525 = OpAccessChain %_ptr_Function_v2float %min_Local_9 %int_2
+        %526 = OpLoad %v2float %525
+        %527 = OpAccessChain %_ptr_Function_v2float %max_Local_9 %int_2
+        %528 = OpLoad %v2float %527
+        %529 = OpAccessChain %_ptr_Function_v2float %x_Local_2 %int_2
+        %530 = OpLoad %v2float %529
+        %531 = OpExtInst %v2float %2 SmoothStep %526 %528 %530
+               OpStore %524 %531
+        %532 = OpLoad %mat3v2float %result_19
+               OpReturnValue %532
+               OpFunctionEnd
+%Test_Static_Real3x3_Real3x3_Real = OpFunction %void None %9
+    %self_12 = OpFunctionParameter %_ptr_Function_SmoothStep
+        %535 = OpLabel
+    %min__12 = OpVariable %_ptr_Function_mat3v3float Function
+    %max__12 = OpVariable %_ptr_Function_mat3v3float Function
+       %t__5 = OpVariable %_ptr_Function_float Function
+  %result_20 = OpVariable %_ptr_Function_mat3v3float Function
+        %540 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %541 = OpCompositeConstruct %mat3v3float %540 %540 %540
+               OpStore %min__12 %541
+        %542 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %543 = OpCompositeConstruct %mat3v3float %542 %542 %542
+               OpStore %max__12 %543
+               OpStore %t__5 %float_0
+        %544 = OpLoad %mat3v3float %min__12
+        %545 = OpLoad %mat3v3float %max__12
+        %546 = OpLoad %float %t__5
+        %547 = OpFunctionCall %mat3v3float %SmoothStep_11 %544 %545 %546
+               OpStore %result_20 %547
+               OpReturn
+               OpFunctionEnd
+%SmoothStep_11 = OpFunction %mat3v3float None %39
+     %min_10 = OpFunctionParameter %mat3v3float
+     %max_10 = OpFunctionParameter %mat3v3float
+        %t_6 = OpFunctionParameter %float
+        %552 = OpLabel
+%min_Local_10 = OpVariable %_ptr_Function_mat3v3float Function
+%max_Local_10 = OpVariable %_ptr_Function_mat3v3float Function
+  %t_Local_6 = OpVariable %_ptr_Function_float Function
+  %result_21 = OpVariable %_ptr_Function_mat3v3float Function
+               OpStore %min_Local_10 %min_10
+               OpStore %max_Local_10 %max_10
+               OpStore %t_Local_6 %t_6
+        %557 = OpCompositeConstruct %v3float %float_0_0 %float_0_0 %float_0_0
+        %558 = OpCompositeConstruct %mat3v3float %557 %557 %557
+               OpStore %result_21 %558
+        %559 = OpAccessChain %_ptr_Function_v3float %result_21 %int_0
+        %560 = OpAccessChain %_ptr_Function_v3float %min_Local_10 %int_0
+        %561 = OpAccessChain %_ptr_Function_v3float %max_Local_10 %int_0
+        %562 = OpLoad %v3float %560
+        %563 = OpLoad %v3float %561
+        %564 = OpLoad %float %t_Local_6
+        %565 = OpFunctionCall %v3float %SmoothStep_4 %562 %563 %564
+               OpStore %559 %565
+        %566 = OpAccessChain %_ptr_Function_v3float %result_21 %int_1
+        %567 = OpAccessChain %_ptr_Function_v3float %min_Local_10 %int_1
+        %568 = OpAccessChain %_ptr_Function_v3float %max_Local_10 %int_1
+        %569 = OpLoad %v3float %567
+        %570 = OpLoad %v3float %568
+        %571 = OpLoad %float %t_Local_6
+        %572 = OpFunctionCall %v3float %SmoothStep_4 %569 %570 %571
+               OpStore %566 %572
+        %573 = OpAccessChain %_ptr_Function_v3float %result_21 %int_2
+        %574 = OpAccessChain %_ptr_Function_v3float %min_Local_10 %int_2
+        %575 = OpAccessChain %_ptr_Function_v3float %max_Local_10 %int_2
+        %576 = OpLoad %v3float %574
+        %577 = OpLoad %v3float %575
+        %578 = OpLoad %float %t_Local_6
+        %579 = OpFunctionCall %v3float %SmoothStep_4 %576 %577 %578
+               OpStore %573 %579
+        %580 = OpLoad %mat3v3float %result_21
+               OpReturnValue %580
+               OpFunctionEnd
+%Test_Static_Real3x3_Real3x3_Real3x3 = OpFunction %void None %9
+    %self_13 = OpFunctionParameter %_ptr_Function_SmoothStep
+        %583 = OpLabel
+    %min__13 = OpVariable %_ptr_Function_mat3v3float Function
+    %max__13 = OpVariable %_ptr_Function_mat3v3float Function
+       %x__6 = OpVariable %_ptr_Function_mat3v3float Function
+  %result_22 = OpVariable %_ptr_Function_mat3v3float Function
+        %588 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %589 = OpCompositeConstruct %mat3v3float %588 %588 %588
+               OpStore %min__13 %589
+        %590 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %591 = OpCompositeConstruct %mat3v3float %590 %590 %590
+               OpStore %max__13 %591
+        %592 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %593 = OpCompositeConstruct %mat3v3float %592 %592 %592
+               OpStore %x__6 %593
+        %594 = OpLoad %mat3v3float %min__13
+        %595 = OpLoad %mat3v3float %max__13
+        %596 = OpLoad %mat3v3float %x__6
+        %597 = OpFunctionCall %mat3v3float %SmoothStep_12 %594 %595 %596
+               OpStore %result_22 %597
+               OpReturn
+               OpFunctionEnd
+%SmoothStep_12 = OpFunction %mat3v3float None %40
+     %min_11 = OpFunctionParameter %mat3v3float
+     %max_11 = OpFunctionParameter %mat3v3float
+        %x_3 = OpFunctionParameter %mat3v3float
+        %602 = OpLabel
+%min_Local_11 = OpVariable %_ptr_Function_mat3v3float Function
+%max_Local_11 = OpVariable %_ptr_Function_mat3v3float Function
+  %x_Local_3 = OpVariable %_ptr_Function_mat3v3float Function
+  %result_23 = OpVariable %_ptr_Function_mat3v3float Function
+               OpStore %min_Local_11 %min_11
+               OpStore %max_Local_11 %max_11
+               OpStore %x_Local_3 %x_3
+        %607 = OpCompositeConstruct %v3float %float_0_0 %float_0_0 %float_0_0
+        %608 = OpCompositeConstruct %mat3v3float %607 %607 %607
+               OpStore %result_23 %608
+        %609 = OpAccessChain %_ptr_Function_v3float %result_23 %int_0
+        %610 = OpAccessChain %_ptr_Function_v3float %min_Local_11 %int_0
+        %611 = OpLoad %v3float %610
+        %612 = OpAccessChain %_ptr_Function_v3float %max_Local_11 %int_0
+        %613 = OpLoad %v3float %612
+        %614 = OpAccessChain %_ptr_Function_v3float %x_Local_3 %int_0
+        %615 = OpLoad %v3float %614
+        %616 = OpExtInst %v3float %2 SmoothStep %611 %613 %615
+               OpStore %609 %616
+        %617 = OpAccessChain %_ptr_Function_v3float %result_23 %int_1
+        %618 = OpAccessChain %_ptr_Function_v3float %min_Local_11 %int_1
+        %619 = OpLoad %v3float %618
+        %620 = OpAccessChain %_ptr_Function_v3float %max_Local_11 %int_1
+        %621 = OpLoad %v3float %620
+        %622 = OpAccessChain %_ptr_Function_v3float %x_Local_3 %int_1
+        %623 = OpLoad %v3float %622
+        %624 = OpExtInst %v3float %2 SmoothStep %619 %621 %623
+               OpStore %617 %624
+        %625 = OpAccessChain %_ptr_Function_v3float %result_23 %int_2
+        %626 = OpAccessChain %_ptr_Function_v3float %min_Local_11 %int_2
+        %627 = OpLoad %v3float %626
+        %628 = OpAccessChain %_ptr_Function_v3float %max_Local_11 %int_2
+        %629 = OpLoad %v3float %628
+        %630 = OpAccessChain %_ptr_Function_v3float %x_Local_3 %int_2
+        %631 = OpLoad %v3float %630
+        %632 = OpExtInst %v3float %2 SmoothStep %627 %629 %631
+               OpStore %625 %632
+        %633 = OpLoad %mat3v3float %result_23
+               OpReturnValue %633
+               OpFunctionEnd
+%Test_Static_Real3x4_Real3x4_Real = OpFunction %void None %9
+    %self_14 = OpFunctionParameter %_ptr_Function_SmoothStep
+        %636 = OpLabel
+    %min__14 = OpVariable %_ptr_Function_mat3v4float Function
+    %max__14 = OpVariable %_ptr_Function_mat3v4float Function
+       %t__6 = OpVariable %_ptr_Function_float Function
+  %result_24 = OpVariable %_ptr_Function_mat3v4float Function
+        %641 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+        %642 = OpCompositeConstruct %mat3v4float %641 %641 %641
+               OpStore %min__14 %642
+        %643 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+        %644 = OpCompositeConstruct %mat3v4float %643 %643 %643
+               OpStore %max__14 %644
+               OpStore %t__6 %float_0
+        %645 = OpLoad %mat3v4float %min__14
+        %646 = OpLoad %mat3v4float %max__14
+        %647 = OpLoad %float %t__6
+        %648 = OpFunctionCall %mat3v4float %SmoothStep_13 %645 %646 %647
+               OpStore %result_24 %648
+               OpReturn
+               OpFunctionEnd
+%SmoothStep_13 = OpFunction %mat3v4float None %43
+     %min_12 = OpFunctionParameter %mat3v4float
+     %max_12 = OpFunctionParameter %mat3v4float
+        %t_7 = OpFunctionParameter %float
+        %653 = OpLabel
+%min_Local_12 = OpVariable %_ptr_Function_mat3v4float Function
+%max_Local_12 = OpVariable %_ptr_Function_mat3v4float Function
+  %t_Local_7 = OpVariable %_ptr_Function_float Function
+  %result_25 = OpVariable %_ptr_Function_mat3v4float Function
+               OpStore %min_Local_12 %min_12
+               OpStore %max_Local_12 %max_12
+               OpStore %t_Local_7 %t_7
+        %658 = OpCompositeConstruct %v4float %float_0_0 %float_0_0 %float_0_0 %float_0_0
+        %659 = OpCompositeConstruct %mat3v4float %658 %658 %658
+               OpStore %result_25 %659
+        %660 = OpAccessChain %_ptr_Function_v4float %result_25 %int_0
+        %661 = OpAccessChain %_ptr_Function_v4float %min_Local_12 %int_0
+        %662 = OpAccessChain %_ptr_Function_v4float %max_Local_12 %int_0
+        %663 = OpLoad %v4float %661
+        %664 = OpLoad %v4float %662
+        %665 = OpLoad %float %t_Local_7
+        %666 = OpFunctionCall %v4float %SmoothStep_7 %663 %664 %665
+               OpStore %660 %666
+        %667 = OpAccessChain %_ptr_Function_v4float %result_25 %int_1
+        %668 = OpAccessChain %_ptr_Function_v4float %min_Local_12 %int_1
+        %669 = OpAccessChain %_ptr_Function_v4float %max_Local_12 %int_1
+        %670 = OpLoad %v4float %668
+        %671 = OpLoad %v4float %669
+        %672 = OpLoad %float %t_Local_7
+        %673 = OpFunctionCall %v4float %SmoothStep_7 %670 %671 %672
+               OpStore %667 %673
+        %674 = OpAccessChain %_ptr_Function_v4float %result_25 %int_2
+        %675 = OpAccessChain %_ptr_Function_v4float %min_Local_12 %int_2
+        %676 = OpAccessChain %_ptr_Function_v4float %max_Local_12 %int_2
+        %677 = OpLoad %v4float %675
+        %678 = OpLoad %v4float %676
+        %679 = OpLoad %float %t_Local_7
+        %680 = OpFunctionCall %v4float %SmoothStep_7 %677 %678 %679
+               OpStore %674 %680
+        %681 = OpLoad %mat3v4float %result_25
+               OpReturnValue %681
+               OpFunctionEnd
+%Test_Static_Real3x4_Real3x4_Real3x4 = OpFunction %void None %9
+    %self_15 = OpFunctionParameter %_ptr_Function_SmoothStep
+        %684 = OpLabel
+    %min__15 = OpVariable %_ptr_Function_mat3v4float Function
+    %max__15 = OpVariable %_ptr_Function_mat3v4float Function
+       %x__7 = OpVariable %_ptr_Function_mat3v4float Function
+  %result_26 = OpVariable %_ptr_Function_mat3v4float Function
+        %689 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+        %690 = OpCompositeConstruct %mat3v4float %689 %689 %689
+               OpStore %min__15 %690
+        %691 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+        %692 = OpCompositeConstruct %mat3v4float %691 %691 %691
+               OpStore %max__15 %692
+        %693 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+        %694 = OpCompositeConstruct %mat3v4float %693 %693 %693
+               OpStore %x__7 %694
+        %695 = OpLoad %mat3v4float %min__15
+        %696 = OpLoad %mat3v4float %max__15
+        %697 = OpLoad %mat3v4float %x__7
+        %698 = OpFunctionCall %mat3v4float %SmoothStep_14 %695 %696 %697
+               OpStore %result_26 %698
+               OpReturn
+               OpFunctionEnd
+%SmoothStep_14 = OpFunction %mat3v4float None %44
+     %min_13 = OpFunctionParameter %mat3v4float
+     %max_13 = OpFunctionParameter %mat3v4float
+        %x_4 = OpFunctionParameter %mat3v4float
+        %703 = OpLabel
+%min_Local_13 = OpVariable %_ptr_Function_mat3v4float Function
+%max_Local_13 = OpVariable %_ptr_Function_mat3v4float Function
+  %x_Local_4 = OpVariable %_ptr_Function_mat3v4float Function
+  %result_27 = OpVariable %_ptr_Function_mat3v4float Function
+               OpStore %min_Local_13 %min_13
+               OpStore %max_Local_13 %max_13
+               OpStore %x_Local_4 %x_4
+        %708 = OpCompositeConstruct %v4float %float_0_0 %float_0_0 %float_0_0 %float_0_0
+        %709 = OpCompositeConstruct %mat3v4float %708 %708 %708
+               OpStore %result_27 %709
+        %710 = OpAccessChain %_ptr_Function_v4float %result_27 %int_0
+        %711 = OpAccessChain %_ptr_Function_v4float %min_Local_13 %int_0
+        %712 = OpLoad %v4float %711
+        %713 = OpAccessChain %_ptr_Function_v4float %max_Local_13 %int_0
+        %714 = OpLoad %v4float %713
+        %715 = OpAccessChain %_ptr_Function_v4float %x_Local_4 %int_0
+        %716 = OpLoad %v4float %715
+        %717 = OpExtInst %v4float %2 SmoothStep %712 %714 %716
+               OpStore %710 %717
+        %718 = OpAccessChain %_ptr_Function_v4float %result_27 %int_1
+        %719 = OpAccessChain %_ptr_Function_v4float %min_Local_13 %int_1
+        %720 = OpLoad %v4float %719
+        %721 = OpAccessChain %_ptr_Function_v4float %max_Local_13 %int_1
+        %722 = OpLoad %v4float %721
+        %723 = OpAccessChain %_ptr_Function_v4float %x_Local_4 %int_1
+        %724 = OpLoad %v4float %723
+        %725 = OpExtInst %v4float %2 SmoothStep %720 %722 %724
+               OpStore %718 %725
+        %726 = OpAccessChain %_ptr_Function_v4float %result_27 %int_2
+        %727 = OpAccessChain %_ptr_Function_v4float %min_Local_13 %int_2
+        %728 = OpLoad %v4float %727
+        %729 = OpAccessChain %_ptr_Function_v4float %max_Local_13 %int_2
+        %730 = OpLoad %v4float %729
+        %731 = OpAccessChain %_ptr_Function_v4float %x_Local_4 %int_2
+        %732 = OpLoad %v4float %731
+        %733 = OpExtInst %v4float %2 SmoothStep %728 %730 %732
+               OpStore %726 %733
+        %734 = OpLoad %mat3v4float %result_27
+               OpReturnValue %734
+               OpFunctionEnd
+%Test_Static_Real4_Real4_Real = OpFunction %void None %9
+    %self_16 = OpFunctionParameter %_ptr_Function_SmoothStep
+        %737 = OpLabel
+    %min__16 = OpVariable %_ptr_Function_v4float Function
+    %max__16 = OpVariable %_ptr_Function_v4float Function
+       %t__7 = OpVariable %_ptr_Function_float Function
+  %result_28 = OpVariable %_ptr_Function_v4float Function
+        %742 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %min__16 %742
+        %743 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %max__16 %743
+               OpStore %t__7 %float_0
+        %744 = OpLoad %v4float %min__16
+        %745 = OpLoad %v4float %max__16
+        %746 = OpLoad %float %t__7
+        %747 = OpFunctionCall %v4float %SmoothStep_7 %744 %745 %746
+               OpStore %result_28 %747
+               OpReturn
+               OpFunctionEnd
+%Test_Static_Real4_Real4_Real4 = OpFunction %void None %9
+    %self_17 = OpFunctionParameter %_ptr_Function_SmoothStep
+        %750 = OpLabel
+    %min__17 = OpVariable %_ptr_Function_v4float Function
+    %max__17 = OpVariable %_ptr_Function_v4float Function
+       %x__8 = OpVariable %_ptr_Function_v4float Function
+  %result_29 = OpVariable %_ptr_Function_v4float Function
+        %755 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %min__17 %755
+        %756 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %max__17 %756
+        %757 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %x__8 %757
+        %758 = OpLoad %v4float %min__17
+        %759 = OpLoad %v4float %max__17
+        %760 = OpLoad %v4float %x__8
+        %761 = OpExtInst %v4float %2 SmoothStep %758 %759 %760
+               OpStore %result_29 %761
+               OpReturn
+               OpFunctionEnd
+%Test_Static_Real4x2_Real4x2_Real = OpFunction %void None %9
+    %self_18 = OpFunctionParameter %_ptr_Function_SmoothStep
+        %764 = OpLabel
+    %min__18 = OpVariable %_ptr_Function_mat4v2float Function
+    %max__18 = OpVariable %_ptr_Function_mat4v2float Function
+       %t__8 = OpVariable %_ptr_Function_float Function
+  %result_30 = OpVariable %_ptr_Function_mat4v2float Function
+        %769 = OpCompositeConstruct %v2float %float_0 %float_0
+        %770 = OpCompositeConstruct %mat4v2float %769 %769 %769 %769
+               OpStore %min__18 %770
+        %771 = OpCompositeConstruct %v2float %float_0 %float_0
+        %772 = OpCompositeConstruct %mat4v2float %771 %771 %771 %771
+               OpStore %max__18 %772
+               OpStore %t__8 %float_0
+        %773 = OpLoad %mat4v2float %min__18
+        %774 = OpLoad %mat4v2float %max__18
+        %775 = OpLoad %float %t__8
+        %776 = OpFunctionCall %mat4v2float %SmoothStep_15 %773 %774 %775
+               OpStore %result_30 %776
+               OpReturn
+               OpFunctionEnd
+%SmoothStep_15 = OpFunction %mat4v2float None %47
+     %min_14 = OpFunctionParameter %mat4v2float
+     %max_14 = OpFunctionParameter %mat4v2float
+        %t_8 = OpFunctionParameter %float
+        %781 = OpLabel
+%min_Local_14 = OpVariable %_ptr_Function_mat4v2float Function
+%max_Local_14 = OpVariable %_ptr_Function_mat4v2float Function
+  %t_Local_8 = OpVariable %_ptr_Function_float Function
+  %result_31 = OpVariable %_ptr_Function_mat4v2float Function
+               OpStore %min_Local_14 %min_14
+               OpStore %max_Local_14 %max_14
+               OpStore %t_Local_8 %t_8
+        %786 = OpCompositeConstruct %v2float %float_0_0 %float_0_0
+        %787 = OpCompositeConstruct %mat4v2float %786 %786 %786 %786
+               OpStore %result_31 %787
+        %788 = OpAccessChain %_ptr_Function_v2float %result_31 %int_0
+        %789 = OpAccessChain %_ptr_Function_v2float %min_Local_14 %int_0
+        %790 = OpAccessChain %_ptr_Function_v2float %max_Local_14 %int_0
+        %791 = OpLoad %v2float %789
+        %792 = OpLoad %v2float %790
+        %793 = OpLoad %float %t_Local_8
+        %794 = OpFunctionCall %v2float %SmoothStep_0 %791 %792 %793
+               OpStore %788 %794
+        %795 = OpAccessChain %_ptr_Function_v2float %result_31 %int_1
+        %796 = OpAccessChain %_ptr_Function_v2float %min_Local_14 %int_1
+        %797 = OpAccessChain %_ptr_Function_v2float %max_Local_14 %int_1
+        %798 = OpLoad %v2float %796
+        %799 = OpLoad %v2float %797
+        %800 = OpLoad %float %t_Local_8
+        %801 = OpFunctionCall %v2float %SmoothStep_0 %798 %799 %800
+               OpStore %795 %801
+        %802 = OpAccessChain %_ptr_Function_v2float %result_31 %int_2
+        %803 = OpAccessChain %_ptr_Function_v2float %min_Local_14 %int_2
+        %804 = OpAccessChain %_ptr_Function_v2float %max_Local_14 %int_2
+        %805 = OpLoad %v2float %803
+        %806 = OpLoad %v2float %804
+        %807 = OpLoad %float %t_Local_8
+        %808 = OpFunctionCall %v2float %SmoothStep_0 %805 %806 %807
+               OpStore %802 %808
+        %809 = OpAccessChain %_ptr_Function_v2float %result_31 %int_3
+        %810 = OpAccessChain %_ptr_Function_v2float %min_Local_14 %int_3
+        %811 = OpAccessChain %_ptr_Function_v2float %max_Local_14 %int_3
+        %812 = OpLoad %v2float %810
+        %813 = OpLoad %v2float %811
+        %814 = OpLoad %float %t_Local_8
+        %815 = OpFunctionCall %v2float %SmoothStep_0 %812 %813 %814
+               OpStore %809 %815
+        %816 = OpLoad %mat4v2float %result_31
+               OpReturnValue %816
+               OpFunctionEnd
+%Test_Static_Real4x2_Real4x2_Real4x2 = OpFunction %void None %9
+    %self_19 = OpFunctionParameter %_ptr_Function_SmoothStep
+        %819 = OpLabel
+    %min__19 = OpVariable %_ptr_Function_mat4v2float Function
+    %max__19 = OpVariable %_ptr_Function_mat4v2float Function
+       %x__9 = OpVariable %_ptr_Function_mat4v2float Function
+  %result_32 = OpVariable %_ptr_Function_mat4v2float Function
+        %824 = OpCompositeConstruct %v2float %float_0 %float_0
+        %825 = OpCompositeConstruct %mat4v2float %824 %824 %824 %824
+               OpStore %min__19 %825
+        %826 = OpCompositeConstruct %v2float %float_0 %float_0
+        %827 = OpCompositeConstruct %mat4v2float %826 %826 %826 %826
+               OpStore %max__19 %827
+        %828 = OpCompositeConstruct %v2float %float_0 %float_0
+        %829 = OpCompositeConstruct %mat4v2float %828 %828 %828 %828
+               OpStore %x__9 %829
+        %830 = OpLoad %mat4v2float %min__19
+        %831 = OpLoad %mat4v2float %max__19
+        %832 = OpLoad %mat4v2float %x__9
+        %833 = OpFunctionCall %mat4v2float %SmoothStep_16 %830 %831 %832
+               OpStore %result_32 %833
+               OpReturn
+               OpFunctionEnd
+%SmoothStep_16 = OpFunction %mat4v2float None %48
+     %min_15 = OpFunctionParameter %mat4v2float
+     %max_15 = OpFunctionParameter %mat4v2float
+        %x_5 = OpFunctionParameter %mat4v2float
+        %838 = OpLabel
+%min_Local_15 = OpVariable %_ptr_Function_mat4v2float Function
+%max_Local_15 = OpVariable %_ptr_Function_mat4v2float Function
+  %x_Local_5 = OpVariable %_ptr_Function_mat4v2float Function
+  %result_33 = OpVariable %_ptr_Function_mat4v2float Function
+               OpStore %min_Local_15 %min_15
+               OpStore %max_Local_15 %max_15
+               OpStore %x_Local_5 %x_5
+        %843 = OpCompositeConstruct %v2float %float_0_0 %float_0_0
+        %844 = OpCompositeConstruct %mat4v2float %843 %843 %843 %843
+               OpStore %result_33 %844
+        %845 = OpAccessChain %_ptr_Function_v2float %result_33 %int_0
+        %846 = OpAccessChain %_ptr_Function_v2float %min_Local_15 %int_0
+        %847 = OpLoad %v2float %846
+        %848 = OpAccessChain %_ptr_Function_v2float %max_Local_15 %int_0
+        %849 = OpLoad %v2float %848
+        %850 = OpAccessChain %_ptr_Function_v2float %x_Local_5 %int_0
+        %851 = OpLoad %v2float %850
+        %852 = OpExtInst %v2float %2 SmoothStep %847 %849 %851
+               OpStore %845 %852
+        %853 = OpAccessChain %_ptr_Function_v2float %result_33 %int_1
+        %854 = OpAccessChain %_ptr_Function_v2float %min_Local_15 %int_1
+        %855 = OpLoad %v2float %854
+        %856 = OpAccessChain %_ptr_Function_v2float %max_Local_15 %int_1
+        %857 = OpLoad %v2float %856
+        %858 = OpAccessChain %_ptr_Function_v2float %x_Local_5 %int_1
+        %859 = OpLoad %v2float %858
+        %860 = OpExtInst %v2float %2 SmoothStep %855 %857 %859
+               OpStore %853 %860
+        %861 = OpAccessChain %_ptr_Function_v2float %result_33 %int_2
+        %862 = OpAccessChain %_ptr_Function_v2float %min_Local_15 %int_2
+        %863 = OpLoad %v2float %862
+        %864 = OpAccessChain %_ptr_Function_v2float %max_Local_15 %int_2
+        %865 = OpLoad %v2float %864
+        %866 = OpAccessChain %_ptr_Function_v2float %x_Local_5 %int_2
+        %867 = OpLoad %v2float %866
+        %868 = OpExtInst %v2float %2 SmoothStep %863 %865 %867
+               OpStore %861 %868
+        %869 = OpAccessChain %_ptr_Function_v2float %result_33 %int_3
+        %870 = OpAccessChain %_ptr_Function_v2float %min_Local_15 %int_3
+        %871 = OpLoad %v2float %870
+        %872 = OpAccessChain %_ptr_Function_v2float %max_Local_15 %int_3
+        %873 = OpLoad %v2float %872
+        %874 = OpAccessChain %_ptr_Function_v2float %x_Local_5 %int_3
+        %875 = OpLoad %v2float %874
+        %876 = OpExtInst %v2float %2 SmoothStep %871 %873 %875
+               OpStore %869 %876
+        %877 = OpLoad %mat4v2float %result_33
+               OpReturnValue %877
+               OpFunctionEnd
+%Test_Static_Real4x3_Real4x3_Real = OpFunction %void None %9
+    %self_20 = OpFunctionParameter %_ptr_Function_SmoothStep
+        %880 = OpLabel
+    %min__20 = OpVariable %_ptr_Function_mat4v3float Function
+    %max__20 = OpVariable %_ptr_Function_mat4v3float Function
+       %t__9 = OpVariable %_ptr_Function_float Function
+  %result_34 = OpVariable %_ptr_Function_mat4v3float Function
+        %885 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %886 = OpCompositeConstruct %mat4v3float %885 %885 %885 %885
+               OpStore %min__20 %886
+        %887 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %888 = OpCompositeConstruct %mat4v3float %887 %887 %887 %887
+               OpStore %max__20 %888
+               OpStore %t__9 %float_0
+        %889 = OpLoad %mat4v3float %min__20
+        %890 = OpLoad %mat4v3float %max__20
+        %891 = OpLoad %float %t__9
+        %892 = OpFunctionCall %mat4v3float %SmoothStep_17 %889 %890 %891
+               OpStore %result_34 %892
+               OpReturn
+               OpFunctionEnd
+%SmoothStep_17 = OpFunction %mat4v3float None %51
+     %min_16 = OpFunctionParameter %mat4v3float
+     %max_16 = OpFunctionParameter %mat4v3float
+        %t_9 = OpFunctionParameter %float
+        %897 = OpLabel
+%min_Local_16 = OpVariable %_ptr_Function_mat4v3float Function
+%max_Local_16 = OpVariable %_ptr_Function_mat4v3float Function
+  %t_Local_9 = OpVariable %_ptr_Function_float Function
+  %result_35 = OpVariable %_ptr_Function_mat4v3float Function
+               OpStore %min_Local_16 %min_16
+               OpStore %max_Local_16 %max_16
+               OpStore %t_Local_9 %t_9
+        %902 = OpCompositeConstruct %v3float %float_0_0 %float_0_0 %float_0_0
+        %903 = OpCompositeConstruct %mat4v3float %902 %902 %902 %902
+               OpStore %result_35 %903
+        %904 = OpAccessChain %_ptr_Function_v3float %result_35 %int_0
+        %905 = OpAccessChain %_ptr_Function_v3float %min_Local_16 %int_0
+        %906 = OpAccessChain %_ptr_Function_v3float %max_Local_16 %int_0
+        %907 = OpLoad %v3float %905
+        %908 = OpLoad %v3float %906
+        %909 = OpLoad %float %t_Local_9
+        %910 = OpFunctionCall %v3float %SmoothStep_4 %907 %908 %909
+               OpStore %904 %910
+        %911 = OpAccessChain %_ptr_Function_v3float %result_35 %int_1
+        %912 = OpAccessChain %_ptr_Function_v3float %min_Local_16 %int_1
+        %913 = OpAccessChain %_ptr_Function_v3float %max_Local_16 %int_1
+        %914 = OpLoad %v3float %912
+        %915 = OpLoad %v3float %913
+        %916 = OpLoad %float %t_Local_9
+        %917 = OpFunctionCall %v3float %SmoothStep_4 %914 %915 %916
+               OpStore %911 %917
+        %918 = OpAccessChain %_ptr_Function_v3float %result_35 %int_2
+        %919 = OpAccessChain %_ptr_Function_v3float %min_Local_16 %int_2
+        %920 = OpAccessChain %_ptr_Function_v3float %max_Local_16 %int_2
+        %921 = OpLoad %v3float %919
+        %922 = OpLoad %v3float %920
+        %923 = OpLoad %float %t_Local_9
+        %924 = OpFunctionCall %v3float %SmoothStep_4 %921 %922 %923
+               OpStore %918 %924
+        %925 = OpAccessChain %_ptr_Function_v3float %result_35 %int_3
+        %926 = OpAccessChain %_ptr_Function_v3float %min_Local_16 %int_3
+        %927 = OpAccessChain %_ptr_Function_v3float %max_Local_16 %int_3
+        %928 = OpLoad %v3float %926
+        %929 = OpLoad %v3float %927
+        %930 = OpLoad %float %t_Local_9
+        %931 = OpFunctionCall %v3float %SmoothStep_4 %928 %929 %930
+               OpStore %925 %931
+        %932 = OpLoad %mat4v3float %result_35
+               OpReturnValue %932
+               OpFunctionEnd
+%Test_Static_Real4x3_Real4x3_Real4x3 = OpFunction %void None %9
+    %self_21 = OpFunctionParameter %_ptr_Function_SmoothStep
+        %935 = OpLabel
+    %min__21 = OpVariable %_ptr_Function_mat4v3float Function
+    %max__21 = OpVariable %_ptr_Function_mat4v3float Function
+      %x__10 = OpVariable %_ptr_Function_mat4v3float Function
+  %result_36 = OpVariable %_ptr_Function_mat4v3float Function
+        %940 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %941 = OpCompositeConstruct %mat4v3float %940 %940 %940 %940
+               OpStore %min__21 %941
+        %942 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %943 = OpCompositeConstruct %mat4v3float %942 %942 %942 %942
+               OpStore %max__21 %943
+        %944 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %945 = OpCompositeConstruct %mat4v3float %944 %944 %944 %944
+               OpStore %x__10 %945
+        %946 = OpLoad %mat4v3float %min__21
+        %947 = OpLoad %mat4v3float %max__21
+        %948 = OpLoad %mat4v3float %x__10
+        %949 = OpFunctionCall %mat4v3float %SmoothStep_18 %946 %947 %948
+               OpStore %result_36 %949
+               OpReturn
+               OpFunctionEnd
+%SmoothStep_18 = OpFunction %mat4v3float None %52
+     %min_17 = OpFunctionParameter %mat4v3float
+     %max_17 = OpFunctionParameter %mat4v3float
+        %x_6 = OpFunctionParameter %mat4v3float
+        %954 = OpLabel
+%min_Local_17 = OpVariable %_ptr_Function_mat4v3float Function
+%max_Local_17 = OpVariable %_ptr_Function_mat4v3float Function
+  %x_Local_6 = OpVariable %_ptr_Function_mat4v3float Function
+  %result_37 = OpVariable %_ptr_Function_mat4v3float Function
+               OpStore %min_Local_17 %min_17
+               OpStore %max_Local_17 %max_17
+               OpStore %x_Local_6 %x_6
+        %959 = OpCompositeConstruct %v3float %float_0_0 %float_0_0 %float_0_0
+        %960 = OpCompositeConstruct %mat4v3float %959 %959 %959 %959
+               OpStore %result_37 %960
+        %961 = OpAccessChain %_ptr_Function_v3float %result_37 %int_0
+        %962 = OpAccessChain %_ptr_Function_v3float %min_Local_17 %int_0
+        %963 = OpLoad %v3float %962
+        %964 = OpAccessChain %_ptr_Function_v3float %max_Local_17 %int_0
+        %965 = OpLoad %v3float %964
+        %966 = OpAccessChain %_ptr_Function_v3float %x_Local_6 %int_0
+        %967 = OpLoad %v3float %966
+        %968 = OpExtInst %v3float %2 SmoothStep %963 %965 %967
+               OpStore %961 %968
+        %969 = OpAccessChain %_ptr_Function_v3float %result_37 %int_1
+        %970 = OpAccessChain %_ptr_Function_v3float %min_Local_17 %int_1
+        %971 = OpLoad %v3float %970
+        %972 = OpAccessChain %_ptr_Function_v3float %max_Local_17 %int_1
+        %973 = OpLoad %v3float %972
+        %974 = OpAccessChain %_ptr_Function_v3float %x_Local_6 %int_1
+        %975 = OpLoad %v3float %974
+        %976 = OpExtInst %v3float %2 SmoothStep %971 %973 %975
+               OpStore %969 %976
+        %977 = OpAccessChain %_ptr_Function_v3float %result_37 %int_2
+        %978 = OpAccessChain %_ptr_Function_v3float %min_Local_17 %int_2
+        %979 = OpLoad %v3float %978
+        %980 = OpAccessChain %_ptr_Function_v3float %max_Local_17 %int_2
+        %981 = OpLoad %v3float %980
+        %982 = OpAccessChain %_ptr_Function_v3float %x_Local_6 %int_2
+        %983 = OpLoad %v3float %982
+        %984 = OpExtInst %v3float %2 SmoothStep %979 %981 %983
+               OpStore %977 %984
+        %985 = OpAccessChain %_ptr_Function_v3float %result_37 %int_3
+        %986 = OpAccessChain %_ptr_Function_v3float %min_Local_17 %int_3
+        %987 = OpLoad %v3float %986
+        %988 = OpAccessChain %_ptr_Function_v3float %max_Local_17 %int_3
+        %989 = OpLoad %v3float %988
+        %990 = OpAccessChain %_ptr_Function_v3float %x_Local_6 %int_3
+        %991 = OpLoad %v3float %990
+        %992 = OpExtInst %v3float %2 SmoothStep %987 %989 %991
+               OpStore %985 %992
+        %993 = OpLoad %mat4v3float %result_37
+               OpReturnValue %993
+               OpFunctionEnd
+%Test_Static_Real4x4_Real4x4_Real = OpFunction %void None %9
+    %self_22 = OpFunctionParameter %_ptr_Function_SmoothStep
+        %996 = OpLabel
+    %min__22 = OpVariable %_ptr_Function_mat4v4float Function
+    %max__22 = OpVariable %_ptr_Function_mat4v4float Function
+      %t__10 = OpVariable %_ptr_Function_float Function
+  %result_38 = OpVariable %_ptr_Function_mat4v4float Function
+       %1001 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+       %1002 = OpCompositeConstruct %mat4v4float %1001 %1001 %1001 %1001
+               OpStore %min__22 %1002
+       %1003 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+       %1004 = OpCompositeConstruct %mat4v4float %1003 %1003 %1003 %1003
+               OpStore %max__22 %1004
+               OpStore %t__10 %float_0
+       %1005 = OpLoad %mat4v4float %min__22
+       %1006 = OpLoad %mat4v4float %max__22
+       %1007 = OpLoad %float %t__10
+       %1008 = OpFunctionCall %mat4v4float %SmoothStep_19 %1005 %1006 %1007
+               OpStore %result_38 %1008
+               OpReturn
+               OpFunctionEnd
+%SmoothStep_19 = OpFunction %mat4v4float None %55
+     %min_18 = OpFunctionParameter %mat4v4float
+     %max_18 = OpFunctionParameter %mat4v4float
+       %t_10 = OpFunctionParameter %float
+       %1013 = OpLabel
+%min_Local_18 = OpVariable %_ptr_Function_mat4v4float Function
+%max_Local_18 = OpVariable %_ptr_Function_mat4v4float Function
+ %t_Local_10 = OpVariable %_ptr_Function_float Function
+  %result_39 = OpVariable %_ptr_Function_mat4v4float Function
+               OpStore %min_Local_18 %min_18
+               OpStore %max_Local_18 %max_18
+               OpStore %t_Local_10 %t_10
+       %1018 = OpCompositeConstruct %v4float %float_0_0 %float_0_0 %float_0_0 %float_0_0
+       %1019 = OpCompositeConstruct %mat4v4float %1018 %1018 %1018 %1018
+               OpStore %result_39 %1019
+       %1020 = OpAccessChain %_ptr_Function_v4float %result_39 %int_0
+       %1021 = OpAccessChain %_ptr_Function_v4float %min_Local_18 %int_0
+       %1022 = OpAccessChain %_ptr_Function_v4float %max_Local_18 %int_0
+       %1023 = OpLoad %v4float %1021
+       %1024 = OpLoad %v4float %1022
+       %1025 = OpLoad %float %t_Local_10
+       %1026 = OpFunctionCall %v4float %SmoothStep_7 %1023 %1024 %1025
+               OpStore %1020 %1026
+       %1027 = OpAccessChain %_ptr_Function_v4float %result_39 %int_1
+       %1028 = OpAccessChain %_ptr_Function_v4float %min_Local_18 %int_1
+       %1029 = OpAccessChain %_ptr_Function_v4float %max_Local_18 %int_1
+       %1030 = OpLoad %v4float %1028
+       %1031 = OpLoad %v4float %1029
+       %1032 = OpLoad %float %t_Local_10
+       %1033 = OpFunctionCall %v4float %SmoothStep_7 %1030 %1031 %1032
+               OpStore %1027 %1033
+       %1034 = OpAccessChain %_ptr_Function_v4float %result_39 %int_2
+       %1035 = OpAccessChain %_ptr_Function_v4float %min_Local_18 %int_2
+       %1036 = OpAccessChain %_ptr_Function_v4float %max_Local_18 %int_2
+       %1037 = OpLoad %v4float %1035
+       %1038 = OpLoad %v4float %1036
+       %1039 = OpLoad %float %t_Local_10
+       %1040 = OpFunctionCall %v4float %SmoothStep_7 %1037 %1038 %1039
+               OpStore %1034 %1040
+       %1041 = OpAccessChain %_ptr_Function_v4float %result_39 %int_3
+       %1042 = OpAccessChain %_ptr_Function_v4float %min_Local_18 %int_3
+       %1043 = OpAccessChain %_ptr_Function_v4float %max_Local_18 %int_3
+       %1044 = OpLoad %v4float %1042
+       %1045 = OpLoad %v4float %1043
+       %1046 = OpLoad %float %t_Local_10
+       %1047 = OpFunctionCall %v4float %SmoothStep_7 %1044 %1045 %1046
+               OpStore %1041 %1047
+       %1048 = OpLoad %mat4v4float %result_39
+               OpReturnValue %1048
+               OpFunctionEnd
+%Test_Static_Real4x4_Real4x4_Real4x4 = OpFunction %void None %9
+    %self_23 = OpFunctionParameter %_ptr_Function_SmoothStep
+       %1051 = OpLabel
+    %min__23 = OpVariable %_ptr_Function_mat4v4float Function
+    %max__23 = OpVariable %_ptr_Function_mat4v4float Function
+      %x__11 = OpVariable %_ptr_Function_mat4v4float Function
+  %result_40 = OpVariable %_ptr_Function_mat4v4float Function
+       %1056 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+       %1057 = OpCompositeConstruct %mat4v4float %1056 %1056 %1056 %1056
+               OpStore %min__23 %1057
+       %1058 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+       %1059 = OpCompositeConstruct %mat4v4float %1058 %1058 %1058 %1058
+               OpStore %max__23 %1059
+       %1060 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+       %1061 = OpCompositeConstruct %mat4v4float %1060 %1060 %1060 %1060
+               OpStore %x__11 %1061
+       %1062 = OpLoad %mat4v4float %min__23
+       %1063 = OpLoad %mat4v4float %max__23
+       %1064 = OpLoad %mat4v4float %x__11
+       %1065 = OpFunctionCall %mat4v4float %SmoothStep_20 %1062 %1063 %1064
+               OpStore %result_40 %1065
+               OpReturn
+               OpFunctionEnd
+%SmoothStep_20 = OpFunction %mat4v4float None %56
+     %min_19 = OpFunctionParameter %mat4v4float
+     %max_19 = OpFunctionParameter %mat4v4float
+        %x_7 = OpFunctionParameter %mat4v4float
+       %1070 = OpLabel
+%min_Local_19 = OpVariable %_ptr_Function_mat4v4float Function
+%max_Local_19 = OpVariable %_ptr_Function_mat4v4float Function
+  %x_Local_7 = OpVariable %_ptr_Function_mat4v4float Function
+  %result_41 = OpVariable %_ptr_Function_mat4v4float Function
+               OpStore %min_Local_19 %min_19
+               OpStore %max_Local_19 %max_19
+               OpStore %x_Local_7 %x_7
+       %1075 = OpCompositeConstruct %v4float %float_0_0 %float_0_0 %float_0_0 %float_0_0
+       %1076 = OpCompositeConstruct %mat4v4float %1075 %1075 %1075 %1075
+               OpStore %result_41 %1076
+       %1077 = OpAccessChain %_ptr_Function_v4float %result_41 %int_0
+       %1078 = OpAccessChain %_ptr_Function_v4float %min_Local_19 %int_0
+       %1079 = OpLoad %v4float %1078
+       %1080 = OpAccessChain %_ptr_Function_v4float %max_Local_19 %int_0
+       %1081 = OpLoad %v4float %1080
+       %1082 = OpAccessChain %_ptr_Function_v4float %x_Local_7 %int_0
+       %1083 = OpLoad %v4float %1082
+       %1084 = OpExtInst %v4float %2 SmoothStep %1079 %1081 %1083
+               OpStore %1077 %1084
+       %1085 = OpAccessChain %_ptr_Function_v4float %result_41 %int_1
+       %1086 = OpAccessChain %_ptr_Function_v4float %min_Local_19 %int_1
+       %1087 = OpLoad %v4float %1086
+       %1088 = OpAccessChain %_ptr_Function_v4float %max_Local_19 %int_1
+       %1089 = OpLoad %v4float %1088
+       %1090 = OpAccessChain %_ptr_Function_v4float %x_Local_7 %int_1
+       %1091 = OpLoad %v4float %1090
+       %1092 = OpExtInst %v4float %2 SmoothStep %1087 %1089 %1091
+               OpStore %1085 %1092
+       %1093 = OpAccessChain %_ptr_Function_v4float %result_41 %int_2
+       %1094 = OpAccessChain %_ptr_Function_v4float %min_Local_19 %int_2
+       %1095 = OpLoad %v4float %1094
+       %1096 = OpAccessChain %_ptr_Function_v4float %max_Local_19 %int_2
+       %1097 = OpLoad %v4float %1096
+       %1098 = OpAccessChain %_ptr_Function_v4float %x_Local_7 %int_2
+       %1099 = OpLoad %v4float %1098
+       %1100 = OpExtInst %v4float %2 SmoothStep %1095 %1097 %1099
+               OpStore %1093 %1100
+       %1101 = OpAccessChain %_ptr_Function_v4float %result_41 %int_3
+       %1102 = OpAccessChain %_ptr_Function_v4float %min_Local_19 %int_3
+       %1103 = OpLoad %v4float %1102
+       %1104 = OpAccessChain %_ptr_Function_v4float %max_Local_19 %int_3
+       %1105 = OpLoad %v4float %1104
+       %1106 = OpAccessChain %_ptr_Function_v4float %x_Local_7 %int_3
+       %1107 = OpLoad %v4float %1106
+       %1108 = OpExtInst %v4float %2 SmoothStep %1103 %1105 %1107
+               OpStore %1101 %1108
+       %1109 = OpLoad %mat4v4float %result_41
+               OpReturnValue %1109
+               OpFunctionEnd
+       %Main = OpFunction %void None %9
+    %self_24 = OpFunctionParameter %_ptr_Function_SmoothStep
+       %1112 = OpLabel
+       %1113 = OpFunctionCall %void %Test_Static_Real_Real_Real %self_24
+       %1114 = OpFunctionCall %void %Test_Static_Real2_Real2_Real %self_24
+       %1115 = OpFunctionCall %void %Test_Static_Real2_Real2_Real2 %self_24
+       %1116 = OpFunctionCall %void %Test_Static_Real2x2_Real2x2_Real %self_24
+       %1117 = OpFunctionCall %void %Test_Static_Real2x2_Real2x2_Real2x2 %self_24
+       %1118 = OpFunctionCall %void %Test_Static_Real2x3_Real2x3_Real %self_24
+       %1119 = OpFunctionCall %void %Test_Static_Real2x3_Real2x3_Real2x3 %self_24
+       %1120 = OpFunctionCall %void %Test_Static_Real2x4_Real2x4_Real %self_24
+       %1121 = OpFunctionCall %void %Test_Static_Real2x4_Real2x4_Real2x4 %self_24
+       %1122 = OpFunctionCall %void %Test_Static_Real3_Real3_Real %self_24
+       %1123 = OpFunctionCall %void %Test_Static_Real3_Real3_Real3 %self_24
+       %1124 = OpFunctionCall %void %Test_Static_Real3x2_Real3x2_Real %self_24
+       %1125 = OpFunctionCall %void %Test_Static_Real3x2_Real3x2_Real3x2 %self_24
+       %1126 = OpFunctionCall %void %Test_Static_Real3x3_Real3x3_Real %self_24
+       %1127 = OpFunctionCall %void %Test_Static_Real3x3_Real3x3_Real3x3 %self_24
+       %1128 = OpFunctionCall %void %Test_Static_Real3x4_Real3x4_Real %self_24
+       %1129 = OpFunctionCall %void %Test_Static_Real3x4_Real3x4_Real3x4 %self_24
+       %1130 = OpFunctionCall %void %Test_Static_Real4_Real4_Real %self_24
+       %1131 = OpFunctionCall %void %Test_Static_Real4_Real4_Real4 %self_24
+       %1132 = OpFunctionCall %void %Test_Static_Real4x2_Real4x2_Real %self_24
+       %1133 = OpFunctionCall %void %Test_Static_Real4x2_Real4x2_Real4x2 %self_24
+       %1134 = OpFunctionCall %void %Test_Static_Real4x3_Real4x3_Real %self_24
+       %1135 = OpFunctionCall %void %Test_Static_Real4x3_Real4x3_Real4x3 %self_24
+       %1136 = OpFunctionCall %void %Test_Static_Real4x4_Real4x4_Real %self_24
+       %1137 = OpFunctionCall %void %Test_Static_Real4x4_Real4x4_Real4x4 %self_24
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_SmoothStep = OpFunction %void None %9
+    %self_25 = OpFunctionParameter %_ptr_Function_SmoothStep
+       %1140 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %9
+    %self_26 = OpFunctionParameter %_ptr_Function_SmoothStep
+       %1143 = OpLabel
+       %1144 = OpFunctionCall %void %PreConstructor_SmoothStep %self_26
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %9
+    %self_27 = OpFunctionParameter %_ptr_Function_SmoothStep
+       %1147 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %9
+    %self_28 = OpFunctionParameter %_ptr_Function_SmoothStep
+       %1150 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_SmoothStep = OpFunction %void None %57
+       %1152 = OpLabel
+    %self_29 = OpVariable %_ptr_Function_SmoothStep Function
+       %1154 = OpFunctionCall %void %InitializeGlobals
+       %1155 = OpFunctionCall %void %DefaultConstructor %self_29
+       %1156 = OpFunctionCall %void %CopyInputs_Main %self_29
+       %1157 = OpFunctionCall %void %Main %self_29
+       %1158 = OpFunctionCall %void %CopyOutputs_Main %self_29
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %57
+       %1159 = OpLabel
+               OpReturn
+               OpFunctionEnd

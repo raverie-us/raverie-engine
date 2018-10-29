@@ -1,0 +1,127 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 70
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_SampleDRefExplicitLod "EntryPoint_Main_SampleDRefExplicitLod"
+               OpExecutionMode %EntryPoint_Main_SampleDRefExplicitLod OriginUpperLeft
+               OpSource Unknown 100
+               OpName %SampleDRefExplicitLod "SampleDRefExplicitLod"
+               OpMemberName %SampleDRefExplicitLod 0 "Uv"
+               OpName %SampledDepthImage_SampleDRefExplicitLod "SampledDepthImage_SampleDRefExplicitLod"
+               OpName %DepthImage_SampleDRefExplicitLod "DepthImage_SampleDRefExplicitLod"
+               OpName %Sampler_SampleDRefExplicitLod "Sampler_SampleDRefExplicitLod"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %depthCompare "depthCompare"
+               OpName %depthResult "depthResult"
+               OpName %lod "lod"
+               OpName %PreConstructor_SampleDRefExplicitLod "PreConstructor_SampleDRefExplicitLod"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_SampleDRefExplicitLod "EntryPoint_Main_SampleDRefExplicitLod"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %SampledDepthImage_SampleDRefExplicitLod Binding 0
+               OpDecorate %SampledDepthImage_SampleDRefExplicitLod DescriptorSet 0
+               OpDecorate %DepthImage_SampleDRefExplicitLod Binding 1
+               OpDecorate %DepthImage_SampleDRefExplicitLod DescriptorSet 0
+               OpDecorate %Sampler_SampleDRefExplicitLod Binding 1
+               OpDecorate %Sampler_SampleDRefExplicitLod DescriptorSet 0
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+%SampleDRefExplicitLod = OpTypeStruct %v2float
+%_ptr_Function_SampleDRefExplicitLod = OpTypePointer Function %SampleDRefExplicitLod
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+         %10 = OpTypeFunction %void %_ptr_Function_SampleDRefExplicitLod
+    %float_1 = OpConstant %float 1
+         %11 = OpTypeImage %float 2D 1 0 0 1 Unknown
+%_ptr_UniformConstant_11 = OpTypePointer UniformConstant %11
+         %13 = OpTypeSampledImage %11
+%_ptr_UniformConstant_13 = OpTypePointer UniformConstant %13
+%SampledDepthImage_SampleDRefExplicitLod = OpVariable %_ptr_UniformConstant_13 UniformConstant
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+      %int_0 = OpConstant %int 0
+%DepthImage_SampleDRefExplicitLod = OpVariable %_ptr_UniformConstant_11 UniformConstant
+         %17 = OpTypeSampler
+%_ptr_UniformConstant_17 = OpTypePointer UniformConstant %17
+%Sampler_SampleDRefExplicitLod = OpVariable %_ptr_UniformConstant_17 UniformConstant
+    %float_0 = OpConstant %float 0
+         %19 = OpTypeFunction %void
+       %Main = OpFunction %void None %10
+       %self = OpFunctionParameter %_ptr_Function_SampleDRefExplicitLod
+         %28 = OpLabel
+%depthCompare = OpVariable %_ptr_Function_float Function
+%depthResult = OpVariable %_ptr_Function_float Function
+        %lod = OpVariable %_ptr_Function_float Function
+               OpStore %depthCompare %float_1
+               OpStore %depthResult %float_1
+               OpStore %lod %float_1
+         %32 = OpLoad %13 %SampledDepthImage_SampleDRefExplicitLod
+         %33 = OpAccessChain %_ptr_Function_v2float %self %int_0
+         %34 = OpLoad %v2float %33
+         %35 = OpLoad %float %depthCompare
+         %36 = OpLoad %float %lod
+         %37 = OpImageSampleDrefExplicitLod %float %32 %34 %35 Lod %36
+               OpStore %depthResult %37
+         %38 = OpLoad %11 %DepthImage_SampleDRefExplicitLod
+         %39 = OpLoad %17 %Sampler_SampleDRefExplicitLod
+         %40 = OpSampledImage %13 %38 %39
+         %41 = OpAccessChain %_ptr_Function_v2float %self %int_0
+         %42 = OpLoad %v2float %41
+         %43 = OpLoad %float %depthCompare
+         %44 = OpLoad %float %lod
+         %45 = OpImageSampleDrefExplicitLod %float %40 %42 %43 Lod %44
+               OpStore %depthResult %45
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_SampleDRefExplicitLod = OpFunction %void None %10
+     %self_0 = OpFunctionParameter %_ptr_Function_SampleDRefExplicitLod
+         %48 = OpLabel
+         %49 = OpAccessChain %_ptr_Function_v2float %self_0 %int_0
+         %50 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %49 %50
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %10
+     %self_1 = OpFunctionParameter %_ptr_Function_SampleDRefExplicitLod
+         %53 = OpLabel
+         %54 = OpFunctionCall %void %PreConstructor_SampleDRefExplicitLod %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %10
+     %self_2 = OpFunctionParameter %_ptr_Function_SampleDRefExplicitLod
+         %57 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %10
+     %self_3 = OpFunctionParameter %_ptr_Function_SampleDRefExplicitLod
+         %60 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_SampleDRefExplicitLod = OpFunction %void None %19
+         %62 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_SampleDRefExplicitLod Function
+         %64 = OpFunctionCall %void %InitializeGlobals
+         %65 = OpFunctionCall %void %DefaultConstructor %self_4
+         %66 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %67 = OpFunctionCall %void %Main %self_4
+         %68 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %19
+         %69 = OpLabel
+               OpReturn
+               OpFunctionEnd

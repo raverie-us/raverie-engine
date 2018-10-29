@@ -1,0 +1,32 @@
+[Pixel][UnitTest]
+struct ReflectAcrossVector
+{
+  function Test_Static_Real2_Real2()
+  {
+    var toBeReflected_ = Real2();
+    var vector_ = Real2();
+    var result = Math.ReflectAcrossVector(toBeReflected_, vector_);
+  }
+
+  function Test_Static_Real3_Real3()
+  {
+    var toBeReflected_ = Real3();
+    var vector_ = Real3();
+    var result = Math.ReflectAcrossVector(toBeReflected_, vector_);
+  }
+
+  function Test_Static_Real4_Real4()
+  {
+    var toBeReflected_ = Real4();
+    var vector_ = Real4();
+    var result = Math.ReflectAcrossVector(toBeReflected_, vector_);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Real2_Real2();
+    this.Test_Static_Real3_Real3();
+    this.Test_Static_Real4_Real4();
+  }
+}

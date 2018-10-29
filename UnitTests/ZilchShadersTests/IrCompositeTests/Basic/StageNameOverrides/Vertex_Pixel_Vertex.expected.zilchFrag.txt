@@ -1,0 +1,22 @@
+[Vertex][UnitTest]
+struct Vertex_Pixel_Vertex
+{
+  [StageOutput(name : "Value1")] var Stage_Value1_Real : Real;
+  [StageOutput(name : "Value2")] var Stage_Value2_Real : Real;
+  [StageOutput(name : "Value3")] var Stage_Value3_Real : Real;
+  [StageOutput(name : "Value5")] var Stage_Value5_Real : Real;
+  [StageOutput(name : "Value8")] var Stage_Value8_Real : Real;
+
+  [EntryPoint]
+  function Main()
+  {
+    var vertex = Vertex();
+    vertex.Main();
+
+    this.Stage_Value1_Real = vertex.V1;
+    this.Stage_Value2_Real = vertex.V23;
+    this.Stage_Value3_Real = vertex.V23;
+    this.Stage_Value5_Real = vertex.V5;
+    this.Stage_Value8_Real = vertex.V8;
+  }
+}

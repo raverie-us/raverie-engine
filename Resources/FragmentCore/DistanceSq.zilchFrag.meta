@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "DistanceSq"
+		var ResourceId = 0x5bcd3fe78eaf350c
+	}
+}

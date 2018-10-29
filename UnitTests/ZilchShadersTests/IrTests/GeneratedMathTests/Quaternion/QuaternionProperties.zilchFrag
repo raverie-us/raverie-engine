@@ -1,0 +1,2128 @@
+[Pixel][UnitTest]
+struct QuaternionProperties
+{
+  function Test_StaticCount_Integer()
+  {
+    var value = Quaternion.Count;
+  }
+  function Test_Count_Integer()
+  {
+    var instance = Quaternion();
+    var value = instance.Count;
+  }
+  function Test_StaticIdentity_Quaternion()
+  {
+    var value = Quaternion.Identity;
+  }
+  function Test_W_Real()
+  {
+    var instance = Quaternion();
+    var value = instance.W;
+    instance.W = Real();
+  }
+  function Test_WW_Real2()
+  {
+    var instance = Quaternion();
+    var value = instance.WW;
+  }
+  function Test_WWW_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.WWW;
+  }
+  function Test_WWWW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WWWW;
+  }
+  function Test_WWWX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WWWX;
+  }
+  function Test_WWWY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WWWY;
+  }
+  function Test_WWWZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WWWZ;
+  }
+  function Test_WWX_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.WWX;
+  }
+  function Test_WWXW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WWXW;
+  }
+  function Test_WWXX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WWXX;
+  }
+  function Test_WWXY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WWXY;
+  }
+  function Test_WWXZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WWXZ;
+  }
+  function Test_WWY_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.WWY;
+  }
+  function Test_WWYW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WWYW;
+  }
+  function Test_WWYX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WWYX;
+  }
+  function Test_WWYY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WWYY;
+  }
+  function Test_WWYZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WWYZ;
+  }
+  function Test_WWZ_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.WWZ;
+  }
+  function Test_WWZW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WWZW;
+  }
+  function Test_WWZX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WWZX;
+  }
+  function Test_WWZY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WWZY;
+  }
+  function Test_WWZZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WWZZ;
+  }
+  function Test_WX_Real2()
+  {
+    var instance = Quaternion();
+    var value = instance.WX;
+    instance.WX = Real2();
+  }
+  function Test_WXW_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.WXW;
+  }
+  function Test_WXWW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WXWW;
+  }
+  function Test_WXWX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WXWX;
+  }
+  function Test_WXWY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WXWY;
+  }
+  function Test_WXWZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WXWZ;
+  }
+  function Test_WXX_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.WXX;
+  }
+  function Test_WXXW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WXXW;
+  }
+  function Test_WXXX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WXXX;
+  }
+  function Test_WXXY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WXXY;
+  }
+  function Test_WXXZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WXXZ;
+  }
+  function Test_WXY_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.WXY;
+    instance.WXY = Real3();
+  }
+  function Test_WXYW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WXYW;
+  }
+  function Test_WXYX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WXYX;
+  }
+  function Test_WXYY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WXYY;
+  }
+  function Test_WXYZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WXYZ;
+    instance.WXYZ = Real4();
+  }
+  function Test_WXZ_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.WXZ;
+    instance.WXZ = Real3();
+  }
+  function Test_WXZW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WXZW;
+  }
+  function Test_WXZX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WXZX;
+  }
+  function Test_WXZY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WXZY;
+    instance.WXZY = Real4();
+  }
+  function Test_WXZZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WXZZ;
+  }
+  function Test_WY_Real2()
+  {
+    var instance = Quaternion();
+    var value = instance.WY;
+    instance.WY = Real2();
+  }
+  function Test_WYW_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.WYW;
+  }
+  function Test_WYWW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WYWW;
+  }
+  function Test_WYWX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WYWX;
+  }
+  function Test_WYWY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WYWY;
+  }
+  function Test_WYWZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WYWZ;
+  }
+  function Test_WYX_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.WYX;
+    instance.WYX = Real3();
+  }
+  function Test_WYXW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WYXW;
+  }
+  function Test_WYXX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WYXX;
+  }
+  function Test_WYXY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WYXY;
+  }
+  function Test_WYXZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WYXZ;
+    instance.WYXZ = Real4();
+  }
+  function Test_WYY_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.WYY;
+  }
+  function Test_WYYW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WYYW;
+  }
+  function Test_WYYX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WYYX;
+  }
+  function Test_WYYY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WYYY;
+  }
+  function Test_WYYZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WYYZ;
+  }
+  function Test_WYZ_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.WYZ;
+    instance.WYZ = Real3();
+  }
+  function Test_WYZW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WYZW;
+  }
+  function Test_WYZX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WYZX;
+    instance.WYZX = Real4();
+  }
+  function Test_WYZY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WYZY;
+  }
+  function Test_WYZZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WYZZ;
+  }
+  function Test_WZ_Real2()
+  {
+    var instance = Quaternion();
+    var value = instance.WZ;
+    instance.WZ = Real2();
+  }
+  function Test_WZW_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.WZW;
+  }
+  function Test_WZWW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WZWW;
+  }
+  function Test_WZWX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WZWX;
+  }
+  function Test_WZWY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WZWY;
+  }
+  function Test_WZWZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WZWZ;
+  }
+  function Test_WZX_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.WZX;
+    instance.WZX = Real3();
+  }
+  function Test_WZXW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WZXW;
+  }
+  function Test_WZXX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WZXX;
+  }
+  function Test_WZXY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WZXY;
+    instance.WZXY = Real4();
+  }
+  function Test_WZXZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WZXZ;
+  }
+  function Test_WZY_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.WZY;
+    instance.WZY = Real3();
+  }
+  function Test_WZYW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WZYW;
+  }
+  function Test_WZYX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WZYX;
+    instance.WZYX = Real4();
+  }
+  function Test_WZYY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WZYY;
+  }
+  function Test_WZYZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WZYZ;
+  }
+  function Test_WZZ_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.WZZ;
+  }
+  function Test_WZZW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WZZW;
+  }
+  function Test_WZZX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WZZX;
+  }
+  function Test_WZZY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WZZY;
+  }
+  function Test_WZZZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.WZZZ;
+  }
+  function Test_X_Real()
+  {
+    var instance = Quaternion();
+    var value = instance.X;
+    instance.X = Real();
+  }
+  function Test_XW_Real2()
+  {
+    var instance = Quaternion();
+    var value = instance.XW;
+    instance.XW = Real2();
+  }
+  function Test_XWW_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.XWW;
+  }
+  function Test_XWWW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XWWW;
+  }
+  function Test_XWWX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XWWX;
+  }
+  function Test_XWWY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XWWY;
+  }
+  function Test_XWWZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XWWZ;
+  }
+  function Test_XWX_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.XWX;
+  }
+  function Test_XWXW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XWXW;
+  }
+  function Test_XWXX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XWXX;
+  }
+  function Test_XWXY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XWXY;
+  }
+  function Test_XWXZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XWXZ;
+  }
+  function Test_XWY_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.XWY;
+    instance.XWY = Real3();
+  }
+  function Test_XWYW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XWYW;
+  }
+  function Test_XWYX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XWYX;
+  }
+  function Test_XWYY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XWYY;
+  }
+  function Test_XWYZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XWYZ;
+    instance.XWYZ = Real4();
+  }
+  function Test_XWZ_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.XWZ;
+    instance.XWZ = Real3();
+  }
+  function Test_XWZW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XWZW;
+  }
+  function Test_XWZX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XWZX;
+  }
+  function Test_XWZY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XWZY;
+    instance.XWZY = Real4();
+  }
+  function Test_XWZZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XWZZ;
+  }
+  function Test_XX_Real2()
+  {
+    var instance = Quaternion();
+    var value = instance.XX;
+  }
+  function Test_XXW_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.XXW;
+  }
+  function Test_XXWW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XXWW;
+  }
+  function Test_XXWX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XXWX;
+  }
+  function Test_XXWY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XXWY;
+  }
+  function Test_XXWZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XXWZ;
+  }
+  function Test_XXX_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.XXX;
+  }
+  function Test_XXXW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XXXW;
+  }
+  function Test_XXXX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XXXX;
+  }
+  function Test_XXXY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XXXY;
+  }
+  function Test_XXXZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XXXZ;
+  }
+  function Test_XXY_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.XXY;
+  }
+  function Test_XXYW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XXYW;
+  }
+  function Test_XXYX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XXYX;
+  }
+  function Test_XXYY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XXYY;
+  }
+  function Test_XXYZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XXYZ;
+  }
+  function Test_XXZ_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.XXZ;
+  }
+  function Test_XXZW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XXZW;
+  }
+  function Test_XXZX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XXZX;
+  }
+  function Test_XXZY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XXZY;
+  }
+  function Test_XXZZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XXZZ;
+  }
+  function Test_XY_Real2()
+  {
+    var instance = Quaternion();
+    var value = instance.XY;
+    instance.XY = Real2();
+  }
+  function Test_XYW_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.XYW;
+    instance.XYW = Real3();
+  }
+  function Test_XYWW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XYWW;
+  }
+  function Test_XYWX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XYWX;
+  }
+  function Test_XYWY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XYWY;
+  }
+  function Test_XYWZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XYWZ;
+    instance.XYWZ = Real4();
+  }
+  function Test_XYX_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.XYX;
+  }
+  function Test_XYXW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XYXW;
+  }
+  function Test_XYXX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XYXX;
+  }
+  function Test_XYXY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XYXY;
+  }
+  function Test_XYXZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XYXZ;
+  }
+  function Test_XYY_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.XYY;
+  }
+  function Test_XYYW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XYYW;
+  }
+  function Test_XYYX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XYYX;
+  }
+  function Test_XYYY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XYYY;
+  }
+  function Test_XYYZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XYYZ;
+  }
+  function Test_XYZ_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.XYZ;
+    instance.XYZ = Real3();
+  }
+  function Test_XYZW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XYZW;
+    instance.XYZW = Real4();
+  }
+  function Test_XYZX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XYZX;
+  }
+  function Test_XYZY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XYZY;
+  }
+  function Test_XYZZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XYZZ;
+  }
+  function Test_XZ_Real2()
+  {
+    var instance = Quaternion();
+    var value = instance.XZ;
+    instance.XZ = Real2();
+  }
+  function Test_XZW_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.XZW;
+    instance.XZW = Real3();
+  }
+  function Test_XZWW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XZWW;
+  }
+  function Test_XZWX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XZWX;
+  }
+  function Test_XZWY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XZWY;
+    instance.XZWY = Real4();
+  }
+  function Test_XZWZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XZWZ;
+  }
+  function Test_XZX_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.XZX;
+  }
+  function Test_XZXW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XZXW;
+  }
+  function Test_XZXX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XZXX;
+  }
+  function Test_XZXY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XZXY;
+  }
+  function Test_XZXZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XZXZ;
+  }
+  function Test_XZY_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.XZY;
+    instance.XZY = Real3();
+  }
+  function Test_XZYW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XZYW;
+    instance.XZYW = Real4();
+  }
+  function Test_XZYX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XZYX;
+  }
+  function Test_XZYY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XZYY;
+  }
+  function Test_XZYZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XZYZ;
+  }
+  function Test_XZZ_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.XZZ;
+  }
+  function Test_XZZW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XZZW;
+  }
+  function Test_XZZX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XZZX;
+  }
+  function Test_XZZY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XZZY;
+  }
+  function Test_XZZZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.XZZZ;
+  }
+  function Test_Y_Real()
+  {
+    var instance = Quaternion();
+    var value = instance.Y;
+    instance.Y = Real();
+  }
+  function Test_YW_Real2()
+  {
+    var instance = Quaternion();
+    var value = instance.YW;
+    instance.YW = Real2();
+  }
+  function Test_YWW_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.YWW;
+  }
+  function Test_YWWW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YWWW;
+  }
+  function Test_YWWX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YWWX;
+  }
+  function Test_YWWY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YWWY;
+  }
+  function Test_YWWZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YWWZ;
+  }
+  function Test_YWX_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.YWX;
+    instance.YWX = Real3();
+  }
+  function Test_YWXW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YWXW;
+  }
+  function Test_YWXX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YWXX;
+  }
+  function Test_YWXY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YWXY;
+  }
+  function Test_YWXZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YWXZ;
+    instance.YWXZ = Real4();
+  }
+  function Test_YWY_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.YWY;
+  }
+  function Test_YWYW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YWYW;
+  }
+  function Test_YWYX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YWYX;
+  }
+  function Test_YWYY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YWYY;
+  }
+  function Test_YWYZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YWYZ;
+  }
+  function Test_YWZ_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.YWZ;
+    instance.YWZ = Real3();
+  }
+  function Test_YWZW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YWZW;
+  }
+  function Test_YWZX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YWZX;
+    instance.YWZX = Real4();
+  }
+  function Test_YWZY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YWZY;
+  }
+  function Test_YWZZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YWZZ;
+  }
+  function Test_YX_Real2()
+  {
+    var instance = Quaternion();
+    var value = instance.YX;
+    instance.YX = Real2();
+  }
+  function Test_YXW_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.YXW;
+    instance.YXW = Real3();
+  }
+  function Test_YXWW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YXWW;
+  }
+  function Test_YXWX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YXWX;
+  }
+  function Test_YXWY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YXWY;
+  }
+  function Test_YXWZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YXWZ;
+    instance.YXWZ = Real4();
+  }
+  function Test_YXX_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.YXX;
+  }
+  function Test_YXXW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YXXW;
+  }
+  function Test_YXXX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YXXX;
+  }
+  function Test_YXXY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YXXY;
+  }
+  function Test_YXXZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YXXZ;
+  }
+  function Test_YXY_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.YXY;
+  }
+  function Test_YXYW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YXYW;
+  }
+  function Test_YXYX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YXYX;
+  }
+  function Test_YXYY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YXYY;
+  }
+  function Test_YXYZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YXYZ;
+  }
+  function Test_YXZ_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.YXZ;
+    instance.YXZ = Real3();
+  }
+  function Test_YXZW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YXZW;
+    instance.YXZW = Real4();
+  }
+  function Test_YXZX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YXZX;
+  }
+  function Test_YXZY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YXZY;
+  }
+  function Test_YXZZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YXZZ;
+  }
+  function Test_YY_Real2()
+  {
+    var instance = Quaternion();
+    var value = instance.YY;
+  }
+  function Test_YYW_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.YYW;
+  }
+  function Test_YYWW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YYWW;
+  }
+  function Test_YYWX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YYWX;
+  }
+  function Test_YYWY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YYWY;
+  }
+  function Test_YYWZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YYWZ;
+  }
+  function Test_YYX_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.YYX;
+  }
+  function Test_YYXW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YYXW;
+  }
+  function Test_YYXX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YYXX;
+  }
+  function Test_YYXY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YYXY;
+  }
+  function Test_YYXZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YYXZ;
+  }
+  function Test_YYY_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.YYY;
+  }
+  function Test_YYYW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YYYW;
+  }
+  function Test_YYYX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YYYX;
+  }
+  function Test_YYYY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YYYY;
+  }
+  function Test_YYYZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YYYZ;
+  }
+  function Test_YYZ_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.YYZ;
+  }
+  function Test_YYZW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YYZW;
+  }
+  function Test_YYZX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YYZX;
+  }
+  function Test_YYZY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YYZY;
+  }
+  function Test_YYZZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YYZZ;
+  }
+  function Test_YZ_Real2()
+  {
+    var instance = Quaternion();
+    var value = instance.YZ;
+    instance.YZ = Real2();
+  }
+  function Test_YZW_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.YZW;
+    instance.YZW = Real3();
+  }
+  function Test_YZWW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YZWW;
+  }
+  function Test_YZWX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YZWX;
+    instance.YZWX = Real4();
+  }
+  function Test_YZWY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YZWY;
+  }
+  function Test_YZWZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YZWZ;
+  }
+  function Test_YZX_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.YZX;
+    instance.YZX = Real3();
+  }
+  function Test_YZXW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YZXW;
+    instance.YZXW = Real4();
+  }
+  function Test_YZXX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YZXX;
+  }
+  function Test_YZXY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YZXY;
+  }
+  function Test_YZXZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YZXZ;
+  }
+  function Test_YZY_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.YZY;
+  }
+  function Test_YZYW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YZYW;
+  }
+  function Test_YZYX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YZYX;
+  }
+  function Test_YZYY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YZYY;
+  }
+  function Test_YZYZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YZYZ;
+  }
+  function Test_YZZ_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.YZZ;
+  }
+  function Test_YZZW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YZZW;
+  }
+  function Test_YZZX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YZZX;
+  }
+  function Test_YZZY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YZZY;
+  }
+  function Test_YZZZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.YZZZ;
+  }
+  function Test_Z_Real()
+  {
+    var instance = Quaternion();
+    var value = instance.Z;
+    instance.Z = Real();
+  }
+  function Test_ZW_Real2()
+  {
+    var instance = Quaternion();
+    var value = instance.ZW;
+    instance.ZW = Real2();
+  }
+  function Test_ZWW_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.ZWW;
+  }
+  function Test_ZWWW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZWWW;
+  }
+  function Test_ZWWX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZWWX;
+  }
+  function Test_ZWWY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZWWY;
+  }
+  function Test_ZWWZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZWWZ;
+  }
+  function Test_ZWX_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.ZWX;
+    instance.ZWX = Real3();
+  }
+  function Test_ZWXW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZWXW;
+  }
+  function Test_ZWXX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZWXX;
+  }
+  function Test_ZWXY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZWXY;
+    instance.ZWXY = Real4();
+  }
+  function Test_ZWXZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZWXZ;
+  }
+  function Test_ZWY_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.ZWY;
+    instance.ZWY = Real3();
+  }
+  function Test_ZWYW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZWYW;
+  }
+  function Test_ZWYX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZWYX;
+    instance.ZWYX = Real4();
+  }
+  function Test_ZWYY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZWYY;
+  }
+  function Test_ZWYZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZWYZ;
+  }
+  function Test_ZWZ_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.ZWZ;
+  }
+  function Test_ZWZW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZWZW;
+  }
+  function Test_ZWZX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZWZX;
+  }
+  function Test_ZWZY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZWZY;
+  }
+  function Test_ZWZZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZWZZ;
+  }
+  function Test_ZX_Real2()
+  {
+    var instance = Quaternion();
+    var value = instance.ZX;
+    instance.ZX = Real2();
+  }
+  function Test_ZXW_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.ZXW;
+    instance.ZXW = Real3();
+  }
+  function Test_ZXWW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZXWW;
+  }
+  function Test_ZXWX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZXWX;
+  }
+  function Test_ZXWY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZXWY;
+    instance.ZXWY = Real4();
+  }
+  function Test_ZXWZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZXWZ;
+  }
+  function Test_ZXX_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.ZXX;
+  }
+  function Test_ZXXW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZXXW;
+  }
+  function Test_ZXXX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZXXX;
+  }
+  function Test_ZXXY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZXXY;
+  }
+  function Test_ZXXZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZXXZ;
+  }
+  function Test_ZXY_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.ZXY;
+    instance.ZXY = Real3();
+  }
+  function Test_ZXYW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZXYW;
+    instance.ZXYW = Real4();
+  }
+  function Test_ZXYX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZXYX;
+  }
+  function Test_ZXYY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZXYY;
+  }
+  function Test_ZXYZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZXYZ;
+  }
+  function Test_ZXZ_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.ZXZ;
+  }
+  function Test_ZXZW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZXZW;
+  }
+  function Test_ZXZX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZXZX;
+  }
+  function Test_ZXZY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZXZY;
+  }
+  function Test_ZXZZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZXZZ;
+  }
+  function Test_ZY_Real2()
+  {
+    var instance = Quaternion();
+    var value = instance.ZY;
+    instance.ZY = Real2();
+  }
+  function Test_ZYW_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.ZYW;
+    instance.ZYW = Real3();
+  }
+  function Test_ZYWW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZYWW;
+  }
+  function Test_ZYWX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZYWX;
+    instance.ZYWX = Real4();
+  }
+  function Test_ZYWY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZYWY;
+  }
+  function Test_ZYWZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZYWZ;
+  }
+  function Test_ZYX_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.ZYX;
+    instance.ZYX = Real3();
+  }
+  function Test_ZYXW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZYXW;
+    instance.ZYXW = Real4();
+  }
+  function Test_ZYXX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZYXX;
+  }
+  function Test_ZYXY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZYXY;
+  }
+  function Test_ZYXZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZYXZ;
+  }
+  function Test_ZYY_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.ZYY;
+  }
+  function Test_ZYYW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZYYW;
+  }
+  function Test_ZYYX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZYYX;
+  }
+  function Test_ZYYY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZYYY;
+  }
+  function Test_ZYYZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZYYZ;
+  }
+  function Test_ZYZ_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.ZYZ;
+  }
+  function Test_ZYZW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZYZW;
+  }
+  function Test_ZYZX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZYZX;
+  }
+  function Test_ZYZY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZYZY;
+  }
+  function Test_ZYZZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZYZZ;
+  }
+  function Test_ZZ_Real2()
+  {
+    var instance = Quaternion();
+    var value = instance.ZZ;
+  }
+  function Test_ZZW_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.ZZW;
+  }
+  function Test_ZZWW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZZWW;
+  }
+  function Test_ZZWX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZZWX;
+  }
+  function Test_ZZWY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZZWY;
+  }
+  function Test_ZZWZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZZWZ;
+  }
+  function Test_ZZX_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.ZZX;
+  }
+  function Test_ZZXW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZZXW;
+  }
+  function Test_ZZXX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZZXX;
+  }
+  function Test_ZZXY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZZXY;
+  }
+  function Test_ZZXZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZZXZ;
+  }
+  function Test_ZZY_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.ZZY;
+  }
+  function Test_ZZYW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZZYW;
+  }
+  function Test_ZZYX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZZYX;
+  }
+  function Test_ZZYY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZZYY;
+  }
+  function Test_ZZYZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZZYZ;
+  }
+  function Test_ZZZ_Real3()
+  {
+    var instance = Quaternion();
+    var value = instance.ZZZ;
+  }
+  function Test_ZZZW_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZZZW;
+  }
+  function Test_ZZZX_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZZZX;
+  }
+  function Test_ZZZY_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZZZY;
+  }
+  function Test_ZZZZ_Real4()
+  {
+    var instance = Quaternion();
+    var value = instance.ZZZZ;
+  }
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_StaticCount_Integer();
+    this.Test_Count_Integer();
+    this.Test_StaticIdentity_Quaternion();
+    this.Test_W_Real();
+    this.Test_WW_Real2();
+    this.Test_WWW_Real3();
+    this.Test_WWWW_Real4();
+    this.Test_WWWX_Real4();
+    this.Test_WWWY_Real4();
+    this.Test_WWWZ_Real4();
+    this.Test_WWX_Real3();
+    this.Test_WWXW_Real4();
+    this.Test_WWXX_Real4();
+    this.Test_WWXY_Real4();
+    this.Test_WWXZ_Real4();
+    this.Test_WWY_Real3();
+    this.Test_WWYW_Real4();
+    this.Test_WWYX_Real4();
+    this.Test_WWYY_Real4();
+    this.Test_WWYZ_Real4();
+    this.Test_WWZ_Real3();
+    this.Test_WWZW_Real4();
+    this.Test_WWZX_Real4();
+    this.Test_WWZY_Real4();
+    this.Test_WWZZ_Real4();
+    this.Test_WX_Real2();
+    this.Test_WXW_Real3();
+    this.Test_WXWW_Real4();
+    this.Test_WXWX_Real4();
+    this.Test_WXWY_Real4();
+    this.Test_WXWZ_Real4();
+    this.Test_WXX_Real3();
+    this.Test_WXXW_Real4();
+    this.Test_WXXX_Real4();
+    this.Test_WXXY_Real4();
+    this.Test_WXXZ_Real4();
+    this.Test_WXY_Real3();
+    this.Test_WXYW_Real4();
+    this.Test_WXYX_Real4();
+    this.Test_WXYY_Real4();
+    this.Test_WXYZ_Real4();
+    this.Test_WXZ_Real3();
+    this.Test_WXZW_Real4();
+    this.Test_WXZX_Real4();
+    this.Test_WXZY_Real4();
+    this.Test_WXZZ_Real4();
+    this.Test_WY_Real2();
+    this.Test_WYW_Real3();
+    this.Test_WYWW_Real4();
+    this.Test_WYWX_Real4();
+    this.Test_WYWY_Real4();
+    this.Test_WYWZ_Real4();
+    this.Test_WYX_Real3();
+    this.Test_WYXW_Real4();
+    this.Test_WYXX_Real4();
+    this.Test_WYXY_Real4();
+    this.Test_WYXZ_Real4();
+    this.Test_WYY_Real3();
+    this.Test_WYYW_Real4();
+    this.Test_WYYX_Real4();
+    this.Test_WYYY_Real4();
+    this.Test_WYYZ_Real4();
+    this.Test_WYZ_Real3();
+    this.Test_WYZW_Real4();
+    this.Test_WYZX_Real4();
+    this.Test_WYZY_Real4();
+    this.Test_WYZZ_Real4();
+    this.Test_WZ_Real2();
+    this.Test_WZW_Real3();
+    this.Test_WZWW_Real4();
+    this.Test_WZWX_Real4();
+    this.Test_WZWY_Real4();
+    this.Test_WZWZ_Real4();
+    this.Test_WZX_Real3();
+    this.Test_WZXW_Real4();
+    this.Test_WZXX_Real4();
+    this.Test_WZXY_Real4();
+    this.Test_WZXZ_Real4();
+    this.Test_WZY_Real3();
+    this.Test_WZYW_Real4();
+    this.Test_WZYX_Real4();
+    this.Test_WZYY_Real4();
+    this.Test_WZYZ_Real4();
+    this.Test_WZZ_Real3();
+    this.Test_WZZW_Real4();
+    this.Test_WZZX_Real4();
+    this.Test_WZZY_Real4();
+    this.Test_WZZZ_Real4();
+    this.Test_X_Real();
+    this.Test_XW_Real2();
+    this.Test_XWW_Real3();
+    this.Test_XWWW_Real4();
+    this.Test_XWWX_Real4();
+    this.Test_XWWY_Real4();
+    this.Test_XWWZ_Real4();
+    this.Test_XWX_Real3();
+    this.Test_XWXW_Real4();
+    this.Test_XWXX_Real4();
+    this.Test_XWXY_Real4();
+    this.Test_XWXZ_Real4();
+    this.Test_XWY_Real3();
+    this.Test_XWYW_Real4();
+    this.Test_XWYX_Real4();
+    this.Test_XWYY_Real4();
+    this.Test_XWYZ_Real4();
+    this.Test_XWZ_Real3();
+    this.Test_XWZW_Real4();
+    this.Test_XWZX_Real4();
+    this.Test_XWZY_Real4();
+    this.Test_XWZZ_Real4();
+    this.Test_XX_Real2();
+    this.Test_XXW_Real3();
+    this.Test_XXWW_Real4();
+    this.Test_XXWX_Real4();
+    this.Test_XXWY_Real4();
+    this.Test_XXWZ_Real4();
+    this.Test_XXX_Real3();
+    this.Test_XXXW_Real4();
+    this.Test_XXXX_Real4();
+    this.Test_XXXY_Real4();
+    this.Test_XXXZ_Real4();
+    this.Test_XXY_Real3();
+    this.Test_XXYW_Real4();
+    this.Test_XXYX_Real4();
+    this.Test_XXYY_Real4();
+    this.Test_XXYZ_Real4();
+    this.Test_XXZ_Real3();
+    this.Test_XXZW_Real4();
+    this.Test_XXZX_Real4();
+    this.Test_XXZY_Real4();
+    this.Test_XXZZ_Real4();
+    this.Test_XY_Real2();
+    this.Test_XYW_Real3();
+    this.Test_XYWW_Real4();
+    this.Test_XYWX_Real4();
+    this.Test_XYWY_Real4();
+    this.Test_XYWZ_Real4();
+    this.Test_XYX_Real3();
+    this.Test_XYXW_Real4();
+    this.Test_XYXX_Real4();
+    this.Test_XYXY_Real4();
+    this.Test_XYXZ_Real4();
+    this.Test_XYY_Real3();
+    this.Test_XYYW_Real4();
+    this.Test_XYYX_Real4();
+    this.Test_XYYY_Real4();
+    this.Test_XYYZ_Real4();
+    this.Test_XYZ_Real3();
+    this.Test_XYZW_Real4();
+    this.Test_XYZX_Real4();
+    this.Test_XYZY_Real4();
+    this.Test_XYZZ_Real4();
+    this.Test_XZ_Real2();
+    this.Test_XZW_Real3();
+    this.Test_XZWW_Real4();
+    this.Test_XZWX_Real4();
+    this.Test_XZWY_Real4();
+    this.Test_XZWZ_Real4();
+    this.Test_XZX_Real3();
+    this.Test_XZXW_Real4();
+    this.Test_XZXX_Real4();
+    this.Test_XZXY_Real4();
+    this.Test_XZXZ_Real4();
+    this.Test_XZY_Real3();
+    this.Test_XZYW_Real4();
+    this.Test_XZYX_Real4();
+    this.Test_XZYY_Real4();
+    this.Test_XZYZ_Real4();
+    this.Test_XZZ_Real3();
+    this.Test_XZZW_Real4();
+    this.Test_XZZX_Real4();
+    this.Test_XZZY_Real4();
+    this.Test_XZZZ_Real4();
+    this.Test_Y_Real();
+    this.Test_YW_Real2();
+    this.Test_YWW_Real3();
+    this.Test_YWWW_Real4();
+    this.Test_YWWX_Real4();
+    this.Test_YWWY_Real4();
+    this.Test_YWWZ_Real4();
+    this.Test_YWX_Real3();
+    this.Test_YWXW_Real4();
+    this.Test_YWXX_Real4();
+    this.Test_YWXY_Real4();
+    this.Test_YWXZ_Real4();
+    this.Test_YWY_Real3();
+    this.Test_YWYW_Real4();
+    this.Test_YWYX_Real4();
+    this.Test_YWYY_Real4();
+    this.Test_YWYZ_Real4();
+    this.Test_YWZ_Real3();
+    this.Test_YWZW_Real4();
+    this.Test_YWZX_Real4();
+    this.Test_YWZY_Real4();
+    this.Test_YWZZ_Real4();
+    this.Test_YX_Real2();
+    this.Test_YXW_Real3();
+    this.Test_YXWW_Real4();
+    this.Test_YXWX_Real4();
+    this.Test_YXWY_Real4();
+    this.Test_YXWZ_Real4();
+    this.Test_YXX_Real3();
+    this.Test_YXXW_Real4();
+    this.Test_YXXX_Real4();
+    this.Test_YXXY_Real4();
+    this.Test_YXXZ_Real4();
+    this.Test_YXY_Real3();
+    this.Test_YXYW_Real4();
+    this.Test_YXYX_Real4();
+    this.Test_YXYY_Real4();
+    this.Test_YXYZ_Real4();
+    this.Test_YXZ_Real3();
+    this.Test_YXZW_Real4();
+    this.Test_YXZX_Real4();
+    this.Test_YXZY_Real4();
+    this.Test_YXZZ_Real4();
+    this.Test_YY_Real2();
+    this.Test_YYW_Real3();
+    this.Test_YYWW_Real4();
+    this.Test_YYWX_Real4();
+    this.Test_YYWY_Real4();
+    this.Test_YYWZ_Real4();
+    this.Test_YYX_Real3();
+    this.Test_YYXW_Real4();
+    this.Test_YYXX_Real4();
+    this.Test_YYXY_Real4();
+    this.Test_YYXZ_Real4();
+    this.Test_YYY_Real3();
+    this.Test_YYYW_Real4();
+    this.Test_YYYX_Real4();
+    this.Test_YYYY_Real4();
+    this.Test_YYYZ_Real4();
+    this.Test_YYZ_Real3();
+    this.Test_YYZW_Real4();
+    this.Test_YYZX_Real4();
+    this.Test_YYZY_Real4();
+    this.Test_YYZZ_Real4();
+    this.Test_YZ_Real2();
+    this.Test_YZW_Real3();
+    this.Test_YZWW_Real4();
+    this.Test_YZWX_Real4();
+    this.Test_YZWY_Real4();
+    this.Test_YZWZ_Real4();
+    this.Test_YZX_Real3();
+    this.Test_YZXW_Real4();
+    this.Test_YZXX_Real4();
+    this.Test_YZXY_Real4();
+    this.Test_YZXZ_Real4();
+    this.Test_YZY_Real3();
+    this.Test_YZYW_Real4();
+    this.Test_YZYX_Real4();
+    this.Test_YZYY_Real4();
+    this.Test_YZYZ_Real4();
+    this.Test_YZZ_Real3();
+    this.Test_YZZW_Real4();
+    this.Test_YZZX_Real4();
+    this.Test_YZZY_Real4();
+    this.Test_YZZZ_Real4();
+    this.Test_Z_Real();
+    this.Test_ZW_Real2();
+    this.Test_ZWW_Real3();
+    this.Test_ZWWW_Real4();
+    this.Test_ZWWX_Real4();
+    this.Test_ZWWY_Real4();
+    this.Test_ZWWZ_Real4();
+    this.Test_ZWX_Real3();
+    this.Test_ZWXW_Real4();
+    this.Test_ZWXX_Real4();
+    this.Test_ZWXY_Real4();
+    this.Test_ZWXZ_Real4();
+    this.Test_ZWY_Real3();
+    this.Test_ZWYW_Real4();
+    this.Test_ZWYX_Real4();
+    this.Test_ZWYY_Real4();
+    this.Test_ZWYZ_Real4();
+    this.Test_ZWZ_Real3();
+    this.Test_ZWZW_Real4();
+    this.Test_ZWZX_Real4();
+    this.Test_ZWZY_Real4();
+    this.Test_ZWZZ_Real4();
+    this.Test_ZX_Real2();
+    this.Test_ZXW_Real3();
+    this.Test_ZXWW_Real4();
+    this.Test_ZXWX_Real4();
+    this.Test_ZXWY_Real4();
+    this.Test_ZXWZ_Real4();
+    this.Test_ZXX_Real3();
+    this.Test_ZXXW_Real4();
+    this.Test_ZXXX_Real4();
+    this.Test_ZXXY_Real4();
+    this.Test_ZXXZ_Real4();
+    this.Test_ZXY_Real3();
+    this.Test_ZXYW_Real4();
+    this.Test_ZXYX_Real4();
+    this.Test_ZXYY_Real4();
+    this.Test_ZXYZ_Real4();
+    this.Test_ZXZ_Real3();
+    this.Test_ZXZW_Real4();
+    this.Test_ZXZX_Real4();
+    this.Test_ZXZY_Real4();
+    this.Test_ZXZZ_Real4();
+    this.Test_ZY_Real2();
+    this.Test_ZYW_Real3();
+    this.Test_ZYWW_Real4();
+    this.Test_ZYWX_Real4();
+    this.Test_ZYWY_Real4();
+    this.Test_ZYWZ_Real4();
+    this.Test_ZYX_Real3();
+    this.Test_ZYXW_Real4();
+    this.Test_ZYXX_Real4();
+    this.Test_ZYXY_Real4();
+    this.Test_ZYXZ_Real4();
+    this.Test_ZYY_Real3();
+    this.Test_ZYYW_Real4();
+    this.Test_ZYYX_Real4();
+    this.Test_ZYYY_Real4();
+    this.Test_ZYYZ_Real4();
+    this.Test_ZYZ_Real3();
+    this.Test_ZYZW_Real4();
+    this.Test_ZYZX_Real4();
+    this.Test_ZYZY_Real4();
+    this.Test_ZYZZ_Real4();
+    this.Test_ZZ_Real2();
+    this.Test_ZZW_Real3();
+    this.Test_ZZWW_Real4();
+    this.Test_ZZWX_Real4();
+    this.Test_ZZWY_Real4();
+    this.Test_ZZWZ_Real4();
+    this.Test_ZZX_Real3();
+    this.Test_ZZXW_Real4();
+    this.Test_ZZXX_Real4();
+    this.Test_ZZXY_Real4();
+    this.Test_ZZXZ_Real4();
+    this.Test_ZZY_Real3();
+    this.Test_ZZYW_Real4();
+    this.Test_ZZYX_Real4();
+    this.Test_ZZYY_Real4();
+    this.Test_ZZYZ_Real4();
+    this.Test_ZZZ_Real3();
+    this.Test_ZZZW_Real4();
+    this.Test_ZZZX_Real4();
+    this.Test_ZZZY_Real4();
+    this.Test_ZZZZ_Real4();
+  }
+}

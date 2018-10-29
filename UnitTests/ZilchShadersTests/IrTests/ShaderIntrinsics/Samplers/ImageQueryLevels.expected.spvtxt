@@ -1,0 +1,138 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 72
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpCapability ImageQuery
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_ImageQueryLevels "EntryPoint_Main_ImageQueryLevels"
+               OpExecutionMode %EntryPoint_Main_ImageQueryLevels OriginUpperLeft
+               OpSource Unknown 100
+               OpName %ImageQueryLevels "ImageQueryLevels"
+               OpMemberName %ImageQueryLevels 0 "Dummy"
+               OpName %Image_ImageQueryLevels "Image_ImageQueryLevels"
+               OpName %SampledImage_ImageQueryLevels "SampledImage_ImageQueryLevels"
+               OpName %DepthImage_ImageQueryLevels "DepthImage_ImageQueryLevels"
+               OpName %SampledDepthImage_ImageQueryLevels "SampledDepthImage_ImageQueryLevels"
+               OpName %ImageCube_ImageQueryLevels "ImageCube_ImageQueryLevels"
+               OpName %SampledImageCube_ImageQueryLevels "SampledImageCube_ImageQueryLevels"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %levels "levels"
+               OpName %PreConstructor_ImageQueryLevels "PreConstructor_ImageQueryLevels"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_ImageQueryLevels "EntryPoint_Main_ImageQueryLevels"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %Image_ImageQueryLevels Binding 0
+               OpDecorate %Image_ImageQueryLevels DescriptorSet 0
+               OpDecorate %SampledImage_ImageQueryLevels Binding 1
+               OpDecorate %SampledImage_ImageQueryLevels DescriptorSet 0
+               OpDecorate %DepthImage_ImageQueryLevels Binding 2
+               OpDecorate %DepthImage_ImageQueryLevels DescriptorSet 0
+               OpDecorate %SampledDepthImage_ImageQueryLevels Binding 3
+               OpDecorate %SampledDepthImage_ImageQueryLevels DescriptorSet 0
+               OpDecorate %ImageCube_ImageQueryLevels Binding 4
+               OpDecorate %ImageCube_ImageQueryLevels DescriptorSet 0
+               OpDecorate %SampledImageCube_ImageQueryLevels Binding 5
+               OpDecorate %SampledImageCube_ImageQueryLevels DescriptorSet 0
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%ImageQueryLevels = OpTypeStruct %int
+%_ptr_Function_ImageQueryLevels = OpTypePointer Function %ImageQueryLevels
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_ImageQueryLevels
+      %int_1 = OpConstant %int 1
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+         %11 = OpTypeImage %float 2D 0 0 0 1 Unknown
+%_ptr_UniformConstant_11 = OpTypePointer UniformConstant %11
+%Image_ImageQueryLevels = OpVariable %_ptr_UniformConstant_11 UniformConstant
+         %13 = OpTypeSampledImage %11
+%_ptr_UniformConstant_13 = OpTypePointer UniformConstant %13
+%SampledImage_ImageQueryLevels = OpVariable %_ptr_UniformConstant_13 UniformConstant
+         %15 = OpTypeImage %float 2D 1 0 0 1 Unknown
+%_ptr_UniformConstant_15 = OpTypePointer UniformConstant %15
+%DepthImage_ImageQueryLevels = OpVariable %_ptr_UniformConstant_15 UniformConstant
+         %17 = OpTypeSampledImage %15
+%_ptr_UniformConstant_17 = OpTypePointer UniformConstant %17
+%SampledDepthImage_ImageQueryLevels = OpVariable %_ptr_UniformConstant_17 UniformConstant
+         %19 = OpTypeImage %float Cube 0 0 0 1 Unknown
+%_ptr_UniformConstant_19 = OpTypePointer UniformConstant %19
+%ImageCube_ImageQueryLevels = OpVariable %_ptr_UniformConstant_19 UniformConstant
+         %21 = OpTypeSampledImage %19
+%_ptr_UniformConstant_21 = OpTypePointer UniformConstant %21
+%SampledImageCube_ImageQueryLevels = OpVariable %_ptr_UniformConstant_21 UniformConstant
+         %23 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_ImageQueryLevels
+         %33 = OpLabel
+     %levels = OpVariable %_ptr_Function_int Function
+               OpStore %levels %int_1
+         %35 = OpLoad %11 %Image_ImageQueryLevels
+         %36 = OpImageQueryLevels %int %35
+               OpStore %levels %36
+         %37 = OpLoad %13 %SampledImage_ImageQueryLevels
+         %38 = OpImage %11 %37
+         %39 = OpImageQueryLevels %int %38
+               OpStore %levels %39
+         %40 = OpLoad %15 %DepthImage_ImageQueryLevels
+         %41 = OpImageQueryLevels %int %40
+               OpStore %levels %41
+         %42 = OpLoad %17 %SampledDepthImage_ImageQueryLevels
+         %43 = OpImage %15 %42
+         %44 = OpImageQueryLevels %int %43
+               OpStore %levels %44
+         %45 = OpLoad %19 %ImageCube_ImageQueryLevels
+         %46 = OpImageQueryLevels %int %45
+               OpStore %levels %46
+         %47 = OpLoad %21 %SampledImageCube_ImageQueryLevels
+         %48 = OpImage %19 %47
+         %49 = OpImageQueryLevels %int %48
+               OpStore %levels %49
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_ImageQueryLevels = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_ImageQueryLevels
+         %52 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_ImageQueryLevels
+         %55 = OpLabel
+         %56 = OpFunctionCall %void %PreConstructor_ImageQueryLevels %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_ImageQueryLevels
+         %59 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_ImageQueryLevels
+         %62 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_ImageQueryLevels = OpFunction %void None %23
+         %64 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_ImageQueryLevels Function
+         %66 = OpFunctionCall %void %InitializeGlobals
+         %67 = OpFunctionCall %void %DefaultConstructor %self_4
+         %68 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %69 = OpFunctionCall %void %Main %self_4
+         %70 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %23
+         %71 = OpLabel
+               OpReturn
+               OpFunctionEnd

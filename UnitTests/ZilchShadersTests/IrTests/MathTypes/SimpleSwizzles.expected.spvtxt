@@ -1,0 +1,136 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 75
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_SimpleSwizzles "EntryPoint_Main_SimpleSwizzles"
+               OpExecutionMode %EntryPoint_Main_SimpleSwizzles OriginUpperLeft
+               OpSource Unknown 100
+               OpName %SimpleSwizzles "SimpleSwizzles"
+               OpMemberName %SimpleSwizzles 0 "Dummy"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %r1 "r1"
+               OpName %r2 "r2"
+               OpName %r3 "r3"
+               OpName %r4 "r4"
+               OpName %i1 "i1"
+               OpName %i2 "i2"
+               OpName %i3 "i3"
+               OpName %i4 "i4"
+               OpName %r1_0 "r1_0"
+               OpName %PreConstructor_SimpleSwizzles "PreConstructor_SimpleSwizzles"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_SimpleSwizzles "EntryPoint_Main_SimpleSwizzles"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%SimpleSwizzles = OpTypeStruct %int
+%_ptr_Function_SimpleSwizzles = OpTypePointer Function %SimpleSwizzles
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_SimpleSwizzles
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %float_0 = OpConstant %float 0
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+      %int_0 = OpConstant %int 0
+      %v2int = OpTypeVector %int 2
+%_ptr_Function_v2int = OpTypePointer Function %v2int
+      %v3int = OpTypeVector %int 3
+%_ptr_Function_v3int = OpTypePointer Function %v3int
+      %v4int = OpTypeVector %int 4
+%_ptr_Function_v4int = OpTypePointer Function %v4int
+         %23 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_SimpleSwizzles
+         %28 = OpLabel
+         %r1 = OpVariable %_ptr_Function_float Function
+         %r2 = OpVariable %_ptr_Function_v2float Function
+         %r3 = OpVariable %_ptr_Function_v3float Function
+         %r4 = OpVariable %_ptr_Function_v4float Function
+         %i1 = OpVariable %_ptr_Function_int Function
+         %i2 = OpVariable %_ptr_Function_v2int Function
+         %i3 = OpVariable %_ptr_Function_v3int Function
+         %i4 = OpVariable %_ptr_Function_v4int Function
+       %r1_0 = OpVariable %_ptr_Function_float Function
+               OpStore %r1 %float_0
+         %38 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %r2 %38
+         %39 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %r3 %39
+         %40 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %r4 %40
+               OpStore %i1 %int_0
+         %41 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %i2 %41
+         %42 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+               OpStore %i3 %42
+         %43 = OpCompositeConstruct %v4int %int_0 %int_0 %int_0 %int_0
+               OpStore %i4 %43
+         %44 = OpAccessChain %_ptr_Function_float %r2 %int_0
+         %45 = OpLoad %float %44
+               OpStore %r1 %45
+         %46 = OpLoad %v2float %r2
+         %47 = OpVectorShuffle %v2float %46 %46 0 1
+               OpStore %r2 %47
+         %48 = OpLoad %v2float %r2
+         %49 = OpVectorShuffle %v3float %48 %48 0 1 0
+               OpStore %r3 %49
+         %50 = OpLoad %float %r1
+               OpStore %r1_0 %50
+         %51 = OpLoad %float %r1
+         %52 = OpCompositeConstruct %v2float %51 %51
+               OpStore %r2 %52
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_SimpleSwizzles = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_SimpleSwizzles
+         %55 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_SimpleSwizzles
+         %58 = OpLabel
+         %59 = OpFunctionCall %void %PreConstructor_SimpleSwizzles %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_SimpleSwizzles
+         %62 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_SimpleSwizzles
+         %65 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_SimpleSwizzles = OpFunction %void None %23
+         %67 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_SimpleSwizzles Function
+         %69 = OpFunctionCall %void %InitializeGlobals
+         %70 = OpFunctionCall %void %DefaultConstructor %self_4
+         %71 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %72 = OpFunctionCall %void %Main %self_4
+         %73 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %23
+         %74 = OpLabel
+               OpReturn
+               OpFunctionEnd

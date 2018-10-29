@@ -1,0 +1,21 @@
+// All Inputs
+[Vertex][UnitTest]
+struct UniformBuffersVertex9
+{
+  // Buffer0 (Frame Data)
+  [AppBuiltInInput("LogicTime")] var GameTime : Real;
+  [AppBuiltInInput("FrameTime")] var EditorTime : Real;
+  
+  // Buffer1 (Camera Data)
+  [AppBuiltInInput("NearPlane")] var Near : Real;
+  [AppBuiltInInput("FarPlane")] var Far : Real;
+  
+  // Buffer2 (Misc)
+  [PropertyInput("ObjectPosition")] var Position : Real3;
+  [PropertyInput("ObjectColor")] var Color : Real4;
+  
+  [EntryPoint]
+  function Main()
+  {
+  }
+}

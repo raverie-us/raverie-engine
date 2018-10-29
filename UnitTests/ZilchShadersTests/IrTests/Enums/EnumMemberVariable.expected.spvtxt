@@ -1,0 +1,77 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 37
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_EnumMemberVariable "EntryPoint_Main_EnumMemberVariable"
+               OpExecutionMode %EntryPoint_Main_EnumMemberVariable OriginUpperLeft
+               OpSource Unknown 100
+               OpName %EnumMemberVariable "EnumMemberVariable"
+               OpMemberName %EnumMemberVariable 0 "Value1"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %PreConstructor_EnumMemberVariable "PreConstructor_EnumMemberVariable"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_EnumMemberVariable "EntryPoint_Main_EnumMemberVariable"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%EnumMemberVariable = OpTypeStruct %int
+%_ptr_Function_EnumMemberVariable = OpTypePointer Function %EnumMemberVariable
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_EnumMemberVariable
+      %int_0 = OpConstant %int 0
+          %9 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_EnumMemberVariable
+         %13 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_EnumMemberVariable = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_EnumMemberVariable
+         %16 = OpLabel
+         %17 = OpAccessChain %_ptr_Function_int %self_0 %int_0
+               OpStore %17 %int_0
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_EnumMemberVariable
+         %20 = OpLabel
+         %21 = OpFunctionCall %void %PreConstructor_EnumMemberVariable %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_EnumMemberVariable
+         %24 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_EnumMemberVariable
+         %27 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_EnumMemberVariable = OpFunction %void None %9
+         %29 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_EnumMemberVariable Function
+         %31 = OpFunctionCall %void %InitializeGlobals
+         %32 = OpFunctionCall %void %DefaultConstructor %self_4
+         %33 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %34 = OpFunctionCall %void %Main %self_4
+         %35 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %9
+         %36 = OpLabel
+               OpReturn
+               OpFunctionEnd

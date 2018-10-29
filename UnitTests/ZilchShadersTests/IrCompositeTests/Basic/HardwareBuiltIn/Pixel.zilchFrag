@@ -1,0 +1,24 @@
+[Pixel]
+struct Pixel1
+{
+  [HardwareBuiltInInput] var FragCoord : Real4;
+  [HardwareBuiltInInput("PointCoord")] var PointCoordinate : Real2;
+  
+  [HardwareBuiltInOutput] var FragDepth : Real;
+  
+  function Main()
+  {
+    
+  }
+}
+
+[Pixel]
+struct Pixel2
+{
+  [HardwareBuiltInOutput("FragDepth")] var Depth : Real;
+  
+  function Main()
+  {
+    
+  }
+}

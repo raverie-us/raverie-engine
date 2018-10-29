@@ -1,0 +1,24 @@
+[Vertex][UnitTest]
+struct Booleans_Vertex
+{
+  [StageOutput(name : "MyVar2")] var Stage_MyVar2_Boolean2 : Boolean2;
+  [StageOutput(name : "MyVar2")] var Stage_MyVar2_Integer2 : Integer2;
+  [StageOutput(name : "MyVar1")] var Stage_MyVar1_Boolean : Boolean;
+  [StageOutput(name : "MyVar1")] var Stage_MyVar1_Integer : Integer;
+  [StageOutput(name : "MyVar3")] var Stage_MyVar3_Boolean3 : Boolean3;
+  [StageOutput(name : "MyVar3")] var Stage_MyVar3_Integer3 : Integer3;
+
+  [EntryPoint]
+  function Main()
+  {
+    var vertex = Vertex();
+    vertex.Main();
+
+    this.Stage_MyVar2_Boolean2 = vertex.MyVar2;
+    this.Stage_MyVar2_Integer2 = vertex.MyInt2;
+    this.Stage_MyVar1_Boolean = vertex.MyVar1;
+    this.Stage_MyVar1_Integer = vertex.MyInt1;
+    this.Stage_MyVar3_Boolean3 = vertex.MyVar3;
+    this.Stage_MyVar3_Integer3 = vertex.MyInt3;
+  }
+}

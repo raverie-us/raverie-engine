@@ -1,0 +1,103 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 51
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_RuntimeArray1 "EntryPoint_Main_RuntimeArray1"
+               OpExecutionMode %EntryPoint_Main_RuntimeArray1 OriginUpperLeft
+               OpSource Unknown 100
+               OpName %RuntimeArray1 "RuntimeArray1"
+               OpMemberName %RuntimeArray1 0 "Dummy"
+               OpName %RuntimeArray_Real_Buffer "RuntimeArray[Real]Buffer"
+               OpMemberName %RuntimeArray_Real_Buffer 0 "Data"
+               OpName %Data_RuntimeArray1 "Data_RuntimeArray1"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %count "count"
+               OpName %value "value"
+               OpName %PreConstructor_RuntimeArray1 "PreConstructor_RuntimeArray1"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_RuntimeArray1 "EntryPoint_Main_RuntimeArray1"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %Data_RuntimeArray1 Binding 0
+               OpDecorate %Data_RuntimeArray1 DescriptorSet 0
+               OpDecorate %RuntimeArray_Real_Buffer Block
+               OpMemberDecorate %RuntimeArray_Real_Buffer 0 Offset 0
+               OpDecorate %_runtimearr_float ArrayStride 4
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%RuntimeArray1 = OpTypeStruct %int
+%_ptr_Function_RuntimeArray1 = OpTypePointer Function %RuntimeArray1
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_RuntimeArray1
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+%_runtimearr_float = OpTypeRuntimeArray %float
+%_ptr_StorageBuffer__runtimearr_float = OpTypePointer StorageBuffer %_runtimearr_float
+%RuntimeArray_Real_Buffer = OpTypeStruct %_runtimearr_float
+%_ptr_StorageBuffer_RuntimeArray_Real_Buffer = OpTypePointer StorageBuffer %RuntimeArray_Real_Buffer
+%Data_RuntimeArray1 = OpVariable %_ptr_StorageBuffer_RuntimeArray_Real_Buffer StorageBuffer
+%_ptr_StorageBuffer_float = OpTypePointer StorageBuffer %float
+      %int_0 = OpConstant %int 0
+         %16 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_RuntimeArray1
+         %21 = OpLabel
+      %count = OpVariable %_ptr_Function_int Function
+      %value = OpVariable %_ptr_Function_float Function
+         %24 = OpArrayLength %int %Data_RuntimeArray1 0
+               OpStore %count %24
+         %25 = OpAccessChain %_ptr_StorageBuffer_float %Data_RuntimeArray1 %int_0 %int_0
+         %26 = OpLoad %float %25
+               OpStore %value %26
+         %27 = OpAccessChain %_ptr_StorageBuffer_float %Data_RuntimeArray1 %int_0 %int_0
+         %28 = OpLoad %float %value
+               OpStore %27 %28
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_RuntimeArray1 = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_RuntimeArray1
+         %31 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_RuntimeArray1
+         %34 = OpLabel
+         %35 = OpFunctionCall %void %PreConstructor_RuntimeArray1 %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_RuntimeArray1
+         %38 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_RuntimeArray1
+         %41 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_RuntimeArray1 = OpFunction %void None %16
+         %43 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_RuntimeArray1 Function
+         %45 = OpFunctionCall %void %InitializeGlobals
+         %46 = OpFunctionCall %void %DefaultConstructor %self_4
+         %47 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %48 = OpFunctionCall %void %Main %self_4
+         %49 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %16
+         %50 = OpLabel
+               OpReturn
+               OpFunctionEnd

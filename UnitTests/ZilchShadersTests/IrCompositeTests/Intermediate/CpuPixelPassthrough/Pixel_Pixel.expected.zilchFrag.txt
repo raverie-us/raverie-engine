@@ -1,0 +1,18 @@
+[Pixel][UnitTest]
+struct Pixel_Pixel
+{
+  [StageInput(name : "Uv")] var Stage_Uv_Real2 : Real2;
+  [StageInput(name : "LocalNormal")] var Stage_LocalNormal_Real3 : Real3;
+  [StageInput(name : "Color")] var Stage_Color_Real4 : Real4;
+
+  [EntryPoint]
+  function Main()
+  {
+    var pixel = Pixel();
+    pixel.Uv = this.Stage_Uv_Real2;
+    pixel.Normal = this.Stage_LocalNormal_Real3;
+    pixel.MyColor = this.Stage_Color_Real4;
+    pixel.Main();
+
+  }
+}

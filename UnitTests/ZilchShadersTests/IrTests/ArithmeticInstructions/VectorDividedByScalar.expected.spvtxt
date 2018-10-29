@@ -1,0 +1,158 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 89
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_VectorDividedByScalar "EntryPoint_Main_VectorDividedByScalar"
+               OpExecutionMode %EntryPoint_Main_VectorDividedByScalar OriginUpperLeft
+               OpSource Unknown 100
+               OpName %VectorDividedByScalar "VectorDividedByScalar"
+               OpMemberName %VectorDividedByScalar 0 "Dummy"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %Test "Test"
+               OpName %vector "vector"
+               OpName %scalar "scalar"
+               OpName %result "result"
+               OpName %Test_0 "Test"
+               OpName %vector_0 "vector"
+               OpName %scalar_0 "scalar"
+               OpName %result_0 "result"
+               OpName %Test_1 "Test"
+               OpName %vector_1 "vector"
+               OpName %scalar_1 "scalar"
+               OpName %result_1 "result"
+               OpName %PreConstructor_VectorDividedByScalar "PreConstructor_VectorDividedByScalar"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_VectorDividedByScalar "EntryPoint_Main_VectorDividedByScalar"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%VectorDividedByScalar = OpTypeStruct %int
+%_ptr_Function_VectorDividedByScalar = OpTypePointer Function %VectorDividedByScalar
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_VectorDividedByScalar
+          %9 = OpTypeFunction %void
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+    %float_0 = OpConstant %float 0
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_VectorDividedByScalar
+         %21 = OpLabel
+         %22 = OpFunctionCall %void %Test
+         %23 = OpFunctionCall %void %Test_0
+         %24 = OpFunctionCall %void %Test_1
+               OpReturn
+               OpFunctionEnd
+       %Test = OpFunction %void None %9
+         %26 = OpLabel
+     %vector = OpVariable %_ptr_Function_v2float Function
+     %scalar = OpVariable %_ptr_Function_float Function
+     %result = OpVariable %_ptr_Function_v2float Function
+         %30 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %vector %30
+               OpStore %scalar %float_0
+         %31 = OpLoad %float %scalar
+         %32 = OpCompositeConstruct %v2float %31 %31
+         %33 = OpLoad %v2float %vector
+         %34 = OpFDiv %v2float %33 %32
+               OpStore %result %34
+         %35 = OpLoad %float %scalar
+         %36 = OpCompositeConstruct %v2float %35 %35
+         %37 = OpLoad %v2float %result
+         %38 = OpFDiv %v2float %37 %36
+               OpStore %result %38
+               OpReturn
+               OpFunctionEnd
+     %Test_0 = OpFunction %void None %9
+         %40 = OpLabel
+   %vector_0 = OpVariable %_ptr_Function_v3float Function
+   %scalar_0 = OpVariable %_ptr_Function_float Function
+   %result_0 = OpVariable %_ptr_Function_v3float Function
+         %44 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %vector_0 %44
+               OpStore %scalar_0 %float_0
+         %45 = OpLoad %float %scalar_0
+         %46 = OpCompositeConstruct %v3float %45 %45 %45
+         %47 = OpLoad %v3float %vector_0
+         %48 = OpFDiv %v3float %47 %46
+               OpStore %result_0 %48
+         %49 = OpLoad %float %scalar_0
+         %50 = OpCompositeConstruct %v3float %49 %49 %49
+         %51 = OpLoad %v3float %result_0
+         %52 = OpFDiv %v3float %51 %50
+               OpStore %result_0 %52
+               OpReturn
+               OpFunctionEnd
+     %Test_1 = OpFunction %void None %9
+         %54 = OpLabel
+   %vector_1 = OpVariable %_ptr_Function_v4float Function
+   %scalar_1 = OpVariable %_ptr_Function_float Function
+   %result_1 = OpVariable %_ptr_Function_v4float Function
+         %58 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %vector_1 %58
+               OpStore %scalar_1 %float_0
+         %59 = OpLoad %float %scalar_1
+         %60 = OpCompositeConstruct %v4float %59 %59 %59 %59
+         %61 = OpLoad %v4float %vector_1
+         %62 = OpFDiv %v4float %61 %60
+               OpStore %result_1 %62
+         %63 = OpLoad %float %scalar_1
+         %64 = OpCompositeConstruct %v4float %63 %63 %63 %63
+         %65 = OpLoad %v4float %result_1
+         %66 = OpFDiv %v4float %65 %64
+               OpStore %result_1 %66
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_VectorDividedByScalar = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_VectorDividedByScalar
+         %69 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_VectorDividedByScalar
+         %72 = OpLabel
+         %73 = OpFunctionCall %void %PreConstructor_VectorDividedByScalar %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_VectorDividedByScalar
+         %76 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_VectorDividedByScalar
+         %79 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_VectorDividedByScalar = OpFunction %void None %9
+         %81 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_VectorDividedByScalar Function
+         %83 = OpFunctionCall %void %InitializeGlobals
+         %84 = OpFunctionCall %void %DefaultConstructor %self_4
+         %85 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %86 = OpFunctionCall %void %Main %self_4
+         %87 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %9
+         %88 = OpLabel
+               OpReturn
+               OpFunctionEnd

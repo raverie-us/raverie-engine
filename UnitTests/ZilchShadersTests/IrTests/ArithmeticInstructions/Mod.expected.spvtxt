@@ -1,0 +1,294 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 171
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_Mod "EntryPoint_Main_Mod"
+               OpExecutionMode %EntryPoint_Main_Mod OriginUpperLeft
+               OpSource Unknown 100
+               OpName %Mod "Mod"
+               OpMemberName %Mod 0 "Dummy"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %Test "Test"
+               OpName %lhs "lhs"
+               OpName %rhs "rhs"
+               OpName %result "result"
+               OpName %Test_0 "Test"
+               OpName %lhs_0 "lhs"
+               OpName %rhs_0 "rhs"
+               OpName %result_0 "result"
+               OpName %Test_1 "Test"
+               OpName %lhs_1 "lhs"
+               OpName %rhs_1 "rhs"
+               OpName %result_1 "result"
+               OpName %Test_2 "Test"
+               OpName %lhs_2 "lhs"
+               OpName %rhs_2 "rhs"
+               OpName %result_2 "result"
+               OpName %Test_3 "Test"
+               OpName %lhs_3 "lhs"
+               OpName %rhs_3 "rhs"
+               OpName %result_3 "result"
+               OpName %Test_4 "Test"
+               OpName %lhs_4 "lhs"
+               OpName %rhs_4 "rhs"
+               OpName %result_4 "result"
+               OpName %Test_5 "Test"
+               OpName %lhs_5 "lhs"
+               OpName %rhs_5 "rhs"
+               OpName %result_5 "result"
+               OpName %Test_6 "Test"
+               OpName %lhs_6 "lhs"
+               OpName %rhs_6 "rhs"
+               OpName %result_6 "result"
+               OpName %PreConstructor_Mod "PreConstructor_Mod"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_Mod "EntryPoint_Main_Mod"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+        %Mod = OpTypeStruct %int
+%_ptr_Function_Mod = OpTypePointer Function %Mod
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_Mod
+          %9 = OpTypeFunction %void
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %float_0 = OpConstant %float 0
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+      %int_0 = OpConstant %int 0
+      %v2int = OpTypeVector %int 2
+%_ptr_Function_v2int = OpTypePointer Function %v2int
+      %v3int = OpTypeVector %int 3
+%_ptr_Function_v3int = OpTypePointer Function %v3int
+      %v4int = OpTypeVector %int 4
+%_ptr_Function_v4int = OpTypePointer Function %v4int
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_Mod
+         %28 = OpLabel
+         %29 = OpFunctionCall %void %Test
+         %30 = OpFunctionCall %void %Test_0
+         %31 = OpFunctionCall %void %Test_1
+         %32 = OpFunctionCall %void %Test_2
+         %33 = OpFunctionCall %void %Test_3
+         %34 = OpFunctionCall %void %Test_4
+         %35 = OpFunctionCall %void %Test_5
+         %36 = OpFunctionCall %void %Test_6
+               OpReturn
+               OpFunctionEnd
+       %Test = OpFunction %void None %9
+         %38 = OpLabel
+        %lhs = OpVariable %_ptr_Function_float Function
+        %rhs = OpVariable %_ptr_Function_float Function
+     %result = OpVariable %_ptr_Function_float Function
+               OpStore %lhs %float_0
+               OpStore %rhs %float_0
+         %42 = OpLoad %float %lhs
+         %43 = OpLoad %float %rhs
+         %44 = OpFMod %float %42 %43
+               OpStore %result %44
+         %45 = OpLoad %float %result
+         %46 = OpLoad %float %rhs
+         %47 = OpFMod %float %45 %46
+               OpStore %result %47
+         %48 = OpLoad %float %lhs
+         %49 = OpLoad %float %rhs
+         %50 = OpFMod %float %48 %49
+               OpStore %result %50
+               OpReturn
+               OpFunctionEnd
+     %Test_0 = OpFunction %void None %9
+         %52 = OpLabel
+      %lhs_0 = OpVariable %_ptr_Function_v2float Function
+      %rhs_0 = OpVariable %_ptr_Function_v2float Function
+   %result_0 = OpVariable %_ptr_Function_v2float Function
+         %56 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %lhs_0 %56
+         %57 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %rhs_0 %57
+         %58 = OpLoad %v2float %lhs_0
+         %59 = OpLoad %v2float %rhs_0
+         %60 = OpFMod %v2float %58 %59
+               OpStore %result_0 %60
+         %61 = OpLoad %v2float %result_0
+         %62 = OpLoad %v2float %rhs_0
+         %63 = OpFMod %v2float %61 %62
+               OpStore %result_0 %63
+         %64 = OpLoad %v2float %lhs_0
+         %65 = OpLoad %v2float %rhs_0
+         %66 = OpFMod %v2float %64 %65
+               OpStore %result_0 %66
+               OpReturn
+               OpFunctionEnd
+     %Test_1 = OpFunction %void None %9
+         %68 = OpLabel
+      %lhs_1 = OpVariable %_ptr_Function_v3float Function
+      %rhs_1 = OpVariable %_ptr_Function_v3float Function
+   %result_1 = OpVariable %_ptr_Function_v3float Function
+         %72 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %lhs_1 %72
+         %73 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %rhs_1 %73
+         %74 = OpLoad %v3float %lhs_1
+         %75 = OpLoad %v3float %rhs_1
+         %76 = OpFMod %v3float %74 %75
+               OpStore %result_1 %76
+         %77 = OpLoad %v3float %result_1
+         %78 = OpLoad %v3float %rhs_1
+         %79 = OpFMod %v3float %77 %78
+               OpStore %result_1 %79
+         %80 = OpLoad %v3float %lhs_1
+         %81 = OpLoad %v3float %rhs_1
+         %82 = OpFMod %v3float %80 %81
+               OpStore %result_1 %82
+               OpReturn
+               OpFunctionEnd
+     %Test_2 = OpFunction %void None %9
+         %84 = OpLabel
+      %lhs_2 = OpVariable %_ptr_Function_v4float Function
+      %rhs_2 = OpVariable %_ptr_Function_v4float Function
+   %result_2 = OpVariable %_ptr_Function_v4float Function
+         %88 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %lhs_2 %88
+         %89 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %rhs_2 %89
+         %90 = OpLoad %v4float %lhs_2
+         %91 = OpLoad %v4float %rhs_2
+         %92 = OpFMod %v4float %90 %91
+               OpStore %result_2 %92
+         %93 = OpLoad %v4float %result_2
+         %94 = OpLoad %v4float %rhs_2
+         %95 = OpFMod %v4float %93 %94
+               OpStore %result_2 %95
+         %96 = OpLoad %v4float %lhs_2
+         %97 = OpLoad %v4float %rhs_2
+         %98 = OpFMod %v4float %96 %97
+               OpStore %result_2 %98
+               OpReturn
+               OpFunctionEnd
+     %Test_3 = OpFunction %void None %9
+        %100 = OpLabel
+      %lhs_3 = OpVariable %_ptr_Function_int Function
+      %rhs_3 = OpVariable %_ptr_Function_int Function
+   %result_3 = OpVariable %_ptr_Function_int Function
+               OpStore %lhs_3 %int_0
+               OpStore %rhs_3 %int_0
+        %104 = OpLoad %int %lhs_3
+        %105 = OpLoad %int %rhs_3
+        %106 = OpSMod %int %104 %105
+               OpStore %result_3 %106
+        %107 = OpLoad %int %result_3
+        %108 = OpLoad %int %rhs_3
+        %109 = OpSMod %int %107 %108
+               OpStore %result_3 %109
+               OpReturn
+               OpFunctionEnd
+     %Test_4 = OpFunction %void None %9
+        %111 = OpLabel
+      %lhs_4 = OpVariable %_ptr_Function_v2int Function
+      %rhs_4 = OpVariable %_ptr_Function_v2int Function
+   %result_4 = OpVariable %_ptr_Function_v2int Function
+        %115 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %lhs_4 %115
+        %116 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %rhs_4 %116
+        %117 = OpLoad %v2int %lhs_4
+        %118 = OpLoad %v2int %rhs_4
+        %119 = OpSMod %v2int %117 %118
+               OpStore %result_4 %119
+        %120 = OpLoad %v2int %result_4
+        %121 = OpLoad %v2int %rhs_4
+        %122 = OpSMod %v2int %120 %121
+               OpStore %result_4 %122
+               OpReturn
+               OpFunctionEnd
+     %Test_5 = OpFunction %void None %9
+        %124 = OpLabel
+      %lhs_5 = OpVariable %_ptr_Function_v3int Function
+      %rhs_5 = OpVariable %_ptr_Function_v3int Function
+   %result_5 = OpVariable %_ptr_Function_v3int Function
+        %128 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+               OpStore %lhs_5 %128
+        %129 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+               OpStore %rhs_5 %129
+        %130 = OpLoad %v3int %lhs_5
+        %131 = OpLoad %v3int %rhs_5
+        %132 = OpSMod %v3int %130 %131
+               OpStore %result_5 %132
+        %133 = OpLoad %v3int %result_5
+        %134 = OpLoad %v3int %rhs_5
+        %135 = OpSMod %v3int %133 %134
+               OpStore %result_5 %135
+               OpReturn
+               OpFunctionEnd
+     %Test_6 = OpFunction %void None %9
+        %137 = OpLabel
+      %lhs_6 = OpVariable %_ptr_Function_v4int Function
+      %rhs_6 = OpVariable %_ptr_Function_v4int Function
+   %result_6 = OpVariable %_ptr_Function_v4int Function
+        %141 = OpCompositeConstruct %v4int %int_0 %int_0 %int_0 %int_0
+               OpStore %lhs_6 %141
+        %142 = OpCompositeConstruct %v4int %int_0 %int_0 %int_0 %int_0
+               OpStore %rhs_6 %142
+        %143 = OpLoad %v4int %lhs_6
+        %144 = OpLoad %v4int %rhs_6
+        %145 = OpSMod %v4int %143 %144
+               OpStore %result_6 %145
+        %146 = OpLoad %v4int %result_6
+        %147 = OpLoad %v4int %rhs_6
+        %148 = OpSMod %v4int %146 %147
+               OpStore %result_6 %148
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_Mod = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_Mod
+        %151 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_Mod
+        %154 = OpLabel
+        %155 = OpFunctionCall %void %PreConstructor_Mod %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_Mod
+        %158 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_Mod
+        %161 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_Mod = OpFunction %void None %9
+        %163 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_Mod Function
+        %165 = OpFunctionCall %void %InitializeGlobals
+        %166 = OpFunctionCall %void %DefaultConstructor %self_4
+        %167 = OpFunctionCall %void %CopyInputs_Main %self_4
+        %168 = OpFunctionCall %void %Main %self_4
+        %169 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %9
+        %170 = OpLabel
+               OpReturn
+               OpFunctionEnd

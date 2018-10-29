@@ -4,10 +4,10 @@
 [Pixel][PostProcess]
 struct BloomBrightPass
 {
-  [BuiltInInput] var ViewportSize : Real2;
+  [AppBuiltInInput] var ViewportSize : Real2;
   [StageInput] var Uv : Real2;
   
-  [Input] var Texture : Sampler2d;
+  [Input] var Texture : SampledImage2d;
   [Input] var Intensity : Real;
   [Input] var Threshold : Real;
   
@@ -37,7 +37,7 @@ struct BloomBrightPass
 struct Filter13Tap
 {
   [StageInput] var Uv : Real2;
-  [Input] var Texture : Sampler2d;
+  [Input] var Texture : SampledImage2d;
   [Input] var InverseTextureSize : Real2;
   
   [Output] var Target0 : Real4;
@@ -105,7 +105,7 @@ struct Filter13Tap
 struct Filter13TapPartialKarisAverage
 {
   [StageInput] var Uv : Real2;
-  [Input] var Texture : Sampler2d;
+  [Input] var Texture : SampledImage2d;
   [Input] var InverseTextureSize : Real2;
   
   [Output] var Target0 : Real4;

@@ -1,0 +1,9 @@
+[UnitTest]
+struct Base
+{
+}
+
+[UnitTest]
+struct Derived : Base
+{
+}

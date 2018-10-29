@@ -1,0 +1,19 @@
+struct ParticleData
+{
+  var R2x2 : Real2x2;
+  var R3x3 : Real3x3;
+  var R4x4 : Real4x4;
+}
+
+[Pixel][UnitTest]
+struct RuntimeArray7
+{
+  var Data : RuntimeArray[ParticleData];
+  
+  [EntryPoint]
+  function Main()
+  {
+    var count = this.Data.Count;
+    var particle = this.Data[0];
+  }
+}

@@ -12,10 +12,11 @@ namespace Zero
 namespace Events
 {
 ZilchDeclareEvent(TranslationError, TranslationErrorEvent);
+ZilchDeclareEvent(ValidationError, ValidationErrorEvent);
 }//namespace Events
 
 //-------------------------------------------------------------------TranslationErrorEvent
-// An error event for when translation fails
+/// An error event for when translation fails
 class TranslationErrorEvent : public Zilch::EventData
 {
 public:
@@ -27,8 +28,23 @@ public:
   Zilch::CodeLocation mLocation;
 };
 
+//-------------------------------------------------------------------ValidationErrorEvent
+/// An error even dispatched during validation. Mostly the same as a translation error
+/// event, but this also contains a call stack to trace where an error occurred.
+class ValidationErrorEvent : public Zilch::EventData
+{
+  ZilchDeclareType(ValidationErrorEvent, Zilch::TypeCopyMode::ReferenceType);
+  String GetFormattedMessage(Zilch::MessageFormat::Enum format);
+
+  String mShortMessage;
+  String mFullMessage;
+  Zilch::CodeLocation mLocation;
+
+  Array<Zilch::CodeLocation> mCallStack;
+};
+
 //-------------------------------------------------------------------ShaderCompilationErrors
-// Event handler for sending shader compilation errors as well as translation errors.
+/// Event handler for sending shader compilation errors as well as translation errors.
 class ShaderCompilationErrors : public Zilch::EventHandler
 {
 public:

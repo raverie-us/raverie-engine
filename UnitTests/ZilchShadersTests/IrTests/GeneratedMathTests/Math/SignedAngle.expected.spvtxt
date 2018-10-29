@@ -1,0 +1,175 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 97
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+          %2 = OpExtInstImport "GLSL.std.450"
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_SignedAngle "EntryPoint_Main_SignedAngle"
+               OpExecutionMode %EntryPoint_Main_SignedAngle OriginUpperLeft
+               OpSource Unknown 100
+               OpName %SignedAngle "SignedAngle"
+               OpMemberName %SignedAngle 0 "Dummy"
+               OpName %Test_Static_Real3_Real3_Real3 "Test_Static_Real3_Real3_Real3"
+               OpName %self "self"
+               OpName %p0_ "p0_"
+               OpName %p1_ "p1_"
+               OpName %up_ "up_"
+               OpName %result "result"
+               OpName %SignedAngle_0 "SignedAngle"
+               OpName %p0 "p0"
+               OpName %p1 "p1"
+               OpName %up "up"
+               OpName %p0_Local "p0_Local"
+               OpName %p1_Local "p1_Local"
+               OpName %up_Local "up_Local"
+               OpName %right "right"
+               OpName %forwardDot "forwardDot"
+               OpName %rightDot "rightDot"
+               OpName %finalAngle "finalAngle"
+               OpName %ifTrue0 "ifTrue0"
+               OpName %ifMerge0 "ifMerge0"
+               OpName %Main "Main"
+               OpName %self_0 "self"
+               OpName %PreConstructor_SignedAngle "PreConstructor_SignedAngle"
+               OpName %self_1 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_2 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_3 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_4 "self"
+               OpName %EntryPoint_Main_SignedAngle "EntryPoint_Main_SignedAngle"
+               OpName %self_5 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%SignedAngle = OpTypeStruct %int
+%_ptr_Function_SignedAngle = OpTypePointer Function %SignedAngle
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %9 = OpTypeFunction %void %_ptr_Function_SignedAngle
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+    %float_0 = OpConstant %float 0
+         %14 = OpTypeFunction %float %v3float %v3float %v3float
+    %float_1 = OpConstant %float 1
+       %bool = OpTypeBool
+%_ptr_Function_bool = OpTypePointer Function %bool
+  %float_0_0 = OpConstant %float 0
+         %17 = OpTypeFunction %void
+%Test_Static_Real3_Real3_Real3 = OpFunction %void None %9
+       %self = OpFunctionParameter %_ptr_Function_SignedAngle
+         %23 = OpLabel
+        %p0_ = OpVariable %_ptr_Function_v3float Function
+        %p1_ = OpVariable %_ptr_Function_v3float Function
+        %up_ = OpVariable %_ptr_Function_v3float Function
+     %result = OpVariable %_ptr_Function_float Function
+         %28 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %p0_ %28
+         %29 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %p1_ %29
+         %30 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %up_ %30
+         %31 = OpLoad %v3float %p0_
+         %32 = OpLoad %v3float %p1_
+         %33 = OpLoad %v3float %up_
+         %34 = OpFunctionCall %float %SignedAngle_0 %31 %32 %33
+               OpStore %result %34
+               OpReturn
+               OpFunctionEnd
+%SignedAngle_0 = OpFunction %float None %14
+         %p0 = OpFunctionParameter %v3float
+         %p1 = OpFunctionParameter %v3float
+         %up = OpFunctionParameter %v3float
+         %39 = OpLabel
+   %p0_Local = OpVariable %_ptr_Function_v3float Function
+   %p1_Local = OpVariable %_ptr_Function_v3float Function
+   %up_Local = OpVariable %_ptr_Function_v3float Function
+      %right = OpVariable %_ptr_Function_v3float Function
+ %forwardDot = OpVariable %_ptr_Function_float Function
+   %rightDot = OpVariable %_ptr_Function_float Function
+ %finalAngle = OpVariable %_ptr_Function_float Function
+               OpStore %p0_Local %p0
+               OpStore %p1_Local %p1
+               OpStore %up_Local %up
+         %47 = OpLoad %v3float %p0_Local
+         %48 = OpLoad %v3float %up_Local
+         %49 = OpExtInst %v3float %2 Cross %47 %48
+               OpStore %right %49
+         %50 = OpLoad %v3float %right
+         %51 = OpExtInst %v3float %2 Normalize %50
+               OpStore %right %51
+         %52 = OpLoad %v3float %p0_Local
+         %53 = OpLoad %v3float %p1_Local
+         %54 = OpDot %float %52 %53
+         %55 = OpFNegate %float %float_1
+         %56 = OpExtInst %float %2 FClamp %54 %55 %float_1
+               OpStore %forwardDot %56
+         %57 = OpLoad %v3float %right
+         %58 = OpLoad %v3float %p1_Local
+         %59 = OpDot %float %57 %58
+         %60 = OpFNegate %float %float_1
+         %61 = OpExtInst %float %2 FClamp %59 %60 %float_1
+               OpStore %rightDot %61
+         %62 = OpLoad %float %forwardDot
+         %63 = OpExtInst %float %2 Acos %62
+               OpStore %finalAngle %63
+         %64 = OpLoad %float %rightDot
+         %65 = OpFOrdGreaterThan %bool %64 %float_0_0
+               OpSelectionMerge %ifMerge0 None
+               OpBranchConditional %65 %ifTrue0 %ifMerge0
+    %ifTrue0 = OpLabel
+         %67 = OpLoad %float %finalAngle
+         %68 = OpFNegate %float %67
+               OpStore %finalAngle %68
+               OpBranch %ifMerge0
+   %ifMerge0 = OpLabel
+         %70 = OpLoad %float %finalAngle
+               OpReturnValue %70
+               OpFunctionEnd
+       %Main = OpFunction %void None %9
+     %self_0 = OpFunctionParameter %_ptr_Function_SignedAngle
+         %73 = OpLabel
+         %74 = OpFunctionCall %void %Test_Static_Real3_Real3_Real3 %self_0
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_SignedAngle = OpFunction %void None %9
+     %self_1 = OpFunctionParameter %_ptr_Function_SignedAngle
+         %77 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %9
+     %self_2 = OpFunctionParameter %_ptr_Function_SignedAngle
+         %80 = OpLabel
+         %81 = OpFunctionCall %void %PreConstructor_SignedAngle %self_2
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %9
+     %self_3 = OpFunctionParameter %_ptr_Function_SignedAngle
+         %84 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %9
+     %self_4 = OpFunctionParameter %_ptr_Function_SignedAngle
+         %87 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_SignedAngle = OpFunction %void None %17
+         %89 = OpLabel
+     %self_5 = OpVariable %_ptr_Function_SignedAngle Function
+         %91 = OpFunctionCall %void %InitializeGlobals
+         %92 = OpFunctionCall %void %DefaultConstructor %self_5
+         %93 = OpFunctionCall %void %CopyInputs_Main %self_5
+         %94 = OpFunctionCall %void %Main %self_5
+         %95 = OpFunctionCall %void %CopyOutputs_Main %self_5
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %17
+         %96 = OpLabel
+               OpReturn
+               OpFunctionEnd

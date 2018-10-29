@@ -1,0 +1,2 @@
+  IrErrorTests\Attributes\BadCombinations\StaticFragmentOutput.zilchFrag(4): Attribute 'FragmentOutput' cannot be combined with attribute(s): Static:
+  Attribute 'FragmentOutput' cannot be combined with attribute(s): Static

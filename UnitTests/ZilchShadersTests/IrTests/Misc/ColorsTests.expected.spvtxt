@@ -1,0 +1,91 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 48
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_ColorsTests "EntryPoint_Main_ColorsTests"
+               OpExecutionMode %EntryPoint_Main_ColorsTests OriginUpperLeft
+               OpSource Unknown 100
+               OpName %ColorsTests "ColorsTests"
+               OpMemberName %ColorsTests 0 "Dummy"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %color "color"
+               OpName %PreConstructor_ColorsTests "PreConstructor_ColorsTests"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_ColorsTests "EntryPoint_Main_ColorsTests"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%ColorsTests = OpTypeStruct %int
+%_ptr_Function_ColorsTests = OpTypePointer Function %ColorsTests
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_ColorsTests
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+    %float_1 = OpConstant %float 1
+    %float_0 = OpConstant %float 0
+%float_0_870588243 = OpConstant %float 0.870588243
+%float_0_721568644 = OpConstant %float 0.721568644
+%float_0_529411793 = OpConstant %float 0.529411793
+         %13 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_ColorsTests
+         %21 = OpLabel
+      %color = OpVariable %_ptr_Function_v4float Function
+         %23 = OpCompositeConstruct %v4float %float_1 %float_0 %float_0 %float_1
+               OpStore %color %23
+         %24 = OpCompositeConstruct %v4float %float_0 %float_1 %float_1 %float_1
+               OpStore %color %24
+         %25 = OpCompositeConstruct %v4float %float_0_870588243 %float_0_721568644 %float_0_529411793 %float_1
+               OpStore %color %25
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_ColorsTests = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_ColorsTests
+         %28 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_ColorsTests
+         %31 = OpLabel
+         %32 = OpFunctionCall %void %PreConstructor_ColorsTests %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_ColorsTests
+         %35 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_ColorsTests
+         %38 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_ColorsTests = OpFunction %void None %13
+         %40 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_ColorsTests Function
+         %42 = OpFunctionCall %void %InitializeGlobals
+         %43 = OpFunctionCall %void %DefaultConstructor %self_4
+         %44 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %45 = OpFunctionCall %void %Main %self_4
+         %46 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %13
+         %47 = OpLabel
+               OpReturn
+               OpFunctionEnd

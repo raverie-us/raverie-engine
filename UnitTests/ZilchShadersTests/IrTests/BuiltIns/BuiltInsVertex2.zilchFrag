@@ -1,0 +1,18 @@
+// Reverse the built-ins order
+[Vertex][UnitTest]
+struct BuiltInsVertex2
+{
+  // Inputs
+  [HardwareBuiltInInput] var InstanceId : Integer;
+  [HardwareBuiltInInput] var VertexId : Integer;
+  
+  // Outputs
+  [HardwareBuiltInOutput] var PointSize : Real;
+  [HardwareBuiltInOutput] var ApiPerspectivePosition : Real4;
+  
+  [EntryPoint]
+  function Main()
+  {
+    
+  }
+}

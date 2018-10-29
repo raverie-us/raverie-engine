@@ -1,0 +1,150 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 87
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_SampleImplicitLod "EntryPoint_Main_SampleImplicitLod"
+               OpExecutionMode %EntryPoint_Main_SampleImplicitLod OriginUpperLeft
+               OpSource Unknown 100
+               OpName %SampleImplicitLod "SampleImplicitLod"
+               OpMemberName %SampleImplicitLod 0 "Uv"
+               OpMemberName %SampleImplicitLod 1 "Uv3"
+               OpName %SampledImage_SampleImplicitLod "SampledImage_SampleImplicitLod"
+               OpName %Image_SampleImplicitLod "Image_SampleImplicitLod"
+               OpName %Sampler_SampleImplicitLod "Sampler_SampleImplicitLod"
+               OpName %SampledImageCube_SampleImplicitLod "SampledImageCube_SampleImplicitLod"
+               OpName %ImageCube_SampleImplicitLod "ImageCube_SampleImplicitLod"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %color "color"
+               OpName %PreConstructor_SampleImplicitLod "PreConstructor_SampleImplicitLod"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_SampleImplicitLod "EntryPoint_Main_SampleImplicitLod"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %SampledImage_SampleImplicitLod Binding 0
+               OpDecorate %SampledImage_SampleImplicitLod DescriptorSet 0
+               OpDecorate %Image_SampleImplicitLod Binding 1
+               OpDecorate %Image_SampleImplicitLod DescriptorSet 0
+               OpDecorate %Sampler_SampleImplicitLod Binding 1
+               OpDecorate %Sampler_SampleImplicitLod DescriptorSet 0
+               OpDecorate %SampledImageCube_SampleImplicitLod Binding 2
+               OpDecorate %SampledImageCube_SampleImplicitLod DescriptorSet 0
+               OpDecorate %ImageCube_SampleImplicitLod Binding 3
+               OpDecorate %ImageCube_SampleImplicitLod DescriptorSet 0
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+%SampleImplicitLod = OpTypeStruct %v2float %v3float
+%_ptr_Function_SampleImplicitLod = OpTypePointer Function %SampleImplicitLod
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+         %12 = OpTypeFunction %void %_ptr_Function_SampleImplicitLod
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+    %float_0 = OpConstant %float 0
+         %15 = OpTypeImage %float 2D 0 0 0 1 Unknown
+%_ptr_UniformConstant_15 = OpTypePointer UniformConstant %15
+         %17 = OpTypeSampledImage %15
+%_ptr_UniformConstant_17 = OpTypePointer UniformConstant %17
+%SampledImage_SampleImplicitLod = OpVariable %_ptr_UniformConstant_17 UniformConstant
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+      %int_0 = OpConstant %int 0
+%Image_SampleImplicitLod = OpVariable %_ptr_UniformConstant_15 UniformConstant
+         %21 = OpTypeSampler
+%_ptr_UniformConstant_21 = OpTypePointer UniformConstant %21
+%Sampler_SampleImplicitLod = OpVariable %_ptr_UniformConstant_21 UniformConstant
+         %23 = OpTypeImage %float Cube 0 0 0 1 Unknown
+%_ptr_UniformConstant_23 = OpTypePointer UniformConstant %23
+         %25 = OpTypeSampledImage %23
+%_ptr_UniformConstant_25 = OpTypePointer UniformConstant %25
+%SampledImageCube_SampleImplicitLod = OpVariable %_ptr_UniformConstant_25 UniformConstant
+      %int_1 = OpConstant %int 1
+%ImageCube_SampleImplicitLod = OpVariable %_ptr_UniformConstant_23 UniformConstant
+         %27 = OpTypeFunction %void
+       %Main = OpFunction %void None %12
+       %self = OpFunctionParameter %_ptr_Function_SampleImplicitLod
+         %38 = OpLabel
+      %color = OpVariable %_ptr_Function_v4float Function
+         %40 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %color %40
+         %41 = OpLoad %17 %SampledImage_SampleImplicitLod
+         %42 = OpAccessChain %_ptr_Function_v2float %self %int_0
+         %43 = OpLoad %v2float %42
+         %44 = OpImageSampleImplicitLod %v4float %41 %43
+               OpStore %color %44
+         %45 = OpLoad %15 %Image_SampleImplicitLod
+         %46 = OpLoad %21 %Sampler_SampleImplicitLod
+         %47 = OpSampledImage %17 %45 %46
+         %48 = OpAccessChain %_ptr_Function_v2float %self %int_0
+         %49 = OpLoad %v2float %48
+         %50 = OpImageSampleImplicitLod %v4float %47 %49
+               OpStore %color %50
+         %51 = OpLoad %25 %SampledImageCube_SampleImplicitLod
+         %52 = OpAccessChain %_ptr_Function_v3float %self %int_1
+         %53 = OpLoad %v3float %52
+         %54 = OpImageSampleImplicitLod %v4float %51 %53
+               OpStore %color %54
+         %55 = OpLoad %23 %ImageCube_SampleImplicitLod
+         %56 = OpLoad %21 %Sampler_SampleImplicitLod
+         %57 = OpSampledImage %25 %55 %56
+         %58 = OpAccessChain %_ptr_Function_v3float %self %int_1
+         %59 = OpLoad %v3float %58
+         %60 = OpImageSampleImplicitLod %v4float %57 %59
+               OpStore %color %60
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_SampleImplicitLod = OpFunction %void None %12
+     %self_0 = OpFunctionParameter %_ptr_Function_SampleImplicitLod
+         %63 = OpLabel
+         %64 = OpAccessChain %_ptr_Function_v2float %self_0 %int_0
+         %65 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %64 %65
+         %66 = OpAccessChain %_ptr_Function_v3float %self_0 %int_1
+         %67 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %66 %67
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %12
+     %self_1 = OpFunctionParameter %_ptr_Function_SampleImplicitLod
+         %70 = OpLabel
+         %71 = OpFunctionCall %void %PreConstructor_SampleImplicitLod %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %12
+     %self_2 = OpFunctionParameter %_ptr_Function_SampleImplicitLod
+         %74 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %12
+     %self_3 = OpFunctionParameter %_ptr_Function_SampleImplicitLod
+         %77 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_SampleImplicitLod = OpFunction %void None %27
+         %79 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_SampleImplicitLod Function
+         %81 = OpFunctionCall %void %InitializeGlobals
+         %82 = OpFunctionCall %void %DefaultConstructor %self_4
+         %83 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %84 = OpFunctionCall %void %Main %self_4
+         %85 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %27
+         %86 = OpLabel
+               OpReturn
+               OpFunctionEnd

@@ -1,0 +1,160 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 87
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_SetByIndex "EntryPoint_Main_SetByIndex"
+               OpExecutionMode %EntryPoint_Main_SetByIndex OriginUpperLeft
+               OpSource Unknown 100
+               OpName %SetByIndex "SetByIndex"
+               OpMemberName %SetByIndex 0 "Dummy"
+               OpName %Test_Integer_Real "Test_Integer_Real"
+               OpName %self "self"
+               OpName %index_ "index_"
+               OpName %value_ "value_"
+               OpName %instance_ "instance_"
+               OpName %SetByIndex_0 "SetByIndex"
+               OpName %self_0 "self"
+               OpName %index "index"
+               OpName %value "value"
+               OpName %index_Local "index_Local"
+               OpName %value_Local "value_Local"
+               OpName %countX "countX"
+               OpName %indexX "indexX"
+               OpName %indexY "indexY"
+               OpName %CountX "CountX"
+               OpName %self_1 "self"
+               OpName %CountX_0 "CountX"
+               OpName %Main "Main"
+               OpName %self_2 "self"
+               OpName %PreConstructor_SetByIndex "PreConstructor_SetByIndex"
+               OpName %self_3 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_4 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_5 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_6 "self"
+               OpName %EntryPoint_Main_SetByIndex "EntryPoint_Main_SetByIndex"
+               OpName %self_7 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+ %SetByIndex = OpTypeStruct %int
+%_ptr_Function_SetByIndex = OpTypePointer Function %SetByIndex
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_SetByIndex
+      %int_0 = OpConstant %int 0
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %float_0 = OpConstant %float 0
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+%mat2v3float = OpTypeMatrix %v3float 2
+%_ptr_Function_mat2v3float = OpTypePointer Function %mat2v3float
+         %15 = OpTypeFunction %void %_ptr_Function_mat2v3float %int %float
+         %16 = OpTypeFunction %int %_ptr_Function_mat2v3float
+         %17 = OpTypeFunction %int
+      %int_3 = OpConstant %int 3
+         %18 = OpTypeFunction %void
+%Test_Integer_Real = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_SetByIndex
+         %24 = OpLabel
+     %index_ = OpVariable %_ptr_Function_int Function
+     %value_ = OpVariable %_ptr_Function_float Function
+  %instance_ = OpVariable %_ptr_Function_mat2v3float Function
+               OpStore %index_ %int_0
+               OpStore %value_ %float_0
+         %28 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+         %29 = OpCompositeConstruct %mat2v3float %28 %28
+               OpStore %instance_ %29
+         %30 = OpLoad %int %index_
+         %31 = OpLoad %float %value_
+         %32 = OpFunctionCall %void %SetByIndex_0 %instance_ %30 %31
+               OpReturn
+               OpFunctionEnd
+%SetByIndex_0 = OpFunction %void None %15
+     %self_0 = OpFunctionParameter %_ptr_Function_mat2v3float
+      %index = OpFunctionParameter %int
+      %value = OpFunctionParameter %float
+         %37 = OpLabel
+%index_Local = OpVariable %_ptr_Function_int Function
+%value_Local = OpVariable %_ptr_Function_float Function
+     %countX = OpVariable %_ptr_Function_int Function
+     %indexX = OpVariable %_ptr_Function_int Function
+     %indexY = OpVariable %_ptr_Function_int Function
+               OpStore %index_Local %index
+               OpStore %value_Local %value
+         %43 = OpFunctionCall %int %CountX %self_0
+               OpStore %countX %43
+         %44 = OpLoad %int %index_Local
+         %45 = OpLoad %int %countX
+         %46 = OpSMod %int %44 %45
+               OpStore %indexX %46
+         %47 = OpLoad %int %index_Local
+         %48 = OpLoad %int %countX
+         %49 = OpSDiv %int %47 %48
+               OpStore %indexY %49
+         %50 = OpLoad %int %indexX
+         %51 = OpLoad %int %indexY
+         %52 = OpAccessChain %_ptr_Function_v3float %self_0 %51
+         %53 = OpAccessChain %_ptr_Function_float %52 %50
+         %54 = OpLoad %float %value_Local
+               OpStore %53 %54
+               OpReturn
+               OpFunctionEnd
+     %CountX = OpFunction %int None %16
+     %self_1 = OpFunctionParameter %_ptr_Function_mat2v3float
+         %57 = OpLabel
+         %58 = OpFunctionCall %int %CountX_0
+               OpReturnValue %58
+               OpFunctionEnd
+   %CountX_0 = OpFunction %int None %17
+         %60 = OpLabel
+               OpReturnValue %int_3
+               OpFunctionEnd
+       %Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_SetByIndex
+         %63 = OpLabel
+         %64 = OpFunctionCall %void %Test_Integer_Real %self_2
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_SetByIndex = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_SetByIndex
+         %67 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_4 = OpFunctionParameter %_ptr_Function_SetByIndex
+         %70 = OpLabel
+         %71 = OpFunctionCall %void %PreConstructor_SetByIndex %self_4
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_5 = OpFunctionParameter %_ptr_Function_SetByIndex
+         %74 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_6 = OpFunctionParameter %_ptr_Function_SetByIndex
+         %77 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_SetByIndex = OpFunction %void None %18
+         %79 = OpLabel
+     %self_7 = OpVariable %_ptr_Function_SetByIndex Function
+         %81 = OpFunctionCall %void %InitializeGlobals
+         %82 = OpFunctionCall %void %DefaultConstructor %self_7
+         %83 = OpFunctionCall %void %CopyInputs_Main %self_7
+         %84 = OpFunctionCall %void %Main %self_7
+         %85 = OpFunctionCall %void %CopyOutputs_Main %self_7
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %18
+         %86 = OpLabel
+               OpReturn
+               OpFunctionEnd

@@ -1,0 +1,26 @@
+[Pixel]
+struct Pixel
+{
+  // Out Vertex, In Pixel
+  [StageInput("Value1")] var P1 : Real;
+  
+  // Out Vertex (V2,V3), In Pixel(P2), In Pixel(P3)
+  [StageInput("Value2")] var P2 : Real;
+  [StageInput("Value3")] var P3 : Real;
+  
+  // Out Vertex (V5), In Pixel(P4)(P5) (Resovle V5 -> P45)
+  [StageInput("Value4")][StageInput("Value5")] var V45 : Real;
+  
+  // Out Vertex (R2), In Pixel (R) (mismatched types)
+  [StageInput("Value6")] var P6 : Real;
+  // Out 1, In 1 (mismatched override names but same var names)
+  [StageInput("P7")] var Value7 : Real;
+  
+  // Out Vertex, In Pixel after other properties)
+  [StageInput("Value8")] var P8 : Real;
+  
+  function Main()
+  {
+    
+  }
+}

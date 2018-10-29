@@ -1,0 +1,20 @@
+[Vertex][UnitTest]
+struct HardwareBuiltIn1_Vertex
+{
+  [HardwareBuiltInInput] var VertexId : Integer;
+  [HardwareBuiltInInput] var InstanceId : Integer;
+  [HardwareBuiltInOutput] var ApiPerspectivePosition : Real4;
+  [HardwareBuiltInOutput] var PointSize : Real;
+
+  [EntryPoint]
+  function Main()
+  {
+    var vertex = Vertex();
+    vertex.VertexId = this.VertexId;
+    vertex.Id = this.InstanceId;
+    vertex.Main();
+
+    this.ApiPerspectivePosition = vertex.ApiPerspectivePosition;
+    this.PointSize = vertex.VertexSize;
+  }
+}

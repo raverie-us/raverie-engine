@@ -1,0 +1,790 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 418
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_Integer2Properties "EntryPoint_Main_Integer2Properties"
+               OpExecutionMode %EntryPoint_Main_Integer2Properties OriginUpperLeft
+               OpSource Unknown 100
+               OpName %Integer2Properties "Integer2Properties"
+               OpMemberName %Integer2Properties 0 "Dummy"
+               OpName %Test_StaticCount_Integer "Test_StaticCount_Integer"
+               OpName %self "self"
+               OpName %value "value"
+               OpName %Test_Count_Integer "Test_Count_Integer"
+               OpName %self_0 "self"
+               OpName %instance "instance"
+               OpName %value_0 "value"
+               OpName %Test_StaticNegativeMin_Integer2 "Test_StaticNegativeMin_Integer2"
+               OpName %self_1 "self"
+               OpName %value_1 "value"
+               OpName %NegativeMin "NegativeMin"
+               OpName %NegativeMin_0 "NegativeMin"
+               OpName %PositiveMax "PositiveMax"
+               OpName %Test_StaticNegativeValueClosestToZero_Integer2 "Test_StaticNegativeValueClosestToZero_Integer2"
+               OpName %self_2 "self"
+               OpName %value_2 "value"
+               OpName %NegativeValueClosestToZero "NegativeValueClosestToZero"
+               OpName %NegativeValueClosestToZero_0 "NegativeValueClosestToZero"
+               OpName %Test_StaticPositiveMax_Integer2 "Test_StaticPositiveMax_Integer2"
+               OpName %self_3 "self"
+               OpName %value_3 "value"
+               OpName %PositiveMax_0 "PositiveMax"
+               OpName %Test_StaticPositiveValueClosestToZero_Integer2 "Test_StaticPositiveValueClosestToZero_Integer2"
+               OpName %self_4 "self"
+               OpName %value_4 "value"
+               OpName %PositiveValueClosestToZero "PositiveValueClosestToZero"
+               OpName %PositiveValueClosestToZero_0 "PositiveValueClosestToZero"
+               OpName %Test_X_Integer "Test_X_Integer"
+               OpName %self_5 "self"
+               OpName %instance_0 "instance"
+               OpName %value_5 "value"
+               OpName %Test_StaticXAxis_Integer2 "Test_StaticXAxis_Integer2"
+               OpName %self_6 "self"
+               OpName %value_6 "value"
+               OpName %XAxis "XAxis"
+               OpName %Test_XX_Integer2 "Test_XX_Integer2"
+               OpName %self_7 "self"
+               OpName %instance_1 "instance"
+               OpName %value_7 "value"
+               OpName %Test_XXX_Integer3 "Test_XXX_Integer3"
+               OpName %self_8 "self"
+               OpName %instance_2 "instance"
+               OpName %value_8 "value"
+               OpName %Test_XXXX_Integer4 "Test_XXXX_Integer4"
+               OpName %self_9 "self"
+               OpName %instance_3 "instance"
+               OpName %value_9 "value"
+               OpName %Test_XXXY_Integer4 "Test_XXXY_Integer4"
+               OpName %self_10 "self"
+               OpName %instance_4 "instance"
+               OpName %value_10 "value"
+               OpName %Test_XXY_Integer3 "Test_XXY_Integer3"
+               OpName %self_11 "self"
+               OpName %instance_5 "instance"
+               OpName %value_11 "value"
+               OpName %Test_XXYX_Integer4 "Test_XXYX_Integer4"
+               OpName %self_12 "self"
+               OpName %instance_6 "instance"
+               OpName %value_12 "value"
+               OpName %Test_XXYY_Integer4 "Test_XXYY_Integer4"
+               OpName %self_13 "self"
+               OpName %instance_7 "instance"
+               OpName %value_13 "value"
+               OpName %Test_XY_Integer2 "Test_XY_Integer2"
+               OpName %self_14 "self"
+               OpName %instance_8 "instance"
+               OpName %value_14 "value"
+               OpName %Test_XYX_Integer3 "Test_XYX_Integer3"
+               OpName %self_15 "self"
+               OpName %instance_9 "instance"
+               OpName %value_15 "value"
+               OpName %Test_XYXX_Integer4 "Test_XYXX_Integer4"
+               OpName %self_16 "self"
+               OpName %instance_10 "instance"
+               OpName %value_16 "value"
+               OpName %Test_XYXY_Integer4 "Test_XYXY_Integer4"
+               OpName %self_17 "self"
+               OpName %instance_11 "instance"
+               OpName %value_17 "value"
+               OpName %Test_XYY_Integer3 "Test_XYY_Integer3"
+               OpName %self_18 "self"
+               OpName %instance_12 "instance"
+               OpName %value_18 "value"
+               OpName %Test_XYYX_Integer4 "Test_XYYX_Integer4"
+               OpName %self_19 "self"
+               OpName %instance_13 "instance"
+               OpName %value_19 "value"
+               OpName %Test_XYYY_Integer4 "Test_XYYY_Integer4"
+               OpName %self_20 "self"
+               OpName %instance_14 "instance"
+               OpName %value_20 "value"
+               OpName %Test_Y_Integer "Test_Y_Integer"
+               OpName %self_21 "self"
+               OpName %instance_15 "instance"
+               OpName %value_21 "value"
+               OpName %Test_StaticYAxis_Integer2 "Test_StaticYAxis_Integer2"
+               OpName %self_22 "self"
+               OpName %value_22 "value"
+               OpName %YAxis "YAxis"
+               OpName %Test_YX_Integer2 "Test_YX_Integer2"
+               OpName %self_23 "self"
+               OpName %instance_16 "instance"
+               OpName %value_23 "value"
+               OpName %Test_YXX_Integer3 "Test_YXX_Integer3"
+               OpName %self_24 "self"
+               OpName %instance_17 "instance"
+               OpName %value_24 "value"
+               OpName %Test_YXXX_Integer4 "Test_YXXX_Integer4"
+               OpName %self_25 "self"
+               OpName %instance_18 "instance"
+               OpName %value_25 "value"
+               OpName %Test_YXXY_Integer4 "Test_YXXY_Integer4"
+               OpName %self_26 "self"
+               OpName %instance_19 "instance"
+               OpName %value_26 "value"
+               OpName %Test_YXY_Integer3 "Test_YXY_Integer3"
+               OpName %self_27 "self"
+               OpName %instance_20 "instance"
+               OpName %value_27 "value"
+               OpName %Test_YXYX_Integer4 "Test_YXYX_Integer4"
+               OpName %self_28 "self"
+               OpName %instance_21 "instance"
+               OpName %value_28 "value"
+               OpName %Test_YXYY_Integer4 "Test_YXYY_Integer4"
+               OpName %self_29 "self"
+               OpName %instance_22 "instance"
+               OpName %value_29 "value"
+               OpName %Test_YY_Integer2 "Test_YY_Integer2"
+               OpName %self_30 "self"
+               OpName %instance_23 "instance"
+               OpName %value_30 "value"
+               OpName %Test_YYX_Integer3 "Test_YYX_Integer3"
+               OpName %self_31 "self"
+               OpName %instance_24 "instance"
+               OpName %value_31 "value"
+               OpName %Test_YYXX_Integer4 "Test_YYXX_Integer4"
+               OpName %self_32 "self"
+               OpName %instance_25 "instance"
+               OpName %value_32 "value"
+               OpName %Test_YYXY_Integer4 "Test_YYXY_Integer4"
+               OpName %self_33 "self"
+               OpName %instance_26 "instance"
+               OpName %value_33 "value"
+               OpName %Test_YYY_Integer3 "Test_YYY_Integer3"
+               OpName %self_34 "self"
+               OpName %instance_27 "instance"
+               OpName %value_34 "value"
+               OpName %Test_YYYX_Integer4 "Test_YYYX_Integer4"
+               OpName %self_35 "self"
+               OpName %instance_28 "instance"
+               OpName %value_35 "value"
+               OpName %Test_YYYY_Integer4 "Test_YYYY_Integer4"
+               OpName %self_36 "self"
+               OpName %instance_29 "instance"
+               OpName %value_36 "value"
+               OpName %Test_StaticZero_Integer2 "Test_StaticZero_Integer2"
+               OpName %self_37 "self"
+               OpName %value_37 "value"
+               OpName %Zero "Zero"
+               OpName %Main "Main"
+               OpName %self_38 "self"
+               OpName %PreConstructor_Integer2Properties "PreConstructor_Integer2Properties"
+               OpName %self_39 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_40 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_41 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_42 "self"
+               OpName %EntryPoint_Main_Integer2Properties "EntryPoint_Main_Integer2Properties"
+               OpName %self_43 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%Integer2Properties = OpTypeStruct %int
+%_ptr_Function_Integer2Properties = OpTypePointer Function %Integer2Properties
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_Integer2Properties
+      %int_2 = OpConstant %int 2
+      %v2int = OpTypeVector %int 2
+%_ptr_Function_v2int = OpTypePointer Function %v2int
+      %int_0 = OpConstant %int 0
+         %11 = OpTypeFunction %v2int
+         %12 = OpTypeFunction %int
+%int_2147483647 = OpConstant %int 2147483647
+      %int_1 = OpConstant %int 1
+    %int_0_0 = OpConstant %int 0
+      %v3int = OpTypeVector %int 3
+%_ptr_Function_v3int = OpTypePointer Function %v3int
+      %v4int = OpTypeVector %int 4
+%_ptr_Function_v4int = OpTypePointer Function %v4int
+    %int_1_0 = OpConstant %int 1
+         %17 = OpTypeFunction %void
+%Test_StaticCount_Integer = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_Integer2Properties
+         %26 = OpLabel
+      %value = OpVariable %_ptr_Function_int Function
+               OpStore %value %int_2
+               OpReturn
+               OpFunctionEnd
+%Test_Count_Integer = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_Integer2Properties
+         %30 = OpLabel
+   %instance = OpVariable %_ptr_Function_v2int Function
+    %value_0 = OpVariable %_ptr_Function_int Function
+         %33 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance %33
+               OpStore %value_0 %int_2
+               OpReturn
+               OpFunctionEnd
+%Test_StaticNegativeMin_Integer2 = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_Integer2Properties
+         %36 = OpLabel
+    %value_1 = OpVariable %_ptr_Function_v2int Function
+         %38 = OpFunctionCall %v2int %NegativeMin
+               OpStore %value_1 %38
+               OpReturn
+               OpFunctionEnd
+%NegativeMin = OpFunction %v2int None %11
+         %40 = OpLabel
+         %41 = OpFunctionCall %int %NegativeMin_0
+         %42 = OpCompositeConstruct %v2int %41 %41
+               OpReturnValue %42
+               OpFunctionEnd
+%NegativeMin_0 = OpFunction %int None %12
+         %44 = OpLabel
+         %45 = OpFunctionCall %int %PositiveMax
+         %46 = OpSNegate %int %45
+         %47 = OpISub %int %46 %int_1
+               OpReturnValue %47
+               OpFunctionEnd
+%PositiveMax = OpFunction %int None %12
+         %49 = OpLabel
+               OpReturnValue %int_2147483647
+               OpFunctionEnd
+%Test_StaticNegativeValueClosestToZero_Integer2 = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_Integer2Properties
+         %52 = OpLabel
+    %value_2 = OpVariable %_ptr_Function_v2int Function
+         %54 = OpFunctionCall %v2int %NegativeValueClosestToZero
+               OpStore %value_2 %54
+               OpReturn
+               OpFunctionEnd
+%NegativeValueClosestToZero = OpFunction %v2int None %11
+         %56 = OpLabel
+         %57 = OpFunctionCall %int %NegativeValueClosestToZero_0
+         %58 = OpCompositeConstruct %v2int %57 %57
+               OpReturnValue %58
+               OpFunctionEnd
+%NegativeValueClosestToZero_0 = OpFunction %int None %12
+         %60 = OpLabel
+         %61 = OpSNegate %int %int_1
+               OpReturnValue %61
+               OpFunctionEnd
+%Test_StaticPositiveMax_Integer2 = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_Integer2Properties
+         %64 = OpLabel
+    %value_3 = OpVariable %_ptr_Function_v2int Function
+         %66 = OpFunctionCall %v2int %PositiveMax_0
+               OpStore %value_3 %66
+               OpReturn
+               OpFunctionEnd
+%PositiveMax_0 = OpFunction %v2int None %11
+         %68 = OpLabel
+         %69 = OpFunctionCall %int %PositiveMax
+         %70 = OpCompositeConstruct %v2int %69 %69
+               OpReturnValue %70
+               OpFunctionEnd
+%Test_StaticPositiveValueClosestToZero_Integer2 = OpFunction %void None %8
+     %self_4 = OpFunctionParameter %_ptr_Function_Integer2Properties
+         %73 = OpLabel
+    %value_4 = OpVariable %_ptr_Function_v2int Function
+         %75 = OpFunctionCall %v2int %PositiveValueClosestToZero
+               OpStore %value_4 %75
+               OpReturn
+               OpFunctionEnd
+%PositiveValueClosestToZero = OpFunction %v2int None %11
+         %77 = OpLabel
+         %78 = OpFunctionCall %int %PositiveValueClosestToZero_0
+         %79 = OpCompositeConstruct %v2int %78 %78
+               OpReturnValue %79
+               OpFunctionEnd
+%PositiveValueClosestToZero_0 = OpFunction %int None %12
+         %81 = OpLabel
+               OpReturnValue %int_1
+               OpFunctionEnd
+%Test_X_Integer = OpFunction %void None %8
+     %self_5 = OpFunctionParameter %_ptr_Function_Integer2Properties
+         %84 = OpLabel
+ %instance_0 = OpVariable %_ptr_Function_v2int Function
+    %value_5 = OpVariable %_ptr_Function_int Function
+         %87 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_0 %87
+         %88 = OpAccessChain %_ptr_Function_int %instance_0 %int_0
+         %89 = OpLoad %int %88
+               OpStore %value_5 %89
+         %90 = OpAccessChain %_ptr_Function_int %instance_0 %int_0
+               OpStore %90 %int_0
+               OpReturn
+               OpFunctionEnd
+%Test_StaticXAxis_Integer2 = OpFunction %void None %8
+     %self_6 = OpFunctionParameter %_ptr_Function_Integer2Properties
+         %93 = OpLabel
+    %value_6 = OpVariable %_ptr_Function_v2int Function
+         %95 = OpFunctionCall %v2int %XAxis
+               OpStore %value_6 %95
+               OpReturn
+               OpFunctionEnd
+      %XAxis = OpFunction %v2int None %11
+         %97 = OpLabel
+         %98 = OpCompositeConstruct %v2int %int_1 %int_0_0
+               OpReturnValue %98
+               OpFunctionEnd
+%Test_XX_Integer2 = OpFunction %void None %8
+     %self_7 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %101 = OpLabel
+ %instance_1 = OpVariable %_ptr_Function_v2int Function
+    %value_7 = OpVariable %_ptr_Function_v2int Function
+        %104 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_1 %104
+        %105 = OpLoad %v2int %instance_1
+        %106 = OpVectorShuffle %v2int %105 %105 0 0
+               OpStore %value_7 %106
+               OpReturn
+               OpFunctionEnd
+%Test_XXX_Integer3 = OpFunction %void None %8
+     %self_8 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %109 = OpLabel
+ %instance_2 = OpVariable %_ptr_Function_v2int Function
+    %value_8 = OpVariable %_ptr_Function_v3int Function
+        %112 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_2 %112
+        %113 = OpLoad %v2int %instance_2
+        %114 = OpVectorShuffle %v3int %113 %113 0 0 0
+               OpStore %value_8 %114
+               OpReturn
+               OpFunctionEnd
+%Test_XXXX_Integer4 = OpFunction %void None %8
+     %self_9 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %117 = OpLabel
+ %instance_3 = OpVariable %_ptr_Function_v2int Function
+    %value_9 = OpVariable %_ptr_Function_v4int Function
+        %120 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_3 %120
+        %121 = OpLoad %v2int %instance_3
+        %122 = OpVectorShuffle %v4int %121 %121 0 0 0 0
+               OpStore %value_9 %122
+               OpReturn
+               OpFunctionEnd
+%Test_XXXY_Integer4 = OpFunction %void None %8
+    %self_10 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %125 = OpLabel
+ %instance_4 = OpVariable %_ptr_Function_v2int Function
+   %value_10 = OpVariable %_ptr_Function_v4int Function
+        %128 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_4 %128
+        %129 = OpLoad %v2int %instance_4
+        %130 = OpVectorShuffle %v4int %129 %129 0 0 0 1
+               OpStore %value_10 %130
+               OpReturn
+               OpFunctionEnd
+%Test_XXY_Integer3 = OpFunction %void None %8
+    %self_11 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %133 = OpLabel
+ %instance_5 = OpVariable %_ptr_Function_v2int Function
+   %value_11 = OpVariable %_ptr_Function_v3int Function
+        %136 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_5 %136
+        %137 = OpLoad %v2int %instance_5
+        %138 = OpVectorShuffle %v3int %137 %137 0 0 1
+               OpStore %value_11 %138
+               OpReturn
+               OpFunctionEnd
+%Test_XXYX_Integer4 = OpFunction %void None %8
+    %self_12 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %141 = OpLabel
+ %instance_6 = OpVariable %_ptr_Function_v2int Function
+   %value_12 = OpVariable %_ptr_Function_v4int Function
+        %144 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_6 %144
+        %145 = OpLoad %v2int %instance_6
+        %146 = OpVectorShuffle %v4int %145 %145 0 0 1 0
+               OpStore %value_12 %146
+               OpReturn
+               OpFunctionEnd
+%Test_XXYY_Integer4 = OpFunction %void None %8
+    %self_13 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %149 = OpLabel
+ %instance_7 = OpVariable %_ptr_Function_v2int Function
+   %value_13 = OpVariable %_ptr_Function_v4int Function
+        %152 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_7 %152
+        %153 = OpLoad %v2int %instance_7
+        %154 = OpVectorShuffle %v4int %153 %153 0 0 1 1
+               OpStore %value_13 %154
+               OpReturn
+               OpFunctionEnd
+%Test_XY_Integer2 = OpFunction %void None %8
+    %self_14 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %157 = OpLabel
+ %instance_8 = OpVariable %_ptr_Function_v2int Function
+   %value_14 = OpVariable %_ptr_Function_v2int Function
+        %160 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_8 %160
+        %161 = OpLoad %v2int %instance_8
+        %162 = OpVectorShuffle %v2int %161 %161 0 1
+               OpStore %value_14 %162
+        %163 = OpCompositeConstruct %v2int %int_0 %int_0
+        %164 = OpLoad %v2int %instance_8
+        %165 = OpVectorShuffle %v2int %164 %163 2 3
+               OpStore %instance_8 %165
+               OpReturn
+               OpFunctionEnd
+%Test_XYX_Integer3 = OpFunction %void None %8
+    %self_15 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %168 = OpLabel
+ %instance_9 = OpVariable %_ptr_Function_v2int Function
+   %value_15 = OpVariable %_ptr_Function_v3int Function
+        %171 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_9 %171
+        %172 = OpLoad %v2int %instance_9
+        %173 = OpVectorShuffle %v3int %172 %172 0 1 0
+               OpStore %value_15 %173
+               OpReturn
+               OpFunctionEnd
+%Test_XYXX_Integer4 = OpFunction %void None %8
+    %self_16 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %176 = OpLabel
+%instance_10 = OpVariable %_ptr_Function_v2int Function
+   %value_16 = OpVariable %_ptr_Function_v4int Function
+        %179 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_10 %179
+        %180 = OpLoad %v2int %instance_10
+        %181 = OpVectorShuffle %v4int %180 %180 0 1 0 0
+               OpStore %value_16 %181
+               OpReturn
+               OpFunctionEnd
+%Test_XYXY_Integer4 = OpFunction %void None %8
+    %self_17 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %184 = OpLabel
+%instance_11 = OpVariable %_ptr_Function_v2int Function
+   %value_17 = OpVariable %_ptr_Function_v4int Function
+        %187 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_11 %187
+        %188 = OpLoad %v2int %instance_11
+        %189 = OpVectorShuffle %v4int %188 %188 0 1 0 1
+               OpStore %value_17 %189
+               OpReturn
+               OpFunctionEnd
+%Test_XYY_Integer3 = OpFunction %void None %8
+    %self_18 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %192 = OpLabel
+%instance_12 = OpVariable %_ptr_Function_v2int Function
+   %value_18 = OpVariable %_ptr_Function_v3int Function
+        %195 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_12 %195
+        %196 = OpLoad %v2int %instance_12
+        %197 = OpVectorShuffle %v3int %196 %196 0 1 1
+               OpStore %value_18 %197
+               OpReturn
+               OpFunctionEnd
+%Test_XYYX_Integer4 = OpFunction %void None %8
+    %self_19 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %200 = OpLabel
+%instance_13 = OpVariable %_ptr_Function_v2int Function
+   %value_19 = OpVariable %_ptr_Function_v4int Function
+        %203 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_13 %203
+        %204 = OpLoad %v2int %instance_13
+        %205 = OpVectorShuffle %v4int %204 %204 0 1 1 0
+               OpStore %value_19 %205
+               OpReturn
+               OpFunctionEnd
+%Test_XYYY_Integer4 = OpFunction %void None %8
+    %self_20 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %208 = OpLabel
+%instance_14 = OpVariable %_ptr_Function_v2int Function
+   %value_20 = OpVariable %_ptr_Function_v4int Function
+        %211 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_14 %211
+        %212 = OpLoad %v2int %instance_14
+        %213 = OpVectorShuffle %v4int %212 %212 0 1 1 1
+               OpStore %value_20 %213
+               OpReturn
+               OpFunctionEnd
+%Test_Y_Integer = OpFunction %void None %8
+    %self_21 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %216 = OpLabel
+%instance_15 = OpVariable %_ptr_Function_v2int Function
+   %value_21 = OpVariable %_ptr_Function_int Function
+        %219 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_15 %219
+        %220 = OpAccessChain %_ptr_Function_int %instance_15 %int_1_0
+        %221 = OpLoad %int %220
+               OpStore %value_21 %221
+        %222 = OpAccessChain %_ptr_Function_int %instance_15 %int_1_0
+               OpStore %222 %int_0
+               OpReturn
+               OpFunctionEnd
+%Test_StaticYAxis_Integer2 = OpFunction %void None %8
+    %self_22 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %225 = OpLabel
+   %value_22 = OpVariable %_ptr_Function_v2int Function
+        %227 = OpFunctionCall %v2int %YAxis
+               OpStore %value_22 %227
+               OpReturn
+               OpFunctionEnd
+      %YAxis = OpFunction %v2int None %11
+        %229 = OpLabel
+        %230 = OpCompositeConstruct %v2int %int_0_0 %int_1
+               OpReturnValue %230
+               OpFunctionEnd
+%Test_YX_Integer2 = OpFunction %void None %8
+    %self_23 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %233 = OpLabel
+%instance_16 = OpVariable %_ptr_Function_v2int Function
+   %value_23 = OpVariable %_ptr_Function_v2int Function
+        %236 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_16 %236
+        %237 = OpLoad %v2int %instance_16
+        %238 = OpVectorShuffle %v2int %237 %237 1 0
+               OpStore %value_23 %238
+        %239 = OpCompositeConstruct %v2int %int_0 %int_0
+        %240 = OpLoad %v2int %instance_16
+        %241 = OpVectorShuffle %v2int %240 %239 3 2
+               OpStore %instance_16 %241
+               OpReturn
+               OpFunctionEnd
+%Test_YXX_Integer3 = OpFunction %void None %8
+    %self_24 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %244 = OpLabel
+%instance_17 = OpVariable %_ptr_Function_v2int Function
+   %value_24 = OpVariable %_ptr_Function_v3int Function
+        %247 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_17 %247
+        %248 = OpLoad %v2int %instance_17
+        %249 = OpVectorShuffle %v3int %248 %248 1 0 0
+               OpStore %value_24 %249
+               OpReturn
+               OpFunctionEnd
+%Test_YXXX_Integer4 = OpFunction %void None %8
+    %self_25 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %252 = OpLabel
+%instance_18 = OpVariable %_ptr_Function_v2int Function
+   %value_25 = OpVariable %_ptr_Function_v4int Function
+        %255 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_18 %255
+        %256 = OpLoad %v2int %instance_18
+        %257 = OpVectorShuffle %v4int %256 %256 1 0 0 0
+               OpStore %value_25 %257
+               OpReturn
+               OpFunctionEnd
+%Test_YXXY_Integer4 = OpFunction %void None %8
+    %self_26 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %260 = OpLabel
+%instance_19 = OpVariable %_ptr_Function_v2int Function
+   %value_26 = OpVariable %_ptr_Function_v4int Function
+        %263 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_19 %263
+        %264 = OpLoad %v2int %instance_19
+        %265 = OpVectorShuffle %v4int %264 %264 1 0 0 1
+               OpStore %value_26 %265
+               OpReturn
+               OpFunctionEnd
+%Test_YXY_Integer3 = OpFunction %void None %8
+    %self_27 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %268 = OpLabel
+%instance_20 = OpVariable %_ptr_Function_v2int Function
+   %value_27 = OpVariable %_ptr_Function_v3int Function
+        %271 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_20 %271
+        %272 = OpLoad %v2int %instance_20
+        %273 = OpVectorShuffle %v3int %272 %272 1 0 1
+               OpStore %value_27 %273
+               OpReturn
+               OpFunctionEnd
+%Test_YXYX_Integer4 = OpFunction %void None %8
+    %self_28 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %276 = OpLabel
+%instance_21 = OpVariable %_ptr_Function_v2int Function
+   %value_28 = OpVariable %_ptr_Function_v4int Function
+        %279 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_21 %279
+        %280 = OpLoad %v2int %instance_21
+        %281 = OpVectorShuffle %v4int %280 %280 1 0 1 0
+               OpStore %value_28 %281
+               OpReturn
+               OpFunctionEnd
+%Test_YXYY_Integer4 = OpFunction %void None %8
+    %self_29 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %284 = OpLabel
+%instance_22 = OpVariable %_ptr_Function_v2int Function
+   %value_29 = OpVariable %_ptr_Function_v4int Function
+        %287 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_22 %287
+        %288 = OpLoad %v2int %instance_22
+        %289 = OpVectorShuffle %v4int %288 %288 1 0 1 1
+               OpStore %value_29 %289
+               OpReturn
+               OpFunctionEnd
+%Test_YY_Integer2 = OpFunction %void None %8
+    %self_30 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %292 = OpLabel
+%instance_23 = OpVariable %_ptr_Function_v2int Function
+   %value_30 = OpVariable %_ptr_Function_v2int Function
+        %295 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_23 %295
+        %296 = OpLoad %v2int %instance_23
+        %297 = OpVectorShuffle %v2int %296 %296 1 1
+               OpStore %value_30 %297
+               OpReturn
+               OpFunctionEnd
+%Test_YYX_Integer3 = OpFunction %void None %8
+    %self_31 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %300 = OpLabel
+%instance_24 = OpVariable %_ptr_Function_v2int Function
+   %value_31 = OpVariable %_ptr_Function_v3int Function
+        %303 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_24 %303
+        %304 = OpLoad %v2int %instance_24
+        %305 = OpVectorShuffle %v3int %304 %304 1 1 0
+               OpStore %value_31 %305
+               OpReturn
+               OpFunctionEnd
+%Test_YYXX_Integer4 = OpFunction %void None %8
+    %self_32 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %308 = OpLabel
+%instance_25 = OpVariable %_ptr_Function_v2int Function
+   %value_32 = OpVariable %_ptr_Function_v4int Function
+        %311 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_25 %311
+        %312 = OpLoad %v2int %instance_25
+        %313 = OpVectorShuffle %v4int %312 %312 1 1 0 0
+               OpStore %value_32 %313
+               OpReturn
+               OpFunctionEnd
+%Test_YYXY_Integer4 = OpFunction %void None %8
+    %self_33 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %316 = OpLabel
+%instance_26 = OpVariable %_ptr_Function_v2int Function
+   %value_33 = OpVariable %_ptr_Function_v4int Function
+        %319 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_26 %319
+        %320 = OpLoad %v2int %instance_26
+        %321 = OpVectorShuffle %v4int %320 %320 1 1 0 1
+               OpStore %value_33 %321
+               OpReturn
+               OpFunctionEnd
+%Test_YYY_Integer3 = OpFunction %void None %8
+    %self_34 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %324 = OpLabel
+%instance_27 = OpVariable %_ptr_Function_v2int Function
+   %value_34 = OpVariable %_ptr_Function_v3int Function
+        %327 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_27 %327
+        %328 = OpLoad %v2int %instance_27
+        %329 = OpVectorShuffle %v3int %328 %328 1 1 1
+               OpStore %value_34 %329
+               OpReturn
+               OpFunctionEnd
+%Test_YYYX_Integer4 = OpFunction %void None %8
+    %self_35 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %332 = OpLabel
+%instance_28 = OpVariable %_ptr_Function_v2int Function
+   %value_35 = OpVariable %_ptr_Function_v4int Function
+        %335 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_28 %335
+        %336 = OpLoad %v2int %instance_28
+        %337 = OpVectorShuffle %v4int %336 %336 1 1 1 0
+               OpStore %value_35 %337
+               OpReturn
+               OpFunctionEnd
+%Test_YYYY_Integer4 = OpFunction %void None %8
+    %self_36 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %340 = OpLabel
+%instance_29 = OpVariable %_ptr_Function_v2int Function
+   %value_36 = OpVariable %_ptr_Function_v4int Function
+        %343 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_29 %343
+        %344 = OpLoad %v2int %instance_29
+        %345 = OpVectorShuffle %v4int %344 %344 1 1 1 1
+               OpStore %value_36 %345
+               OpReturn
+               OpFunctionEnd
+%Test_StaticZero_Integer2 = OpFunction %void None %8
+    %self_37 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %348 = OpLabel
+   %value_37 = OpVariable %_ptr_Function_v2int Function
+        %350 = OpFunctionCall %v2int %Zero
+               OpStore %value_37 %350
+               OpReturn
+               OpFunctionEnd
+       %Zero = OpFunction %v2int None %11
+        %352 = OpLabel
+        %353 = OpCompositeConstruct %v2int %int_0_0 %int_0_0
+               OpReturnValue %353
+               OpFunctionEnd
+       %Main = OpFunction %void None %8
+    %self_38 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %356 = OpLabel
+        %357 = OpFunctionCall %void %Test_StaticCount_Integer %self_38
+        %358 = OpFunctionCall %void %Test_Count_Integer %self_38
+        %359 = OpFunctionCall %void %Test_StaticNegativeMin_Integer2 %self_38
+        %360 = OpFunctionCall %void %Test_StaticNegativeValueClosestToZero_Integer2 %self_38
+        %361 = OpFunctionCall %void %Test_StaticPositiveMax_Integer2 %self_38
+        %362 = OpFunctionCall %void %Test_StaticPositiveValueClosestToZero_Integer2 %self_38
+        %363 = OpFunctionCall %void %Test_X_Integer %self_38
+        %364 = OpFunctionCall %void %Test_StaticXAxis_Integer2 %self_38
+        %365 = OpFunctionCall %void %Test_XX_Integer2 %self_38
+        %366 = OpFunctionCall %void %Test_XXX_Integer3 %self_38
+        %367 = OpFunctionCall %void %Test_XXXX_Integer4 %self_38
+        %368 = OpFunctionCall %void %Test_XXXY_Integer4 %self_38
+        %369 = OpFunctionCall %void %Test_XXY_Integer3 %self_38
+        %370 = OpFunctionCall %void %Test_XXYX_Integer4 %self_38
+        %371 = OpFunctionCall %void %Test_XXYY_Integer4 %self_38
+        %372 = OpFunctionCall %void %Test_XY_Integer2 %self_38
+        %373 = OpFunctionCall %void %Test_XYX_Integer3 %self_38
+        %374 = OpFunctionCall %void %Test_XYXX_Integer4 %self_38
+        %375 = OpFunctionCall %void %Test_XYXY_Integer4 %self_38
+        %376 = OpFunctionCall %void %Test_XYY_Integer3 %self_38
+        %377 = OpFunctionCall %void %Test_XYYX_Integer4 %self_38
+        %378 = OpFunctionCall %void %Test_XYYY_Integer4 %self_38
+        %379 = OpFunctionCall %void %Test_Y_Integer %self_38
+        %380 = OpFunctionCall %void %Test_StaticYAxis_Integer2 %self_38
+        %381 = OpFunctionCall %void %Test_YX_Integer2 %self_38
+        %382 = OpFunctionCall %void %Test_YXX_Integer3 %self_38
+        %383 = OpFunctionCall %void %Test_YXXX_Integer4 %self_38
+        %384 = OpFunctionCall %void %Test_YXXY_Integer4 %self_38
+        %385 = OpFunctionCall %void %Test_YXY_Integer3 %self_38
+        %386 = OpFunctionCall %void %Test_YXYX_Integer4 %self_38
+        %387 = OpFunctionCall %void %Test_YXYY_Integer4 %self_38
+        %388 = OpFunctionCall %void %Test_YY_Integer2 %self_38
+        %389 = OpFunctionCall %void %Test_YYX_Integer3 %self_38
+        %390 = OpFunctionCall %void %Test_YYXX_Integer4 %self_38
+        %391 = OpFunctionCall %void %Test_YYXY_Integer4 %self_38
+        %392 = OpFunctionCall %void %Test_YYY_Integer3 %self_38
+        %393 = OpFunctionCall %void %Test_YYYX_Integer4 %self_38
+        %394 = OpFunctionCall %void %Test_YYYY_Integer4 %self_38
+        %395 = OpFunctionCall %void %Test_StaticZero_Integer2 %self_38
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_Integer2Properties = OpFunction %void None %8
+    %self_39 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %398 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+    %self_40 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %401 = OpLabel
+        %402 = OpFunctionCall %void %PreConstructor_Integer2Properties %self_40
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+    %self_41 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %405 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+    %self_42 = OpFunctionParameter %_ptr_Function_Integer2Properties
+        %408 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_Integer2Properties = OpFunction %void None %17
+        %410 = OpLabel
+    %self_43 = OpVariable %_ptr_Function_Integer2Properties Function
+        %412 = OpFunctionCall %void %InitializeGlobals
+        %413 = OpFunctionCall %void %DefaultConstructor %self_43
+        %414 = OpFunctionCall %void %CopyInputs_Main %self_43
+        %415 = OpFunctionCall %void %Main %self_43
+        %416 = OpFunctionCall %void %CopyOutputs_Main %self_43
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %17
+        %417 = OpLabel
+               OpReturn
+               OpFunctionEnd

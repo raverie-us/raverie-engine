@@ -1,0 +1,23 @@
+[Pixel][UnitTest]
+struct GenerateRotationMatrix3x3
+{
+  function Test_Static_Real3_Real()
+  {
+    var axis_ = Real3();
+    var radians_ = Real();
+    var result = Math.GenerateRotationMatrix3x3(axis_, radians_);
+  }
+
+  function Test_Static_Real()
+  {
+    var radians_ = Real();
+    var result = Math.GenerateRotationMatrix3x3(radians_);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Real3_Real();
+    this.Test_Static_Real();
+  }
+}

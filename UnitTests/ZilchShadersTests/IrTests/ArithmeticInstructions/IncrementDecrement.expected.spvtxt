@@ -1,0 +1,137 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 73
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_IncrementDecrement "EntryPoint_Main_IncrementDecrement"
+               OpExecutionMode %EntryPoint_Main_IncrementDecrement OriginUpperLeft
+               OpSource Unknown 100
+               OpName %IncrementDecrement "IncrementDecrement"
+               OpMemberName %IncrementDecrement 0 "Dummy"
+               OpName %Data "Data"
+               OpMemberName %Data 1 "Real"
+               OpMemberName %Data 0 "Int"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %i "i"
+               OpName %r "r"
+               OpName %data "data"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_0 "self"
+               OpName %PreConstructor_Data "PreConstructor_Data"
+               OpName %self_1 "self"
+               OpName %PreConstructor_IncrementDecrement "PreConstructor_IncrementDecrement"
+               OpName %self_2 "self"
+               OpName %DefaultConstructor_0 "DefaultConstructor"
+               OpName %self_3 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_4 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_5 "self"
+               OpName %EntryPoint_Main_IncrementDecrement "EntryPoint_Main_IncrementDecrement"
+               OpName %self_6 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%IncrementDecrement = OpTypeStruct %int
+%_ptr_Function_IncrementDecrement = OpTypePointer Function %IncrementDecrement
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_IncrementDecrement
+      %int_0 = OpConstant %int 0
+      %int_1 = OpConstant %int 1
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %float_0 = OpConstant %float 0
+    %float_1 = OpConstant %float 1
+       %Data = OpTypeStruct %int %float
+%_ptr_Function_Data = OpTypePointer Function %Data
+         %13 = OpTypeFunction %void %_ptr_Function_Data
+         %14 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_IncrementDecrement
+         %21 = OpLabel
+          %i = OpVariable %_ptr_Function_int Function
+          %r = OpVariable %_ptr_Function_float Function
+       %data = OpVariable %_ptr_Function_Data Function
+         %25 = OpVariable %_ptr_Function_Data Function
+               OpStore %i %int_0
+         %26 = OpLoad %int %i
+         %27 = OpIAdd %int %26 %int_1
+               OpStore %i %27
+         %28 = OpLoad %int %i
+         %29 = OpISub %int %28 %int_1
+               OpStore %i %29
+               OpStore %r %float_0
+         %30 = OpLoad %float %r
+         %31 = OpFAdd %float %30 %float_1
+               OpStore %r %31
+         %32 = OpLoad %float %r
+         %33 = OpFSub %float %32 %float_1
+               OpStore %r %33
+         %34 = OpFunctionCall %void %DefaultConstructor %25
+         %35 = OpLoad %Data %25
+               OpStore %data %35
+         %36 = OpAccessChain %_ptr_Function_int %data %int_0
+         %37 = OpLoad %int %36
+         %38 = OpIAdd %int %37 %int_1
+               OpStore %36 %38
+         %39 = OpAccessChain %_ptr_Function_float %data %int_1
+         %40 = OpLoad %float %39
+         %41 = OpFAdd %float %40 %float_1
+               OpStore %39 %41
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %13
+     %self_0 = OpFunctionParameter %_ptr_Function_Data
+         %44 = OpLabel
+         %45 = OpFunctionCall %void %PreConstructor_Data %self_0
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_Data = OpFunction %void None %13
+     %self_1 = OpFunctionParameter %_ptr_Function_Data
+         %48 = OpLabel
+         %49 = OpAccessChain %_ptr_Function_int %self_1 %int_0
+               OpStore %49 %int_0
+         %50 = OpAccessChain %_ptr_Function_float %self_1 %int_1
+               OpStore %50 %float_0
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_IncrementDecrement = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_IncrementDecrement
+         %53 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor_0 = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_IncrementDecrement
+         %56 = OpLabel
+         %57 = OpFunctionCall %void %PreConstructor_IncrementDecrement %self_3
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_4 = OpFunctionParameter %_ptr_Function_IncrementDecrement
+         %60 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_5 = OpFunctionParameter %_ptr_Function_IncrementDecrement
+         %63 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_IncrementDecrement = OpFunction %void None %14
+         %65 = OpLabel
+     %self_6 = OpVariable %_ptr_Function_IncrementDecrement Function
+         %67 = OpFunctionCall %void %InitializeGlobals
+         %68 = OpFunctionCall %void %DefaultConstructor_0 %self_6
+         %69 = OpFunctionCall %void %CopyInputs_Main %self_6
+         %70 = OpFunctionCall %void %Main %self_6
+         %71 = OpFunctionCall %void %CopyOutputs_Main %self_6
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %14
+         %72 = OpLabel
+               OpReturn
+               OpFunctionEnd

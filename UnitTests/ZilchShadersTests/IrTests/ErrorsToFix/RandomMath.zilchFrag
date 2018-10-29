@@ -1,0 +1,25 @@
+[Pixel][UnitTest]
+struct RandomMath
+{
+  //[Extension(typeid(Integer))]
+  //function MinusOne() : Real2
+  //{
+  //  return Real2(-1.0);
+  //}
+  //
+  //[Extension(typeid(Real3))]
+  //function MinusOne()
+  //{
+  //  this.XYZ = Real3(-1.0);
+  //}
+  //
+  //[EntryPoint]
+  //function Main()
+  //{
+  //  var r = 1.0;
+  //  r = -1;
+  //  
+  //  var r3 = Real3();
+  //  r3.MinusOne();
+  //}
+}

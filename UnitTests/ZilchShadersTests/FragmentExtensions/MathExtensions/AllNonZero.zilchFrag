@@ -1,0 +1,50 @@
+struct MathAllNonZeroImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function AllNonZero(value : Real) : Boolean
+  {
+    return Math.AllNonZero(value as Boolean);
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function AllNonZero(value : Real2) : Boolean
+  {
+    return Math.AllNonZero(value as Boolean2);
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function AllNonZero(value : Real3) : Boolean
+  {
+    return Math.AllNonZero(value as Boolean3);
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function AllNonZero(value : Real4) : Boolean
+  {
+    return Math.AllNonZero(value as Boolean4);
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function AllNonZero(value : Integer) : Boolean
+  {
+    return Math.AllNonZero(value as Boolean);
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function AllNonZero(value : Integer2) : Boolean
+  {
+    return Math.AllNonZero(value as Boolean2);
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function AllNonZero(value : Integer3) : Boolean
+  {
+    return Math.AllNonZero(value as Boolean3);
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function AllNonZero(value : Integer4) : Boolean
+  {
+    return Math.AllNonZero(value as Boolean4);
+  }
+}

@@ -1,0 +1,2 @@
+  IrErrorTests\Attributes\BadGeometry2.zilchFrag(5): Too many parameters to attribute 'Geometry'. Signature must be 'maxVertices : Integer':
+  Too many parameters to attribute 'Geometry'. Signature must be 'maxVertices : Integer'

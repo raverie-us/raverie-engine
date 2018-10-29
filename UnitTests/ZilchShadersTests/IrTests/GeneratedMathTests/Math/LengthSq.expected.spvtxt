@@ -1,0 +1,215 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 118
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_LengthSq "EntryPoint_Main_LengthSq"
+               OpExecutionMode %EntryPoint_Main_LengthSq OriginUpperLeft
+               OpSource Unknown 100
+               OpName %LengthSq "LengthSq"
+               OpMemberName %LengthSq 0 "Dummy"
+               OpName %Quaternion "Quaternion"
+               OpMemberName %Quaternion 0 "Data"
+               OpName %Test_Static_Quaternion "Test_Static_Quaternion"
+               OpName %self "self"
+               OpName %param0 "param0"
+               OpName %result "result"
+               OpName %LengthSq_0 "LengthSq"
+               OpName %value "value"
+               OpName %value_Local "value_Local"
+               OpName %LengthSq_1 "LengthSq"
+               OpName %param0_0 "param0"
+               OpName %param0_Local "param0_Local"
+               OpName %Test_Static_Real2 "Test_Static_Real2"
+               OpName %self_0 "self"
+               OpName %param0_1 "param0"
+               OpName %result_0 "result"
+               OpName %LengthSq_2 "LengthSq"
+               OpName %param0_2 "param0"
+               OpName %param0_Local_0 "param0_Local"
+               OpName %Test_Static_Real3 "Test_Static_Real3"
+               OpName %self_1 "self"
+               OpName %param0_3 "param0"
+               OpName %result_1 "result"
+               OpName %LengthSq_3 "LengthSq"
+               OpName %param0_4 "param0"
+               OpName %param0_Local_1 "param0_Local"
+               OpName %Test_Static_Real4 "Test_Static_Real4"
+               OpName %self_2 "self"
+               OpName %param0_5 "param0"
+               OpName %result_2 "result"
+               OpName %Main "Main"
+               OpName %self_3 "self"
+               OpName %PreConstructor_LengthSq "PreConstructor_LengthSq"
+               OpName %self_4 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_5 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_6 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_7 "self"
+               OpName %EntryPoint_Main_LengthSq "EntryPoint_Main_LengthSq"
+               OpName %self_8 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+   %LengthSq = OpTypeStruct %int
+%_ptr_Function_LengthSq = OpTypePointer Function %LengthSq
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_LengthSq
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+    %float_0 = OpConstant %float 0
+    %float_1 = OpConstant %float 1
+ %Quaternion = OpTypeStruct %v4float
+%_ptr_Function_Quaternion = OpTypePointer Function %Quaternion
+         %15 = OpTypeFunction %float %Quaternion
+      %int_0 = OpConstant %int 0
+         %16 = OpTypeFunction %float %v4float
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+         %19 = OpTypeFunction %float %v2float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+         %22 = OpTypeFunction %float %v3float
+         %23 = OpTypeFunction %void
+%Test_Static_Quaternion = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_LengthSq
+         %29 = OpLabel
+     %param0 = OpVariable %_ptr_Function_Quaternion Function
+     %result = OpVariable %_ptr_Function_float Function
+         %32 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_1
+         %33 = OpCompositeConstruct %Quaternion %32
+               OpStore %param0 %33
+         %34 = OpLoad %Quaternion %param0
+         %35 = OpFunctionCall %float %LengthSq_0 %34
+               OpStore %result %35
+               OpReturn
+               OpFunctionEnd
+ %LengthSq_0 = OpFunction %float None %15
+      %value = OpFunctionParameter %Quaternion
+         %38 = OpLabel
+%value_Local = OpVariable %_ptr_Function_Quaternion Function
+               OpStore %value_Local %value
+         %40 = OpAccessChain %_ptr_Function_v4float %value_Local %int_0
+         %41 = OpLoad %v4float %40
+         %42 = OpVectorShuffle %v4float %41 %41 0 1 2 3
+         %43 = OpFunctionCall %float %LengthSq_1 %42
+               OpReturnValue %43
+               OpFunctionEnd
+ %LengthSq_1 = OpFunction %float None %16
+   %param0_0 = OpFunctionParameter %v4float
+         %46 = OpLabel
+%param0_Local = OpVariable %_ptr_Function_v4float Function
+               OpStore %param0_Local %param0_0
+         %48 = OpLoad %v4float %param0_Local
+         %49 = OpLoad %v4float %param0_Local
+         %50 = OpDot %float %48 %49
+               OpReturnValue %50
+               OpFunctionEnd
+%Test_Static_Real2 = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_LengthSq
+         %53 = OpLabel
+   %param0_1 = OpVariable %_ptr_Function_v2float Function
+   %result_0 = OpVariable %_ptr_Function_float Function
+         %56 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %param0_1 %56
+         %57 = OpLoad %v2float %param0_1
+         %58 = OpFunctionCall %float %LengthSq_2 %57
+               OpStore %result_0 %58
+               OpReturn
+               OpFunctionEnd
+ %LengthSq_2 = OpFunction %float None %19
+   %param0_2 = OpFunctionParameter %v2float
+         %61 = OpLabel
+%param0_Local_0 = OpVariable %_ptr_Function_v2float Function
+               OpStore %param0_Local_0 %param0_2
+         %63 = OpLoad %v2float %param0_Local_0
+         %64 = OpLoad %v2float %param0_Local_0
+         %65 = OpDot %float %63 %64
+               OpReturnValue %65
+               OpFunctionEnd
+%Test_Static_Real3 = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_LengthSq
+         %68 = OpLabel
+   %param0_3 = OpVariable %_ptr_Function_v3float Function
+   %result_1 = OpVariable %_ptr_Function_float Function
+         %71 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %param0_3 %71
+         %72 = OpLoad %v3float %param0_3
+         %73 = OpFunctionCall %float %LengthSq_3 %72
+               OpStore %result_1 %73
+               OpReturn
+               OpFunctionEnd
+ %LengthSq_3 = OpFunction %float None %22
+   %param0_4 = OpFunctionParameter %v3float
+         %76 = OpLabel
+%param0_Local_1 = OpVariable %_ptr_Function_v3float Function
+               OpStore %param0_Local_1 %param0_4
+         %78 = OpLoad %v3float %param0_Local_1
+         %79 = OpLoad %v3float %param0_Local_1
+         %80 = OpDot %float %78 %79
+               OpReturnValue %80
+               OpFunctionEnd
+%Test_Static_Real4 = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_LengthSq
+         %83 = OpLabel
+   %param0_5 = OpVariable %_ptr_Function_v4float Function
+   %result_2 = OpVariable %_ptr_Function_float Function
+         %86 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %param0_5 %86
+         %87 = OpLoad %v4float %param0_5
+         %88 = OpFunctionCall %float %LengthSq_1 %87
+               OpStore %result_2 %88
+               OpReturn
+               OpFunctionEnd
+       %Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_LengthSq
+         %91 = OpLabel
+         %92 = OpFunctionCall %void %Test_Static_Quaternion %self_3
+         %93 = OpFunctionCall %void %Test_Static_Real2 %self_3
+         %94 = OpFunctionCall %void %Test_Static_Real3 %self_3
+         %95 = OpFunctionCall %void %Test_Static_Real4 %self_3
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_LengthSq = OpFunction %void None %8
+     %self_4 = OpFunctionParameter %_ptr_Function_LengthSq
+         %98 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_5 = OpFunctionParameter %_ptr_Function_LengthSq
+        %101 = OpLabel
+        %102 = OpFunctionCall %void %PreConstructor_LengthSq %self_5
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_6 = OpFunctionParameter %_ptr_Function_LengthSq
+        %105 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_7 = OpFunctionParameter %_ptr_Function_LengthSq
+        %108 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_LengthSq = OpFunction %void None %23
+        %110 = OpLabel
+     %self_8 = OpVariable %_ptr_Function_LengthSq Function
+        %112 = OpFunctionCall %void %InitializeGlobals
+        %113 = OpFunctionCall %void %DefaultConstructor %self_8
+        %114 = OpFunctionCall %void %CopyInputs_Main %self_8
+        %115 = OpFunctionCall %void %Main %self_8
+        %116 = OpFunctionCall %void %CopyOutputs_Main %self_8
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %23
+        %117 = OpLabel
+               OpReturn
+               OpFunctionEnd

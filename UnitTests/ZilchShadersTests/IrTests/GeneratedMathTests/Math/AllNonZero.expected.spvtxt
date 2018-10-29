@@ -1,0 +1,898 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 544
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_AllNonZero "EntryPoint_Main_AllNonZero"
+               OpExecutionMode %EntryPoint_Main_AllNonZero OriginUpperLeft
+               OpSource Unknown 100
+               OpName %AllNonZero "AllNonZero"
+               OpMemberName %AllNonZero 0 "Dummy"
+               OpName %Test_Static_Boolean "Test_Static_Boolean"
+               OpName %self "self"
+               OpName %param0 "param0"
+               OpName %result "result"
+               OpName %Test_Static_Boolean2 "Test_Static_Boolean2"
+               OpName %self_0 "self"
+               OpName %param0_0 "param0"
+               OpName %result_0 "result"
+               OpName %Test_Static_Boolean3 "Test_Static_Boolean3"
+               OpName %self_1 "self"
+               OpName %param0_1 "param0"
+               OpName %result_1 "result"
+               OpName %Test_Static_Boolean4 "Test_Static_Boolean4"
+               OpName %self_2 "self"
+               OpName %param0_2 "param0"
+               OpName %result_2 "result"
+               OpName %Test_Static_Integer "Test_Static_Integer"
+               OpName %self_3 "self"
+               OpName %param0_3 "param0"
+               OpName %result_3 "result"
+               OpName %AllNonZero_0 "AllNonZero"
+               OpName %value "value"
+               OpName %value_Local "value_Local"
+               OpName %Test_Static_Integer2 "Test_Static_Integer2"
+               OpName %self_4 "self"
+               OpName %param0_4 "param0"
+               OpName %result_4 "result"
+               OpName %AllNonZero_1 "AllNonZero"
+               OpName %value_0 "value"
+               OpName %value_Local_0 "value_Local"
+               OpName %Test_Static_Integer3 "Test_Static_Integer3"
+               OpName %self_5 "self"
+               OpName %param0_5 "param0"
+               OpName %result_5 "result"
+               OpName %AllNonZero_2 "AllNonZero"
+               OpName %value_1 "value"
+               OpName %value_Local_1 "value_Local"
+               OpName %Test_Static_Integer4 "Test_Static_Integer4"
+               OpName %self_6 "self"
+               OpName %param0_6 "param0"
+               OpName %result_6 "result"
+               OpName %AllNonZero_3 "AllNonZero"
+               OpName %value_2 "value"
+               OpName %value_Local_2 "value_Local"
+               OpName %Test_Static_Real "Test_Static_Real"
+               OpName %self_7 "self"
+               OpName %param0_7 "param0"
+               OpName %result_7 "result"
+               OpName %AllNonZero_4 "AllNonZero"
+               OpName %value_3 "value"
+               OpName %value_Local_3 "value_Local"
+               OpName %Test_Static_Real2 "Test_Static_Real2"
+               OpName %self_8 "self"
+               OpName %param0_8 "param0"
+               OpName %result_8 "result"
+               OpName %AllNonZero_5 "AllNonZero"
+               OpName %value_4 "value"
+               OpName %value_Local_4 "value_Local"
+               OpName %Test_Static_Real2x2 "Test_Static_Real2x2"
+               OpName %self_9 "self"
+               OpName %param0_9 "param0"
+               OpName %result_9 "result"
+               OpName %AllNonZero_6 "AllNonZero"
+               OpName %param0_10 "param0"
+               OpName %param0_Local "param0_Local"
+               OpName %result_10 "result"
+               OpName %Test_Static_Real2x3 "Test_Static_Real2x3"
+               OpName %self_10 "self"
+               OpName %param0_11 "param0"
+               OpName %result_11 "result"
+               OpName %AllNonZero_7 "AllNonZero"
+               OpName %param0_12 "param0"
+               OpName %param0_Local_0 "param0_Local"
+               OpName %result_12 "result"
+               OpName %AllNonZero_8 "AllNonZero"
+               OpName %value_5 "value"
+               OpName %value_Local_5 "value_Local"
+               OpName %Test_Static_Real2x4 "Test_Static_Real2x4"
+               OpName %self_11 "self"
+               OpName %param0_13 "param0"
+               OpName %result_13 "result"
+               OpName %AllNonZero_9 "AllNonZero"
+               OpName %param0_14 "param0"
+               OpName %param0_Local_1 "param0_Local"
+               OpName %result_14 "result"
+               OpName %AllNonZero_10 "AllNonZero"
+               OpName %value_6 "value"
+               OpName %value_Local_6 "value_Local"
+               OpName %Test_Static_Real3 "Test_Static_Real3"
+               OpName %self_12 "self"
+               OpName %param0_15 "param0"
+               OpName %result_15 "result"
+               OpName %Test_Static_Real3x2 "Test_Static_Real3x2"
+               OpName %self_13 "self"
+               OpName %param0_16 "param0"
+               OpName %result_16 "result"
+               OpName %AllNonZero_11 "AllNonZero"
+               OpName %param0_17 "param0"
+               OpName %param0_Local_2 "param0_Local"
+               OpName %result_17 "result"
+               OpName %Test_Static_Real3x3 "Test_Static_Real3x3"
+               OpName %self_14 "self"
+               OpName %param0_18 "param0"
+               OpName %result_18 "result"
+               OpName %AllNonZero_12 "AllNonZero"
+               OpName %param0_19 "param0"
+               OpName %param0_Local_3 "param0_Local"
+               OpName %result_19 "result"
+               OpName %Test_Static_Real3x4 "Test_Static_Real3x4"
+               OpName %self_15 "self"
+               OpName %param0_20 "param0"
+               OpName %result_20 "result"
+               OpName %AllNonZero_13 "AllNonZero"
+               OpName %param0_21 "param0"
+               OpName %param0_Local_4 "param0_Local"
+               OpName %result_21 "result"
+               OpName %Test_Static_Real4 "Test_Static_Real4"
+               OpName %self_16 "self"
+               OpName %param0_22 "param0"
+               OpName %result_22 "result"
+               OpName %Test_Static_Real4x2 "Test_Static_Real4x2"
+               OpName %self_17 "self"
+               OpName %param0_23 "param0"
+               OpName %result_23 "result"
+               OpName %AllNonZero_14 "AllNonZero"
+               OpName %param0_24 "param0"
+               OpName %param0_Local_5 "param0_Local"
+               OpName %result_24 "result"
+               OpName %Test_Static_Real4x3 "Test_Static_Real4x3"
+               OpName %self_18 "self"
+               OpName %param0_25 "param0"
+               OpName %result_25 "result"
+               OpName %AllNonZero_15 "AllNonZero"
+               OpName %param0_26 "param0"
+               OpName %param0_Local_6 "param0_Local"
+               OpName %result_26 "result"
+               OpName %Test_Static_Real4x4 "Test_Static_Real4x4"
+               OpName %self_19 "self"
+               OpName %param0_27 "param0"
+               OpName %result_27 "result"
+               OpName %AllNonZero_16 "AllNonZero"
+               OpName %param0_28 "param0"
+               OpName %param0_Local_7 "param0_Local"
+               OpName %result_28 "result"
+               OpName %Main "Main"
+               OpName %self_20 "self"
+               OpName %PreConstructor_AllNonZero "PreConstructor_AllNonZero"
+               OpName %self_21 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_22 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_23 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_24 "self"
+               OpName %EntryPoint_Main_AllNonZero "EntryPoint_Main_AllNonZero"
+               OpName %self_25 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+ %AllNonZero = OpTypeStruct %int
+%_ptr_Function_AllNonZero = OpTypePointer Function %AllNonZero
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_AllNonZero
+       %bool = OpTypeBool
+%_ptr_Function_bool = OpTypePointer Function %bool
+      %false = OpConstantFalse %bool
+     %v2bool = OpTypeVector %bool 2
+%_ptr_Function_v2bool = OpTypePointer Function %v2bool
+     %v3bool = OpTypeVector %bool 3
+%_ptr_Function_v3bool = OpTypePointer Function %v3bool
+     %v4bool = OpTypeVector %bool 4
+%_ptr_Function_v4bool = OpTypePointer Function %v4bool
+      %int_0 = OpConstant %int 0
+         %17 = OpTypeFunction %bool %int
+    %int_0_0 = OpConstant %int 0
+      %v2int = OpTypeVector %int 2
+%_ptr_Function_v2int = OpTypePointer Function %v2int
+         %20 = OpTypeFunction %bool %v2int
+      %v3int = OpTypeVector %int 3
+%_ptr_Function_v3int = OpTypePointer Function %v3int
+         %23 = OpTypeFunction %bool %v3int
+      %v4int = OpTypeVector %int 4
+%_ptr_Function_v4int = OpTypePointer Function %v4int
+         %26 = OpTypeFunction %bool %v4int
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %float_0 = OpConstant %float 0
+         %29 = OpTypeFunction %bool %float
+  %float_0_0 = OpConstant %float 0
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+         %32 = OpTypeFunction %bool %v2float
+%mat2v2float = OpTypeMatrix %v2float 2
+%_ptr_Function_mat2v2float = OpTypePointer Function %mat2v2float
+         %35 = OpTypeFunction %bool %mat2v2float
+       %true = OpConstantTrue %bool
+      %int_1 = OpConstant %int 1
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+%mat2v3float = OpTypeMatrix %v3float 2
+%_ptr_Function_mat2v3float = OpTypePointer Function %mat2v3float
+         %40 = OpTypeFunction %bool %mat2v3float
+         %41 = OpTypeFunction %bool %v3float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+%mat2v4float = OpTypeMatrix %v4float 2
+%_ptr_Function_mat2v4float = OpTypePointer Function %mat2v4float
+         %46 = OpTypeFunction %bool %mat2v4float
+         %47 = OpTypeFunction %bool %v4float
+%mat3v2float = OpTypeMatrix %v2float 3
+%_ptr_Function_mat3v2float = OpTypePointer Function %mat3v2float
+         %50 = OpTypeFunction %bool %mat3v2float
+      %int_2 = OpConstant %int 2
+%mat3v3float = OpTypeMatrix %v3float 3
+%_ptr_Function_mat3v3float = OpTypePointer Function %mat3v3float
+         %53 = OpTypeFunction %bool %mat3v3float
+%mat3v4float = OpTypeMatrix %v4float 3
+%_ptr_Function_mat3v4float = OpTypePointer Function %mat3v4float
+         %56 = OpTypeFunction %bool %mat3v4float
+%mat4v2float = OpTypeMatrix %v2float 4
+%_ptr_Function_mat4v2float = OpTypePointer Function %mat4v2float
+         %59 = OpTypeFunction %bool %mat4v2float
+      %int_3 = OpConstant %int 3
+%mat4v3float = OpTypeMatrix %v3float 4
+%_ptr_Function_mat4v3float = OpTypePointer Function %mat4v3float
+         %62 = OpTypeFunction %bool %mat4v3float
+%mat4v4float = OpTypeMatrix %v4float 4
+%_ptr_Function_mat4v4float = OpTypePointer Function %mat4v4float
+         %65 = OpTypeFunction %bool %mat4v4float
+         %66 = OpTypeFunction %void
+%Test_Static_Boolean = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_AllNonZero
+         %78 = OpLabel
+     %param0 = OpVariable %_ptr_Function_bool Function
+     %result = OpVariable %_ptr_Function_bool Function
+               OpStore %param0 %false
+         %81 = OpLoad %bool %param0
+               OpStore %result %81
+               OpReturn
+               OpFunctionEnd
+%Test_Static_Boolean2 = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_AllNonZero
+         %84 = OpLabel
+   %param0_0 = OpVariable %_ptr_Function_v2bool Function
+   %result_0 = OpVariable %_ptr_Function_bool Function
+         %87 = OpCompositeConstruct %v2bool %false %false
+               OpStore %param0_0 %87
+         %88 = OpLoad %v2bool %param0_0
+         %89 = OpAll %bool %88
+               OpStore %result_0 %89
+               OpReturn
+               OpFunctionEnd
+%Test_Static_Boolean3 = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_AllNonZero
+         %92 = OpLabel
+   %param0_1 = OpVariable %_ptr_Function_v3bool Function
+   %result_1 = OpVariable %_ptr_Function_bool Function
+         %95 = OpCompositeConstruct %v3bool %false %false %false
+               OpStore %param0_1 %95
+         %96 = OpLoad %v3bool %param0_1
+         %97 = OpAll %bool %96
+               OpStore %result_1 %97
+               OpReturn
+               OpFunctionEnd
+%Test_Static_Boolean4 = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_AllNonZero
+        %100 = OpLabel
+   %param0_2 = OpVariable %_ptr_Function_v4bool Function
+   %result_2 = OpVariable %_ptr_Function_bool Function
+        %103 = OpCompositeConstruct %v4bool %false %false %false %false
+               OpStore %param0_2 %103
+        %104 = OpLoad %v4bool %param0_2
+        %105 = OpAll %bool %104
+               OpStore %result_2 %105
+               OpReturn
+               OpFunctionEnd
+%Test_Static_Integer = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_AllNonZero
+        %108 = OpLabel
+   %param0_3 = OpVariable %_ptr_Function_int Function
+   %result_3 = OpVariable %_ptr_Function_bool Function
+               OpStore %param0_3 %int_0
+        %111 = OpLoad %int %param0_3
+        %112 = OpFunctionCall %bool %AllNonZero_0 %111
+               OpStore %result_3 %112
+               OpReturn
+               OpFunctionEnd
+%AllNonZero_0 = OpFunction %bool None %17
+      %value = OpFunctionParameter %int
+        %115 = OpLabel
+%value_Local = OpVariable %_ptr_Function_int Function
+               OpStore %value_Local %value
+        %117 = OpLoad %int %value_Local
+        %118 = OpINotEqual %bool %117 %int_0_0
+               OpReturnValue %118
+               OpFunctionEnd
+%Test_Static_Integer2 = OpFunction %void None %8
+     %self_4 = OpFunctionParameter %_ptr_Function_AllNonZero
+        %121 = OpLabel
+   %param0_4 = OpVariable %_ptr_Function_v2int Function
+   %result_4 = OpVariable %_ptr_Function_bool Function
+        %124 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %param0_4 %124
+        %125 = OpLoad %v2int %param0_4
+        %126 = OpFunctionCall %bool %AllNonZero_1 %125
+               OpStore %result_4 %126
+               OpReturn
+               OpFunctionEnd
+%AllNonZero_1 = OpFunction %bool None %20
+    %value_0 = OpFunctionParameter %v2int
+        %129 = OpLabel
+%value_Local_0 = OpVariable %_ptr_Function_v2int Function
+               OpStore %value_Local_0 %value_0
+        %131 = OpLoad %v2int %value_Local_0
+        %132 = OpCompositeConstruct %v2int %int_0_0 %int_0_0
+        %133 = OpINotEqual %v2bool %131 %132
+        %134 = OpAll %bool %133
+               OpReturnValue %134
+               OpFunctionEnd
+%Test_Static_Integer3 = OpFunction %void None %8
+     %self_5 = OpFunctionParameter %_ptr_Function_AllNonZero
+        %137 = OpLabel
+   %param0_5 = OpVariable %_ptr_Function_v3int Function
+   %result_5 = OpVariable %_ptr_Function_bool Function
+        %140 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+               OpStore %param0_5 %140
+        %141 = OpLoad %v3int %param0_5
+        %142 = OpFunctionCall %bool %AllNonZero_2 %141
+               OpStore %result_5 %142
+               OpReturn
+               OpFunctionEnd
+%AllNonZero_2 = OpFunction %bool None %23
+    %value_1 = OpFunctionParameter %v3int
+        %145 = OpLabel
+%value_Local_1 = OpVariable %_ptr_Function_v3int Function
+               OpStore %value_Local_1 %value_1
+        %147 = OpLoad %v3int %value_Local_1
+        %148 = OpCompositeConstruct %v3int %int_0_0 %int_0_0 %int_0_0
+        %149 = OpINotEqual %v3bool %147 %148
+        %150 = OpAll %bool %149
+               OpReturnValue %150
+               OpFunctionEnd
+%Test_Static_Integer4 = OpFunction %void None %8
+     %self_6 = OpFunctionParameter %_ptr_Function_AllNonZero
+        %153 = OpLabel
+   %param0_6 = OpVariable %_ptr_Function_v4int Function
+   %result_6 = OpVariable %_ptr_Function_bool Function
+        %156 = OpCompositeConstruct %v4int %int_0 %int_0 %int_0 %int_0
+               OpStore %param0_6 %156
+        %157 = OpLoad %v4int %param0_6
+        %158 = OpFunctionCall %bool %AllNonZero_3 %157
+               OpStore %result_6 %158
+               OpReturn
+               OpFunctionEnd
+%AllNonZero_3 = OpFunction %bool None %26
+    %value_2 = OpFunctionParameter %v4int
+        %161 = OpLabel
+%value_Local_2 = OpVariable %_ptr_Function_v4int Function
+               OpStore %value_Local_2 %value_2
+        %163 = OpLoad %v4int %value_Local_2
+        %164 = OpCompositeConstruct %v4int %int_0_0 %int_0_0 %int_0_0 %int_0_0
+        %165 = OpINotEqual %v4bool %163 %164
+        %166 = OpAll %bool %165
+               OpReturnValue %166
+               OpFunctionEnd
+%Test_Static_Real = OpFunction %void None %8
+     %self_7 = OpFunctionParameter %_ptr_Function_AllNonZero
+        %169 = OpLabel
+   %param0_7 = OpVariable %_ptr_Function_float Function
+   %result_7 = OpVariable %_ptr_Function_bool Function
+               OpStore %param0_7 %float_0
+        %172 = OpLoad %float %param0_7
+        %173 = OpFunctionCall %bool %AllNonZero_4 %172
+               OpStore %result_7 %173
+               OpReturn
+               OpFunctionEnd
+%AllNonZero_4 = OpFunction %bool None %29
+    %value_3 = OpFunctionParameter %float
+        %176 = OpLabel
+%value_Local_3 = OpVariable %_ptr_Function_float Function
+               OpStore %value_Local_3 %value_3
+        %178 = OpLoad %float %value_Local_3
+        %179 = OpFOrdNotEqual %bool %178 %float_0_0
+               OpReturnValue %179
+               OpFunctionEnd
+%Test_Static_Real2 = OpFunction %void None %8
+     %self_8 = OpFunctionParameter %_ptr_Function_AllNonZero
+        %182 = OpLabel
+   %param0_8 = OpVariable %_ptr_Function_v2float Function
+   %result_8 = OpVariable %_ptr_Function_bool Function
+        %185 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %param0_8 %185
+        %186 = OpLoad %v2float %param0_8
+        %187 = OpFunctionCall %bool %AllNonZero_5 %186
+               OpStore %result_8 %187
+               OpReturn
+               OpFunctionEnd
+%AllNonZero_5 = OpFunction %bool None %32
+    %value_4 = OpFunctionParameter %v2float
+        %190 = OpLabel
+%value_Local_4 = OpVariable %_ptr_Function_v2float Function
+               OpStore %value_Local_4 %value_4
+        %192 = OpLoad %v2float %value_Local_4
+        %193 = OpCompositeConstruct %v2float %float_0_0 %float_0_0
+        %194 = OpFOrdNotEqual %v2bool %192 %193
+        %195 = OpAll %bool %194
+               OpReturnValue %195
+               OpFunctionEnd
+%Test_Static_Real2x2 = OpFunction %void None %8
+     %self_9 = OpFunctionParameter %_ptr_Function_AllNonZero
+        %198 = OpLabel
+   %param0_9 = OpVariable %_ptr_Function_mat2v2float Function
+   %result_9 = OpVariable %_ptr_Function_bool Function
+        %201 = OpCompositeConstruct %v2float %float_0 %float_0
+        %202 = OpCompositeConstruct %mat2v2float %201 %201
+               OpStore %param0_9 %202
+        %203 = OpLoad %mat2v2float %param0_9
+        %204 = OpFunctionCall %bool %AllNonZero_6 %203
+               OpStore %result_9 %204
+               OpReturn
+               OpFunctionEnd
+%AllNonZero_6 = OpFunction %bool None %35
+  %param0_10 = OpFunctionParameter %mat2v2float
+        %207 = OpLabel
+%param0_Local = OpVariable %_ptr_Function_mat2v2float Function
+  %result_10 = OpVariable %_ptr_Function_bool Function
+               OpStore %param0_Local %param0_10
+               OpStore %result_10 %true
+        %210 = OpLoad %bool %result_10
+        %211 = OpAccessChain %_ptr_Function_v2float %param0_Local %int_0_0
+        %212 = OpLoad %v2float %211
+        %213 = OpFunctionCall %bool %AllNonZero_5 %212
+        %214 = OpLogicalAnd %bool %210 %213
+               OpStore %result_10 %214
+        %215 = OpLoad %bool %result_10
+        %216 = OpAccessChain %_ptr_Function_v2float %param0_Local %int_1
+        %217 = OpLoad %v2float %216
+        %218 = OpFunctionCall %bool %AllNonZero_5 %217
+        %219 = OpLogicalAnd %bool %215 %218
+               OpStore %result_10 %219
+        %220 = OpLoad %bool %result_10
+               OpReturnValue %220
+               OpFunctionEnd
+%Test_Static_Real2x3 = OpFunction %void None %8
+    %self_10 = OpFunctionParameter %_ptr_Function_AllNonZero
+        %223 = OpLabel
+  %param0_11 = OpVariable %_ptr_Function_mat2v3float Function
+  %result_11 = OpVariable %_ptr_Function_bool Function
+        %226 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %227 = OpCompositeConstruct %mat2v3float %226 %226
+               OpStore %param0_11 %227
+        %228 = OpLoad %mat2v3float %param0_11
+        %229 = OpFunctionCall %bool %AllNonZero_7 %228
+               OpStore %result_11 %229
+               OpReturn
+               OpFunctionEnd
+%AllNonZero_7 = OpFunction %bool None %40
+  %param0_12 = OpFunctionParameter %mat2v3float
+        %232 = OpLabel
+%param0_Local_0 = OpVariable %_ptr_Function_mat2v3float Function
+  %result_12 = OpVariable %_ptr_Function_bool Function
+               OpStore %param0_Local_0 %param0_12
+               OpStore %result_12 %true
+        %235 = OpLoad %bool %result_12
+        %236 = OpAccessChain %_ptr_Function_v3float %param0_Local_0 %int_0_0
+        %237 = OpLoad %v3float %236
+        %238 = OpFunctionCall %bool %AllNonZero_8 %237
+        %239 = OpLogicalAnd %bool %235 %238
+               OpStore %result_12 %239
+        %240 = OpLoad %bool %result_12
+        %241 = OpAccessChain %_ptr_Function_v3float %param0_Local_0 %int_1
+        %242 = OpLoad %v3float %241
+        %243 = OpFunctionCall %bool %AllNonZero_8 %242
+        %244 = OpLogicalAnd %bool %240 %243
+               OpStore %result_12 %244
+        %245 = OpLoad %bool %result_12
+               OpReturnValue %245
+               OpFunctionEnd
+%AllNonZero_8 = OpFunction %bool None %41
+    %value_5 = OpFunctionParameter %v3float
+        %248 = OpLabel
+%value_Local_5 = OpVariable %_ptr_Function_v3float Function
+               OpStore %value_Local_5 %value_5
+        %250 = OpLoad %v3float %value_Local_5
+        %251 = OpCompositeConstruct %v3float %float_0_0 %float_0_0 %float_0_0
+        %252 = OpFOrdNotEqual %v3bool %250 %251
+        %253 = OpAll %bool %252
+               OpReturnValue %253
+               OpFunctionEnd
+%Test_Static_Real2x4 = OpFunction %void None %8
+    %self_11 = OpFunctionParameter %_ptr_Function_AllNonZero
+        %256 = OpLabel
+  %param0_13 = OpVariable %_ptr_Function_mat2v4float Function
+  %result_13 = OpVariable %_ptr_Function_bool Function
+        %259 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+        %260 = OpCompositeConstruct %mat2v4float %259 %259
+               OpStore %param0_13 %260
+        %261 = OpLoad %mat2v4float %param0_13
+        %262 = OpFunctionCall %bool %AllNonZero_9 %261
+               OpStore %result_13 %262
+               OpReturn
+               OpFunctionEnd
+%AllNonZero_9 = OpFunction %bool None %46
+  %param0_14 = OpFunctionParameter %mat2v4float
+        %265 = OpLabel
+%param0_Local_1 = OpVariable %_ptr_Function_mat2v4float Function
+  %result_14 = OpVariable %_ptr_Function_bool Function
+               OpStore %param0_Local_1 %param0_14
+               OpStore %result_14 %true
+        %268 = OpLoad %bool %result_14
+        %269 = OpAccessChain %_ptr_Function_v4float %param0_Local_1 %int_0_0
+        %270 = OpLoad %v4float %269
+        %271 = OpFunctionCall %bool %AllNonZero_10 %270
+        %272 = OpLogicalAnd %bool %268 %271
+               OpStore %result_14 %272
+        %273 = OpLoad %bool %result_14
+        %274 = OpAccessChain %_ptr_Function_v4float %param0_Local_1 %int_1
+        %275 = OpLoad %v4float %274
+        %276 = OpFunctionCall %bool %AllNonZero_10 %275
+        %277 = OpLogicalAnd %bool %273 %276
+               OpStore %result_14 %277
+        %278 = OpLoad %bool %result_14
+               OpReturnValue %278
+               OpFunctionEnd
+%AllNonZero_10 = OpFunction %bool None %47
+    %value_6 = OpFunctionParameter %v4float
+        %281 = OpLabel
+%value_Local_6 = OpVariable %_ptr_Function_v4float Function
+               OpStore %value_Local_6 %value_6
+        %283 = OpLoad %v4float %value_Local_6
+        %284 = OpCompositeConstruct %v4float %float_0_0 %float_0_0 %float_0_0 %float_0_0
+        %285 = OpFOrdNotEqual %v4bool %283 %284
+        %286 = OpAll %bool %285
+               OpReturnValue %286
+               OpFunctionEnd
+%Test_Static_Real3 = OpFunction %void None %8
+    %self_12 = OpFunctionParameter %_ptr_Function_AllNonZero
+        %289 = OpLabel
+  %param0_15 = OpVariable %_ptr_Function_v3float Function
+  %result_15 = OpVariable %_ptr_Function_bool Function
+        %292 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %param0_15 %292
+        %293 = OpLoad %v3float %param0_15
+        %294 = OpFunctionCall %bool %AllNonZero_8 %293
+               OpStore %result_15 %294
+               OpReturn
+               OpFunctionEnd
+%Test_Static_Real3x2 = OpFunction %void None %8
+    %self_13 = OpFunctionParameter %_ptr_Function_AllNonZero
+        %297 = OpLabel
+  %param0_16 = OpVariable %_ptr_Function_mat3v2float Function
+  %result_16 = OpVariable %_ptr_Function_bool Function
+        %300 = OpCompositeConstruct %v2float %float_0 %float_0
+        %301 = OpCompositeConstruct %mat3v2float %300 %300 %300
+               OpStore %param0_16 %301
+        %302 = OpLoad %mat3v2float %param0_16
+        %303 = OpFunctionCall %bool %AllNonZero_11 %302
+               OpStore %result_16 %303
+               OpReturn
+               OpFunctionEnd
+%AllNonZero_11 = OpFunction %bool None %50
+  %param0_17 = OpFunctionParameter %mat3v2float
+        %306 = OpLabel
+%param0_Local_2 = OpVariable %_ptr_Function_mat3v2float Function
+  %result_17 = OpVariable %_ptr_Function_bool Function
+               OpStore %param0_Local_2 %param0_17
+               OpStore %result_17 %true
+        %309 = OpLoad %bool %result_17
+        %310 = OpAccessChain %_ptr_Function_v2float %param0_Local_2 %int_0_0
+        %311 = OpLoad %v2float %310
+        %312 = OpFunctionCall %bool %AllNonZero_5 %311
+        %313 = OpLogicalAnd %bool %309 %312
+               OpStore %result_17 %313
+        %314 = OpLoad %bool %result_17
+        %315 = OpAccessChain %_ptr_Function_v2float %param0_Local_2 %int_1
+        %316 = OpLoad %v2float %315
+        %317 = OpFunctionCall %bool %AllNonZero_5 %316
+        %318 = OpLogicalAnd %bool %314 %317
+               OpStore %result_17 %318
+        %319 = OpLoad %bool %result_17
+        %320 = OpAccessChain %_ptr_Function_v2float %param0_Local_2 %int_2
+        %321 = OpLoad %v2float %320
+        %322 = OpFunctionCall %bool %AllNonZero_5 %321
+        %323 = OpLogicalAnd %bool %319 %322
+               OpStore %result_17 %323
+        %324 = OpLoad %bool %result_17
+               OpReturnValue %324
+               OpFunctionEnd
+%Test_Static_Real3x3 = OpFunction %void None %8
+    %self_14 = OpFunctionParameter %_ptr_Function_AllNonZero
+        %327 = OpLabel
+  %param0_18 = OpVariable %_ptr_Function_mat3v3float Function
+  %result_18 = OpVariable %_ptr_Function_bool Function
+        %330 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %331 = OpCompositeConstruct %mat3v3float %330 %330 %330
+               OpStore %param0_18 %331
+        %332 = OpLoad %mat3v3float %param0_18
+        %333 = OpFunctionCall %bool %AllNonZero_12 %332
+               OpStore %result_18 %333
+               OpReturn
+               OpFunctionEnd
+%AllNonZero_12 = OpFunction %bool None %53
+  %param0_19 = OpFunctionParameter %mat3v3float
+        %336 = OpLabel
+%param0_Local_3 = OpVariable %_ptr_Function_mat3v3float Function
+  %result_19 = OpVariable %_ptr_Function_bool Function
+               OpStore %param0_Local_3 %param0_19
+               OpStore %result_19 %true
+        %339 = OpLoad %bool %result_19
+        %340 = OpAccessChain %_ptr_Function_v3float %param0_Local_3 %int_0_0
+        %341 = OpLoad %v3float %340
+        %342 = OpFunctionCall %bool %AllNonZero_8 %341
+        %343 = OpLogicalAnd %bool %339 %342
+               OpStore %result_19 %343
+        %344 = OpLoad %bool %result_19
+        %345 = OpAccessChain %_ptr_Function_v3float %param0_Local_3 %int_1
+        %346 = OpLoad %v3float %345
+        %347 = OpFunctionCall %bool %AllNonZero_8 %346
+        %348 = OpLogicalAnd %bool %344 %347
+               OpStore %result_19 %348
+        %349 = OpLoad %bool %result_19
+        %350 = OpAccessChain %_ptr_Function_v3float %param0_Local_3 %int_2
+        %351 = OpLoad %v3float %350
+        %352 = OpFunctionCall %bool %AllNonZero_8 %351
+        %353 = OpLogicalAnd %bool %349 %352
+               OpStore %result_19 %353
+        %354 = OpLoad %bool %result_19
+               OpReturnValue %354
+               OpFunctionEnd
+%Test_Static_Real3x4 = OpFunction %void None %8
+    %self_15 = OpFunctionParameter %_ptr_Function_AllNonZero
+        %357 = OpLabel
+  %param0_20 = OpVariable %_ptr_Function_mat3v4float Function
+  %result_20 = OpVariable %_ptr_Function_bool Function
+        %360 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+        %361 = OpCompositeConstruct %mat3v4float %360 %360 %360
+               OpStore %param0_20 %361
+        %362 = OpLoad %mat3v4float %param0_20
+        %363 = OpFunctionCall %bool %AllNonZero_13 %362
+               OpStore %result_20 %363
+               OpReturn
+               OpFunctionEnd
+%AllNonZero_13 = OpFunction %bool None %56
+  %param0_21 = OpFunctionParameter %mat3v4float
+        %366 = OpLabel
+%param0_Local_4 = OpVariable %_ptr_Function_mat3v4float Function
+  %result_21 = OpVariable %_ptr_Function_bool Function
+               OpStore %param0_Local_4 %param0_21
+               OpStore %result_21 %true
+        %369 = OpLoad %bool %result_21
+        %370 = OpAccessChain %_ptr_Function_v4float %param0_Local_4 %int_0_0
+        %371 = OpLoad %v4float %370
+        %372 = OpFunctionCall %bool %AllNonZero_10 %371
+        %373 = OpLogicalAnd %bool %369 %372
+               OpStore %result_21 %373
+        %374 = OpLoad %bool %result_21
+        %375 = OpAccessChain %_ptr_Function_v4float %param0_Local_4 %int_1
+        %376 = OpLoad %v4float %375
+        %377 = OpFunctionCall %bool %AllNonZero_10 %376
+        %378 = OpLogicalAnd %bool %374 %377
+               OpStore %result_21 %378
+        %379 = OpLoad %bool %result_21
+        %380 = OpAccessChain %_ptr_Function_v4float %param0_Local_4 %int_2
+        %381 = OpLoad %v4float %380
+        %382 = OpFunctionCall %bool %AllNonZero_10 %381
+        %383 = OpLogicalAnd %bool %379 %382
+               OpStore %result_21 %383
+        %384 = OpLoad %bool %result_21
+               OpReturnValue %384
+               OpFunctionEnd
+%Test_Static_Real4 = OpFunction %void None %8
+    %self_16 = OpFunctionParameter %_ptr_Function_AllNonZero
+        %387 = OpLabel
+  %param0_22 = OpVariable %_ptr_Function_v4float Function
+  %result_22 = OpVariable %_ptr_Function_bool Function
+        %390 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %param0_22 %390
+        %391 = OpLoad %v4float %param0_22
+        %392 = OpFunctionCall %bool %AllNonZero_10 %391
+               OpStore %result_22 %392
+               OpReturn
+               OpFunctionEnd
+%Test_Static_Real4x2 = OpFunction %void None %8
+    %self_17 = OpFunctionParameter %_ptr_Function_AllNonZero
+        %395 = OpLabel
+  %param0_23 = OpVariable %_ptr_Function_mat4v2float Function
+  %result_23 = OpVariable %_ptr_Function_bool Function
+        %398 = OpCompositeConstruct %v2float %float_0 %float_0
+        %399 = OpCompositeConstruct %mat4v2float %398 %398 %398 %398
+               OpStore %param0_23 %399
+        %400 = OpLoad %mat4v2float %param0_23
+        %401 = OpFunctionCall %bool %AllNonZero_14 %400
+               OpStore %result_23 %401
+               OpReturn
+               OpFunctionEnd
+%AllNonZero_14 = OpFunction %bool None %59
+  %param0_24 = OpFunctionParameter %mat4v2float
+        %404 = OpLabel
+%param0_Local_5 = OpVariable %_ptr_Function_mat4v2float Function
+  %result_24 = OpVariable %_ptr_Function_bool Function
+               OpStore %param0_Local_5 %param0_24
+               OpStore %result_24 %true
+        %407 = OpLoad %bool %result_24
+        %408 = OpAccessChain %_ptr_Function_v2float %param0_Local_5 %int_0_0
+        %409 = OpLoad %v2float %408
+        %410 = OpFunctionCall %bool %AllNonZero_5 %409
+        %411 = OpLogicalAnd %bool %407 %410
+               OpStore %result_24 %411
+        %412 = OpLoad %bool %result_24
+        %413 = OpAccessChain %_ptr_Function_v2float %param0_Local_5 %int_1
+        %414 = OpLoad %v2float %413
+        %415 = OpFunctionCall %bool %AllNonZero_5 %414
+        %416 = OpLogicalAnd %bool %412 %415
+               OpStore %result_24 %416
+        %417 = OpLoad %bool %result_24
+        %418 = OpAccessChain %_ptr_Function_v2float %param0_Local_5 %int_2
+        %419 = OpLoad %v2float %418
+        %420 = OpFunctionCall %bool %AllNonZero_5 %419
+        %421 = OpLogicalAnd %bool %417 %420
+               OpStore %result_24 %421
+        %422 = OpLoad %bool %result_24
+        %423 = OpAccessChain %_ptr_Function_v2float %param0_Local_5 %int_3
+        %424 = OpLoad %v2float %423
+        %425 = OpFunctionCall %bool %AllNonZero_5 %424
+        %426 = OpLogicalAnd %bool %422 %425
+               OpStore %result_24 %426
+        %427 = OpLoad %bool %result_24
+               OpReturnValue %427
+               OpFunctionEnd
+%Test_Static_Real4x3 = OpFunction %void None %8
+    %self_18 = OpFunctionParameter %_ptr_Function_AllNonZero
+        %430 = OpLabel
+  %param0_25 = OpVariable %_ptr_Function_mat4v3float Function
+  %result_25 = OpVariable %_ptr_Function_bool Function
+        %433 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %434 = OpCompositeConstruct %mat4v3float %433 %433 %433 %433
+               OpStore %param0_25 %434
+        %435 = OpLoad %mat4v3float %param0_25
+        %436 = OpFunctionCall %bool %AllNonZero_15 %435
+               OpStore %result_25 %436
+               OpReturn
+               OpFunctionEnd
+%AllNonZero_15 = OpFunction %bool None %62
+  %param0_26 = OpFunctionParameter %mat4v3float
+        %439 = OpLabel
+%param0_Local_6 = OpVariable %_ptr_Function_mat4v3float Function
+  %result_26 = OpVariable %_ptr_Function_bool Function
+               OpStore %param0_Local_6 %param0_26
+               OpStore %result_26 %true
+        %442 = OpLoad %bool %result_26
+        %443 = OpAccessChain %_ptr_Function_v3float %param0_Local_6 %int_0_0
+        %444 = OpLoad %v3float %443
+        %445 = OpFunctionCall %bool %AllNonZero_8 %444
+        %446 = OpLogicalAnd %bool %442 %445
+               OpStore %result_26 %446
+        %447 = OpLoad %bool %result_26
+        %448 = OpAccessChain %_ptr_Function_v3float %param0_Local_6 %int_1
+        %449 = OpLoad %v3float %448
+        %450 = OpFunctionCall %bool %AllNonZero_8 %449
+        %451 = OpLogicalAnd %bool %447 %450
+               OpStore %result_26 %451
+        %452 = OpLoad %bool %result_26
+        %453 = OpAccessChain %_ptr_Function_v3float %param0_Local_6 %int_2
+        %454 = OpLoad %v3float %453
+        %455 = OpFunctionCall %bool %AllNonZero_8 %454
+        %456 = OpLogicalAnd %bool %452 %455
+               OpStore %result_26 %456
+        %457 = OpLoad %bool %result_26
+        %458 = OpAccessChain %_ptr_Function_v3float %param0_Local_6 %int_3
+        %459 = OpLoad %v3float %458
+        %460 = OpFunctionCall %bool %AllNonZero_8 %459
+        %461 = OpLogicalAnd %bool %457 %460
+               OpStore %result_26 %461
+        %462 = OpLoad %bool %result_26
+               OpReturnValue %462
+               OpFunctionEnd
+%Test_Static_Real4x4 = OpFunction %void None %8
+    %self_19 = OpFunctionParameter %_ptr_Function_AllNonZero
+        %465 = OpLabel
+  %param0_27 = OpVariable %_ptr_Function_mat4v4float Function
+  %result_27 = OpVariable %_ptr_Function_bool Function
+        %468 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+        %469 = OpCompositeConstruct %mat4v4float %468 %468 %468 %468
+               OpStore %param0_27 %469
+        %470 = OpLoad %mat4v4float %param0_27
+        %471 = OpFunctionCall %bool %AllNonZero_16 %470
+               OpStore %result_27 %471
+               OpReturn
+               OpFunctionEnd
+%AllNonZero_16 = OpFunction %bool None %65
+  %param0_28 = OpFunctionParameter %mat4v4float
+        %474 = OpLabel
+%param0_Local_7 = OpVariable %_ptr_Function_mat4v4float Function
+  %result_28 = OpVariable %_ptr_Function_bool Function
+               OpStore %param0_Local_7 %param0_28
+               OpStore %result_28 %true
+        %477 = OpLoad %bool %result_28
+        %478 = OpAccessChain %_ptr_Function_v4float %param0_Local_7 %int_0_0
+        %479 = OpLoad %v4float %478
+        %480 = OpFunctionCall %bool %AllNonZero_10 %479
+        %481 = OpLogicalAnd %bool %477 %480
+               OpStore %result_28 %481
+        %482 = OpLoad %bool %result_28
+        %483 = OpAccessChain %_ptr_Function_v4float %param0_Local_7 %int_1
+        %484 = OpLoad %v4float %483
+        %485 = OpFunctionCall %bool %AllNonZero_10 %484
+        %486 = OpLogicalAnd %bool %482 %485
+               OpStore %result_28 %486
+        %487 = OpLoad %bool %result_28
+        %488 = OpAccessChain %_ptr_Function_v4float %param0_Local_7 %int_2
+        %489 = OpLoad %v4float %488
+        %490 = OpFunctionCall %bool %AllNonZero_10 %489
+        %491 = OpLogicalAnd %bool %487 %490
+               OpStore %result_28 %491
+        %492 = OpLoad %bool %result_28
+        %493 = OpAccessChain %_ptr_Function_v4float %param0_Local_7 %int_3
+        %494 = OpLoad %v4float %493
+        %495 = OpFunctionCall %bool %AllNonZero_10 %494
+        %496 = OpLogicalAnd %bool %492 %495
+               OpStore %result_28 %496
+        %497 = OpLoad %bool %result_28
+               OpReturnValue %497
+               OpFunctionEnd
+       %Main = OpFunction %void None %8
+    %self_20 = OpFunctionParameter %_ptr_Function_AllNonZero
+        %500 = OpLabel
+        %501 = OpFunctionCall %void %Test_Static_Boolean %self_20
+        %502 = OpFunctionCall %void %Test_Static_Boolean2 %self_20
+        %503 = OpFunctionCall %void %Test_Static_Boolean3 %self_20
+        %504 = OpFunctionCall %void %Test_Static_Boolean4 %self_20
+        %505 = OpFunctionCall %void %Test_Static_Integer %self_20
+        %506 = OpFunctionCall %void %Test_Static_Integer2 %self_20
+        %507 = OpFunctionCall %void %Test_Static_Integer3 %self_20
+        %508 = OpFunctionCall %void %Test_Static_Integer4 %self_20
+        %509 = OpFunctionCall %void %Test_Static_Real %self_20
+        %510 = OpFunctionCall %void %Test_Static_Real2 %self_20
+        %511 = OpFunctionCall %void %Test_Static_Real2x2 %self_20
+        %512 = OpFunctionCall %void %Test_Static_Real2x3 %self_20
+        %513 = OpFunctionCall %void %Test_Static_Real2x4 %self_20
+        %514 = OpFunctionCall %void %Test_Static_Real3 %self_20
+        %515 = OpFunctionCall %void %Test_Static_Real3x2 %self_20
+        %516 = OpFunctionCall %void %Test_Static_Real3x3 %self_20
+        %517 = OpFunctionCall %void %Test_Static_Real3x4 %self_20
+        %518 = OpFunctionCall %void %Test_Static_Real4 %self_20
+        %519 = OpFunctionCall %void %Test_Static_Real4x2 %self_20
+        %520 = OpFunctionCall %void %Test_Static_Real4x3 %self_20
+        %521 = OpFunctionCall %void %Test_Static_Real4x4 %self_20
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_AllNonZero = OpFunction %void None %8
+    %self_21 = OpFunctionParameter %_ptr_Function_AllNonZero
+        %524 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+    %self_22 = OpFunctionParameter %_ptr_Function_AllNonZero
+        %527 = OpLabel
+        %528 = OpFunctionCall %void %PreConstructor_AllNonZero %self_22
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+    %self_23 = OpFunctionParameter %_ptr_Function_AllNonZero
+        %531 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+    %self_24 = OpFunctionParameter %_ptr_Function_AllNonZero
+        %534 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_AllNonZero = OpFunction %void None %66
+        %536 = OpLabel
+    %self_25 = OpVariable %_ptr_Function_AllNonZero Function
+        %538 = OpFunctionCall %void %InitializeGlobals
+        %539 = OpFunctionCall %void %DefaultConstructor %self_25
+        %540 = OpFunctionCall %void %CopyInputs_Main %self_25
+        %541 = OpFunctionCall %void %Main %self_25
+        %542 = OpFunctionCall %void %CopyOutputs_Main %self_25
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %66
+        %543 = OpLabel
+               OpReturn
+               OpFunctionEnd

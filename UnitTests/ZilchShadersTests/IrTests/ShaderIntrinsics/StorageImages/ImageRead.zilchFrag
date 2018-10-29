@@ -1,0 +1,12 @@
+[Pixel][UnitTest]
+struct ImageRead
+{
+  var StorageImage : StorageImage2d;
+  
+  [EntryPoint]
+  function Main()
+  {
+    var coordinate = Integer2();
+    var data = ShaderIntrinsics.ImageRead(this.StorageImage, coordinate);
+  }
+}

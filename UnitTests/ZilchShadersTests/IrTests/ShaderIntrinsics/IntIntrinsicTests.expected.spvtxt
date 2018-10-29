@@ -1,0 +1,684 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 421
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_IntIntrinsicTests "EntryPoint_Main_IntIntrinsicTests"
+               OpExecutionMode %EntryPoint_Main_IntIntrinsicTests OriginUpperLeft
+               OpSource Unknown 100
+               OpName %IntIntrinsicTests "IntIntrinsicTests"
+               OpMemberName %IntIntrinsicTests 0 "Dummy"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %TestInts "TestInts"
+               OpName %param0 "param0"
+               OpName %param1 "param1"
+               OpName %result0 "result0"
+               OpName %result1 "result1"
+               OpName %result2 "result2"
+               OpName %result3 "result3"
+               OpName %result4 "result4"
+               OpName %result5 "result5"
+               OpName %result6 "result6"
+               OpName %result7 "result7"
+               OpName %result8 "result8"
+               OpName %result9 "result9"
+               OpName %result10 "result10"
+               OpName %result11 "result11"
+               OpName %result12 "result12"
+               OpName %result13 "result13"
+               OpName %result14 "result14"
+               OpName %result15 "result15"
+               OpName %result16 "result16"
+               OpName %result17 "result17"
+               OpName %result18 "result18"
+               OpName %TestInts_0 "TestInts"
+               OpName %param0_0 "param0"
+               OpName %param1_0 "param1"
+               OpName %result0_0 "result0"
+               OpName %result1_0 "result1"
+               OpName %result2_0 "result2"
+               OpName %result3_0 "result3"
+               OpName %result4_0 "result4"
+               OpName %result5_0 "result5"
+               OpName %result6_0 "result6"
+               OpName %result7_0 "result7"
+               OpName %result8_0 "result8"
+               OpName %result9_0 "result9"
+               OpName %result10_0 "result10"
+               OpName %result11_0 "result11"
+               OpName %result12_0 "result12"
+               OpName %result13_0 "result13"
+               OpName %result14_0 "result14"
+               OpName %result15_0 "result15"
+               OpName %result16_0 "result16"
+               OpName %result17_0 "result17"
+               OpName %result18_0 "result18"
+               OpName %TestInts_1 "TestInts"
+               OpName %param0_1 "param0"
+               OpName %param1_1 "param1"
+               OpName %result0_1 "result0"
+               OpName %result1_1 "result1"
+               OpName %result2_1 "result2"
+               OpName %result3_1 "result3"
+               OpName %result4_1 "result4"
+               OpName %result5_1 "result5"
+               OpName %result6_1 "result6"
+               OpName %result7_1 "result7"
+               OpName %result8_1 "result8"
+               OpName %result9_1 "result9"
+               OpName %result10_1 "result10"
+               OpName %result11_1 "result11"
+               OpName %result12_1 "result12"
+               OpName %result13_1 "result13"
+               OpName %result14_1 "result14"
+               OpName %result15_1 "result15"
+               OpName %result16_1 "result16"
+               OpName %result17_1 "result17"
+               OpName %result18_1 "result18"
+               OpName %TestInts_2 "TestInts"
+               OpName %param0_2 "param0"
+               OpName %param1_2 "param1"
+               OpName %result0_2 "result0"
+               OpName %result1_2 "result1"
+               OpName %result2_2 "result2"
+               OpName %result3_2 "result3"
+               OpName %result4_2 "result4"
+               OpName %result5_2 "result5"
+               OpName %result6_2 "result6"
+               OpName %result7_2 "result7"
+               OpName %result8_2 "result8"
+               OpName %result9_2 "result9"
+               OpName %result10_2 "result10"
+               OpName %result11_2 "result11"
+               OpName %result12_2 "result12"
+               OpName %result13_2 "result13"
+               OpName %result14_2 "result14"
+               OpName %result15_2 "result15"
+               OpName %result16_2 "result16"
+               OpName %result17_2 "result17"
+               OpName %result18_2 "result18"
+               OpName %TestSelect "TestSelect"
+               OpName %condition "condition"
+               OpName %obj1 "obj1"
+               OpName %obj2 "obj2"
+               OpName %result "result"
+               OpName %TestSelect_0 "TestSelect"
+               OpName %condition_0 "condition"
+               OpName %obj1_0 "obj1"
+               OpName %obj2_0 "obj2"
+               OpName %result_0 "result"
+               OpName %TestSelect_1 "TestSelect"
+               OpName %condition_1 "condition"
+               OpName %obj1_1 "obj1"
+               OpName %obj2_1 "obj2"
+               OpName %result_1 "result"
+               OpName %TestSelect_2 "TestSelect"
+               OpName %condition_2 "condition"
+               OpName %obj1_2 "obj1"
+               OpName %obj2_2 "obj2"
+               OpName %result_2 "result"
+               OpName %PreConstructor_IntIntrinsicTests "PreConstructor_IntIntrinsicTests"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_IntIntrinsicTests "EntryPoint_Main_IntIntrinsicTests"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%IntIntrinsicTests = OpTypeStruct %int
+%_ptr_Function_IntIntrinsicTests = OpTypePointer Function %IntIntrinsicTests
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_IntIntrinsicTests
+          %9 = OpTypeFunction %void
+      %int_0 = OpConstant %int 0
+       %bool = OpTypeBool
+%_ptr_Function_bool = OpTypePointer Function %bool
+      %int_1 = OpConstant %int 1
+      %int_2 = OpConstant %int 2
+      %v2int = OpTypeVector %int 2
+%_ptr_Function_v2int = OpTypePointer Function %v2int
+     %v2bool = OpTypeVector %bool 2
+%_ptr_Function_v2bool = OpTypePointer Function %v2bool
+      %v3int = OpTypeVector %int 3
+%_ptr_Function_v3int = OpTypePointer Function %v3int
+     %v3bool = OpTypeVector %bool 3
+%_ptr_Function_v3bool = OpTypePointer Function %v3bool
+      %v4int = OpTypeVector %int 4
+%_ptr_Function_v4int = OpTypePointer Function %v4int
+     %v4bool = OpTypeVector %bool 4
+%_ptr_Function_v4bool = OpTypePointer Function %v4bool
+      %false = OpConstantFalse %bool
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_IntIntrinsicTests
+         %30 = OpLabel
+         %31 = OpFunctionCall %void %TestInts
+         %32 = OpFunctionCall %void %TestInts_0
+         %33 = OpFunctionCall %void %TestInts_1
+         %34 = OpFunctionCall %void %TestInts_2
+         %35 = OpFunctionCall %void %TestSelect
+         %36 = OpFunctionCall %void %TestSelect_0
+         %37 = OpFunctionCall %void %TestSelect_1
+         %38 = OpFunctionCall %void %TestSelect_2
+               OpReturn
+               OpFunctionEnd
+   %TestInts = OpFunction %void None %9
+         %40 = OpLabel
+     %param0 = OpVariable %_ptr_Function_int Function
+     %param1 = OpVariable %_ptr_Function_int Function
+    %result0 = OpVariable %_ptr_Function_int Function
+    %result1 = OpVariable %_ptr_Function_int Function
+    %result2 = OpVariable %_ptr_Function_int Function
+    %result3 = OpVariable %_ptr_Function_int Function
+    %result4 = OpVariable %_ptr_Function_int Function
+    %result5 = OpVariable %_ptr_Function_int Function
+    %result6 = OpVariable %_ptr_Function_int Function
+    %result7 = OpVariable %_ptr_Function_int Function
+    %result8 = OpVariable %_ptr_Function_int Function
+    %result9 = OpVariable %_ptr_Function_bool Function
+   %result10 = OpVariable %_ptr_Function_bool Function
+   %result11 = OpVariable %_ptr_Function_bool Function
+   %result12 = OpVariable %_ptr_Function_bool Function
+   %result13 = OpVariable %_ptr_Function_bool Function
+   %result14 = OpVariable %_ptr_Function_bool Function
+   %result15 = OpVariable %_ptr_Function_int Function
+   %result16 = OpVariable %_ptr_Function_int Function
+   %result17 = OpVariable %_ptr_Function_int Function
+   %result18 = OpVariable %_ptr_Function_int Function
+               OpStore %param0 %int_0
+         %62 = OpLoad %int %param0
+               OpStore %param1 %62
+         %63 = OpLoad %int %param0
+         %64 = OpBitReverse %int %63
+               OpStore %result0 %64
+         %65 = OpLoad %int %param0
+         %66 = OpBitCount %int %65
+               OpStore %result1 %66
+         %67 = OpLoad %int %param0
+         %68 = OpNot %int %67
+               OpStore %result2 %68
+         %69 = OpLoad %int %param0
+         %70 = OpLoad %int %param1
+         %71 = OpShiftRightLogical %int %69 %70
+               OpStore %result3 %71
+         %72 = OpLoad %int %param0
+         %73 = OpLoad %int %param1
+         %74 = OpShiftRightArithmetic %int %72 %73
+               OpStore %result4 %74
+         %75 = OpLoad %int %param0
+         %76 = OpLoad %int %param1
+         %77 = OpShiftLeftLogical %int %75 %76
+               OpStore %result5 %77
+         %78 = OpLoad %int %param0
+         %79 = OpLoad %int %param1
+         %80 = OpBitwiseOr %int %78 %79
+               OpStore %result6 %80
+         %81 = OpLoad %int %param0
+         %82 = OpLoad %int %param1
+         %83 = OpBitwiseXor %int %81 %82
+               OpStore %result7 %83
+         %84 = OpLoad %int %param0
+         %85 = OpLoad %int %param1
+         %86 = OpBitwiseAnd %int %84 %85
+               OpStore %result8 %86
+         %87 = OpLoad %int %param0
+         %88 = OpLoad %int %param1
+         %89 = OpIEqual %bool %87 %88
+               OpStore %result9 %89
+         %90 = OpLoad %int %param0
+         %91 = OpLoad %int %param1
+         %92 = OpINotEqual %bool %90 %91
+               OpStore %result10 %92
+         %93 = OpLoad %int %param0
+         %94 = OpLoad %int %param1
+         %95 = OpSGreaterThan %bool %93 %94
+               OpStore %result11 %95
+         %96 = OpLoad %int %param0
+         %97 = OpLoad %int %param1
+         %98 = OpSGreaterThanEqual %bool %96 %97
+               OpStore %result12 %98
+         %99 = OpLoad %int %param0
+        %100 = OpLoad %int %param1
+        %101 = OpSLessThan %bool %99 %100
+               OpStore %result13 %101
+        %102 = OpLoad %int %param0
+        %103 = OpLoad %int %param1
+        %104 = OpSLessThanEqual %bool %102 %103
+               OpStore %result14 %104
+        %105 = OpLoad %int %param0
+        %106 = OpLoad %int %param1
+        %107 = OpSMod %int %105 %106
+               OpStore %result15 %107
+        %108 = OpLoad %int %param0
+        %109 = OpLoad %int %param1
+        %110 = OpSRem %int %108 %109
+               OpStore %result16 %110
+        %111 = OpLoad %int %param0
+        %112 = OpBitFieldSExtract %int %111 %int_1 %int_2
+               OpStore %result17 %112
+        %113 = OpLoad %int %param0
+        %114 = OpLoad %int %param1
+        %115 = OpBitFieldInsert %int %113 %114 %int_1 %int_2
+               OpStore %result18 %115
+               OpReturn
+               OpFunctionEnd
+ %TestInts_0 = OpFunction %void None %9
+        %117 = OpLabel
+   %param0_0 = OpVariable %_ptr_Function_v2int Function
+   %param1_0 = OpVariable %_ptr_Function_v2int Function
+  %result0_0 = OpVariable %_ptr_Function_v2int Function
+  %result1_0 = OpVariable %_ptr_Function_v2int Function
+  %result2_0 = OpVariable %_ptr_Function_v2int Function
+  %result3_0 = OpVariable %_ptr_Function_v2int Function
+  %result4_0 = OpVariable %_ptr_Function_v2int Function
+  %result5_0 = OpVariable %_ptr_Function_v2int Function
+  %result6_0 = OpVariable %_ptr_Function_v2int Function
+  %result7_0 = OpVariable %_ptr_Function_v2int Function
+  %result8_0 = OpVariable %_ptr_Function_v2int Function
+  %result9_0 = OpVariable %_ptr_Function_v2bool Function
+ %result10_0 = OpVariable %_ptr_Function_v2bool Function
+ %result11_0 = OpVariable %_ptr_Function_v2bool Function
+ %result12_0 = OpVariable %_ptr_Function_v2bool Function
+ %result13_0 = OpVariable %_ptr_Function_v2bool Function
+ %result14_0 = OpVariable %_ptr_Function_v2bool Function
+ %result15_0 = OpVariable %_ptr_Function_v2int Function
+ %result16_0 = OpVariable %_ptr_Function_v2int Function
+ %result17_0 = OpVariable %_ptr_Function_v2int Function
+ %result18_0 = OpVariable %_ptr_Function_v2int Function
+        %139 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %param0_0 %139
+        %140 = OpLoad %v2int %param0_0
+               OpStore %param1_0 %140
+        %141 = OpLoad %v2int %param0_0
+        %142 = OpBitReverse %v2int %141
+               OpStore %result0_0 %142
+        %143 = OpLoad %v2int %param0_0
+        %144 = OpBitCount %v2int %143
+               OpStore %result1_0 %144
+        %145 = OpLoad %v2int %param0_0
+        %146 = OpNot %v2int %145
+               OpStore %result2_0 %146
+        %147 = OpLoad %v2int %param0_0
+        %148 = OpLoad %v2int %param1_0
+        %149 = OpShiftRightLogical %v2int %147 %148
+               OpStore %result3_0 %149
+        %150 = OpLoad %v2int %param0_0
+        %151 = OpLoad %v2int %param1_0
+        %152 = OpShiftRightArithmetic %v2int %150 %151
+               OpStore %result4_0 %152
+        %153 = OpLoad %v2int %param0_0
+        %154 = OpLoad %v2int %param1_0
+        %155 = OpShiftLeftLogical %v2int %153 %154
+               OpStore %result5_0 %155
+        %156 = OpLoad %v2int %param0_0
+        %157 = OpLoad %v2int %param1_0
+        %158 = OpBitwiseOr %v2int %156 %157
+               OpStore %result6_0 %158
+        %159 = OpLoad %v2int %param0_0
+        %160 = OpLoad %v2int %param1_0
+        %161 = OpBitwiseXor %v2int %159 %160
+               OpStore %result7_0 %161
+        %162 = OpLoad %v2int %param0_0
+        %163 = OpLoad %v2int %param1_0
+        %164 = OpBitwiseAnd %v2int %162 %163
+               OpStore %result8_0 %164
+        %165 = OpLoad %v2int %param0_0
+        %166 = OpLoad %v2int %param1_0
+        %167 = OpIEqual %v2bool %165 %166
+               OpStore %result9_0 %167
+        %168 = OpLoad %v2int %param0_0
+        %169 = OpLoad %v2int %param1_0
+        %170 = OpINotEqual %v2bool %168 %169
+               OpStore %result10_0 %170
+        %171 = OpLoad %v2int %param0_0
+        %172 = OpLoad %v2int %param1_0
+        %173 = OpSGreaterThan %v2bool %171 %172
+               OpStore %result11_0 %173
+        %174 = OpLoad %v2int %param0_0
+        %175 = OpLoad %v2int %param1_0
+        %176 = OpSGreaterThanEqual %v2bool %174 %175
+               OpStore %result12_0 %176
+        %177 = OpLoad %v2int %param0_0
+        %178 = OpLoad %v2int %param1_0
+        %179 = OpSLessThan %v2bool %177 %178
+               OpStore %result13_0 %179
+        %180 = OpLoad %v2int %param0_0
+        %181 = OpLoad %v2int %param1_0
+        %182 = OpSLessThanEqual %v2bool %180 %181
+               OpStore %result14_0 %182
+        %183 = OpLoad %v2int %param0_0
+        %184 = OpLoad %v2int %param1_0
+        %185 = OpSMod %v2int %183 %184
+               OpStore %result15_0 %185
+        %186 = OpLoad %v2int %param0_0
+        %187 = OpLoad %v2int %param1_0
+        %188 = OpSRem %v2int %186 %187
+               OpStore %result16_0 %188
+        %189 = OpLoad %v2int %param0_0
+        %190 = OpBitFieldSExtract %v2int %189 %int_1 %int_2
+               OpStore %result17_0 %190
+        %191 = OpLoad %v2int %param0_0
+        %192 = OpLoad %v2int %param1_0
+        %193 = OpBitFieldInsert %v2int %191 %192 %int_1 %int_2
+               OpStore %result18_0 %193
+               OpReturn
+               OpFunctionEnd
+ %TestInts_1 = OpFunction %void None %9
+        %195 = OpLabel
+   %param0_1 = OpVariable %_ptr_Function_v3int Function
+   %param1_1 = OpVariable %_ptr_Function_v3int Function
+  %result0_1 = OpVariable %_ptr_Function_v3int Function
+  %result1_1 = OpVariable %_ptr_Function_v3int Function
+  %result2_1 = OpVariable %_ptr_Function_v3int Function
+  %result3_1 = OpVariable %_ptr_Function_v3int Function
+  %result4_1 = OpVariable %_ptr_Function_v3int Function
+  %result5_1 = OpVariable %_ptr_Function_v3int Function
+  %result6_1 = OpVariable %_ptr_Function_v3int Function
+  %result7_1 = OpVariable %_ptr_Function_v3int Function
+  %result8_1 = OpVariable %_ptr_Function_v3int Function
+  %result9_1 = OpVariable %_ptr_Function_v3bool Function
+ %result10_1 = OpVariable %_ptr_Function_v3bool Function
+ %result11_1 = OpVariable %_ptr_Function_v3bool Function
+ %result12_1 = OpVariable %_ptr_Function_v3bool Function
+ %result13_1 = OpVariable %_ptr_Function_v3bool Function
+ %result14_1 = OpVariable %_ptr_Function_v3bool Function
+ %result15_1 = OpVariable %_ptr_Function_v3int Function
+ %result16_1 = OpVariable %_ptr_Function_v3int Function
+ %result17_1 = OpVariable %_ptr_Function_v3int Function
+ %result18_1 = OpVariable %_ptr_Function_v3int Function
+        %217 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+               OpStore %param0_1 %217
+        %218 = OpLoad %v3int %param0_1
+               OpStore %param1_1 %218
+        %219 = OpLoad %v3int %param0_1
+        %220 = OpBitReverse %v3int %219
+               OpStore %result0_1 %220
+        %221 = OpLoad %v3int %param0_1
+        %222 = OpBitCount %v3int %221
+               OpStore %result1_1 %222
+        %223 = OpLoad %v3int %param0_1
+        %224 = OpNot %v3int %223
+               OpStore %result2_1 %224
+        %225 = OpLoad %v3int %param0_1
+        %226 = OpLoad %v3int %param1_1
+        %227 = OpShiftRightLogical %v3int %225 %226
+               OpStore %result3_1 %227
+        %228 = OpLoad %v3int %param0_1
+        %229 = OpLoad %v3int %param1_1
+        %230 = OpShiftRightArithmetic %v3int %228 %229
+               OpStore %result4_1 %230
+        %231 = OpLoad %v3int %param0_1
+        %232 = OpLoad %v3int %param1_1
+        %233 = OpShiftLeftLogical %v3int %231 %232
+               OpStore %result5_1 %233
+        %234 = OpLoad %v3int %param0_1
+        %235 = OpLoad %v3int %param1_1
+        %236 = OpBitwiseOr %v3int %234 %235
+               OpStore %result6_1 %236
+        %237 = OpLoad %v3int %param0_1
+        %238 = OpLoad %v3int %param1_1
+        %239 = OpBitwiseXor %v3int %237 %238
+               OpStore %result7_1 %239
+        %240 = OpLoad %v3int %param0_1
+        %241 = OpLoad %v3int %param1_1
+        %242 = OpBitwiseAnd %v3int %240 %241
+               OpStore %result8_1 %242
+        %243 = OpLoad %v3int %param0_1
+        %244 = OpLoad %v3int %param1_1
+        %245 = OpIEqual %v3bool %243 %244
+               OpStore %result9_1 %245
+        %246 = OpLoad %v3int %param0_1
+        %247 = OpLoad %v3int %param1_1
+        %248 = OpINotEqual %v3bool %246 %247
+               OpStore %result10_1 %248
+        %249 = OpLoad %v3int %param0_1
+        %250 = OpLoad %v3int %param1_1
+        %251 = OpSGreaterThan %v3bool %249 %250
+               OpStore %result11_1 %251
+        %252 = OpLoad %v3int %param0_1
+        %253 = OpLoad %v3int %param1_1
+        %254 = OpSGreaterThanEqual %v3bool %252 %253
+               OpStore %result12_1 %254
+        %255 = OpLoad %v3int %param0_1
+        %256 = OpLoad %v3int %param1_1
+        %257 = OpSLessThan %v3bool %255 %256
+               OpStore %result13_1 %257
+        %258 = OpLoad %v3int %param0_1
+        %259 = OpLoad %v3int %param1_1
+        %260 = OpSLessThanEqual %v3bool %258 %259
+               OpStore %result14_1 %260
+        %261 = OpLoad %v3int %param0_1
+        %262 = OpLoad %v3int %param1_1
+        %263 = OpSMod %v3int %261 %262
+               OpStore %result15_1 %263
+        %264 = OpLoad %v3int %param0_1
+        %265 = OpLoad %v3int %param1_1
+        %266 = OpSRem %v3int %264 %265
+               OpStore %result16_1 %266
+        %267 = OpLoad %v3int %param0_1
+        %268 = OpBitFieldSExtract %v3int %267 %int_1 %int_2
+               OpStore %result17_1 %268
+        %269 = OpLoad %v3int %param0_1
+        %270 = OpLoad %v3int %param1_1
+        %271 = OpBitFieldInsert %v3int %269 %270 %int_1 %int_2
+               OpStore %result18_1 %271
+               OpReturn
+               OpFunctionEnd
+ %TestInts_2 = OpFunction %void None %9
+        %273 = OpLabel
+   %param0_2 = OpVariable %_ptr_Function_v4int Function
+   %param1_2 = OpVariable %_ptr_Function_v4int Function
+  %result0_2 = OpVariable %_ptr_Function_v4int Function
+  %result1_2 = OpVariable %_ptr_Function_v4int Function
+  %result2_2 = OpVariable %_ptr_Function_v4int Function
+  %result3_2 = OpVariable %_ptr_Function_v4int Function
+  %result4_2 = OpVariable %_ptr_Function_v4int Function
+  %result5_2 = OpVariable %_ptr_Function_v4int Function
+  %result6_2 = OpVariable %_ptr_Function_v4int Function
+  %result7_2 = OpVariable %_ptr_Function_v4int Function
+  %result8_2 = OpVariable %_ptr_Function_v4int Function
+  %result9_2 = OpVariable %_ptr_Function_v4bool Function
+ %result10_2 = OpVariable %_ptr_Function_v4bool Function
+ %result11_2 = OpVariable %_ptr_Function_v4bool Function
+ %result12_2 = OpVariable %_ptr_Function_v4bool Function
+ %result13_2 = OpVariable %_ptr_Function_v4bool Function
+ %result14_2 = OpVariable %_ptr_Function_v4bool Function
+ %result15_2 = OpVariable %_ptr_Function_v4int Function
+ %result16_2 = OpVariable %_ptr_Function_v4int Function
+ %result17_2 = OpVariable %_ptr_Function_v4int Function
+ %result18_2 = OpVariable %_ptr_Function_v4int Function
+        %295 = OpCompositeConstruct %v4int %int_0 %int_0 %int_0 %int_0
+               OpStore %param0_2 %295
+        %296 = OpLoad %v4int %param0_2
+               OpStore %param1_2 %296
+        %297 = OpLoad %v4int %param0_2
+        %298 = OpBitReverse %v4int %297
+               OpStore %result0_2 %298
+        %299 = OpLoad %v4int %param0_2
+        %300 = OpBitCount %v4int %299
+               OpStore %result1_2 %300
+        %301 = OpLoad %v4int %param0_2
+        %302 = OpNot %v4int %301
+               OpStore %result2_2 %302
+        %303 = OpLoad %v4int %param0_2
+        %304 = OpLoad %v4int %param1_2
+        %305 = OpShiftRightLogical %v4int %303 %304
+               OpStore %result3_2 %305
+        %306 = OpLoad %v4int %param0_2
+        %307 = OpLoad %v4int %param1_2
+        %308 = OpShiftRightArithmetic %v4int %306 %307
+               OpStore %result4_2 %308
+        %309 = OpLoad %v4int %param0_2
+        %310 = OpLoad %v4int %param1_2
+        %311 = OpShiftLeftLogical %v4int %309 %310
+               OpStore %result5_2 %311
+        %312 = OpLoad %v4int %param0_2
+        %313 = OpLoad %v4int %param1_2
+        %314 = OpBitwiseOr %v4int %312 %313
+               OpStore %result6_2 %314
+        %315 = OpLoad %v4int %param0_2
+        %316 = OpLoad %v4int %param1_2
+        %317 = OpBitwiseXor %v4int %315 %316
+               OpStore %result7_2 %317
+        %318 = OpLoad %v4int %param0_2
+        %319 = OpLoad %v4int %param1_2
+        %320 = OpBitwiseAnd %v4int %318 %319
+               OpStore %result8_2 %320
+        %321 = OpLoad %v4int %param0_2
+        %322 = OpLoad %v4int %param1_2
+        %323 = OpIEqual %v4bool %321 %322
+               OpStore %result9_2 %323
+        %324 = OpLoad %v4int %param0_2
+        %325 = OpLoad %v4int %param1_2
+        %326 = OpINotEqual %v4bool %324 %325
+               OpStore %result10_2 %326
+        %327 = OpLoad %v4int %param0_2
+        %328 = OpLoad %v4int %param1_2
+        %329 = OpSGreaterThan %v4bool %327 %328
+               OpStore %result11_2 %329
+        %330 = OpLoad %v4int %param0_2
+        %331 = OpLoad %v4int %param1_2
+        %332 = OpSGreaterThanEqual %v4bool %330 %331
+               OpStore %result12_2 %332
+        %333 = OpLoad %v4int %param0_2
+        %334 = OpLoad %v4int %param1_2
+        %335 = OpSLessThan %v4bool %333 %334
+               OpStore %result13_2 %335
+        %336 = OpLoad %v4int %param0_2
+        %337 = OpLoad %v4int %param1_2
+        %338 = OpSLessThanEqual %v4bool %336 %337
+               OpStore %result14_2 %338
+        %339 = OpLoad %v4int %param0_2
+        %340 = OpLoad %v4int %param1_2
+        %341 = OpSMod %v4int %339 %340
+               OpStore %result15_2 %341
+        %342 = OpLoad %v4int %param0_2
+        %343 = OpLoad %v4int %param1_2
+        %344 = OpSRem %v4int %342 %343
+               OpStore %result16_2 %344
+        %345 = OpLoad %v4int %param0_2
+        %346 = OpBitFieldSExtract %v4int %345 %int_1 %int_2
+               OpStore %result17_2 %346
+        %347 = OpLoad %v4int %param0_2
+        %348 = OpLoad %v4int %param1_2
+        %349 = OpBitFieldInsert %v4int %347 %348 %int_1 %int_2
+               OpStore %result18_2 %349
+               OpReturn
+               OpFunctionEnd
+ %TestSelect = OpFunction %void None %9
+        %351 = OpLabel
+  %condition = OpVariable %_ptr_Function_bool Function
+       %obj1 = OpVariable %_ptr_Function_int Function
+       %obj2 = OpVariable %_ptr_Function_int Function
+     %result = OpVariable %_ptr_Function_int Function
+               OpStore %condition %false
+               OpStore %obj1 %int_0
+               OpStore %obj2 %int_0
+        %356 = OpLoad %bool %condition
+        %357 = OpLoad %int %obj1
+        %358 = OpLoad %int %obj2
+        %359 = OpSelect %int %356 %357 %358
+               OpStore %result %359
+               OpReturn
+               OpFunctionEnd
+%TestSelect_0 = OpFunction %void None %9
+        %361 = OpLabel
+%condition_0 = OpVariable %_ptr_Function_v2bool Function
+     %obj1_0 = OpVariable %_ptr_Function_v2int Function
+     %obj2_0 = OpVariable %_ptr_Function_v2int Function
+   %result_0 = OpVariable %_ptr_Function_v2int Function
+        %366 = OpCompositeConstruct %v2bool %false %false
+               OpStore %condition_0 %366
+        %367 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %obj1_0 %367
+        %368 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %obj2_0 %368
+        %369 = OpLoad %v2bool %condition_0
+        %370 = OpLoad %v2int %obj1_0
+        %371 = OpLoad %v2int %obj2_0
+        %372 = OpSelect %v2int %369 %370 %371
+               OpStore %result_0 %372
+               OpReturn
+               OpFunctionEnd
+%TestSelect_1 = OpFunction %void None %9
+        %374 = OpLabel
+%condition_1 = OpVariable %_ptr_Function_v3bool Function
+     %obj1_1 = OpVariable %_ptr_Function_v3int Function
+     %obj2_1 = OpVariable %_ptr_Function_v3int Function
+   %result_1 = OpVariable %_ptr_Function_v3int Function
+        %379 = OpCompositeConstruct %v3bool %false %false %false
+               OpStore %condition_1 %379
+        %380 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+               OpStore %obj1_1 %380
+        %381 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+               OpStore %obj2_1 %381
+        %382 = OpLoad %v3bool %condition_1
+        %383 = OpLoad %v3int %obj1_1
+        %384 = OpLoad %v3int %obj2_1
+        %385 = OpSelect %v3int %382 %383 %384
+               OpStore %result_1 %385
+               OpReturn
+               OpFunctionEnd
+%TestSelect_2 = OpFunction %void None %9
+        %387 = OpLabel
+%condition_2 = OpVariable %_ptr_Function_v4bool Function
+     %obj1_2 = OpVariable %_ptr_Function_v4int Function
+     %obj2_2 = OpVariable %_ptr_Function_v4int Function
+   %result_2 = OpVariable %_ptr_Function_v4int Function
+        %392 = OpCompositeConstruct %v4bool %false %false %false %false
+               OpStore %condition_2 %392
+        %393 = OpCompositeConstruct %v4int %int_0 %int_0 %int_0 %int_0
+               OpStore %obj1_2 %393
+        %394 = OpCompositeConstruct %v4int %int_0 %int_0 %int_0 %int_0
+               OpStore %obj2_2 %394
+        %395 = OpLoad %v4bool %condition_2
+        %396 = OpLoad %v4int %obj1_2
+        %397 = OpLoad %v4int %obj2_2
+        %398 = OpSelect %v4int %395 %396 %397
+               OpStore %result_2 %398
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_IntIntrinsicTests = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_IntIntrinsicTests
+        %401 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_IntIntrinsicTests
+        %404 = OpLabel
+        %405 = OpFunctionCall %void %PreConstructor_IntIntrinsicTests %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_IntIntrinsicTests
+        %408 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_IntIntrinsicTests
+        %411 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_IntIntrinsicTests = OpFunction %void None %9
+        %413 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_IntIntrinsicTests Function
+        %415 = OpFunctionCall %void %InitializeGlobals
+        %416 = OpFunctionCall %void %DefaultConstructor %self_4
+        %417 = OpFunctionCall %void %CopyInputs_Main %self_4
+        %418 = OpFunctionCall %void %Main %self_4
+        %419 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %9
+        %420 = OpLabel
+               OpReturn
+               OpFunctionEnd

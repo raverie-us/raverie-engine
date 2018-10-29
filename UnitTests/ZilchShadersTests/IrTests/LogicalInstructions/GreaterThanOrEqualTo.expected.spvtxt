@@ -1,0 +1,254 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 143
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_GreaterThanOrEqualTo "EntryPoint_Main_GreaterThanOrEqualTo"
+               OpExecutionMode %EntryPoint_Main_GreaterThanOrEqualTo OriginUpperLeft
+               OpSource Unknown 100
+               OpName %GreaterThanOrEqualTo "GreaterThanOrEqualTo"
+               OpMemberName %GreaterThanOrEqualTo 0 "Dummy"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %Test "Test"
+               OpName %lhs "lhs"
+               OpName %rhs "rhs"
+               OpName %result "result"
+               OpName %Test_0 "Test"
+               OpName %lhs_0 "lhs"
+               OpName %rhs_0 "rhs"
+               OpName %result_0 "result"
+               OpName %Test_1 "Test"
+               OpName %lhs_1 "lhs"
+               OpName %rhs_1 "rhs"
+               OpName %result_1 "result"
+               OpName %Test_2 "Test"
+               OpName %lhs_2 "lhs"
+               OpName %rhs_2 "rhs"
+               OpName %result_2 "result"
+               OpName %Test_3 "Test"
+               OpName %lhs_3 "lhs"
+               OpName %rhs_3 "rhs"
+               OpName %result_3 "result"
+               OpName %Test_4 "Test"
+               OpName %lhs_4 "lhs"
+               OpName %rhs_4 "rhs"
+               OpName %result_4 "result"
+               OpName %Test_5 "Test"
+               OpName %lhs_5 "lhs"
+               OpName %rhs_5 "rhs"
+               OpName %result_5 "result"
+               OpName %Test_6 "Test"
+               OpName %lhs_6 "lhs"
+               OpName %rhs_6 "rhs"
+               OpName %result_6 "result"
+               OpName %PreConstructor_GreaterThanOrEqualTo "PreConstructor_GreaterThanOrEqualTo"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_GreaterThanOrEqualTo "EntryPoint_Main_GreaterThanOrEqualTo"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%GreaterThanOrEqualTo = OpTypeStruct %int
+%_ptr_Function_GreaterThanOrEqualTo = OpTypePointer Function %GreaterThanOrEqualTo
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_GreaterThanOrEqualTo
+          %9 = OpTypeFunction %void
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %float_0 = OpConstant %float 0
+       %bool = OpTypeBool
+%_ptr_Function_bool = OpTypePointer Function %bool
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+     %v2bool = OpTypeVector %bool 2
+%_ptr_Function_v2bool = OpTypePointer Function %v2bool
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+     %v3bool = OpTypeVector %bool 3
+%_ptr_Function_v3bool = OpTypePointer Function %v3bool
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+     %v4bool = OpTypeVector %bool 4
+%_ptr_Function_v4bool = OpTypePointer Function %v4bool
+      %int_0 = OpConstant %int 0
+      %v2int = OpTypeVector %int 2
+%_ptr_Function_v2int = OpTypePointer Function %v2int
+      %v3int = OpTypeVector %int 3
+%_ptr_Function_v3int = OpTypePointer Function %v3int
+      %v4int = OpTypeVector %int 4
+%_ptr_Function_v4int = OpTypePointer Function %v4int
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_GreaterThanOrEqualTo
+         %36 = OpLabel
+         %37 = OpFunctionCall %void %Test
+         %38 = OpFunctionCall %void %Test_0
+         %39 = OpFunctionCall %void %Test_1
+         %40 = OpFunctionCall %void %Test_2
+         %41 = OpFunctionCall %void %Test_3
+         %42 = OpFunctionCall %void %Test_4
+         %43 = OpFunctionCall %void %Test_5
+         %44 = OpFunctionCall %void %Test_6
+               OpReturn
+               OpFunctionEnd
+       %Test = OpFunction %void None %9
+         %46 = OpLabel
+        %lhs = OpVariable %_ptr_Function_float Function
+        %rhs = OpVariable %_ptr_Function_float Function
+     %result = OpVariable %_ptr_Function_bool Function
+               OpStore %lhs %float_0
+               OpStore %rhs %float_0
+         %50 = OpLoad %float %lhs
+         %51 = OpLoad %float %rhs
+         %52 = OpFOrdGreaterThanEqual %bool %50 %51
+               OpStore %result %52
+               OpReturn
+               OpFunctionEnd
+     %Test_0 = OpFunction %void None %9
+         %54 = OpLabel
+      %lhs_0 = OpVariable %_ptr_Function_v2float Function
+      %rhs_0 = OpVariable %_ptr_Function_v2float Function
+   %result_0 = OpVariable %_ptr_Function_v2bool Function
+         %58 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %lhs_0 %58
+         %59 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %rhs_0 %59
+         %60 = OpLoad %v2float %lhs_0
+         %61 = OpLoad %v2float %rhs_0
+         %62 = OpFOrdGreaterThanEqual %v2bool %60 %61
+               OpStore %result_0 %62
+               OpReturn
+               OpFunctionEnd
+     %Test_1 = OpFunction %void None %9
+         %64 = OpLabel
+      %lhs_1 = OpVariable %_ptr_Function_v3float Function
+      %rhs_1 = OpVariable %_ptr_Function_v3float Function
+   %result_1 = OpVariable %_ptr_Function_v3bool Function
+         %68 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %lhs_1 %68
+         %69 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %rhs_1 %69
+         %70 = OpLoad %v3float %lhs_1
+         %71 = OpLoad %v3float %rhs_1
+         %72 = OpFOrdGreaterThanEqual %v3bool %70 %71
+               OpStore %result_1 %72
+               OpReturn
+               OpFunctionEnd
+     %Test_2 = OpFunction %void None %9
+         %74 = OpLabel
+      %lhs_2 = OpVariable %_ptr_Function_v4float Function
+      %rhs_2 = OpVariable %_ptr_Function_v4float Function
+   %result_2 = OpVariable %_ptr_Function_v4bool Function
+         %78 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %lhs_2 %78
+         %79 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %rhs_2 %79
+         %80 = OpLoad %v4float %lhs_2
+         %81 = OpLoad %v4float %rhs_2
+         %82 = OpFOrdGreaterThanEqual %v4bool %80 %81
+               OpStore %result_2 %82
+               OpReturn
+               OpFunctionEnd
+     %Test_3 = OpFunction %void None %9
+         %84 = OpLabel
+      %lhs_3 = OpVariable %_ptr_Function_int Function
+      %rhs_3 = OpVariable %_ptr_Function_int Function
+   %result_3 = OpVariable %_ptr_Function_bool Function
+               OpStore %lhs_3 %int_0
+               OpStore %rhs_3 %int_0
+         %88 = OpLoad %int %lhs_3
+         %89 = OpLoad %int %rhs_3
+         %90 = OpSGreaterThanEqual %bool %88 %89
+               OpStore %result_3 %90
+               OpReturn
+               OpFunctionEnd
+     %Test_4 = OpFunction %void None %9
+         %92 = OpLabel
+      %lhs_4 = OpVariable %_ptr_Function_v2int Function
+      %rhs_4 = OpVariable %_ptr_Function_v2int Function
+   %result_4 = OpVariable %_ptr_Function_v2bool Function
+         %96 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %lhs_4 %96
+         %97 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %rhs_4 %97
+         %98 = OpLoad %v2int %lhs_4
+         %99 = OpLoad %v2int %rhs_4
+        %100 = OpSGreaterThanEqual %v2bool %98 %99
+               OpStore %result_4 %100
+               OpReturn
+               OpFunctionEnd
+     %Test_5 = OpFunction %void None %9
+        %102 = OpLabel
+      %lhs_5 = OpVariable %_ptr_Function_v3int Function
+      %rhs_5 = OpVariable %_ptr_Function_v3int Function
+   %result_5 = OpVariable %_ptr_Function_v3bool Function
+        %106 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+               OpStore %lhs_5 %106
+        %107 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+               OpStore %rhs_5 %107
+        %108 = OpLoad %v3int %lhs_5
+        %109 = OpLoad %v3int %rhs_5
+        %110 = OpSGreaterThanEqual %v3bool %108 %109
+               OpStore %result_5 %110
+               OpReturn
+               OpFunctionEnd
+     %Test_6 = OpFunction %void None %9
+        %112 = OpLabel
+      %lhs_6 = OpVariable %_ptr_Function_v4int Function
+      %rhs_6 = OpVariable %_ptr_Function_v4int Function
+   %result_6 = OpVariable %_ptr_Function_v4bool Function
+        %116 = OpCompositeConstruct %v4int %int_0 %int_0 %int_0 %int_0
+               OpStore %lhs_6 %116
+        %117 = OpCompositeConstruct %v4int %int_0 %int_0 %int_0 %int_0
+               OpStore %rhs_6 %117
+        %118 = OpLoad %v4int %lhs_6
+        %119 = OpLoad %v4int %rhs_6
+        %120 = OpSGreaterThanEqual %v4bool %118 %119
+               OpStore %result_6 %120
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_GreaterThanOrEqualTo = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_GreaterThanOrEqualTo
+        %123 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_GreaterThanOrEqualTo
+        %126 = OpLabel
+        %127 = OpFunctionCall %void %PreConstructor_GreaterThanOrEqualTo %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_GreaterThanOrEqualTo
+        %130 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_GreaterThanOrEqualTo
+        %133 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_GreaterThanOrEqualTo = OpFunction %void None %9
+        %135 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_GreaterThanOrEqualTo Function
+        %137 = OpFunctionCall %void %InitializeGlobals
+        %138 = OpFunctionCall %void %DefaultConstructor %self_4
+        %139 = OpFunctionCall %void %CopyInputs_Main %self_4
+        %140 = OpFunctionCall %void %Main %self_4
+        %141 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %9
+        %142 = OpLabel
+               OpReturn
+               OpFunctionEnd

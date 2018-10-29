@@ -1,0 +1,19 @@
+[Pixel][UnitTest]
+struct Integer4Implements
+{
+  [EntryPoint]
+  function Main()
+  {
+    var max = Integer4.PositiveMax;
+    var posMin = Integer4.PositiveValueClosestToZero;
+    var negMax = Integer4.NegativeValueClosestToZero;
+    var min = Integer4.NegativeMin;
+    
+    var x = Integer4.XAxis;
+    var y = Integer4.YAxis;
+    var z = Integer4.ZAxis;
+    var w = Integer4.WAxis;
+    var zero = Integer4.Zero;
+    var axis = Integer4.GetAxis(1);
+  }
+}

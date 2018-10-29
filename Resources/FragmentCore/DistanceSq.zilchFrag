@@ -1,0 +1,21 @@
+struct MathDistanceSqImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function DistanceSq(param0 : Real2, param1 : Real2) : Real
+  {
+    var vector = param0 - param1;
+    return Math.LengthSq(vector);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function DistanceSq(param0 : Real3, param1 : Real3) : Real
+  {
+    var vector = param0 - param1;
+    return Math.LengthSq(vector);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function DistanceSq(param0 : Real4, param1 : Real4) : Real
+  {
+    var vector = param0 - param1;
+    return Math.LengthSq(vector);
+  }
+}

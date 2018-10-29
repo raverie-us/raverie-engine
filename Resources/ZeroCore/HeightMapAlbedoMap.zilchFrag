@@ -6,10 +6,10 @@ struct HeightMapAlbedoMap
   [FragmentInput][StageInput] var Uv : Real2;
   [FragmentInput] var HeightMapTextureWeights : Real4;
   
-  [Input] var Texture0 : Sampler2d;
-  [Input] var Texture1 : Sampler2d;
-  [Input] var Texture2 : Sampler2d;
-  [Input] var Texture3 : Sampler2d;
+  [Input] var Texture0 : SampledImage2d;
+  [Input] var Texture1 : SampledImage2d;
+  [Input] var Texture2 : SampledImage2d;
+  [Input] var Texture3 : SampledImage2d;
   
   [Output] var Albedo : Real3;
   

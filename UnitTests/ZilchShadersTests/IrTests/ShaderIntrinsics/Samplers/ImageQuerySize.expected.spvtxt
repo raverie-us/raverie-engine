@@ -1,0 +1,151 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 83
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpCapability ImageQuery
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_ImageQuerySize "EntryPoint_Main_ImageQuerySize"
+               OpExecutionMode %EntryPoint_Main_ImageQuerySize OriginUpperLeft
+               OpSource Unknown 100
+               OpName %ImageQuerySize "ImageQuerySize"
+               OpMemberName %ImageQuerySize 0 "Dummy"
+               OpName %Image_ImageQuerySize "Image_ImageQuerySize"
+               OpName %SampledImage_ImageQuerySize "SampledImage_ImageQuerySize"
+               OpName %DepthImage_ImageQuerySize "DepthImage_ImageQuerySize"
+               OpName %SampledDepthImage_ImageQuerySize "SampledDepthImage_ImageQuerySize"
+               OpName %ImageCube_ImageQuerySize "ImageCube_ImageQuerySize"
+               OpName %SampledImageCube_ImageQuerySize "SampledImageCube_ImageQuerySize"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %size "size"
+               OpName %lod "lod"
+               OpName %PreConstructor_ImageQuerySize "PreConstructor_ImageQuerySize"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_ImageQuerySize "EntryPoint_Main_ImageQuerySize"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %Image_ImageQuerySize Binding 0
+               OpDecorate %Image_ImageQuerySize DescriptorSet 0
+               OpDecorate %SampledImage_ImageQuerySize Binding 1
+               OpDecorate %SampledImage_ImageQuerySize DescriptorSet 0
+               OpDecorate %DepthImage_ImageQuerySize Binding 2
+               OpDecorate %DepthImage_ImageQuerySize DescriptorSet 0
+               OpDecorate %SampledDepthImage_ImageQuerySize Binding 3
+               OpDecorate %SampledDepthImage_ImageQuerySize DescriptorSet 0
+               OpDecorate %ImageCube_ImageQuerySize Binding 4
+               OpDecorate %ImageCube_ImageQuerySize DescriptorSet 0
+               OpDecorate %SampledImageCube_ImageQuerySize Binding 5
+               OpDecorate %SampledImageCube_ImageQuerySize DescriptorSet 0
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%ImageQuerySize = OpTypeStruct %int
+%_ptr_Function_ImageQuerySize = OpTypePointer Function %ImageQuerySize
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_ImageQuerySize
+      %v2int = OpTypeVector %int 2
+%_ptr_Function_v2int = OpTypePointer Function %v2int
+      %int_0 = OpConstant %int 0
+      %int_1 = OpConstant %int 1
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+         %13 = OpTypeImage %float 2D 0 0 0 1 Unknown
+%_ptr_UniformConstant_13 = OpTypePointer UniformConstant %13
+%Image_ImageQuerySize = OpVariable %_ptr_UniformConstant_13 UniformConstant
+         %15 = OpTypeSampledImage %13
+%_ptr_UniformConstant_15 = OpTypePointer UniformConstant %15
+%SampledImage_ImageQuerySize = OpVariable %_ptr_UniformConstant_15 UniformConstant
+         %17 = OpTypeImage %float 2D 1 0 0 1 Unknown
+%_ptr_UniformConstant_17 = OpTypePointer UniformConstant %17
+%DepthImage_ImageQuerySize = OpVariable %_ptr_UniformConstant_17 UniformConstant
+         %19 = OpTypeSampledImage %17
+%_ptr_UniformConstant_19 = OpTypePointer UniformConstant %19
+%SampledDepthImage_ImageQuerySize = OpVariable %_ptr_UniformConstant_19 UniformConstant
+         %21 = OpTypeImage %float Cube 0 0 0 1 Unknown
+%_ptr_UniformConstant_21 = OpTypePointer UniformConstant %21
+%ImageCube_ImageQuerySize = OpVariable %_ptr_UniformConstant_21 UniformConstant
+         %23 = OpTypeSampledImage %21
+%_ptr_UniformConstant_23 = OpTypePointer UniformConstant %23
+%SampledImageCube_ImageQuerySize = OpVariable %_ptr_UniformConstant_23 UniformConstant
+         %25 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_ImageQuerySize
+         %36 = OpLabel
+       %size = OpVariable %_ptr_Function_v2int Function
+        %lod = OpVariable %_ptr_Function_int Function
+         %39 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %size %39
+               OpStore %lod %int_1
+         %40 = OpLoad %13 %Image_ImageQuerySize
+         %41 = OpLoad %int %lod
+         %42 = OpImageQuerySizeLod %v2int %40 %41
+               OpStore %size %42
+         %43 = OpLoad %15 %SampledImage_ImageQuerySize
+         %44 = OpImage %13 %43
+         %45 = OpLoad %int %lod
+         %46 = OpImageQuerySizeLod %v2int %44 %45
+               OpStore %size %46
+         %47 = OpLoad %17 %DepthImage_ImageQuerySize
+         %48 = OpLoad %int %lod
+         %49 = OpImageQuerySizeLod %v2int %47 %48
+               OpStore %size %49
+         %50 = OpLoad %19 %SampledDepthImage_ImageQuerySize
+         %51 = OpImage %17 %50
+         %52 = OpLoad %int %lod
+         %53 = OpImageQuerySizeLod %v2int %51 %52
+               OpStore %size %53
+         %54 = OpLoad %21 %ImageCube_ImageQuerySize
+         %55 = OpLoad %int %lod
+         %56 = OpImageQuerySizeLod %v2int %54 %55
+               OpStore %size %56
+         %57 = OpLoad %23 %SampledImageCube_ImageQuerySize
+         %58 = OpImage %21 %57
+         %59 = OpLoad %int %lod
+         %60 = OpImageQuerySizeLod %v2int %58 %59
+               OpStore %size %60
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_ImageQuerySize = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_ImageQuerySize
+         %63 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_ImageQuerySize
+         %66 = OpLabel
+         %67 = OpFunctionCall %void %PreConstructor_ImageQuerySize %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_ImageQuerySize
+         %70 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_ImageQuerySize
+         %73 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_ImageQuerySize = OpFunction %void None %25
+         %75 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_ImageQuerySize Function
+         %77 = OpFunctionCall %void %InitializeGlobals
+         %78 = OpFunctionCall %void %DefaultConstructor %self_4
+         %79 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %80 = OpFunctionCall %void %Main %self_4
+         %81 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %25
+         %82 = OpLabel
+               OpReturn
+               OpFunctionEnd

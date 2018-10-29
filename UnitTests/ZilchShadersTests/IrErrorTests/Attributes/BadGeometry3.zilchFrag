@@ -1,0 +1,11 @@
+struct GeoData
+{
+}
+
+[Geometry(maxVertices : "12")]
+struct BadGeometry3
+{
+  function Main(input : TriangleInput[GeoData], output : TriangleOutput[GeoData])
+  {
+  }
+}

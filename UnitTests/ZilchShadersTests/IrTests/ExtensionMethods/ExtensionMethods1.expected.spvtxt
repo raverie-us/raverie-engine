@@ -1,0 +1,151 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 80
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_ExtensionMethods1 "EntryPoint_Main_ExtensionMethods1"
+               OpExecutionMode %EntryPoint_Main_ExtensionMethods1 OriginUpperLeft
+               OpSource Unknown 100
+               OpName %ExtensionMethods1 "ExtensionMethods1"
+               OpMemberName %ExtensionMethods1 0 "Dummy"
+               OpName %MyStruct "MyStruct"
+               OpMemberName %MyStruct 0 "Data"
+               OpName %Clear "Clear"
+               OpName %self "self"
+               OpName %PreConstructor_MyStruct "PreConstructor_MyStruct"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %Scale "Scale"
+               OpName %self_2 "self"
+               OpName %value "value"
+               OpName %value_Local "value_Local"
+               OpName %Empty "Empty"
+               OpName %result "result"
+               OpName %Main "Main"
+               OpName %self_3 "self"
+               OpName %s "s"
+               OpName %result_0 "result"
+               OpName %PreConstructor_ExtensionMethods1 "PreConstructor_ExtensionMethods1"
+               OpName %self_4 "self"
+               OpName %DefaultConstructor_0 "DefaultConstructor"
+               OpName %self_5 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_6 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_7 "self"
+               OpName %EntryPoint_Main_ExtensionMethods1 "EntryPoint_Main_ExtensionMethods1"
+               OpName %self_8 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%ExtensionMethods1 = OpTypeStruct %int
+%_ptr_Function_ExtensionMethods1 = OpTypePointer Function %ExtensionMethods1
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+   %MyStruct = OpTypeStruct %float
+%_ptr_Function_MyStruct = OpTypePointer Function %MyStruct
+         %12 = OpTypeFunction %void %_ptr_Function_MyStruct
+      %int_0 = OpConstant %int 0
+    %float_0 = OpConstant %float 0
+    %float_1 = OpConstant %float 1
+         %13 = OpTypeFunction %float %_ptr_Function_MyStruct %float
+         %14 = OpTypeFunction %MyStruct
+         %15 = OpTypeFunction %void %_ptr_Function_ExtensionMethods1
+    %float_2 = OpConstant %float 2
+         %16 = OpTypeFunction %void
+      %Clear = OpFunction %void None %12
+       %self = OpFunctionParameter %_ptr_Function_MyStruct
+         %23 = OpLabel
+         %24 = OpAccessChain %_ptr_Function_float %self %int_0
+               OpStore %24 %float_1
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_MyStruct = OpFunction %void None %12
+     %self_0 = OpFunctionParameter %_ptr_Function_MyStruct
+         %27 = OpLabel
+         %28 = OpAccessChain %_ptr_Function_float %self_0 %int_0
+               OpStore %28 %float_0
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %12
+     %self_1 = OpFunctionParameter %_ptr_Function_MyStruct
+         %31 = OpLabel
+         %32 = OpFunctionCall %void %PreConstructor_MyStruct %self_1
+               OpReturn
+               OpFunctionEnd
+      %Scale = OpFunction %float None %13
+     %self_2 = OpFunctionParameter %_ptr_Function_MyStruct
+      %value = OpFunctionParameter %float
+         %36 = OpLabel
+%value_Local = OpVariable %_ptr_Function_float Function
+               OpStore %value_Local %value
+         %38 = OpAccessChain %_ptr_Function_float %self_2 %int_0
+         %39 = OpLoad %float %38
+         %40 = OpLoad %float %value_Local
+         %41 = OpFMul %float %39 %40
+               OpReturnValue %41
+               OpFunctionEnd
+      %Empty = OpFunction %MyStruct None %14
+         %43 = OpLabel
+     %result = OpVariable %_ptr_Function_MyStruct Function
+         %45 = OpVariable %_ptr_Function_MyStruct Function
+         %46 = OpFunctionCall %void %DefaultConstructor %45
+         %47 = OpLoad %MyStruct %45
+               OpStore %result %47
+         %48 = OpFunctionCall %void %Clear %result
+         %49 = OpLoad %MyStruct %result
+               OpReturnValue %49
+               OpFunctionEnd
+       %Main = OpFunction %void None %15
+     %self_3 = OpFunctionParameter %_ptr_Function_ExtensionMethods1
+         %52 = OpLabel
+          %s = OpVariable %_ptr_Function_MyStruct Function
+   %result_0 = OpVariable %_ptr_Function_float Function
+         %55 = OpFunctionCall %MyStruct %Empty
+               OpStore %s %55
+         %56 = OpFunctionCall %void %Clear %s
+         %57 = OpFunctionCall %float %Scale %s %float_2
+               OpStore %result_0 %57
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_ExtensionMethods1 = OpFunction %void None %15
+     %self_4 = OpFunctionParameter %_ptr_Function_ExtensionMethods1
+         %60 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor_0 = OpFunction %void None %15
+     %self_5 = OpFunctionParameter %_ptr_Function_ExtensionMethods1
+         %63 = OpLabel
+         %64 = OpFunctionCall %void %PreConstructor_ExtensionMethods1 %self_5
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %15
+     %self_6 = OpFunctionParameter %_ptr_Function_ExtensionMethods1
+         %67 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %15
+     %self_7 = OpFunctionParameter %_ptr_Function_ExtensionMethods1
+         %70 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_ExtensionMethods1 = OpFunction %void None %16
+         %72 = OpLabel
+     %self_8 = OpVariable %_ptr_Function_ExtensionMethods1 Function
+         %74 = OpFunctionCall %void %InitializeGlobals
+         %75 = OpFunctionCall %void %DefaultConstructor_0 %self_8
+         %76 = OpFunctionCall %void %CopyInputs_Main %self_8
+         %77 = OpFunctionCall %void %Main %self_8
+         %78 = OpFunctionCall %void %CopyOutputs_Main %self_8
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %16
+         %79 = OpLabel
+               OpReturn
+               OpFunctionEnd

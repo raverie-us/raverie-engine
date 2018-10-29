@@ -1,0 +1,45 @@
+[Pixel][UnitTest]
+struct CountBits
+{
+  function Test_Static_Integer()
+  {
+    var param0 = Integer();
+    var result = Math.CountBits(param0);
+  }
+
+  function Test_Static_Integer2()
+  {
+    var param0 = Integer2();
+    var result = Math.CountBits(param0);
+  }
+
+  function Test_Static_Integer3()
+  {
+    var param0 = Integer3();
+    var result = Math.CountBits(param0);
+  }
+
+  function Test_Static_Integer4()
+  {
+    var param0 = Integer4();
+    var result = Math.CountBits(param0);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Integer();
+    this.Test_Static_Integer2();
+    //this.Test_Static_Integer2x2();
+    //this.Test_Static_Integer2x3();
+    //this.Test_Static_Integer2x4();
+    this.Test_Static_Integer3();
+    //this.Test_Static_Integer3x2();
+    //this.Test_Static_Integer3x3();
+    //this.Test_Static_Integer3x4();
+    this.Test_Static_Integer4();
+    //this.Test_Static_Integer4x2();
+    //this.Test_Static_Integer4x3();
+    //this.Test_Static_Integer4x4();
+  }
+}

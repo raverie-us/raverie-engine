@@ -1,0 +1,10 @@
+[Vertex]
+struct BadAppBuiltInInput2
+{
+  // Wrong name.
+  [AppBuiltInInput] var LogicTimes : Real;
+  
+  function Main()
+  {
+  }
+}

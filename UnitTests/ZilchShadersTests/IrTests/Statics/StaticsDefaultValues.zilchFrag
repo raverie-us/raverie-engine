@@ -1,0 +1,15 @@
+[Pixel][UnitTest]
+struct StaticsDefaultValues
+{
+  [Static] var Two : Real = 2.0;
+  [Static] var Pi : Real = Math.Pi;
+  [Static] var Tau : Real = StaticsDefaultValues.Two * StaticsDefaultValues.Pi;
+  
+  [EntryPoint]
+  function Main()
+  {
+    var tau = StaticsDefaultValues.Tau;
+    var pi = StaticsDefaultValues.Pi;
+    var two = StaticsDefaultValues.Two;
+  }
+}

@@ -1,0 +1,28 @@
+struct NameOverrideSpecConstants_GeoIn
+{
+  [HardwareBuiltInInput] var ApiPerspectivePosition : Real4;
+}
+struct NameOverrideSpecConstants_GeoOut
+{
+  [HardwareBuiltInOutput] var ApiPerspectivePosition : Real4;
+}
+[Geometry(maxVertices : 3)][UnitTest]
+struct NameOverrideSpecConstants_Geometry
+{
+  [Static][SpecConstant] var Position_GeometryOverride : Real4;
+  [Static][SpecConstant] var Value_GeometryOverride : Real;
+  [AppBuiltInInput] var PerspectiveToApiPerspective : Real4x4;
+  [EntryPoint]
+  function Main(input : TriangleInput[NameOverrideSpecConstants_GeoIn], output : TriangleOutput[NameOverrideSpecConstants_GeoOut])
+  {
+    var fragmentInput = TriangleInput[GeometryData]();
+    for(var i = 0; i < 3; ++i)
+    {
+    }
+    var fragmentOutput = TriangleOutput[GeometryData]();
+    var geometryOverride = GeometryOverride();
+    geometryOverride.GeoPosition = NameOverrideSpecConstants_Geometry.Position_GeometryOverride;
+    geometryOverride.Aux = NameOverrideSpecConstants_Geometry.Value_GeometryOverride;
+    geometryOverride.Main(fragmentInput, fragmentOutput);
+  }
+}

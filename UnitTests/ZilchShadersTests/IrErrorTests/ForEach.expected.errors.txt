@@ -1,0 +1,2 @@
+  IrErrorTests\ForEach.zilchFrag(27) in Main: foreach is not supported.:
+  foreach is not supported.

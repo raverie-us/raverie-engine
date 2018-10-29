@@ -1,0 +1,15 @@
+[Pixel][UnitTest]
+struct Angle2D
+{
+  function Test_Static_Real3()
+  {
+    var param0 = Real3();
+    var result = Math.Angle2D(param0);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Real3();
+  }
+}

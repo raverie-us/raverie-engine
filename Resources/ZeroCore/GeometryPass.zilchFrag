@@ -2,7 +2,7 @@
 [Pixel][RenderPass]
 struct GeometryPass
 {
-  [BuiltInInput] var FarPlane : Real;
+  [AppBuiltInInput] var FarPlane : Real;
   
   [Input] var PerspectivePosition : Real4;
   
@@ -109,13 +109,13 @@ struct GeometryPass
 [Pixel]
 struct GeometryInput
 {
-  [BuiltInInput] var FarPlane : Real;
-  [BuiltInInput] var PerspectiveToView : Real4x4;
+  [AppBuiltInInput] var FarPlane : Real;
+  [AppBuiltInInput] var PerspectiveToView : Real4x4;
   
   [StageInput] var PerspectivePosition : Real4;
   
-  [PropertyInput] var GeometryBuffer0 : Sampler2d;
-  [PropertyInput] var GeometryBuffer1 : Sampler2d;
+  [PropertyInput] var GeometryBuffer0 : SampledImage2d;
+  [PropertyInput] var GeometryBuffer1 : SampledImage2d;
   
   [Output] var GeoNormal : Real3;
   [Output] var GeoDepth : Real;
@@ -150,12 +150,12 @@ struct GeometryInput
 [Pixel][PostProcess]
 struct GeometryDebug
 {
-  [BuiltInInput] var ViewToWorld : Real4x4;
+  [AppBuiltInInput] var ViewToWorld : Real4x4;
   
   [StageInput] var Uv : Real2;
   
-  [Input] var GeometryBuffer0 : Sampler2d;
-  [Input] var GeometryBuffer1 : Sampler2d;
+  [Input] var GeometryBuffer0 : SampledImage2d;
+  [Input] var GeometryBuffer1 : SampledImage2d;
   
   [Input] var ShowNormal : Boolean = false;
   [Input] var ShowDepth : Boolean = false;

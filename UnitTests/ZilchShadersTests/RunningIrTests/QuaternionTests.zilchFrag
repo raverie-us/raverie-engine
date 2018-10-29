@@ -1,0 +1,186 @@
+[Pixel]
+struct SlerpQuaternionTest
+{
+  [StageOutput] var Target0 : Real4;
+  [StageOutput] var Target1 : Real4;
+  [StageOutput] var Target2 : Real4;
+  [StageOutput] var Target3 : Real4;
+
+  function ComputeTarget0()
+  {
+    var start = Quaternion(0.0, 0.0, 0.0, 1.0);
+    var end = Quaternion(0.0, 0.3826834323650898, 0.0, 0.9238795325112867);
+    var t = 0.25;
+    this.Target0 = Math.Slerp(start, end, t).XYZW;
+  }
+  
+  function ComputeTarget1()
+  {
+    var start = Quaternion(0.0, 0.0, 0.0, 1.0);
+    var end = Quaternion(0.0, 0.3826834323650898, 0.0, 0.9238795325112867);
+    var t = 0.75;
+    this.Target1 = Math.Slerp(start, end, t).XYZW;
+  }
+  
+  function ComputeTarget2()
+  {
+    var start = Quaternion(0.0, 0.70710678118654760, 0.0, 0.7071067811865476);
+    var end = Quaternion(0.5, -0.5, -0.5, 0.5);
+    var t = 0.25;
+    this.Target2 = Math.Slerp(start, end, t).XYZW;
+  }
+  
+  function ComputeTarget3()
+  {
+    var start = Quaternion(-0.3826834323650898, 0.0, 0.0, 0.9238795325112867);
+    var end = Quaternion(0.5, -0.5, 0.5, 0.5);
+    var t = 0.5;
+    this.Target3 = Math.Slerp(start, end, t).XYZW;
+  }
+  
+  [EntryPoint]
+  function Main()
+  {
+    this.ComputeTarget0();
+    this.ComputeTarget1();
+    this.ComputeTarget2();
+    this.ComputeTarget3();
+  }
+}
+
+[Pixel]
+struct InvertQuaternionTest
+{
+  [StageOutput] var Target0 : Real4;
+  [StageOutput] var Target1 : Real4;
+  [StageOutput] var Target2 : Real4;
+  
+  [EntryPoint]
+  function Main()
+  {
+    this.Target0 = Math.Invert(Quaternion(4.0, 4.0, 2.0, 6.0)).XYZW;
+    this.Target1 = Math.Invert(Quaternion(1.0, 0.0, 0.0, 0.0)).XYZW;
+    this.Target2 = Math.Invert(Quaternion(2.0, -3.0, 5.0, 7.0)).XYZW;
+  }
+}
+
+[Pixel]
+struct MultiplyQuaternionTest
+{
+  [StageOutput] var Target0 : Real4;
+  
+  [EntryPoint]
+  function Main()
+  {
+    var q0 = Quaternion(5.0, 3.0, 9.0, 10.0);
+    var q1 = Quaternion(2.0, 8.0, 4.0, 7.0);
+    this.Target0 = Math.Multiply(q0, q1).XYZW;
+  }
+}
+
+[Pixel]
+struct MultiplyQuaternionVectorTest
+{
+  [StageOutput] var Target0 : Real4;
+  [StageOutput] var Target1 : Real4;
+  [StageOutput] var Target2 : Real4;
+  
+  [EntryPoint]
+  function Main()
+  {
+    var result0 = Math.Multiply(Quaternion(0.0, 1.0, 0.0, 0.0), Real3(1.0, 1.0, 1.0));
+    var result1 = Math.Multiply(Quaternion(1.0, 0.0, 0.0, 0.0), Real3(1.0, 1.0, 1.0));
+    var result2 = Math.Multiply(Quaternion(0.0, 0.0, 1.0, 0.0), Real3(1.0, 1.0, 1.0));
+    this.Target0 = Real4(result0, 0);
+    this.Target1 = Real4(result1, 0);
+    this.Target2 = Real4(result2, 0);
+  }
+}
+
+[Pixel]
+struct AxisAngleToQuaternionTest
+{
+  [StageOutput] var Target0 : Real4;
+  [StageOutput] var Target1 : Real4;
+  [StageOutput] var Target2 : Real4;
+  [StageOutput] var Target3 : Real4;
+  
+  function ComputeTarget0()
+  {
+    var axis = Real3(0.57735026918962576450914878050196, 0.57735026918962576450914878050196, 0.57735026918962576450914878050196);
+    var angle = Math.Pi;
+    this.Target0 = Math.ToQuaternion(axis, angle).XYZW;
+  }
+  
+  function ComputeTarget1()
+  {
+    var axis = Real3(0.57735026918962576450914878050196, 0.57735026918962576450914878050196, 0.57735026918962576450914878050196);
+    var angle = Math.Pi / 6.0;
+    this.Target1 = Math.ToQuaternion(axis, angle).XYZW;
+  }
+  
+  function ComputeTarget2()
+  {
+    this.Target2 = Math.ToQuaternion(Real3(0.0, 0.0, 0.0), 0.0).XYZW;
+  }
+  
+  function ComputeTarget3()
+  {
+    var axis = Real3(0.0, 0.70710678118654752440084436210485, 0.70710678118654752440084436210485);
+    var angle = (7.0 / 6.0) * Math.Pi;
+    this.Target3 = Math.ToQuaternion(axis, angle).XYZW;
+  }
+  
+  [EntryPoint]
+  function Main()
+  {
+    this.ComputeTarget0();
+    this.ComputeTarget1();
+    this.ComputeTarget2();
+    this.ComputeTarget3();
+  }
+}
+
+[Pixel]
+struct Matrix3ToQuaternionTest
+{
+  [StageOutput] var Target0 : Real4;
+  [StageOutput] var Target1 : Real4;
+  
+  function ComputeTarget0()
+  {
+    var mtx = Real3x3();
+    mtx.M00 = (1.0 / 17.0) - ((8.0 * Math.Sqrt(3.0)) / 17.0);
+    mtx.M01 = ((2.0 * (Math.Sqrt(3.0) + 2.0)) / 17.0);
+    mtx.M02 = ((2.0 * Math.Sqrt(17.0)) / 17.0);
+    mtx.M10 = ((2.0 * (Math.Sqrt(3.0) + 2.0)) / 17.0);
+    mtx.M11 = (16.0 / 17.0) - (Math.Sqrt(3.0) / 34.0);
+    mtx.M12 = (-Math.Sqrt(17.0) / 34.0);
+    mtx.M20 = ((-2.0 * Math.Sqrt(17.0)) / 17.0);
+    mtx.M21 = (Math.Sqrt(17.0) / 34.0);
+    mtx.M22 = (-Math.Sqrt(3.0) / 2.0);
+    this.Target0 = Math.ToQuaternion(mtx).XYZW;
+  }
+  
+  function ComputeTarget1()
+  {
+    var mtx = Real3x3();
+    mtx.M00 = -0.86602540378443864676372317075294;
+    mtx.M01 =  0.35355339059327376220042218105242;
+    mtx.M02 = -0.35355339059327376220042218105242;
+    mtx.M10 = -0.35355339059327376220042218105242;
+    mtx.M11 =  0.06698729810778067661813841462353;
+    mtx.M12 =  0.93301270189221932338186158537647;
+    mtx.M20 =  0.35355339059327376220042218105242;
+    mtx.M21 =  0.93301270189221932338186158537647;
+    mtx.M22 =  0.06698729810778067661813841462353;
+    this.Target1 = Math.ToQuaternion(mtx).XYZW;
+  }
+  
+  [EntryPoint]
+  function Main()
+  {
+    this.ComputeTarget0();
+    this.ComputeTarget1();
+  }
+}

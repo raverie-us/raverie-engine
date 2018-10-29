@@ -1,0 +1,25 @@
+// Vertex:
+//[StageOutput] var ViewPosition : Real3;
+//[StageOutput] var PerspectivePosition : Real4;
+//[StageOutput] var Uv : Real2;
+//[StageOutput] var Time : Real;
+
+// Pixel:
+//[StageInput] var Uv : Real2;
+//[StageInput] var Color : Real4;
+//[StageInput] var Size : Real;
+//[StageInput] var Time : Real;
+
+// Full pass-through
+struct GeometryData
+{
+}
+
+[Geometry(maxVertices : 3)]
+struct Geometry
+{
+  function Main(input : TriangleInput[GeometryData], output : TriangleOutput[GeometryData])
+  {
+    output.Append(input[0], 0);
+  }
+}

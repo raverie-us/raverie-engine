@@ -1,0 +1,2 @@
+  IrErrorTests\Attributes\BadGeometry3.zilchFrag(5): Invalid parameter type 'String' to attribute 'Geometry'. Signature must be 'maxVertices : Integer':
+  Invalid parameter type 'String' to attribute 'Geometry'. Signature must be 'maxVertices : Integer'

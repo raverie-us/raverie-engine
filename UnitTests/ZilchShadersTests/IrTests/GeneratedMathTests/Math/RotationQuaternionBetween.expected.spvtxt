@@ -1,0 +1,238 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 135
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+          %2 = OpExtInstImport "GLSL.std.450"
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_RotationQuaternionBetween "EntryPoint_Main_RotationQuaternionBetween"
+               OpExecutionMode %EntryPoint_Main_RotationQuaternionBetween OriginUpperLeft
+               OpSource Unknown 100
+               OpName %RotationQuaternionBetween "RotationQuaternionBetween"
+               OpMemberName %RotationQuaternionBetween 0 "Dummy"
+               OpName %Quaternion "Quaternion"
+               OpMemberName %Quaternion 0 "Data"
+               OpName %Test_Static_Real3_Real3 "Test_Static_Real3_Real3"
+               OpName %self "self"
+               OpName %start_ "start_"
+               OpName %end_ "end_"
+               OpName %result "result"
+               OpName %RotationQuaternionBetween_0 "RotationQuaternionBetween"
+               OpName %start "start"
+               OpName %end "end"
+               OpName %start_Local "start_Local"
+               OpName %end_Local "end_Local"
+               OpName %axis "axis"
+               OpName %length "length"
+               OpName %dot "dot"
+               OpName %angle "angle"
+               OpName %ifTrue0 "ifTrue0"
+               OpName %ifMerge0 "ifMerge0"
+               OpName %Identity "Identity"
+               OpName %ToQuaternion "ToQuaternion"
+               OpName %axis_0 "axis"
+               OpName %radians "radians"
+               OpName %axis_Local "axis_Local"
+               OpName %radians_Local "radians_Local"
+               OpName %AxisAngle "AxisAngle"
+               OpName %axis_1 "axis"
+               OpName %radians_0 "radians"
+               OpName %axis_Local_0 "axis_Local"
+               OpName %radians_Local_0 "radians_Local"
+               OpName %alpha "alpha"
+               OpName %sinAlpha "sinAlpha"
+               OpName %result_0 "result"
+               OpName %Main "Main"
+               OpName %self_0 "self"
+               OpName %PreConstructor_RotationQuaternionBetween "PreConstructor_RotationQuaternionBetween"
+               OpName %self_1 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_2 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_3 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_4 "self"
+               OpName %EntryPoint_Main_RotationQuaternionBetween "EntryPoint_Main_RotationQuaternionBetween"
+               OpName %self_5 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%RotationQuaternionBetween = OpTypeStruct %int
+%_ptr_Function_RotationQuaternionBetween = OpTypePointer Function %RotationQuaternionBetween
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %9 = OpTypeFunction %void %_ptr_Function_RotationQuaternionBetween
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+    %float_0 = OpConstant %float 0
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+ %Quaternion = OpTypeStruct %v4float
+%_ptr_Function_Quaternion = OpTypePointer Function %Quaternion
+         %18 = OpTypeFunction %Quaternion %v3float %v3float
+      %int_0 = OpConstant %int 0
+       %bool = OpTypeBool
+%_ptr_Function_bool = OpTypePointer Function %bool
+         %21 = OpTypeFunction %Quaternion
+  %float_0_0 = OpConstant %float 0
+    %float_1 = OpConstant %float 1
+         %22 = OpTypeFunction %Quaternion %v3float %float
+  %float_0_5 = OpConstant %float 0.5
+         %23 = OpTypeFunction %void
+%Test_Static_Real3_Real3 = OpFunction %void None %9
+       %self = OpFunctionParameter %_ptr_Function_RotationQuaternionBetween
+         %31 = OpLabel
+     %start_ = OpVariable %_ptr_Function_v3float Function
+       %end_ = OpVariable %_ptr_Function_v3float Function
+     %result = OpVariable %_ptr_Function_Quaternion Function
+         %35 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %start_ %35
+         %36 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %end_ %36
+         %37 = OpLoad %v3float %start_
+         %38 = OpLoad %v3float %end_
+         %39 = OpFunctionCall %Quaternion %RotationQuaternionBetween_0 %37 %38
+               OpStore %result %39
+               OpReturn
+               OpFunctionEnd
+%RotationQuaternionBetween_0 = OpFunction %Quaternion None %18
+      %start = OpFunctionParameter %v3float
+        %end = OpFunctionParameter %v3float
+         %43 = OpLabel
+%start_Local = OpVariable %_ptr_Function_v3float Function
+  %end_Local = OpVariable %_ptr_Function_v3float Function
+       %axis = OpVariable %_ptr_Function_v3float Function
+     %length = OpVariable %_ptr_Function_float Function
+        %dot = OpVariable %_ptr_Function_float Function
+      %angle = OpVariable %_ptr_Function_float Function
+               OpStore %start_Local %start
+               OpStore %end_Local %end
+         %50 = OpLoad %v3float %start_Local
+         %51 = OpExtInst %v3float %2 Normalize %50
+               OpStore %start_Local %51
+         %52 = OpLoad %v3float %end_Local
+         %53 = OpExtInst %v3float %2 Normalize %52
+               OpStore %end_Local %53
+         %54 = OpLoad %v3float %start_Local
+         %55 = OpLoad %v3float %end_Local
+         %56 = OpExtInst %v3float %2 Cross %54 %55
+               OpStore %axis %56
+         %57 = OpLoad %v3float %axis
+         %58 = OpExtInst %float %2 Length %57
+               OpStore %length %58
+         %59 = OpConvertSToF %float %int_0
+         %60 = OpLoad %float %length
+         %61 = OpFOrdEqual %bool %60 %59
+               OpSelectionMerge %ifMerge0 None
+               OpBranchConditional %61 %ifTrue0 %ifMerge0
+    %ifTrue0 = OpLabel
+         %63 = OpFunctionCall %Quaternion %Identity
+               OpReturnValue %63
+   %ifMerge0 = OpLabel
+         %65 = OpLoad %v3float %axis
+         %66 = OpExtInst %v3float %2 Normalize %65
+               OpStore %axis %66
+         %67 = OpLoad %v3float %start_Local
+         %68 = OpLoad %v3float %end_Local
+         %69 = OpDot %float %67 %68
+               OpStore %dot %69
+         %70 = OpLoad %float %dot
+         %71 = OpExtInst %float %2 Acos %70
+               OpStore %angle %71
+         %72 = OpLoad %v3float %axis
+         %73 = OpLoad %float %angle
+         %74 = OpFunctionCall %Quaternion %ToQuaternion %72 %73
+               OpReturnValue %74
+               OpFunctionEnd
+   %Identity = OpFunction %Quaternion None %21
+         %76 = OpLabel
+         %77 = OpCompositeConstruct %v4float %float_0_0 %float_0_0 %float_0_0 %float_1
+         %78 = OpCompositeConstruct %Quaternion %77
+               OpReturnValue %78
+               OpFunctionEnd
+%ToQuaternion = OpFunction %Quaternion None %22
+     %axis_0 = OpFunctionParameter %v3float
+    %radians = OpFunctionParameter %float
+         %82 = OpLabel
+ %axis_Local = OpVariable %_ptr_Function_v3float Function
+%radians_Local = OpVariable %_ptr_Function_float Function
+               OpStore %axis_Local %axis_0
+               OpStore %radians_Local %radians
+         %85 = OpLoad %v3float %axis_Local
+         %86 = OpLoad %float %radians_Local
+         %87 = OpFunctionCall %Quaternion %AxisAngle %85 %86
+               OpReturnValue %87
+               OpFunctionEnd
+  %AxisAngle = OpFunction %Quaternion None %22
+     %axis_1 = OpFunctionParameter %v3float
+  %radians_0 = OpFunctionParameter %float
+         %91 = OpLabel
+%axis_Local_0 = OpVariable %_ptr_Function_v3float Function
+%radians_Local_0 = OpVariable %_ptr_Function_float Function
+      %alpha = OpVariable %_ptr_Function_float Function
+   %sinAlpha = OpVariable %_ptr_Function_float Function
+   %result_0 = OpVariable %_ptr_Function_Quaternion Function
+               OpStore %axis_Local_0 %axis_1
+               OpStore %radians_Local_0 %radians_0
+         %97 = OpLoad %float %radians_Local_0
+         %98 = OpFMul %float %97 %float_0_5
+               OpStore %alpha %98
+         %99 = OpLoad %float %alpha
+        %100 = OpExtInst %float %2 Sin %99
+               OpStore %sinAlpha %100
+        %101 = OpLoad %v3float %axis_Local_0
+        %102 = OpLoad %float %sinAlpha
+        %103 = OpVectorTimesScalar %v3float %101 %102
+        %104 = OpLoad %float %alpha
+        %105 = OpExtInst %float %2 Cos %104
+        %106 = OpCompositeConstruct %v4float %103 %105
+        %107 = OpCompositeConstruct %Quaternion %106
+               OpStore %result_0 %107
+        %108 = OpLoad %Quaternion %result_0
+               OpReturnValue %108
+               OpFunctionEnd
+       %Main = OpFunction %void None %9
+     %self_0 = OpFunctionParameter %_ptr_Function_RotationQuaternionBetween
+        %111 = OpLabel
+        %112 = OpFunctionCall %void %Test_Static_Real3_Real3 %self_0
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_RotationQuaternionBetween = OpFunction %void None %9
+     %self_1 = OpFunctionParameter %_ptr_Function_RotationQuaternionBetween
+        %115 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %9
+     %self_2 = OpFunctionParameter %_ptr_Function_RotationQuaternionBetween
+        %118 = OpLabel
+        %119 = OpFunctionCall %void %PreConstructor_RotationQuaternionBetween %self_2
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %9
+     %self_3 = OpFunctionParameter %_ptr_Function_RotationQuaternionBetween
+        %122 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %9
+     %self_4 = OpFunctionParameter %_ptr_Function_RotationQuaternionBetween
+        %125 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_RotationQuaternionBetween = OpFunction %void None %23
+        %127 = OpLabel
+     %self_5 = OpVariable %_ptr_Function_RotationQuaternionBetween Function
+        %129 = OpFunctionCall %void %InitializeGlobals
+        %130 = OpFunctionCall %void %DefaultConstructor %self_5
+        %131 = OpFunctionCall %void %CopyInputs_Main %self_5
+        %132 = OpFunctionCall %void %Main %self_5
+        %133 = OpFunctionCall %void %CopyOutputs_Main %self_5
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %23
+        %134 = OpLabel
+               OpReturn
+               OpFunctionEnd

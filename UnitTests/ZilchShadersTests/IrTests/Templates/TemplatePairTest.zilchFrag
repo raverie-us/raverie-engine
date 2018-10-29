@@ -1,0 +1,25 @@
+struct TPair[TypeA, TypeB]
+{
+  var First : TypeA;
+  var Second : TypeB;
+  
+  function Set(first : TypeA, second : TypeB)
+  {
+    this.First = first;
+    this.Second = second;
+  }
+}
+
+[Pixel][UnitTest]
+struct TemplatePairTest
+{
+  [EntryPoint]
+  function Main()
+  {
+    var pair1 = TPair[Integer, Real]();
+    pair1.Set(2, 3.0);
+    
+    var nestedPair = TPair[Real2, TPair[Integer, Real]]();
+    nestedPair.Set(Real2(), pair1);
+  }
+}

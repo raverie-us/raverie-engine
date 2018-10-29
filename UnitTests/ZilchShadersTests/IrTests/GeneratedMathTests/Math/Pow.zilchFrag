@@ -1,0 +1,112 @@
+[Pixel][UnitTest]
+struct Pow
+{
+  function Test_Static_Real_Real()
+  {
+    var base_ = Real();
+    var exponent_ = Real();
+    var result = Math.Pow(base_, exponent_);
+  }
+
+  function Test_Static_Real2_Real2()
+  {
+    var base_ = Real2();
+    var exponent_ = Real2();
+    var result = Math.Pow(base_, exponent_);
+  }
+
+  function Test_Static_Real2x2_Real2x2()
+  {
+    var base_ = Real2x2();
+    var exponent_ = Real2x2();
+    var result = Math.Pow(base_, exponent_);
+  }
+
+  function Test_Static_Real2x3_Real2x3()
+  {
+    var base_ = Real2x3();
+    var exponent_ = Real2x3();
+    var result = Math.Pow(base_, exponent_);
+  }
+
+  function Test_Static_Real2x4_Real2x4()
+  {
+    var base_ = Real2x4();
+    var exponent_ = Real2x4();
+    var result = Math.Pow(base_, exponent_);
+  }
+
+  function Test_Static_Real3_Real3()
+  {
+    var base_ = Real3();
+    var exponent_ = Real3();
+    var result = Math.Pow(base_, exponent_);
+  }
+
+  function Test_Static_Real3x2_Real3x2()
+  {
+    var base_ = Real3x2();
+    var exponent_ = Real3x2();
+    var result = Math.Pow(base_, exponent_);
+  }
+
+  function Test_Static_Real3x3_Real3x3()
+  {
+    var base_ = Real3x3();
+    var exponent_ = Real3x3();
+    var result = Math.Pow(base_, exponent_);
+  }
+
+  function Test_Static_Real3x4_Real3x4()
+  {
+    var base_ = Real3x4();
+    var exponent_ = Real3x4();
+    var result = Math.Pow(base_, exponent_);
+  }
+
+  function Test_Static_Real4_Real4()
+  {
+    var base_ = Real4();
+    var exponent_ = Real4();
+    var result = Math.Pow(base_, exponent_);
+  }
+
+  function Test_Static_Real4x2_Real4x2()
+  {
+    var base_ = Real4x2();
+    var exponent_ = Real4x2();
+    var result = Math.Pow(base_, exponent_);
+  }
+
+  function Test_Static_Real4x3_Real4x3()
+  {
+    var base_ = Real4x3();
+    var exponent_ = Real4x3();
+    var result = Math.Pow(base_, exponent_);
+  }
+
+  function Test_Static_Real4x4_Real4x4()
+  {
+    var base_ = Real4x4();
+    var exponent_ = Real4x4();
+    var result = Math.Pow(base_, exponent_);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Real_Real();
+    this.Test_Static_Real2_Real2();
+    this.Test_Static_Real2x2_Real2x2();
+    this.Test_Static_Real2x3_Real2x3();
+    this.Test_Static_Real2x4_Real2x4();
+    this.Test_Static_Real3_Real3();
+    this.Test_Static_Real3x2_Real3x2();
+    this.Test_Static_Real3x3_Real3x3();
+    this.Test_Static_Real3x4_Real3x4();
+    this.Test_Static_Real4_Real4();
+    this.Test_Static_Real4x2_Real4x2();
+    this.Test_Static_Real4x3_Real4x3();
+    this.Test_Static_Real4x4_Real4x4();
+  }
+}

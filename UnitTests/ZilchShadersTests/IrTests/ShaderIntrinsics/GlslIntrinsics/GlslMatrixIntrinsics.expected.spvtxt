@@ -1,0 +1,153 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 87
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+          %2 = OpExtInstImport "GLSL.std.450"
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_GlslMatrixIntrinsics "EntryPoint_Main_GlslMatrixIntrinsics"
+               OpExecutionMode %EntryPoint_Main_GlslMatrixIntrinsics OriginUpperLeft
+               OpSource Unknown 100
+               OpName %GlslMatrixIntrinsics "GlslMatrixIntrinsics"
+               OpMemberName %GlslMatrixIntrinsics 0 "Dummy"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %TestMatrix "TestMatrix"
+               OpName %param0 "param0"
+               OpName %result0 "result0"
+               OpName %result1 "result1"
+               OpName %TestMatrix_0 "TestMatrix"
+               OpName %param0_0 "param0"
+               OpName %result0_0 "result0"
+               OpName %result1_0 "result1"
+               OpName %TestMatrix_1 "TestMatrix"
+               OpName %param0_1 "param0"
+               OpName %result0_1 "result0"
+               OpName %result1_1 "result1"
+               OpName %PreConstructor_GlslMatrixIntrinsics "PreConstructor_GlslMatrixIntrinsics"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_GlslMatrixIntrinsics "EntryPoint_Main_GlslMatrixIntrinsics"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%GlslMatrixIntrinsics = OpTypeStruct %int
+%_ptr_Function_GlslMatrixIntrinsics = OpTypePointer Function %GlslMatrixIntrinsics
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %9 = OpTypeFunction %void %_ptr_Function_GlslMatrixIntrinsics
+         %10 = OpTypeFunction %void
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+    %float_0 = OpConstant %float 0
+%mat2v2float = OpTypeMatrix %v2float 2
+%_ptr_Function_mat2v2float = OpTypePointer Function %mat2v2float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+%mat3v3float = OpTypeMatrix %v3float 3
+%_ptr_Function_mat3v3float = OpTypePointer Function %mat3v3float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+%mat4v4float = OpTypeMatrix %v4float 4
+%_ptr_Function_mat4v4float = OpTypePointer Function %mat4v4float
+       %Main = OpFunction %void None %9
+       %self = OpFunctionParameter %_ptr_Function_GlslMatrixIntrinsics
+         %28 = OpLabel
+         %29 = OpFunctionCall %void %TestMatrix
+         %30 = OpFunctionCall %void %TestMatrix_0
+         %31 = OpFunctionCall %void %TestMatrix_1
+               OpReturn
+               OpFunctionEnd
+ %TestMatrix = OpFunction %void None %10
+         %33 = OpLabel
+     %param0 = OpVariable %_ptr_Function_mat2v2float Function
+    %result0 = OpVariable %_ptr_Function_float Function
+    %result1 = OpVariable %_ptr_Function_mat2v2float Function
+         %37 = OpCompositeConstruct %v2float %float_0 %float_0
+         %38 = OpCompositeConstruct %mat2v2float %37 %37
+               OpStore %param0 %38
+         %39 = OpLoad %mat2v2float %param0
+         %40 = OpExtInst %float %2 Determinant %39
+               OpStore %result0 %40
+         %41 = OpLoad %mat2v2float %param0
+         %42 = OpExtInst %mat2v2float %2 MatrixInverse %41
+               OpStore %result1 %42
+               OpReturn
+               OpFunctionEnd
+%TestMatrix_0 = OpFunction %void None %10
+         %44 = OpLabel
+   %param0_0 = OpVariable %_ptr_Function_mat3v3float Function
+  %result0_0 = OpVariable %_ptr_Function_float Function
+  %result1_0 = OpVariable %_ptr_Function_mat3v3float Function
+         %48 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+         %49 = OpCompositeConstruct %mat3v3float %48 %48 %48
+               OpStore %param0_0 %49
+         %50 = OpLoad %mat3v3float %param0_0
+         %51 = OpExtInst %float %2 Determinant %50
+               OpStore %result0_0 %51
+         %52 = OpLoad %mat3v3float %param0_0
+         %53 = OpExtInst %mat3v3float %2 MatrixInverse %52
+               OpStore %result1_0 %53
+               OpReturn
+               OpFunctionEnd
+%TestMatrix_1 = OpFunction %void None %10
+         %55 = OpLabel
+   %param0_1 = OpVariable %_ptr_Function_mat4v4float Function
+  %result0_1 = OpVariable %_ptr_Function_float Function
+  %result1_1 = OpVariable %_ptr_Function_mat4v4float Function
+         %59 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+         %60 = OpCompositeConstruct %mat4v4float %59 %59 %59 %59
+               OpStore %param0_1 %60
+         %61 = OpLoad %mat4v4float %param0_1
+         %62 = OpExtInst %float %2 Determinant %61
+               OpStore %result0_1 %62
+         %63 = OpLoad %mat4v4float %param0_1
+         %64 = OpExtInst %mat4v4float %2 MatrixInverse %63
+               OpStore %result1_1 %64
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_GlslMatrixIntrinsics = OpFunction %void None %9
+     %self_0 = OpFunctionParameter %_ptr_Function_GlslMatrixIntrinsics
+         %67 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %9
+     %self_1 = OpFunctionParameter %_ptr_Function_GlslMatrixIntrinsics
+         %70 = OpLabel
+         %71 = OpFunctionCall %void %PreConstructor_GlslMatrixIntrinsics %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %9
+     %self_2 = OpFunctionParameter %_ptr_Function_GlslMatrixIntrinsics
+         %74 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %9
+     %self_3 = OpFunctionParameter %_ptr_Function_GlslMatrixIntrinsics
+         %77 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_GlslMatrixIntrinsics = OpFunction %void None %10
+         %79 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_GlslMatrixIntrinsics Function
+         %81 = OpFunctionCall %void %InitializeGlobals
+         %82 = OpFunctionCall %void %DefaultConstructor %self_4
+         %83 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %84 = OpFunctionCall %void %Main %self_4
+         %85 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %10
+         %86 = OpLabel
+               OpReturn
+               OpFunctionEnd

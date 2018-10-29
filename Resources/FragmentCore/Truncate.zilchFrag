@@ -1,0 +1,50 @@
+struct MathTruncatePlacesImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Truncate(value : Real, places : Integer) : Real
+  {
+    return Math.Truncate(value, places, 10);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Truncate(value : Real2, places : Integer) : Real2
+  {
+    return Math.Truncate(value, places, 10);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Truncate(value : Real3, places : Integer) : Real3
+  {
+    return Math.Truncate(value, places, 10);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Truncate(value : Real4, places : Integer) : Real4
+  {
+    return Math.Truncate(value, places, 10);
+  }
+}
+struct MathTruncatePlacesBaseImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Truncate(value : Real, places : Integer, numericalBase : Integer) : Real
+  {
+    var scale = Math.Pow(numericalBase, places);
+    return Math.Truncate(value / scale) * scale;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Truncate(value : Real2, places : Integer, numericalBase : Integer) : Real2
+  {
+    var scale = Math.Pow(numericalBase, places);
+    return Math.Truncate(value / scale) * scale;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Truncate(value : Real3, places : Integer, numericalBase : Integer) : Real3
+  {
+    var scale = Math.Pow(numericalBase, places);
+    return Math.Truncate(value / scale) * scale;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Truncate(value : Real4, places : Integer, numericalBase : Integer) : Real4
+  {
+    var scale = Math.Pow(numericalBase, places);
+    return Math.Truncate(value / scale) * scale;
+  }
+}

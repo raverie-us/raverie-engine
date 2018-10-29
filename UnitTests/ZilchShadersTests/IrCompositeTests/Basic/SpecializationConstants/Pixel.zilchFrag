@@ -1,0 +1,25 @@
+[Pixel]
+struct Pixel
+{
+  [SpecConstantInput] var Position : Real4;
+  [SpecConstantInput] var Value : Real;
+  
+  function Main()
+  {
+    var value = this.Value;
+    var pos = this.Position;
+  }
+}
+
+[Pixel]
+struct PixelOverride
+{
+  [SpecConstantInput("Position")] var PixelPosition : Real4;
+  [SpecConstantInput("Value")] var Aux : Real;
+  
+  function Main()
+  {
+    var value = this.PixelPosition;
+    var pos = this.Aux;
+  }
+}

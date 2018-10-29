@@ -1,0 +1,24 @@
+struct Helper[Type]
+{
+  [Static]
+  function Test()
+  {
+    var lhs = Type();
+    var rhs = Type();
+    
+    var result = lhs & rhs;
+  }
+}
+
+[Pixel][UnitTest]
+struct BitwiseAnd
+{
+  [EntryPoint]
+  function Main()
+  {
+    Helper[Integer].Test();
+    Helper[Integer2].Test();
+    Helper[Integer3].Test();
+    Helper[Integer4].Test();
+  }
+}

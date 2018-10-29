@@ -1,0 +1,124 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 69
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_ConvertSignedIntToReal "EntryPoint_Main_ConvertSignedIntToReal"
+               OpExecutionMode %EntryPoint_Main_ConvertSignedIntToReal OriginUpperLeft
+               OpSource Unknown 100
+               OpName %ConvertSignedIntToReal "ConvertSignedIntToReal"
+               OpMemberName %ConvertSignedIntToReal 0 "Dummy"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %i1 "i1"
+               OpName %r1 "r1"
+               OpName %i2 "i2"
+               OpName %r2 "r2"
+               OpName %i3 "i3"
+               OpName %r3 "r3"
+               OpName %i4 "i4"
+               OpName %r4 "r4"
+               OpName %PreConstructor_ConvertSignedIntToReal "PreConstructor_ConvertSignedIntToReal"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_ConvertSignedIntToReal "EntryPoint_Main_ConvertSignedIntToReal"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%ConvertSignedIntToReal = OpTypeStruct %int
+%_ptr_Function_ConvertSignedIntToReal = OpTypePointer Function %ConvertSignedIntToReal
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_ConvertSignedIntToReal
+      %int_1 = OpConstant %int 1
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+      %v2int = OpTypeVector %int 2
+%_ptr_Function_v2int = OpTypePointer Function %v2int
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+      %v3int = OpTypeVector %int 3
+%_ptr_Function_v3int = OpTypePointer Function %v3int
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+      %v4int = OpTypeVector %int 4
+%_ptr_Function_v4int = OpTypePointer Function %v4int
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+         %23 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_ConvertSignedIntToReal
+         %27 = OpLabel
+         %i1 = OpVariable %_ptr_Function_int Function
+         %r1 = OpVariable %_ptr_Function_float Function
+         %i2 = OpVariable %_ptr_Function_v2int Function
+         %r2 = OpVariable %_ptr_Function_v2float Function
+         %i3 = OpVariable %_ptr_Function_v3int Function
+         %r3 = OpVariable %_ptr_Function_v3float Function
+         %i4 = OpVariable %_ptr_Function_v4int Function
+         %r4 = OpVariable %_ptr_Function_v4float Function
+               OpStore %i1 %int_1
+         %36 = OpLoad %int %i1
+         %37 = OpConvertSToF %float %36
+               OpStore %r1 %37
+         %38 = OpCompositeConstruct %v2int %int_1 %int_1
+               OpStore %i2 %38
+         %39 = OpLoad %v2int %i2
+         %40 = OpConvertSToF %v2float %39
+               OpStore %r2 %40
+         %41 = OpCompositeConstruct %v3int %int_1 %int_1 %int_1
+               OpStore %i3 %41
+         %42 = OpLoad %v3int %i3
+         %43 = OpConvertSToF %v3float %42
+               OpStore %r3 %43
+         %44 = OpCompositeConstruct %v4int %int_1 %int_1 %int_1 %int_1
+               OpStore %i4 %44
+         %45 = OpLoad %v4int %i4
+         %46 = OpConvertSToF %v4float %45
+               OpStore %r4 %46
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_ConvertSignedIntToReal = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_ConvertSignedIntToReal
+         %49 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_ConvertSignedIntToReal
+         %52 = OpLabel
+         %53 = OpFunctionCall %void %PreConstructor_ConvertSignedIntToReal %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_ConvertSignedIntToReal
+         %56 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_ConvertSignedIntToReal
+         %59 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_ConvertSignedIntToReal = OpFunction %void None %23
+         %61 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_ConvertSignedIntToReal Function
+         %63 = OpFunctionCall %void %InitializeGlobals
+         %64 = OpFunctionCall %void %DefaultConstructor %self_4
+         %65 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %66 = OpFunctionCall %void %Main %self_4
+         %67 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %23
+         %68 = OpLabel
+               OpReturn
+               OpFunctionEnd

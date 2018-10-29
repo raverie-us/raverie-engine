@@ -1,0 +1,18 @@
+enum MyEnum
+{
+  Value1,
+  Value2,
+  Value3
+}
+
+[UnitTest][Pixel]
+struct EnumUnaryOperators
+{
+  [EntryPoint]
+  function Main()
+  {
+    var result1 = -MyEnum.Value2;
+    --result1;
+    ++result1;
+  }
+}

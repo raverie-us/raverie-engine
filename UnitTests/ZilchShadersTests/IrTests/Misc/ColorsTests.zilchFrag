@@ -1,0 +1,11 @@
+[Pixel][UnitTest]
+struct ColorsTests
+{
+  [EntryPoint]
+  function Main()
+  {
+    var color = Colors.Red;
+    color = Colors.Aqua;
+    color = Colors.Burlywood;
+  }
+}

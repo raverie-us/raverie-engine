@@ -1,0 +1,48 @@
+[Pixel][UnitTest]
+struct IfsWithReturn
+{
+  var Distance : Real3;
+  
+  function Test0() : Integer
+  {
+    var lhs = true;
+    var rhs = false;
+    
+    if(lhs && rhs)
+      return 0;
+    return 3;
+  }
+  
+  function Test1() : Integer
+  {
+    var lhs = true;
+    var rhs = false;
+    
+    if(lhs && rhs)
+      return 0;
+    else if(lhs || rhs)
+      return 1;
+    return 3;
+  }
+  
+  function Test2() : Integer
+  {
+    var lhs = true;
+    var rhs = false;
+    
+    if(lhs && rhs)
+      return 0;
+    else if(lhs || rhs)
+      return 1;
+    else
+      return 2;
+  }
+  
+  [EntryPoint]
+  function Main()
+  {
+    var index0 = this.Test0();
+    var index1 = this.Test1();
+    var index2 = this.Test2();
+  }
+}

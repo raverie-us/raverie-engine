@@ -1,0 +1,26 @@
+[Pixel][UnitTest]
+struct PixelTest_Pixel
+{
+
+  [EntryPoint]
+  function Main()
+  {
+    var pixel1 = Pixel1();
+    pixel1.Main();
+
+    var pixel2 = Pixel2();
+    pixel2.P2Value1 = pixel1.P1Value1;
+    pixel2.P2Value2 = pixel1.P1Value2;
+    pixel2.P2Value3 = pixel1.P1Value34;
+    pixel2.P2Value8 = pixel1.P1Value8;
+    pixel2.Main();
+
+    var pixel3 = Pixel3();
+    pixel3.P3Value1 = pixel2.P2Value1;
+    pixel3.P3Value2 = pixel1.P1Value2;
+    pixel3.P3Value4 = pixel1.P1Value34;
+    pixel3.P3Value8 = pixel2.P2Value8;
+    pixel3.Main();
+
+  }
+}

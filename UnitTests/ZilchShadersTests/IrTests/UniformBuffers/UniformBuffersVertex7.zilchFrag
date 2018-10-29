@@ -1,0 +1,15 @@
+// Test matrices
+[Vertex][UnitTest]
+struct UniformBuffersVertex7
+{
+  // Buffer2 (Misc)
+  [PropertyInput] var R4x4 : Real4x4;
+  [PropertyInput] var R3x3 : Real3x3;
+  [PropertyInput] var R2x2 : Real2x2;
+  [PropertyInput] var End : Real;
+  
+  [EntryPoint]
+  function Main()
+  {
+  }
+}

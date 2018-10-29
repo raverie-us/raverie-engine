@@ -1,0 +1,16 @@
+[Pixel][UnitTest]
+struct Vertex_Pixel_Pixel
+{
+  [StageInput(name : "Value1")] var Stage_Value1_Real : Real;
+  [StageInput(name : "Value5")] var Stage_Value5_Real : Real;
+
+  [EntryPoint]
+  function Main()
+  {
+    var pixel = Pixel();
+    pixel.Value1 = this.Stage_Value1_Real;
+    pixel.Value5 = this.Stage_Value5_Real;
+    pixel.Main();
+
+  }
+}

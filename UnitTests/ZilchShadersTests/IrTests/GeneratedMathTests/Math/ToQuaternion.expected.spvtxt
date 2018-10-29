@@ -1,0 +1,664 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 438
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+          %2 = OpExtInstImport "GLSL.std.450"
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_ToQuaternion "EntryPoint_Main_ToQuaternion"
+               OpExecutionMode %EntryPoint_Main_ToQuaternion OriginUpperLeft
+               OpSource Unknown 100
+               OpName %ToQuaternion "ToQuaternion"
+               OpMemberName %ToQuaternion 0 "Dummy"
+               OpName %Quaternion "Quaternion"
+               OpMemberName %Quaternion 0 "Data"
+               OpName %Test_Static_Real3_Real "Test_Static_Real3_Real"
+               OpName %self "self"
+               OpName %axis_ "axis_"
+               OpName %radians_ "radians_"
+               OpName %result "result"
+               OpName %ToQuaternion_0 "ToQuaternion"
+               OpName %axis "axis"
+               OpName %radians "radians"
+               OpName %axis_Local "axis_Local"
+               OpName %radians_Local "radians_Local"
+               OpName %AxisAngle "AxisAngle"
+               OpName %axis_0 "axis"
+               OpName %radians_0 "radians"
+               OpName %axis_Local_0 "axis_Local"
+               OpName %radians_Local_0 "radians_Local"
+               OpName %alpha "alpha"
+               OpName %sinAlpha "sinAlpha"
+               OpName %result_0 "result"
+               OpName %Test_Static_Real3_Real3 "Test_Static_Real3_Real3"
+               OpName %self_0 "self"
+               OpName %facing_ "facing_"
+               OpName %up_ "up_"
+               OpName %result_1 "result"
+               OpName %ToQuaternion_1 "ToQuaternion"
+               OpName %facing "facing"
+               OpName %up "up"
+               OpName %facing_Local "facing_Local"
+               OpName %up_Local "up_Local"
+               OpName %r3x3 "r3x3"
+               OpName %ToReal3x3 "ToReal3x3"
+               OpName %facing_0 "facing"
+               OpName %up_0 "up"
+               OpName %facing_Local_0 "facing_Local"
+               OpName %up_Local_0 "up_Local"
+               OpName %right "right"
+               OpName %ToReal3x3_0 "ToReal3x3"
+               OpName %facing_1 "facing"
+               OpName %up_1 "up"
+               OpName %right_0 "right"
+               OpName %facing_Local_1 "facing_Local"
+               OpName %up_Local_1 "up_Local"
+               OpName %right_Local "right_Local"
+               OpName %nFacing "nFacing"
+               OpName %ToQuaternion_2 "ToQuaternion"
+               OpName %matrix "matrix"
+               OpName %matrix_Local "matrix_Local"
+               OpName %r4Result "r4Result"
+               OpName %t "t"
+               OpName %s "s"
+               OpName %tempAnd "tempAnd"
+               OpName %t_0 "t"
+               OpName %s_0 "s"
+               OpName %t_1 "t"
+               OpName %s_1 "s"
+               OpName %t_2 "t"
+               OpName %s_2 "s"
+               OpName %ifTrue0 "ifTrue0"
+               OpName %ifFalse0 "ifFalse0"
+               OpName %ifTrue "ifTrue"
+               OpName %ifFalse "ifFalse"
+               OpName %mergePoint "mergePoint"
+               OpName %ifTrue1 "ifTrue1"
+               OpName %ifFalse1 "ifFalse1"
+               OpName %ifTrue2 "ifTrue2"
+               OpName %ifFalse2 "ifFalse2"
+               OpName %ifMerge2 "ifMerge2"
+               OpName %ifMerge1 "ifMerge1"
+               OpName %ifMerge0 "ifMerge0"
+               OpName %Test_Static_Real3_Real3_Real3 "Test_Static_Real3_Real3_Real3"
+               OpName %self_1 "self"
+               OpName %facing__0 "facing_"
+               OpName %up__0 "up_"
+               OpName %right_ "right_"
+               OpName %result_2 "result"
+               OpName %ToQuaternion_3 "ToQuaternion"
+               OpName %facing_2 "facing"
+               OpName %up_2 "up"
+               OpName %right_1 "right"
+               OpName %facing_Local_2 "facing_Local"
+               OpName %up_Local_2 "up_Local"
+               OpName %right_Local_0 "right_Local"
+               OpName %r3x3_0 "r3x3"
+               OpName %Test_Static_Real3x3 "Test_Static_Real3x3"
+               OpName %self_2 "self"
+               OpName %rotationMatrix_ "rotationMatrix_"
+               OpName %result_3 "result"
+               OpName %Main "Main"
+               OpName %self_3 "self"
+               OpName %PreConstructor_ToQuaternion "PreConstructor_ToQuaternion"
+               OpName %self_4 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_5 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_6 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_7 "self"
+               OpName %EntryPoint_Main_ToQuaternion "EntryPoint_Main_ToQuaternion"
+               OpName %self_8 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%ToQuaternion = OpTypeStruct %int
+%_ptr_Function_ToQuaternion = OpTypePointer Function %ToQuaternion
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %9 = OpTypeFunction %void %_ptr_Function_ToQuaternion
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+    %float_0 = OpConstant %float 0
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+ %Quaternion = OpTypeStruct %v4float
+%_ptr_Function_Quaternion = OpTypePointer Function %Quaternion
+         %18 = OpTypeFunction %Quaternion %v3float %float
+  %float_0_5 = OpConstant %float 0.5
+         %19 = OpTypeFunction %Quaternion %v3float %v3float
+%mat3v3float = OpTypeMatrix %v3float 3
+%_ptr_Function_mat3v3float = OpTypePointer Function %mat3v3float
+         %22 = OpTypeFunction %mat3v3float %v3float %v3float
+         %23 = OpTypeFunction %mat3v3float %v3float %v3float %v3float
+      %int_0 = OpConstant %int 0
+      %int_1 = OpConstant %int 1
+      %int_2 = OpConstant %int 2
+         %24 = OpTypeFunction %Quaternion %mat3v3float
+  %float_0_0 = OpConstant %float 0
+       %bool = OpTypeBool
+%_ptr_Function_bool = OpTypePointer Function %bool
+    %float_1 = OpConstant %float 1
+      %int_3 = OpConstant %int 3
+         %27 = OpTypeFunction %Quaternion %v3float %v3float %v3float
+         %28 = OpTypeFunction %void
+%Test_Static_Real3_Real = OpFunction %void None %9
+       %self = OpFunctionParameter %_ptr_Function_ToQuaternion
+         %39 = OpLabel
+      %axis_ = OpVariable %_ptr_Function_v3float Function
+   %radians_ = OpVariable %_ptr_Function_float Function
+     %result = OpVariable %_ptr_Function_Quaternion Function
+         %43 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %axis_ %43
+               OpStore %radians_ %float_0
+         %44 = OpLoad %v3float %axis_
+         %45 = OpLoad %float %radians_
+         %46 = OpFunctionCall %Quaternion %ToQuaternion_0 %44 %45
+               OpStore %result %46
+               OpReturn
+               OpFunctionEnd
+%ToQuaternion_0 = OpFunction %Quaternion None %18
+       %axis = OpFunctionParameter %v3float
+    %radians = OpFunctionParameter %float
+         %50 = OpLabel
+ %axis_Local = OpVariable %_ptr_Function_v3float Function
+%radians_Local = OpVariable %_ptr_Function_float Function
+               OpStore %axis_Local %axis
+               OpStore %radians_Local %radians
+         %53 = OpLoad %v3float %axis_Local
+         %54 = OpLoad %float %radians_Local
+         %55 = OpFunctionCall %Quaternion %AxisAngle %53 %54
+               OpReturnValue %55
+               OpFunctionEnd
+  %AxisAngle = OpFunction %Quaternion None %18
+     %axis_0 = OpFunctionParameter %v3float
+  %radians_0 = OpFunctionParameter %float
+         %59 = OpLabel
+%axis_Local_0 = OpVariable %_ptr_Function_v3float Function
+%radians_Local_0 = OpVariable %_ptr_Function_float Function
+      %alpha = OpVariable %_ptr_Function_float Function
+   %sinAlpha = OpVariable %_ptr_Function_float Function
+   %result_0 = OpVariable %_ptr_Function_Quaternion Function
+               OpStore %axis_Local_0 %axis_0
+               OpStore %radians_Local_0 %radians_0
+         %65 = OpLoad %float %radians_Local_0
+         %66 = OpFMul %float %65 %float_0_5
+               OpStore %alpha %66
+         %67 = OpLoad %float %alpha
+         %68 = OpExtInst %float %2 Sin %67
+               OpStore %sinAlpha %68
+         %69 = OpLoad %v3float %axis_Local_0
+         %70 = OpLoad %float %sinAlpha
+         %71 = OpVectorTimesScalar %v3float %69 %70
+         %72 = OpLoad %float %alpha
+         %73 = OpExtInst %float %2 Cos %72
+         %74 = OpCompositeConstruct %v4float %71 %73
+         %75 = OpCompositeConstruct %Quaternion %74
+               OpStore %result_0 %75
+         %76 = OpLoad %Quaternion %result_0
+               OpReturnValue %76
+               OpFunctionEnd
+%Test_Static_Real3_Real3 = OpFunction %void None %9
+     %self_0 = OpFunctionParameter %_ptr_Function_ToQuaternion
+         %79 = OpLabel
+    %facing_ = OpVariable %_ptr_Function_v3float Function
+        %up_ = OpVariable %_ptr_Function_v3float Function
+   %result_1 = OpVariable %_ptr_Function_Quaternion Function
+         %83 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %facing_ %83
+         %84 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %up_ %84
+         %85 = OpLoad %v3float %facing_
+         %86 = OpLoad %v3float %up_
+         %87 = OpFunctionCall %Quaternion %ToQuaternion_1 %85 %86
+               OpStore %result_1 %87
+               OpReturn
+               OpFunctionEnd
+%ToQuaternion_1 = OpFunction %Quaternion None %19
+     %facing = OpFunctionParameter %v3float
+         %up = OpFunctionParameter %v3float
+         %91 = OpLabel
+%facing_Local = OpVariable %_ptr_Function_v3float Function
+   %up_Local = OpVariable %_ptr_Function_v3float Function
+       %r3x3 = OpVariable %_ptr_Function_mat3v3float Function
+               OpStore %facing_Local %facing
+               OpStore %up_Local %up
+         %95 = OpLoad %v3float %facing_Local
+         %96 = OpLoad %v3float %up_Local
+         %97 = OpFunctionCall %mat3v3float %ToReal3x3 %95 %96
+               OpStore %r3x3 %97
+         %98 = OpLoad %mat3v3float %r3x3
+         %99 = OpFunctionCall %Quaternion %ToQuaternion_2 %98
+               OpReturnValue %99
+               OpFunctionEnd
+  %ToReal3x3 = OpFunction %mat3v3float None %22
+   %facing_0 = OpFunctionParameter %v3float
+       %up_0 = OpFunctionParameter %v3float
+        %103 = OpLabel
+%facing_Local_0 = OpVariable %_ptr_Function_v3float Function
+ %up_Local_0 = OpVariable %_ptr_Function_v3float Function
+      %right = OpVariable %_ptr_Function_v3float Function
+               OpStore %facing_Local_0 %facing_0
+               OpStore %up_Local_0 %up_0
+        %107 = OpLoad %v3float %facing_Local_0
+        %108 = OpLoad %v3float %up_Local_0
+        %109 = OpExtInst %v3float %2 Cross %107 %108
+               OpStore %right %109
+        %110 = OpLoad %v3float %facing_Local_0
+        %111 = OpLoad %v3float %up_Local_0
+        %112 = OpLoad %v3float %right
+        %113 = OpFunctionCall %mat3v3float %ToReal3x3_0 %110 %111 %112
+               OpReturnValue %113
+               OpFunctionEnd
+%ToReal3x3_0 = OpFunction %mat3v3float None %23
+   %facing_1 = OpFunctionParameter %v3float
+       %up_1 = OpFunctionParameter %v3float
+    %right_0 = OpFunctionParameter %v3float
+        %118 = OpLabel
+%facing_Local_1 = OpVariable %_ptr_Function_v3float Function
+ %up_Local_1 = OpVariable %_ptr_Function_v3float Function
+%right_Local = OpVariable %_ptr_Function_v3float Function
+    %nFacing = OpVariable %_ptr_Function_v3float Function
+               OpStore %facing_Local_1 %facing_1
+               OpStore %up_Local_1 %up_1
+               OpStore %right_Local %right_0
+        %123 = OpLoad %v3float %facing_Local_1
+        %124 = OpFNegate %v3float %123
+               OpStore %nFacing %124
+        %125 = OpAccessChain %_ptr_Function_float %right_Local %int_0
+        %126 = OpLoad %float %125
+        %127 = OpAccessChain %_ptr_Function_float %up_Local_1 %int_0
+        %128 = OpLoad %float %127
+        %129 = OpAccessChain %_ptr_Function_float %nFacing %int_0
+        %130 = OpLoad %float %129
+        %131 = OpCompositeConstruct %v3float %126 %128 %130
+        %132 = OpAccessChain %_ptr_Function_float %right_Local %int_1
+        %133 = OpLoad %float %132
+        %134 = OpAccessChain %_ptr_Function_float %up_Local_1 %int_1
+        %135 = OpLoad %float %134
+        %136 = OpAccessChain %_ptr_Function_float %nFacing %int_1
+        %137 = OpLoad %float %136
+        %138 = OpCompositeConstruct %v3float %133 %135 %137
+        %139 = OpAccessChain %_ptr_Function_float %right_Local %int_2
+        %140 = OpLoad %float %139
+        %141 = OpAccessChain %_ptr_Function_float %up_Local_1 %int_2
+        %142 = OpLoad %float %141
+        %143 = OpAccessChain %_ptr_Function_float %nFacing %int_2
+        %144 = OpLoad %float %143
+        %145 = OpCompositeConstruct %v3float %140 %142 %144
+        %146 = OpCompositeConstruct %mat3v3float %131 %138 %145
+               OpReturnValue %146
+               OpFunctionEnd
+%ToQuaternion_2 = OpFunction %Quaternion None %24
+     %matrix = OpFunctionParameter %mat3v3float
+        %149 = OpLabel
+%matrix_Local = OpVariable %_ptr_Function_mat3v3float Function
+   %r4Result = OpVariable %_ptr_Function_v4float Function
+          %t = OpVariable %_ptr_Function_float Function
+          %s = OpVariable %_ptr_Function_float Function
+    %tempAnd = OpVariable %_ptr_Function_bool Function
+        %t_0 = OpVariable %_ptr_Function_float Function
+        %s_0 = OpVariable %_ptr_Function_float Function
+        %t_1 = OpVariable %_ptr_Function_float Function
+        %s_1 = OpVariable %_ptr_Function_float Function
+        %t_2 = OpVariable %_ptr_Function_float Function
+        %s_2 = OpVariable %_ptr_Function_float Function
+               OpStore %matrix_Local %matrix
+        %161 = OpCompositeConstruct %v4float %float_0_0 %float_0_0 %float_0_0 %float_0_0
+               OpStore %r4Result %161
+        %162 = OpAccessChain %_ptr_Function_float %matrix_Local %int_0 %int_0
+        %163 = OpAccessChain %_ptr_Function_float %matrix_Local %int_1 %int_1
+        %164 = OpLoad %float %162
+        %165 = OpLoad %float %163
+        %166 = OpFAdd %float %164 %165
+        %167 = OpAccessChain %_ptr_Function_float %matrix_Local %int_2 %int_2
+        %168 = OpLoad %float %167
+        %169 = OpFAdd %float %166 %168
+        %170 = OpFOrdGreaterThan %bool %169 %float_0_0
+               OpSelectionMerge %ifMerge0 None
+               OpBranchConditional %170 %ifTrue0 %ifFalse0
+    %ifTrue0 = OpLabel
+        %172 = OpAccessChain %_ptr_Function_float %matrix_Local %int_0 %int_0
+        %173 = OpAccessChain %_ptr_Function_float %matrix_Local %int_1 %int_1
+        %174 = OpLoad %float %172
+        %175 = OpLoad %float %173
+        %176 = OpFAdd %float %174 %175
+        %177 = OpAccessChain %_ptr_Function_float %matrix_Local %int_2 %int_2
+        %178 = OpLoad %float %177
+        %179 = OpFAdd %float %176 %178
+        %180 = OpFAdd %float %179 %float_1
+               OpStore %t %180
+        %181 = OpLoad %float %t
+        %182 = OpExtInst %float %2 InverseSqrt %181
+        %183 = OpFMul %float %182 %float_0_5
+               OpStore %s %183
+        %184 = OpAccessChain %_ptr_Function_float %r4Result %int_3
+        %185 = OpLoad %float %s
+        %186 = OpLoad %float %t
+        %187 = OpFMul %float %185 %186
+               OpStore %184 %187
+        %188 = OpAccessChain %_ptr_Function_float %r4Result %int_2
+        %189 = OpAccessChain %_ptr_Function_float %matrix_Local %int_1 %int_0
+        %190 = OpAccessChain %_ptr_Function_float %matrix_Local %int_0 %int_1
+        %191 = OpLoad %float %189
+        %192 = OpLoad %float %190
+        %193 = OpFSub %float %191 %192
+        %194 = OpLoad %float %s
+        %195 = OpFMul %float %193 %194
+               OpStore %188 %195
+        %196 = OpAccessChain %_ptr_Function_float %r4Result %int_1
+        %197 = OpAccessChain %_ptr_Function_float %matrix_Local %int_0 %int_2
+        %198 = OpAccessChain %_ptr_Function_float %matrix_Local %int_2 %int_0
+        %199 = OpLoad %float %197
+        %200 = OpLoad %float %198
+        %201 = OpFSub %float %199 %200
+        %202 = OpLoad %float %s
+        %203 = OpFMul %float %201 %202
+               OpStore %196 %203
+        %204 = OpAccessChain %_ptr_Function_float %r4Result %int_0
+        %205 = OpAccessChain %_ptr_Function_float %matrix_Local %int_2 %int_1
+        %206 = OpAccessChain %_ptr_Function_float %matrix_Local %int_1 %int_2
+        %207 = OpLoad %float %205
+        %208 = OpLoad %float %206
+        %209 = OpFSub %float %207 %208
+        %210 = OpLoad %float %s
+        %211 = OpFMul %float %209 %210
+               OpStore %204 %211
+               OpBranch %ifMerge0
+   %ifFalse0 = OpLabel
+        %213 = OpAccessChain %_ptr_Function_float %matrix_Local %int_0 %int_0
+        %214 = OpAccessChain %_ptr_Function_float %matrix_Local %int_1 %int_1
+        %215 = OpLoad %float %213
+        %216 = OpLoad %float %214
+        %217 = OpFOrdGreaterThan %bool %215 %216
+               OpSelectionMerge %mergePoint None
+               OpBranchConditional %217 %ifFalse %ifTrue
+     %ifTrue = OpLabel
+               OpStore %tempAnd %217
+               OpBranch %mergePoint
+    %ifFalse = OpLabel
+        %220 = OpAccessChain %_ptr_Function_float %matrix_Local %int_0 %int_0
+        %221 = OpAccessChain %_ptr_Function_float %matrix_Local %int_2 %int_2
+        %222 = OpLoad %float %220
+        %223 = OpLoad %float %221
+        %224 = OpFOrdGreaterThan %bool %222 %223
+               OpStore %tempAnd %224
+               OpBranch %mergePoint
+ %mergePoint = OpLabel
+        %226 = OpLoad %bool %tempAnd
+               OpSelectionMerge %ifMerge1 None
+               OpBranchConditional %226 %ifTrue1 %ifFalse1
+    %ifTrue1 = OpLabel
+        %228 = OpAccessChain %_ptr_Function_float %matrix_Local %int_0 %int_0
+        %229 = OpAccessChain %_ptr_Function_float %matrix_Local %int_1 %int_1
+        %230 = OpLoad %float %228
+        %231 = OpLoad %float %229
+        %232 = OpFSub %float %230 %231
+        %233 = OpAccessChain %_ptr_Function_float %matrix_Local %int_2 %int_2
+        %234 = OpLoad %float %233
+        %235 = OpFSub %float %232 %234
+        %236 = OpFAdd %float %235 %float_1
+               OpStore %t_0 %236
+        %237 = OpLoad %float %t_0
+        %238 = OpExtInst %float %2 InverseSqrt %237
+        %239 = OpFMul %float %238 %float_0_5
+               OpStore %s_0 %239
+        %240 = OpAccessChain %_ptr_Function_float %r4Result %int_0
+        %241 = OpLoad %float %s_0
+        %242 = OpLoad %float %t_0
+        %243 = OpFMul %float %241 %242
+               OpStore %240 %243
+        %244 = OpAccessChain %_ptr_Function_float %r4Result %int_1
+        %245 = OpAccessChain %_ptr_Function_float %matrix_Local %int_1 %int_0
+        %246 = OpAccessChain %_ptr_Function_float %matrix_Local %int_0 %int_1
+        %247 = OpLoad %float %245
+        %248 = OpLoad %float %246
+        %249 = OpFAdd %float %247 %248
+        %250 = OpLoad %float %s_0
+        %251 = OpFMul %float %249 %250
+               OpStore %244 %251
+        %252 = OpAccessChain %_ptr_Function_float %r4Result %int_2
+        %253 = OpAccessChain %_ptr_Function_float %matrix_Local %int_0 %int_2
+        %254 = OpAccessChain %_ptr_Function_float %matrix_Local %int_2 %int_0
+        %255 = OpLoad %float %253
+        %256 = OpLoad %float %254
+        %257 = OpFAdd %float %255 %256
+        %258 = OpLoad %float %s_0
+        %259 = OpFMul %float %257 %258
+               OpStore %252 %259
+        %260 = OpAccessChain %_ptr_Function_float %r4Result %int_3
+        %261 = OpAccessChain %_ptr_Function_float %matrix_Local %int_2 %int_1
+        %262 = OpAccessChain %_ptr_Function_float %matrix_Local %int_1 %int_2
+        %263 = OpLoad %float %261
+        %264 = OpLoad %float %262
+        %265 = OpFSub %float %263 %264
+        %266 = OpLoad %float %s_0
+        %267 = OpFMul %float %265 %266
+               OpStore %260 %267
+               OpBranch %ifMerge1
+   %ifFalse1 = OpLabel
+        %269 = OpAccessChain %_ptr_Function_float %matrix_Local %int_1 %int_1
+        %270 = OpAccessChain %_ptr_Function_float %matrix_Local %int_2 %int_2
+        %271 = OpLoad %float %269
+        %272 = OpLoad %float %270
+        %273 = OpFOrdGreaterThan %bool %271 %272
+               OpSelectionMerge %ifMerge2 None
+               OpBranchConditional %273 %ifTrue2 %ifFalse2
+    %ifTrue2 = OpLabel
+        %275 = OpAccessChain %_ptr_Function_float %matrix_Local %int_0 %int_0
+        %276 = OpLoad %float %275
+        %277 = OpFNegate %float %276
+        %278 = OpAccessChain %_ptr_Function_float %matrix_Local %int_1 %int_1
+        %279 = OpLoad %float %278
+        %280 = OpFAdd %float %277 %279
+        %281 = OpAccessChain %_ptr_Function_float %matrix_Local %int_2 %int_2
+        %282 = OpLoad %float %281
+        %283 = OpFSub %float %280 %282
+        %284 = OpFAdd %float %283 %float_1
+               OpStore %t_1 %284
+        %285 = OpLoad %float %t_1
+        %286 = OpExtInst %float %2 InverseSqrt %285
+        %287 = OpFMul %float %286 %float_0_5
+               OpStore %s_1 %287
+        %288 = OpAccessChain %_ptr_Function_float %r4Result %int_1
+        %289 = OpLoad %float %s_1
+        %290 = OpLoad %float %t_1
+        %291 = OpFMul %float %289 %290
+               OpStore %288 %291
+        %292 = OpAccessChain %_ptr_Function_float %r4Result %int_0
+        %293 = OpAccessChain %_ptr_Function_float %matrix_Local %int_1 %int_0
+        %294 = OpAccessChain %_ptr_Function_float %matrix_Local %int_0 %int_1
+        %295 = OpLoad %float %293
+        %296 = OpLoad %float %294
+        %297 = OpFAdd %float %295 %296
+        %298 = OpLoad %float %s_1
+        %299 = OpFMul %float %297 %298
+               OpStore %292 %299
+        %300 = OpAccessChain %_ptr_Function_float %r4Result %int_3
+        %301 = OpAccessChain %_ptr_Function_float %matrix_Local %int_0 %int_2
+        %302 = OpAccessChain %_ptr_Function_float %matrix_Local %int_2 %int_0
+        %303 = OpLoad %float %301
+        %304 = OpLoad %float %302
+        %305 = OpFSub %float %303 %304
+        %306 = OpLoad %float %s_1
+        %307 = OpFMul %float %305 %306
+               OpStore %300 %307
+        %308 = OpAccessChain %_ptr_Function_float %r4Result %int_2
+        %309 = OpAccessChain %_ptr_Function_float %matrix_Local %int_2 %int_1
+        %310 = OpAccessChain %_ptr_Function_float %matrix_Local %int_1 %int_2
+        %311 = OpLoad %float %309
+        %312 = OpLoad %float %310
+        %313 = OpFAdd %float %311 %312
+        %314 = OpLoad %float %s_1
+        %315 = OpFMul %float %313 %314
+               OpStore %308 %315
+               OpBranch %ifMerge2
+   %ifFalse2 = OpLabel
+        %317 = OpAccessChain %_ptr_Function_float %matrix_Local %int_0 %int_0
+        %318 = OpLoad %float %317
+        %319 = OpFNegate %float %318
+        %320 = OpAccessChain %_ptr_Function_float %matrix_Local %int_1 %int_1
+        %321 = OpLoad %float %320
+        %322 = OpFSub %float %319 %321
+        %323 = OpAccessChain %_ptr_Function_float %matrix_Local %int_2 %int_2
+        %324 = OpLoad %float %323
+        %325 = OpFAdd %float %322 %324
+        %326 = OpFAdd %float %325 %float_1
+               OpStore %t_2 %326
+        %327 = OpLoad %float %t_2
+        %328 = OpExtInst %float %2 InverseSqrt %327
+        %329 = OpFMul %float %328 %float_0_5
+               OpStore %s_2 %329
+        %330 = OpAccessChain %_ptr_Function_float %r4Result %int_2
+        %331 = OpLoad %float %s_2
+        %332 = OpLoad %float %t_2
+        %333 = OpFMul %float %331 %332
+               OpStore %330 %333
+        %334 = OpAccessChain %_ptr_Function_float %r4Result %int_3
+        %335 = OpAccessChain %_ptr_Function_float %matrix_Local %int_1 %int_0
+        %336 = OpAccessChain %_ptr_Function_float %matrix_Local %int_0 %int_1
+        %337 = OpLoad %float %335
+        %338 = OpLoad %float %336
+        %339 = OpFSub %float %337 %338
+        %340 = OpLoad %float %s_2
+        %341 = OpFMul %float %339 %340
+               OpStore %334 %341
+        %342 = OpAccessChain %_ptr_Function_float %r4Result %int_0
+        %343 = OpAccessChain %_ptr_Function_float %matrix_Local %int_0 %int_2
+        %344 = OpAccessChain %_ptr_Function_float %matrix_Local %int_2 %int_0
+        %345 = OpLoad %float %343
+        %346 = OpLoad %float %344
+        %347 = OpFAdd %float %345 %346
+        %348 = OpLoad %float %s_2
+        %349 = OpFMul %float %347 %348
+               OpStore %342 %349
+        %350 = OpAccessChain %_ptr_Function_float %r4Result %int_1
+        %351 = OpAccessChain %_ptr_Function_float %matrix_Local %int_2 %int_1
+        %352 = OpAccessChain %_ptr_Function_float %matrix_Local %int_1 %int_2
+        %353 = OpLoad %float %351
+        %354 = OpLoad %float %352
+        %355 = OpFAdd %float %353 %354
+        %356 = OpLoad %float %s_2
+        %357 = OpFMul %float %355 %356
+               OpStore %350 %357
+               OpBranch %ifMerge2
+   %ifMerge2 = OpLabel
+               OpBranch %ifMerge1
+   %ifMerge1 = OpLabel
+               OpBranch %ifMerge0
+   %ifMerge0 = OpLabel
+        %361 = OpAccessChain %_ptr_Function_float %r4Result %int_0
+        %362 = OpLoad %float %361
+        %363 = OpAccessChain %_ptr_Function_float %r4Result %int_1
+        %364 = OpLoad %float %363
+        %365 = OpAccessChain %_ptr_Function_float %r4Result %int_2
+        %366 = OpLoad %float %365
+        %367 = OpAccessChain %_ptr_Function_float %r4Result %int_3
+        %368 = OpLoad %float %367
+        %369 = OpCompositeConstruct %v4float %362 %364 %366 %368
+        %370 = OpCompositeConstruct %Quaternion %369
+               OpReturnValue %370
+               OpFunctionEnd
+%Test_Static_Real3_Real3_Real3 = OpFunction %void None %9
+     %self_1 = OpFunctionParameter %_ptr_Function_ToQuaternion
+        %373 = OpLabel
+  %facing__0 = OpVariable %_ptr_Function_v3float Function
+      %up__0 = OpVariable %_ptr_Function_v3float Function
+     %right_ = OpVariable %_ptr_Function_v3float Function
+   %result_2 = OpVariable %_ptr_Function_Quaternion Function
+        %378 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %facing__0 %378
+        %379 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %up__0 %379
+        %380 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %right_ %380
+        %381 = OpLoad %v3float %facing__0
+        %382 = OpLoad %v3float %up__0
+        %383 = OpLoad %v3float %right_
+        %384 = OpFunctionCall %Quaternion %ToQuaternion_3 %381 %382 %383
+               OpStore %result_2 %384
+               OpReturn
+               OpFunctionEnd
+%ToQuaternion_3 = OpFunction %Quaternion None %27
+   %facing_2 = OpFunctionParameter %v3float
+       %up_2 = OpFunctionParameter %v3float
+    %right_1 = OpFunctionParameter %v3float
+        %389 = OpLabel
+%facing_Local_2 = OpVariable %_ptr_Function_v3float Function
+ %up_Local_2 = OpVariable %_ptr_Function_v3float Function
+%right_Local_0 = OpVariable %_ptr_Function_v3float Function
+     %r3x3_0 = OpVariable %_ptr_Function_mat3v3float Function
+               OpStore %facing_Local_2 %facing_2
+               OpStore %up_Local_2 %up_2
+               OpStore %right_Local_0 %right_1
+        %394 = OpLoad %v3float %facing_Local_2
+        %395 = OpLoad %v3float %up_Local_2
+        %396 = OpLoad %v3float %right_Local_0
+        %397 = OpFunctionCall %mat3v3float %ToReal3x3_0 %394 %395 %396
+               OpStore %r3x3_0 %397
+        %398 = OpLoad %mat3v3float %r3x3_0
+        %399 = OpFunctionCall %Quaternion %ToQuaternion_2 %398
+               OpReturnValue %399
+               OpFunctionEnd
+%Test_Static_Real3x3 = OpFunction %void None %9
+     %self_2 = OpFunctionParameter %_ptr_Function_ToQuaternion
+        %402 = OpLabel
+%rotationMatrix_ = OpVariable %_ptr_Function_mat3v3float Function
+   %result_3 = OpVariable %_ptr_Function_Quaternion Function
+        %405 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %406 = OpCompositeConstruct %mat3v3float %405 %405 %405
+               OpStore %rotationMatrix_ %406
+        %407 = OpLoad %mat3v3float %rotationMatrix_
+        %408 = OpFunctionCall %Quaternion %ToQuaternion_2 %407
+               OpStore %result_3 %408
+               OpReturn
+               OpFunctionEnd
+       %Main = OpFunction %void None %9
+     %self_3 = OpFunctionParameter %_ptr_Function_ToQuaternion
+        %411 = OpLabel
+        %412 = OpFunctionCall %void %Test_Static_Real3_Real %self_3
+        %413 = OpFunctionCall %void %Test_Static_Real3_Real3 %self_3
+        %414 = OpFunctionCall %void %Test_Static_Real3_Real3_Real3 %self_3
+        %415 = OpFunctionCall %void %Test_Static_Real3x3 %self_3
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_ToQuaternion = OpFunction %void None %9
+     %self_4 = OpFunctionParameter %_ptr_Function_ToQuaternion
+        %418 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %9
+     %self_5 = OpFunctionParameter %_ptr_Function_ToQuaternion
+        %421 = OpLabel
+        %422 = OpFunctionCall %void %PreConstructor_ToQuaternion %self_5
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %9
+     %self_6 = OpFunctionParameter %_ptr_Function_ToQuaternion
+        %425 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %9
+     %self_7 = OpFunctionParameter %_ptr_Function_ToQuaternion
+        %428 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_ToQuaternion = OpFunction %void None %28
+        %430 = OpLabel
+     %self_8 = OpVariable %_ptr_Function_ToQuaternion Function
+        %432 = OpFunctionCall %void %InitializeGlobals
+        %433 = OpFunctionCall %void %DefaultConstructor %self_8
+        %434 = OpFunctionCall %void %CopyInputs_Main %self_8
+        %435 = OpFunctionCall %void %Main %self_8
+        %436 = OpFunctionCall %void %CopyOutputs_Main %self_8
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %28
+        %437 = OpLabel
+               OpReturn
+               OpFunctionEnd

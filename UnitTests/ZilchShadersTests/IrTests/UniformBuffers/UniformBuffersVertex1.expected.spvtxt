@@ -1,0 +1,182 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 95
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Vertex %EntryPoint_Main_UniformBuffersVertex1 "EntryPoint_Main_UniformBuffersVertex1"
+               OpSource Unknown 100
+               OpName %UniformBuffersVertex1 "UniformBuffersVertex1"
+               OpMemberName %UniformBuffersVertex1 4 "ViewportSize"
+               OpMemberName %UniformBuffersVertex1 0 "LogicTime"
+               OpMemberName %UniformBuffersVertex1 2 "NearPlane"
+               OpMemberName %UniformBuffersVertex1 6 "ObjectColor"
+               OpMemberName %UniformBuffersVertex1 5 "Position"
+               OpMemberName %UniformBuffersVertex1 1 "FrameTime"
+               OpMemberName %UniformBuffersVertex1 3 "FarPlane"
+               OpName %UniformBuffersVertex1Frame_Data "UniformBuffersVertex1Frame Data"
+               OpMemberName %UniformBuffersVertex1Frame_Data 0 "LogicTime"
+               OpMemberName %UniformBuffersVertex1Frame_Data 1 "FrameTime"
+               OpName %UniformBuffersVertex1CameraData "UniformBuffersVertex1CameraData"
+               OpMemberName %UniformBuffersVertex1CameraData 2 "ViewportSize"
+               OpMemberName %UniformBuffersVertex1CameraData 0 "NearPlane"
+               OpMemberName %UniformBuffersVertex1CameraData 1 "FarPlane"
+               OpName %UniformBuffersVertex1Material "UniformBuffersVertex1Material"
+               OpMemberName %UniformBuffersVertex1Material 1 "ObjectColor"
+               OpMemberName %UniformBuffersVertex1Material 0 "Position"
+               OpName %Frame_Data "Frame Data"
+               OpName %CameraData "CameraData"
+               OpName %Material "Material"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %PreConstructor_UniformBuffersVertex1 "PreConstructor_UniformBuffersVertex1"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_UniformBuffersVertex1 "EntryPoint_Main_UniformBuffersVertex1"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %UniformBuffersVertex1Frame_Data Block
+               OpMemberDecorate %UniformBuffersVertex1Frame_Data 0 Offset 0
+               OpMemberDecorate %UniformBuffersVertex1Frame_Data 1 Offset 4
+               OpDecorate %Frame_Data DescriptorSet 0
+               OpDecorate %Frame_Data Binding 0
+               OpDecorate %UniformBuffersVertex1CameraData Block
+               OpMemberDecorate %UniformBuffersVertex1CameraData 0 Offset 0
+               OpMemberDecorate %UniformBuffersVertex1CameraData 1 Offset 4
+               OpMemberDecorate %UniformBuffersVertex1CameraData 2 Offset 8
+               OpDecorate %CameraData DescriptorSet 0
+               OpDecorate %CameraData Binding 1
+               OpDecorate %UniformBuffersVertex1Material Block
+               OpMemberDecorate %UniformBuffersVertex1Material 0 Offset 0
+               OpMemberDecorate %UniformBuffersVertex1Material 1 Offset 16
+               OpDecorate %Material DescriptorSet 0
+               OpDecorate %Material Binding 3
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+%UniformBuffersVertex1 = OpTypeStruct %float %float %float %float %v2float %v3float %v4float
+%_ptr_Function_UniformBuffersVertex1 = OpTypePointer Function %UniformBuffersVertex1
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+         %14 = OpTypeFunction %void %_ptr_Function_UniformBuffersVertex1
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+      %int_0 = OpConstant %int 0
+    %float_0 = OpConstant %float 0
+      %int_1 = OpConstant %int 1
+      %int_2 = OpConstant %int 2
+      %int_3 = OpConstant %int 3
+      %int_4 = OpConstant %int 4
+      %int_5 = OpConstant %int 5
+      %int_6 = OpConstant %int 6
+%_ptr_Uniform_float = OpTypePointer Uniform %float
+%UniformBuffersVertex1Frame_Data = OpTypeStruct %float %float
+%_ptr_Uniform_UniformBuffersVertex1Frame_Data = OpTypePointer Uniform %UniformBuffersVertex1Frame_Data
+ %Frame_Data = OpVariable %_ptr_Uniform_UniformBuffersVertex1Frame_Data Uniform
+%UniformBuffersVertex1CameraData = OpTypeStruct %float %float %v2float
+%_ptr_Uniform_UniformBuffersVertex1CameraData = OpTypePointer Uniform %UniformBuffersVertex1CameraData
+ %CameraData = OpVariable %_ptr_Uniform_UniformBuffersVertex1CameraData Uniform
+%_ptr_Uniform_v2float = OpTypePointer Uniform %v2float
+%_ptr_Uniform_v3float = OpTypePointer Uniform %v3float
+%UniformBuffersVertex1Material = OpTypeStruct %v3float %v4float
+%_ptr_Uniform_UniformBuffersVertex1Material = OpTypePointer Uniform %UniformBuffersVertex1Material
+   %Material = OpVariable %_ptr_Uniform_UniformBuffersVertex1Material Uniform
+%_ptr_Uniform_v4float = OpTypePointer Uniform %v4float
+         %27 = OpTypeFunction %void
+       %Main = OpFunction %void None %14
+       %self = OpFunctionParameter %_ptr_Function_UniformBuffersVertex1
+         %41 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_UniformBuffersVertex1 = OpFunction %void None %14
+     %self_0 = OpFunctionParameter %_ptr_Function_UniformBuffersVertex1
+         %44 = OpLabel
+         %45 = OpAccessChain %_ptr_Function_float %self_0 %int_0
+               OpStore %45 %float_0
+         %46 = OpAccessChain %_ptr_Function_float %self_0 %int_1
+               OpStore %46 %float_0
+         %47 = OpAccessChain %_ptr_Function_float %self_0 %int_2
+               OpStore %47 %float_0
+         %48 = OpAccessChain %_ptr_Function_float %self_0 %int_3
+               OpStore %48 %float_0
+         %49 = OpAccessChain %_ptr_Function_v2float %self_0 %int_4
+         %50 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %49 %50
+         %51 = OpAccessChain %_ptr_Function_v3float %self_0 %int_5
+         %52 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %51 %52
+         %53 = OpAccessChain %_ptr_Function_v4float %self_0 %int_6
+         %54 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %53 %54
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %14
+     %self_1 = OpFunctionParameter %_ptr_Function_UniformBuffersVertex1
+         %57 = OpLabel
+         %58 = OpFunctionCall %void %PreConstructor_UniformBuffersVertex1 %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %14
+     %self_2 = OpFunctionParameter %_ptr_Function_UniformBuffersVertex1
+         %61 = OpLabel
+         %62 = OpAccessChain %_ptr_Uniform_float %Frame_Data %int_0
+         %63 = OpAccessChain %_ptr_Function_float %self_2 %int_0
+         %64 = OpLoad %float %62
+               OpStore %63 %64
+         %65 = OpAccessChain %_ptr_Uniform_float %Frame_Data %int_1
+         %66 = OpAccessChain %_ptr_Function_float %self_2 %int_1
+         %67 = OpLoad %float %65
+               OpStore %66 %67
+         %68 = OpAccessChain %_ptr_Uniform_float %CameraData %int_0
+         %69 = OpAccessChain %_ptr_Function_float %self_2 %int_2
+         %70 = OpLoad %float %68
+               OpStore %69 %70
+         %71 = OpAccessChain %_ptr_Uniform_float %CameraData %int_1
+         %72 = OpAccessChain %_ptr_Function_float %self_2 %int_3
+         %73 = OpLoad %float %71
+               OpStore %72 %73
+         %74 = OpAccessChain %_ptr_Uniform_v2float %CameraData %int_2
+         %75 = OpAccessChain %_ptr_Function_v2float %self_2 %int_4
+         %76 = OpLoad %v2float %74
+               OpStore %75 %76
+         %77 = OpAccessChain %_ptr_Uniform_v3float %Material %int_0
+         %78 = OpAccessChain %_ptr_Function_v3float %self_2 %int_5
+         %79 = OpLoad %v3float %77
+               OpStore %78 %79
+         %80 = OpAccessChain %_ptr_Uniform_v4float %Material %int_1
+         %81 = OpAccessChain %_ptr_Function_v4float %self_2 %int_6
+         %82 = OpLoad %v4float %80
+               OpStore %81 %82
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %14
+     %self_3 = OpFunctionParameter %_ptr_Function_UniformBuffersVertex1
+         %85 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_UniformBuffersVertex1 = OpFunction %void None %27
+         %87 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_UniformBuffersVertex1 Function
+         %89 = OpFunctionCall %void %InitializeGlobals
+         %90 = OpFunctionCall %void %DefaultConstructor %self_4
+         %91 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %92 = OpFunctionCall %void %Main %self_4
+         %93 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %27
+         %94 = OpLabel
+               OpReturn
+               OpFunctionEnd

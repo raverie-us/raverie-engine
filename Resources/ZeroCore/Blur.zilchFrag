@@ -58,7 +58,7 @@ struct SeparableBlur
   };
 
   [Static]
-  function Call(texture : ref Sampler2d, inverseTargetSize : Real2, uv : Real2, vertical : Boolean, radiusIndex : Integer) : Real4
+  function Call(texture : ref SampledImage2d, inverseTargetSize : Real2, uv : Real2, vertical : Boolean, radiusIndex : Integer) : Real4
   {
     var startIndex = SeparableBlur.WeightStride * radiusIndex;
     
@@ -81,7 +81,7 @@ struct SeparableBlur
   }
 
   [Static]
-  function Call(texture : ref Sampler2d, inverseTargetSize : Real2, uv : Real2, vertical : Boolean, radiusIndex : Integer, geometryBuffer0 : ref Sampler2d, threshold : Real, pixelStride : Real) : Real4
+  function Call(texture : ref SampledImage2d, inverseTargetSize : Real2, uv : Real2, vertical : Boolean, radiusIndex : Integer, geometryBuffer0 : ref SampledImage2d, threshold : Real, pixelStride : Real) : Real4
   {
     var refGeoSample = geometryBuffer0.Sample(uv);
     var refDepth = GeometryPass.GetDepth(refGeoSample);
@@ -141,7 +141,7 @@ struct SeparableBlurRadius5
 {
   [StageInput] var Uv : Real2;
   [Input] var InverseTextureSize : Real2;
-  [Input] var Texture : Sampler2d;
+  [Input] var Texture : SampledImage2d;
   [Input] var Vertical : Boolean;
   
   [Output] var Target0 : Real4;
@@ -158,7 +158,7 @@ struct SeparableBlurRadius10
 {
   [StageInput] var Uv : Real2;
   [Input] var InverseTextureSize : Real2;
-  [Input] var Texture : Sampler2d;
+  [Input] var Texture : SampledImage2d;
   [Input] var Vertical : Boolean;
   
   [Output] var Target0 : Real4;
@@ -175,7 +175,7 @@ struct SeparableBlurRadius15
 {
   [StageInput] var Uv : Real2;
   [Input] var InverseTextureSize : Real2;
-  [Input] var Texture : Sampler2d;
+  [Input] var Texture : SampledImage2d;
   [Input] var Vertical : Boolean;
   
   [Output] var Target0 : Real4;
@@ -192,7 +192,7 @@ struct SeparableBlurRadius20
 {
   [StageInput] var Uv : Real2;
   [Input] var InverseTextureSize : Real2;
-  [Input] var Texture : Sampler2d;
+  [Input] var Texture : SampledImage2d;
   [Input] var Vertical : Boolean;
   
   [Output] var Target0 : Real4;
@@ -209,7 +209,7 @@ struct SeparableBlurRadius25
 {
   [StageInput] var Uv : Real2;
   [Input] var InverseTextureSize : Real2;
-  [Input] var Texture : Sampler2d;
+  [Input] var Texture : SampledImage2d;
   [Input] var Vertical : Boolean;
   
   [Output] var Target0 : Real4;
@@ -228,12 +228,12 @@ struct SeparableBlurRadius25
 [Pixel][PostProcess]
 struct BilateralBlurRadius5
 {
-  [BuiltInInput] var FarPlane : Real;
+  [AppBuiltInInput] var FarPlane : Real;
   [StageInput] var Uv : Real2;
   [Input] var InverseTextureSize : Real2;
-  [Input] var Texture : Sampler2d;
+  [Input] var Texture : SampledImage2d;
   [Input] var Vertical : Boolean;
-  [Input] var GeometryBuffer0 : Sampler2d;
+  [Input] var GeometryBuffer0 : SampledImage2d;
   [Input] var DepthThreshold : Real;
   [Input] var PixelStride : Real;
   
@@ -249,12 +249,12 @@ struct BilateralBlurRadius5
 [Pixel][PostProcess]
 struct BilateralBlurRadius10
 {
-  [BuiltInInput] var FarPlane : Real;
+  [AppBuiltInInput] var FarPlane : Real;
   [StageInput] var Uv : Real2;
   [Input] var InverseTextureSize : Real2;
-  [Input] var Texture : Sampler2d;
+  [Input] var Texture : SampledImage2d;
   [Input] var Vertical : Boolean;
-  [Input] var GeometryBuffer0 : Sampler2d;
+  [Input] var GeometryBuffer0 : SampledImage2d;
   [Input] var DepthThreshold : Real;
   [Input] var PixelStride : Real;
   
@@ -270,12 +270,12 @@ struct BilateralBlurRadius10
 [Pixel][PostProcess]
 struct BilateralBlurRadius15
 {
-  [BuiltInInput] var FarPlane : Real;
+  [AppBuiltInInput] var FarPlane : Real;
   [StageInput] var Uv : Real2;
   [Input] var InverseTextureSize : Real2;
-  [Input] var Texture : Sampler2d;
+  [Input] var Texture : SampledImage2d;
   [Input] var Vertical : Boolean;
-  [Input] var GeometryBuffer0 : Sampler2d;
+  [Input] var GeometryBuffer0 : SampledImage2d;
   [Input] var DepthThreshold : Real;
   [Input] var PixelStride : Real;
   
@@ -291,12 +291,12 @@ struct BilateralBlurRadius15
 [Pixel][PostProcess]
 struct BilateralBlurRadius20
 {
-  [BuiltInInput] var FarPlane : Real;
+  [AppBuiltInInput] var FarPlane : Real;
   [StageInput] var Uv : Real2;
   [Input] var InverseTextureSize : Real2;
-  [Input] var Texture : Sampler2d;
+  [Input] var Texture : SampledImage2d;
   [Input] var Vertical : Boolean;
-  [Input] var GeometryBuffer0 : Sampler2d;
+  [Input] var GeometryBuffer0 : SampledImage2d;
   [Input] var DepthThreshold : Real;
   [Input] var PixelStride : Real;
   
@@ -312,12 +312,12 @@ struct BilateralBlurRadius20
 [Pixel][PostProcess]
 struct BilateralBlurRadius25
 {
-  [BuiltInInput] var FarPlane : Real;
+  [AppBuiltInInput] var FarPlane : Real;
   [StageInput] var Uv : Real2;
   [Input] var InverseTextureSize : Real2;
-  [Input] var Texture : Sampler2d;
+  [Input] var Texture : SampledImage2d;
   [Input] var Vertical : Boolean;
-  [Input] var GeometryBuffer0 : Sampler2d;
+  [Input] var GeometryBuffer0 : SampledImage2d;
   [Input] var DepthThreshold : Real;
   [Input] var PixelStride : Real;
   

@@ -1,0 +1,33 @@
+[Pixel][UnitTest]
+struct LogicalAnd
+{
+  function Test0()
+  {
+    var a = true;
+    var b = true;
+    var c = a && b;
+  }
+  
+  function Test1()
+  {
+    var a = true;
+    var b = true;
+    var c = true;
+    var d = a && b && c;
+  }
+  
+  function Test2() : Boolean
+  {
+    var a = true;
+    var b = true;
+    return a && b;
+  }
+  
+  [EntryPoint]
+  function Main()
+  {
+    this.Test0();
+    this.Test1();
+    this.Test2();
+  }
+}

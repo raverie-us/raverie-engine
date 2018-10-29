@@ -1,0 +1,25 @@
+[Pixel][UnitTest]
+struct Get
+{
+  function Test_Integer()
+  {
+    var y_ = Integer();
+    var instance_ = Real2x3();
+    var result = instance_.Get(y_);
+  }
+
+  function Test_Integer_Integer()
+  {
+    var y_ = Integer();
+    var x_ = Integer();
+    var instance_ = Real2x3();
+    var result = instance_.Get(y_, x_);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Integer();
+    this.Test_Integer_Integer();
+  }
+}

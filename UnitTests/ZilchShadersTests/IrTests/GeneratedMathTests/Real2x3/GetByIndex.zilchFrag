@@ -1,0 +1,16 @@
+[Pixel][UnitTest]
+struct GetByIndex
+{
+  function Test_Integer()
+  {
+    var index_ = Integer();
+    var instance_ = Real2x3();
+    var result = instance_.GetByIndex(index_);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Integer();
+  }
+}

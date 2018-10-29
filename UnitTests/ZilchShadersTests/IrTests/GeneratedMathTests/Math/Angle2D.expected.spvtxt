@@ -1,0 +1,115 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 62
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+          %2 = OpExtInstImport "GLSL.std.450"
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_Angle2D "EntryPoint_Main_Angle2D"
+               OpExecutionMode %EntryPoint_Main_Angle2D OriginUpperLeft
+               OpSource Unknown 100
+               OpName %Angle2D "Angle2D"
+               OpMemberName %Angle2D 0 "Dummy"
+               OpName %Test_Static_Real3 "Test_Static_Real3"
+               OpName %self "self"
+               OpName %param0 "param0"
+               OpName %result "result"
+               OpName %Angle2D_0 "Angle2D"
+               OpName %param0_0 "param0"
+               OpName %param0_Local "param0_Local"
+               OpName %Main "Main"
+               OpName %self_0 "self"
+               OpName %PreConstructor_Angle2D "PreConstructor_Angle2D"
+               OpName %self_1 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_2 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_3 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_4 "self"
+               OpName %EntryPoint_Main_Angle2D "EntryPoint_Main_Angle2D"
+               OpName %self_5 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+    %Angle2D = OpTypeStruct %int
+%_ptr_Function_Angle2D = OpTypePointer Function %Angle2D
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %9 = OpTypeFunction %void %_ptr_Function_Angle2D
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+    %float_0 = OpConstant %float 0
+         %14 = OpTypeFunction %float %v3float
+      %int_1 = OpConstant %int 1
+      %int_0 = OpConstant %int 0
+         %15 = OpTypeFunction %void
+%Test_Static_Real3 = OpFunction %void None %9
+       %self = OpFunctionParameter %_ptr_Function_Angle2D
+         %21 = OpLabel
+     %param0 = OpVariable %_ptr_Function_v3float Function
+     %result = OpVariable %_ptr_Function_float Function
+         %24 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %param0 %24
+         %25 = OpLoad %v3float %param0
+         %26 = OpFunctionCall %float %Angle2D_0 %25
+               OpStore %result %26
+               OpReturn
+               OpFunctionEnd
+  %Angle2D_0 = OpFunction %float None %14
+   %param0_0 = OpFunctionParameter %v3float
+         %29 = OpLabel
+%param0_Local = OpVariable %_ptr_Function_v3float Function
+               OpStore %param0_Local %param0_0
+         %31 = OpAccessChain %_ptr_Function_float %param0_Local %int_1
+         %32 = OpLoad %float %31
+         %33 = OpAccessChain %_ptr_Function_float %param0_Local %int_0
+         %34 = OpLoad %float %33
+         %35 = OpExtInst %float %2 Atan2 %32 %34
+               OpReturnValue %35
+               OpFunctionEnd
+       %Main = OpFunction %void None %9
+     %self_0 = OpFunctionParameter %_ptr_Function_Angle2D
+         %38 = OpLabel
+         %39 = OpFunctionCall %void %Test_Static_Real3 %self_0
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_Angle2D = OpFunction %void None %9
+     %self_1 = OpFunctionParameter %_ptr_Function_Angle2D
+         %42 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %9
+     %self_2 = OpFunctionParameter %_ptr_Function_Angle2D
+         %45 = OpLabel
+         %46 = OpFunctionCall %void %PreConstructor_Angle2D %self_2
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %9
+     %self_3 = OpFunctionParameter %_ptr_Function_Angle2D
+         %49 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %9
+     %self_4 = OpFunctionParameter %_ptr_Function_Angle2D
+         %52 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_Angle2D = OpFunction %void None %15
+         %54 = OpLabel
+     %self_5 = OpVariable %_ptr_Function_Angle2D Function
+         %56 = OpFunctionCall %void %InitializeGlobals
+         %57 = OpFunctionCall %void %DefaultConstructor %self_5
+         %58 = OpFunctionCall %void %CopyInputs_Main %self_5
+         %59 = OpFunctionCall %void %Main %self_5
+         %60 = OpFunctionCall %void %CopyOutputs_Main %self_5
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %15
+         %61 = OpLabel
+               OpReturn
+               OpFunctionEnd

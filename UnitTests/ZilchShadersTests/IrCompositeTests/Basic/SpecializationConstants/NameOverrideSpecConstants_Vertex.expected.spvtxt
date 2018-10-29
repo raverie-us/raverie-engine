@@ -1,0 +1,153 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 79
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Vertex %EntryPoint_Main_NameOverrideSpecConstants_Vertex "EntryPoint_Main_NameOverrideSpecConstants_Vertex"
+               OpSource Unknown 100
+               OpName %NameOverrideSpecConstants_Vertex "NameOverrideSpecConstants_Vertex"
+               OpMemberName %NameOverrideSpecConstants_Vertex 0 "Dummy"
+               OpName %VertexOverride "VertexOverride"
+               OpMemberName %VertexOverride 1 "Aux"
+               OpMemberName %VertexOverride 0 "VertexPosition"
+               OpName %Position_VertexOverride_X_NameOverrideSpecConstants_Vertex "Position_VertexOverride.X_NameOverrideSpecConstants_Vertex"
+               OpName %Position_VertexOverride_Y_NameOverrideSpecConstants_Vertex "Position_VertexOverride.Y_NameOverrideSpecConstants_Vertex"
+               OpName %Position_VertexOverride_Z_NameOverrideSpecConstants_Vertex "Position_VertexOverride.Z_NameOverrideSpecConstants_Vertex"
+               OpName %Position_VertexOverride_W_NameOverrideSpecConstants_Vertex "Position_VertexOverride.W_NameOverrideSpecConstants_Vertex"
+               OpName %Position_VertexOverride_NameOverrideSpecConstants_Vertex "Position_VertexOverride_NameOverrideSpecConstants_Vertex"
+               OpName %Value_VertexOverride_NameOverrideSpecConstants_Vertex "Value_VertexOverride_NameOverrideSpecConstants_Vertex"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %vertexOverride "vertexOverride"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_0 "self"
+               OpName %Main_0 "Main"
+               OpName %self_1 "self"
+               OpName %value "value"
+               OpName %pos "pos"
+               OpName %PreConstructor_VertexOverride "PreConstructor_VertexOverride"
+               OpName %self_2 "self"
+               OpName %PreConstructor_NameOverrideSpecConstants_Vertex "PreConstructor_NameOverrideSpecConstants_Vertex"
+               OpName %self_3 "self"
+               OpName %DefaultConstructor_0 "DefaultConstructor"
+               OpName %self_4 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_5 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_6 "self"
+               OpName %EntryPoint_Main_NameOverrideSpecConstants_Vertex "EntryPoint_Main_NameOverrideSpecConstants_Vertex"
+               OpName %self_7 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %Position_VertexOverride_X_NameOverrideSpecConstants_Vertex SpecId 1
+               OpDecorate %Position_VertexOverride_Y_NameOverrideSpecConstants_Vertex SpecId 2
+               OpDecorate %Position_VertexOverride_Z_NameOverrideSpecConstants_Vertex SpecId 3
+               OpDecorate %Position_VertexOverride_W_NameOverrideSpecConstants_Vertex SpecId 4
+               OpDecorate %Value_VertexOverride_NameOverrideSpecConstants_Vertex SpecId 5
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%NameOverrideSpecConstants_Vertex = OpTypeStruct %int
+%_ptr_Function_NameOverrideSpecConstants_Vertex = OpTypePointer Function %NameOverrideSpecConstants_Vertex
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_NameOverrideSpecConstants_Vertex
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+%VertexOverride = OpTypeStruct %v4float %float
+%_ptr_Function_VertexOverride = OpTypePointer Function %VertexOverride
+         %15 = OpTypeFunction %void %_ptr_Function_VertexOverride
+      %int_0 = OpConstant %int 0
+      %int_1 = OpConstant %int 1
+    %float_0 = OpConstant %float 0
+    %int_0_0 = OpConstant %int 0
+%Position_VertexOverride_X_NameOverrideSpecConstants_Vertex = OpSpecConstant %float 0.100000001
+%Position_VertexOverride_Y_NameOverrideSpecConstants_Vertex = OpSpecConstant %float 0.200000003
+%Position_VertexOverride_Z_NameOverrideSpecConstants_Vertex = OpSpecConstant %float 0.300000012
+%Position_VertexOverride_W_NameOverrideSpecConstants_Vertex = OpSpecConstant %float 0.400000006
+%Position_VertexOverride_NameOverrideSpecConstants_Vertex = OpSpecConstantComposite %v4float %Position_VertexOverride_X_NameOverrideSpecConstants_Vertex %Position_VertexOverride_Y_NameOverrideSpecConstants_Vertex %Position_VertexOverride_Z_NameOverrideSpecConstants_Vertex %Position_VertexOverride_W_NameOverrideSpecConstants_Vertex
+    %int_1_0 = OpConstant %int 1
+%Value_VertexOverride_NameOverrideSpecConstants_Vertex = OpSpecConstant %float 0.5
+         %16 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_NameOverrideSpecConstants_Vertex
+         %30 = OpLabel
+%vertexOverride = OpVariable %_ptr_Function_VertexOverride Function
+         %32 = OpVariable %_ptr_Function_VertexOverride Function
+         %33 = OpFunctionCall %void %DefaultConstructor %32
+         %34 = OpLoad %VertexOverride %32
+               OpStore %vertexOverride %34
+         %35 = OpAccessChain %_ptr_Function_v4float %vertexOverride %int_0_0
+               OpStore %35 %Position_VertexOverride_NameOverrideSpecConstants_Vertex
+         %36 = OpAccessChain %_ptr_Function_float %vertexOverride %int_1_0
+               OpStore %36 %Value_VertexOverride_NameOverrideSpecConstants_Vertex
+         %37 = OpFunctionCall %void %Main_0 %vertexOverride
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %15
+     %self_0 = OpFunctionParameter %_ptr_Function_VertexOverride
+         %40 = OpLabel
+         %41 = OpFunctionCall %void %PreConstructor_VertexOverride %self_0
+               OpReturn
+               OpFunctionEnd
+     %Main_0 = OpFunction %void None %15
+     %self_1 = OpFunctionParameter %_ptr_Function_VertexOverride
+         %44 = OpLabel
+      %value = OpVariable %_ptr_Function_v4float Function
+        %pos = OpVariable %_ptr_Function_float Function
+         %47 = OpAccessChain %_ptr_Function_v4float %self_1 %int_0
+         %48 = OpLoad %v4float %47
+               OpStore %value %48
+         %49 = OpAccessChain %_ptr_Function_float %self_1 %int_1
+         %50 = OpLoad %float %49
+               OpStore %pos %50
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_VertexOverride = OpFunction %void None %15
+     %self_2 = OpFunctionParameter %_ptr_Function_VertexOverride
+         %53 = OpLabel
+         %54 = OpAccessChain %_ptr_Function_v4float %self_2 %int_0
+         %55 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %54 %55
+         %56 = OpAccessChain %_ptr_Function_float %self_2 %int_1
+               OpStore %56 %float_0
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_NameOverrideSpecConstants_Vertex = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_NameOverrideSpecConstants_Vertex
+         %59 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor_0 = OpFunction %void None %8
+     %self_4 = OpFunctionParameter %_ptr_Function_NameOverrideSpecConstants_Vertex
+         %62 = OpLabel
+         %63 = OpFunctionCall %void %PreConstructor_NameOverrideSpecConstants_Vertex %self_4
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_5 = OpFunctionParameter %_ptr_Function_NameOverrideSpecConstants_Vertex
+         %66 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_6 = OpFunctionParameter %_ptr_Function_NameOverrideSpecConstants_Vertex
+         %69 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_NameOverrideSpecConstants_Vertex = OpFunction %void None %16
+         %71 = OpLabel
+     %self_7 = OpVariable %_ptr_Function_NameOverrideSpecConstants_Vertex Function
+         %73 = OpFunctionCall %void %InitializeGlobals
+         %74 = OpFunctionCall %void %DefaultConstructor_0 %self_7
+         %75 = OpFunctionCall %void %CopyInputs_Main %self_7
+         %76 = OpFunctionCall %void %Main %self_7
+         %77 = OpFunctionCall %void %CopyOutputs_Main %self_7
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %16
+         %78 = OpLabel
+               OpReturn
+               OpFunctionEnd

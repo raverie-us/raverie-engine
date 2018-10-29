@@ -1,0 +1,45 @@
+[Pixel][UnitTest]
+struct Functions
+{
+  function Fn0()
+  {
+    this.Fn1();
+  }
+  
+  function Fn1()
+  {
+    var data = 1.0;
+    this.Fn2(data);
+  }
+  
+  function Fn2(data : Real)
+  {
+    var result = this.Fn3(data + 2);
+  }
+  
+  function Fn3(data : Real) : Real
+  {
+    return data + 1.0;
+  }
+  
+  [Static] function StaticFn1() : Real
+  {
+    var a = 1.0;
+    Functions.StaticFn2(a);
+    return a;
+  }
+  
+  [Static] function StaticFn2(data : Real)
+  {
+    data += 1;
+  }
+  
+  function Main()
+  {
+    this.Fn1();
+    var val = this.Fn3(1.0);
+    this.Fn3(3.0);
+    val = this.Fn3(2.0);
+    val = Functions.StaticFn1();
+  }
+}

@@ -1,0 +1,129 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 68
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_HardwareBuiltIn2_Pixel "EntryPoint_Main_HardwareBuiltIn2_Pixel" %FragDepth
+               OpExecutionMode %EntryPoint_Main_HardwareBuiltIn2_Pixel OriginUpperLeft
+               OpSource Unknown 100
+               OpName %HardwareBuiltIn2_Pixel "HardwareBuiltIn2_Pixel"
+               OpMemberName %HardwareBuiltIn2_Pixel 0 "FragDepth"
+               OpName %Pixel2 "Pixel2"
+               OpMemberName %Pixel2 0 "Depth"
+               OpName %FragDepth "FragDepth"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %pixel2 "pixel2"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_0 "self"
+               OpName %Main_0 "Main"
+               OpName %self_1 "self"
+               OpName %PreConstructor_Pixel2 "PreConstructor_Pixel2"
+               OpName %self_2 "self"
+               OpName %PreConstructor_HardwareBuiltIn2_Pixel "PreConstructor_HardwareBuiltIn2_Pixel"
+               OpName %self_3 "self"
+               OpName %DefaultConstructor_0 "DefaultConstructor"
+               OpName %self_4 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_5 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_6 "self"
+               OpName %EntryPoint_Main_HardwareBuiltIn2_Pixel "EntryPoint_Main_HardwareBuiltIn2_Pixel"
+               OpName %self_7 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %FragDepth BuiltIn FragDepth
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+%HardwareBuiltIn2_Pixel = OpTypeStruct %float
+%_ptr_Function_HardwareBuiltIn2_Pixel = OpTypePointer Function %HardwareBuiltIn2_Pixel
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_HardwareBuiltIn2_Pixel
+     %Pixel2 = OpTypeStruct %float
+%_ptr_Function_Pixel2 = OpTypePointer Function %Pixel2
+         %11 = OpTypeFunction %void %_ptr_Function_Pixel2
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+      %int_0 = OpConstant %int 0
+    %float_0 = OpConstant %float 0
+    %int_0_0 = OpConstant %int 0
+  %float_0_0 = OpConstant %float 0
+%_ptr_Output_float = OpTypePointer Output %float
+  %FragDepth = OpVariable %_ptr_Output_float Output
+         %15 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_HardwareBuiltIn2_Pixel
+         %23 = OpLabel
+     %pixel2 = OpVariable %_ptr_Function_Pixel2 Function
+         %25 = OpVariable %_ptr_Function_Pixel2 Function
+         %26 = OpFunctionCall %void %DefaultConstructor %25
+         %27 = OpLoad %Pixel2 %25
+               OpStore %pixel2 %27
+         %28 = OpFunctionCall %void %Main_0 %pixel2
+         %29 = OpAccessChain %_ptr_Function_float %self %int_0_0
+         %30 = OpAccessChain %_ptr_Function_float %pixel2 %int_0_0
+         %31 = OpLoad %float %30
+               OpStore %29 %31
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %11
+     %self_0 = OpFunctionParameter %_ptr_Function_Pixel2
+         %34 = OpLabel
+         %35 = OpFunctionCall %void %PreConstructor_Pixel2 %self_0
+               OpReturn
+               OpFunctionEnd
+     %Main_0 = OpFunction %void None %11
+     %self_1 = OpFunctionParameter %_ptr_Function_Pixel2
+         %38 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_Pixel2 = OpFunction %void None %11
+     %self_2 = OpFunctionParameter %_ptr_Function_Pixel2
+         %41 = OpLabel
+         %42 = OpAccessChain %_ptr_Function_float %self_2 %int_0
+               OpStore %42 %float_0
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_HardwareBuiltIn2_Pixel = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_HardwareBuiltIn2_Pixel
+         %45 = OpLabel
+         %46 = OpAccessChain %_ptr_Function_float %self_3 %int_0_0
+               OpStore %46 %float_0_0
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor_0 = OpFunction %void None %8
+     %self_4 = OpFunctionParameter %_ptr_Function_HardwareBuiltIn2_Pixel
+         %49 = OpLabel
+         %50 = OpFunctionCall %void %PreConstructor_HardwareBuiltIn2_Pixel %self_4
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_5 = OpFunctionParameter %_ptr_Function_HardwareBuiltIn2_Pixel
+         %53 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_6 = OpFunctionParameter %_ptr_Function_HardwareBuiltIn2_Pixel
+         %56 = OpLabel
+         %57 = OpAccessChain %_ptr_Function_float %self_6 %int_0_0
+         %58 = OpLoad %float %57
+               OpStore %FragDepth %58
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_HardwareBuiltIn2_Pixel = OpFunction %void None %15
+         %60 = OpLabel
+     %self_7 = OpVariable %_ptr_Function_HardwareBuiltIn2_Pixel Function
+         %62 = OpFunctionCall %void %InitializeGlobals
+         %63 = OpFunctionCall %void %DefaultConstructor_0 %self_7
+         %64 = OpFunctionCall %void %CopyInputs_Main %self_7
+         %65 = OpFunctionCall %void %Main %self_7
+         %66 = OpFunctionCall %void %CopyOutputs_Main %self_7
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %15
+         %67 = OpLabel
+               OpReturn
+               OpFunctionEnd

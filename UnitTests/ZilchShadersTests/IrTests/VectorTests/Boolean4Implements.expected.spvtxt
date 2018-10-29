@@ -1,0 +1,155 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 80
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_Boolean4Implements "EntryPoint_Main_Boolean4Implements"
+               OpExecutionMode %EntryPoint_Main_Boolean4Implements OriginUpperLeft
+               OpSource Unknown 100
+               OpName %Boolean4Implements "Boolean4Implements"
+               OpMemberName %Boolean4Implements 0 "Dummy"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %x "x"
+               OpName %y "y"
+               OpName %z "z"
+               OpName %w "w"
+               OpName %zero "zero"
+               OpName %axis "axis"
+               OpName %XAxis "XAxis"
+               OpName %YAxis "YAxis"
+               OpName %ZAxis "ZAxis"
+               OpName %WAxis "WAxis"
+               OpName %Zero "Zero"
+               OpName %GetAxis "GetAxis"
+               OpName %value "value"
+               OpName %value_Local "value_Local"
+               OpName %result "result"
+               OpName %PreConstructor_Boolean4Implements "PreConstructor_Boolean4Implements"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_Boolean4Implements "EntryPoint_Main_Boolean4Implements"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%Boolean4Implements = OpTypeStruct %int
+%_ptr_Function_Boolean4Implements = OpTypePointer Function %Boolean4Implements
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_Boolean4Implements
+       %bool = OpTypeBool
+%_ptr_Function_bool = OpTypePointer Function %bool
+     %v4bool = OpTypeVector %bool 4
+%_ptr_Function_v4bool = OpTypePointer Function %v4bool
+         %13 = OpTypeFunction %v4bool
+       %true = OpConstantTrue %bool
+      %false = OpConstantFalse %bool
+         %14 = OpTypeFunction %v4bool %int
+      %int_1 = OpConstant %int 1
+         %15 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_Boolean4Implements
+         %21 = OpLabel
+          %x = OpVariable %_ptr_Function_v4bool Function
+          %y = OpVariable %_ptr_Function_v4bool Function
+          %z = OpVariable %_ptr_Function_v4bool Function
+          %w = OpVariable %_ptr_Function_v4bool Function
+       %zero = OpVariable %_ptr_Function_v4bool Function
+       %axis = OpVariable %_ptr_Function_v4bool Function
+         %28 = OpFunctionCall %v4bool %XAxis
+               OpStore %x %28
+         %29 = OpFunctionCall %v4bool %YAxis
+               OpStore %y %29
+         %30 = OpFunctionCall %v4bool %ZAxis
+               OpStore %z %30
+         %31 = OpFunctionCall %v4bool %WAxis
+               OpStore %w %31
+         %32 = OpFunctionCall %v4bool %Zero
+               OpStore %zero %32
+         %33 = OpFunctionCall %v4bool %GetAxis %int_1
+               OpStore %axis %33
+               OpReturn
+               OpFunctionEnd
+      %XAxis = OpFunction %v4bool None %13
+         %35 = OpLabel
+         %36 = OpCompositeConstruct %v4bool %true %false %false %false
+               OpReturnValue %36
+               OpFunctionEnd
+      %YAxis = OpFunction %v4bool None %13
+         %38 = OpLabel
+         %39 = OpCompositeConstruct %v4bool %false %true %false %false
+               OpReturnValue %39
+               OpFunctionEnd
+      %ZAxis = OpFunction %v4bool None %13
+         %41 = OpLabel
+         %42 = OpCompositeConstruct %v4bool %false %false %true %false
+               OpReturnValue %42
+               OpFunctionEnd
+      %WAxis = OpFunction %v4bool None %13
+         %44 = OpLabel
+         %45 = OpCompositeConstruct %v4bool %false %false %false %true
+               OpReturnValue %45
+               OpFunctionEnd
+       %Zero = OpFunction %v4bool None %13
+         %47 = OpLabel
+         %48 = OpCompositeConstruct %v4bool %false %false %false %false
+               OpReturnValue %48
+               OpFunctionEnd
+    %GetAxis = OpFunction %v4bool None %14
+      %value = OpFunctionParameter %int
+         %51 = OpLabel
+%value_Local = OpVariable %_ptr_Function_int Function
+     %result = OpVariable %_ptr_Function_v4bool Function
+               OpStore %value_Local %value
+         %54 = OpCompositeConstruct %v4bool %false %false %false %false
+               OpStore %result %54
+         %55 = OpLoad %int %value_Local
+         %56 = OpAccessChain %_ptr_Function_bool %result %55
+               OpStore %56 %true
+         %57 = OpLoad %v4bool %result
+               OpReturnValue %57
+               OpFunctionEnd
+%PreConstructor_Boolean4Implements = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_Boolean4Implements
+         %60 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_Boolean4Implements
+         %63 = OpLabel
+         %64 = OpFunctionCall %void %PreConstructor_Boolean4Implements %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_Boolean4Implements
+         %67 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_Boolean4Implements
+         %70 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_Boolean4Implements = OpFunction %void None %15
+         %72 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_Boolean4Implements Function
+         %74 = OpFunctionCall %void %InitializeGlobals
+         %75 = OpFunctionCall %void %DefaultConstructor %self_4
+         %76 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %77 = OpFunctionCall %void %Main %self_4
+         %78 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %15
+         %79 = OpLabel
+               OpReturn
+               OpFunctionEnd

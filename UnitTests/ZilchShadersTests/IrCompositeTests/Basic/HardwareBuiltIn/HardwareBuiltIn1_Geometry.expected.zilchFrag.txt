@@ -1,0 +1,26 @@
+struct HardwareBuiltIn1_GeoIn
+{
+  [HardwareBuiltInInput] var ApiPerspectivePosition : Real4;
+}
+struct HardwareBuiltIn1_GeoOut
+{
+  [HardwareBuiltInOutput] var ApiPerspectivePosition : Real4;
+}
+[Geometry(maxVertices : 3)][UnitTest]
+struct HardwareBuiltIn1_Geometry
+{
+  [HardwareBuiltInInput][HardwareBuiltInOutput] var PrimitiveId : Integer;
+  [AppBuiltInInput] var PerspectiveToApiPerspective : Real4x4;
+  [EntryPoint]
+  function Main(input : TriangleInput[HardwareBuiltIn1_GeoIn], output : TriangleOutput[HardwareBuiltIn1_GeoOut])
+  {
+    var fragmentInput = TriangleInput[GeometryData]();
+    for(var i = 0; i < 3; ++i)
+    {
+    }
+    var fragmentOutput = TriangleOutput[GeometryData]();
+    var geometry = Geometry();
+    geometry.Id = this.PrimitiveId;
+    geometry.Main(fragmentInput, fragmentOutput);
+  }
+}

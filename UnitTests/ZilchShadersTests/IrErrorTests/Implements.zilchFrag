@@ -1,0 +1,14 @@
+[Pixel][UnitTest]
+struct Implements
+{
+  [Static][Extension(typeid(Real3))][Implements]
+  var YAxis : Real2
+  {
+    get { return Real2(1, 0); }
+  }
+  
+  [EntryPoint]
+  function Main()
+  {
+  }
+}

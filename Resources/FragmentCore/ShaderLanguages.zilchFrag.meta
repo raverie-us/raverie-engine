@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "ShaderLanguages"
+		var ResourceId = 0x5bf7e08e9f2e18e4
+	}
+}

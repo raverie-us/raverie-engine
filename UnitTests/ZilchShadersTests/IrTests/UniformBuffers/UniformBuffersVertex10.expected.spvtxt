@@ -1,0 +1,142 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 80
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Vertex %EntryPoint_Main_UniformBuffersVertex10 "EntryPoint_Main_UniformBuffersVertex10"
+               OpSource Unknown 100
+               OpName %UniformBuffersVertex10 "UniformBuffersVertex10"
+               OpMemberName %UniformBuffersVertex10 3 "IntStates"
+               OpMemberName %UniformBuffersVertex10 0 "Bool1"
+               OpMemberName %UniformBuffersVertex10 1 "Bool2"
+               OpMemberName %UniformBuffersVertex10 2 "States"
+               OpName %UniformBuffersVertex10Material "UniformBuffersVertex10Material"
+               OpMemberName %UniformBuffersVertex10Material 1 "Bool2_Boolean2"
+               OpMemberName %UniformBuffersVertex10Material 0 "Bool1_Boolean"
+               OpMemberName %UniformBuffersVertex10Material 2 "States_Boolean3"
+               OpMemberName %UniformBuffersVertex10Material 3 "States"
+               OpName %Material "Material"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %PreConstructor_UniformBuffersVertex10 "PreConstructor_UniformBuffersVertex10"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_UniformBuffersVertex10 "EntryPoint_Main_UniformBuffersVertex10"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %UniformBuffersVertex10Material Block
+               OpMemberDecorate %UniformBuffersVertex10Material 0 Offset 0
+               OpMemberDecorate %UniformBuffersVertex10Material 1 Offset 8
+               OpMemberDecorate %UniformBuffersVertex10Material 2 Offset 16
+               OpMemberDecorate %UniformBuffersVertex10Material 3 Offset 32
+               OpDecorate %Material DescriptorSet 0
+               OpDecorate %Material Binding 3
+       %bool = OpTypeBool
+%_ptr_Function_bool = OpTypePointer Function %bool
+     %v2bool = OpTypeVector %bool 2
+%_ptr_Function_v2bool = OpTypePointer Function %v2bool
+     %v3bool = OpTypeVector %bool 3
+%_ptr_Function_v3bool = OpTypePointer Function %v3bool
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+      %v3int = OpTypeVector %int 3
+%_ptr_Function_v3int = OpTypePointer Function %v3int
+%UniformBuffersVertex10 = OpTypeStruct %bool %v2bool %v3bool %v3int
+%_ptr_Function_UniformBuffersVertex10 = OpTypePointer Function %UniformBuffersVertex10
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+         %16 = OpTypeFunction %void %_ptr_Function_UniformBuffersVertex10
+      %int_0 = OpConstant %int 0
+      %false = OpConstantFalse %bool
+      %int_1 = OpConstant %int 1
+      %int_2 = OpConstant %int 2
+      %int_3 = OpConstant %int 3
+%_ptr_Uniform_int = OpTypePointer Uniform %int
+      %v2int = OpTypeVector %int 2
+%_ptr_Function_v2int = OpTypePointer Function %v2int
+%UniformBuffersVertex10Material = OpTypeStruct %int %v2int %v3int %v3int
+%_ptr_Uniform_UniformBuffersVertex10Material = OpTypePointer Uniform %UniformBuffersVertex10Material
+   %Material = OpVariable %_ptr_Uniform_UniformBuffersVertex10Material Uniform
+%_ptr_Uniform_v2int = OpTypePointer Uniform %v2int
+%_ptr_Uniform_v3int = OpTypePointer Uniform %v3int
+         %24 = OpTypeFunction %void
+       %Main = OpFunction %void None %16
+       %self = OpFunctionParameter %_ptr_Function_UniformBuffersVertex10
+         %33 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_UniformBuffersVertex10 = OpFunction %void None %16
+     %self_0 = OpFunctionParameter %_ptr_Function_UniformBuffersVertex10
+         %36 = OpLabel
+         %37 = OpAccessChain %_ptr_Function_bool %self_0 %int_0
+               OpStore %37 %false
+         %38 = OpAccessChain %_ptr_Function_v2bool %self_0 %int_1
+         %39 = OpCompositeConstruct %v2bool %false %false
+               OpStore %38 %39
+         %40 = OpAccessChain %_ptr_Function_v3bool %self_0 %int_2
+         %41 = OpCompositeConstruct %v3bool %false %false %false
+               OpStore %40 %41
+         %42 = OpAccessChain %_ptr_Function_v3int %self_0 %int_3
+         %43 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+               OpStore %42 %43
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %16
+     %self_1 = OpFunctionParameter %_ptr_Function_UniformBuffersVertex10
+         %46 = OpLabel
+         %47 = OpFunctionCall %void %PreConstructor_UniformBuffersVertex10 %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %16
+     %self_2 = OpFunctionParameter %_ptr_Function_UniformBuffersVertex10
+         %50 = OpLabel
+         %51 = OpAccessChain %_ptr_Uniform_int %Material %int_0
+         %52 = OpAccessChain %_ptr_Function_bool %self_2 %int_0
+         %53 = OpLoad %int %51
+         %54 = OpINotEqual %bool %53 %int_0
+               OpStore %52 %54
+         %55 = OpAccessChain %_ptr_Uniform_v2int %Material %int_1
+         %56 = OpAccessChain %_ptr_Function_v2bool %self_2 %int_1
+         %57 = OpLoad %v2int %55
+         %58 = OpCompositeConstruct %v2int %int_0 %int_0
+         %59 = OpINotEqual %v2bool %57 %58
+               OpStore %56 %59
+         %60 = OpAccessChain %_ptr_Uniform_v3int %Material %int_2
+         %61 = OpAccessChain %_ptr_Function_v3bool %self_2 %int_2
+         %62 = OpLoad %v3int %60
+         %63 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+         %64 = OpINotEqual %v3bool %62 %63
+               OpStore %61 %64
+         %65 = OpAccessChain %_ptr_Uniform_v3int %Material %int_3
+         %66 = OpAccessChain %_ptr_Function_v3int %self_2 %int_3
+         %67 = OpLoad %v3int %65
+               OpStore %66 %67
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %16
+     %self_3 = OpFunctionParameter %_ptr_Function_UniformBuffersVertex10
+         %70 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_UniformBuffersVertex10 = OpFunction %void None %24
+         %72 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_UniformBuffersVertex10 Function
+         %74 = OpFunctionCall %void %InitializeGlobals
+         %75 = OpFunctionCall %void %DefaultConstructor %self_4
+         %76 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %77 = OpFunctionCall %void %Main %self_4
+         %78 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %24
+         %79 = OpLabel
+               OpReturn
+               OpFunctionEnd

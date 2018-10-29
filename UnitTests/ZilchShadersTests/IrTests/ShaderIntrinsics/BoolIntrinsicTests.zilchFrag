@@ -1,0 +1,62 @@
+
+struct BoolTests[BoolType]
+{
+  [Static]
+  function TestBools()
+  {
+    var param0 = BoolType();
+    var param1 = param0;
+    
+    var result2 = ShaderIntrinsics.LogicalNot(param0);
+    
+    var result3 = ShaderIntrinsics.LogicalEqual(param0, param1);
+    var result4 = ShaderIntrinsics.LogicalNotEqual(param0, param1);
+    var result5 = ShaderIntrinsics.LogicalOr(param0, param1);
+    var result6 = ShaderIntrinsics.LogicalAnd(param0, param1);
+  }
+}
+
+struct BoolVectorTests[BoolType]
+{
+  [Static]
+  function TestBools()
+  {
+    BoolTests[BoolType].TestBools();
+    
+    var param0 = BoolType();
+    var param1 = param0;
+    
+    var result0 = ShaderIntrinsics.Any(param0);
+    var result1 = ShaderIntrinsics.All(param0);
+  }
+}
+
+struct SelectTests[Type, BoolType]
+{
+  [Static]
+  function TestSelect()
+  {
+    var condition = BoolType();
+    var obj1 = Type();
+    var obj2 = Type();
+    var result = ShaderIntrinsics.Select(condition, obj1, obj2);
+  }
+}
+
+[Pixel][UnitTest]
+struct BoolIntrinsicTests
+{
+  [EntryPoint]
+  function Main()
+  {
+    BoolTests[Boolean].TestBools();
+    BoolVectorTests[Boolean2].TestBools();
+    BoolVectorTests[Boolean3].TestBools();
+    BoolVectorTests[Boolean4].TestBools();
+    
+    SelectTests[Boolean, Boolean].TestSelect();
+    SelectTests[Boolean2, Boolean2].TestSelect();
+    SelectTests[Boolean3, Boolean3].TestSelect();
+    SelectTests[Boolean4, Boolean4].TestSelect();
+  }
+}

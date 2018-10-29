@@ -1,0 +1,219 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 118
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_TemplatesTest1 "EntryPoint_Main_TemplatesTest1"
+               OpExecutionMode %EntryPoint_Main_TemplatesTest1 OriginUpperLeft
+               OpSource Unknown 100
+               OpName %TemplatesTest1 "TemplatesTest1"
+               OpMemberName %TemplatesTest1 0 "Dummy"
+               OpName %SimpleTemplate_Real_ "SimpleTemplate[Real]"
+               OpMemberName %SimpleTemplate_Real_ 0 "Data"
+               OpName %SimpleTemplate_Real2_ "SimpleTemplate[Real2]"
+               OpMemberName %SimpleTemplate_Real2_ 0 "Data"
+               OpName %SimpleTemplate_SimpleTemplate_Real2__ "SimpleTemplate[SimpleTemplate[Real2]]"
+               OpMemberName %SimpleTemplate_SimpleTemplate_Real2__ 0 "Data"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %tReal "tReal"
+               OpName %tReal2 "tReal2"
+               OpName %tNested "tNested"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_0 "self"
+               OpName %Set "Set"
+               OpName %self_1 "self"
+               OpName %data "data"
+               OpName %data_Local "data_Local"
+               OpName %_PreConstructor_SimpleTemplate_Real_ "[PreConstructor]SimpleTemplate[Real]"
+               OpName %self_2 "self"
+               OpName %DefaultConstructor_0 "DefaultConstructor"
+               OpName %self_3 "self"
+               OpName %Set_0 "Set"
+               OpName %self_4 "self"
+               OpName %data_0 "data"
+               OpName %data_Local_0 "data_Local"
+               OpName %_PreConstructor_SimpleTemplate_Real2_ "[PreConstructor]SimpleTemplate[Real2]"
+               OpName %self_5 "self"
+               OpName %DefaultConstructor_1 "DefaultConstructor"
+               OpName %self_6 "self"
+               OpName %Set_1 "Set"
+               OpName %self_7 "self"
+               OpName %data_1 "data"
+               OpName %data_Local_1 "data_Local"
+               OpName %_PreConstructor_SimpleTemplate_SimpleTemplate_Real2__ "[PreConstructor]SimpleTemplate[SimpleTemplate[Real2]]"
+               OpName %self_8 "self"
+               OpName %PreConstructor_TemplatesTest1 "PreConstructor_TemplatesTest1"
+               OpName %self_9 "self"
+               OpName %DefaultConstructor_2 "DefaultConstructor"
+               OpName %self_10 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_11 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_12 "self"
+               OpName %EntryPoint_Main_TemplatesTest1 "EntryPoint_Main_TemplatesTest1"
+               OpName %self_13 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%TemplatesTest1 = OpTypeStruct %int
+%_ptr_Function_TemplatesTest1 = OpTypePointer Function %TemplatesTest1
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_TemplatesTest1
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+%SimpleTemplate_Real_ = OpTypeStruct %float
+%_ptr_Function_SimpleTemplate_Real_ = OpTypePointer Function %SimpleTemplate_Real_
+         %13 = OpTypeFunction %void %_ptr_Function_SimpleTemplate_Real_ %float
+      %int_0 = OpConstant %int 0
+         %14 = OpTypeFunction %void %_ptr_Function_SimpleTemplate_Real_
+    %float_0 = OpConstant %float 0
+    %float_1 = OpConstant %float 1
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+%SimpleTemplate_Real2_ = OpTypeStruct %v2float
+%_ptr_Function_SimpleTemplate_Real2_ = OpTypePointer Function %SimpleTemplate_Real2_
+         %19 = OpTypeFunction %void %_ptr_Function_SimpleTemplate_Real2_ %v2float
+         %20 = OpTypeFunction %void %_ptr_Function_SimpleTemplate_Real2_
+%SimpleTemplate_SimpleTemplate_Real2__ = OpTypeStruct %SimpleTemplate_Real2_
+%_ptr_Function_SimpleTemplate_SimpleTemplate_Real2__ = OpTypePointer Function %SimpleTemplate_SimpleTemplate_Real2__
+         %23 = OpTypeFunction %void %_ptr_Function_SimpleTemplate_SimpleTemplate_Real2__ %SimpleTemplate_Real2_
+         %24 = OpTypeFunction %void %_ptr_Function_SimpleTemplate_SimpleTemplate_Real2__
+         %25 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_TemplatesTest1
+         %31 = OpLabel
+      %tReal = OpVariable %_ptr_Function_SimpleTemplate_Real_ Function
+         %33 = OpVariable %_ptr_Function_SimpleTemplate_Real_ Function
+     %tReal2 = OpVariable %_ptr_Function_SimpleTemplate_Real2_ Function
+         %35 = OpVariable %_ptr_Function_SimpleTemplate_Real2_ Function
+    %tNested = OpVariable %_ptr_Function_SimpleTemplate_SimpleTemplate_Real2__ Function
+         %37 = OpVariable %_ptr_Function_SimpleTemplate_SimpleTemplate_Real2__ Function
+         %38 = OpFunctionCall %void %DefaultConstructor %33
+         %39 = OpLoad %SimpleTemplate_Real_ %33
+               OpStore %tReal %39
+         %40 = OpFunctionCall %void %Set %tReal %float_1
+         %41 = OpFunctionCall %void %DefaultConstructor_0 %35
+         %42 = OpLoad %SimpleTemplate_Real2_ %35
+               OpStore %tReal2 %42
+         %43 = OpCompositeConstruct %v2float %float_0 %float_0
+         %44 = OpFunctionCall %void %Set_0 %tReal2 %43
+         %45 = OpFunctionCall %void %DefaultConstructor_1 %37
+         %46 = OpLoad %SimpleTemplate_SimpleTemplate_Real2__ %37
+               OpStore %tNested %46
+         %47 = OpLoad %SimpleTemplate_Real2_ %tReal2
+         %48 = OpFunctionCall %void %Set_1 %tNested %47
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %14
+     %self_0 = OpFunctionParameter %_ptr_Function_SimpleTemplate_Real_
+         %51 = OpLabel
+         %52 = OpFunctionCall %void %_PreConstructor_SimpleTemplate_Real_ %self_0
+               OpReturn
+               OpFunctionEnd
+        %Set = OpFunction %void None %13
+     %self_1 = OpFunctionParameter %_ptr_Function_SimpleTemplate_Real_
+       %data = OpFunctionParameter %float
+         %56 = OpLabel
+ %data_Local = OpVariable %_ptr_Function_float Function
+               OpStore %data_Local %data
+         %58 = OpAccessChain %_ptr_Function_float %self_1 %int_0
+         %59 = OpLoad %float %data_Local
+               OpStore %58 %59
+               OpReturn
+               OpFunctionEnd
+%_PreConstructor_SimpleTemplate_Real_ = OpFunction %void None %14
+     %self_2 = OpFunctionParameter %_ptr_Function_SimpleTemplate_Real_
+         %62 = OpLabel
+         %63 = OpAccessChain %_ptr_Function_float %self_2 %int_0
+               OpStore %63 %float_0
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor_0 = OpFunction %void None %20
+     %self_3 = OpFunctionParameter %_ptr_Function_SimpleTemplate_Real2_
+         %66 = OpLabel
+         %67 = OpFunctionCall %void %_PreConstructor_SimpleTemplate_Real2_ %self_3
+               OpReturn
+               OpFunctionEnd
+      %Set_0 = OpFunction %void None %19
+     %self_4 = OpFunctionParameter %_ptr_Function_SimpleTemplate_Real2_
+     %data_0 = OpFunctionParameter %v2float
+         %71 = OpLabel
+%data_Local_0 = OpVariable %_ptr_Function_v2float Function
+               OpStore %data_Local_0 %data_0
+         %73 = OpAccessChain %_ptr_Function_v2float %self_4 %int_0
+         %74 = OpLoad %v2float %data_Local_0
+               OpStore %73 %74
+               OpReturn
+               OpFunctionEnd
+%_PreConstructor_SimpleTemplate_Real2_ = OpFunction %void None %20
+     %self_5 = OpFunctionParameter %_ptr_Function_SimpleTemplate_Real2_
+         %77 = OpLabel
+         %78 = OpAccessChain %_ptr_Function_v2float %self_5 %int_0
+         %79 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %78 %79
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor_1 = OpFunction %void None %24
+     %self_6 = OpFunctionParameter %_ptr_Function_SimpleTemplate_SimpleTemplate_Real2__
+         %82 = OpLabel
+         %83 = OpFunctionCall %void %_PreConstructor_SimpleTemplate_SimpleTemplate_Real2__ %self_6
+               OpReturn
+               OpFunctionEnd
+      %Set_1 = OpFunction %void None %23
+     %self_7 = OpFunctionParameter %_ptr_Function_SimpleTemplate_SimpleTemplate_Real2__
+     %data_1 = OpFunctionParameter %SimpleTemplate_Real2_
+         %87 = OpLabel
+%data_Local_1 = OpVariable %_ptr_Function_SimpleTemplate_Real2_ Function
+               OpStore %data_Local_1 %data_1
+         %89 = OpAccessChain %_ptr_Function_SimpleTemplate_Real2_ %self_7 %int_0
+         %90 = OpLoad %SimpleTemplate_Real2_ %data_Local_1
+               OpStore %89 %90
+               OpReturn
+               OpFunctionEnd
+%_PreConstructor_SimpleTemplate_SimpleTemplate_Real2__ = OpFunction %void None %24
+     %self_8 = OpFunctionParameter %_ptr_Function_SimpleTemplate_SimpleTemplate_Real2__
+         %93 = OpLabel
+         %94 = OpAccessChain %_ptr_Function_SimpleTemplate_Real2_ %self_8 %int_0
+         %95 = OpFunctionCall %void %DefaultConstructor_0 %94
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_TemplatesTest1 = OpFunction %void None %8
+     %self_9 = OpFunctionParameter %_ptr_Function_TemplatesTest1
+         %98 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor_2 = OpFunction %void None %8
+    %self_10 = OpFunctionParameter %_ptr_Function_TemplatesTest1
+        %101 = OpLabel
+        %102 = OpFunctionCall %void %PreConstructor_TemplatesTest1 %self_10
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+    %self_11 = OpFunctionParameter %_ptr_Function_TemplatesTest1
+        %105 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+    %self_12 = OpFunctionParameter %_ptr_Function_TemplatesTest1
+        %108 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_TemplatesTest1 = OpFunction %void None %25
+        %110 = OpLabel
+    %self_13 = OpVariable %_ptr_Function_TemplatesTest1 Function
+        %112 = OpFunctionCall %void %InitializeGlobals
+        %113 = OpFunctionCall %void %DefaultConstructor_2 %self_13
+        %114 = OpFunctionCall %void %CopyInputs_Main %self_13
+        %115 = OpFunctionCall %void %Main %self_13
+        %116 = OpFunctionCall %void %CopyOutputs_Main %self_13
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %25
+        %117 = OpLabel
+               OpReturn
+               OpFunctionEnd

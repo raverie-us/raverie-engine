@@ -1,0 +1,142 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 74
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint GLCompute %EntryPoint_Main_BuiltInsCompute2 "EntryPoint_Main_BuiltInsCompute2" %GlobalInvocationId %LocalInvocationId %LocalInvocationIndex %NumWorkgroups %WorkgroupId %WorkgroupSize
+               OpExecutionMode %EntryPoint_Main_BuiltInsCompute2 LocalSize 1 1 1
+               OpSource Unknown 100
+               OpName %BuiltInsCompute2 "BuiltInsCompute2"
+               OpMemberName %BuiltInsCompute2 4 "GroupId"
+               OpMemberName %BuiltInsCompute2 2 "LocalIndex"
+               OpMemberName %BuiltInsCompute2 5 "GropuSize"
+               OpMemberName %BuiltInsCompute2 0 "GlobalId"
+               OpMemberName %BuiltInsCompute2 3 "WorkgroupCount"
+               OpMemberName %BuiltInsCompute2 1 "LocalId"
+               OpName %GlobalInvocationId "GlobalInvocationId"
+               OpName %LocalInvocationId "LocalInvocationId"
+               OpName %LocalInvocationIndex "LocalInvocationIndex"
+               OpName %NumWorkgroups "NumWorkgroups"
+               OpName %WorkgroupId "WorkgroupId"
+               OpName %WorkgroupSize "WorkgroupSize"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %PreConstructor_BuiltInsCompute2 "PreConstructor_BuiltInsCompute2"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_BuiltInsCompute2 "EntryPoint_Main_BuiltInsCompute2"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %GlobalInvocationId BuiltIn GlobalInvocationId
+               OpDecorate %LocalInvocationId BuiltIn LocalInvocationId
+               OpDecorate %LocalInvocationIndex BuiltIn LocalInvocationIndex
+               OpDecorate %NumWorkgroups BuiltIn NumWorkgroups
+               OpDecorate %WorkgroupId BuiltIn WorkgroupId
+               OpDecorate %WorkgroupSize BuiltIn WorkgroupSize
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+      %v3int = OpTypeVector %int 3
+%_ptr_Function_v3int = OpTypePointer Function %v3int
+%BuiltInsCompute2 = OpTypeStruct %v3int %v3int %int %v3int %v3int %v3int
+%_ptr_Function_BuiltInsCompute2 = OpTypePointer Function %BuiltInsCompute2
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+         %10 = OpTypeFunction %void %_ptr_Function_BuiltInsCompute2
+      %int_0 = OpConstant %int 0
+      %int_1 = OpConstant %int 1
+      %int_2 = OpConstant %int 2
+      %int_3 = OpConstant %int 3
+      %int_4 = OpConstant %int 4
+      %int_5 = OpConstant %int 5
+%_ptr_Input_v3int = OpTypePointer Input %v3int
+%GlobalInvocationId = OpVariable %_ptr_Input_v3int Input
+%LocalInvocationId = OpVariable %_ptr_Input_v3int Input
+%_ptr_Input_int = OpTypePointer Input %int
+%LocalInvocationIndex = OpVariable %_ptr_Input_int Input
+%NumWorkgroups = OpVariable %_ptr_Input_v3int Input
+%WorkgroupId = OpVariable %_ptr_Input_v3int Input
+%WorkgroupSize = OpVariable %_ptr_Input_v3int Input
+         %13 = OpTypeFunction %void
+       %Main = OpFunction %void None %10
+       %self = OpFunctionParameter %_ptr_Function_BuiltInsCompute2
+         %28 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_BuiltInsCompute2 = OpFunction %void None %10
+     %self_0 = OpFunctionParameter %_ptr_Function_BuiltInsCompute2
+         %31 = OpLabel
+         %32 = OpAccessChain %_ptr_Function_v3int %self_0 %int_0
+         %33 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+               OpStore %32 %33
+         %34 = OpAccessChain %_ptr_Function_v3int %self_0 %int_1
+         %35 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+               OpStore %34 %35
+         %36 = OpAccessChain %_ptr_Function_int %self_0 %int_2
+               OpStore %36 %int_0
+         %37 = OpAccessChain %_ptr_Function_v3int %self_0 %int_3
+         %38 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+               OpStore %37 %38
+         %39 = OpAccessChain %_ptr_Function_v3int %self_0 %int_4
+         %40 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+               OpStore %39 %40
+         %41 = OpAccessChain %_ptr_Function_v3int %self_0 %int_5
+         %42 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+               OpStore %41 %42
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %10
+     %self_1 = OpFunctionParameter %_ptr_Function_BuiltInsCompute2
+         %45 = OpLabel
+         %46 = OpFunctionCall %void %PreConstructor_BuiltInsCompute2 %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %10
+     %self_2 = OpFunctionParameter %_ptr_Function_BuiltInsCompute2
+         %49 = OpLabel
+         %50 = OpAccessChain %_ptr_Function_v3int %self_2 %int_0
+         %51 = OpLoad %v3int %GlobalInvocationId
+               OpStore %50 %51
+         %52 = OpAccessChain %_ptr_Function_v3int %self_2 %int_1
+         %53 = OpLoad %v3int %LocalInvocationId
+               OpStore %52 %53
+         %54 = OpAccessChain %_ptr_Function_int %self_2 %int_2
+         %55 = OpLoad %int %LocalInvocationIndex
+               OpStore %54 %55
+         %56 = OpAccessChain %_ptr_Function_v3int %self_2 %int_3
+         %57 = OpLoad %v3int %NumWorkgroups
+               OpStore %56 %57
+         %58 = OpAccessChain %_ptr_Function_v3int %self_2 %int_4
+         %59 = OpLoad %v3int %WorkgroupId
+               OpStore %58 %59
+         %60 = OpAccessChain %_ptr_Function_v3int %self_2 %int_5
+         %61 = OpLoad %v3int %WorkgroupSize
+               OpStore %60 %61
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %10
+     %self_3 = OpFunctionParameter %_ptr_Function_BuiltInsCompute2
+         %64 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_BuiltInsCompute2 = OpFunction %void None %13
+         %66 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_BuiltInsCompute2 Function
+         %68 = OpFunctionCall %void %InitializeGlobals
+         %69 = OpFunctionCall %void %DefaultConstructor %self_4
+         %70 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %71 = OpFunctionCall %void %Main %self_4
+         %72 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %13
+         %73 = OpLabel
+               OpReturn
+               OpFunctionEnd

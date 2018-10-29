@@ -4,7 +4,7 @@
 struct RESOURCE_NAME_
 {
 	[StageInput] var Uv : Real2;
-	[Input] var Texture : Sampler2d;
+	[Input] var Texture : SampledImage2d;
 
 	[Output] var Target0 : Real4;
 

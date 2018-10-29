@@ -8,6 +8,10 @@ get_filename_component(ParentDirectory ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 # get our current directory
 set(CurrentDirectory ${CMAKE_CURRENT_LIST_DIR})
 
+if(use_spirv_shared_library)
+  set(SpirVToolsCompileOptions -DSPIRV_TOOLS_SHAREDLIB)
+endif()
+
 ################################################################################
 # define all of the libraries that are in this folder
 ################################################################################
@@ -38,6 +42,8 @@ include(UiWidget/CMakeLists.txt)
 include(Widget/CMakeLists.txt)
 include(ZilchShaders/CMakeLists.txt)
 
+
+add_subdirectory(SpirV)
 ################################################################################
 # define include directories for all of our libraries
 ################################################################################
@@ -75,6 +81,15 @@ target_include_directories(Widget
 target_include_directories(ZilchShaders
     PUBLIC 
         ${CurrentDirectory}
+        ${CurrentDirectory}/SpirV/SPIRV-Cross
+        ${CurrentDirectory}/SpirV/SpirVFiles
+        ${CurrentDirectory}/SpirV/SpirVFiles/external
+        ${CurrentDirectory}/SpirV/SpirVFiles/external/SPIRV-Headers/include
+        ${CurrentDirectory}/SpirV/SpirVFiles/include
+        ${CurrentDirectory}/SpirV/SpirVFiles/include/spirv-tools
+        ${CurrentDirectory}/SpirV/SpirVFiles/build
+        ${CurrentDirectory}/SpirV/SpirVFiles/tools
+        ${CurrentDirectory}/SpirV/SpirVFiles/source
 )
 
 ################################################################################
@@ -89,10 +104,12 @@ target_link_libraries(Editor
                       Common
 ) 
 target_link_libraries(ZilchShaders
-                      PUBLIC
+                      PRIVATE
                       Common
                       Geometry
                       Zilch
+                      SPIRV-Cross
+                      SPIRV-Tools-opt
 ) 
 target_link_libraries(Widget
                       PUBLIC
@@ -176,6 +193,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
             -MDd
             -nologo
             -WX
+            ${SpirVToolsCompileOptions}
             ${common_flags}
     )
 else()

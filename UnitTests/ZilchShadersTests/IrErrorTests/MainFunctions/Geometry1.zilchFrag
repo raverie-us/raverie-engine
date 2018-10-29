@@ -1,0 +1,9 @@
+struct GeoData
+{
+  var Data : Real;
+}
+
+[Geometry(maxVertices : 3)][UnitTest]
+struct Geometry1
+{
+}

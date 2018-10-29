@@ -1,0 +1,23 @@
+struct MathLog10Implements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Log10(param0 : Real) : Real
+  {
+    return Math.Log(param0) / Math.Log(10);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Log10(param0 : Real2) : Real2
+  {
+    return Math.Log(param0) / Math.Log(10);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Log10(param0 : Real3) : Real3
+  {
+    return Math.Log(param0) / Math.Log(10);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Log10(param0 : Real4) : Real4
+  {
+    return Math.Log(param0) / Math.Log(10);
+  }
+}

@@ -1,0 +1,159 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 84
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_BitwiseXor "EntryPoint_Main_BitwiseXor"
+               OpExecutionMode %EntryPoint_Main_BitwiseXor OriginUpperLeft
+               OpSource Unknown 100
+               OpName %BitwiseXor "BitwiseXor"
+               OpMemberName %BitwiseXor 0 "Dummy"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %Test "Test"
+               OpName %lhs "lhs"
+               OpName %rhs "rhs"
+               OpName %result "result"
+               OpName %Test_0 "Test"
+               OpName %lhs_0 "lhs"
+               OpName %rhs_0 "rhs"
+               OpName %result_0 "result"
+               OpName %Test_1 "Test"
+               OpName %lhs_1 "lhs"
+               OpName %rhs_1 "rhs"
+               OpName %result_1 "result"
+               OpName %Test_2 "Test"
+               OpName %lhs_2 "lhs"
+               OpName %rhs_2 "rhs"
+               OpName %result_2 "result"
+               OpName %PreConstructor_BitwiseXor "PreConstructor_BitwiseXor"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_BitwiseXor "EntryPoint_Main_BitwiseXor"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+ %BitwiseXor = OpTypeStruct %int
+%_ptr_Function_BitwiseXor = OpTypePointer Function %BitwiseXor
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_BitwiseXor
+          %9 = OpTypeFunction %void
+      %int_0 = OpConstant %int 0
+      %v2int = OpTypeVector %int 2
+%_ptr_Function_v2int = OpTypePointer Function %v2int
+      %v3int = OpTypeVector %int 3
+%_ptr_Function_v3int = OpTypePointer Function %v3int
+      %v4int = OpTypeVector %int 4
+%_ptr_Function_v4int = OpTypePointer Function %v4int
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_BitwiseXor
+         %19 = OpLabel
+         %20 = OpFunctionCall %void %Test
+         %21 = OpFunctionCall %void %Test_0
+         %22 = OpFunctionCall %void %Test_1
+         %23 = OpFunctionCall %void %Test_2
+               OpReturn
+               OpFunctionEnd
+       %Test = OpFunction %void None %9
+         %25 = OpLabel
+        %lhs = OpVariable %_ptr_Function_int Function
+        %rhs = OpVariable %_ptr_Function_int Function
+     %result = OpVariable %_ptr_Function_int Function
+               OpStore %lhs %int_0
+               OpStore %rhs %int_0
+         %29 = OpLoad %int %lhs
+         %30 = OpLoad %int %rhs
+         %31 = OpBitwiseXor %int %29 %30
+               OpStore %result %31
+               OpReturn
+               OpFunctionEnd
+     %Test_0 = OpFunction %void None %9
+         %33 = OpLabel
+      %lhs_0 = OpVariable %_ptr_Function_v2int Function
+      %rhs_0 = OpVariable %_ptr_Function_v2int Function
+   %result_0 = OpVariable %_ptr_Function_v2int Function
+         %37 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %lhs_0 %37
+         %38 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %rhs_0 %38
+         %39 = OpLoad %v2int %lhs_0
+         %40 = OpLoad %v2int %rhs_0
+         %41 = OpBitwiseXor %v2int %39 %40
+               OpStore %result_0 %41
+               OpReturn
+               OpFunctionEnd
+     %Test_1 = OpFunction %void None %9
+         %43 = OpLabel
+      %lhs_1 = OpVariable %_ptr_Function_v3int Function
+      %rhs_1 = OpVariable %_ptr_Function_v3int Function
+   %result_1 = OpVariable %_ptr_Function_v3int Function
+         %47 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+               OpStore %lhs_1 %47
+         %48 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+               OpStore %rhs_1 %48
+         %49 = OpLoad %v3int %lhs_1
+         %50 = OpLoad %v3int %rhs_1
+         %51 = OpBitwiseXor %v3int %49 %50
+               OpStore %result_1 %51
+               OpReturn
+               OpFunctionEnd
+     %Test_2 = OpFunction %void None %9
+         %53 = OpLabel
+      %lhs_2 = OpVariable %_ptr_Function_v4int Function
+      %rhs_2 = OpVariable %_ptr_Function_v4int Function
+   %result_2 = OpVariable %_ptr_Function_v4int Function
+         %57 = OpCompositeConstruct %v4int %int_0 %int_0 %int_0 %int_0
+               OpStore %lhs_2 %57
+         %58 = OpCompositeConstruct %v4int %int_0 %int_0 %int_0 %int_0
+               OpStore %rhs_2 %58
+         %59 = OpLoad %v4int %lhs_2
+         %60 = OpLoad %v4int %rhs_2
+         %61 = OpBitwiseXor %v4int %59 %60
+               OpStore %result_2 %61
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_BitwiseXor = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_BitwiseXor
+         %64 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_BitwiseXor
+         %67 = OpLabel
+         %68 = OpFunctionCall %void %PreConstructor_BitwiseXor %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_BitwiseXor
+         %71 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_BitwiseXor
+         %74 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_BitwiseXor = OpFunction %void None %9
+         %76 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_BitwiseXor Function
+         %78 = OpFunctionCall %void %InitializeGlobals
+         %79 = OpFunctionCall %void %DefaultConstructor %self_4
+         %80 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %81 = OpFunctionCall %void %Main %self_4
+         %82 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %9
+         %83 = OpLabel
+               OpReturn
+               OpFunctionEnd

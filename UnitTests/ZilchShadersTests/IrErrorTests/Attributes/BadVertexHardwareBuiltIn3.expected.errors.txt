@@ -1,0 +1,2 @@
+  IrErrorTests\Attributes\BadVertexHardwareBuiltIn3.zilchFrag(5): Field 'FragCoord : Real4' does not match any provided HardwareBuiltInInput with fragment type 'Vertex'.:
+  Field 'FragCoord : Real4' does not match any provided HardwareBuiltInInput with fragment type 'Vertex'.

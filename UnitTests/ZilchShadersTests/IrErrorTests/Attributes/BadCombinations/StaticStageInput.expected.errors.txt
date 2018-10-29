@@ -1,0 +1,2 @@
+  IrErrorTests\Attributes\BadCombinations\StaticStageInput.zilchFrag(4): Attribute 'StageInput' cannot be combined with attribute(s): Static:
+  Attribute 'StageInput' cannot be combined with attribute(s): Static

@@ -1,0 +1,37 @@
+struct OperatorGetSetHelper[Type]
+{
+  [Static]
+  function Test()
+  {
+    var t = Type();
+    for(var i = 0; i < Type.Count; ++i)
+    {
+      var r = t[i];
+      t[i] = r;
+      ++i;
+    }
+  }
+}
+
+[Pixel][UnitTest]
+struct OperatorGetSet
+{
+  [EntryPoint]
+  function Main()
+  {
+    OperatorGetSetHelper[Real].Test();
+    OperatorGetSetHelper[Real2].Test();
+    OperatorGetSetHelper[Real3].Test();
+    OperatorGetSetHelper[Real4].Test();
+    
+    OperatorGetSetHelper[Integer].Test();
+    OperatorGetSetHelper[Integer2].Test();
+    OperatorGetSetHelper[Integer3].Test();
+    OperatorGetSetHelper[Integer4].Test();
+    
+    OperatorGetSetHelper[Boolean].Test();
+    OperatorGetSetHelper[Boolean2].Test();
+    OperatorGetSetHelper[Boolean3].Test();
+    OperatorGetSetHelper[Boolean4].Test();
+  }
+}

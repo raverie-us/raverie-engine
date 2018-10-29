@@ -1,0 +1,13 @@
+[Pixel][UnitTest]
+struct VectorSpecConstants
+{
+  [Static][SpecConstant] var ConstantInteger3 : Integer3;
+  [Static][SpecConstant] var ConstantReal3 : Real3;
+  
+  [EntryPoint]
+  function Main()
+  {
+    var constantInteger3 = VectorSpecConstants.ConstantInteger3;
+    var constantReal3 = VectorSpecConstants.ConstantReal3;
+  }
+}

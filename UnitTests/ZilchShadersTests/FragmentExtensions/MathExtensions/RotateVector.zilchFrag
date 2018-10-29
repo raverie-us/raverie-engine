@@ -1,0 +1,9 @@
+struct RotateVectorImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function RotateVector(vector : Real3, axis : Real3, radians : Real) : Real3
+  {
+    var rotMat = Math.ToReal3x3(axis, radians);
+    return Math.Multiply(rotMat, vector);
+  }
+}

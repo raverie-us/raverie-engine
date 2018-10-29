@@ -1,0 +1,60 @@
+struct MathGenerateTransformMatrixImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function GenerateTransformMatrix2x2(radians: Real, scale : Real2) : Real2x2
+  {
+    var result = Math.GenerateRotationMatrix2x2(radians);
+    result[0] = result[0] * scale;
+    result[1] = result[1] * scale;
+    return result;
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function GenerateTransformMatrix3x3(translation : Real2, rotationRadians : Real, scale : Real2) : Real3x3
+  {
+    var r2x2 = Math.GenerateTransformMatrix2x2(rotationRadians, scale);
+    
+    var result = Real3x3();
+    
+    result[0] = Real3(r2x2[0], translation.X);
+    result[1] = Real3(r2x2[1], translation.Y);
+    result[2] = Real3(0.0, 0.0, 1.0);
+    
+    return result;
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function GenerateTransformMatrix3x3(rotation : Real3x3, scale : Real3) : Real3x3
+  {
+    var result = rotation;
+    result[0] = result[0] * scale;
+    result[1] = result[1] * scale;
+    result[2] = result[2] * scale;
+    return result;
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function GenerateTransformMatrix3x3(rotation : Quaternion, scale : Real3) : Real3x3
+  {
+    var rotationMatrix = Math.ToReal3x3(rotation);
+    return Math.GenerateTransformMatrix3x3(rotationMatrix, scale);
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function GenerateTransformMatrix4x4(translation : Real3, rotation : Real3x3, scale : Real3) : Real4x4
+  {
+    var result = Real4x4();
+    result[0] = Real4(rotation[0] * scale, translation[0]);
+    result[1] = Real4(rotation[1] * scale, translation[1]);
+    result[2] = Real4(rotation[2] * scale, translation[2]);
+    result[3] = Real4(0.0, 0.0, 0.0, 1.0);
+    return result;
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function GenerateTransformMatrix4x4(translation : Real3, rotation : Quaternion, scale : Real3) : Real4x4
+  {
+    var rotationMatrix = Math.ToReal3x3(rotation);
+    return Math.GenerateTransformMatrix4x4(translation, rotationMatrix, scale);
+  }
+}

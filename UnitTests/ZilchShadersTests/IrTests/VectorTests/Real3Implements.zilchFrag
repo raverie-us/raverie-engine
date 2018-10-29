@@ -1,0 +1,18 @@
+[Pixel][UnitTest]
+struct Real3Implements
+{
+  [EntryPoint]
+  function Main()
+  {
+    var max = Real3.PositiveMax;
+    var posMin = Real3.PositiveValueClosestToZero;
+    var negMax = Real3.NegativeValueClosestToZero;
+    var min = Real3.NegativeMin;
+    
+    var x = Real3.XAxis;
+    var y = Real3.YAxis;
+    var z = Real3.ZAxis;
+    var zero = Real3.Zero;
+    var axis = Real3.GetAxis(1);
+  }
+}

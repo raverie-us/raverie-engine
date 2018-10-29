@@ -1,0 +1,6 @@
+[Vertex]
+struct BadInputParam3
+{
+  // Too many params
+  [Input("Name", "Value")] var MyVar : Real = 1.0;
+}

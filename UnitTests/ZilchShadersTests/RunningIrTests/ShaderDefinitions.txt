@@ -1,0 +1,227 @@
+Array Shaders = 
+[
+	{
+		string ShaderName = "Real4x4MemberAccessTest",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"Real4x4MemberAccessTest",
+		],
+	},
+  {
+		string ShaderName = "Real4x4RowAccessTest",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"Real4x4RowAccessTest",
+		],
+	},
+  {
+		string ShaderName = "Real4x4DoubleBracketAcessTest",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"Real4x4DoubleBracketAcessTest",
+		],
+	},
+  {
+		string ShaderName = "Real4x4MultiplyTest",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"Real4x4MultiplyTests",
+		],
+	},
+  {
+		string ShaderName = "Real4x4MatrixMultiplyTest",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"Real4x4MatrixMultiplyTests",
+		],
+	},
+  {
+		string ShaderName = "Real4x4MultiplyPointTests",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"Real4x4MultiplyPointTests",
+		],
+	},
+  {
+		string ShaderName = "Real4x4MultiplyNormalTests",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"Real4x4MultiplyNormalTests",
+		],
+	},
+  {
+		string ShaderName = "Real4x4TransposeTests",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"Real4x4TransposeTests",
+		],
+	},
+  {
+		string ShaderName = "GenerateScaleMatrix2x2Test",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"GenerateScaleMatrix2x2Test",
+		],
+	},
+  {
+		string ShaderName = "GenerateScaleMatrix3x3Test_0",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"GenerateScaleMatrix3x3Test_0",
+		],
+	},
+  {
+		string ShaderName = "GenerateScaleMatrix3x3Test_1",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"GenerateScaleMatrix3x3Test_1",
+		],
+	},
+  {
+		string ShaderName = "GenerateScaleMatrix4x4Test",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"GenerateScaleMatrix4x4Test",
+		],
+	},
+  {
+		string ShaderName = "GenerateRotationMatrix2x2Test",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"GenerateRotationMatrix2x2Test",
+		],
+	},
+  {
+		string ShaderName = "GenerateRotationMatrix3x3Test_0",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"GenerateRotationMatrix3x3Test_0",
+		],
+	},
+  {
+		string ShaderName = "GenerateRotationMatrix3x3Test_1",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"GenerateRotationMatrix3x3Test_1",
+		],
+	},
+  {
+		string ShaderName = "GenerateRotationMatrix4x4Test",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"GenerateRotationMatrix4x4Test",
+		],
+	},
+  {
+		string ShaderName = "GenerateTranslationMatrix3x3Test",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"GenerateTranslationMatrix3x3Test",
+		],
+	},
+  {
+		string ShaderName = "GenerateTranslationMatrix4x4Test",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"GenerateTranslationMatrix4x4Test",
+		],
+	},
+  {
+		string ShaderName = "GenerateTransformMatrix3x3Test_0",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"GenerateTransformMatrix3x3Test_0",
+		],
+	},
+  {
+		string ShaderName = "GenerateTransformMatrix3x3Test_1",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"GenerateTransformMatrix3x3Test_1",
+		],
+	},
+  {
+		string ShaderName = "GenerateTransformMatrix4x4Test",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"GenerateTransformMatrix4x4Test",
+		],
+	},
+  {
+		string ShaderName = "SlerpQuaternionTest",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"SlerpQuaternionTest",
+		],
+	},
+  {
+		string ShaderName = "InvertQuaternionTest",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"InvertQuaternionTest",
+		],
+	},
+  {
+		string ShaderName = "MultiplyQuaternionTest",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"MultiplyQuaternionTest",
+		],
+	},
+  {
+		string ShaderName = "MultiplyQuaternionVectorTest",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"MultiplyQuaternionVectorTest",
+		],
+	},
+  {
+		string ShaderName = "AxisAngleToQuaternionTest",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"AxisAngleToQuaternionTest",
+		],
+	},
+  {
+		string ShaderName = "Matrix3ToQuaternionTest",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"Matrix3ToQuaternionTest",
+		],
+	},
+  {
+		string ShaderName = "FracTests",
+		Array FragmentNames = 
+		[
+			"BasicVertexFrag",
+			"FracTests",
+		],
+	},
+],

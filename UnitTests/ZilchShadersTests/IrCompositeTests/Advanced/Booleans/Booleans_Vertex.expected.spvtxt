@@ -1,0 +1,248 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 146
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Vertex %EntryPoint_Main_Booleans_Vertex "EntryPoint_Main_Booleans_Vertex" %Out
+               OpSource Unknown 100
+               OpName %Booleans_Vertex "Booleans_Vertex"
+               OpMemberName %Booleans_Vertex 2 "Stage_MyVar1_Boolean"
+               OpMemberName %Booleans_Vertex 0 "Stage_MyVar2_Boolean2"
+               OpMemberName %Booleans_Vertex 4 "Stage_MyVar3_Boolean3"
+               OpMemberName %Booleans_Vertex 1 "Stage_MyVar2_Integer2"
+               OpMemberName %Booleans_Vertex 5 "Stage_MyVar3_Integer3"
+               OpMemberName %Booleans_Vertex 3 "Stage_MyVar1_Integer"
+               OpName %Vertex "Vertex"
+               OpMemberName %Vertex 4 "MyVar3"
+               OpMemberName %Vertex 5 "MyInt3"
+               OpMemberName %Vertex 0 "MyVar1"
+               OpMemberName %Vertex 1 "MyInt1"
+               OpMemberName %Vertex 2 "MyVar2"
+               OpMemberName %Vertex 3 "MyInt2"
+               OpName %Booleans_VertexOut "Booleans_VertexOut"
+               OpMemberName %Booleans_VertexOut 2 "MyVar1_Boolean"
+               OpMemberName %Booleans_VertexOut 5 "MyVar3"
+               OpMemberName %Booleans_VertexOut 1 "MyVar2"
+               OpMemberName %Booleans_VertexOut 3 "MyVar1"
+               OpMemberName %Booleans_VertexOut 4 "MyVar3_Boolean3"
+               OpMemberName %Booleans_VertexOut 0 "MyVar2_Boolean2"
+               OpName %Out "Out"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %vertex "vertex"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_0 "self"
+               OpName %Main_0 "Main"
+               OpName %self_1 "self"
+               OpName %PreConstructor_Vertex "PreConstructor_Vertex"
+               OpName %self_2 "self"
+               OpName %PreConstructor_Booleans_Vertex "PreConstructor_Booleans_Vertex"
+               OpName %self_3 "self"
+               OpName %DefaultConstructor_0 "DefaultConstructor"
+               OpName %self_4 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_5 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_6 "self"
+               OpName %zero "zero"
+               OpName %one "one"
+               OpName %zero_0 "zero"
+               OpName %one_0 "one"
+               OpName %EntryPoint_Main_Booleans_Vertex "EntryPoint_Main_Booleans_Vertex"
+               OpName %self_7 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %Booleans_VertexOut Block
+               OpDecorate %Out Location 0
+       %bool = OpTypeBool
+%_ptr_Function_bool = OpTypePointer Function %bool
+     %v2bool = OpTypeVector %bool 2
+%_ptr_Function_v2bool = OpTypePointer Function %v2bool
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+      %v2int = OpTypeVector %int 2
+%_ptr_Function_v2int = OpTypePointer Function %v2int
+     %v3bool = OpTypeVector %bool 3
+%_ptr_Function_v3bool = OpTypePointer Function %v3bool
+      %v3int = OpTypeVector %int 3
+%_ptr_Function_v3int = OpTypePointer Function %v3int
+%Booleans_Vertex = OpTypeStruct %v2bool %v2int %bool %int %v3bool %v3int
+%_ptr_Function_Booleans_Vertex = OpTypePointer Function %Booleans_Vertex
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+         %18 = OpTypeFunction %void %_ptr_Function_Booleans_Vertex
+     %Vertex = OpTypeStruct %bool %int %v2bool %v2int %v3bool %v3int
+%_ptr_Function_Vertex = OpTypePointer Function %Vertex
+         %21 = OpTypeFunction %void %_ptr_Function_Vertex
+      %int_0 = OpConstant %int 0
+      %false = OpConstantFalse %bool
+      %int_1 = OpConstant %int 1
+      %int_2 = OpConstant %int 2
+      %int_3 = OpConstant %int 3
+      %int_4 = OpConstant %int 4
+      %int_5 = OpConstant %int 5
+    %int_0_0 = OpConstant %int 0
+    %int_2_0 = OpConstant %int 2
+    %int_1_0 = OpConstant %int 1
+    %int_3_0 = OpConstant %int 3
+    %int_4_0 = OpConstant %int 4
+    %int_5_0 = OpConstant %int 5
+    %false_0 = OpConstantFalse %bool
+%_ptr_Output_v2int = OpTypePointer Output %v2int
+%Booleans_VertexOut = OpTypeStruct %v2int %v2int %int %int %v3int %v3int
+%_ptr_Output_Booleans_VertexOut = OpTypePointer Output %Booleans_VertexOut
+        %Out = OpVariable %_ptr_Output_Booleans_VertexOut Output
+%_ptr_Output_int = OpTypePointer Output %int
+%_ptr_Output_v3int = OpTypePointer Output %v3int
+         %27 = OpTypeFunction %void
+       %Main = OpFunction %void None %18
+       %self = OpFunctionParameter %_ptr_Function_Booleans_Vertex
+         %45 = OpLabel
+     %vertex = OpVariable %_ptr_Function_Vertex Function
+         %47 = OpVariable %_ptr_Function_Vertex Function
+         %48 = OpFunctionCall %void %DefaultConstructor %47
+         %49 = OpLoad %Vertex %47
+               OpStore %vertex %49
+         %50 = OpFunctionCall %void %Main_0 %vertex
+         %51 = OpAccessChain %_ptr_Function_v2bool %self %int_0_0
+         %52 = OpAccessChain %_ptr_Function_v2bool %vertex %int_2_0
+         %53 = OpLoad %v2bool %52
+               OpStore %51 %53
+         %54 = OpAccessChain %_ptr_Function_v2int %self %int_1_0
+         %55 = OpAccessChain %_ptr_Function_v2int %vertex %int_3_0
+         %56 = OpLoad %v2int %55
+               OpStore %54 %56
+         %57 = OpAccessChain %_ptr_Function_bool %self %int_2_0
+         %58 = OpAccessChain %_ptr_Function_bool %vertex %int_0_0
+         %59 = OpLoad %bool %58
+               OpStore %57 %59
+         %60 = OpAccessChain %_ptr_Function_int %self %int_3_0
+         %61 = OpAccessChain %_ptr_Function_int %vertex %int_1_0
+         %62 = OpLoad %int %61
+               OpStore %60 %62
+         %63 = OpAccessChain %_ptr_Function_v3bool %self %int_4_0
+         %64 = OpAccessChain %_ptr_Function_v3bool %vertex %int_4_0
+         %65 = OpLoad %v3bool %64
+               OpStore %63 %65
+         %66 = OpAccessChain %_ptr_Function_v3int %self %int_5_0
+         %67 = OpAccessChain %_ptr_Function_v3int %vertex %int_5_0
+         %68 = OpLoad %v3int %67
+               OpStore %66 %68
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %21
+     %self_0 = OpFunctionParameter %_ptr_Function_Vertex
+         %71 = OpLabel
+         %72 = OpFunctionCall %void %PreConstructor_Vertex %self_0
+               OpReturn
+               OpFunctionEnd
+     %Main_0 = OpFunction %void None %21
+     %self_1 = OpFunctionParameter %_ptr_Function_Vertex
+         %75 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_Vertex = OpFunction %void None %21
+     %self_2 = OpFunctionParameter %_ptr_Function_Vertex
+         %78 = OpLabel
+         %79 = OpAccessChain %_ptr_Function_bool %self_2 %int_0
+               OpStore %79 %false
+         %80 = OpAccessChain %_ptr_Function_int %self_2 %int_1
+               OpStore %80 %int_0
+         %81 = OpAccessChain %_ptr_Function_v2bool %self_2 %int_2
+         %82 = OpCompositeConstruct %v2bool %false %false
+               OpStore %81 %82
+         %83 = OpAccessChain %_ptr_Function_v2int %self_2 %int_3
+         %84 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %83 %84
+         %85 = OpAccessChain %_ptr_Function_v3bool %self_2 %int_4
+         %86 = OpCompositeConstruct %v3bool %false %false %false
+               OpStore %85 %86
+         %87 = OpAccessChain %_ptr_Function_v3int %self_2 %int_5
+         %88 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+               OpStore %87 %88
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_Booleans_Vertex = OpFunction %void None %18
+     %self_3 = OpFunctionParameter %_ptr_Function_Booleans_Vertex
+         %91 = OpLabel
+         %92 = OpAccessChain %_ptr_Function_v2bool %self_3 %int_0_0
+         %93 = OpCompositeConstruct %v2bool %false_0 %false_0
+               OpStore %92 %93
+         %94 = OpAccessChain %_ptr_Function_v2int %self_3 %int_1_0
+         %95 = OpCompositeConstruct %v2int %int_0_0 %int_0_0
+               OpStore %94 %95
+         %96 = OpAccessChain %_ptr_Function_bool %self_3 %int_2_0
+               OpStore %96 %false_0
+         %97 = OpAccessChain %_ptr_Function_int %self_3 %int_3_0
+               OpStore %97 %int_0_0
+         %98 = OpAccessChain %_ptr_Function_v3bool %self_3 %int_4_0
+         %99 = OpCompositeConstruct %v3bool %false_0 %false_0 %false_0
+               OpStore %98 %99
+        %100 = OpAccessChain %_ptr_Function_v3int %self_3 %int_5_0
+        %101 = OpCompositeConstruct %v3int %int_0_0 %int_0_0 %int_0_0
+               OpStore %100 %101
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor_0 = OpFunction %void None %18
+     %self_4 = OpFunctionParameter %_ptr_Function_Booleans_Vertex
+        %104 = OpLabel
+        %105 = OpFunctionCall %void %PreConstructor_Booleans_Vertex %self_4
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %18
+     %self_5 = OpFunctionParameter %_ptr_Function_Booleans_Vertex
+        %108 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %18
+     %self_6 = OpFunctionParameter %_ptr_Function_Booleans_Vertex
+        %111 = OpLabel
+        %112 = OpAccessChain %_ptr_Output_v2int %Out %int_0_0
+        %113 = OpAccessChain %_ptr_Function_v2bool %self_6 %int_0_0
+        %114 = OpLoad %v2bool %113
+       %zero = OpCompositeConstruct %v2int %int_0_0 %int_0_0
+        %one = OpCompositeConstruct %v2int %int_1_0 %int_1_0
+        %117 = OpSelect %v2int %114 %one %zero
+               OpStore %112 %117
+        %118 = OpAccessChain %_ptr_Output_v2int %Out %int_1_0
+        %119 = OpAccessChain %_ptr_Function_v2int %self_6 %int_1_0
+        %120 = OpLoad %v2int %119
+               OpStore %118 %120
+        %121 = OpAccessChain %_ptr_Output_int %Out %int_2_0
+        %122 = OpAccessChain %_ptr_Function_bool %self_6 %int_2_0
+        %123 = OpLoad %bool %122
+        %124 = OpSelect %int %123 %int_1_0 %int_0_0
+               OpStore %121 %124
+        %125 = OpAccessChain %_ptr_Output_int %Out %int_3_0
+        %126 = OpAccessChain %_ptr_Function_int %self_6 %int_3_0
+        %127 = OpLoad %int %126
+               OpStore %125 %127
+        %128 = OpAccessChain %_ptr_Output_v3int %Out %int_4_0
+        %129 = OpAccessChain %_ptr_Function_v3bool %self_6 %int_4_0
+        %130 = OpLoad %v3bool %129
+     %zero_0 = OpCompositeConstruct %v3int %int_0_0 %int_0_0 %int_0_0
+      %one_0 = OpCompositeConstruct %v3int %int_1_0 %int_1_0 %int_1_0
+        %133 = OpSelect %v3int %130 %one_0 %zero_0
+               OpStore %128 %133
+        %134 = OpAccessChain %_ptr_Output_v3int %Out %int_5_0
+        %135 = OpAccessChain %_ptr_Function_v3int %self_6 %int_5_0
+        %136 = OpLoad %v3int %135
+               OpStore %134 %136
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_Booleans_Vertex = OpFunction %void None %27
+        %138 = OpLabel
+     %self_7 = OpVariable %_ptr_Function_Booleans_Vertex Function
+        %140 = OpFunctionCall %void %InitializeGlobals
+        %141 = OpFunctionCall %void %DefaultConstructor_0 %self_7
+        %142 = OpFunctionCall %void %CopyInputs_Main %self_7
+        %143 = OpFunctionCall %void %Main %self_7
+        %144 = OpFunctionCall %void %CopyOutputs_Main %self_7
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %27
+        %145 = OpLabel
+               OpReturn
+               OpFunctionEnd

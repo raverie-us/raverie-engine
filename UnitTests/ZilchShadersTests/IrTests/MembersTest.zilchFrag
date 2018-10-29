@@ -1,0 +1,52 @@
+struct SubStruct
+{
+  var R4 : Real4;
+}
+
+[Pixel][UnitTest]
+struct MembersTest
+{
+  var Sub : SubStruct;
+  var R1 : Real;
+  var R2 : Real2;
+  var R3 : Real3;
+  var I : Integer;
+  
+  function Real3Test()
+  {
+    var r3 = Real3();
+    var x = r3.X;
+    var y = r3.Y;
+    var z = r3.Z;
+  }
+  
+  function Real4Test()
+  {
+    var r4 = Real4();
+    var x = r4.X;
+    var y = r4.Y;
+    var z = r4.Z;
+    var w = r4.W;
+    var r2 = r4.XZ;
+    var r3 = r4.ZYY;
+  }
+  
+  function Main0()
+  {
+    this.I = 0;
+    this.Sub.R4 = Real4(0.0);
+    
+    var sub = this.Sub;
+    sub = this.Sub;
+    sub.R4 = Real4(1.0);
+    
+    var sum = sub.R4 + sub.R4;
+    var r3 = sub.R4.XYW;
+    r3 = (sub.R4 + sub.R4).ZZZ;
+    var r2 = (sub.R4 - sub.R4).ZY;
+    var r = (sub.R4 + sub.R4).Y;
+    
+    this.Real3Test();
+    this.Real4Test();
+  }
+}

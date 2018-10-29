@@ -1,0 +1,32 @@
+enum MyEnum
+{
+  Value1,
+  Value2,
+  Value3
+}
+
+[UnitTest][Pixel]
+struct EnumBinaryOperators
+{
+  [EntryPoint]
+  function Main()
+  {
+    var result1  = MyEnum.Value1 + MyEnum.Value2;
+    var result2  = MyEnum.Value1 - MyEnum.Value2;
+    var result3  = MyEnum.Value1 * MyEnum.Value2;
+    var result4  = MyEnum.Value1 / MyEnum.Value2;
+    var result5  = MyEnum.Value1 | MyEnum.Value2;
+    var result6  = MyEnum.Value1 & MyEnum.Value2;
+    var result7  = MyEnum.Value1 $ MyEnum.Value2;
+    var result8  = MyEnum.Value1 % MyEnum.Value2;
+    var result9  = MyEnum.Value1 == MyEnum.Value2;
+    var result10  = MyEnum.Value1 != MyEnum.Value2;
+    var result11 = MyEnum.Value1 >= MyEnum.Value2;
+    var result12 = MyEnum.Value1 <= MyEnum.Value2;
+    var result13 = MyEnum.Value1 > MyEnum.Value2;
+    var result14 = MyEnum.Value1 < MyEnum.Value2;
+    
+    // Add one extra test to make sure binary operator of enum and int works
+    var result15 = MyEnum.Value1 + 2;
+  }
+}

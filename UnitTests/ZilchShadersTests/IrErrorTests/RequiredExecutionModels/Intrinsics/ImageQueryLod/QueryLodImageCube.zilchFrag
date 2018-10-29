@@ -1,0 +1,11 @@
+[UnitTest][Vertex]
+struct QueryLodImageCube
+{
+  var Image : ImageCube;
+  var Sampler : Sampler;
+  
+  function Main()
+  {
+    ShaderIntrinsics.ImageQueryLod(this.Image, this.Sampler, Real3());
+  }
+}

@@ -39,6 +39,14 @@ public:
   String EmitSpace();
   String EmitIndent();
 
+  ShaderCodeBuilder& WriteMemberVariableDeclaration(StringParam variableName, StringParam variableTypeName);
+  ShaderCodeBuilder& WriteVariableDeclaration(ShaderIRAttributeList& attributes, StringParam variableName, StringParam variableTypeName);
+  ShaderCodeBuilder& WriteVariableDeclaration(ShaderIRAttribute& attribute, StringParam variableName, StringParam variableTypeName);
+  ShaderCodeBuilder& WriteLocalVariableDefaultConstruction(StringParam variableName, StringParam variableTypeName);
+  ShaderCodeBuilder& DeclareAttribute(ShaderIRAttribute& attribute);
+  ShaderCodeBuilder& DeclareAttribute(StringParam attributeName);
+  ShaderCodeBuilder& DeclareAttributeParams(ShaderIRAttribute& attribute);
+
   // These functions are test replacement functions for the above Emit functions. It's less efficient
   // to build up a string, return it, and then append it into our builder instead of just writing a
   // function to append directly into the builder. To make these work with the insertion operator they return this.
@@ -65,23 +73,6 @@ public:
   const char* LineReturn;
   const char* Space;
   const char* SingleIndentation;
-};
-
-//-------------------------------------------------------------------ScopedShaderCodeBuilder
-
-// A code builder for a scope. This replaces the builder on the translator's context during this builder's life-time.
-// This makes it easier to gather information from a sub-portion of the tree and then store for later use, such as
-// collecting the initialization of a member variable. To manually pop the builder off the context's stack
-// (so future operations don't write to this builder) just call PopFromStatck().
-class ScopedShaderCodeBuilder : public ShaderCodeBuilder
-{
-public:
-  ScopedShaderCodeBuilder(ZilchShaderTranslatorContext* context);
-  ~ScopedShaderCodeBuilder();
-
-  void PopFromStack();
-
-  ZilchShaderTranslatorContext* mContext;
 };
 
 }//namespace Zero

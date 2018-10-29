@@ -1,0 +1,32 @@
+[Pixel][UnitTest]
+struct ProjectOnVector
+{
+  function Test_Static_Real2_Real2()
+  {
+    var toBeProjected_ = Real2();
+    var normalizedVector_ = Real2();
+    var result = Math.ProjectOnVector(toBeProjected_, normalizedVector_);
+  }
+
+  function Test_Static_Real3_Real3()
+  {
+    var toBeProjected_ = Real3();
+    var normalizedVector_ = Real3();
+    var result = Math.ProjectOnVector(toBeProjected_, normalizedVector_);
+  }
+
+  function Test_Static_Real4_Real4()
+  {
+    var toBeProjected_ = Real4();
+    var normalizedVector_ = Real4();
+    var result = Math.ProjectOnVector(toBeProjected_, normalizedVector_);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Real2_Real2();
+    this.Test_Static_Real3_Real3();
+    this.Test_Static_Real4_Real4();
+  }
+}

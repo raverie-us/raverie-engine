@@ -1,0 +1,2 @@
+  IrErrorTests\SpecializationConstants\ReadOnlyBinaryAssignment.zilchFrag(9) in Main: Specialization constants are read-only:
+  Specialization constants are read-only

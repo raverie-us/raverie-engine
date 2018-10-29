@@ -1,0 +1,15 @@
+[Pixel]
+struct FracTests
+{
+  [StageOutput] var Target0 : Real4;
+  [StageOutput] var Target1 : Real4;
+  [StageOutput] var Target2 : Real4;
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Target0 = Math.Frac(Real4(1.0, 0.0, -1.0, 2.0));
+    this.Target1 = Math.Frac(Real4(1.1, 0.1, -1.1, 2.1));
+    this.Target2 = Math.Frac(Real4(1.9, 0.9, -1.9, 2.9));
+  }
+}

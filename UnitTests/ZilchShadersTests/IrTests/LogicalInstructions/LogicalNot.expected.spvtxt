@@ -1,0 +1,89 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 45
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_LogicalNot "EntryPoint_Main_LogicalNot"
+               OpExecutionMode %EntryPoint_Main_LogicalNot OriginUpperLeft
+               OpSource Unknown 100
+               OpName %LogicalNot "LogicalNot"
+               OpMemberName %LogicalNot 0 "Dummy"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %b "b"
+               OpName %result "result"
+               OpName %PreConstructor_LogicalNot "PreConstructor_LogicalNot"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_LogicalNot "EntryPoint_Main_LogicalNot"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+ %LogicalNot = OpTypeStruct %int
+%_ptr_Function_LogicalNot = OpTypePointer Function %LogicalNot
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_LogicalNot
+       %bool = OpTypeBool
+%_ptr_Function_bool = OpTypePointer Function %bool
+       %true = OpConstantTrue %bool
+         %11 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_LogicalNot
+         %15 = OpLabel
+          %b = OpVariable %_ptr_Function_bool Function
+     %result = OpVariable %_ptr_Function_bool Function
+               OpStore %b %true
+         %18 = OpLoad %bool %b
+         %19 = OpLogicalNot %bool %18
+               OpStore %result %19
+         %20 = OpLoad %bool %b
+         %21 = OpLogicalNot %bool %20
+         %22 = OpLogicalNot %bool %21
+               OpStore %result %22
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_LogicalNot = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_LogicalNot
+         %25 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_LogicalNot
+         %28 = OpLabel
+         %29 = OpFunctionCall %void %PreConstructor_LogicalNot %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_LogicalNot
+         %32 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_LogicalNot
+         %35 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_LogicalNot = OpFunction %void None %11
+         %37 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_LogicalNot Function
+         %39 = OpFunctionCall %void %InitializeGlobals
+         %40 = OpFunctionCall %void %DefaultConstructor %self_4
+         %41 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %42 = OpFunctionCall %void %Main %self_4
+         %43 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %11
+         %44 = OpLabel
+               OpReturn
+               OpFunctionEnd

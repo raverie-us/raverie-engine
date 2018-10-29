@@ -1,0 +1,115 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 58
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_EmptyStructTest "EntryPoint_Main_EmptyStructTest"
+               OpExecutionMode %EntryPoint_Main_EmptyStructTest OriginUpperLeft
+               OpSource Unknown 100
+               OpName %EmptyStructTest "EmptyStructTest"
+               OpMemberName %EmptyStructTest 0 "Dummy"
+               OpName %EmptyStruct "EmptyStruct"
+               OpMemberName %EmptyStruct 0 "Dummy"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %empty "empty"
+               OpName %value "value"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_0 "self"
+               OpName %GetValue "GetValue"
+               OpName %self_1 "self"
+               OpName %PreConstructor_EmptyStruct "PreConstructor_EmptyStruct"
+               OpName %self_2 "self"
+               OpName %PreConstructor_EmptyStructTest "PreConstructor_EmptyStructTest"
+               OpName %self_3 "self"
+               OpName %DefaultConstructor_0 "DefaultConstructor"
+               OpName %self_4 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_5 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_6 "self"
+               OpName %EntryPoint_Main_EmptyStructTest "EntryPoint_Main_EmptyStructTest"
+               OpName %self_7 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%EmptyStructTest = OpTypeStruct %int
+%_ptr_Function_EmptyStructTest = OpTypePointer Function %EmptyStructTest
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_EmptyStructTest
+%EmptyStruct = OpTypeStruct %int
+%_ptr_Function_EmptyStruct = OpTypePointer Function %EmptyStruct
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+         %13 = OpTypeFunction %float %_ptr_Function_EmptyStruct
+    %float_0 = OpConstant %float 0
+         %14 = OpTypeFunction %void %_ptr_Function_EmptyStruct
+         %15 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_EmptyStructTest
+         %19 = OpLabel
+      %empty = OpVariable %_ptr_Function_EmptyStruct Function
+         %21 = OpVariable %_ptr_Function_EmptyStruct Function
+      %value = OpVariable %_ptr_Function_float Function
+         %23 = OpFunctionCall %void %DefaultConstructor %21
+         %24 = OpLoad %EmptyStruct %21
+               OpStore %empty %24
+         %25 = OpFunctionCall %float %GetValue %empty
+               OpStore %value %25
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %14
+     %self_0 = OpFunctionParameter %_ptr_Function_EmptyStruct
+         %28 = OpLabel
+         %29 = OpFunctionCall %void %PreConstructor_EmptyStruct %self_0
+               OpReturn
+               OpFunctionEnd
+   %GetValue = OpFunction %float None %13
+     %self_1 = OpFunctionParameter %_ptr_Function_EmptyStruct
+         %32 = OpLabel
+               OpReturnValue %float_0
+               OpFunctionEnd
+%PreConstructor_EmptyStruct = OpFunction %void None %14
+     %self_2 = OpFunctionParameter %_ptr_Function_EmptyStruct
+         %35 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_EmptyStructTest = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_EmptyStructTest
+         %38 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor_0 = OpFunction %void None %8
+     %self_4 = OpFunctionParameter %_ptr_Function_EmptyStructTest
+         %41 = OpLabel
+         %42 = OpFunctionCall %void %PreConstructor_EmptyStructTest %self_4
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_5 = OpFunctionParameter %_ptr_Function_EmptyStructTest
+         %45 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_6 = OpFunctionParameter %_ptr_Function_EmptyStructTest
+         %48 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_EmptyStructTest = OpFunction %void None %15
+         %50 = OpLabel
+     %self_7 = OpVariable %_ptr_Function_EmptyStructTest Function
+         %52 = OpFunctionCall %void %InitializeGlobals
+         %53 = OpFunctionCall %void %DefaultConstructor_0 %self_7
+         %54 = OpFunctionCall %void %CopyInputs_Main %self_7
+         %55 = OpFunctionCall %void %Main %self_7
+         %56 = OpFunctionCall %void %CopyOutputs_Main %self_7
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %15
+         %57 = OpLabel
+               OpReturn
+               OpFunctionEnd

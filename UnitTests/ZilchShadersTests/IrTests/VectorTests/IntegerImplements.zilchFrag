@@ -1,0 +1,16 @@
+[Pixel][UnitTest]
+struct IntegerImplements
+{
+  [EntryPoint]
+  function Main()
+  {
+    var max = Integer.PositiveMax;
+    var posMin = Integer.PositiveValueClosestToZero;
+    var negMax = Integer.NegativeValueClosestToZero;
+    var min = Integer.NegativeMin;
+    
+    var x = Integer.XAxis;
+    var zero = Integer.Zero;
+    var axis = Integer.GetAxis(1);
+  }
+}

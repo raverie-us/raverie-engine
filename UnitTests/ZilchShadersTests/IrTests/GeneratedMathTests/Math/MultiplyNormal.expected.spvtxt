@@ -1,0 +1,236 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 134
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_MultiplyNormal "EntryPoint_Main_MultiplyNormal"
+               OpExecutionMode %EntryPoint_Main_MultiplyNormal OriginUpperLeft
+               OpSource Unknown 100
+               OpName %MultiplyNormal "MultiplyNormal"
+               OpMemberName %MultiplyNormal 0 "Dummy"
+               OpName %Test_Static_Real2x2_Real "Test_Static_Real2x2_Real"
+               OpName %self "self"
+               OpName %by_ "by_"
+               OpName %the_ "the_"
+               OpName %result "result"
+               OpName %MultiplyNormal_0 "MultiplyNormal"
+               OpName %by "by"
+               OpName %the "the"
+               OpName %by_Local "by_Local"
+               OpName %the_Local "the_Local"
+               OpName %promotedVector "promotedVector"
+               OpName %Test_Static_Real3x3_Real2 "Test_Static_Real3x3_Real2"
+               OpName %self_0 "self"
+               OpName %by__0 "by_"
+               OpName %the__0 "the_"
+               OpName %result_0 "result"
+               OpName %MultiplyNormal_1 "MultiplyNormal"
+               OpName %by_0 "by"
+               OpName %the_0 "the"
+               OpName %by_Local_0 "by_Local"
+               OpName %the_Local_0 "the_Local"
+               OpName %promotedVector_0 "promotedVector"
+               OpName %Test_Static_Real4x4_Real3 "Test_Static_Real4x4_Real3"
+               OpName %self_1 "self"
+               OpName %by__1 "by_"
+               OpName %the__1 "the_"
+               OpName %result_1 "result"
+               OpName %MultiplyNormal_2 "MultiplyNormal"
+               OpName %by_1 "by"
+               OpName %the_1 "the"
+               OpName %by_Local_1 "by_Local"
+               OpName %the_Local_1 "the_Local"
+               OpName %promotedVector_1 "promotedVector"
+               OpName %Main "Main"
+               OpName %self_2 "self"
+               OpName %PreConstructor_MultiplyNormal "PreConstructor_MultiplyNormal"
+               OpName %self_3 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_4 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_5 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_6 "self"
+               OpName %EntryPoint_Main_MultiplyNormal "EntryPoint_Main_MultiplyNormal"
+               OpName %self_7 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%MultiplyNormal = OpTypeStruct %int
+%_ptr_Function_MultiplyNormal = OpTypePointer Function %MultiplyNormal
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_MultiplyNormal
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+    %float_0 = OpConstant %float 0
+%mat2v2float = OpTypeMatrix %v2float 2
+%_ptr_Function_mat2v2float = OpTypePointer Function %mat2v2float
+         %15 = OpTypeFunction %float %mat2v2float %float
+      %int_0 = OpConstant %int 0
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+%mat3v3float = OpTypeMatrix %v3float 3
+%_ptr_Function_mat3v3float = OpTypePointer Function %mat3v3float
+         %20 = OpTypeFunction %v2float %mat3v3float %v2float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+%mat4v4float = OpTypeMatrix %v4float 4
+%_ptr_Function_mat4v4float = OpTypePointer Function %mat4v4float
+         %25 = OpTypeFunction %v3float %mat4v4float %v3float
+         %26 = OpTypeFunction %void
+%Test_Static_Real2x2_Real = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_MultiplyNormal
+         %31 = OpLabel
+        %by_ = OpVariable %_ptr_Function_mat2v2float Function
+       %the_ = OpVariable %_ptr_Function_float Function
+     %result = OpVariable %_ptr_Function_float Function
+         %35 = OpCompositeConstruct %v2float %float_0 %float_0
+         %36 = OpCompositeConstruct %mat2v2float %35 %35
+               OpStore %by_ %36
+               OpStore %the_ %float_0
+         %37 = OpLoad %mat2v2float %by_
+         %38 = OpLoad %float %the_
+         %39 = OpFunctionCall %float %MultiplyNormal_0 %37 %38
+               OpStore %result %39
+               OpReturn
+               OpFunctionEnd
+%MultiplyNormal_0 = OpFunction %float None %15
+         %by = OpFunctionParameter %mat2v2float
+        %the = OpFunctionParameter %float
+         %43 = OpLabel
+   %by_Local = OpVariable %_ptr_Function_mat2v2float Function
+  %the_Local = OpVariable %_ptr_Function_float Function
+%promotedVector = OpVariable %_ptr_Function_v2float Function
+               OpStore %by_Local %by
+               OpStore %the_Local %the
+         %47 = OpLoad %float %the_Local
+         %48 = OpConvertSToF %float %int_0
+         %49 = OpCompositeConstruct %v2float %47 %48
+               OpStore %promotedVector %49
+         %50 = OpLoad %mat2v2float %by_Local
+         %51 = OpLoad %v2float %promotedVector
+         %52 = OpVectorTimesMatrix %v2float %51 %50
+         %53 = OpCompositeExtract %float %52 0
+               OpReturnValue %53
+               OpFunctionEnd
+%Test_Static_Real3x3_Real2 = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_MultiplyNormal
+         %56 = OpLabel
+      %by__0 = OpVariable %_ptr_Function_mat3v3float Function
+     %the__0 = OpVariable %_ptr_Function_v2float Function
+   %result_0 = OpVariable %_ptr_Function_v2float Function
+         %60 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+         %61 = OpCompositeConstruct %mat3v3float %60 %60 %60
+               OpStore %by__0 %61
+         %62 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %the__0 %62
+         %63 = OpLoad %mat3v3float %by__0
+         %64 = OpLoad %v2float %the__0
+         %65 = OpFunctionCall %v2float %MultiplyNormal_1 %63 %64
+               OpStore %result_0 %65
+               OpReturn
+               OpFunctionEnd
+%MultiplyNormal_1 = OpFunction %v2float None %20
+       %by_0 = OpFunctionParameter %mat3v3float
+      %the_0 = OpFunctionParameter %v2float
+         %69 = OpLabel
+ %by_Local_0 = OpVariable %_ptr_Function_mat3v3float Function
+%the_Local_0 = OpVariable %_ptr_Function_v2float Function
+%promotedVector_0 = OpVariable %_ptr_Function_v3float Function
+               OpStore %by_Local_0 %by_0
+               OpStore %the_Local_0 %the_0
+         %73 = OpLoad %v2float %the_Local_0
+         %74 = OpConvertSToF %float %int_0
+         %75 = OpCompositeConstruct %v3float %73 %74
+               OpStore %promotedVector_0 %75
+         %76 = OpLoad %mat3v3float %by_Local_0
+         %77 = OpLoad %v3float %promotedVector_0
+         %78 = OpVectorTimesMatrix %v3float %77 %76
+         %79 = OpVectorShuffle %v2float %78 %78 0 1
+               OpReturnValue %79
+               OpFunctionEnd
+%Test_Static_Real4x4_Real3 = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_MultiplyNormal
+         %82 = OpLabel
+      %by__1 = OpVariable %_ptr_Function_mat4v4float Function
+     %the__1 = OpVariable %_ptr_Function_v3float Function
+   %result_1 = OpVariable %_ptr_Function_v3float Function
+         %86 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+         %87 = OpCompositeConstruct %mat4v4float %86 %86 %86 %86
+               OpStore %by__1 %87
+         %88 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %the__1 %88
+         %89 = OpLoad %mat4v4float %by__1
+         %90 = OpLoad %v3float %the__1
+         %91 = OpFunctionCall %v3float %MultiplyNormal_2 %89 %90
+               OpStore %result_1 %91
+               OpReturn
+               OpFunctionEnd
+%MultiplyNormal_2 = OpFunction %v3float None %25
+       %by_1 = OpFunctionParameter %mat4v4float
+      %the_1 = OpFunctionParameter %v3float
+         %95 = OpLabel
+ %by_Local_1 = OpVariable %_ptr_Function_mat4v4float Function
+%the_Local_1 = OpVariable %_ptr_Function_v3float Function
+%promotedVector_1 = OpVariable %_ptr_Function_v4float Function
+               OpStore %by_Local_1 %by_1
+               OpStore %the_Local_1 %the_1
+         %99 = OpLoad %v3float %the_Local_1
+        %100 = OpConvertSToF %float %int_0
+        %101 = OpCompositeConstruct %v4float %99 %100
+               OpStore %promotedVector_1 %101
+        %102 = OpLoad %mat4v4float %by_Local_1
+        %103 = OpLoad %v4float %promotedVector_1
+        %104 = OpVectorTimesMatrix %v4float %103 %102
+        %105 = OpVectorShuffle %v3float %104 %104 0 1 2
+               OpReturnValue %105
+               OpFunctionEnd
+       %Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_MultiplyNormal
+        %108 = OpLabel
+        %109 = OpFunctionCall %void %Test_Static_Real2x2_Real %self_2
+        %110 = OpFunctionCall %void %Test_Static_Real3x3_Real2 %self_2
+        %111 = OpFunctionCall %void %Test_Static_Real4x4_Real3 %self_2
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_MultiplyNormal = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_MultiplyNormal
+        %114 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_4 = OpFunctionParameter %_ptr_Function_MultiplyNormal
+        %117 = OpLabel
+        %118 = OpFunctionCall %void %PreConstructor_MultiplyNormal %self_4
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_5 = OpFunctionParameter %_ptr_Function_MultiplyNormal
+        %121 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_6 = OpFunctionParameter %_ptr_Function_MultiplyNormal
+        %124 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_MultiplyNormal = OpFunction %void None %26
+        %126 = OpLabel
+     %self_7 = OpVariable %_ptr_Function_MultiplyNormal Function
+        %128 = OpFunctionCall %void %InitializeGlobals
+        %129 = OpFunctionCall %void %DefaultConstructor %self_7
+        %130 = OpFunctionCall %void %CopyInputs_Main %self_7
+        %131 = OpFunctionCall %void %Main %self_7
+        %132 = OpFunctionCall %void %CopyOutputs_Main %self_7
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %26
+        %133 = OpLabel
+               OpReturn
+               OpFunctionEnd

@@ -1,0 +1,164 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 93
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_Pixel1 "EntryPoint_Main_Pixel1" %In %Out
+               OpExecutionMode %EntryPoint_Main_Pixel1 OriginUpperLeft
+               OpSource Unknown 100
+               OpName %Pixel1 "Pixel1"
+               OpMemberName %Pixel1 0 "Scalar"
+               OpMemberName %Pixel1 2 "WorldNormal"
+               OpMemberName %Pixel1 4 "Color"
+               OpMemberName %Pixel1 1 "Uv"
+               OpMemberName %Pixel1 3 "PerspectivePosition"
+               OpMemberName %Pixel1 5 "Color1"
+               OpName %Pixel1In "Pixel1In"
+               OpMemberName %Pixel1In 0 "Scalar"
+               OpMemberName %Pixel1In 2 "WorldNormal"
+               OpMemberName %Pixel1In 1 "Uv"
+               OpMemberName %Pixel1In 3 "PerspectivePosition"
+               OpMemberName %Pixel1In 4 "Color1"
+               OpName %Pixel1Out "Pixel1Out"
+               OpMemberName %Pixel1Out 0 "Color"
+               OpMemberName %Pixel1Out 1 "Color1"
+               OpName %In "In"
+               OpName %Out "Out"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %PreConstructor_Pixel1 "PreConstructor_Pixel1"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_Pixel1 "EntryPoint_Main_Pixel1"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %Pixel1In Block
+               OpDecorate %In Location 0
+               OpDecorate %Out Location 0
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+     %Pixel1 = OpTypeStruct %float %v2float %v3float %v4float %v4float %v4float
+%_ptr_Function_Pixel1 = OpTypePointer Function %Pixel1
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+         %14 = OpTypeFunction %void %_ptr_Function_Pixel1
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+      %int_0 = OpConstant %int 0
+    %float_0 = OpConstant %float 0
+      %int_1 = OpConstant %int 1
+      %int_2 = OpConstant %int 2
+      %int_3 = OpConstant %int 3
+      %int_4 = OpConstant %int 4
+      %int_5 = OpConstant %int 5
+%_ptr_Input_float = OpTypePointer Input %float
+   %Pixel1In = OpTypeStruct %float %v2float %v3float %v4float %v4float
+%_ptr_Input_Pixel1In = OpTypePointer Input %Pixel1In
+         %In = OpVariable %_ptr_Input_Pixel1In Input
+%_ptr_Input_v2float = OpTypePointer Input %v2float
+%_ptr_Input_v3float = OpTypePointer Input %v3float
+%_ptr_Input_v4float = OpTypePointer Input %v4float
+%_ptr_Output_v4float = OpTypePointer Output %v4float
+  %Pixel1Out = OpTypeStruct %v4float %v4float
+%_ptr_Output_Pixel1Out = OpTypePointer Output %Pixel1Out
+        %Out = OpVariable %_ptr_Output_Pixel1Out Output
+         %26 = OpTypeFunction %void
+       %Main = OpFunction %void None %14
+       %self = OpFunctionParameter %_ptr_Function_Pixel1
+         %38 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_Pixel1 = OpFunction %void None %14
+     %self_0 = OpFunctionParameter %_ptr_Function_Pixel1
+         %41 = OpLabel
+         %42 = OpAccessChain %_ptr_Function_float %self_0 %int_0
+               OpStore %42 %float_0
+         %43 = OpAccessChain %_ptr_Function_v2float %self_0 %int_1
+         %44 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %43 %44
+         %45 = OpAccessChain %_ptr_Function_v3float %self_0 %int_2
+         %46 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %45 %46
+         %47 = OpAccessChain %_ptr_Function_v4float %self_0 %int_3
+         %48 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %47 %48
+         %49 = OpAccessChain %_ptr_Function_v4float %self_0 %int_4
+         %50 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %49 %50
+         %51 = OpAccessChain %_ptr_Function_v4float %self_0 %int_5
+         %52 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %51 %52
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %14
+     %self_1 = OpFunctionParameter %_ptr_Function_Pixel1
+         %55 = OpLabel
+         %56 = OpFunctionCall %void %PreConstructor_Pixel1 %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %14
+     %self_2 = OpFunctionParameter %_ptr_Function_Pixel1
+         %59 = OpLabel
+         %60 = OpAccessChain %_ptr_Input_float %In %int_0
+         %61 = OpAccessChain %_ptr_Function_float %self_2 %int_0
+         %62 = OpLoad %float %60
+               OpStore %61 %62
+         %63 = OpAccessChain %_ptr_Input_v2float %In %int_1
+         %64 = OpAccessChain %_ptr_Function_v2float %self_2 %int_1
+         %65 = OpLoad %v2float %63
+               OpStore %64 %65
+         %66 = OpAccessChain %_ptr_Input_v3float %In %int_2
+         %67 = OpAccessChain %_ptr_Function_v3float %self_2 %int_2
+         %68 = OpLoad %v3float %66
+               OpStore %67 %68
+         %69 = OpAccessChain %_ptr_Input_v4float %In %int_3
+         %70 = OpAccessChain %_ptr_Function_v4float %self_2 %int_3
+         %71 = OpLoad %v4float %69
+               OpStore %70 %71
+         %72 = OpAccessChain %_ptr_Input_v4float %In %int_4
+         %73 = OpAccessChain %_ptr_Function_v4float %self_2 %int_5
+         %74 = OpLoad %v4float %72
+               OpStore %73 %74
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %14
+     %self_3 = OpFunctionParameter %_ptr_Function_Pixel1
+         %77 = OpLabel
+         %78 = OpAccessChain %_ptr_Output_v4float %Out %int_0
+         %79 = OpAccessChain %_ptr_Function_v4float %self_3 %int_4
+         %80 = OpLoad %v4float %79
+               OpStore %78 %80
+         %81 = OpAccessChain %_ptr_Output_v4float %Out %int_1
+         %82 = OpAccessChain %_ptr_Function_v4float %self_3 %int_5
+         %83 = OpLoad %v4float %82
+               OpStore %81 %83
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_Pixel1 = OpFunction %void None %26
+         %85 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_Pixel1 Function
+         %87 = OpFunctionCall %void %InitializeGlobals
+         %88 = OpFunctionCall %void %DefaultConstructor %self_4
+         %89 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %90 = OpFunctionCall %void %Main %self_4
+         %91 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %26
+         %92 = OpLabel
+               OpReturn
+               OpFunctionEnd

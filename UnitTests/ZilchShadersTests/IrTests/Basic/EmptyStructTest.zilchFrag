@@ -1,0 +1,18 @@
+struct EmptyStruct
+{
+  function GetValue() : Real
+  {
+    return 0.0;
+  }
+}
+
+[Pixel][UnitTest]
+struct EmptyStructTest
+{
+  [EntryPoint]
+  function Main()
+  {
+    var empty = EmptyStruct();
+    var value = empty.GetValue();
+  }
+}

@@ -1,0 +1,19 @@
+struct MathGenerateTranslationMatrixImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function GenerateTranslationMatrix3x3(translation : Real2) : Real3x3
+  {
+    return Real3x3(1.0, 0.0, translation.X,
+                   0.0, 1.0, translation.Y,
+                   0.0, 0.0,           1.0);
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function GenerateTranslationMatrix4x4(translation : Real3) : Real4x4
+  {
+    return Real4x4(1.0, 0.0, 0.0, translation.X,
+                   0.0, 1.0, 0.0, translation.Y,
+                   0.0, 0.0, 1.0, translation.Z,
+                   0.0, 0.0, 0.0,           1.0);
+  }
+}

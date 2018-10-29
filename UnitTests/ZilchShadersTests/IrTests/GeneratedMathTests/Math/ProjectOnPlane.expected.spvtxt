@@ -1,0 +1,272 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 149
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_ProjectOnPlane "EntryPoint_Main_ProjectOnPlane"
+               OpExecutionMode %EntryPoint_Main_ProjectOnPlane OriginUpperLeft
+               OpSource Unknown 100
+               OpName %ProjectOnPlane "ProjectOnPlane"
+               OpMemberName %ProjectOnPlane 0 "Dummy"
+               OpName %Test_Static_Real2_Real2 "Test_Static_Real2_Real2"
+               OpName %self "self"
+               OpName %toBeProjected_ "toBeProjected_"
+               OpName %planeNormal_ "planeNormal_"
+               OpName %result "result"
+               OpName %ProjectOnPlane_0 "ProjectOnPlane"
+               OpName %toBeProjected "toBeProjected"
+               OpName %planeNormal "planeNormal"
+               OpName %toBeProjected_Local "toBeProjected_Local"
+               OpName %planeNormal_Local "planeNormal_Local"
+               OpName %ProjectOnVector "ProjectOnVector"
+               OpName %toBeProjected_0 "toBeProjected"
+               OpName %normalizedVector "normalizedVector"
+               OpName %toBeProjected_Local_0 "toBeProjected_Local"
+               OpName %normalizedVector_Local "normalizedVector_Local"
+               OpName %Test_Static_Real3_Real3 "Test_Static_Real3_Real3"
+               OpName %self_0 "self"
+               OpName %toBeProjected__0 "toBeProjected_"
+               OpName %planeNormal__0 "planeNormal_"
+               OpName %result_0 "result"
+               OpName %ProjectOnPlane_1 "ProjectOnPlane"
+               OpName %toBeProjected_1 "toBeProjected"
+               OpName %planeNormal_0 "planeNormal"
+               OpName %toBeProjected_Local_1 "toBeProjected_Local"
+               OpName %planeNormal_Local_0 "planeNormal_Local"
+               OpName %ProjectOnVector_0 "ProjectOnVector"
+               OpName %toBeProjected_2 "toBeProjected"
+               OpName %normalizedVector_0 "normalizedVector"
+               OpName %toBeProjected_Local_2 "toBeProjected_Local"
+               OpName %normalizedVector_Local_0 "normalizedVector_Local"
+               OpName %Test_Static_Real4_Real4 "Test_Static_Real4_Real4"
+               OpName %self_1 "self"
+               OpName %toBeProjected__1 "toBeProjected_"
+               OpName %planeNormal__1 "planeNormal_"
+               OpName %result_1 "result"
+               OpName %ProjectOnPlane_2 "ProjectOnPlane"
+               OpName %toBeProjected_3 "toBeProjected"
+               OpName %planeNormal_1 "planeNormal"
+               OpName %toBeProjected_Local_3 "toBeProjected_Local"
+               OpName %planeNormal_Local_1 "planeNormal_Local"
+               OpName %ProjectOnVector_1 "ProjectOnVector"
+               OpName %toBeProjected_4 "toBeProjected"
+               OpName %normalizedVector_1 "normalizedVector"
+               OpName %toBeProjected_Local_4 "toBeProjected_Local"
+               OpName %normalizedVector_Local_1 "normalizedVector_Local"
+               OpName %Main "Main"
+               OpName %self_2 "self"
+               OpName %PreConstructor_ProjectOnPlane "PreConstructor_ProjectOnPlane"
+               OpName %self_3 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_4 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_5 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_6 "self"
+               OpName %EntryPoint_Main_ProjectOnPlane "EntryPoint_Main_ProjectOnPlane"
+               OpName %self_7 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%ProjectOnPlane = OpTypeStruct %int
+%_ptr_Function_ProjectOnPlane = OpTypePointer Function %ProjectOnPlane
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_ProjectOnPlane
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+    %float_0 = OpConstant %float 0
+         %13 = OpTypeFunction %v2float %v2float %v2float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+         %16 = OpTypeFunction %v3float %v3float %v3float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+         %19 = OpTypeFunction %v4float %v4float %v4float
+         %20 = OpTypeFunction %void
+%Test_Static_Real2_Real2 = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_ProjectOnPlane
+         %24 = OpLabel
+%toBeProjected_ = OpVariable %_ptr_Function_v2float Function
+%planeNormal_ = OpVariable %_ptr_Function_v2float Function
+     %result = OpVariable %_ptr_Function_v2float Function
+         %28 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %toBeProjected_ %28
+         %29 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %planeNormal_ %29
+         %30 = OpLoad %v2float %toBeProjected_
+         %31 = OpLoad %v2float %planeNormal_
+         %32 = OpFunctionCall %v2float %ProjectOnPlane_0 %30 %31
+               OpStore %result %32
+               OpReturn
+               OpFunctionEnd
+%ProjectOnPlane_0 = OpFunction %v2float None %13
+%toBeProjected = OpFunctionParameter %v2float
+%planeNormal = OpFunctionParameter %v2float
+         %36 = OpLabel
+%toBeProjected_Local = OpVariable %_ptr_Function_v2float Function
+%planeNormal_Local = OpVariable %_ptr_Function_v2float Function
+               OpStore %toBeProjected_Local %toBeProjected
+               OpStore %planeNormal_Local %planeNormal
+         %39 = OpLoad %v2float %toBeProjected_Local
+         %40 = OpLoad %v2float %planeNormal_Local
+         %41 = OpFunctionCall %v2float %ProjectOnVector %39 %40
+         %42 = OpLoad %v2float %toBeProjected_Local
+         %43 = OpFSub %v2float %42 %41
+               OpReturnValue %43
+               OpFunctionEnd
+%ProjectOnVector = OpFunction %v2float None %13
+%toBeProjected_0 = OpFunctionParameter %v2float
+%normalizedVector = OpFunctionParameter %v2float
+         %47 = OpLabel
+%toBeProjected_Local_0 = OpVariable %_ptr_Function_v2float Function
+%normalizedVector_Local = OpVariable %_ptr_Function_v2float Function
+               OpStore %toBeProjected_Local_0 %toBeProjected_0
+               OpStore %normalizedVector_Local %normalizedVector
+         %50 = OpLoad %v2float %toBeProjected_Local_0
+         %51 = OpLoad %v2float %normalizedVector_Local
+         %52 = OpDot %float %50 %51
+         %53 = OpLoad %v2float %normalizedVector_Local
+         %54 = OpVectorTimesScalar %v2float %53 %52
+               OpReturnValue %54
+               OpFunctionEnd
+%Test_Static_Real3_Real3 = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_ProjectOnPlane
+         %57 = OpLabel
+%toBeProjected__0 = OpVariable %_ptr_Function_v3float Function
+%planeNormal__0 = OpVariable %_ptr_Function_v3float Function
+   %result_0 = OpVariable %_ptr_Function_v3float Function
+         %61 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %toBeProjected__0 %61
+         %62 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %planeNormal__0 %62
+         %63 = OpLoad %v3float %toBeProjected__0
+         %64 = OpLoad %v3float %planeNormal__0
+         %65 = OpFunctionCall %v3float %ProjectOnPlane_1 %63 %64
+               OpStore %result_0 %65
+               OpReturn
+               OpFunctionEnd
+%ProjectOnPlane_1 = OpFunction %v3float None %16
+%toBeProjected_1 = OpFunctionParameter %v3float
+%planeNormal_0 = OpFunctionParameter %v3float
+         %69 = OpLabel
+%toBeProjected_Local_1 = OpVariable %_ptr_Function_v3float Function
+%planeNormal_Local_0 = OpVariable %_ptr_Function_v3float Function
+               OpStore %toBeProjected_Local_1 %toBeProjected_1
+               OpStore %planeNormal_Local_0 %planeNormal_0
+         %72 = OpLoad %v3float %toBeProjected_Local_1
+         %73 = OpLoad %v3float %planeNormal_Local_0
+         %74 = OpFunctionCall %v3float %ProjectOnVector_0 %72 %73
+         %75 = OpLoad %v3float %toBeProjected_Local_1
+         %76 = OpFSub %v3float %75 %74
+               OpReturnValue %76
+               OpFunctionEnd
+%ProjectOnVector_0 = OpFunction %v3float None %16
+%toBeProjected_2 = OpFunctionParameter %v3float
+%normalizedVector_0 = OpFunctionParameter %v3float
+         %80 = OpLabel
+%toBeProjected_Local_2 = OpVariable %_ptr_Function_v3float Function
+%normalizedVector_Local_0 = OpVariable %_ptr_Function_v3float Function
+               OpStore %toBeProjected_Local_2 %toBeProjected_2
+               OpStore %normalizedVector_Local_0 %normalizedVector_0
+         %83 = OpLoad %v3float %toBeProjected_Local_2
+         %84 = OpLoad %v3float %normalizedVector_Local_0
+         %85 = OpDot %float %83 %84
+         %86 = OpLoad %v3float %normalizedVector_Local_0
+         %87 = OpVectorTimesScalar %v3float %86 %85
+               OpReturnValue %87
+               OpFunctionEnd
+%Test_Static_Real4_Real4 = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_ProjectOnPlane
+         %90 = OpLabel
+%toBeProjected__1 = OpVariable %_ptr_Function_v4float Function
+%planeNormal__1 = OpVariable %_ptr_Function_v4float Function
+   %result_1 = OpVariable %_ptr_Function_v4float Function
+         %94 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %toBeProjected__1 %94
+         %95 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %planeNormal__1 %95
+         %96 = OpLoad %v4float %toBeProjected__1
+         %97 = OpLoad %v4float %planeNormal__1
+         %98 = OpFunctionCall %v4float %ProjectOnPlane_2 %96 %97
+               OpStore %result_1 %98
+               OpReturn
+               OpFunctionEnd
+%ProjectOnPlane_2 = OpFunction %v4float None %19
+%toBeProjected_3 = OpFunctionParameter %v4float
+%planeNormal_1 = OpFunctionParameter %v4float
+        %102 = OpLabel
+%toBeProjected_Local_3 = OpVariable %_ptr_Function_v4float Function
+%planeNormal_Local_1 = OpVariable %_ptr_Function_v4float Function
+               OpStore %toBeProjected_Local_3 %toBeProjected_3
+               OpStore %planeNormal_Local_1 %planeNormal_1
+        %105 = OpLoad %v4float %toBeProjected_Local_3
+        %106 = OpLoad %v4float %planeNormal_Local_1
+        %107 = OpFunctionCall %v4float %ProjectOnVector_1 %105 %106
+        %108 = OpLoad %v4float %toBeProjected_Local_3
+        %109 = OpFSub %v4float %108 %107
+               OpReturnValue %109
+               OpFunctionEnd
+%ProjectOnVector_1 = OpFunction %v4float None %19
+%toBeProjected_4 = OpFunctionParameter %v4float
+%normalizedVector_1 = OpFunctionParameter %v4float
+        %113 = OpLabel
+%toBeProjected_Local_4 = OpVariable %_ptr_Function_v4float Function
+%normalizedVector_Local_1 = OpVariable %_ptr_Function_v4float Function
+               OpStore %toBeProjected_Local_4 %toBeProjected_4
+               OpStore %normalizedVector_Local_1 %normalizedVector_1
+        %116 = OpLoad %v4float %toBeProjected_Local_4
+        %117 = OpLoad %v4float %normalizedVector_Local_1
+        %118 = OpDot %float %116 %117
+        %119 = OpLoad %v4float %normalizedVector_Local_1
+        %120 = OpVectorTimesScalar %v4float %119 %118
+               OpReturnValue %120
+               OpFunctionEnd
+       %Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_ProjectOnPlane
+        %123 = OpLabel
+        %124 = OpFunctionCall %void %Test_Static_Real2_Real2 %self_2
+        %125 = OpFunctionCall %void %Test_Static_Real3_Real3 %self_2
+        %126 = OpFunctionCall %void %Test_Static_Real4_Real4 %self_2
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_ProjectOnPlane = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_ProjectOnPlane
+        %129 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_4 = OpFunctionParameter %_ptr_Function_ProjectOnPlane
+        %132 = OpLabel
+        %133 = OpFunctionCall %void %PreConstructor_ProjectOnPlane %self_4
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_5 = OpFunctionParameter %_ptr_Function_ProjectOnPlane
+        %136 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_6 = OpFunctionParameter %_ptr_Function_ProjectOnPlane
+        %139 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_ProjectOnPlane = OpFunction %void None %20
+        %141 = OpLabel
+     %self_7 = OpVariable %_ptr_Function_ProjectOnPlane Function
+        %143 = OpFunctionCall %void %InitializeGlobals
+        %144 = OpFunctionCall %void %DefaultConstructor %self_7
+        %145 = OpFunctionCall %void %CopyInputs_Main %self_7
+        %146 = OpFunctionCall %void %Main %self_7
+        %147 = OpFunctionCall %void %CopyOutputs_Main %self_7
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %20
+        %148 = OpLabel
+               OpReturn
+               OpFunctionEnd

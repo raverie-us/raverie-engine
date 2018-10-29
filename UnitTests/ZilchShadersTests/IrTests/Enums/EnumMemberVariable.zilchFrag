@@ -1,0 +1,17 @@
+enum MyEnum
+{
+  Value1,
+  Value2,
+  Value3
+}
+
+[UnitTest][Pixel]
+struct EnumMemberVariable
+{
+  var Value1 : MyEnum = MyEnum.Value1;
+  
+  [EntryPoint]
+  function Main()
+  {
+  }
+}

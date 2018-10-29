@@ -1,0 +1,10 @@
+[UnitTest][Vertex]
+struct QueryLodSampledImage2d
+{
+  var SampledImage : SampledImage2d;
+  
+  function Main()
+  {
+    ShaderIntrinsics.ImageQueryLod(this.SampledImage, Real2());
+  }
+}

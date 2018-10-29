@@ -1,0 +1,79 @@
+struct RealTests[RealType]
+{
+  [Static]
+  function TestReals()
+  {
+    var param0 = RealType();
+    var param1 = param0;
+    
+    // Unary
+    var result0 = ShaderIntrinsics.Ddx(param0);
+    var result1 = ShaderIntrinsics.Ddy(param0);
+    var result2 = ShaderIntrinsics.FWidth(param0);
+    var result5 = ShaderIntrinsics.IsNan(param0);
+    var result6 = ShaderIntrinsics.IsInf(param0);
+    
+    // Binary
+    var result7 = ShaderIntrinsics.Mod(param0, param1);
+    var result8 = ShaderIntrinsics.Remainder(param0, param1);
+    
+    var result9  = ShaderIntrinsics.OrderedEqual(param0, param1);
+    var result10 = ShaderIntrinsics.OrderedNotEqual(param0, param1);
+    var result11 = ShaderIntrinsics.OrderedLessThan(param0, param1);
+    var result12 = ShaderIntrinsics.OrderedLessThanEqual(param0, param1);
+    var result13 = ShaderIntrinsics.OrderedGreaterThan(param0, param1);
+    var result14 = ShaderIntrinsics.OrderedGreaterThanEqual(param0, param1);
+    
+    var result15 = ShaderIntrinsics.UnorderedEqual(param0, param1);
+    var result16 = ShaderIntrinsics.UnorderedNotEqual(param0, param1);
+    var result17 = ShaderIntrinsics.UnorderedLessThan(param0, param1);
+    var result18 = ShaderIntrinsics.UnorderedLessThanEqual(param0, param1);
+    var result19 = ShaderIntrinsics.UnorderedGreaterThan(param0, param1);
+    var result20 = ShaderIntrinsics.UnorderedGreaterThanEqual(param0, param1);
+  }
+}
+
+struct RealVectorTests[RealType]
+{
+  [Static]
+  function TestReals()
+  {
+    RealTests[RealType].TestReals();
+    
+    var param0 = RealType();
+    var param1 = param0;
+    
+    var result0 = ShaderIntrinsics.Dot(param0, param1);
+    var result1 = ShaderIntrinsics.VectorTimesScalar(param0, 1.0);
+  }
+}
+
+struct SelectTests[Type, BoolType]
+{
+  [Static]
+  function TestSelect()
+  {
+    var condition = BoolType();
+    var obj1 = Type();
+    var obj2 = Type();
+    var result = ShaderIntrinsics.Select(condition, obj1, obj2);
+  }
+}
+
+[Pixel][UnitTest]
+struct RealIntrinsicTests
+{
+  [EntryPoint]
+  function Main()
+  {
+    RealTests[Real].TestReals();
+    RealVectorTests[Real2].TestReals();
+    RealVectorTests[Real3].TestReals();
+    RealVectorTests[Real4].TestReals();
+    
+    SelectTests[Real,  Boolean].TestSelect();
+    SelectTests[Real2, Boolean2].TestSelect();
+    SelectTests[Real3, Boolean3].TestSelect();
+    SelectTests[Real4, Boolean4].TestSelect();
+  }
+}

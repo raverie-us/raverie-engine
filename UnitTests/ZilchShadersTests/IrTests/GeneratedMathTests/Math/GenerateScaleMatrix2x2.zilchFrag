@@ -1,0 +1,15 @@
+[Pixel][UnitTest]
+struct GenerateScaleMatrix2x2
+{
+  function Test_Static_Real2()
+  {
+    var scale_ = Real2();
+    var result = Math.GenerateScaleMatrix2x2(scale_);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Real2();
+  }
+}

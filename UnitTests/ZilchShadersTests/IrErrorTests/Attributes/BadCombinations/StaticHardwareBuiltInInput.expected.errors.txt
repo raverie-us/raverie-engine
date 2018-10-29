@@ -1,0 +1,2 @@
+  IrErrorTests\Attributes\BadCombinations\StaticHardwareBuiltInInput.zilchFrag(4): Attribute 'HardwareBuiltInInput' cannot be combined with attribute(s): Static:
+  Attribute 'HardwareBuiltInInput' cannot be combined with attribute(s): Static

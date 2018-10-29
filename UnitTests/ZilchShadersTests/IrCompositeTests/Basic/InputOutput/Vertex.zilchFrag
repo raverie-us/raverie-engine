@@ -1,0 +1,40 @@
+[Vertex]
+struct VertexFirst
+{
+  [Output] var FragmentVar1 : Real;
+  [Output("FragmentVar2")] var MyFragmentVar : Real;
+  
+  function Main()
+  {
+    
+  }
+}
+
+[Vertex]
+struct VertexFinal
+{
+  // Fragment
+  [Input] var FragmentVar1 : Real;
+  [Input("FragmentVar2")] var MyFragmentVar2 : Real;
+  
+  // HardwareBuiltIn Inputs
+  [Input] var VertexId : Integer;
+  [Input("InstanceId")] var Id : Integer;
+  
+  // Stage Inputs
+  [Input][Output] var Uv : Real2;
+  [Input("LocalPosition")][Output("LocalPosition")] var Position : Real3;
+  
+  // AppBuiltIn Inputs
+  [Input] var LogicTime : Real;
+  [Input("LocalToWorld")] var Transform : Real4x4;
+  
+  // Property
+  [Input] var Property1 : Real;
+  [Input("Property2")] var MyProperty : Real;
+  
+  function Main()
+  {
+    
+  }
+}

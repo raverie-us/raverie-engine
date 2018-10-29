@@ -1,0 +1,84 @@
+[Pixel]
+struct GenerateTransformMatrix2x2Test
+{
+  [StageOutput] var Target0 : Real4;
+  [StageOutput] var Target1 : Real4;
+  [StageOutput] var Target2 : Real4;
+  [StageOutput] var Target3 : Real4;
+
+  [EntryPoint]
+  function Main()
+  {
+    var scale = Real2(2.0, 3.0);
+    var m = Math.GenerateTransformMatrix2x2(0.9, scale);
+    this.Target0 = Real4(m[0], 0.0, 0.0);
+    this.Target1 = Real4(m[1], 0.0, 0.0);
+  }
+}
+
+[Pixel]
+struct GenerateTransformMatrix3x3Test_0
+{
+  [StageOutput] var Target0 : Real4;
+  [StageOutput] var Target1 : Real4;
+  [StageOutput] var Target2 : Real4;
+  [StageOutput] var Target3 : Real4;
+
+  [EntryPoint]
+  function Main()
+  {
+    var scale = Real2(2.0, 3.0);
+    var translation = Real2(0.4, 0.8);
+    var rotationRadians = 0.9;
+    
+    var m = Math.GenerateTransformMatrix3x3(translation, rotationRadians, scale);
+    
+    this.Target0 = Real4(m[0], 0.0);
+    this.Target1 = Real4(m[1], 0.0);
+    this.Target2 = Real4(m[2], 0.0);
+  }
+}
+
+[Pixel]
+struct GenerateTransformMatrix3x3Test_1
+{
+  [StageOutput] var Target0 : Real4;
+  [StageOutput] var Target1 : Real4;
+  [StageOutput] var Target2 : Real4;
+  [StageOutput] var Target3 : Real4;
+
+  [EntryPoint]
+  function Main()
+  {
+    var scale = Real3(2.0, 3.0, 4.0);
+    var axis = Real3(1.0, 2.0, 3.0);
+    var rotation = Math.GenerateRotationMatrix3x3(axis, 0.9);
+    var m = Math.GenerateTransformMatrix3x3(rotation, scale);
+    this.Target0 = Real4(m[0], 0.0);
+    this.Target1 = Real4(m[1], 0.0);
+    this.Target2 = Real4(m[2], 0.0);
+  }
+}
+
+[Pixel]
+struct GenerateTransformMatrix4x4Test
+{
+  [StageOutput] var Target0 : Real4;
+  [StageOutput] var Target1 : Real4;
+  [StageOutput] var Target2 : Real4;
+  [StageOutput] var Target3 : Real4;
+
+  [EntryPoint]
+  function Main()
+  {
+    var scale = Real3(2.0, 3.0, 4.0);
+    var translation = Real3(0.4, 0.8, 0.1);
+    var axis = Real3(1.0, 2.0, 3.0);
+    var rotation = Math.GenerateRotationMatrix3x3(axis, 0.9);
+    var m = Math.GenerateTransformMatrix4x4(translation, rotation, scale);
+    this.Target0 = m[0];
+    this.Target1 = m[1];
+    this.Target2 = m[2];
+    this.Target3 = m[3];
+  }
+}

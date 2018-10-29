@@ -1,0 +1,10 @@
+[Pixel][UnitTest]
+struct StaticStageInput
+{
+  [Static][StageInput] var Var1 : Real;
+  
+  [EntryPoint]
+  function Main()
+  {
+  }
+}

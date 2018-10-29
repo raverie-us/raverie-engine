@@ -1,0 +1,233 @@
+[Pixel][UnitTest]
+struct ForLoops
+{
+  function For0() : Integer
+  {
+    for(var i = 0; i < 10; ++i)
+    {
+    }
+    return 0;
+  }
+  
+  function For1() : Integer
+  {
+    var count = 10;
+    var result = 1;
+    for(var i = 0; i < count; ++i)
+    {
+      result *= (i + 1);
+    }
+    return result;
+  }
+  
+  function For2() : Integer
+  {
+    var count = 10;
+    var result = 1;
+    var i = 0;
+    for(i = 1; i < count; ++i)
+    {
+      result += i;
+    }
+    return result;
+  }
+  
+  //function For3() : Integer
+  //{
+  //  var count = 10;
+  //  var result = 1;
+  //  var i = 0;
+  //  for(i = 1; i < count && i > 0; ++i)
+  //  {
+  //    result += i;
+  //  }
+  //  return result;
+  //}
+  
+  function ForBreak0(count : Integer) : Integer
+  {
+    var result = 0;
+    for(var i = 1; i < count; ++i)
+    {
+      ++result;
+      break;
+    }
+    return result;
+  }
+  
+  function ForBreak1(count : Integer) : Integer
+  {
+    var result = 0;
+    for(var i = 1; i < count; ++i)
+    {
+      break;
+      ++result;
+    }
+    return result;
+  }
+  
+  function ForBreak2(count : Integer) : Integer
+  {
+    var result = 0;
+    for(var i = 1; i < count; ++i)
+    {
+      if(i < 0)
+        break;
+    }
+    return result;
+  }
+  
+  function ForContinue0(count : Integer) : Integer
+  {
+    var result = 0;
+    for(var i = 1; i < count; ++i)
+    {
+      continue;
+    }
+    return result;
+  }
+  
+  function ForContinue1(count : Integer) : Integer
+  {
+    var result = 0;
+    for(var i = 1; i < count; ++i)
+    {
+      ++result;
+      continue;
+    }
+    return result;
+  }
+  
+  function ForContinue2(count : Integer) : Integer
+  {
+    var result = 0;
+    for(var i = 1; i < count; ++i)
+    {
+      continue;
+      ++result;
+    }
+    return result;
+  }
+  
+  function ForIf0() : Integer
+  {
+    var result = 0;
+    for(var i = 0; i < 0; --i)
+    {
+      if(i > 0)
+        continue;
+      ++result;
+    }
+    return result;
+  }
+  
+  function ForIf1() : Integer
+  {
+    var result = 0;
+    for(var i = 0; i < 0; --i)
+    {
+      if(i > 0)
+        break;
+      ++result;
+    }
+    return result;
+  }
+  
+  function ForIf2() : Integer
+  {
+    var result = 0;
+    for(var i = 0; i < 0; --i)
+    {
+      if(i > 0)
+        continue;
+      else if(i < 0)
+        break;
+      else
+        i = 0;
+      ++result;
+    }
+    return result;
+  }
+  
+  function NestedFor0() : Integer
+  {
+    var result = 1;
+    for(var i = 1; i > 0; --i)
+    {
+      for(var j = 1; j > 0; --j)
+      {
+        result += 2;
+      }
+      ++result;
+    }
+    return result;
+  }
+  
+  function NestedFor1() : Integer
+  {
+    var result = 1;
+    for(var i = 1; i > 0; --i)
+    {
+      for(var j = 1; j > 0; --j)
+      {
+        result += 2;
+        continue;
+      }
+      ++result;
+    }
+    return result;
+  }
+  
+  function NestedFor2() : Integer
+  {
+    var result = 1;
+    for(var i = 1; i > 0; --i)
+    {
+      for(var j = 1; j > 0; --j)
+      {
+        result += 2;
+        break;
+      }
+      ++result;
+    }
+    return result;
+  }
+  
+  function NestedFor3() : Integer
+  {
+    var result = 1;
+    for(var i = 1; i > 0; --i)
+    {
+      for(var j = 1; j > 0; --j)
+      {
+        result += 2;
+        break;
+      }
+      ++result;
+      break;
+    }
+    return result;
+  }
+  
+  [EntryPoint]
+  function Main()
+  {
+    this.For0();
+    this.For1();
+    this.For2();
+    //this.For3();
+    this.ForBreak0(10);
+    this.ForBreak1(10);
+    this.ForBreak2(10);
+    this.ForContinue0(10);
+    this.ForContinue1(10);
+    this.ForContinue2(10);
+    this.ForIf0();
+    this.ForIf1();
+    this.ForIf2();
+    this.NestedFor0();
+    this.NestedFor1();
+    this.NestedFor2();
+    this.NestedFor3();
+  }
+}

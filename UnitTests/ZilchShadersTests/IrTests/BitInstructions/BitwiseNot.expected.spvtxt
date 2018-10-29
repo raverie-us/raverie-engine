@@ -1,0 +1,140 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 73
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_BitwiseNot "EntryPoint_Main_BitwiseNot"
+               OpExecutionMode %EntryPoint_Main_BitwiseNot OriginUpperLeft
+               OpSource Unknown 100
+               OpName %BitwiseNot "BitwiseNot"
+               OpMemberName %BitwiseNot 0 "Dummy"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %Test "Test"
+               OpName %value "value"
+               OpName %result "result"
+               OpName %Test_0 "Test"
+               OpName %value_0 "value"
+               OpName %result_0 "result"
+               OpName %Test_1 "Test"
+               OpName %value_1 "value"
+               OpName %result_1 "result"
+               OpName %Test_2 "Test"
+               OpName %value_2 "value"
+               OpName %result_2 "result"
+               OpName %PreConstructor_BitwiseNot "PreConstructor_BitwiseNot"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_BitwiseNot "EntryPoint_Main_BitwiseNot"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+ %BitwiseNot = OpTypeStruct %int
+%_ptr_Function_BitwiseNot = OpTypePointer Function %BitwiseNot
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_BitwiseNot
+          %9 = OpTypeFunction %void
+      %int_0 = OpConstant %int 0
+      %v2int = OpTypeVector %int 2
+%_ptr_Function_v2int = OpTypePointer Function %v2int
+      %v3int = OpTypeVector %int 3
+%_ptr_Function_v3int = OpTypePointer Function %v3int
+      %v4int = OpTypeVector %int 4
+%_ptr_Function_v4int = OpTypePointer Function %v4int
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_BitwiseNot
+         %19 = OpLabel
+         %20 = OpFunctionCall %void %Test
+         %21 = OpFunctionCall %void %Test_0
+         %22 = OpFunctionCall %void %Test_1
+         %23 = OpFunctionCall %void %Test_2
+               OpReturn
+               OpFunctionEnd
+       %Test = OpFunction %void None %9
+         %25 = OpLabel
+      %value = OpVariable %_ptr_Function_int Function
+     %result = OpVariable %_ptr_Function_int Function
+               OpStore %value %int_0
+         %28 = OpLoad %int %value
+         %29 = OpNot %int %28
+               OpStore %result %29
+               OpReturn
+               OpFunctionEnd
+     %Test_0 = OpFunction %void None %9
+         %31 = OpLabel
+    %value_0 = OpVariable %_ptr_Function_v2int Function
+   %result_0 = OpVariable %_ptr_Function_v2int Function
+         %34 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %value_0 %34
+         %35 = OpLoad %v2int %value_0
+         %36 = OpNot %v2int %35
+               OpStore %result_0 %36
+               OpReturn
+               OpFunctionEnd
+     %Test_1 = OpFunction %void None %9
+         %38 = OpLabel
+    %value_1 = OpVariable %_ptr_Function_v3int Function
+   %result_1 = OpVariable %_ptr_Function_v3int Function
+         %41 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+               OpStore %value_1 %41
+         %42 = OpLoad %v3int %value_1
+         %43 = OpNot %v3int %42
+               OpStore %result_1 %43
+               OpReturn
+               OpFunctionEnd
+     %Test_2 = OpFunction %void None %9
+         %45 = OpLabel
+    %value_2 = OpVariable %_ptr_Function_v4int Function
+   %result_2 = OpVariable %_ptr_Function_v4int Function
+         %48 = OpCompositeConstruct %v4int %int_0 %int_0 %int_0 %int_0
+               OpStore %value_2 %48
+         %49 = OpLoad %v4int %value_2
+         %50 = OpNot %v4int %49
+               OpStore %result_2 %50
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_BitwiseNot = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_BitwiseNot
+         %53 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_BitwiseNot
+         %56 = OpLabel
+         %57 = OpFunctionCall %void %PreConstructor_BitwiseNot %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_BitwiseNot
+         %60 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_BitwiseNot
+         %63 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_BitwiseNot = OpFunction %void None %9
+         %65 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_BitwiseNot Function
+         %67 = OpFunctionCall %void %InitializeGlobals
+         %68 = OpFunctionCall %void %DefaultConstructor %self_4
+         %69 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %70 = OpFunctionCall %void %Main %self_4
+         %71 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %9
+         %72 = OpLabel
+               OpReturn
+               OpFunctionEnd

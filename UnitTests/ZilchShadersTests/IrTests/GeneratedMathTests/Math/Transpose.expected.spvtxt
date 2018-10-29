@@ -1,0 +1,263 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 152
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_Transpose "EntryPoint_Main_Transpose"
+               OpExecutionMode %EntryPoint_Main_Transpose OriginUpperLeft
+               OpSource Unknown 100
+               OpName %Transpose "Transpose"
+               OpMemberName %Transpose 0 "Dummy"
+               OpName %Test_Static_Real2x2 "Test_Static_Real2x2"
+               OpName %self "self"
+               OpName %param0 "param0"
+               OpName %result "result"
+               OpName %Test_Static_Real2x3 "Test_Static_Real2x3"
+               OpName %self_0 "self"
+               OpName %param0_0 "param0"
+               OpName %result_0 "result"
+               OpName %Test_Static_Real2x4 "Test_Static_Real2x4"
+               OpName %self_1 "self"
+               OpName %param0_1 "param0"
+               OpName %result_1 "result"
+               OpName %Test_Static_Real3x2 "Test_Static_Real3x2"
+               OpName %self_2 "self"
+               OpName %param0_2 "param0"
+               OpName %result_2 "result"
+               OpName %Test_Static_Real3x3 "Test_Static_Real3x3"
+               OpName %self_3 "self"
+               OpName %param0_3 "param0"
+               OpName %result_3 "result"
+               OpName %Test_Static_Real3x4 "Test_Static_Real3x4"
+               OpName %self_4 "self"
+               OpName %param0_4 "param0"
+               OpName %result_4 "result"
+               OpName %Test_Static_Real4x2 "Test_Static_Real4x2"
+               OpName %self_5 "self"
+               OpName %param0_5 "param0"
+               OpName %result_5 "result"
+               OpName %Test_Static_Real4x3 "Test_Static_Real4x3"
+               OpName %self_6 "self"
+               OpName %param0_6 "param0"
+               OpName %result_6 "result"
+               OpName %Test_Static_Real4x4 "Test_Static_Real4x4"
+               OpName %self_7 "self"
+               OpName %param0_7 "param0"
+               OpName %result_7 "result"
+               OpName %Main "Main"
+               OpName %self_8 "self"
+               OpName %PreConstructor_Transpose "PreConstructor_Transpose"
+               OpName %self_9 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_10 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_11 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_12 "self"
+               OpName %EntryPoint_Main_Transpose "EntryPoint_Main_Transpose"
+               OpName %self_13 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+  %Transpose = OpTypeStruct %int
+%_ptr_Function_Transpose = OpTypePointer Function %Transpose
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_Transpose
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+    %float_0 = OpConstant %float 0
+%mat2v2float = OpTypeMatrix %v2float 2
+%_ptr_Function_mat2v2float = OpTypePointer Function %mat2v2float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+%mat2v3float = OpTypeMatrix %v3float 2
+%_ptr_Function_mat2v3float = OpTypePointer Function %mat2v3float
+%mat3v2float = OpTypeMatrix %v2float 3
+%_ptr_Function_mat3v2float = OpTypePointer Function %mat3v2float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+%mat2v4float = OpTypeMatrix %v4float 2
+%_ptr_Function_mat2v4float = OpTypePointer Function %mat2v4float
+%mat4v2float = OpTypeMatrix %v2float 4
+%_ptr_Function_mat4v2float = OpTypePointer Function %mat4v2float
+%mat3v3float = OpTypeMatrix %v3float 3
+%_ptr_Function_mat3v3float = OpTypePointer Function %mat3v3float
+%mat3v4float = OpTypeMatrix %v4float 3
+%_ptr_Function_mat3v4float = OpTypePointer Function %mat3v4float
+%mat4v3float = OpTypeMatrix %v3float 4
+%_ptr_Function_mat4v3float = OpTypePointer Function %mat4v3float
+%mat4v4float = OpTypeMatrix %v4float 4
+%_ptr_Function_mat4v4float = OpTypePointer Function %mat4v4float
+         %35 = OpTypeFunction %void
+%Test_Static_Real2x2 = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_Transpose
+         %39 = OpLabel
+     %param0 = OpVariable %_ptr_Function_mat2v2float Function
+     %result = OpVariable %_ptr_Function_mat2v2float Function
+         %42 = OpCompositeConstruct %v2float %float_0 %float_0
+         %43 = OpCompositeConstruct %mat2v2float %42 %42
+               OpStore %param0 %43
+         %44 = OpLoad %mat2v2float %param0
+         %45 = OpTranspose %mat2v2float %44
+               OpStore %result %45
+               OpReturn
+               OpFunctionEnd
+%Test_Static_Real2x3 = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_Transpose
+         %48 = OpLabel
+   %param0_0 = OpVariable %_ptr_Function_mat2v3float Function
+   %result_0 = OpVariable %_ptr_Function_mat3v2float Function
+         %51 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+         %52 = OpCompositeConstruct %mat2v3float %51 %51
+               OpStore %param0_0 %52
+         %53 = OpLoad %mat2v3float %param0_0
+         %54 = OpTranspose %mat3v2float %53
+               OpStore %result_0 %54
+               OpReturn
+               OpFunctionEnd
+%Test_Static_Real2x4 = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_Transpose
+         %57 = OpLabel
+   %param0_1 = OpVariable %_ptr_Function_mat2v4float Function
+   %result_1 = OpVariable %_ptr_Function_mat4v2float Function
+         %60 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+         %61 = OpCompositeConstruct %mat2v4float %60 %60
+               OpStore %param0_1 %61
+         %62 = OpLoad %mat2v4float %param0_1
+         %63 = OpTranspose %mat4v2float %62
+               OpStore %result_1 %63
+               OpReturn
+               OpFunctionEnd
+%Test_Static_Real3x2 = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_Transpose
+         %66 = OpLabel
+   %param0_2 = OpVariable %_ptr_Function_mat3v2float Function
+   %result_2 = OpVariable %_ptr_Function_mat2v3float Function
+         %69 = OpCompositeConstruct %v2float %float_0 %float_0
+         %70 = OpCompositeConstruct %mat3v2float %69 %69 %69
+               OpStore %param0_2 %70
+         %71 = OpLoad %mat3v2float %param0_2
+         %72 = OpTranspose %mat2v3float %71
+               OpStore %result_2 %72
+               OpReturn
+               OpFunctionEnd
+%Test_Static_Real3x3 = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_Transpose
+         %75 = OpLabel
+   %param0_3 = OpVariable %_ptr_Function_mat3v3float Function
+   %result_3 = OpVariable %_ptr_Function_mat3v3float Function
+         %78 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+         %79 = OpCompositeConstruct %mat3v3float %78 %78 %78
+               OpStore %param0_3 %79
+         %80 = OpLoad %mat3v3float %param0_3
+         %81 = OpTranspose %mat3v3float %80
+               OpStore %result_3 %81
+               OpReturn
+               OpFunctionEnd
+%Test_Static_Real3x4 = OpFunction %void None %8
+     %self_4 = OpFunctionParameter %_ptr_Function_Transpose
+         %84 = OpLabel
+   %param0_4 = OpVariable %_ptr_Function_mat3v4float Function
+   %result_4 = OpVariable %_ptr_Function_mat4v3float Function
+         %87 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+         %88 = OpCompositeConstruct %mat3v4float %87 %87 %87
+               OpStore %param0_4 %88
+         %89 = OpLoad %mat3v4float %param0_4
+         %90 = OpTranspose %mat4v3float %89
+               OpStore %result_4 %90
+               OpReturn
+               OpFunctionEnd
+%Test_Static_Real4x2 = OpFunction %void None %8
+     %self_5 = OpFunctionParameter %_ptr_Function_Transpose
+         %93 = OpLabel
+   %param0_5 = OpVariable %_ptr_Function_mat4v2float Function
+   %result_5 = OpVariable %_ptr_Function_mat2v4float Function
+         %96 = OpCompositeConstruct %v2float %float_0 %float_0
+         %97 = OpCompositeConstruct %mat4v2float %96 %96 %96 %96
+               OpStore %param0_5 %97
+         %98 = OpLoad %mat4v2float %param0_5
+         %99 = OpTranspose %mat2v4float %98
+               OpStore %result_5 %99
+               OpReturn
+               OpFunctionEnd
+%Test_Static_Real4x3 = OpFunction %void None %8
+     %self_6 = OpFunctionParameter %_ptr_Function_Transpose
+        %102 = OpLabel
+   %param0_6 = OpVariable %_ptr_Function_mat4v3float Function
+   %result_6 = OpVariable %_ptr_Function_mat3v4float Function
+        %105 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %106 = OpCompositeConstruct %mat4v3float %105 %105 %105 %105
+               OpStore %param0_6 %106
+        %107 = OpLoad %mat4v3float %param0_6
+        %108 = OpTranspose %mat3v4float %107
+               OpStore %result_6 %108
+               OpReturn
+               OpFunctionEnd
+%Test_Static_Real4x4 = OpFunction %void None %8
+     %self_7 = OpFunctionParameter %_ptr_Function_Transpose
+        %111 = OpLabel
+   %param0_7 = OpVariable %_ptr_Function_mat4v4float Function
+   %result_7 = OpVariable %_ptr_Function_mat4v4float Function
+        %114 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+        %115 = OpCompositeConstruct %mat4v4float %114 %114 %114 %114
+               OpStore %param0_7 %115
+        %116 = OpLoad %mat4v4float %param0_7
+        %117 = OpTranspose %mat4v4float %116
+               OpStore %result_7 %117
+               OpReturn
+               OpFunctionEnd
+       %Main = OpFunction %void None %8
+     %self_8 = OpFunctionParameter %_ptr_Function_Transpose
+        %120 = OpLabel
+        %121 = OpFunctionCall %void %Test_Static_Real2x2 %self_8
+        %122 = OpFunctionCall %void %Test_Static_Real2x3 %self_8
+        %123 = OpFunctionCall %void %Test_Static_Real2x4 %self_8
+        %124 = OpFunctionCall %void %Test_Static_Real3x2 %self_8
+        %125 = OpFunctionCall %void %Test_Static_Real3x3 %self_8
+        %126 = OpFunctionCall %void %Test_Static_Real3x4 %self_8
+        %127 = OpFunctionCall %void %Test_Static_Real4x2 %self_8
+        %128 = OpFunctionCall %void %Test_Static_Real4x3 %self_8
+        %129 = OpFunctionCall %void %Test_Static_Real4x4 %self_8
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_Transpose = OpFunction %void None %8
+     %self_9 = OpFunctionParameter %_ptr_Function_Transpose
+        %132 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+    %self_10 = OpFunctionParameter %_ptr_Function_Transpose
+        %135 = OpLabel
+        %136 = OpFunctionCall %void %PreConstructor_Transpose %self_10
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+    %self_11 = OpFunctionParameter %_ptr_Function_Transpose
+        %139 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+    %self_12 = OpFunctionParameter %_ptr_Function_Transpose
+        %142 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_Transpose = OpFunction %void None %35
+        %144 = OpLabel
+    %self_13 = OpVariable %_ptr_Function_Transpose Function
+        %146 = OpFunctionCall %void %InitializeGlobals
+        %147 = OpFunctionCall %void %DefaultConstructor %self_13
+        %148 = OpFunctionCall %void %CopyInputs_Main %self_13
+        %149 = OpFunctionCall %void %Main %self_13
+        %150 = OpFunctionCall %void %CopyOutputs_Main %self_13
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %35
+        %151 = OpLabel
+               OpReturn
+               OpFunctionEnd

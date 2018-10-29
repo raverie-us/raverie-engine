@@ -1,0 +1,143 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 67
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_MatrixSpecConstants "EntryPoint_Main_MatrixSpecConstants"
+               OpExecutionMode %EntryPoint_Main_MatrixSpecConstants OriginUpperLeft
+               OpSource Unknown 100
+               OpName %MatrixSpecConstants "MatrixSpecConstants"
+               OpMemberName %MatrixSpecConstants 0 "Dummy"
+               OpName %ConstantReal3x3_X_X_MatrixSpecConstants "ConstantReal3x3.X.X_MatrixSpecConstants"
+               OpName %ConstantReal3x3_X_Y_MatrixSpecConstants "ConstantReal3x3.X.Y_MatrixSpecConstants"
+               OpName %ConstantReal3x3_X_Z_MatrixSpecConstants "ConstantReal3x3.X.Z_MatrixSpecConstants"
+               OpName %ConstantReal3x3_X_MatrixSpecConstants "ConstantReal3x3.X_MatrixSpecConstants"
+               OpName %ConstantReal3x3_Y_X_MatrixSpecConstants "ConstantReal3x3.Y.X_MatrixSpecConstants"
+               OpName %ConstantReal3x3_Y_Y_MatrixSpecConstants "ConstantReal3x3.Y.Y_MatrixSpecConstants"
+               OpName %ConstantReal3x3_Y_Z_MatrixSpecConstants "ConstantReal3x3.Y.Z_MatrixSpecConstants"
+               OpName %ConstantReal3x3_Y_MatrixSpecConstants "ConstantReal3x3.Y_MatrixSpecConstants"
+               OpName %ConstantReal3x3_Z_X_MatrixSpecConstants "ConstantReal3x3.Z.X_MatrixSpecConstants"
+               OpName %ConstantReal3x3_Z_Y_MatrixSpecConstants "ConstantReal3x3.Z.Y_MatrixSpecConstants"
+               OpName %ConstantReal3x3_Z_Z_MatrixSpecConstants "ConstantReal3x3.Z.Z_MatrixSpecConstants"
+               OpName %ConstantReal3x3_Z_MatrixSpecConstants "ConstantReal3x3.Z_MatrixSpecConstants"
+               OpName %ConstantReal3x3_MatrixSpecConstants "ConstantReal3x3_MatrixSpecConstants"
+               OpName %ConstantReal2x2_X_X_MatrixSpecConstants "ConstantReal2x2.X.X_MatrixSpecConstants"
+               OpName %ConstantReal2x2_X_Y_MatrixSpecConstants "ConstantReal2x2.X.Y_MatrixSpecConstants"
+               OpName %ConstantReal2x2_X_MatrixSpecConstants "ConstantReal2x2.X_MatrixSpecConstants"
+               OpName %ConstantReal2x2_Y_X_MatrixSpecConstants "ConstantReal2x2.Y.X_MatrixSpecConstants"
+               OpName %ConstantReal2x2_Y_Y_MatrixSpecConstants "ConstantReal2x2.Y.Y_MatrixSpecConstants"
+               OpName %ConstantReal2x2_Y_MatrixSpecConstants "ConstantReal2x2.Y_MatrixSpecConstants"
+               OpName %ConstantReal2x2_MatrixSpecConstants "ConstantReal2x2_MatrixSpecConstants"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %constantReal3x3 "constantReal3x3"
+               OpName %constantReal2x2 "constantReal2x2"
+               OpName %PreConstructor_MatrixSpecConstants "PreConstructor_MatrixSpecConstants"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_MatrixSpecConstants "EntryPoint_Main_MatrixSpecConstants"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %ConstantReal3x3_X_X_MatrixSpecConstants SpecId 1
+               OpDecorate %ConstantReal3x3_X_Y_MatrixSpecConstants SpecId 2
+               OpDecorate %ConstantReal3x3_X_Z_MatrixSpecConstants SpecId 3
+               OpDecorate %ConstantReal3x3_Y_X_MatrixSpecConstants SpecId 4
+               OpDecorate %ConstantReal3x3_Y_Y_MatrixSpecConstants SpecId 5
+               OpDecorate %ConstantReal3x3_Y_Z_MatrixSpecConstants SpecId 6
+               OpDecorate %ConstantReal3x3_Z_X_MatrixSpecConstants SpecId 7
+               OpDecorate %ConstantReal3x3_Z_Y_MatrixSpecConstants SpecId 8
+               OpDecorate %ConstantReal3x3_Z_Z_MatrixSpecConstants SpecId 9
+               OpDecorate %ConstantReal2x2_X_X_MatrixSpecConstants SpecId 10
+               OpDecorate %ConstantReal2x2_X_Y_MatrixSpecConstants SpecId 11
+               OpDecorate %ConstantReal2x2_Y_X_MatrixSpecConstants SpecId 12
+               OpDecorate %ConstantReal2x2_Y_Y_MatrixSpecConstants SpecId 13
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%MatrixSpecConstants = OpTypeStruct %int
+%_ptr_Function_MatrixSpecConstants = OpTypePointer Function %MatrixSpecConstants
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_MatrixSpecConstants
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+%mat3v3float = OpTypeMatrix %v3float 3
+%_ptr_Function_mat3v3float = OpTypePointer Function %mat3v3float
+%ConstantReal3x3_X_X_MatrixSpecConstants = OpSpecConstant %float 0.100000001
+%ConstantReal3x3_X_Y_MatrixSpecConstants = OpSpecConstant %float 0.200000003
+%ConstantReal3x3_X_Z_MatrixSpecConstants = OpSpecConstant %float 0.300000012
+%ConstantReal3x3_X_MatrixSpecConstants = OpSpecConstantComposite %v3float %ConstantReal3x3_X_X_MatrixSpecConstants %ConstantReal3x3_X_Y_MatrixSpecConstants %ConstantReal3x3_X_Z_MatrixSpecConstants
+%ConstantReal3x3_Y_X_MatrixSpecConstants = OpSpecConstant %float 0.400000006
+%ConstantReal3x3_Y_Y_MatrixSpecConstants = OpSpecConstant %float 0.5
+%ConstantReal3x3_Y_Z_MatrixSpecConstants = OpSpecConstant %float 0.600000024
+%ConstantReal3x3_Y_MatrixSpecConstants = OpSpecConstantComposite %v3float %ConstantReal3x3_Y_X_MatrixSpecConstants %ConstantReal3x3_Y_Y_MatrixSpecConstants %ConstantReal3x3_Y_Z_MatrixSpecConstants
+%ConstantReal3x3_Z_X_MatrixSpecConstants = OpSpecConstant %float 0.700000048
+%ConstantReal3x3_Z_Y_MatrixSpecConstants = OpSpecConstant %float 0.800000072
+%ConstantReal3x3_Z_Z_MatrixSpecConstants = OpSpecConstant %float 0.900000095
+%ConstantReal3x3_Z_MatrixSpecConstants = OpSpecConstantComposite %v3float %ConstantReal3x3_Z_X_MatrixSpecConstants %ConstantReal3x3_Z_Y_MatrixSpecConstants %ConstantReal3x3_Z_Z_MatrixSpecConstants
+%ConstantReal3x3_MatrixSpecConstants = OpSpecConstantComposite %mat3v3float %ConstantReal3x3_X_MatrixSpecConstants %ConstantReal3x3_Y_MatrixSpecConstants %ConstantReal3x3_Z_MatrixSpecConstants
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+%mat2v2float = OpTypeMatrix %v2float 2
+%_ptr_Function_mat2v2float = OpTypePointer Function %mat2v2float
+%ConstantReal2x2_X_X_MatrixSpecConstants = OpSpecConstant %float 1.00000012
+%ConstantReal2x2_X_Y_MatrixSpecConstants = OpSpecConstant %float 1.10000014
+%ConstantReal2x2_X_MatrixSpecConstants = OpSpecConstantComposite %v2float %ConstantReal2x2_X_X_MatrixSpecConstants %ConstantReal2x2_X_Y_MatrixSpecConstants
+%ConstantReal2x2_Y_X_MatrixSpecConstants = OpSpecConstant %float 1.20000017
+%ConstantReal2x2_Y_Y_MatrixSpecConstants = OpSpecConstant %float 1.30000019
+%ConstantReal2x2_Y_MatrixSpecConstants = OpSpecConstantComposite %v2float %ConstantReal2x2_Y_X_MatrixSpecConstants %ConstantReal2x2_Y_Y_MatrixSpecConstants
+%ConstantReal2x2_MatrixSpecConstants = OpSpecConstantComposite %mat2v2float %ConstantReal2x2_X_MatrixSpecConstants %ConstantReal2x2_Y_MatrixSpecConstants
+         %19 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_MatrixSpecConstants
+         %42 = OpLabel
+%constantReal3x3 = OpVariable %_ptr_Function_mat3v3float Function
+%constantReal2x2 = OpVariable %_ptr_Function_mat2v2float Function
+               OpStore %constantReal3x3 %ConstantReal3x3_MatrixSpecConstants
+               OpStore %constantReal2x2 %ConstantReal2x2_MatrixSpecConstants
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_MatrixSpecConstants = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_MatrixSpecConstants
+         %47 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_MatrixSpecConstants
+         %50 = OpLabel
+         %51 = OpFunctionCall %void %PreConstructor_MatrixSpecConstants %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_MatrixSpecConstants
+         %54 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_MatrixSpecConstants
+         %57 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_MatrixSpecConstants = OpFunction %void None %19
+         %59 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_MatrixSpecConstants Function
+         %61 = OpFunctionCall %void %InitializeGlobals
+         %62 = OpFunctionCall %void %DefaultConstructor %self_4
+         %63 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %64 = OpFunctionCall %void %Main %self_4
+         %65 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %19
+         %66 = OpLabel
+               OpReturn
+               OpFunctionEnd

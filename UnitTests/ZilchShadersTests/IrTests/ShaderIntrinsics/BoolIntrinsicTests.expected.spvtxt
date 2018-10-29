@@ -1,0 +1,423 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 239
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_BoolIntrinsicTests "EntryPoint_Main_BoolIntrinsicTests"
+               OpExecutionMode %EntryPoint_Main_BoolIntrinsicTests OriginUpperLeft
+               OpSource Unknown 100
+               OpName %BoolIntrinsicTests "BoolIntrinsicTests"
+               OpMemberName %BoolIntrinsicTests 0 "Dummy"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %TestBools "TestBools"
+               OpName %param0 "param0"
+               OpName %param1 "param1"
+               OpName %result2 "result2"
+               OpName %result3 "result3"
+               OpName %result4 "result4"
+               OpName %result5 "result5"
+               OpName %result6 "result6"
+               OpName %TestBools_0 "TestBools"
+               OpName %param0_0 "param0"
+               OpName %param1_0 "param1"
+               OpName %result0 "result0"
+               OpName %result1 "result1"
+               OpName %TestBools_1 "TestBools"
+               OpName %param0_1 "param0"
+               OpName %param1_1 "param1"
+               OpName %result2_0 "result2"
+               OpName %result3_0 "result3"
+               OpName %result4_0 "result4"
+               OpName %result5_0 "result5"
+               OpName %result6_0 "result6"
+               OpName %TestBools_2 "TestBools"
+               OpName %param0_2 "param0"
+               OpName %param1_2 "param1"
+               OpName %result0_0 "result0"
+               OpName %result1_0 "result1"
+               OpName %TestBools_3 "TestBools"
+               OpName %param0_3 "param0"
+               OpName %param1_3 "param1"
+               OpName %result2_1 "result2"
+               OpName %result3_1 "result3"
+               OpName %result4_1 "result4"
+               OpName %result5_1 "result5"
+               OpName %result6_1 "result6"
+               OpName %TestBools_4 "TestBools"
+               OpName %param0_4 "param0"
+               OpName %param1_4 "param1"
+               OpName %result0_1 "result0"
+               OpName %result1_1 "result1"
+               OpName %TestBools_5 "TestBools"
+               OpName %param0_5 "param0"
+               OpName %param1_5 "param1"
+               OpName %result2_2 "result2"
+               OpName %result3_2 "result3"
+               OpName %result4_2 "result4"
+               OpName %result5_2 "result5"
+               OpName %result6_2 "result6"
+               OpName %TestSelect "TestSelect"
+               OpName %condition "condition"
+               OpName %obj1 "obj1"
+               OpName %obj2 "obj2"
+               OpName %result "result"
+               OpName %TestSelect_0 "TestSelect"
+               OpName %condition_0 "condition"
+               OpName %obj1_0 "obj1"
+               OpName %obj2_0 "obj2"
+               OpName %result_0 "result"
+               OpName %TestSelect_1 "TestSelect"
+               OpName %condition_1 "condition"
+               OpName %obj1_1 "obj1"
+               OpName %obj2_1 "obj2"
+               OpName %result_1 "result"
+               OpName %TestSelect_2 "TestSelect"
+               OpName %condition_2 "condition"
+               OpName %obj1_2 "obj1"
+               OpName %obj2_2 "obj2"
+               OpName %result_2 "result"
+               OpName %PreConstructor_BoolIntrinsicTests "PreConstructor_BoolIntrinsicTests"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_BoolIntrinsicTests "EntryPoint_Main_BoolIntrinsicTests"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%BoolIntrinsicTests = OpTypeStruct %int
+%_ptr_Function_BoolIntrinsicTests = OpTypePointer Function %BoolIntrinsicTests
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_BoolIntrinsicTests
+          %9 = OpTypeFunction %void
+       %bool = OpTypeBool
+%_ptr_Function_bool = OpTypePointer Function %bool
+      %false = OpConstantFalse %bool
+     %v2bool = OpTypeVector %bool 2
+%_ptr_Function_v2bool = OpTypePointer Function %v2bool
+     %v3bool = OpTypeVector %bool 3
+%_ptr_Function_v3bool = OpTypePointer Function %v3bool
+     %v4bool = OpTypeVector %bool 4
+%_ptr_Function_v4bool = OpTypePointer Function %v4bool
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_BoolIntrinsicTests
+         %21 = OpLabel
+         %22 = OpFunctionCall %void %TestBools
+         %23 = OpFunctionCall %void %TestBools_0
+         %24 = OpFunctionCall %void %TestBools_2
+         %25 = OpFunctionCall %void %TestBools_4
+         %26 = OpFunctionCall %void %TestSelect
+         %27 = OpFunctionCall %void %TestSelect_0
+         %28 = OpFunctionCall %void %TestSelect_1
+         %29 = OpFunctionCall %void %TestSelect_2
+               OpReturn
+               OpFunctionEnd
+  %TestBools = OpFunction %void None %9
+         %31 = OpLabel
+     %param0 = OpVariable %_ptr_Function_bool Function
+     %param1 = OpVariable %_ptr_Function_bool Function
+    %result2 = OpVariable %_ptr_Function_bool Function
+    %result3 = OpVariable %_ptr_Function_bool Function
+    %result4 = OpVariable %_ptr_Function_bool Function
+    %result5 = OpVariable %_ptr_Function_bool Function
+    %result6 = OpVariable %_ptr_Function_bool Function
+               OpStore %param0 %false
+         %39 = OpLoad %bool %param0
+               OpStore %param1 %39
+         %40 = OpLoad %bool %param0
+         %41 = OpLogicalNot %bool %40
+               OpStore %result2 %41
+         %42 = OpLoad %bool %param0
+         %43 = OpLoad %bool %param1
+         %44 = OpLogicalEqual %bool %42 %43
+               OpStore %result3 %44
+         %45 = OpLoad %bool %param0
+         %46 = OpLoad %bool %param1
+         %47 = OpLogicalNotEqual %bool %45 %46
+               OpStore %result4 %47
+         %48 = OpLoad %bool %param0
+         %49 = OpLoad %bool %param1
+         %50 = OpLogicalOr %bool %48 %49
+               OpStore %result5 %50
+         %51 = OpLoad %bool %param0
+         %52 = OpLoad %bool %param1
+         %53 = OpLogicalAnd %bool %51 %52
+               OpStore %result6 %53
+               OpReturn
+               OpFunctionEnd
+%TestBools_0 = OpFunction %void None %9
+         %55 = OpLabel
+   %param0_0 = OpVariable %_ptr_Function_v2bool Function
+   %param1_0 = OpVariable %_ptr_Function_v2bool Function
+    %result0 = OpVariable %_ptr_Function_bool Function
+    %result1 = OpVariable %_ptr_Function_bool Function
+         %60 = OpFunctionCall %void %TestBools_1
+         %61 = OpCompositeConstruct %v2bool %false %false
+               OpStore %param0_0 %61
+         %62 = OpLoad %v2bool %param0_0
+               OpStore %param1_0 %62
+         %63 = OpLoad %v2bool %param0_0
+         %64 = OpAny %bool %63
+               OpStore %result0 %64
+         %65 = OpLoad %v2bool %param0_0
+         %66 = OpAll %bool %65
+               OpStore %result1 %66
+               OpReturn
+               OpFunctionEnd
+%TestBools_1 = OpFunction %void None %9
+         %68 = OpLabel
+   %param0_1 = OpVariable %_ptr_Function_v2bool Function
+   %param1_1 = OpVariable %_ptr_Function_v2bool Function
+  %result2_0 = OpVariable %_ptr_Function_v2bool Function
+  %result3_0 = OpVariable %_ptr_Function_v2bool Function
+  %result4_0 = OpVariable %_ptr_Function_v2bool Function
+  %result5_0 = OpVariable %_ptr_Function_v2bool Function
+  %result6_0 = OpVariable %_ptr_Function_v2bool Function
+         %76 = OpCompositeConstruct %v2bool %false %false
+               OpStore %param0_1 %76
+         %77 = OpLoad %v2bool %param0_1
+               OpStore %param1_1 %77
+         %78 = OpLoad %v2bool %param0_1
+         %79 = OpLogicalNot %v2bool %78
+               OpStore %result2_0 %79
+         %80 = OpLoad %v2bool %param0_1
+         %81 = OpLoad %v2bool %param1_1
+         %82 = OpLogicalEqual %v2bool %80 %81
+               OpStore %result3_0 %82
+         %83 = OpLoad %v2bool %param0_1
+         %84 = OpLoad %v2bool %param1_1
+         %85 = OpLogicalNotEqual %v2bool %83 %84
+               OpStore %result4_0 %85
+         %86 = OpLoad %v2bool %param0_1
+         %87 = OpLoad %v2bool %param1_1
+         %88 = OpLogicalOr %v2bool %86 %87
+               OpStore %result5_0 %88
+         %89 = OpLoad %v2bool %param0_1
+         %90 = OpLoad %v2bool %param1_1
+         %91 = OpLogicalAnd %v2bool %89 %90
+               OpStore %result6_0 %91
+               OpReturn
+               OpFunctionEnd
+%TestBools_2 = OpFunction %void None %9
+         %93 = OpLabel
+   %param0_2 = OpVariable %_ptr_Function_v3bool Function
+   %param1_2 = OpVariable %_ptr_Function_v3bool Function
+  %result0_0 = OpVariable %_ptr_Function_bool Function
+  %result1_0 = OpVariable %_ptr_Function_bool Function
+         %98 = OpFunctionCall %void %TestBools_3
+         %99 = OpCompositeConstruct %v3bool %false %false %false
+               OpStore %param0_2 %99
+        %100 = OpLoad %v3bool %param0_2
+               OpStore %param1_2 %100
+        %101 = OpLoad %v3bool %param0_2
+        %102 = OpAny %bool %101
+               OpStore %result0_0 %102
+        %103 = OpLoad %v3bool %param0_2
+        %104 = OpAll %bool %103
+               OpStore %result1_0 %104
+               OpReturn
+               OpFunctionEnd
+%TestBools_3 = OpFunction %void None %9
+        %106 = OpLabel
+   %param0_3 = OpVariable %_ptr_Function_v3bool Function
+   %param1_3 = OpVariable %_ptr_Function_v3bool Function
+  %result2_1 = OpVariable %_ptr_Function_v3bool Function
+  %result3_1 = OpVariable %_ptr_Function_v3bool Function
+  %result4_1 = OpVariable %_ptr_Function_v3bool Function
+  %result5_1 = OpVariable %_ptr_Function_v3bool Function
+  %result6_1 = OpVariable %_ptr_Function_v3bool Function
+        %114 = OpCompositeConstruct %v3bool %false %false %false
+               OpStore %param0_3 %114
+        %115 = OpLoad %v3bool %param0_3
+               OpStore %param1_3 %115
+        %116 = OpLoad %v3bool %param0_3
+        %117 = OpLogicalNot %v3bool %116
+               OpStore %result2_1 %117
+        %118 = OpLoad %v3bool %param0_3
+        %119 = OpLoad %v3bool %param1_3
+        %120 = OpLogicalEqual %v3bool %118 %119
+               OpStore %result3_1 %120
+        %121 = OpLoad %v3bool %param0_3
+        %122 = OpLoad %v3bool %param1_3
+        %123 = OpLogicalNotEqual %v3bool %121 %122
+               OpStore %result4_1 %123
+        %124 = OpLoad %v3bool %param0_3
+        %125 = OpLoad %v3bool %param1_3
+        %126 = OpLogicalOr %v3bool %124 %125
+               OpStore %result5_1 %126
+        %127 = OpLoad %v3bool %param0_3
+        %128 = OpLoad %v3bool %param1_3
+        %129 = OpLogicalAnd %v3bool %127 %128
+               OpStore %result6_1 %129
+               OpReturn
+               OpFunctionEnd
+%TestBools_4 = OpFunction %void None %9
+        %131 = OpLabel
+   %param0_4 = OpVariable %_ptr_Function_v4bool Function
+   %param1_4 = OpVariable %_ptr_Function_v4bool Function
+  %result0_1 = OpVariable %_ptr_Function_bool Function
+  %result1_1 = OpVariable %_ptr_Function_bool Function
+        %136 = OpFunctionCall %void %TestBools_5
+        %137 = OpCompositeConstruct %v4bool %false %false %false %false
+               OpStore %param0_4 %137
+        %138 = OpLoad %v4bool %param0_4
+               OpStore %param1_4 %138
+        %139 = OpLoad %v4bool %param0_4
+        %140 = OpAny %bool %139
+               OpStore %result0_1 %140
+        %141 = OpLoad %v4bool %param0_4
+        %142 = OpAll %bool %141
+               OpStore %result1_1 %142
+               OpReturn
+               OpFunctionEnd
+%TestBools_5 = OpFunction %void None %9
+        %144 = OpLabel
+   %param0_5 = OpVariable %_ptr_Function_v4bool Function
+   %param1_5 = OpVariable %_ptr_Function_v4bool Function
+  %result2_2 = OpVariable %_ptr_Function_v4bool Function
+  %result3_2 = OpVariable %_ptr_Function_v4bool Function
+  %result4_2 = OpVariable %_ptr_Function_v4bool Function
+  %result5_2 = OpVariable %_ptr_Function_v4bool Function
+  %result6_2 = OpVariable %_ptr_Function_v4bool Function
+        %152 = OpCompositeConstruct %v4bool %false %false %false %false
+               OpStore %param0_5 %152
+        %153 = OpLoad %v4bool %param0_5
+               OpStore %param1_5 %153
+        %154 = OpLoad %v4bool %param0_5
+        %155 = OpLogicalNot %v4bool %154
+               OpStore %result2_2 %155
+        %156 = OpLoad %v4bool %param0_5
+        %157 = OpLoad %v4bool %param1_5
+        %158 = OpLogicalEqual %v4bool %156 %157
+               OpStore %result3_2 %158
+        %159 = OpLoad %v4bool %param0_5
+        %160 = OpLoad %v4bool %param1_5
+        %161 = OpLogicalNotEqual %v4bool %159 %160
+               OpStore %result4_2 %161
+        %162 = OpLoad %v4bool %param0_5
+        %163 = OpLoad %v4bool %param1_5
+        %164 = OpLogicalOr %v4bool %162 %163
+               OpStore %result5_2 %164
+        %165 = OpLoad %v4bool %param0_5
+        %166 = OpLoad %v4bool %param1_5
+        %167 = OpLogicalAnd %v4bool %165 %166
+               OpStore %result6_2 %167
+               OpReturn
+               OpFunctionEnd
+ %TestSelect = OpFunction %void None %9
+        %169 = OpLabel
+  %condition = OpVariable %_ptr_Function_bool Function
+       %obj1 = OpVariable %_ptr_Function_bool Function
+       %obj2 = OpVariable %_ptr_Function_bool Function
+     %result = OpVariable %_ptr_Function_bool Function
+               OpStore %condition %false
+               OpStore %obj1 %false
+               OpStore %obj2 %false
+        %174 = OpLoad %bool %condition
+        %175 = OpLoad %bool %obj1
+        %176 = OpLoad %bool %obj2
+        %177 = OpSelect %bool %174 %175 %176
+               OpStore %result %177
+               OpReturn
+               OpFunctionEnd
+%TestSelect_0 = OpFunction %void None %9
+        %179 = OpLabel
+%condition_0 = OpVariable %_ptr_Function_v2bool Function
+     %obj1_0 = OpVariable %_ptr_Function_v2bool Function
+     %obj2_0 = OpVariable %_ptr_Function_v2bool Function
+   %result_0 = OpVariable %_ptr_Function_v2bool Function
+        %184 = OpCompositeConstruct %v2bool %false %false
+               OpStore %condition_0 %184
+        %185 = OpCompositeConstruct %v2bool %false %false
+               OpStore %obj1_0 %185
+        %186 = OpCompositeConstruct %v2bool %false %false
+               OpStore %obj2_0 %186
+        %187 = OpLoad %v2bool %condition_0
+        %188 = OpLoad %v2bool %obj1_0
+        %189 = OpLoad %v2bool %obj2_0
+        %190 = OpSelect %v2bool %187 %188 %189
+               OpStore %result_0 %190
+               OpReturn
+               OpFunctionEnd
+%TestSelect_1 = OpFunction %void None %9
+        %192 = OpLabel
+%condition_1 = OpVariable %_ptr_Function_v3bool Function
+     %obj1_1 = OpVariable %_ptr_Function_v3bool Function
+     %obj2_1 = OpVariable %_ptr_Function_v3bool Function
+   %result_1 = OpVariable %_ptr_Function_v3bool Function
+        %197 = OpCompositeConstruct %v3bool %false %false %false
+               OpStore %condition_1 %197
+        %198 = OpCompositeConstruct %v3bool %false %false %false
+               OpStore %obj1_1 %198
+        %199 = OpCompositeConstruct %v3bool %false %false %false
+               OpStore %obj2_1 %199
+        %200 = OpLoad %v3bool %condition_1
+        %201 = OpLoad %v3bool %obj1_1
+        %202 = OpLoad %v3bool %obj2_1
+        %203 = OpSelect %v3bool %200 %201 %202
+               OpStore %result_1 %203
+               OpReturn
+               OpFunctionEnd
+%TestSelect_2 = OpFunction %void None %9
+        %205 = OpLabel
+%condition_2 = OpVariable %_ptr_Function_v4bool Function
+     %obj1_2 = OpVariable %_ptr_Function_v4bool Function
+     %obj2_2 = OpVariable %_ptr_Function_v4bool Function
+   %result_2 = OpVariable %_ptr_Function_v4bool Function
+        %210 = OpCompositeConstruct %v4bool %false %false %false %false
+               OpStore %condition_2 %210
+        %211 = OpCompositeConstruct %v4bool %false %false %false %false
+               OpStore %obj1_2 %211
+        %212 = OpCompositeConstruct %v4bool %false %false %false %false
+               OpStore %obj2_2 %212
+        %213 = OpLoad %v4bool %condition_2
+        %214 = OpLoad %v4bool %obj1_2
+        %215 = OpLoad %v4bool %obj2_2
+        %216 = OpSelect %v4bool %213 %214 %215
+               OpStore %result_2 %216
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_BoolIntrinsicTests = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_BoolIntrinsicTests
+        %219 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_BoolIntrinsicTests
+        %222 = OpLabel
+        %223 = OpFunctionCall %void %PreConstructor_BoolIntrinsicTests %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_BoolIntrinsicTests
+        %226 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_BoolIntrinsicTests
+        %229 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_BoolIntrinsicTests = OpFunction %void None %9
+        %231 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_BoolIntrinsicTests Function
+        %233 = OpFunctionCall %void %InitializeGlobals
+        %234 = OpFunctionCall %void %DefaultConstructor %self_4
+        %235 = OpFunctionCall %void %CopyInputs_Main %self_4
+        %236 = OpFunctionCall %void %Main %self_4
+        %237 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %9
+        %238 = OpLabel
+               OpReturn
+               OpFunctionEnd

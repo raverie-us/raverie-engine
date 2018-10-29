@@ -1,0 +1,18 @@
+enum MyEnum
+{
+  Value1 = 2,
+  Value2 = 1,
+  Value3 = 19
+}
+
+[UnitTest][Pixel]
+struct HardcodedEnumValues
+{
+  [EntryPoint]
+  function Main()
+  {
+    var value1 = MyEnum.Value1;
+    var value2 = MyEnum.Value2;
+    var value3 = MyEnum.Value3;
+  }
+}

@@ -1,0 +1,159 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 80
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_RuntimeArray2 "EntryPoint_Main_RuntimeArray2"
+               OpExecutionMode %EntryPoint_Main_RuntimeArray2 OriginUpperLeft
+               OpSource Unknown 100
+               OpName %RuntimeArray2 "RuntimeArray2"
+               OpMemberName %RuntimeArray2 0 "Dummy"
+               OpName %RuntimeArray_Real_Buffer "RuntimeArray[Real]Buffer"
+               OpMemberName %RuntimeArray_Real_Buffer 0 "Data"
+               OpName %RuntimeArray_Real2_Buffer "RuntimeArray[Real2]Buffer"
+               OpMemberName %RuntimeArray_Real2_Buffer 0 "Data"
+               OpName %RuntimeArray_Real3_Buffer "RuntimeArray[Real3]Buffer"
+               OpMemberName %RuntimeArray_Real3_Buffer 0 "Data"
+               OpName %RuntimeArray_Real4_Buffer "RuntimeArray[Real4]Buffer"
+               OpMemberName %RuntimeArray_Real4_Buffer 0 "Data"
+               OpName %Scalars_RuntimeArray2 "Scalars_RuntimeArray2"
+               OpName %Uvs_RuntimeArray2 "Uvs_RuntimeArray2"
+               OpName %Velocities_RuntimeArray2 "Velocities_RuntimeArray2"
+               OpName %Positions_RuntimeArray2 "Positions_RuntimeArray2"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %scalar "scalar"
+               OpName %uv "uv"
+               OpName %vel "vel"
+               OpName %pos "pos"
+               OpName %PreConstructor_RuntimeArray2 "PreConstructor_RuntimeArray2"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_RuntimeArray2 "EntryPoint_Main_RuntimeArray2"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %Scalars_RuntimeArray2 Binding 0
+               OpDecorate %Scalars_RuntimeArray2 DescriptorSet 0
+               OpDecorate %RuntimeArray_Real_Buffer Block
+               OpMemberDecorate %RuntimeArray_Real_Buffer 0 Offset 0
+               OpDecorate %_runtimearr_float ArrayStride 4
+               OpDecorate %Uvs_RuntimeArray2 Binding 1
+               OpDecorate %Uvs_RuntimeArray2 DescriptorSet 0
+               OpDecorate %RuntimeArray_Real2_Buffer Block
+               OpMemberDecorate %RuntimeArray_Real2_Buffer 0 Offset 0
+               OpDecorate %_runtimearr_v2float ArrayStride 8
+               OpDecorate %Velocities_RuntimeArray2 Binding 2
+               OpDecorate %Velocities_RuntimeArray2 DescriptorSet 0
+               OpDecorate %RuntimeArray_Real3_Buffer Block
+               OpMemberDecorate %RuntimeArray_Real3_Buffer 0 Offset 0
+               OpDecorate %_runtimearr_v3float ArrayStride 16
+               OpDecorate %Positions_RuntimeArray2 Binding 3
+               OpDecorate %Positions_RuntimeArray2 DescriptorSet 0
+               OpDecorate %RuntimeArray_Real4_Buffer Block
+               OpMemberDecorate %RuntimeArray_Real4_Buffer 0 Offset 0
+               OpDecorate %_runtimearr_v4float ArrayStride 16
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%RuntimeArray2 = OpTypeStruct %int
+%_ptr_Function_RuntimeArray2 = OpTypePointer Function %RuntimeArray2
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_RuntimeArray2
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+%_ptr_StorageBuffer_float = OpTypePointer StorageBuffer %float
+%_runtimearr_float = OpTypeRuntimeArray %float
+%_ptr_StorageBuffer__runtimearr_float = OpTypePointer StorageBuffer %_runtimearr_float
+%RuntimeArray_Real_Buffer = OpTypeStruct %_runtimearr_float
+%_ptr_StorageBuffer_RuntimeArray_Real_Buffer = OpTypePointer StorageBuffer %RuntimeArray_Real_Buffer
+%Scalars_RuntimeArray2 = OpVariable %_ptr_StorageBuffer_RuntimeArray_Real_Buffer StorageBuffer
+      %int_0 = OpConstant %int 0
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+%_ptr_StorageBuffer_v2float = OpTypePointer StorageBuffer %v2float
+%_runtimearr_v2float = OpTypeRuntimeArray %v2float
+%_ptr_StorageBuffer__runtimearr_v2float = OpTypePointer StorageBuffer %_runtimearr_v2float
+%RuntimeArray_Real2_Buffer = OpTypeStruct %_runtimearr_v2float
+%_ptr_StorageBuffer_RuntimeArray_Real2_Buffer = OpTypePointer StorageBuffer %RuntimeArray_Real2_Buffer
+%Uvs_RuntimeArray2 = OpVariable %_ptr_StorageBuffer_RuntimeArray_Real2_Buffer StorageBuffer
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+%_ptr_StorageBuffer_v3float = OpTypePointer StorageBuffer %v3float
+%_runtimearr_v3float = OpTypeRuntimeArray %v3float
+%_ptr_StorageBuffer__runtimearr_v3float = OpTypePointer StorageBuffer %_runtimearr_v3float
+%RuntimeArray_Real3_Buffer = OpTypeStruct %_runtimearr_v3float
+%_ptr_StorageBuffer_RuntimeArray_Real3_Buffer = OpTypePointer StorageBuffer %RuntimeArray_Real3_Buffer
+%Velocities_RuntimeArray2 = OpVariable %_ptr_StorageBuffer_RuntimeArray_Real3_Buffer StorageBuffer
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+%_ptr_StorageBuffer_v4float = OpTypePointer StorageBuffer %v4float
+%_runtimearr_v4float = OpTypeRuntimeArray %v4float
+%_ptr_StorageBuffer__runtimearr_v4float = OpTypePointer StorageBuffer %_runtimearr_v4float
+%RuntimeArray_Real4_Buffer = OpTypeStruct %_runtimearr_v4float
+%_ptr_StorageBuffer_RuntimeArray_Real4_Buffer = OpTypePointer StorageBuffer %RuntimeArray_Real4_Buffer
+%Positions_RuntimeArray2 = OpVariable %_ptr_StorageBuffer_RuntimeArray_Real4_Buffer StorageBuffer
+         %37 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_RuntimeArray2
+         %45 = OpLabel
+     %scalar = OpVariable %_ptr_Function_float Function
+         %uv = OpVariable %_ptr_Function_v2float Function
+        %vel = OpVariable %_ptr_Function_v3float Function
+        %pos = OpVariable %_ptr_Function_v4float Function
+         %50 = OpAccessChain %_ptr_StorageBuffer_float %Scalars_RuntimeArray2 %int_0 %int_0
+         %51 = OpLoad %float %50
+               OpStore %scalar %51
+         %52 = OpAccessChain %_ptr_StorageBuffer_v2float %Uvs_RuntimeArray2 %int_0 %int_0
+         %53 = OpLoad %v2float %52
+               OpStore %uv %53
+         %54 = OpAccessChain %_ptr_StorageBuffer_v3float %Velocities_RuntimeArray2 %int_0 %int_0
+         %55 = OpLoad %v3float %54
+               OpStore %vel %55
+         %56 = OpAccessChain %_ptr_StorageBuffer_v4float %Positions_RuntimeArray2 %int_0 %int_0
+         %57 = OpLoad %v4float %56
+               OpStore %pos %57
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_RuntimeArray2 = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_RuntimeArray2
+         %60 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_RuntimeArray2
+         %63 = OpLabel
+         %64 = OpFunctionCall %void %PreConstructor_RuntimeArray2 %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_RuntimeArray2
+         %67 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_RuntimeArray2
+         %70 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_RuntimeArray2 = OpFunction %void None %37
+         %72 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_RuntimeArray2 Function
+         %74 = OpFunctionCall %void %InitializeGlobals
+         %75 = OpFunctionCall %void %DefaultConstructor %self_4
+         %76 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %77 = OpFunctionCall %void %Main %self_4
+         %78 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %37
+         %79 = OpLabel
+               OpReturn
+               OpFunctionEnd

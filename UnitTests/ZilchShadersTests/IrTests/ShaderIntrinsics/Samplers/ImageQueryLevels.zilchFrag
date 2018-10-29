@@ -1,0 +1,22 @@
+[Pixel][UnitTest]
+struct ImageQueryLevels
+{
+  var Image : Image2d;
+  var SampledImage : SampledImage2d;
+  var DepthImage : DepthImage2d;
+  var SampledDepthImage : SampledDepthImage2d;
+  var ImageCube : ImageCube;
+  var SampledImageCube : SampledImageCube;
+  
+  [EntryPoint]
+  function Main()
+  {
+    var levels = 1;
+    levels = ShaderIntrinsics.ImageQueryLevels(this.Image);
+    levels = ShaderIntrinsics.ImageQueryLevels(this.SampledImage);
+    levels = ShaderIntrinsics.ImageQueryLevels(this.DepthImage);
+    levels = ShaderIntrinsics.ImageQueryLevels(this.SampledDepthImage);
+    levels = ShaderIntrinsics.ImageQueryLevels(this.ImageCube);
+    levels = ShaderIntrinsics.ImageQueryLevels(this.SampledImageCube);
+  }
+}

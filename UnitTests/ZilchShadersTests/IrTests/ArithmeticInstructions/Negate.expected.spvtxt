@@ -1,0 +1,192 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 105
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_Negate "EntryPoint_Main_Negate"
+               OpExecutionMode %EntryPoint_Main_Negate OriginUpperLeft
+               OpSource Unknown 100
+               OpName %Negate "Negate"
+               OpMemberName %Negate 0 "Dummy"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %Test "Test"
+               OpName %t "t"
+               OpName %Test_0 "Test"
+               OpName %t_0 "t"
+               OpName %Test_1 "Test"
+               OpName %t_1 "t"
+               OpName %Test_2 "Test"
+               OpName %t_2 "t"
+               OpName %Test_3 "Test"
+               OpName %t_3 "t"
+               OpName %Test_4 "Test"
+               OpName %t_4 "t"
+               OpName %Test_5 "Test"
+               OpName %t_5 "t"
+               OpName %Test_6 "Test"
+               OpName %t_6 "t"
+               OpName %PreConstructor_Negate "PreConstructor_Negate"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_Negate "EntryPoint_Main_Negate"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+     %Negate = OpTypeStruct %int
+%_ptr_Function_Negate = OpTypePointer Function %Negate
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_Negate
+          %9 = OpTypeFunction %void
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %float_0 = OpConstant %float 0
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+      %int_0 = OpConstant %int 0
+      %v2int = OpTypeVector %int 2
+%_ptr_Function_v2int = OpTypePointer Function %v2int
+      %v3int = OpTypeVector %int 3
+%_ptr_Function_v3int = OpTypePointer Function %v3int
+      %v4int = OpTypeVector %int 4
+%_ptr_Function_v4int = OpTypePointer Function %v4int
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_Negate
+         %28 = OpLabel
+         %29 = OpFunctionCall %void %Test
+         %30 = OpFunctionCall %void %Test_0
+         %31 = OpFunctionCall %void %Test_1
+         %32 = OpFunctionCall %void %Test_2
+         %33 = OpFunctionCall %void %Test_3
+         %34 = OpFunctionCall %void %Test_4
+         %35 = OpFunctionCall %void %Test_5
+         %36 = OpFunctionCall %void %Test_6
+               OpReturn
+               OpFunctionEnd
+       %Test = OpFunction %void None %9
+         %38 = OpLabel
+          %t = OpVariable %_ptr_Function_float Function
+               OpStore %t %float_0
+         %40 = OpLoad %float %t
+         %41 = OpFNegate %float %40
+               OpStore %t %41
+               OpReturn
+               OpFunctionEnd
+     %Test_0 = OpFunction %void None %9
+         %43 = OpLabel
+        %t_0 = OpVariable %_ptr_Function_v2float Function
+         %45 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %t_0 %45
+         %46 = OpLoad %v2float %t_0
+         %47 = OpFNegate %v2float %46
+               OpStore %t_0 %47
+               OpReturn
+               OpFunctionEnd
+     %Test_1 = OpFunction %void None %9
+         %49 = OpLabel
+        %t_1 = OpVariable %_ptr_Function_v3float Function
+         %51 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %t_1 %51
+         %52 = OpLoad %v3float %t_1
+         %53 = OpFNegate %v3float %52
+               OpStore %t_1 %53
+               OpReturn
+               OpFunctionEnd
+     %Test_2 = OpFunction %void None %9
+         %55 = OpLabel
+        %t_2 = OpVariable %_ptr_Function_v4float Function
+         %57 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %t_2 %57
+         %58 = OpLoad %v4float %t_2
+         %59 = OpFNegate %v4float %58
+               OpStore %t_2 %59
+               OpReturn
+               OpFunctionEnd
+     %Test_3 = OpFunction %void None %9
+         %61 = OpLabel
+        %t_3 = OpVariable %_ptr_Function_int Function
+               OpStore %t_3 %int_0
+         %63 = OpLoad %int %t_3
+         %64 = OpSNegate %int %63
+               OpStore %t_3 %64
+               OpReturn
+               OpFunctionEnd
+     %Test_4 = OpFunction %void None %9
+         %66 = OpLabel
+        %t_4 = OpVariable %_ptr_Function_v2int Function
+         %68 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %t_4 %68
+         %69 = OpLoad %v2int %t_4
+         %70 = OpSNegate %v2int %69
+               OpStore %t_4 %70
+               OpReturn
+               OpFunctionEnd
+     %Test_5 = OpFunction %void None %9
+         %72 = OpLabel
+        %t_5 = OpVariable %_ptr_Function_v3int Function
+         %74 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+               OpStore %t_5 %74
+         %75 = OpLoad %v3int %t_5
+         %76 = OpSNegate %v3int %75
+               OpStore %t_5 %76
+               OpReturn
+               OpFunctionEnd
+     %Test_6 = OpFunction %void None %9
+         %78 = OpLabel
+        %t_6 = OpVariable %_ptr_Function_v4int Function
+         %80 = OpCompositeConstruct %v4int %int_0 %int_0 %int_0 %int_0
+               OpStore %t_6 %80
+         %81 = OpLoad %v4int %t_6
+         %82 = OpSNegate %v4int %81
+               OpStore %t_6 %82
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_Negate = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_Negate
+         %85 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_Negate
+         %88 = OpLabel
+         %89 = OpFunctionCall %void %PreConstructor_Negate %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_Negate
+         %92 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_Negate
+         %95 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_Negate = OpFunction %void None %9
+         %97 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_Negate Function
+         %99 = OpFunctionCall %void %InitializeGlobals
+        %100 = OpFunctionCall %void %DefaultConstructor %self_4
+        %101 = OpFunctionCall %void %CopyInputs_Main %self_4
+        %102 = OpFunctionCall %void %Main %self_4
+        %103 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %9
+        %104 = OpLabel
+               OpReturn
+               OpFunctionEnd

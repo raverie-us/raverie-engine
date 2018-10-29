@@ -1,0 +1,20 @@
+struct StorageImageExtensions
+{
+  [Extension(typeid(StorageImage2d))]
+  function Read(coordinate : Integer2) : Real4
+  {
+    return ShaderIntrinsics.ImageRead(*this, coordinate);
+  }
+  
+  [Extension(typeid(StorageImage2d))]
+  function Write(coordinate : Integer2, texel : Real4)
+  {
+    ShaderIntrinsics.ImageWrite(*this, coordinate, texel);
+  }
+  
+  [Extension(typeid(StorageImage2d))]
+  function GetSize() : Integer2
+  {
+    return ShaderIntrinsics.ImageQuerySize(*this);
+  }
+}

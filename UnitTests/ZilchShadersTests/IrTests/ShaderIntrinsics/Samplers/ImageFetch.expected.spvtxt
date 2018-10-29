@@ -1,0 +1,129 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 75
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_ImageFetch "EntryPoint_Main_ImageFetch"
+               OpExecutionMode %EntryPoint_Main_ImageFetch OriginUpperLeft
+               OpSource Unknown 100
+               OpName %ImageFetch "ImageFetch"
+               OpMemberName %ImageFetch 0 "UvTex"
+               OpName %Image_ImageFetch "Image_ImageFetch"
+               OpName %SampledImage_ImageFetch "SampledImage_ImageFetch"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %color "color"
+               OpName %lod "lod"
+               OpName %PreConstructor_ImageFetch "PreConstructor_ImageFetch"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_ImageFetch "EntryPoint_Main_ImageFetch"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %Image_ImageFetch Binding 0
+               OpDecorate %Image_ImageFetch DescriptorSet 0
+               OpDecorate %SampledImage_ImageFetch Binding 1
+               OpDecorate %SampledImage_ImageFetch DescriptorSet 0
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+      %v2int = OpTypeVector %int 2
+%_ptr_Function_v2int = OpTypePointer Function %v2int
+ %ImageFetch = OpTypeStruct %v2int
+%_ptr_Function_ImageFetch = OpTypePointer Function %ImageFetch
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+         %10 = OpTypeFunction %void %_ptr_Function_ImageFetch
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+    %float_0 = OpConstant %float 0
+      %int_1 = OpConstant %int 1
+         %15 = OpTypeImage %float 2D 0 0 0 1 Unknown
+%_ptr_UniformConstant_15 = OpTypePointer UniformConstant %15
+%Image_ImageFetch = OpVariable %_ptr_UniformConstant_15 UniformConstant
+      %int_0 = OpConstant %int 0
+         %17 = OpTypeSampledImage %15
+%_ptr_UniformConstant_17 = OpTypePointer UniformConstant %17
+%SampledImage_ImageFetch = OpVariable %_ptr_UniformConstant_17 UniformConstant
+         %19 = OpTypeFunction %void
+       %Main = OpFunction %void None %10
+       %self = OpFunctionParameter %_ptr_Function_ImageFetch
+         %27 = OpLabel
+      %color = OpVariable %_ptr_Function_v4float Function
+        %lod = OpVariable %_ptr_Function_int Function
+         %30 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %color %30
+               OpStore %lod %int_1
+         %31 = OpLoad %15 %Image_ImageFetch
+         %32 = OpAccessChain %_ptr_Function_v2int %self %int_0
+         %33 = OpLoad %v2int %32
+         %34 = OpLoad %int %lod
+         %35 = OpImageFetch %v4float %31 %33 Lod %34
+               OpStore %color %35
+         %36 = OpLoad %17 %SampledImage_ImageFetch
+         %37 = OpImage %15 %36
+         %38 = OpAccessChain %_ptr_Function_v2int %self %int_0
+         %39 = OpLoad %v2int %38
+         %40 = OpLoad %int %lod
+         %41 = OpImageFetch %v4float %37 %39 Lod %40
+               OpStore %color %41
+         %42 = OpLoad %15 %Image_ImageFetch
+         %43 = OpAccessChain %_ptr_Function_v2int %self %int_0
+         %44 = OpLoad %v2int %43
+         %45 = OpImageFetch %v4float %42 %44
+               OpStore %color %45
+         %46 = OpLoad %17 %SampledImage_ImageFetch
+         %47 = OpImage %15 %46
+         %48 = OpAccessChain %_ptr_Function_v2int %self %int_0
+         %49 = OpLoad %v2int %48
+         %50 = OpImageFetch %v4float %47 %49
+               OpStore %color %50
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_ImageFetch = OpFunction %void None %10
+     %self_0 = OpFunctionParameter %_ptr_Function_ImageFetch
+         %53 = OpLabel
+         %54 = OpAccessChain %_ptr_Function_v2int %self_0 %int_0
+         %55 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %54 %55
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %10
+     %self_1 = OpFunctionParameter %_ptr_Function_ImageFetch
+         %58 = OpLabel
+         %59 = OpFunctionCall %void %PreConstructor_ImageFetch %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %10
+     %self_2 = OpFunctionParameter %_ptr_Function_ImageFetch
+         %62 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %10
+     %self_3 = OpFunctionParameter %_ptr_Function_ImageFetch
+         %65 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_ImageFetch = OpFunction %void None %19
+         %67 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_ImageFetch Function
+         %69 = OpFunctionCall %void %InitializeGlobals
+         %70 = OpFunctionCall %void %DefaultConstructor %self_4
+         %71 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %72 = OpFunctionCall %void %Main %self_4
+         %73 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %19
+         %74 = OpLabel
+               OpReturn
+               OpFunctionEnd

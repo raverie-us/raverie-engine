@@ -4,10 +4,10 @@
 [Vertex][Protected]
 struct ApiPerspectiveOutput
 {
-  [BuiltInInput] var ZeroPerspectiveToApiPerspective : Real4x4;
+  [AppBuiltInInput] var ZeroPerspectiveToApiPerspective : Real4x4;
 
   [Input] var PerspectivePosition : Real4;
-  [Output] var ApiPerspectivePosition : Real4;
+  [HardwareBuiltInOutput] var ApiPerspectivePosition : Real4;
 
   function Main()
   {

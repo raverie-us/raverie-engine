@@ -1,0 +1,263 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 143
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_DistanceSq "EntryPoint_Main_DistanceSq"
+               OpExecutionMode %EntryPoint_Main_DistanceSq OriginUpperLeft
+               OpSource Unknown 100
+               OpName %DistanceSq "DistanceSq"
+               OpMemberName %DistanceSq 0 "Dummy"
+               OpName %Test_Static_Real2_Real2 "Test_Static_Real2_Real2"
+               OpName %self "self"
+               OpName %param0 "param0"
+               OpName %param1 "param1"
+               OpName %result "result"
+               OpName %DistanceSq_0 "DistanceSq"
+               OpName %param0_0 "param0"
+               OpName %param1_0 "param1"
+               OpName %param0_Local "param0_Local"
+               OpName %param1_Local "param1_Local"
+               OpName %vector "vector"
+               OpName %LengthSq "LengthSq"
+               OpName %param0_1 "param0"
+               OpName %param0_Local_0 "param0_Local"
+               OpName %Test_Static_Real3_Real3 "Test_Static_Real3_Real3"
+               OpName %self_0 "self"
+               OpName %param0_2 "param0"
+               OpName %param1_1 "param1"
+               OpName %result_0 "result"
+               OpName %DistanceSq_1 "DistanceSq"
+               OpName %param0_3 "param0"
+               OpName %param1_2 "param1"
+               OpName %param0_Local_1 "param0_Local"
+               OpName %param1_Local_0 "param1_Local"
+               OpName %vector_0 "vector"
+               OpName %LengthSq_0 "LengthSq"
+               OpName %param0_4 "param0"
+               OpName %param0_Local_2 "param0_Local"
+               OpName %Test_Static_Real4_Real4 "Test_Static_Real4_Real4"
+               OpName %self_1 "self"
+               OpName %param0_5 "param0"
+               OpName %param1_3 "param1"
+               OpName %result_1 "result"
+               OpName %DistanceSq_2 "DistanceSq"
+               OpName %param0_6 "param0"
+               OpName %param1_4 "param1"
+               OpName %param0_Local_3 "param0_Local"
+               OpName %param1_Local_1 "param1_Local"
+               OpName %vector_1 "vector"
+               OpName %LengthSq_1 "LengthSq"
+               OpName %param0_7 "param0"
+               OpName %param0_Local_4 "param0_Local"
+               OpName %Main "Main"
+               OpName %self_2 "self"
+               OpName %PreConstructor_DistanceSq "PreConstructor_DistanceSq"
+               OpName %self_3 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_4 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_5 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_6 "self"
+               OpName %EntryPoint_Main_DistanceSq "EntryPoint_Main_DistanceSq"
+               OpName %self_7 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+ %DistanceSq = OpTypeStruct %int
+%_ptr_Function_DistanceSq = OpTypePointer Function %DistanceSq
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_DistanceSq
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+    %float_0 = OpConstant %float 0
+         %13 = OpTypeFunction %float %v2float %v2float
+         %14 = OpTypeFunction %float %v2float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+         %17 = OpTypeFunction %float %v3float %v3float
+         %18 = OpTypeFunction %float %v3float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+         %21 = OpTypeFunction %float %v4float %v4float
+         %22 = OpTypeFunction %float %v4float
+         %23 = OpTypeFunction %void
+%Test_Static_Real2_Real2 = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_DistanceSq
+         %27 = OpLabel
+     %param0 = OpVariable %_ptr_Function_v2float Function
+     %param1 = OpVariable %_ptr_Function_v2float Function
+     %result = OpVariable %_ptr_Function_float Function
+         %31 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %param0 %31
+         %32 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %param1 %32
+         %33 = OpLoad %v2float %param0
+         %34 = OpLoad %v2float %param1
+         %35 = OpFunctionCall %float %DistanceSq_0 %33 %34
+               OpStore %result %35
+               OpReturn
+               OpFunctionEnd
+%DistanceSq_0 = OpFunction %float None %13
+   %param0_0 = OpFunctionParameter %v2float
+   %param1_0 = OpFunctionParameter %v2float
+         %39 = OpLabel
+%param0_Local = OpVariable %_ptr_Function_v2float Function
+%param1_Local = OpVariable %_ptr_Function_v2float Function
+     %vector = OpVariable %_ptr_Function_v2float Function
+               OpStore %param0_Local %param0_0
+               OpStore %param1_Local %param1_0
+         %43 = OpLoad %v2float %param0_Local
+         %44 = OpLoad %v2float %param1_Local
+         %45 = OpFSub %v2float %43 %44
+               OpStore %vector %45
+         %46 = OpLoad %v2float %vector
+         %47 = OpFunctionCall %float %LengthSq %46
+               OpReturnValue %47
+               OpFunctionEnd
+   %LengthSq = OpFunction %float None %14
+   %param0_1 = OpFunctionParameter %v2float
+         %50 = OpLabel
+%param0_Local_0 = OpVariable %_ptr_Function_v2float Function
+               OpStore %param0_Local_0 %param0_1
+         %52 = OpLoad %v2float %param0_Local_0
+         %53 = OpLoad %v2float %param0_Local_0
+         %54 = OpDot %float %52 %53
+               OpReturnValue %54
+               OpFunctionEnd
+%Test_Static_Real3_Real3 = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_DistanceSq
+         %57 = OpLabel
+   %param0_2 = OpVariable %_ptr_Function_v3float Function
+   %param1_1 = OpVariable %_ptr_Function_v3float Function
+   %result_0 = OpVariable %_ptr_Function_float Function
+         %61 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %param0_2 %61
+         %62 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %param1_1 %62
+         %63 = OpLoad %v3float %param0_2
+         %64 = OpLoad %v3float %param1_1
+         %65 = OpFunctionCall %float %DistanceSq_1 %63 %64
+               OpStore %result_0 %65
+               OpReturn
+               OpFunctionEnd
+%DistanceSq_1 = OpFunction %float None %17
+   %param0_3 = OpFunctionParameter %v3float
+   %param1_2 = OpFunctionParameter %v3float
+         %69 = OpLabel
+%param0_Local_1 = OpVariable %_ptr_Function_v3float Function
+%param1_Local_0 = OpVariable %_ptr_Function_v3float Function
+   %vector_0 = OpVariable %_ptr_Function_v3float Function
+               OpStore %param0_Local_1 %param0_3
+               OpStore %param1_Local_0 %param1_2
+         %73 = OpLoad %v3float %param0_Local_1
+         %74 = OpLoad %v3float %param1_Local_0
+         %75 = OpFSub %v3float %73 %74
+               OpStore %vector_0 %75
+         %76 = OpLoad %v3float %vector_0
+         %77 = OpFunctionCall %float %LengthSq_0 %76
+               OpReturnValue %77
+               OpFunctionEnd
+ %LengthSq_0 = OpFunction %float None %18
+   %param0_4 = OpFunctionParameter %v3float
+         %80 = OpLabel
+%param0_Local_2 = OpVariable %_ptr_Function_v3float Function
+               OpStore %param0_Local_2 %param0_4
+         %82 = OpLoad %v3float %param0_Local_2
+         %83 = OpLoad %v3float %param0_Local_2
+         %84 = OpDot %float %82 %83
+               OpReturnValue %84
+               OpFunctionEnd
+%Test_Static_Real4_Real4 = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_DistanceSq
+         %87 = OpLabel
+   %param0_5 = OpVariable %_ptr_Function_v4float Function
+   %param1_3 = OpVariable %_ptr_Function_v4float Function
+   %result_1 = OpVariable %_ptr_Function_float Function
+         %91 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %param0_5 %91
+         %92 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %param1_3 %92
+         %93 = OpLoad %v4float %param0_5
+         %94 = OpLoad %v4float %param1_3
+         %95 = OpFunctionCall %float %DistanceSq_2 %93 %94
+               OpStore %result_1 %95
+               OpReturn
+               OpFunctionEnd
+%DistanceSq_2 = OpFunction %float None %21
+   %param0_6 = OpFunctionParameter %v4float
+   %param1_4 = OpFunctionParameter %v4float
+         %99 = OpLabel
+%param0_Local_3 = OpVariable %_ptr_Function_v4float Function
+%param1_Local_1 = OpVariable %_ptr_Function_v4float Function
+   %vector_1 = OpVariable %_ptr_Function_v4float Function
+               OpStore %param0_Local_3 %param0_6
+               OpStore %param1_Local_1 %param1_4
+        %103 = OpLoad %v4float %param0_Local_3
+        %104 = OpLoad %v4float %param1_Local_1
+        %105 = OpFSub %v4float %103 %104
+               OpStore %vector_1 %105
+        %106 = OpLoad %v4float %vector_1
+        %107 = OpFunctionCall %float %LengthSq_1 %106
+               OpReturnValue %107
+               OpFunctionEnd
+ %LengthSq_1 = OpFunction %float None %22
+   %param0_7 = OpFunctionParameter %v4float
+        %110 = OpLabel
+%param0_Local_4 = OpVariable %_ptr_Function_v4float Function
+               OpStore %param0_Local_4 %param0_7
+        %112 = OpLoad %v4float %param0_Local_4
+        %113 = OpLoad %v4float %param0_Local_4
+        %114 = OpDot %float %112 %113
+               OpReturnValue %114
+               OpFunctionEnd
+       %Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_DistanceSq
+        %117 = OpLabel
+        %118 = OpFunctionCall %void %Test_Static_Real2_Real2 %self_2
+        %119 = OpFunctionCall %void %Test_Static_Real3_Real3 %self_2
+        %120 = OpFunctionCall %void %Test_Static_Real4_Real4 %self_2
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_DistanceSq = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_DistanceSq
+        %123 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_4 = OpFunctionParameter %_ptr_Function_DistanceSq
+        %126 = OpLabel
+        %127 = OpFunctionCall %void %PreConstructor_DistanceSq %self_4
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_5 = OpFunctionParameter %_ptr_Function_DistanceSq
+        %130 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_6 = OpFunctionParameter %_ptr_Function_DistanceSq
+        %133 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_DistanceSq = OpFunction %void None %23
+        %135 = OpLabel
+     %self_7 = OpVariable %_ptr_Function_DistanceSq Function
+        %137 = OpFunctionCall %void %InitializeGlobals
+        %138 = OpFunctionCall %void %DefaultConstructor %self_7
+        %139 = OpFunctionCall %void %CopyInputs_Main %self_7
+        %140 = OpFunctionCall %void %Main %self_7
+        %141 = OpFunctionCall %void %CopyOutputs_Main %self_7
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %23
+        %142 = OpLabel
+               OpReturn
+               OpFunctionEnd

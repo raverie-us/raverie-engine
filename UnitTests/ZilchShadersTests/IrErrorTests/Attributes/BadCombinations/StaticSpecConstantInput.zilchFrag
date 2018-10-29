@@ -1,0 +1,10 @@
+[Pixel][UnitTest]
+struct StaticSpecConstantInput
+{
+  [Static][SpecConstantInput] var Var1 : Real;
+  
+  [EntryPoint]
+  function Main()
+  {
+  }
+}

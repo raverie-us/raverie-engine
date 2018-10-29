@@ -1,0 +1,16 @@
+struct InputData
+{
+  [StageInput][StageOutput]
+  var Color : Real4;
+}
+
+[Geometry(maxVertices : 5)][UnitTest]
+struct Geometry2
+{
+  [PropertyInput] var Color : Real4;
+  
+  [EntryPoint]
+  function Main()
+  {
+  }
+}

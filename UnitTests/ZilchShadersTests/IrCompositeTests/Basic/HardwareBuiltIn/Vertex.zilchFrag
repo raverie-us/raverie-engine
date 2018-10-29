@@ -1,0 +1,14 @@
+[Vertex]
+struct Vertex
+{
+  [HardwareBuiltInInput] var VertexId : Integer;
+  [HardwareBuiltInInput("InstanceId")] var Id : Integer;
+  
+  [HardwareBuiltInOutput] var ApiPerspectivePosition : Real4;
+  [HardwareBuiltInOutput("PointSize")] var VertexSize : Real;
+  
+  function Main()
+  {
+    
+  }
+}

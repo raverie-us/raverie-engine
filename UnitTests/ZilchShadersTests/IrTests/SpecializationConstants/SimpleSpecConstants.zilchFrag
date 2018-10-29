@@ -1,0 +1,27 @@
+[Pixel][UnitTest]
+struct SimpleSpecConstants
+{
+  // Test all 'scalar' types (bool, int, real).
+  // Have one test use that sets a different default value as well.
+  [Static][SpecConstant] var ConstantBoolNoValue : Boolean;
+  [Static][SpecConstant] var ConstantBool : Boolean = true;
+  
+  [Static][SpecConstant] var ConstantIntNoValue : Integer;
+  [Static][SpecConstant] var ConstantInt : Integer = 3;
+  
+  [Static][SpecConstant] var ConstantRealNoValue : Real;
+  [Static][SpecConstant] var ConstantReal : Real = 1.23;
+  
+  [EntryPoint]
+  function Main()
+  {
+    var constantBoolNoValue = SimpleSpecConstants.ConstantBoolNoValue;
+    var constantBool = SimpleSpecConstants.ConstantBool;
+    
+    var constantIntNoValue = SimpleSpecConstants.ConstantIntNoValue;
+    var constantInt = SimpleSpecConstants.ConstantInt;
+    
+    var constantRealNoValue = SimpleSpecConstants.ConstantRealNoValue;
+    var constantReal = SimpleSpecConstants.ConstantReal;
+  }
+}

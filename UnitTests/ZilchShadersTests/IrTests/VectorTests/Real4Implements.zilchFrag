@@ -1,0 +1,19 @@
+[Pixel][UnitTest]
+struct Real4Implements
+{
+  [EntryPoint]
+  function Main()
+  {
+    var max = Real4.PositiveMax;
+    var posMin = Real4.PositiveValueClosestToZero;
+    var negMax = Real4.NegativeValueClosestToZero;
+    var min = Real4.NegativeMin;
+    
+    var x = Real4.XAxis;
+    var y = Real4.YAxis;
+    var z = Real4.ZAxis;
+    var w = Real4.WAxis;
+    var zero = Real4.Zero;
+    var axis = Real4.GetAxis(1);
+  }
+}

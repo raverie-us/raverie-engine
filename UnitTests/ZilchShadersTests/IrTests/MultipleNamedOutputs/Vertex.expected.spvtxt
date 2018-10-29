@@ -1,0 +1,109 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 56
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Vertex %EntryPoint_Main_Vertex "EntryPoint_Main_Vertex" %Out %PerVertexOut
+               OpSource Unknown 100
+               OpName %Vertex "Vertex"
+               OpMemberName %Vertex 0 "PerspectivePosition"
+               OpName %VertexOut "VertexOut"
+               OpMemberName %VertexOut 0 "PerspectivePosition"
+               OpName %VertexPerVertexOut "VertexPerVertexOut"
+               OpMemberName %VertexPerVertexOut 1 "PointSize"
+               OpMemberName %VertexPerVertexOut 0 "ApiPerspectivePosition"
+               OpName %Out "Out"
+               OpName %PerVertexOut "PerVertexOut"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %PreConstructor_Vertex "PreConstructor_Vertex"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_Vertex "EntryPoint_Main_Vertex"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %VertexOut Block
+               OpDecorate %Out Location 0
+               OpDecorate %VertexPerVertexOut Block
+               OpMemberDecorate %VertexPerVertexOut 0 BuiltIn Position
+               OpMemberDecorate %VertexPerVertexOut 1 BuiltIn PointSize
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+     %Vertex = OpTypeStruct %v4float
+%_ptr_Function_Vertex = OpTypePointer Function %Vertex
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+         %10 = OpTypeFunction %void %_ptr_Function_Vertex
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+      %int_0 = OpConstant %int 0
+    %float_0 = OpConstant %float 0
+%_ptr_Output_v4float = OpTypePointer Output %v4float
+  %VertexOut = OpTypeStruct %v4float
+%_ptr_Output_VertexOut = OpTypePointer Output %VertexOut
+        %Out = OpVariable %_ptr_Output_VertexOut Output
+%VertexPerVertexOut = OpTypeStruct %v4float %float
+%_ptr_Output_VertexPerVertexOut = OpTypePointer Output %VertexPerVertexOut
+%PerVertexOut = OpVariable %_ptr_Output_VertexPerVertexOut Output
+         %18 = OpTypeFunction %void
+       %Main = OpFunction %void None %10
+       %self = OpFunctionParameter %_ptr_Function_Vertex
+         %25 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_Vertex = OpFunction %void None %10
+     %self_0 = OpFunctionParameter %_ptr_Function_Vertex
+         %28 = OpLabel
+         %29 = OpAccessChain %_ptr_Function_v4float %self_0 %int_0
+         %30 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %29 %30
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %10
+     %self_1 = OpFunctionParameter %_ptr_Function_Vertex
+         %33 = OpLabel
+         %34 = OpFunctionCall %void %PreConstructor_Vertex %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %10
+     %self_2 = OpFunctionParameter %_ptr_Function_Vertex
+         %37 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %10
+     %self_3 = OpFunctionParameter %_ptr_Function_Vertex
+         %40 = OpLabel
+         %41 = OpAccessChain %_ptr_Output_v4float %Out %int_0
+         %42 = OpAccessChain %_ptr_Function_v4float %self_3 %int_0
+         %43 = OpLoad %v4float %42
+               OpStore %41 %43
+         %44 = OpAccessChain %_ptr_Output_v4float %PerVertexOut %int_0
+         %45 = OpAccessChain %_ptr_Function_v4float %self_3 %int_0
+         %46 = OpLoad %v4float %45
+               OpStore %44 %46
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_Vertex = OpFunction %void None %18
+         %48 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_Vertex Function
+         %50 = OpFunctionCall %void %InitializeGlobals
+         %51 = OpFunctionCall %void %DefaultConstructor %self_4
+         %52 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %53 = OpFunctionCall %void %Main %self_4
+         %54 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %18
+         %55 = OpLabel
+               OpReturn
+               OpFunctionEnd

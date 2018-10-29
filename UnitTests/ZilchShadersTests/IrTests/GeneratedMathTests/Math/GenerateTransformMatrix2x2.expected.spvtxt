@@ -1,0 +1,168 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 96
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+          %2 = OpExtInstImport "GLSL.std.450"
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_GenerateTransformMatrix2x2 "EntryPoint_Main_GenerateTransformMatrix2x2"
+               OpExecutionMode %EntryPoint_Main_GenerateTransformMatrix2x2 OriginUpperLeft
+               OpSource Unknown 100
+               OpName %GenerateTransformMatrix2x2 "GenerateTransformMatrix2x2"
+               OpMemberName %GenerateTransformMatrix2x2 0 "Dummy"
+               OpName %Test_Static_Real_Real2 "Test_Static_Real_Real2"
+               OpName %self "self"
+               OpName %radians_ "radians_"
+               OpName %scale_ "scale_"
+               OpName %result "result"
+               OpName %GenerateTransformMatrix2x2_0 "GenerateTransformMatrix2x2"
+               OpName %radians "radians"
+               OpName %scale "scale"
+               OpName %radians_Local "radians_Local"
+               OpName %scale_Local "scale_Local"
+               OpName %result_0 "result"
+               OpName %GenerateRotationMatrix2x2 "GenerateRotationMatrix2x2"
+               OpName %radians_0 "radians"
+               OpName %radians_Local_0 "radians_Local"
+               OpName %cosTheta "cosTheta"
+               OpName %sinTheta "sinTheta"
+               OpName %Main "Main"
+               OpName %self_0 "self"
+               OpName %PreConstructor_GenerateTransformMatrix2x2 "PreConstructor_GenerateTransformMatrix2x2"
+               OpName %self_1 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_2 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_3 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_4 "self"
+               OpName %EntryPoint_Main_GenerateTransformMatrix2x2 "EntryPoint_Main_GenerateTransformMatrix2x2"
+               OpName %self_5 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%GenerateTransformMatrix2x2 = OpTypeStruct %int
+%_ptr_Function_GenerateTransformMatrix2x2 = OpTypePointer Function %GenerateTransformMatrix2x2
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %9 = OpTypeFunction %void %_ptr_Function_GenerateTransformMatrix2x2
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %float_0 = OpConstant %float 0
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+%mat2v2float = OpTypeMatrix %v2float 2
+%_ptr_Function_mat2v2float = OpTypePointer Function %mat2v2float
+         %16 = OpTypeFunction %mat2v2float %float %v2float
+         %17 = OpTypeFunction %mat2v2float %float
+      %int_0 = OpConstant %int 0
+      %int_1 = OpConstant %int 1
+         %18 = OpTypeFunction %void
+%Test_Static_Real_Real2 = OpFunction %void None %9
+       %self = OpFunctionParameter %_ptr_Function_GenerateTransformMatrix2x2
+         %24 = OpLabel
+   %radians_ = OpVariable %_ptr_Function_float Function
+     %scale_ = OpVariable %_ptr_Function_v2float Function
+     %result = OpVariable %_ptr_Function_mat2v2float Function
+               OpStore %radians_ %float_0
+         %28 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %scale_ %28
+         %29 = OpLoad %float %radians_
+         %30 = OpLoad %v2float %scale_
+         %31 = OpFunctionCall %mat2v2float %GenerateTransformMatrix2x2_0 %29 %30
+               OpStore %result %31
+               OpReturn
+               OpFunctionEnd
+%GenerateTransformMatrix2x2_0 = OpFunction %mat2v2float None %16
+    %radians = OpFunctionParameter %float
+      %scale = OpFunctionParameter %v2float
+         %35 = OpLabel
+%radians_Local = OpVariable %_ptr_Function_float Function
+%scale_Local = OpVariable %_ptr_Function_v2float Function
+   %result_0 = OpVariable %_ptr_Function_mat2v2float Function
+               OpStore %radians_Local %radians
+               OpStore %scale_Local %scale
+         %39 = OpLoad %float %radians_Local
+         %40 = OpFunctionCall %mat2v2float %GenerateRotationMatrix2x2 %39
+               OpStore %result_0 %40
+         %41 = OpAccessChain %_ptr_Function_v2float %result_0 %int_0
+         %42 = OpAccessChain %_ptr_Function_v2float %result_0 %int_0
+         %43 = OpLoad %v2float %42
+         %44 = OpLoad %v2float %scale_Local
+         %45 = OpFMul %v2float %43 %44
+               OpStore %41 %45
+         %46 = OpAccessChain %_ptr_Function_v2float %result_0 %int_1
+         %47 = OpAccessChain %_ptr_Function_v2float %result_0 %int_1
+         %48 = OpLoad %v2float %47
+         %49 = OpLoad %v2float %scale_Local
+         %50 = OpFMul %v2float %48 %49
+               OpStore %46 %50
+         %51 = OpLoad %mat2v2float %result_0
+               OpReturnValue %51
+               OpFunctionEnd
+%GenerateRotationMatrix2x2 = OpFunction %mat2v2float None %17
+  %radians_0 = OpFunctionParameter %float
+         %54 = OpLabel
+%radians_Local_0 = OpVariable %_ptr_Function_float Function
+   %cosTheta = OpVariable %_ptr_Function_float Function
+   %sinTheta = OpVariable %_ptr_Function_float Function
+               OpStore %radians_Local_0 %radians_0
+         %58 = OpLoad %float %radians_Local_0
+         %59 = OpExtInst %float %2 Cos %58
+               OpStore %cosTheta %59
+         %60 = OpLoad %float %radians_Local_0
+         %61 = OpExtInst %float %2 Sin %60
+               OpStore %sinTheta %61
+         %62 = OpLoad %float %cosTheta
+         %63 = OpLoad %float %sinTheta
+         %64 = OpFNegate %float %63
+         %65 = OpCompositeConstruct %v2float %62 %64
+         %66 = OpLoad %float %sinTheta
+         %67 = OpLoad %float %cosTheta
+         %68 = OpCompositeConstruct %v2float %66 %67
+         %69 = OpCompositeConstruct %mat2v2float %65 %68
+               OpReturnValue %69
+               OpFunctionEnd
+       %Main = OpFunction %void None %9
+     %self_0 = OpFunctionParameter %_ptr_Function_GenerateTransformMatrix2x2
+         %72 = OpLabel
+         %73 = OpFunctionCall %void %Test_Static_Real_Real2 %self_0
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_GenerateTransformMatrix2x2 = OpFunction %void None %9
+     %self_1 = OpFunctionParameter %_ptr_Function_GenerateTransformMatrix2x2
+         %76 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %9
+     %self_2 = OpFunctionParameter %_ptr_Function_GenerateTransformMatrix2x2
+         %79 = OpLabel
+         %80 = OpFunctionCall %void %PreConstructor_GenerateTransformMatrix2x2 %self_2
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %9
+     %self_3 = OpFunctionParameter %_ptr_Function_GenerateTransformMatrix2x2
+         %83 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %9
+     %self_4 = OpFunctionParameter %_ptr_Function_GenerateTransformMatrix2x2
+         %86 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_GenerateTransformMatrix2x2 = OpFunction %void None %18
+         %88 = OpLabel
+     %self_5 = OpVariable %_ptr_Function_GenerateTransformMatrix2x2 Function
+         %90 = OpFunctionCall %void %InitializeGlobals
+         %91 = OpFunctionCall %void %DefaultConstructor %self_5
+         %92 = OpFunctionCall %void %CopyInputs_Main %self_5
+         %93 = OpFunctionCall %void %Main %self_5
+         %94 = OpFunctionCall %void %CopyOutputs_Main %self_5
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %18
+         %95 = OpLabel
+               OpReturn
+               OpFunctionEnd

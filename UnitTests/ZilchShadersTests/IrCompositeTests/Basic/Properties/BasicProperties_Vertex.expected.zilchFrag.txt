@@ -1,0 +1,16 @@
+[Vertex][UnitTest]
+struct BasicProperties_Vertex
+{
+  [PropertyInput] var Position_Vertex : Real4;
+  [PropertyInput] var Value_Vertex : Real;
+
+  [EntryPoint]
+  function Main()
+  {
+    var vertex = Vertex();
+    vertex.Position = this.Position_Vertex;
+    vertex.Value = this.Value_Vertex;
+    vertex.Main();
+
+  }
+}

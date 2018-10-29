@@ -27,41 +27,6 @@ struct RenderResults
   HashMap<String, RenderResult> mLanguageResult;
 };
 
-//-------------------------------------------------------------------ErrorReporter
-// A cached message from a compilation or linking log
-class LogMessage
-{
-public:
-  LogMessage();
-  LogMessage(StringParam filePath, StringParam lineNumber, StringParam message);
-
-  String mFilePath;
-  String mLineNumber;
-  String mMessage;
-};
-
-//-------------------------------------------------------------------ErrorReporter
-// Basic class to wrap reporting errors
-class ErrorReporter
-{
-public:
-  ErrorReporter();
-
-  void Report(StringParam message);
-  void Report(StringParam filePath, StringParam lineNumber, StringParam message);
-  void Report(StringParam filePath, StringParam lineNumber, StringParam header, StringParam message);
-  void ReportCompilationWarning(StringParam filePath, StringParam lineNumber, StringParam message);
-  void ReportCompilationWarning(const Array<LogMessage>& messages);
-  void ReportCompilationError(StringParam filePath, StringParam lineNumber, StringParam message);
-  void ReportCompilationError(const Array<LogMessage>& messages);
-  void ReportLinkerError(StringParam filePath, StringParam lineNumber, StringParam message);
-  void ReportPostProcessError(StringParam testName, Vec4Param expected, Vec4Param result, int renderTargetIndex);
-
-  void DisplayDiffs(StringParam expectedFile, StringParam resultFile);
-
-  bool mAssert;
-};
-
 //-------------------------------------------------------------------FragmentInfo
 // Basic info for a fragment. Used to pass lots of data around more cleanly
 class FragmentInfo
@@ -83,6 +48,49 @@ public:
   Vec2 mUv;
   Vec4 mColor;
 };
+
+class UniformByteBuffer
+{
+public:
+  UniformByteBuffer();
+  UniformByteBuffer(const UniformByteBuffer& rhs);
+  ~UniformByteBuffer();
+  UniformByteBuffer& operator=(const UniformByteBuffer& rhs);
+
+
+  void Set(byte* data, size_t size);
+  void CopyFrom(const UniformByteBuffer& rhs);
+  void Clear();
+
+  template <typename T>
+  void Set(T& data)
+  {
+    Set((byte*)&data, sizeof(T));
+  }
+
+  byte* mData;
+  size_t mSize;
+};
+
+class UniformBufferData
+{
+public:
+  String mBufferName;
+  UniformByteBuffer mBuffer;
+};
+
+struct FrameData_Uniforms
+{
+  float mLogicTime;
+  float mFrameTime;
+};
+
+struct ObjectTransform_Uniforms
+{
+  Mat4 mLocalToWorld;
+  Mat4 mWorldToView;
+};
+
 //-------------------------------------------------------------------BaseRenderer
 // Base renderer type to represent compiling/linking/running shaders
 class BaseRenderer
@@ -90,9 +98,41 @@ class BaseRenderer
 public:
   BaseRenderer();
 
-  virtual bool CompileShader(StringParam filePath, StringParam shaderSource, FragmentType::Enum type, ErrorReporter& report) = 0;
-  virtual bool CompileAndLinkShader(Array<FragmentInfo>& fragments, ErrorReporter& report) = 0;
-  virtual void RunPostProcess(Array<FragmentInfo>& fragments, RenderResult& result, ErrorReporter& report) = 0;
+  virtual bool CompileShader(StringParam filePath, StringParam shaderSource, FragmentType::Enum type, ErrorReporter& reporter) = 0;
+  virtual bool CompileAndLinkShader(Array<FragmentInfo>& fragments, ErrorReporter& reporter) = 0;
+  virtual void RunPostProcess(Array<FragmentInfo>& fragments, RenderResult& result, ErrorReporter& reporter) = 0;
+  virtual void RunPostProcess(Array<FragmentInfo>& fragments, Array<UniformBufferData>& uniformBuffers, RenderResult& result, ErrorReporter& reporter) = 0;
 
   RenderVertex mFullScreenTriangleVerts[3];
+};
+
+//-------------------------------------------------------------------RendererPackage
+// Shared data for unit testing a renderer + backend.
+class RendererPackage
+{
+public:
+  RendererPackage();
+
+  typedef Zilch::Ref<ZilchShaderIRBackend> BackendRef;
+
+  BaseRenderer* mRenderer;
+  BackendRef mBackend;
+  ErrorReporter* mErrorReporter;
+};
+
+//-------------------------------------------------------------------UnitTestPackage
+// Collection of data used for unit testing.
+class UnitTestPackage
+{
+public:
+  typedef Zilch::Ref<ShaderPipelineDescription> PipelineRef;
+  typedef Zilch::Ref<ZilchShaderIRTranslationPass> TranslationPassRef;
+  typedef Zilch::Ref<ZilchShaderIRBackend> BackendRef;
+
+  // Currently unused
+  Array<TranslationPassRef> mToolPasses;
+  /// Regular backends to run, mostly during compositing and individual file compilation. 
+  Array<BackendRef> mBackends;
+  /// Renderer backends to run. These are mainly for testing if the final translation (such as glsl) compiled.
+  Array<RendererPackage> mRenderPackages;
 };

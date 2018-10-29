@@ -1,0 +1,27 @@
+[Pixel][UnitTest]
+struct LogicalInstructions
+{
+  function IntegerTest()
+  {
+    var a = 0;
+    var b = 1;
+    var r = a == b;
+    r = a != b;
+    r = a > b;
+    r = a >= b;
+    r = a < b;
+    r = a <= b;
+  }
+  
+  function RealTest()
+  {
+    var a = 0.0;
+    var b = 1.0;
+    var r = a == b;
+    r = a != b;
+    r = a > b;
+    r = a >= b;
+    r = a < b;
+    r = a <= b;
+  }
+}

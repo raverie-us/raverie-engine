@@ -1,0 +1,316 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 223
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+          %2 = OpExtInstImport "GLSL.std.450"
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_GenerateRotationMatrix4x4 "EntryPoint_Main_GenerateRotationMatrix4x4"
+               OpExecutionMode %EntryPoint_Main_GenerateRotationMatrix4x4 OriginUpperLeft
+               OpSource Unknown 100
+               OpName %GenerateRotationMatrix4x4 "GenerateRotationMatrix4x4"
+               OpMemberName %GenerateRotationMatrix4x4 0 "Dummy"
+               OpName %Test_Static_Real3_Real "Test_Static_Real3_Real"
+               OpName %self "self"
+               OpName %axis_ "axis_"
+               OpName %radians_ "radians_"
+               OpName %result "result"
+               OpName %GenerateRotationMatrix4x4_0 "GenerateRotationMatrix4x4"
+               OpName %axis "axis"
+               OpName %radians "radians"
+               OpName %axis_Local "axis_Local"
+               OpName %radians_Local "radians_Local"
+               OpName %r3x3 "r3x3"
+               OpName %result_0 "result"
+               OpName %ToReal3x3 "ToReal3x3"
+               OpName %axis_0 "axis"
+               OpName %radians_0 "radians"
+               OpName %axis_Local_0 "axis_Local"
+               OpName %radians_Local_0 "radians_Local"
+               OpName %c0 "c0"
+               OpName %n1C0 "n1C0"
+               OpName %s0 "s0"
+               OpName %matrix "matrix"
+               OpName %Main "Main"
+               OpName %self_0 "self"
+               OpName %PreConstructor_GenerateRotationMatrix4x4 "PreConstructor_GenerateRotationMatrix4x4"
+               OpName %self_1 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_2 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_3 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_4 "self"
+               OpName %EntryPoint_Main_GenerateRotationMatrix4x4 "EntryPoint_Main_GenerateRotationMatrix4x4"
+               OpName %self_5 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%GenerateRotationMatrix4x4 = OpTypeStruct %int
+%_ptr_Function_GenerateRotationMatrix4x4 = OpTypePointer Function %GenerateRotationMatrix4x4
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %9 = OpTypeFunction %void %_ptr_Function_GenerateRotationMatrix4x4
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+    %float_0 = OpConstant %float 0
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+%mat4v4float = OpTypeMatrix %v4float 4
+%_ptr_Function_mat4v4float = OpTypePointer Function %mat4v4float
+         %18 = OpTypeFunction %mat4v4float %v3float %float
+%mat3v3float = OpTypeMatrix %v3float 3
+%_ptr_Function_mat3v3float = OpTypePointer Function %mat3v3float
+         %21 = OpTypeFunction %mat3v3float %v3float %float
+    %float_1 = OpConstant %float 1
+  %float_0_0 = OpConstant %float 0
+      %int_0 = OpConstant %int 0
+      %int_1 = OpConstant %int 1
+      %int_2 = OpConstant %int 2
+      %int_3 = OpConstant %int 3
+         %22 = OpTypeFunction %void
+%Test_Static_Real3_Real = OpFunction %void None %9
+       %self = OpFunctionParameter %_ptr_Function_GenerateRotationMatrix4x4
+         %32 = OpLabel
+      %axis_ = OpVariable %_ptr_Function_v3float Function
+   %radians_ = OpVariable %_ptr_Function_float Function
+     %result = OpVariable %_ptr_Function_mat4v4float Function
+         %36 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %axis_ %36
+               OpStore %radians_ %float_0
+         %37 = OpLoad %v3float %axis_
+         %38 = OpLoad %float %radians_
+         %39 = OpFunctionCall %mat4v4float %GenerateRotationMatrix4x4_0 %37 %38
+               OpStore %result %39
+               OpReturn
+               OpFunctionEnd
+%GenerateRotationMatrix4x4_0 = OpFunction %mat4v4float None %18
+       %axis = OpFunctionParameter %v3float
+    %radians = OpFunctionParameter %float
+         %43 = OpLabel
+ %axis_Local = OpVariable %_ptr_Function_v3float Function
+%radians_Local = OpVariable %_ptr_Function_float Function
+       %r3x3 = OpVariable %_ptr_Function_mat3v3float Function
+   %result_0 = OpVariable %_ptr_Function_mat4v4float Function
+               OpStore %axis_Local %axis
+               OpStore %radians_Local %radians
+         %48 = OpLoad %v3float %axis_Local
+         %49 = OpLoad %float %radians_Local
+         %50 = OpFunctionCall %mat3v3float %ToReal3x3 %48 %49
+               OpStore %r3x3 %50
+         %51 = OpCompositeConstruct %v4float %float_0_0 %float_0_0 %float_0_0 %float_0_0
+         %52 = OpCompositeConstruct %mat4v4float %51 %51 %51 %51
+               OpStore %result_0 %52
+         %53 = OpAccessChain %_ptr_Function_v4float %result_0 %int_0
+         %54 = OpAccessChain %_ptr_Function_v3float %r3x3 %int_0
+         %55 = OpLoad %v3float %54
+         %56 = OpCompositeConstruct %v4float %55 %float_0_0
+               OpStore %53 %56
+         %57 = OpAccessChain %_ptr_Function_v4float %result_0 %int_1
+         %58 = OpAccessChain %_ptr_Function_v3float %r3x3 %int_1
+         %59 = OpLoad %v3float %58
+         %60 = OpCompositeConstruct %v4float %59 %float_0_0
+               OpStore %57 %60
+         %61 = OpAccessChain %_ptr_Function_v4float %result_0 %int_2
+         %62 = OpAccessChain %_ptr_Function_v3float %r3x3 %int_2
+         %63 = OpLoad %v3float %62
+         %64 = OpCompositeConstruct %v4float %63 %float_0_0
+               OpStore %61 %64
+         %65 = OpAccessChain %_ptr_Function_v4float %result_0 %int_3
+         %66 = OpCompositeConstruct %v4float %float_0_0 %float_0_0 %float_0_0 %float_1
+               OpStore %65 %66
+         %67 = OpLoad %mat4v4float %result_0
+               OpReturnValue %67
+               OpFunctionEnd
+  %ToReal3x3 = OpFunction %mat3v3float None %21
+     %axis_0 = OpFunctionParameter %v3float
+  %radians_0 = OpFunctionParameter %float
+         %71 = OpLabel
+%axis_Local_0 = OpVariable %_ptr_Function_v3float Function
+%radians_Local_0 = OpVariable %_ptr_Function_float Function
+         %c0 = OpVariable %_ptr_Function_float Function
+       %n1C0 = OpVariable %_ptr_Function_float Function
+         %s0 = OpVariable %_ptr_Function_float Function
+     %matrix = OpVariable %_ptr_Function_mat3v3float Function
+               OpStore %axis_Local_0 %axis_0
+               OpStore %radians_Local_0 %radians_0
+         %78 = OpLoad %v3float %axis_Local_0
+         %79 = OpExtInst %v3float %2 Normalize %78
+               OpStore %axis_Local_0 %79
+         %80 = OpLoad %float %radians_Local_0
+         %81 = OpExtInst %float %2 Cos %80
+               OpStore %c0 %81
+         %82 = OpLoad %float %c0
+         %83 = OpFSub %float %float_1 %82
+               OpStore %n1C0 %83
+         %84 = OpLoad %float %radians_Local_0
+         %85 = OpExtInst %float %2 Sin %84
+               OpStore %s0 %85
+         %86 = OpCompositeConstruct %v3float %float_0_0 %float_0_0 %float_0_0
+         %87 = OpCompositeConstruct %mat3v3float %86 %86 %86
+               OpStore %matrix %87
+         %88 = OpAccessChain %_ptr_Function_float %matrix %int_0 %int_0
+         %89 = OpAccessChain %_ptr_Function_float %axis_Local_0 %int_0
+         %90 = OpAccessChain %_ptr_Function_float %axis_Local_0 %int_0
+         %91 = OpLoad %float %89
+         %92 = OpLoad %float %90
+         %93 = OpFMul %float %91 %92
+         %94 = OpLoad %float %n1C0
+         %95 = OpFMul %float %93 %94
+         %96 = OpLoad %float %c0
+         %97 = OpFAdd %float %95 %96
+               OpStore %88 %97
+         %98 = OpAccessChain %_ptr_Function_float %matrix %int_0 %int_1
+         %99 = OpAccessChain %_ptr_Function_float %axis_Local_0 %int_0
+        %100 = OpAccessChain %_ptr_Function_float %axis_Local_0 %int_1
+        %101 = OpLoad %float %99
+        %102 = OpLoad %float %100
+        %103 = OpFMul %float %101 %102
+        %104 = OpLoad %float %n1C0
+        %105 = OpFMul %float %103 %104
+        %106 = OpAccessChain %_ptr_Function_float %axis_Local_0 %int_2
+        %107 = OpLoad %float %106
+        %108 = OpLoad %float %s0
+        %109 = OpFMul %float %107 %108
+        %110 = OpFSub %float %105 %109
+               OpStore %98 %110
+        %111 = OpAccessChain %_ptr_Function_float %matrix %int_0 %int_2
+        %112 = OpAccessChain %_ptr_Function_float %axis_Local_0 %int_0
+        %113 = OpAccessChain %_ptr_Function_float %axis_Local_0 %int_2
+        %114 = OpLoad %float %112
+        %115 = OpLoad %float %113
+        %116 = OpFMul %float %114 %115
+        %117 = OpLoad %float %n1C0
+        %118 = OpFMul %float %116 %117
+        %119 = OpAccessChain %_ptr_Function_float %axis_Local_0 %int_1
+        %120 = OpLoad %float %119
+        %121 = OpLoad %float %s0
+        %122 = OpFMul %float %120 %121
+        %123 = OpFAdd %float %118 %122
+               OpStore %111 %123
+        %124 = OpAccessChain %_ptr_Function_float %matrix %int_1 %int_0
+        %125 = OpAccessChain %_ptr_Function_float %axis_Local_0 %int_0
+        %126 = OpAccessChain %_ptr_Function_float %axis_Local_0 %int_1
+        %127 = OpLoad %float %125
+        %128 = OpLoad %float %126
+        %129 = OpFMul %float %127 %128
+        %130 = OpLoad %float %n1C0
+        %131 = OpFMul %float %129 %130
+        %132 = OpAccessChain %_ptr_Function_float %axis_Local_0 %int_2
+        %133 = OpLoad %float %132
+        %134 = OpLoad %float %s0
+        %135 = OpFMul %float %133 %134
+        %136 = OpFAdd %float %131 %135
+               OpStore %124 %136
+        %137 = OpAccessChain %_ptr_Function_float %matrix %int_1 %int_1
+        %138 = OpAccessChain %_ptr_Function_float %axis_Local_0 %int_1
+        %139 = OpAccessChain %_ptr_Function_float %axis_Local_0 %int_1
+        %140 = OpLoad %float %138
+        %141 = OpLoad %float %139
+        %142 = OpFMul %float %140 %141
+        %143 = OpLoad %float %n1C0
+        %144 = OpFMul %float %142 %143
+        %145 = OpLoad %float %c0
+        %146 = OpFAdd %float %144 %145
+               OpStore %137 %146
+        %147 = OpAccessChain %_ptr_Function_float %matrix %int_1 %int_2
+        %148 = OpAccessChain %_ptr_Function_float %axis_Local_0 %int_1
+        %149 = OpAccessChain %_ptr_Function_float %axis_Local_0 %int_2
+        %150 = OpLoad %float %148
+        %151 = OpLoad %float %149
+        %152 = OpFMul %float %150 %151
+        %153 = OpLoad %float %n1C0
+        %154 = OpFMul %float %152 %153
+        %155 = OpAccessChain %_ptr_Function_float %axis_Local_0 %int_0
+        %156 = OpLoad %float %155
+        %157 = OpLoad %float %s0
+        %158 = OpFMul %float %156 %157
+        %159 = OpFSub %float %154 %158
+               OpStore %147 %159
+        %160 = OpAccessChain %_ptr_Function_float %matrix %int_2 %int_0
+        %161 = OpAccessChain %_ptr_Function_float %axis_Local_0 %int_0
+        %162 = OpAccessChain %_ptr_Function_float %axis_Local_0 %int_2
+        %163 = OpLoad %float %161
+        %164 = OpLoad %float %162
+        %165 = OpFMul %float %163 %164
+        %166 = OpLoad %float %n1C0
+        %167 = OpFMul %float %165 %166
+        %168 = OpAccessChain %_ptr_Function_float %axis_Local_0 %int_1
+        %169 = OpLoad %float %168
+        %170 = OpLoad %float %s0
+        %171 = OpFMul %float %169 %170
+        %172 = OpFSub %float %167 %171
+               OpStore %160 %172
+        %173 = OpAccessChain %_ptr_Function_float %matrix %int_2 %int_1
+        %174 = OpAccessChain %_ptr_Function_float %axis_Local_0 %int_1
+        %175 = OpAccessChain %_ptr_Function_float %axis_Local_0 %int_2
+        %176 = OpLoad %float %174
+        %177 = OpLoad %float %175
+        %178 = OpFMul %float %176 %177
+        %179 = OpLoad %float %n1C0
+        %180 = OpFMul %float %178 %179
+        %181 = OpAccessChain %_ptr_Function_float %axis_Local_0 %int_0
+        %182 = OpLoad %float %181
+        %183 = OpLoad %float %s0
+        %184 = OpFMul %float %182 %183
+        %185 = OpFAdd %float %180 %184
+               OpStore %173 %185
+        %186 = OpAccessChain %_ptr_Function_float %matrix %int_2 %int_2
+        %187 = OpAccessChain %_ptr_Function_float %axis_Local_0 %int_2
+        %188 = OpAccessChain %_ptr_Function_float %axis_Local_0 %int_2
+        %189 = OpLoad %float %187
+        %190 = OpLoad %float %188
+        %191 = OpFMul %float %189 %190
+        %192 = OpLoad %float %n1C0
+        %193 = OpFMul %float %191 %192
+        %194 = OpLoad %float %c0
+        %195 = OpFAdd %float %193 %194
+               OpStore %186 %195
+        %196 = OpLoad %mat3v3float %matrix
+               OpReturnValue %196
+               OpFunctionEnd
+       %Main = OpFunction %void None %9
+     %self_0 = OpFunctionParameter %_ptr_Function_GenerateRotationMatrix4x4
+        %199 = OpLabel
+        %200 = OpFunctionCall %void %Test_Static_Real3_Real %self_0
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_GenerateRotationMatrix4x4 = OpFunction %void None %9
+     %self_1 = OpFunctionParameter %_ptr_Function_GenerateRotationMatrix4x4
+        %203 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %9
+     %self_2 = OpFunctionParameter %_ptr_Function_GenerateRotationMatrix4x4
+        %206 = OpLabel
+        %207 = OpFunctionCall %void %PreConstructor_GenerateRotationMatrix4x4 %self_2
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %9
+     %self_3 = OpFunctionParameter %_ptr_Function_GenerateRotationMatrix4x4
+        %210 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %9
+     %self_4 = OpFunctionParameter %_ptr_Function_GenerateRotationMatrix4x4
+        %213 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_GenerateRotationMatrix4x4 = OpFunction %void None %22
+        %215 = OpLabel
+     %self_5 = OpVariable %_ptr_Function_GenerateRotationMatrix4x4 Function
+        %217 = OpFunctionCall %void %InitializeGlobals
+        %218 = OpFunctionCall %void %DefaultConstructor %self_5
+        %219 = OpFunctionCall %void %CopyInputs_Main %self_5
+        %220 = OpFunctionCall %void %Main %self_5
+        %221 = OpFunctionCall %void %CopyOutputs_Main %self_5
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %22
+        %222 = OpLabel
+               OpReturn
+               OpFunctionEnd

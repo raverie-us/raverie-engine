@@ -2,7 +2,7 @@
 [Vertex][CoreVertex]
 struct StreamedVertex
 {
-  [BuiltInInput] var ViewToPerspective : Real4x4;
+  [AppBuiltInInput] var ViewToPerspective : Real4x4;
 
   [StageInput] var LocalPosition : Real3;
   [StageInput][Output] var Uv : Real2;

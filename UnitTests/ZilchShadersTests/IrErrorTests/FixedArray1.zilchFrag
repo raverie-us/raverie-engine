@@ -1,0 +1,11 @@
+[Pixel][UnitTest]
+struct FixedArrayTest1
+{
+  var Data : FixedArray[Real, 3];
+  [EntryPoint]
+  function Main()
+  {
+    // Operator Get out-of-bounds index with integer constant
+    var value = this.Data[4];
+  }
+}

@@ -1,0 +1,238 @@
+[Pixel][UnitTest]
+struct Integer2Properties
+{
+  function Test_StaticCount_Integer()
+  {
+    var value = Integer2.Count;
+  }
+  function Test_Count_Integer()
+  {
+    var instance = Integer2();
+    var value = instance.Count;
+  }
+  function Test_StaticNegativeMin_Integer2()
+  {
+    var value = Integer2.NegativeMin;
+  }
+  function Test_StaticNegativeValueClosestToZero_Integer2()
+  {
+    var value = Integer2.NegativeValueClosestToZero;
+  }
+  function Test_StaticPositiveMax_Integer2()
+  {
+    var value = Integer2.PositiveMax;
+  }
+  function Test_StaticPositiveValueClosestToZero_Integer2()
+  {
+    var value = Integer2.PositiveValueClosestToZero;
+  }
+  function Test_X_Integer()
+  {
+    var instance = Integer2();
+    var value = instance.X;
+    instance.X = Integer();
+  }
+  function Test_StaticXAxis_Integer2()
+  {
+    var value = Integer2.XAxis;
+  }
+  function Test_XX_Integer2()
+  {
+    var instance = Integer2();
+    var value = instance.XX;
+  }
+  function Test_XXX_Integer3()
+  {
+    var instance = Integer2();
+    var value = instance.XXX;
+  }
+  function Test_XXXX_Integer4()
+  {
+    var instance = Integer2();
+    var value = instance.XXXX;
+  }
+  function Test_XXXY_Integer4()
+  {
+    var instance = Integer2();
+    var value = instance.XXXY;
+  }
+  function Test_XXY_Integer3()
+  {
+    var instance = Integer2();
+    var value = instance.XXY;
+  }
+  function Test_XXYX_Integer4()
+  {
+    var instance = Integer2();
+    var value = instance.XXYX;
+  }
+  function Test_XXYY_Integer4()
+  {
+    var instance = Integer2();
+    var value = instance.XXYY;
+  }
+  function Test_XY_Integer2()
+  {
+    var instance = Integer2();
+    var value = instance.XY;
+    instance.XY = Integer2();
+  }
+  function Test_XYX_Integer3()
+  {
+    var instance = Integer2();
+    var value = instance.XYX;
+  }
+  function Test_XYXX_Integer4()
+  {
+    var instance = Integer2();
+    var value = instance.XYXX;
+  }
+  function Test_XYXY_Integer4()
+  {
+    var instance = Integer2();
+    var value = instance.XYXY;
+  }
+  function Test_XYY_Integer3()
+  {
+    var instance = Integer2();
+    var value = instance.XYY;
+  }
+  function Test_XYYX_Integer4()
+  {
+    var instance = Integer2();
+    var value = instance.XYYX;
+  }
+  function Test_XYYY_Integer4()
+  {
+    var instance = Integer2();
+    var value = instance.XYYY;
+  }
+  function Test_Y_Integer()
+  {
+    var instance = Integer2();
+    var value = instance.Y;
+    instance.Y = Integer();
+  }
+  function Test_StaticYAxis_Integer2()
+  {
+    var value = Integer2.YAxis;
+  }
+  function Test_YX_Integer2()
+  {
+    var instance = Integer2();
+    var value = instance.YX;
+    instance.YX = Integer2();
+  }
+  function Test_YXX_Integer3()
+  {
+    var instance = Integer2();
+    var value = instance.YXX;
+  }
+  function Test_YXXX_Integer4()
+  {
+    var instance = Integer2();
+    var value = instance.YXXX;
+  }
+  function Test_YXXY_Integer4()
+  {
+    var instance = Integer2();
+    var value = instance.YXXY;
+  }
+  function Test_YXY_Integer3()
+  {
+    var instance = Integer2();
+    var value = instance.YXY;
+  }
+  function Test_YXYX_Integer4()
+  {
+    var instance = Integer2();
+    var value = instance.YXYX;
+  }
+  function Test_YXYY_Integer4()
+  {
+    var instance = Integer2();
+    var value = instance.YXYY;
+  }
+  function Test_YY_Integer2()
+  {
+    var instance = Integer2();
+    var value = instance.YY;
+  }
+  function Test_YYX_Integer3()
+  {
+    var instance = Integer2();
+    var value = instance.YYX;
+  }
+  function Test_YYXX_Integer4()
+  {
+    var instance = Integer2();
+    var value = instance.YYXX;
+  }
+  function Test_YYXY_Integer4()
+  {
+    var instance = Integer2();
+    var value = instance.YYXY;
+  }
+  function Test_YYY_Integer3()
+  {
+    var instance = Integer2();
+    var value = instance.YYY;
+  }
+  function Test_YYYX_Integer4()
+  {
+    var instance = Integer2();
+    var value = instance.YYYX;
+  }
+  function Test_YYYY_Integer4()
+  {
+    var instance = Integer2();
+    var value = instance.YYYY;
+  }
+  function Test_StaticZero_Integer2()
+  {
+    var value = Integer2.Zero;
+  }
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_StaticCount_Integer();
+    this.Test_Count_Integer();
+    this.Test_StaticNegativeMin_Integer2();
+    this.Test_StaticNegativeValueClosestToZero_Integer2();
+    this.Test_StaticPositiveMax_Integer2();
+    this.Test_StaticPositiveValueClosestToZero_Integer2();
+    this.Test_X_Integer();
+    this.Test_StaticXAxis_Integer2();
+    this.Test_XX_Integer2();
+    this.Test_XXX_Integer3();
+    this.Test_XXXX_Integer4();
+    this.Test_XXXY_Integer4();
+    this.Test_XXY_Integer3();
+    this.Test_XXYX_Integer4();
+    this.Test_XXYY_Integer4();
+    this.Test_XY_Integer2();
+    this.Test_XYX_Integer3();
+    this.Test_XYXX_Integer4();
+    this.Test_XYXY_Integer4();
+    this.Test_XYY_Integer3();
+    this.Test_XYYX_Integer4();
+    this.Test_XYYY_Integer4();
+    this.Test_Y_Integer();
+    this.Test_StaticYAxis_Integer2();
+    this.Test_YX_Integer2();
+    this.Test_YXX_Integer3();
+    this.Test_YXXX_Integer4();
+    this.Test_YXXY_Integer4();
+    this.Test_YXY_Integer3();
+    this.Test_YXYX_Integer4();
+    this.Test_YXYY_Integer4();
+    this.Test_YY_Integer2();
+    this.Test_YYX_Integer3();
+    this.Test_YYXX_Integer4();
+    this.Test_YYXY_Integer4();
+    this.Test_YYY_Integer3();
+    this.Test_YYYX_Integer4();
+    this.Test_YYYY_Integer4();
+    this.Test_StaticZero_Integer2();
+  }
+}

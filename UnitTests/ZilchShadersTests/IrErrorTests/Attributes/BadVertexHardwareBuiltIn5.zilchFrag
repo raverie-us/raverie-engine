@@ -1,0 +1,10 @@
+[Vertex]
+struct BadVertexHardwareBuiltIn5
+{
+  // Matches an input not an output.
+  [HardwareBuiltInOutput] var VertexId : Integer;
+  
+  function Main()
+  {
+  }
+}

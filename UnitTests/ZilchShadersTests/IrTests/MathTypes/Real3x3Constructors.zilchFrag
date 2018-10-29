@@ -1,0 +1,61 @@
+[Pixel][UnitTest]
+struct Real3x3Constructors
+{
+  var M3x3 : Real3x3;
+  
+  function MemberGetters()
+  {
+    var s = 0.0;
+    s = this.M3x3.M00;
+    s = this.M3x3.M01;
+    s = this.M3x3.M02;
+    s = this.M3x3.M10;
+    s = this.M3x3.M11;
+    s = this.M3x3.M12;
+    s = this.M3x3.M20;
+    s = this.M3x3.M21;
+    s = this.M3x3.M22;
+  }
+  
+  function MemberSetters()
+  {
+    var s = 0.0;
+    this.M3x3.M00 = s;
+    this.M3x3.M01 = s;
+    this.M3x3.M02 = s;
+    this.M3x3.M10 = s;
+    this.M3x3.M11 = s;
+    this.M3x3.M12 = s;
+    this.M3x3.M20 = s;
+    this.M3x3.M21 = s;
+    this.M3x3.M22 = s;
+  }
+  
+  function OperatorGet()
+  {
+    var r3 = Real3();
+    r3 = this.M3x3[0];
+    r3 = this.M3x3[1];
+    r3 = this.M3x3[2];
+  }
+  
+  function OperatorSet()
+  {
+    var r3 = Real3();
+    this.M3x3[0] = r3;
+    this.M3x3[1] = r3;
+    this.M3x3[2] = r3;
+  }
+  
+  [EntryPoint]
+  function Main()
+  {
+    this.M3x3 = Real3x3();
+    this.M3x3 = Real3x3(1);
+    this.M3x3 = Real3x3(1, 2, 3, 4, 5, 6, 7, 8, 9);
+    this.MemberGetters();
+    this.MemberSetters();
+    this.OperatorGet();
+    this.OperatorSet();
+  }
+}

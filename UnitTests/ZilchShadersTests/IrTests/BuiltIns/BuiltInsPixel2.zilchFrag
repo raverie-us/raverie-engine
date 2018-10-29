@@ -1,0 +1,16 @@
+// Reverse the built-ins order
+[Pixel][UnitTest]
+struct BuiltInsPixel2
+{
+  [HardwareBuiltInOutput] var FragDepth : Real;
+  //[BuiltInInput] var PrimitiveId : Integer;
+  [HardwareBuiltInInput] var FrontFacing : Boolean;
+  [HardwareBuiltInInput] var PointCoord : Real2;
+  [HardwareBuiltInInput] var FragCoord : Real4;
+  
+  [EntryPoint]
+  function Main()
+  {
+    
+  }
+}

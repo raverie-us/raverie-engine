@@ -1,0 +1,8 @@
+[UnitTest][Compute(localSizeZ : 3, localSizeX : 1, localSizeY : 2)]
+struct Compute2
+{
+  [EntryPoint]
+  function Main()
+  {
+  }
+}

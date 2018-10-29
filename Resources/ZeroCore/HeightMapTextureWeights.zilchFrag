@@ -5,7 +5,7 @@
 struct HeightMapTextureWeights
 {
   [StageInput] var Uv : Real2;
-  [BuiltInInput] var HeightMapWeights : Sampler2d;
+  [PropertyInput] var HeightMapWeights : SampledImage2d;
   
   [Output] var HeightMapTextureWeights : Real4;
   

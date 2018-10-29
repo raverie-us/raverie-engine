@@ -1,0 +1,123 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 70
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_GenerateTranslationMatrix3x3 "EntryPoint_Main_GenerateTranslationMatrix3x3"
+               OpExecutionMode %EntryPoint_Main_GenerateTranslationMatrix3x3 OriginUpperLeft
+               OpSource Unknown 100
+               OpName %GenerateTranslationMatrix3x3 "GenerateTranslationMatrix3x3"
+               OpMemberName %GenerateTranslationMatrix3x3 0 "Dummy"
+               OpName %Test_Static_Real2 "Test_Static_Real2"
+               OpName %self "self"
+               OpName %translation_ "translation_"
+               OpName %result "result"
+               OpName %GenerateTranslationMatrix3x3_0 "GenerateTranslationMatrix3x3"
+               OpName %translation "translation"
+               OpName %translation_Local "translation_Local"
+               OpName %Main "Main"
+               OpName %self_0 "self"
+               OpName %PreConstructor_GenerateTranslationMatrix3x3 "PreConstructor_GenerateTranslationMatrix3x3"
+               OpName %self_1 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_2 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_3 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_4 "self"
+               OpName %EntryPoint_Main_GenerateTranslationMatrix3x3 "EntryPoint_Main_GenerateTranslationMatrix3x3"
+               OpName %self_5 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%GenerateTranslationMatrix3x3 = OpTypeStruct %int
+%_ptr_Function_GenerateTranslationMatrix3x3 = OpTypePointer Function %GenerateTranslationMatrix3x3
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_GenerateTranslationMatrix3x3
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+    %float_0 = OpConstant %float 0
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+%mat3v3float = OpTypeMatrix %v3float 3
+%_ptr_Function_mat3v3float = OpTypePointer Function %mat3v3float
+         %17 = OpTypeFunction %mat3v3float %v2float
+      %int_0 = OpConstant %int 0
+    %float_1 = OpConstant %float 1
+  %float_0_0 = OpConstant %float 0
+      %int_1 = OpConstant %int 1
+         %18 = OpTypeFunction %void
+%Test_Static_Real2 = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_GenerateTranslationMatrix3x3
+         %26 = OpLabel
+%translation_ = OpVariable %_ptr_Function_v2float Function
+     %result = OpVariable %_ptr_Function_mat3v3float Function
+         %29 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %translation_ %29
+         %30 = OpLoad %v2float %translation_
+         %31 = OpFunctionCall %mat3v3float %GenerateTranslationMatrix3x3_0 %30
+               OpStore %result %31
+               OpReturn
+               OpFunctionEnd
+%GenerateTranslationMatrix3x3_0 = OpFunction %mat3v3float None %17
+%translation = OpFunctionParameter %v2float
+         %34 = OpLabel
+%translation_Local = OpVariable %_ptr_Function_v2float Function
+               OpStore %translation_Local %translation
+         %36 = OpAccessChain %_ptr_Function_float %translation_Local %int_0
+         %37 = OpLoad %float %36
+         %38 = OpCompositeConstruct %v3float %float_1 %float_0_0 %37
+         %39 = OpAccessChain %_ptr_Function_float %translation_Local %int_1
+         %40 = OpLoad %float %39
+         %41 = OpCompositeConstruct %v3float %float_0_0 %float_1 %40
+         %42 = OpCompositeConstruct %v3float %float_0_0 %float_0_0 %float_1
+         %43 = OpCompositeConstruct %mat3v3float %38 %41 %42
+               OpReturnValue %43
+               OpFunctionEnd
+       %Main = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_GenerateTranslationMatrix3x3
+         %46 = OpLabel
+         %47 = OpFunctionCall %void %Test_Static_Real2 %self_0
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_GenerateTranslationMatrix3x3 = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_GenerateTranslationMatrix3x3
+         %50 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_GenerateTranslationMatrix3x3
+         %53 = OpLabel
+         %54 = OpFunctionCall %void %PreConstructor_GenerateTranslationMatrix3x3 %self_2
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_GenerateTranslationMatrix3x3
+         %57 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_4 = OpFunctionParameter %_ptr_Function_GenerateTranslationMatrix3x3
+         %60 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_GenerateTranslationMatrix3x3 = OpFunction %void None %18
+         %62 = OpLabel
+     %self_5 = OpVariable %_ptr_Function_GenerateTranslationMatrix3x3 Function
+         %64 = OpFunctionCall %void %InitializeGlobals
+         %65 = OpFunctionCall %void %DefaultConstructor %self_5
+         %66 = OpFunctionCall %void %CopyInputs_Main %self_5
+         %67 = OpFunctionCall %void %Main %self_5
+         %68 = OpFunctionCall %void %CopyOutputs_Main %self_5
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %18
+         %69 = OpLabel
+               OpReturn
+               OpFunctionEnd

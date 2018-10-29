@@ -1,0 +1,93 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 46
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_Reinterpret "EntryPoint_Main_Reinterpret"
+               OpExecutionMode %EntryPoint_Main_Reinterpret OriginUpperLeft
+               OpSource Unknown 100
+               OpName %Reinterpret "Reinterpret"
+               OpMemberName %Reinterpret 0 "Dummy"
+               OpName %Test_Integer "Test_Integer"
+               OpName %self "self"
+               OpName %param0 "param0"
+               OpName %result "result"
+               OpName %Main "Main"
+               OpName %self_0 "self"
+               OpName %PreConstructor_Reinterpret "PreConstructor_Reinterpret"
+               OpName %self_1 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_2 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_3 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_4 "self"
+               OpName %EntryPoint_Main_Reinterpret "EntryPoint_Main_Reinterpret"
+               OpName %self_5 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%Reinterpret = OpTypeStruct %int
+%_ptr_Function_Reinterpret = OpTypePointer Function %Reinterpret
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_Reinterpret
+      %int_0 = OpConstant %int 0
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+         %11 = OpTypeFunction %void
+%Test_Integer = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_Reinterpret
+         %15 = OpLabel
+     %param0 = OpVariable %_ptr_Function_int Function
+     %result = OpVariable %_ptr_Function_float Function
+               OpStore %param0 %int_0
+         %18 = OpLoad %int %param0
+         %19 = OpBitcast %float %18
+               OpStore %result %19
+               OpReturn
+               OpFunctionEnd
+       %Main = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_Reinterpret
+         %22 = OpLabel
+         %23 = OpFunctionCall %void %Test_Integer %self_0
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_Reinterpret = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_Reinterpret
+         %26 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_Reinterpret
+         %29 = OpLabel
+         %30 = OpFunctionCall %void %PreConstructor_Reinterpret %self_2
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_Reinterpret
+         %33 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_4 = OpFunctionParameter %_ptr_Function_Reinterpret
+         %36 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_Reinterpret = OpFunction %void None %11
+         %38 = OpLabel
+     %self_5 = OpVariable %_ptr_Function_Reinterpret Function
+         %40 = OpFunctionCall %void %InitializeGlobals
+         %41 = OpFunctionCall %void %DefaultConstructor %self_5
+         %42 = OpFunctionCall %void %CopyInputs_Main %self_5
+         %43 = OpFunctionCall %void %Main %self_5
+         %44 = OpFunctionCall %void %CopyOutputs_Main %self_5
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %11
+         %45 = OpLabel
+               OpReturn
+               OpFunctionEnd

@@ -1,0 +1,150 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 81
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+          %2 = OpExtInstImport "GLSL.std.450"
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_ReflectAcrossPlane "EntryPoint_Main_ReflectAcrossPlane"
+               OpExecutionMode %EntryPoint_Main_ReflectAcrossPlane OriginUpperLeft
+               OpSource Unknown 100
+               OpName %ReflectAcrossPlane "ReflectAcrossPlane"
+               OpMemberName %ReflectAcrossPlane 0 "Dummy"
+               OpName %Test_Static_Real2_Real2 "Test_Static_Real2_Real2"
+               OpName %self "self"
+               OpName %toBeReflected_ "toBeReflected_"
+               OpName %planeNormal_ "planeNormal_"
+               OpName %result "result"
+               OpName %Test_Static_Real3_Real3 "Test_Static_Real3_Real3"
+               OpName %self_0 "self"
+               OpName %toBeReflected__0 "toBeReflected_"
+               OpName %planeNormal__0 "planeNormal_"
+               OpName %result_0 "result"
+               OpName %Test_Static_Real4_Real4 "Test_Static_Real4_Real4"
+               OpName %self_1 "self"
+               OpName %toBeReflected__1 "toBeReflected_"
+               OpName %planeNormal__1 "planeNormal_"
+               OpName %result_1 "result"
+               OpName %Main "Main"
+               OpName %self_2 "self"
+               OpName %PreConstructor_ReflectAcrossPlane "PreConstructor_ReflectAcrossPlane"
+               OpName %self_3 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_4 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_5 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_6 "self"
+               OpName %EntryPoint_Main_ReflectAcrossPlane "EntryPoint_Main_ReflectAcrossPlane"
+               OpName %self_7 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%ReflectAcrossPlane = OpTypeStruct %int
+%_ptr_Function_ReflectAcrossPlane = OpTypePointer Function %ReflectAcrossPlane
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %9 = OpTypeFunction %void %_ptr_Function_ReflectAcrossPlane
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+    %float_0 = OpConstant %float 0
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+         %18 = OpTypeFunction %void
+%Test_Static_Real2_Real2 = OpFunction %void None %9
+       %self = OpFunctionParameter %_ptr_Function_ReflectAcrossPlane
+         %22 = OpLabel
+%toBeReflected_ = OpVariable %_ptr_Function_v2float Function
+%planeNormal_ = OpVariable %_ptr_Function_v2float Function
+     %result = OpVariable %_ptr_Function_v2float Function
+         %26 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %toBeReflected_ %26
+         %27 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %planeNormal_ %27
+         %28 = OpLoad %v2float %toBeReflected_
+         %29 = OpLoad %v2float %planeNormal_
+         %30 = OpExtInst %v2float %2 Reflect %28 %29
+               OpStore %result %30
+               OpReturn
+               OpFunctionEnd
+%Test_Static_Real3_Real3 = OpFunction %void None %9
+     %self_0 = OpFunctionParameter %_ptr_Function_ReflectAcrossPlane
+         %33 = OpLabel
+%toBeReflected__0 = OpVariable %_ptr_Function_v3float Function
+%planeNormal__0 = OpVariable %_ptr_Function_v3float Function
+   %result_0 = OpVariable %_ptr_Function_v3float Function
+         %37 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %toBeReflected__0 %37
+         %38 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %planeNormal__0 %38
+         %39 = OpLoad %v3float %toBeReflected__0
+         %40 = OpLoad %v3float %planeNormal__0
+         %41 = OpExtInst %v3float %2 Reflect %39 %40
+               OpStore %result_0 %41
+               OpReturn
+               OpFunctionEnd
+%Test_Static_Real4_Real4 = OpFunction %void None %9
+     %self_1 = OpFunctionParameter %_ptr_Function_ReflectAcrossPlane
+         %44 = OpLabel
+%toBeReflected__1 = OpVariable %_ptr_Function_v4float Function
+%planeNormal__1 = OpVariable %_ptr_Function_v4float Function
+   %result_1 = OpVariable %_ptr_Function_v4float Function
+         %48 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %toBeReflected__1 %48
+         %49 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %planeNormal__1 %49
+         %50 = OpLoad %v4float %toBeReflected__1
+         %51 = OpLoad %v4float %planeNormal__1
+         %52 = OpExtInst %v4float %2 Reflect %50 %51
+               OpStore %result_1 %52
+               OpReturn
+               OpFunctionEnd
+       %Main = OpFunction %void None %9
+     %self_2 = OpFunctionParameter %_ptr_Function_ReflectAcrossPlane
+         %55 = OpLabel
+         %56 = OpFunctionCall %void %Test_Static_Real2_Real2 %self_2
+         %57 = OpFunctionCall %void %Test_Static_Real3_Real3 %self_2
+         %58 = OpFunctionCall %void %Test_Static_Real4_Real4 %self_2
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_ReflectAcrossPlane = OpFunction %void None %9
+     %self_3 = OpFunctionParameter %_ptr_Function_ReflectAcrossPlane
+         %61 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %9
+     %self_4 = OpFunctionParameter %_ptr_Function_ReflectAcrossPlane
+         %64 = OpLabel
+         %65 = OpFunctionCall %void %PreConstructor_ReflectAcrossPlane %self_4
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %9
+     %self_5 = OpFunctionParameter %_ptr_Function_ReflectAcrossPlane
+         %68 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %9
+     %self_6 = OpFunctionParameter %_ptr_Function_ReflectAcrossPlane
+         %71 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_ReflectAcrossPlane = OpFunction %void None %18
+         %73 = OpLabel
+     %self_7 = OpVariable %_ptr_Function_ReflectAcrossPlane Function
+         %75 = OpFunctionCall %void %InitializeGlobals
+         %76 = OpFunctionCall %void %DefaultConstructor %self_7
+         %77 = OpFunctionCall %void %CopyInputs_Main %self_7
+         %78 = OpFunctionCall %void %Main %self_7
+         %79 = OpFunctionCall %void %CopyOutputs_Main %self_7
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %18
+         %80 = OpLabel
+               OpReturn
+               OpFunctionEnd

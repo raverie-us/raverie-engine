@@ -1,0 +1,2 @@
+  IrErrorTests\Geometry1.zilchFrag(7): Not enough parameters to attribute 'Geometry'. Signature must be 'maxVertices : Integer':
+  Not enough parameters to attribute 'Geometry'. Signature must be 'maxVertices : Integer'

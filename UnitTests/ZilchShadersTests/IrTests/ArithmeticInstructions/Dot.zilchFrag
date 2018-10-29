@@ -1,0 +1,22 @@
+struct Helper[Type]
+{
+  [Static]
+  function Test()
+  {
+    var lhs = Type();
+    var rhs = Type();
+    var result = Math.Dot(lhs, rhs);
+  }
+}
+
+[Pixel][UnitTest]
+struct Dot
+{
+  [EntryPoint]
+  function Main()
+  {
+    Helper[Real2].Test();
+    Helper[Real3].Test();
+    Helper[Real4].Test();
+  }
+}

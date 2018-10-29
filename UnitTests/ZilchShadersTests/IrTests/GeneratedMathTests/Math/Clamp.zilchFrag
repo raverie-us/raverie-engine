@@ -1,0 +1,170 @@
+[Pixel][UnitTest]
+struct Clamp
+{
+  function Test_Static_Integer_Integer_Integer()
+  {
+    var value_ = Integer();
+    var min_ = Integer();
+    var max_ = Integer();
+    var result = Math.Clamp(value_, min_, max_);
+  }
+
+  function Test_Static_Integer2_Integer2_Integer2()
+  {
+    var value_ = Integer2();
+    var min_ = Integer2();
+    var max_ = Integer2();
+    var result = Math.Clamp(value_, min_, max_);
+  }
+
+  function Test_Static_Integer3_Integer3_Integer3()
+  {
+    var value_ = Integer3();
+    var min_ = Integer3();
+    var max_ = Integer3();
+    var result = Math.Clamp(value_, min_, max_);
+  }
+
+  function Test_Static_Integer4_Integer4_Integer4()
+  {
+    var value_ = Integer4();
+    var min_ = Integer4();
+    var max_ = Integer4();
+    var result = Math.Clamp(value_, min_, max_);
+  }
+
+  function Test_Static_Real_Real_Real()
+  {
+    var value_ = Real();
+    var min_ = Real();
+    var max_ = Real();
+    var result = Math.Clamp(value_, min_, max_);
+  }
+
+  function Test_Static_Real2_Real2_Real2()
+  {
+    var value_ = Real2();
+    var min_ = Real2();
+    var max_ = Real2();
+    var result = Math.Clamp(value_, min_, max_);
+  }
+
+  function Test_Static_Real2x2_Real2x2_Real2x2()
+  {
+    var value_ = Real2x2();
+    var min_ = Real2x2();
+    var max_ = Real2x2();
+    var result = Math.Clamp(value_, min_, max_);
+  }
+
+  function Test_Static_Real2x3_Real2x3_Real2x3()
+  {
+    var value_ = Real2x3();
+    var min_ = Real2x3();
+    var max_ = Real2x3();
+    var result = Math.Clamp(value_, min_, max_);
+  }
+
+  function Test_Static_Real2x4_Real2x4_Real2x4()
+  {
+    var value_ = Real2x4();
+    var min_ = Real2x4();
+    var max_ = Real2x4();
+    var result = Math.Clamp(value_, min_, max_);
+  }
+
+  function Test_Static_Real3_Real3_Real3()
+  {
+    var value_ = Real3();
+    var min_ = Real3();
+    var max_ = Real3();
+    var result = Math.Clamp(value_, min_, max_);
+  }
+
+  function Test_Static_Real3x2_Real3x2_Real3x2()
+  {
+    var value_ = Real3x2();
+    var min_ = Real3x2();
+    var max_ = Real3x2();
+    var result = Math.Clamp(value_, min_, max_);
+  }
+
+  function Test_Static_Real3x3_Real3x3_Real3x3()
+  {
+    var value_ = Real3x3();
+    var min_ = Real3x3();
+    var max_ = Real3x3();
+    var result = Math.Clamp(value_, min_, max_);
+  }
+
+  function Test_Static_Real3x4_Real3x4_Real3x4()
+  {
+    var value_ = Real3x4();
+    var min_ = Real3x4();
+    var max_ = Real3x4();
+    var result = Math.Clamp(value_, min_, max_);
+  }
+
+  function Test_Static_Real4_Real4_Real4()
+  {
+    var value_ = Real4();
+    var min_ = Real4();
+    var max_ = Real4();
+    var result = Math.Clamp(value_, min_, max_);
+  }
+
+  function Test_Static_Real4x2_Real4x2_Real4x2()
+  {
+    var value_ = Real4x2();
+    var min_ = Real4x2();
+    var max_ = Real4x2();
+    var result = Math.Clamp(value_, min_, max_);
+  }
+
+  function Test_Static_Real4x3_Real4x3_Real4x3()
+  {
+    var value_ = Real4x3();
+    var min_ = Real4x3();
+    var max_ = Real4x3();
+    var result = Math.Clamp(value_, min_, max_);
+  }
+
+  function Test_Static_Real4x4_Real4x4_Real4x4()
+  {
+    var value_ = Real4x4();
+    var min_ = Real4x4();
+    var max_ = Real4x4();
+    var result = Math.Clamp(value_, min_, max_);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Integer_Integer_Integer();
+    this.Test_Static_Integer2_Integer2_Integer2();
+    //this.Test_Static_Integer2x2_Integer2x2_Integer2x2();
+    //this.Test_Static_Integer2x3_Integer2x3_Integer2x3();
+    //this.Test_Static_Integer2x4_Integer2x4_Integer2x4();
+    this.Test_Static_Integer3_Integer3_Integer3();
+    //this.Test_Static_Integer3x2_Integer3x2_Integer3x2();
+    //this.Test_Static_Integer3x3_Integer3x3_Integer3x3();
+    //this.Test_Static_Integer3x4_Integer3x4_Integer3x4();
+    this.Test_Static_Integer4_Integer4_Integer4();
+    //this.Test_Static_Integer4x2_Integer4x2_Integer4x2();
+    //this.Test_Static_Integer4x3_Integer4x3_Integer4x3();
+    //this.Test_Static_Integer4x4_Integer4x4_Integer4x4();
+    this.Test_Static_Real_Real_Real();
+    this.Test_Static_Real2_Real2_Real2();
+    this.Test_Static_Real2x2_Real2x2_Real2x2();
+    this.Test_Static_Real2x3_Real2x3_Real2x3();
+    this.Test_Static_Real2x4_Real2x4_Real2x4();
+    this.Test_Static_Real3_Real3_Real3();
+    this.Test_Static_Real3x2_Real3x2_Real3x2();
+    this.Test_Static_Real3x3_Real3x3_Real3x3();
+    this.Test_Static_Real3x4_Real3x4_Real3x4();
+    this.Test_Static_Real4_Real4_Real4();
+    this.Test_Static_Real4x2_Real4x2_Real4x2();
+    this.Test_Static_Real4x3_Real4x3_Real4x3();
+    this.Test_Static_Real4x4_Real4x4_Real4x4();
+  }
+}

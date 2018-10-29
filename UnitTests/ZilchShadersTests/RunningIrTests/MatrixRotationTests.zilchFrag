@@ -1,0 +1,73 @@
+[Pixel]
+struct GenerateRotationMatrix2x2Test
+{
+  [StageOutput] var Target0 : Real4;
+  [StageOutput] var Target1 : Real4;
+  [StageOutput] var Target2 : Real4;
+  [StageOutput] var Target3 : Real4;
+
+  [EntryPoint]
+  function Main()
+  {
+    var m = Math.GenerateRotationMatrix2x2(0.9);
+    this.Target0 = Real4(m[0], 0.0, 0.0);
+    this.Target1 = Real4(m[1], 0.0, 0.0);
+  }
+}
+
+[Pixel]
+struct GenerateRotationMatrix3x3Test_0
+{
+  [StageOutput] var Target0 : Real4;
+  [StageOutput] var Target1 : Real4;
+  [StageOutput] var Target2 : Real4;
+  [StageOutput] var Target3 : Real4;
+
+  [EntryPoint]
+  function Main()
+  {
+    var m = Math.GenerateRotationMatrix3x3(0.9);
+    this.Target0 = Real4(m[0], 0.0);
+    this.Target1 = Real4(m[1], 0.0);
+    this.Target2 = Real4(m[2], 0.0);
+  }
+}
+
+[Pixel]
+struct GenerateRotationMatrix3x3Test_1
+{
+  [StageOutput] var Target0 : Real4;
+  [StageOutput] var Target1 : Real4;
+  [StageOutput] var Target2 : Real4;
+  [StageOutput] var Target3 : Real4;
+
+  [EntryPoint]
+  function Main()
+  {
+    var axis = Real3(1.0, 2.0, 3.0);
+    var m = Math.GenerateRotationMatrix3x3(axis, 0.9);
+    this.Target0 = Real4(m[0], 0.0);
+    this.Target1 = Real4(m[1], 0.0);
+    this.Target2 = Real4(m[2], 0.0);
+  }
+}
+
+[Pixel]
+struct GenerateRotationMatrix4x4Test
+{
+  [StageOutput] var Target0 : Real4;
+  [StageOutput] var Target1 : Real4;
+  [StageOutput] var Target2 : Real4;
+  [StageOutput] var Target3 : Real4;
+
+  [EntryPoint]
+  function Main()
+  {
+    var axis = Real3(1.0, 2.0, 3.0);
+    var m = Math.GenerateRotationMatrix4x4(axis, 0.9);
+    this.Target0 = m[0];
+    this.Target1 = m[1];
+    this.Target2 = m[2];
+    this.Target3 = m[3];
+  }
+}

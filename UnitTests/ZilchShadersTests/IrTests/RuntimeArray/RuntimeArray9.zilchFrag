@@ -1,0 +1,24 @@
+struct SubData
+{
+  var Data : Real2;
+}
+struct ParticleData
+{
+  var R2x2 : Real2x2;
+  var R3x3 : Real3x3;
+  var R4x4 : Real4x4;
+  var SubData : SubData;
+}
+
+[Pixel][UnitTest]
+struct RuntimeArray9
+{
+  var Data : RuntimeArray[ParticleData];
+  
+  [EntryPoint]
+  function Main()
+  {
+    var count = this.Data.Count;
+    var particle = this.Data[0];
+  }
+}

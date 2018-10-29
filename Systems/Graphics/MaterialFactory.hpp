@@ -19,7 +19,7 @@ public:
 
   bool CanAddComponent(HandleParam owner, BoundType* typeToAdd, AddInfo* info = nullptr) override;
 
-  void UpdateRestrictedComponents(HashMap<LibraryRef, ZilchShaderLibraryRef>& libraries, ZilchFragmentTypeMap& fragmentTypes);
+  void UpdateRestrictedComponents(HashMap<LibraryRef, ZilchShaderIRLibraryRef>& libraries, ZilchFragmentTypeMap& fragmentTypes);
 
   ShaderInputType::Enum GetShaderInputType(Type* type);
   typedef HashMap<Type*, ShaderInputType::Enum> ShaderInputTypeMap;

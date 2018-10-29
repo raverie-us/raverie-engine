@@ -1,0 +1,1131 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 693
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+          %2 = OpExtInstImport "GLSL.std.450"
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_GlslRealIntrinsics "EntryPoint_Main_GlslRealIntrinsics"
+               OpExecutionMode %EntryPoint_Main_GlslRealIntrinsics OriginUpperLeft
+               OpSource Unknown 100
+               OpName %GlslRealIntrinsics "GlslRealIntrinsics"
+               OpMemberName %GlslRealIntrinsics 0 "Dummy"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %real3 "real3"
+               OpName %TestReals "TestReals"
+               OpName %param0 "param0"
+               OpName %param1 "param1"
+               OpName %param2 "param2"
+               OpName %realParam "realParam"
+               OpName %result0 "result0"
+               OpName %result1 "result1"
+               OpName %result2 "result2"
+               OpName %result3 "result3"
+               OpName %result4 "result4"
+               OpName %result5 "result5"
+               OpName %result6 "result6"
+               OpName %result7 "result7"
+               OpName %result8 "result8"
+               OpName %result9 "result9"
+               OpName %result10 "result10"
+               OpName %result11 "result11"
+               OpName %result12 "result12"
+               OpName %result13 "result13"
+               OpName %result14 "result14"
+               OpName %result15 "result15"
+               OpName %result16 "result16"
+               OpName %result17 "result17"
+               OpName %result18 "result18"
+               OpName %result19 "result19"
+               OpName %result20 "result20"
+               OpName %result21 "result21"
+               OpName %result22 "result22"
+               OpName %result23 "result23"
+               OpName %result24 "result24"
+               OpName %result25 "result25"
+               OpName %result26 "result26"
+               OpName %result27 "result27"
+               OpName %result28 "result28"
+               OpName %result29 "result29"
+               OpName %result30 "result30"
+               OpName %result31 "result31"
+               OpName %result32 "result32"
+               OpName %result33 "result33"
+               OpName %result34 "result34"
+               OpName %result35 "result35"
+               OpName %result36 "result36"
+               OpName %result37 "result37"
+               OpName %result38 "result38"
+               OpName %result39 "result39"
+               OpName %result40 "result40"
+               OpName %result41 "result41"
+               OpName %result42 "result42"
+               OpName %result43 "result43"
+               OpName %TestReals_0 "TestReals"
+               OpName %param0_0 "param0"
+               OpName %param1_0 "param1"
+               OpName %param2_0 "param2"
+               OpName %realParam_0 "realParam"
+               OpName %result0_0 "result0"
+               OpName %result1_0 "result1"
+               OpName %result2_0 "result2"
+               OpName %result3_0 "result3"
+               OpName %result4_0 "result4"
+               OpName %result5_0 "result5"
+               OpName %result6_0 "result6"
+               OpName %result7_0 "result7"
+               OpName %result8_0 "result8"
+               OpName %result9_0 "result9"
+               OpName %result10_0 "result10"
+               OpName %result11_0 "result11"
+               OpName %result12_0 "result12"
+               OpName %result13_0 "result13"
+               OpName %result14_0 "result14"
+               OpName %result15_0 "result15"
+               OpName %result16_0 "result16"
+               OpName %result17_0 "result17"
+               OpName %result18_0 "result18"
+               OpName %result19_0 "result19"
+               OpName %result20_0 "result20"
+               OpName %result21_0 "result21"
+               OpName %result22_0 "result22"
+               OpName %result23_0 "result23"
+               OpName %result24_0 "result24"
+               OpName %result25_0 "result25"
+               OpName %result26_0 "result26"
+               OpName %result27_0 "result27"
+               OpName %result28_0 "result28"
+               OpName %result29_0 "result29"
+               OpName %result30_0 "result30"
+               OpName %result31_0 "result31"
+               OpName %result32_0 "result32"
+               OpName %result33_0 "result33"
+               OpName %result34_0 "result34"
+               OpName %result35_0 "result35"
+               OpName %result36_0 "result36"
+               OpName %result37_0 "result37"
+               OpName %result38_0 "result38"
+               OpName %result39_0 "result39"
+               OpName %result40_0 "result40"
+               OpName %result41_0 "result41"
+               OpName %result42_0 "result42"
+               OpName %result43_0 "result43"
+               OpName %TestReals_1 "TestReals"
+               OpName %param0_1 "param0"
+               OpName %param1_1 "param1"
+               OpName %param2_1 "param2"
+               OpName %realParam_1 "realParam"
+               OpName %result0_1 "result0"
+               OpName %result1_1 "result1"
+               OpName %result2_1 "result2"
+               OpName %result3_1 "result3"
+               OpName %result4_1 "result4"
+               OpName %result5_1 "result5"
+               OpName %result6_1 "result6"
+               OpName %result7_1 "result7"
+               OpName %result8_1 "result8"
+               OpName %result9_1 "result9"
+               OpName %result10_1 "result10"
+               OpName %result11_1 "result11"
+               OpName %result12_1 "result12"
+               OpName %result13_1 "result13"
+               OpName %result14_1 "result14"
+               OpName %result15_1 "result15"
+               OpName %result16_1 "result16"
+               OpName %result17_1 "result17"
+               OpName %result18_1 "result18"
+               OpName %result19_1 "result19"
+               OpName %result20_1 "result20"
+               OpName %result21_1 "result21"
+               OpName %result22_1 "result22"
+               OpName %result23_1 "result23"
+               OpName %result24_1 "result24"
+               OpName %result25_1 "result25"
+               OpName %result26_1 "result26"
+               OpName %result27_1 "result27"
+               OpName %result28_1 "result28"
+               OpName %result29_1 "result29"
+               OpName %result30_1 "result30"
+               OpName %result31_1 "result31"
+               OpName %result32_1 "result32"
+               OpName %result33_1 "result33"
+               OpName %result34_1 "result34"
+               OpName %result35_1 "result35"
+               OpName %result36_1 "result36"
+               OpName %result37_1 "result37"
+               OpName %result38_1 "result38"
+               OpName %result39_1 "result39"
+               OpName %result40_1 "result40"
+               OpName %result41_1 "result41"
+               OpName %result42_1 "result42"
+               OpName %result43_1 "result43"
+               OpName %TestReals_2 "TestReals"
+               OpName %param0_2 "param0"
+               OpName %param1_2 "param1"
+               OpName %param2_2 "param2"
+               OpName %realParam_2 "realParam"
+               OpName %result0_2 "result0"
+               OpName %result1_2 "result1"
+               OpName %result2_2 "result2"
+               OpName %result3_2 "result3"
+               OpName %result4_2 "result4"
+               OpName %result5_2 "result5"
+               OpName %result6_2 "result6"
+               OpName %result7_2 "result7"
+               OpName %result8_2 "result8"
+               OpName %result9_2 "result9"
+               OpName %result10_2 "result10"
+               OpName %result11_2 "result11"
+               OpName %result12_2 "result12"
+               OpName %result13_2 "result13"
+               OpName %result14_2 "result14"
+               OpName %result15_2 "result15"
+               OpName %result16_2 "result16"
+               OpName %result17_2 "result17"
+               OpName %result18_2 "result18"
+               OpName %result19_2 "result19"
+               OpName %result20_2 "result20"
+               OpName %result21_2 "result21"
+               OpName %result22_2 "result22"
+               OpName %result23_2 "result23"
+               OpName %result24_2 "result24"
+               OpName %result25_2 "result25"
+               OpName %result26_2 "result26"
+               OpName %result27_2 "result27"
+               OpName %result28_2 "result28"
+               OpName %result29_2 "result29"
+               OpName %result30_2 "result30"
+               OpName %result31_2 "result31"
+               OpName %result32_2 "result32"
+               OpName %result33_2 "result33"
+               OpName %result34_2 "result34"
+               OpName %result35_2 "result35"
+               OpName %result36_2 "result36"
+               OpName %result37_2 "result37"
+               OpName %result38_2 "result38"
+               OpName %result39_2 "result39"
+               OpName %result40_2 "result40"
+               OpName %result41_2 "result41"
+               OpName %result42_2 "result42"
+               OpName %result43_2 "result43"
+               OpName %PreConstructor_GlslRealIntrinsics "PreConstructor_GlslRealIntrinsics"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_GlslRealIntrinsics "EntryPoint_Main_GlslRealIntrinsics"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%GlslRealIntrinsics = OpTypeStruct %int
+%_ptr_Function_GlslRealIntrinsics = OpTypePointer Function %GlslRealIntrinsics
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %9 = OpTypeFunction %void %_ptr_Function_GlslRealIntrinsics
+         %10 = OpTypeFunction %void
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %float_0 = OpConstant %float 0
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+       %Main = OpFunction %void None %9
+       %self = OpFunctionParameter %_ptr_Function_GlslRealIntrinsics
+         %22 = OpLabel
+      %real3 = OpVariable %_ptr_Function_v3float Function
+         %24 = OpFunctionCall %void %TestReals
+         %25 = OpFunctionCall %void %TestReals_0
+         %26 = OpFunctionCall %void %TestReals_1
+         %27 = OpFunctionCall %void %TestReals_2
+         %28 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %real3 %28
+         %29 = OpLoad %v3float %real3
+         %30 = OpLoad %v3float %real3
+         %31 = OpExtInst %v3float %2 Cross %29 %30
+               OpStore %real3 %31
+               OpReturn
+               OpFunctionEnd
+  %TestReals = OpFunction %void None %10
+         %33 = OpLabel
+     %param0 = OpVariable %_ptr_Function_float Function
+     %param1 = OpVariable %_ptr_Function_float Function
+     %param2 = OpVariable %_ptr_Function_float Function
+  %realParam = OpVariable %_ptr_Function_float Function
+    %result0 = OpVariable %_ptr_Function_float Function
+    %result1 = OpVariable %_ptr_Function_float Function
+    %result2 = OpVariable %_ptr_Function_float Function
+    %result3 = OpVariable %_ptr_Function_float Function
+    %result4 = OpVariable %_ptr_Function_float Function
+    %result5 = OpVariable %_ptr_Function_float Function
+    %result6 = OpVariable %_ptr_Function_float Function
+    %result7 = OpVariable %_ptr_Function_float Function
+    %result8 = OpVariable %_ptr_Function_float Function
+    %result9 = OpVariable %_ptr_Function_float Function
+   %result10 = OpVariable %_ptr_Function_float Function
+   %result11 = OpVariable %_ptr_Function_float Function
+   %result12 = OpVariable %_ptr_Function_float Function
+   %result13 = OpVariable %_ptr_Function_float Function
+   %result14 = OpVariable %_ptr_Function_float Function
+   %result15 = OpVariable %_ptr_Function_float Function
+   %result16 = OpVariable %_ptr_Function_float Function
+   %result17 = OpVariable %_ptr_Function_float Function
+   %result18 = OpVariable %_ptr_Function_float Function
+   %result19 = OpVariable %_ptr_Function_float Function
+   %result20 = OpVariable %_ptr_Function_float Function
+   %result21 = OpVariable %_ptr_Function_float Function
+   %result22 = OpVariable %_ptr_Function_float Function
+   %result23 = OpVariable %_ptr_Function_float Function
+   %result24 = OpVariable %_ptr_Function_float Function
+   %result25 = OpVariable %_ptr_Function_float Function
+   %result26 = OpVariable %_ptr_Function_float Function
+   %result27 = OpVariable %_ptr_Function_float Function
+   %result28 = OpVariable %_ptr_Function_float Function
+   %result29 = OpVariable %_ptr_Function_float Function
+   %result30 = OpVariable %_ptr_Function_float Function
+   %result31 = OpVariable %_ptr_Function_float Function
+   %result32 = OpVariable %_ptr_Function_float Function
+   %result33 = OpVariable %_ptr_Function_float Function
+   %result34 = OpVariable %_ptr_Function_float Function
+   %result35 = OpVariable %_ptr_Function_float Function
+   %result36 = OpVariable %_ptr_Function_float Function
+   %result37 = OpVariable %_ptr_Function_float Function
+   %result38 = OpVariable %_ptr_Function_float Function
+   %result39 = OpVariable %_ptr_Function_float Function
+   %result40 = OpVariable %_ptr_Function_float Function
+   %result41 = OpVariable %_ptr_Function_float Function
+   %result42 = OpVariable %_ptr_Function_float Function
+   %result43 = OpVariable %_ptr_Function_float Function
+               OpStore %param0 %float_0
+         %82 = OpLoad %float %param0
+               OpStore %param1 %82
+         %83 = OpLoad %float %param0
+               OpStore %param2 %83
+               OpStore %realParam %float_0
+         %84 = OpLoad %float %param0
+         %85 = OpExtInst %float %2 Round %84
+               OpStore %result0 %85
+         %86 = OpLoad %float %param0
+         %87 = OpExtInst %float %2 RoundEven %86
+               OpStore %result1 %87
+         %88 = OpLoad %float %param0
+         %89 = OpExtInst %float %2 Trunc %88
+               OpStore %result2 %89
+         %90 = OpLoad %float %param0
+         %91 = OpExtInst %float %2 FAbs %90
+               OpStore %result3 %91
+         %92 = OpLoad %float %param0
+         %93 = OpExtInst %float %2 FSign %92
+               OpStore %result4 %93
+         %94 = OpLoad %float %param0
+         %95 = OpExtInst %float %2 Floor %94
+               OpStore %result5 %95
+         %96 = OpLoad %float %param0
+         %97 = OpExtInst %float %2 Ceil %96
+               OpStore %result6 %97
+         %98 = OpLoad %float %param0
+         %99 = OpExtInst %float %2 Fract %98
+               OpStore %result7 %99
+        %100 = OpLoad %float %param0
+        %101 = OpExtInst %float %2 Radians %100
+               OpStore %result8 %101
+        %102 = OpLoad %float %param0
+        %103 = OpExtInst %float %2 Degrees %102
+               OpStore %result9 %103
+        %104 = OpLoad %float %param0
+        %105 = OpExtInst %float %2 Sin %104
+               OpStore %result10 %105
+        %106 = OpLoad %float %param0
+        %107 = OpExtInst %float %2 Cos %106
+               OpStore %result11 %107
+        %108 = OpLoad %float %param0
+        %109 = OpExtInst %float %2 Tan %108
+               OpStore %result12 %109
+        %110 = OpLoad %float %param0
+        %111 = OpExtInst %float %2 Sinh %110
+               OpStore %result13 %111
+        %112 = OpLoad %float %param0
+        %113 = OpExtInst %float %2 Cosh %112
+               OpStore %result14 %113
+        %114 = OpLoad %float %param0
+        %115 = OpExtInst %float %2 Tanh %114
+               OpStore %result15 %115
+        %116 = OpLoad %float %param0
+        %117 = OpExtInst %float %2 Ceil %116
+               OpStore %result16 %117
+        %118 = OpLoad %float %param0
+        %119 = OpExtInst %float %2 Asin %118
+               OpStore %result17 %119
+        %120 = OpLoad %float %param0
+        %121 = OpExtInst %float %2 Acos %120
+               OpStore %result18 %121
+        %122 = OpLoad %float %param0
+        %123 = OpExtInst %float %2 Atan %122
+               OpStore %result19 %123
+        %124 = OpLoad %float %param0
+        %125 = OpExtInst %float %2 Asinh %124
+               OpStore %result20 %125
+        %126 = OpLoad %float %param0
+        %127 = OpExtInst %float %2 Acosh %126
+               OpStore %result21 %127
+        %128 = OpLoad %float %param0
+        %129 = OpExtInst %float %2 Atanh %128
+               OpStore %result22 %129
+        %130 = OpLoad %float %param0
+        %131 = OpLoad %float %param1
+        %132 = OpExtInst %float %2 Atan2 %130 %131
+               OpStore %result23 %132
+        %133 = OpLoad %float %param0
+        %134 = OpLoad %float %param1
+        %135 = OpExtInst %float %2 Pow %133 %134
+               OpStore %result24 %135
+        %136 = OpLoad %float %param0
+        %137 = OpExtInst %float %2 Exp %136
+               OpStore %result25 %137
+        %138 = OpLoad %float %param0
+        %139 = OpExtInst %float %2 Log %138
+               OpStore %result26 %139
+        %140 = OpLoad %float %param0
+        %141 = OpExtInst %float %2 Exp2 %140
+               OpStore %result27 %141
+        %142 = OpLoad %float %param0
+        %143 = OpExtInst %float %2 Log2 %142
+               OpStore %result28 %143
+        %144 = OpLoad %float %param0
+        %145 = OpExtInst %float %2 Sqrt %144
+               OpStore %result29 %145
+        %146 = OpLoad %float %param0
+        %147 = OpExtInst %float %2 InverseSqrt %146
+               OpStore %result30 %147
+        %148 = OpLoad %float %param0
+        %149 = OpLoad %float %param1
+        %150 = OpExtInst %float %2 FMin %148 %149
+               OpStore %result31 %150
+        %151 = OpLoad %float %param0
+        %152 = OpLoad %float %param1
+        %153 = OpExtInst %float %2 FMax %151 %152
+               OpStore %result32 %153
+        %154 = OpLoad %float %param0
+        %155 = OpLoad %float %param1
+        %156 = OpLoad %float %param2
+        %157 = OpExtInst %float %2 FClamp %154 %155 %156
+               OpStore %result33 %157
+        %158 = OpLoad %float %param0
+        %159 = OpLoad %float %param1
+        %160 = OpLoad %float %param2
+        %161 = OpExtInst %float %2 FMix %158 %159 %160
+               OpStore %result34 %161
+        %162 = OpLoad %float %param0
+        %163 = OpLoad %float %param1
+        %164 = OpExtInst %float %2 Step %162 %163
+               OpStore %result35 %164
+        %165 = OpLoad %float %param0
+        %166 = OpLoad %float %param1
+        %167 = OpLoad %float %param2
+        %168 = OpExtInst %float %2 SmoothStep %165 %166 %167
+               OpStore %result36 %168
+        %169 = OpLoad %float %param0
+        %170 = OpLoad %float %param1
+        %171 = OpLoad %float %param2
+        %172 = OpExtInst %float %2 Fma %169 %170 %171
+               OpStore %result37 %172
+        %173 = OpLoad %float %param0
+        %174 = OpExtInst %float %2 Length %173
+               OpStore %result38 %174
+        %175 = OpLoad %float %param0
+        %176 = OpLoad %float %param1
+        %177 = OpExtInst %float %2 Distance %175 %176
+               OpStore %result39 %177
+        %178 = OpLoad %float %param0
+        %179 = OpExtInst %float %2 Normalize %178
+               OpStore %result40 %179
+        %180 = OpLoad %float %param0
+        %181 = OpLoad %float %param1
+        %182 = OpLoad %float %param2
+        %183 = OpExtInst %float %2 FaceForward %180 %181 %182
+               OpStore %result41 %183
+        %184 = OpLoad %float %param0
+        %185 = OpLoad %float %param1
+        %186 = OpExtInst %float %2 Reflect %184 %185
+               OpStore %result42 %186
+        %187 = OpLoad %float %param0
+        %188 = OpLoad %float %param1
+        %189 = OpLoad %float %realParam
+        %190 = OpExtInst %float %2 Refract %187 %188 %189
+               OpStore %result43 %190
+               OpReturn
+               OpFunctionEnd
+%TestReals_0 = OpFunction %void None %10
+        %192 = OpLabel
+   %param0_0 = OpVariable %_ptr_Function_v2float Function
+   %param1_0 = OpVariable %_ptr_Function_v2float Function
+   %param2_0 = OpVariable %_ptr_Function_v2float Function
+%realParam_0 = OpVariable %_ptr_Function_float Function
+  %result0_0 = OpVariable %_ptr_Function_v2float Function
+  %result1_0 = OpVariable %_ptr_Function_v2float Function
+  %result2_0 = OpVariable %_ptr_Function_v2float Function
+  %result3_0 = OpVariable %_ptr_Function_v2float Function
+  %result4_0 = OpVariable %_ptr_Function_v2float Function
+  %result5_0 = OpVariable %_ptr_Function_v2float Function
+  %result6_0 = OpVariable %_ptr_Function_v2float Function
+  %result7_0 = OpVariable %_ptr_Function_v2float Function
+  %result8_0 = OpVariable %_ptr_Function_v2float Function
+  %result9_0 = OpVariable %_ptr_Function_v2float Function
+ %result10_0 = OpVariable %_ptr_Function_v2float Function
+ %result11_0 = OpVariable %_ptr_Function_v2float Function
+ %result12_0 = OpVariable %_ptr_Function_v2float Function
+ %result13_0 = OpVariable %_ptr_Function_v2float Function
+ %result14_0 = OpVariable %_ptr_Function_v2float Function
+ %result15_0 = OpVariable %_ptr_Function_v2float Function
+ %result16_0 = OpVariable %_ptr_Function_v2float Function
+ %result17_0 = OpVariable %_ptr_Function_v2float Function
+ %result18_0 = OpVariable %_ptr_Function_v2float Function
+ %result19_0 = OpVariable %_ptr_Function_v2float Function
+ %result20_0 = OpVariable %_ptr_Function_v2float Function
+ %result21_0 = OpVariable %_ptr_Function_v2float Function
+ %result22_0 = OpVariable %_ptr_Function_v2float Function
+ %result23_0 = OpVariable %_ptr_Function_v2float Function
+ %result24_0 = OpVariable %_ptr_Function_v2float Function
+ %result25_0 = OpVariable %_ptr_Function_v2float Function
+ %result26_0 = OpVariable %_ptr_Function_v2float Function
+ %result27_0 = OpVariable %_ptr_Function_v2float Function
+ %result28_0 = OpVariable %_ptr_Function_v2float Function
+ %result29_0 = OpVariable %_ptr_Function_v2float Function
+ %result30_0 = OpVariable %_ptr_Function_v2float Function
+ %result31_0 = OpVariable %_ptr_Function_v2float Function
+ %result32_0 = OpVariable %_ptr_Function_v2float Function
+ %result33_0 = OpVariable %_ptr_Function_v2float Function
+ %result34_0 = OpVariable %_ptr_Function_v2float Function
+ %result35_0 = OpVariable %_ptr_Function_v2float Function
+ %result36_0 = OpVariable %_ptr_Function_v2float Function
+ %result37_0 = OpVariable %_ptr_Function_v2float Function
+ %result38_0 = OpVariable %_ptr_Function_float Function
+ %result39_0 = OpVariable %_ptr_Function_float Function
+ %result40_0 = OpVariable %_ptr_Function_v2float Function
+ %result41_0 = OpVariable %_ptr_Function_v2float Function
+ %result42_0 = OpVariable %_ptr_Function_v2float Function
+ %result43_0 = OpVariable %_ptr_Function_v2float Function
+        %241 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %param0_0 %241
+        %242 = OpLoad %v2float %param0_0
+               OpStore %param1_0 %242
+        %243 = OpLoad %v2float %param0_0
+               OpStore %param2_0 %243
+               OpStore %realParam_0 %float_0
+        %244 = OpLoad %v2float %param0_0
+        %245 = OpExtInst %v2float %2 Round %244
+               OpStore %result0_0 %245
+        %246 = OpLoad %v2float %param0_0
+        %247 = OpExtInst %v2float %2 RoundEven %246
+               OpStore %result1_0 %247
+        %248 = OpLoad %v2float %param0_0
+        %249 = OpExtInst %v2float %2 Trunc %248
+               OpStore %result2_0 %249
+        %250 = OpLoad %v2float %param0_0
+        %251 = OpExtInst %v2float %2 FAbs %250
+               OpStore %result3_0 %251
+        %252 = OpLoad %v2float %param0_0
+        %253 = OpExtInst %v2float %2 FSign %252
+               OpStore %result4_0 %253
+        %254 = OpLoad %v2float %param0_0
+        %255 = OpExtInst %v2float %2 Floor %254
+               OpStore %result5_0 %255
+        %256 = OpLoad %v2float %param0_0
+        %257 = OpExtInst %v2float %2 Ceil %256
+               OpStore %result6_0 %257
+        %258 = OpLoad %v2float %param0_0
+        %259 = OpExtInst %v2float %2 Fract %258
+               OpStore %result7_0 %259
+        %260 = OpLoad %v2float %param0_0
+        %261 = OpExtInst %v2float %2 Radians %260
+               OpStore %result8_0 %261
+        %262 = OpLoad %v2float %param0_0
+        %263 = OpExtInst %v2float %2 Degrees %262
+               OpStore %result9_0 %263
+        %264 = OpLoad %v2float %param0_0
+        %265 = OpExtInst %v2float %2 Sin %264
+               OpStore %result10_0 %265
+        %266 = OpLoad %v2float %param0_0
+        %267 = OpExtInst %v2float %2 Cos %266
+               OpStore %result11_0 %267
+        %268 = OpLoad %v2float %param0_0
+        %269 = OpExtInst %v2float %2 Tan %268
+               OpStore %result12_0 %269
+        %270 = OpLoad %v2float %param0_0
+        %271 = OpExtInst %v2float %2 Sinh %270
+               OpStore %result13_0 %271
+        %272 = OpLoad %v2float %param0_0
+        %273 = OpExtInst %v2float %2 Cosh %272
+               OpStore %result14_0 %273
+        %274 = OpLoad %v2float %param0_0
+        %275 = OpExtInst %v2float %2 Tanh %274
+               OpStore %result15_0 %275
+        %276 = OpLoad %v2float %param0_0
+        %277 = OpExtInst %v2float %2 Ceil %276
+               OpStore %result16_0 %277
+        %278 = OpLoad %v2float %param0_0
+        %279 = OpExtInst %v2float %2 Asin %278
+               OpStore %result17_0 %279
+        %280 = OpLoad %v2float %param0_0
+        %281 = OpExtInst %v2float %2 Acos %280
+               OpStore %result18_0 %281
+        %282 = OpLoad %v2float %param0_0
+        %283 = OpExtInst %v2float %2 Atan %282
+               OpStore %result19_0 %283
+        %284 = OpLoad %v2float %param0_0
+        %285 = OpExtInst %v2float %2 Asinh %284
+               OpStore %result20_0 %285
+        %286 = OpLoad %v2float %param0_0
+        %287 = OpExtInst %v2float %2 Acosh %286
+               OpStore %result21_0 %287
+        %288 = OpLoad %v2float %param0_0
+        %289 = OpExtInst %v2float %2 Atanh %288
+               OpStore %result22_0 %289
+        %290 = OpLoad %v2float %param0_0
+        %291 = OpLoad %v2float %param1_0
+        %292 = OpExtInst %v2float %2 Atan2 %290 %291
+               OpStore %result23_0 %292
+        %293 = OpLoad %v2float %param0_0
+        %294 = OpLoad %v2float %param1_0
+        %295 = OpExtInst %v2float %2 Pow %293 %294
+               OpStore %result24_0 %295
+        %296 = OpLoad %v2float %param0_0
+        %297 = OpExtInst %v2float %2 Exp %296
+               OpStore %result25_0 %297
+        %298 = OpLoad %v2float %param0_0
+        %299 = OpExtInst %v2float %2 Log %298
+               OpStore %result26_0 %299
+        %300 = OpLoad %v2float %param0_0
+        %301 = OpExtInst %v2float %2 Exp2 %300
+               OpStore %result27_0 %301
+        %302 = OpLoad %v2float %param0_0
+        %303 = OpExtInst %v2float %2 Log2 %302
+               OpStore %result28_0 %303
+        %304 = OpLoad %v2float %param0_0
+        %305 = OpExtInst %v2float %2 Sqrt %304
+               OpStore %result29_0 %305
+        %306 = OpLoad %v2float %param0_0
+        %307 = OpExtInst %v2float %2 InverseSqrt %306
+               OpStore %result30_0 %307
+        %308 = OpLoad %v2float %param0_0
+        %309 = OpLoad %v2float %param1_0
+        %310 = OpExtInst %v2float %2 FMin %308 %309
+               OpStore %result31_0 %310
+        %311 = OpLoad %v2float %param0_0
+        %312 = OpLoad %v2float %param1_0
+        %313 = OpExtInst %v2float %2 FMax %311 %312
+               OpStore %result32_0 %313
+        %314 = OpLoad %v2float %param0_0
+        %315 = OpLoad %v2float %param1_0
+        %316 = OpLoad %v2float %param2_0
+        %317 = OpExtInst %v2float %2 FClamp %314 %315 %316
+               OpStore %result33_0 %317
+        %318 = OpLoad %v2float %param0_0
+        %319 = OpLoad %v2float %param1_0
+        %320 = OpLoad %v2float %param2_0
+        %321 = OpExtInst %v2float %2 FMix %318 %319 %320
+               OpStore %result34_0 %321
+        %322 = OpLoad %v2float %param0_0
+        %323 = OpLoad %v2float %param1_0
+        %324 = OpExtInst %v2float %2 Step %322 %323
+               OpStore %result35_0 %324
+        %325 = OpLoad %v2float %param0_0
+        %326 = OpLoad %v2float %param1_0
+        %327 = OpLoad %v2float %param2_0
+        %328 = OpExtInst %v2float %2 SmoothStep %325 %326 %327
+               OpStore %result36_0 %328
+        %329 = OpLoad %v2float %param0_0
+        %330 = OpLoad %v2float %param1_0
+        %331 = OpLoad %v2float %param2_0
+        %332 = OpExtInst %v2float %2 Fma %329 %330 %331
+               OpStore %result37_0 %332
+        %333 = OpLoad %v2float %param0_0
+        %334 = OpExtInst %float %2 Length %333
+               OpStore %result38_0 %334
+        %335 = OpLoad %v2float %param0_0
+        %336 = OpLoad %v2float %param1_0
+        %337 = OpExtInst %float %2 Distance %335 %336
+               OpStore %result39_0 %337
+        %338 = OpLoad %v2float %param0_0
+        %339 = OpExtInst %v2float %2 Normalize %338
+               OpStore %result40_0 %339
+        %340 = OpLoad %v2float %param0_0
+        %341 = OpLoad %v2float %param1_0
+        %342 = OpLoad %v2float %param2_0
+        %343 = OpExtInst %v2float %2 FaceForward %340 %341 %342
+               OpStore %result41_0 %343
+        %344 = OpLoad %v2float %param0_0
+        %345 = OpLoad %v2float %param1_0
+        %346 = OpExtInst %v2float %2 Reflect %344 %345
+               OpStore %result42_0 %346
+        %347 = OpLoad %v2float %param0_0
+        %348 = OpLoad %v2float %param1_0
+        %349 = OpLoad %float %realParam_0
+        %350 = OpExtInst %v2float %2 Refract %347 %348 %349
+               OpStore %result43_0 %350
+               OpReturn
+               OpFunctionEnd
+%TestReals_1 = OpFunction %void None %10
+        %352 = OpLabel
+   %param0_1 = OpVariable %_ptr_Function_v3float Function
+   %param1_1 = OpVariable %_ptr_Function_v3float Function
+   %param2_1 = OpVariable %_ptr_Function_v3float Function
+%realParam_1 = OpVariable %_ptr_Function_float Function
+  %result0_1 = OpVariable %_ptr_Function_v3float Function
+  %result1_1 = OpVariable %_ptr_Function_v3float Function
+  %result2_1 = OpVariable %_ptr_Function_v3float Function
+  %result3_1 = OpVariable %_ptr_Function_v3float Function
+  %result4_1 = OpVariable %_ptr_Function_v3float Function
+  %result5_1 = OpVariable %_ptr_Function_v3float Function
+  %result6_1 = OpVariable %_ptr_Function_v3float Function
+  %result7_1 = OpVariable %_ptr_Function_v3float Function
+  %result8_1 = OpVariable %_ptr_Function_v3float Function
+  %result9_1 = OpVariable %_ptr_Function_v3float Function
+ %result10_1 = OpVariable %_ptr_Function_v3float Function
+ %result11_1 = OpVariable %_ptr_Function_v3float Function
+ %result12_1 = OpVariable %_ptr_Function_v3float Function
+ %result13_1 = OpVariable %_ptr_Function_v3float Function
+ %result14_1 = OpVariable %_ptr_Function_v3float Function
+ %result15_1 = OpVariable %_ptr_Function_v3float Function
+ %result16_1 = OpVariable %_ptr_Function_v3float Function
+ %result17_1 = OpVariable %_ptr_Function_v3float Function
+ %result18_1 = OpVariable %_ptr_Function_v3float Function
+ %result19_1 = OpVariable %_ptr_Function_v3float Function
+ %result20_1 = OpVariable %_ptr_Function_v3float Function
+ %result21_1 = OpVariable %_ptr_Function_v3float Function
+ %result22_1 = OpVariable %_ptr_Function_v3float Function
+ %result23_1 = OpVariable %_ptr_Function_v3float Function
+ %result24_1 = OpVariable %_ptr_Function_v3float Function
+ %result25_1 = OpVariable %_ptr_Function_v3float Function
+ %result26_1 = OpVariable %_ptr_Function_v3float Function
+ %result27_1 = OpVariable %_ptr_Function_v3float Function
+ %result28_1 = OpVariable %_ptr_Function_v3float Function
+ %result29_1 = OpVariable %_ptr_Function_v3float Function
+ %result30_1 = OpVariable %_ptr_Function_v3float Function
+ %result31_1 = OpVariable %_ptr_Function_v3float Function
+ %result32_1 = OpVariable %_ptr_Function_v3float Function
+ %result33_1 = OpVariable %_ptr_Function_v3float Function
+ %result34_1 = OpVariable %_ptr_Function_v3float Function
+ %result35_1 = OpVariable %_ptr_Function_v3float Function
+ %result36_1 = OpVariable %_ptr_Function_v3float Function
+ %result37_1 = OpVariable %_ptr_Function_v3float Function
+ %result38_1 = OpVariable %_ptr_Function_float Function
+ %result39_1 = OpVariable %_ptr_Function_float Function
+ %result40_1 = OpVariable %_ptr_Function_v3float Function
+ %result41_1 = OpVariable %_ptr_Function_v3float Function
+ %result42_1 = OpVariable %_ptr_Function_v3float Function
+ %result43_1 = OpVariable %_ptr_Function_v3float Function
+        %401 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %param0_1 %401
+        %402 = OpLoad %v3float %param0_1
+               OpStore %param1_1 %402
+        %403 = OpLoad %v3float %param0_1
+               OpStore %param2_1 %403
+               OpStore %realParam_1 %float_0
+        %404 = OpLoad %v3float %param0_1
+        %405 = OpExtInst %v3float %2 Round %404
+               OpStore %result0_1 %405
+        %406 = OpLoad %v3float %param0_1
+        %407 = OpExtInst %v3float %2 RoundEven %406
+               OpStore %result1_1 %407
+        %408 = OpLoad %v3float %param0_1
+        %409 = OpExtInst %v3float %2 Trunc %408
+               OpStore %result2_1 %409
+        %410 = OpLoad %v3float %param0_1
+        %411 = OpExtInst %v3float %2 FAbs %410
+               OpStore %result3_1 %411
+        %412 = OpLoad %v3float %param0_1
+        %413 = OpExtInst %v3float %2 FSign %412
+               OpStore %result4_1 %413
+        %414 = OpLoad %v3float %param0_1
+        %415 = OpExtInst %v3float %2 Floor %414
+               OpStore %result5_1 %415
+        %416 = OpLoad %v3float %param0_1
+        %417 = OpExtInst %v3float %2 Ceil %416
+               OpStore %result6_1 %417
+        %418 = OpLoad %v3float %param0_1
+        %419 = OpExtInst %v3float %2 Fract %418
+               OpStore %result7_1 %419
+        %420 = OpLoad %v3float %param0_1
+        %421 = OpExtInst %v3float %2 Radians %420
+               OpStore %result8_1 %421
+        %422 = OpLoad %v3float %param0_1
+        %423 = OpExtInst %v3float %2 Degrees %422
+               OpStore %result9_1 %423
+        %424 = OpLoad %v3float %param0_1
+        %425 = OpExtInst %v3float %2 Sin %424
+               OpStore %result10_1 %425
+        %426 = OpLoad %v3float %param0_1
+        %427 = OpExtInst %v3float %2 Cos %426
+               OpStore %result11_1 %427
+        %428 = OpLoad %v3float %param0_1
+        %429 = OpExtInst %v3float %2 Tan %428
+               OpStore %result12_1 %429
+        %430 = OpLoad %v3float %param0_1
+        %431 = OpExtInst %v3float %2 Sinh %430
+               OpStore %result13_1 %431
+        %432 = OpLoad %v3float %param0_1
+        %433 = OpExtInst %v3float %2 Cosh %432
+               OpStore %result14_1 %433
+        %434 = OpLoad %v3float %param0_1
+        %435 = OpExtInst %v3float %2 Tanh %434
+               OpStore %result15_1 %435
+        %436 = OpLoad %v3float %param0_1
+        %437 = OpExtInst %v3float %2 Ceil %436
+               OpStore %result16_1 %437
+        %438 = OpLoad %v3float %param0_1
+        %439 = OpExtInst %v3float %2 Asin %438
+               OpStore %result17_1 %439
+        %440 = OpLoad %v3float %param0_1
+        %441 = OpExtInst %v3float %2 Acos %440
+               OpStore %result18_1 %441
+        %442 = OpLoad %v3float %param0_1
+        %443 = OpExtInst %v3float %2 Atan %442
+               OpStore %result19_1 %443
+        %444 = OpLoad %v3float %param0_1
+        %445 = OpExtInst %v3float %2 Asinh %444
+               OpStore %result20_1 %445
+        %446 = OpLoad %v3float %param0_1
+        %447 = OpExtInst %v3float %2 Acosh %446
+               OpStore %result21_1 %447
+        %448 = OpLoad %v3float %param0_1
+        %449 = OpExtInst %v3float %2 Atanh %448
+               OpStore %result22_1 %449
+        %450 = OpLoad %v3float %param0_1
+        %451 = OpLoad %v3float %param1_1
+        %452 = OpExtInst %v3float %2 Atan2 %450 %451
+               OpStore %result23_1 %452
+        %453 = OpLoad %v3float %param0_1
+        %454 = OpLoad %v3float %param1_1
+        %455 = OpExtInst %v3float %2 Pow %453 %454
+               OpStore %result24_1 %455
+        %456 = OpLoad %v3float %param0_1
+        %457 = OpExtInst %v3float %2 Exp %456
+               OpStore %result25_1 %457
+        %458 = OpLoad %v3float %param0_1
+        %459 = OpExtInst %v3float %2 Log %458
+               OpStore %result26_1 %459
+        %460 = OpLoad %v3float %param0_1
+        %461 = OpExtInst %v3float %2 Exp2 %460
+               OpStore %result27_1 %461
+        %462 = OpLoad %v3float %param0_1
+        %463 = OpExtInst %v3float %2 Log2 %462
+               OpStore %result28_1 %463
+        %464 = OpLoad %v3float %param0_1
+        %465 = OpExtInst %v3float %2 Sqrt %464
+               OpStore %result29_1 %465
+        %466 = OpLoad %v3float %param0_1
+        %467 = OpExtInst %v3float %2 InverseSqrt %466
+               OpStore %result30_1 %467
+        %468 = OpLoad %v3float %param0_1
+        %469 = OpLoad %v3float %param1_1
+        %470 = OpExtInst %v3float %2 FMin %468 %469
+               OpStore %result31_1 %470
+        %471 = OpLoad %v3float %param0_1
+        %472 = OpLoad %v3float %param1_1
+        %473 = OpExtInst %v3float %2 FMax %471 %472
+               OpStore %result32_1 %473
+        %474 = OpLoad %v3float %param0_1
+        %475 = OpLoad %v3float %param1_1
+        %476 = OpLoad %v3float %param2_1
+        %477 = OpExtInst %v3float %2 FClamp %474 %475 %476
+               OpStore %result33_1 %477
+        %478 = OpLoad %v3float %param0_1
+        %479 = OpLoad %v3float %param1_1
+        %480 = OpLoad %v3float %param2_1
+        %481 = OpExtInst %v3float %2 FMix %478 %479 %480
+               OpStore %result34_1 %481
+        %482 = OpLoad %v3float %param0_1
+        %483 = OpLoad %v3float %param1_1
+        %484 = OpExtInst %v3float %2 Step %482 %483
+               OpStore %result35_1 %484
+        %485 = OpLoad %v3float %param0_1
+        %486 = OpLoad %v3float %param1_1
+        %487 = OpLoad %v3float %param2_1
+        %488 = OpExtInst %v3float %2 SmoothStep %485 %486 %487
+               OpStore %result36_1 %488
+        %489 = OpLoad %v3float %param0_1
+        %490 = OpLoad %v3float %param1_1
+        %491 = OpLoad %v3float %param2_1
+        %492 = OpExtInst %v3float %2 Fma %489 %490 %491
+               OpStore %result37_1 %492
+        %493 = OpLoad %v3float %param0_1
+        %494 = OpExtInst %float %2 Length %493
+               OpStore %result38_1 %494
+        %495 = OpLoad %v3float %param0_1
+        %496 = OpLoad %v3float %param1_1
+        %497 = OpExtInst %float %2 Distance %495 %496
+               OpStore %result39_1 %497
+        %498 = OpLoad %v3float %param0_1
+        %499 = OpExtInst %v3float %2 Normalize %498
+               OpStore %result40_1 %499
+        %500 = OpLoad %v3float %param0_1
+        %501 = OpLoad %v3float %param1_1
+        %502 = OpLoad %v3float %param2_1
+        %503 = OpExtInst %v3float %2 FaceForward %500 %501 %502
+               OpStore %result41_1 %503
+        %504 = OpLoad %v3float %param0_1
+        %505 = OpLoad %v3float %param1_1
+        %506 = OpExtInst %v3float %2 Reflect %504 %505
+               OpStore %result42_1 %506
+        %507 = OpLoad %v3float %param0_1
+        %508 = OpLoad %v3float %param1_1
+        %509 = OpLoad %float %realParam_1
+        %510 = OpExtInst %v3float %2 Refract %507 %508 %509
+               OpStore %result43_1 %510
+               OpReturn
+               OpFunctionEnd
+%TestReals_2 = OpFunction %void None %10
+        %512 = OpLabel
+   %param0_2 = OpVariable %_ptr_Function_v4float Function
+   %param1_2 = OpVariable %_ptr_Function_v4float Function
+   %param2_2 = OpVariable %_ptr_Function_v4float Function
+%realParam_2 = OpVariable %_ptr_Function_float Function
+  %result0_2 = OpVariable %_ptr_Function_v4float Function
+  %result1_2 = OpVariable %_ptr_Function_v4float Function
+  %result2_2 = OpVariable %_ptr_Function_v4float Function
+  %result3_2 = OpVariable %_ptr_Function_v4float Function
+  %result4_2 = OpVariable %_ptr_Function_v4float Function
+  %result5_2 = OpVariable %_ptr_Function_v4float Function
+  %result6_2 = OpVariable %_ptr_Function_v4float Function
+  %result7_2 = OpVariable %_ptr_Function_v4float Function
+  %result8_2 = OpVariable %_ptr_Function_v4float Function
+  %result9_2 = OpVariable %_ptr_Function_v4float Function
+ %result10_2 = OpVariable %_ptr_Function_v4float Function
+ %result11_2 = OpVariable %_ptr_Function_v4float Function
+ %result12_2 = OpVariable %_ptr_Function_v4float Function
+ %result13_2 = OpVariable %_ptr_Function_v4float Function
+ %result14_2 = OpVariable %_ptr_Function_v4float Function
+ %result15_2 = OpVariable %_ptr_Function_v4float Function
+ %result16_2 = OpVariable %_ptr_Function_v4float Function
+ %result17_2 = OpVariable %_ptr_Function_v4float Function
+ %result18_2 = OpVariable %_ptr_Function_v4float Function
+ %result19_2 = OpVariable %_ptr_Function_v4float Function
+ %result20_2 = OpVariable %_ptr_Function_v4float Function
+ %result21_2 = OpVariable %_ptr_Function_v4float Function
+ %result22_2 = OpVariable %_ptr_Function_v4float Function
+ %result23_2 = OpVariable %_ptr_Function_v4float Function
+ %result24_2 = OpVariable %_ptr_Function_v4float Function
+ %result25_2 = OpVariable %_ptr_Function_v4float Function
+ %result26_2 = OpVariable %_ptr_Function_v4float Function
+ %result27_2 = OpVariable %_ptr_Function_v4float Function
+ %result28_2 = OpVariable %_ptr_Function_v4float Function
+ %result29_2 = OpVariable %_ptr_Function_v4float Function
+ %result30_2 = OpVariable %_ptr_Function_v4float Function
+ %result31_2 = OpVariable %_ptr_Function_v4float Function
+ %result32_2 = OpVariable %_ptr_Function_v4float Function
+ %result33_2 = OpVariable %_ptr_Function_v4float Function
+ %result34_2 = OpVariable %_ptr_Function_v4float Function
+ %result35_2 = OpVariable %_ptr_Function_v4float Function
+ %result36_2 = OpVariable %_ptr_Function_v4float Function
+ %result37_2 = OpVariable %_ptr_Function_v4float Function
+ %result38_2 = OpVariable %_ptr_Function_float Function
+ %result39_2 = OpVariable %_ptr_Function_float Function
+ %result40_2 = OpVariable %_ptr_Function_v4float Function
+ %result41_2 = OpVariable %_ptr_Function_v4float Function
+ %result42_2 = OpVariable %_ptr_Function_v4float Function
+ %result43_2 = OpVariable %_ptr_Function_v4float Function
+        %561 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %param0_2 %561
+        %562 = OpLoad %v4float %param0_2
+               OpStore %param1_2 %562
+        %563 = OpLoad %v4float %param0_2
+               OpStore %param2_2 %563
+               OpStore %realParam_2 %float_0
+        %564 = OpLoad %v4float %param0_2
+        %565 = OpExtInst %v4float %2 Round %564
+               OpStore %result0_2 %565
+        %566 = OpLoad %v4float %param0_2
+        %567 = OpExtInst %v4float %2 RoundEven %566
+               OpStore %result1_2 %567
+        %568 = OpLoad %v4float %param0_2
+        %569 = OpExtInst %v4float %2 Trunc %568
+               OpStore %result2_2 %569
+        %570 = OpLoad %v4float %param0_2
+        %571 = OpExtInst %v4float %2 FAbs %570
+               OpStore %result3_2 %571
+        %572 = OpLoad %v4float %param0_2
+        %573 = OpExtInst %v4float %2 FSign %572
+               OpStore %result4_2 %573
+        %574 = OpLoad %v4float %param0_2
+        %575 = OpExtInst %v4float %2 Floor %574
+               OpStore %result5_2 %575
+        %576 = OpLoad %v4float %param0_2
+        %577 = OpExtInst %v4float %2 Ceil %576
+               OpStore %result6_2 %577
+        %578 = OpLoad %v4float %param0_2
+        %579 = OpExtInst %v4float %2 Fract %578
+               OpStore %result7_2 %579
+        %580 = OpLoad %v4float %param0_2
+        %581 = OpExtInst %v4float %2 Radians %580
+               OpStore %result8_2 %581
+        %582 = OpLoad %v4float %param0_2
+        %583 = OpExtInst %v4float %2 Degrees %582
+               OpStore %result9_2 %583
+        %584 = OpLoad %v4float %param0_2
+        %585 = OpExtInst %v4float %2 Sin %584
+               OpStore %result10_2 %585
+        %586 = OpLoad %v4float %param0_2
+        %587 = OpExtInst %v4float %2 Cos %586
+               OpStore %result11_2 %587
+        %588 = OpLoad %v4float %param0_2
+        %589 = OpExtInst %v4float %2 Tan %588
+               OpStore %result12_2 %589
+        %590 = OpLoad %v4float %param0_2
+        %591 = OpExtInst %v4float %2 Sinh %590
+               OpStore %result13_2 %591
+        %592 = OpLoad %v4float %param0_2
+        %593 = OpExtInst %v4float %2 Cosh %592
+               OpStore %result14_2 %593
+        %594 = OpLoad %v4float %param0_2
+        %595 = OpExtInst %v4float %2 Tanh %594
+               OpStore %result15_2 %595
+        %596 = OpLoad %v4float %param0_2
+        %597 = OpExtInst %v4float %2 Ceil %596
+               OpStore %result16_2 %597
+        %598 = OpLoad %v4float %param0_2
+        %599 = OpExtInst %v4float %2 Asin %598
+               OpStore %result17_2 %599
+        %600 = OpLoad %v4float %param0_2
+        %601 = OpExtInst %v4float %2 Acos %600
+               OpStore %result18_2 %601
+        %602 = OpLoad %v4float %param0_2
+        %603 = OpExtInst %v4float %2 Atan %602
+               OpStore %result19_2 %603
+        %604 = OpLoad %v4float %param0_2
+        %605 = OpExtInst %v4float %2 Asinh %604
+               OpStore %result20_2 %605
+        %606 = OpLoad %v4float %param0_2
+        %607 = OpExtInst %v4float %2 Acosh %606
+               OpStore %result21_2 %607
+        %608 = OpLoad %v4float %param0_2
+        %609 = OpExtInst %v4float %2 Atanh %608
+               OpStore %result22_2 %609
+        %610 = OpLoad %v4float %param0_2
+        %611 = OpLoad %v4float %param1_2
+        %612 = OpExtInst %v4float %2 Atan2 %610 %611
+               OpStore %result23_2 %612
+        %613 = OpLoad %v4float %param0_2
+        %614 = OpLoad %v4float %param1_2
+        %615 = OpExtInst %v4float %2 Pow %613 %614
+               OpStore %result24_2 %615
+        %616 = OpLoad %v4float %param0_2
+        %617 = OpExtInst %v4float %2 Exp %616
+               OpStore %result25_2 %617
+        %618 = OpLoad %v4float %param0_2
+        %619 = OpExtInst %v4float %2 Log %618
+               OpStore %result26_2 %619
+        %620 = OpLoad %v4float %param0_2
+        %621 = OpExtInst %v4float %2 Exp2 %620
+               OpStore %result27_2 %621
+        %622 = OpLoad %v4float %param0_2
+        %623 = OpExtInst %v4float %2 Log2 %622
+               OpStore %result28_2 %623
+        %624 = OpLoad %v4float %param0_2
+        %625 = OpExtInst %v4float %2 Sqrt %624
+               OpStore %result29_2 %625
+        %626 = OpLoad %v4float %param0_2
+        %627 = OpExtInst %v4float %2 InverseSqrt %626
+               OpStore %result30_2 %627
+        %628 = OpLoad %v4float %param0_2
+        %629 = OpLoad %v4float %param1_2
+        %630 = OpExtInst %v4float %2 FMin %628 %629
+               OpStore %result31_2 %630
+        %631 = OpLoad %v4float %param0_2
+        %632 = OpLoad %v4float %param1_2
+        %633 = OpExtInst %v4float %2 FMax %631 %632
+               OpStore %result32_2 %633
+        %634 = OpLoad %v4float %param0_2
+        %635 = OpLoad %v4float %param1_2
+        %636 = OpLoad %v4float %param2_2
+        %637 = OpExtInst %v4float %2 FClamp %634 %635 %636
+               OpStore %result33_2 %637
+        %638 = OpLoad %v4float %param0_2
+        %639 = OpLoad %v4float %param1_2
+        %640 = OpLoad %v4float %param2_2
+        %641 = OpExtInst %v4float %2 FMix %638 %639 %640
+               OpStore %result34_2 %641
+        %642 = OpLoad %v4float %param0_2
+        %643 = OpLoad %v4float %param1_2
+        %644 = OpExtInst %v4float %2 Step %642 %643
+               OpStore %result35_2 %644
+        %645 = OpLoad %v4float %param0_2
+        %646 = OpLoad %v4float %param1_2
+        %647 = OpLoad %v4float %param2_2
+        %648 = OpExtInst %v4float %2 SmoothStep %645 %646 %647
+               OpStore %result36_2 %648
+        %649 = OpLoad %v4float %param0_2
+        %650 = OpLoad %v4float %param1_2
+        %651 = OpLoad %v4float %param2_2
+        %652 = OpExtInst %v4float %2 Fma %649 %650 %651
+               OpStore %result37_2 %652
+        %653 = OpLoad %v4float %param0_2
+        %654 = OpExtInst %float %2 Length %653
+               OpStore %result38_2 %654
+        %655 = OpLoad %v4float %param0_2
+        %656 = OpLoad %v4float %param1_2
+        %657 = OpExtInst %float %2 Distance %655 %656
+               OpStore %result39_2 %657
+        %658 = OpLoad %v4float %param0_2
+        %659 = OpExtInst %v4float %2 Normalize %658
+               OpStore %result40_2 %659
+        %660 = OpLoad %v4float %param0_2
+        %661 = OpLoad %v4float %param1_2
+        %662 = OpLoad %v4float %param2_2
+        %663 = OpExtInst %v4float %2 FaceForward %660 %661 %662
+               OpStore %result41_2 %663
+        %664 = OpLoad %v4float %param0_2
+        %665 = OpLoad %v4float %param1_2
+        %666 = OpExtInst %v4float %2 Reflect %664 %665
+               OpStore %result42_2 %666
+        %667 = OpLoad %v4float %param0_2
+        %668 = OpLoad %v4float %param1_2
+        %669 = OpLoad %float %realParam_2
+        %670 = OpExtInst %v4float %2 Refract %667 %668 %669
+               OpStore %result43_2 %670
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_GlslRealIntrinsics = OpFunction %void None %9
+     %self_0 = OpFunctionParameter %_ptr_Function_GlslRealIntrinsics
+        %673 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %9
+     %self_1 = OpFunctionParameter %_ptr_Function_GlslRealIntrinsics
+        %676 = OpLabel
+        %677 = OpFunctionCall %void %PreConstructor_GlslRealIntrinsics %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %9
+     %self_2 = OpFunctionParameter %_ptr_Function_GlslRealIntrinsics
+        %680 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %9
+     %self_3 = OpFunctionParameter %_ptr_Function_GlslRealIntrinsics
+        %683 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_GlslRealIntrinsics = OpFunction %void None %10
+        %685 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_GlslRealIntrinsics Function
+        %687 = OpFunctionCall %void %InitializeGlobals
+        %688 = OpFunctionCall %void %DefaultConstructor %self_4
+        %689 = OpFunctionCall %void %CopyInputs_Main %self_4
+        %690 = OpFunctionCall %void %Main %self_4
+        %691 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %10
+        %692 = OpLabel
+               OpReturn
+               OpFunctionEnd

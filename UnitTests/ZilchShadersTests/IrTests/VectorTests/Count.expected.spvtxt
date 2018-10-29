@@ -1,0 +1,280 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 133
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_Count "EntryPoint_Main_Count"
+               OpExecutionMode %EntryPoint_Main_Count OriginUpperLeft
+               OpSource Unknown 100
+               OpName %Count "Count"
+               OpMemberName %Count 0 "Dummy"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %Test "Test"
+               OpName %count "count"
+               OpName %instance "instance"
+               OpName %Test_0 "Test"
+               OpName %count_0 "count"
+               OpName %instance_0 "instance"
+               OpName %Test_1 "Test"
+               OpName %count_1 "count"
+               OpName %instance_1 "instance"
+               OpName %Test_2 "Test"
+               OpName %count_2 "count"
+               OpName %instance_2 "instance"
+               OpName %Test_3 "Test"
+               OpName %count_3 "count"
+               OpName %instance_3 "instance"
+               OpName %Test_4 "Test"
+               OpName %count_4 "count"
+               OpName %instance_4 "instance"
+               OpName %Test_5 "Test"
+               OpName %count_5 "count"
+               OpName %instance_5 "instance"
+               OpName %Test_6 "Test"
+               OpName %count_6 "count"
+               OpName %instance_6 "instance"
+               OpName %Test_7 "Test"
+               OpName %count_7 "count"
+               OpName %instance_7 "instance"
+               OpName %Test_8 "Test"
+               OpName %count_8 "count"
+               OpName %instance_8 "instance"
+               OpName %Test_9 "Test"
+               OpName %count_9 "count"
+               OpName %instance_9 "instance"
+               OpName %Test_10 "Test"
+               OpName %count_10 "count"
+               OpName %instance_10 "instance"
+               OpName %PreConstructor_Count "PreConstructor_Count"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_Count "EntryPoint_Main_Count"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+      %Count = OpTypeStruct %int
+%_ptr_Function_Count = OpTypePointer Function %Count
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_Count
+          %9 = OpTypeFunction %void
+      %int_0 = OpConstant %int 0
+      %int_1 = OpConstant %int 1
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %float_0 = OpConstant %float 0
+      %int_2 = OpConstant %int 2
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+      %int_3 = OpConstant %int 3
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+      %int_4 = OpConstant %int 4
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+      %v2int = OpTypeVector %int 2
+%_ptr_Function_v2int = OpTypePointer Function %v2int
+      %v3int = OpTypeVector %int 3
+%_ptr_Function_v3int = OpTypePointer Function %v3int
+      %v4int = OpTypeVector %int 4
+%_ptr_Function_v4int = OpTypePointer Function %v4int
+       %bool = OpTypeBool
+%_ptr_Function_bool = OpTypePointer Function %bool
+      %false = OpConstantFalse %bool
+     %v2bool = OpTypeVector %bool 2
+%_ptr_Function_v2bool = OpTypePointer Function %v2bool
+     %v3bool = OpTypeVector %bool 3
+%_ptr_Function_v3bool = OpTypePointer Function %v3bool
+     %v4bool = OpTypeVector %bool 4
+%_ptr_Function_v4bool = OpTypePointer Function %v4bool
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_Count
+         %41 = OpLabel
+         %42 = OpFunctionCall %void %Test
+         %43 = OpFunctionCall %void %Test_0
+         %44 = OpFunctionCall %void %Test_1
+         %45 = OpFunctionCall %void %Test_2
+         %46 = OpFunctionCall %void %Test_3
+         %47 = OpFunctionCall %void %Test_4
+         %48 = OpFunctionCall %void %Test_5
+         %49 = OpFunctionCall %void %Test_6
+         %50 = OpFunctionCall %void %Test_7
+         %51 = OpFunctionCall %void %Test_8
+         %52 = OpFunctionCall %void %Test_9
+         %53 = OpFunctionCall %void %Test_10
+               OpReturn
+               OpFunctionEnd
+       %Test = OpFunction %void None %9
+         %55 = OpLabel
+      %count = OpVariable %_ptr_Function_int Function
+   %instance = OpVariable %_ptr_Function_float Function
+               OpStore %count %int_0
+               OpStore %count %int_1
+               OpStore %instance %float_0
+               OpStore %count %int_1
+               OpReturn
+               OpFunctionEnd
+     %Test_0 = OpFunction %void None %9
+         %59 = OpLabel
+    %count_0 = OpVariable %_ptr_Function_int Function
+ %instance_0 = OpVariable %_ptr_Function_v2float Function
+               OpStore %count_0 %int_0
+               OpStore %count_0 %int_2
+         %62 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %instance_0 %62
+               OpStore %count_0 %int_2
+               OpReturn
+               OpFunctionEnd
+     %Test_1 = OpFunction %void None %9
+         %64 = OpLabel
+    %count_1 = OpVariable %_ptr_Function_int Function
+ %instance_1 = OpVariable %_ptr_Function_v3float Function
+               OpStore %count_1 %int_0
+               OpStore %count_1 %int_3
+         %67 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_1 %67
+               OpStore %count_1 %int_3
+               OpReturn
+               OpFunctionEnd
+     %Test_2 = OpFunction %void None %9
+         %69 = OpLabel
+    %count_2 = OpVariable %_ptr_Function_int Function
+ %instance_2 = OpVariable %_ptr_Function_v4float Function
+               OpStore %count_2 %int_0
+               OpStore %count_2 %int_4
+         %72 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %instance_2 %72
+               OpStore %count_2 %int_4
+               OpReturn
+               OpFunctionEnd
+     %Test_3 = OpFunction %void None %9
+         %74 = OpLabel
+    %count_3 = OpVariable %_ptr_Function_int Function
+ %instance_3 = OpVariable %_ptr_Function_int Function
+               OpStore %count_3 %int_0
+               OpStore %count_3 %int_1
+               OpStore %instance_3 %int_0
+               OpStore %count_3 %int_1
+               OpReturn
+               OpFunctionEnd
+     %Test_4 = OpFunction %void None %9
+         %78 = OpLabel
+    %count_4 = OpVariable %_ptr_Function_int Function
+ %instance_4 = OpVariable %_ptr_Function_v2int Function
+               OpStore %count_4 %int_0
+               OpStore %count_4 %int_2
+         %81 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %instance_4 %81
+               OpStore %count_4 %int_2
+               OpReturn
+               OpFunctionEnd
+     %Test_5 = OpFunction %void None %9
+         %83 = OpLabel
+    %count_5 = OpVariable %_ptr_Function_int Function
+ %instance_5 = OpVariable %_ptr_Function_v3int Function
+               OpStore %count_5 %int_0
+               OpStore %count_5 %int_3
+         %86 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+               OpStore %instance_5 %86
+               OpStore %count_5 %int_3
+               OpReturn
+               OpFunctionEnd
+     %Test_6 = OpFunction %void None %9
+         %88 = OpLabel
+    %count_6 = OpVariable %_ptr_Function_int Function
+ %instance_6 = OpVariable %_ptr_Function_v4int Function
+               OpStore %count_6 %int_0
+               OpStore %count_6 %int_4
+         %91 = OpCompositeConstruct %v4int %int_0 %int_0 %int_0 %int_0
+               OpStore %instance_6 %91
+               OpStore %count_6 %int_4
+               OpReturn
+               OpFunctionEnd
+     %Test_7 = OpFunction %void None %9
+         %93 = OpLabel
+    %count_7 = OpVariable %_ptr_Function_int Function
+ %instance_7 = OpVariable %_ptr_Function_bool Function
+               OpStore %count_7 %int_0
+               OpStore %count_7 %int_1
+               OpStore %instance_7 %false
+               OpStore %count_7 %int_1
+               OpReturn
+               OpFunctionEnd
+     %Test_8 = OpFunction %void None %9
+         %97 = OpLabel
+    %count_8 = OpVariable %_ptr_Function_int Function
+ %instance_8 = OpVariable %_ptr_Function_v2bool Function
+               OpStore %count_8 %int_0
+               OpStore %count_8 %int_2
+        %100 = OpCompositeConstruct %v2bool %false %false
+               OpStore %instance_8 %100
+               OpStore %count_8 %int_2
+               OpReturn
+               OpFunctionEnd
+     %Test_9 = OpFunction %void None %9
+        %102 = OpLabel
+    %count_9 = OpVariable %_ptr_Function_int Function
+ %instance_9 = OpVariable %_ptr_Function_v3bool Function
+               OpStore %count_9 %int_0
+               OpStore %count_9 %int_3
+        %105 = OpCompositeConstruct %v3bool %false %false %false
+               OpStore %instance_9 %105
+               OpStore %count_9 %int_3
+               OpReturn
+               OpFunctionEnd
+    %Test_10 = OpFunction %void None %9
+        %107 = OpLabel
+   %count_10 = OpVariable %_ptr_Function_int Function
+%instance_10 = OpVariable %_ptr_Function_v4bool Function
+               OpStore %count_10 %int_0
+               OpStore %count_10 %int_4
+        %110 = OpCompositeConstruct %v4bool %false %false %false %false
+               OpStore %instance_10 %110
+               OpStore %count_10 %int_4
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_Count = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_Count
+        %113 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_Count
+        %116 = OpLabel
+        %117 = OpFunctionCall %void %PreConstructor_Count %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_Count
+        %120 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_Count
+        %123 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_Count = OpFunction %void None %9
+        %125 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_Count Function
+        %127 = OpFunctionCall %void %InitializeGlobals
+        %128 = OpFunctionCall %void %DefaultConstructor %self_4
+        %129 = OpFunctionCall %void %CopyInputs_Main %self_4
+        %130 = OpFunctionCall %void %Main %self_4
+        %131 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %9
+        %132 = OpLabel
+               OpReturn
+               OpFunctionEnd

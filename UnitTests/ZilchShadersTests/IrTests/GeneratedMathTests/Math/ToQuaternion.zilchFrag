@@ -1,0 +1,56 @@
+[Pixel][UnitTest]
+struct ToQuaternion
+{
+  function Test_Static_Real3_Real()
+  {
+    var axis_ = Real3();
+    var radians_ = Real();
+    var result = Math.ToQuaternion(axis_, radians_);
+  }
+
+  //function Test_Static_Real3()
+  //{
+  //  var eulerRadians_ = Real3();
+  //  var result = Math.ToQuaternion(eulerRadians_);
+  //}
+
+  function Test_Static_Real3_Real3()
+  {
+    var facing_ = Real3();
+    var up_ = Real3();
+    var result = Math.ToQuaternion(facing_, up_);
+  }
+
+  function Test_Static_Real3_Real3_Real3()
+  {
+    var facing_ = Real3();
+    var up_ = Real3();
+    var right_ = Real3();
+    var result = Math.ToQuaternion(facing_, up_, right_);
+  }
+
+  function Test_Static_Real3x3()
+  {
+    var rotationMatrix_ = Real3x3();
+    var result = Math.ToQuaternion(rotationMatrix_);
+  }
+
+  //function Test_Static_Real_Real_Real()
+  //{
+  //  var xRadians_ = Real();
+  //  var yRadians_ = Real();
+  //  var zRadians_ = Real();
+  //  var result = Math.ToQuaternion(xRadians_, yRadians_, zRadians_);
+  //}
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Real3_Real();
+    //this.Test_Static_Real3();
+    this.Test_Static_Real3_Real3();
+    this.Test_Static_Real3_Real3_Real3();
+    this.Test_Static_Real3x3();
+    //this.Test_Static_Real_Real_Real();
+  }
+}

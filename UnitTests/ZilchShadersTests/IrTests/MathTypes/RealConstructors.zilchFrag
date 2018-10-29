@@ -1,0 +1,12 @@
+[UnitTest][Pixel]
+struct RealConstructors
+{
+  [EntryPoint]
+  function Main()
+  {
+    var r = Real();
+    r = Real(1);
+    r = Real(2.0);
+    r = Real(-3.0);
+  }
+}

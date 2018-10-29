@@ -1,0 +1,114 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 51
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_SimpleSpecConstants "EntryPoint_Main_SimpleSpecConstants"
+               OpExecutionMode %EntryPoint_Main_SimpleSpecConstants OriginUpperLeft
+               OpSource Unknown 100
+               OpName %SimpleSpecConstants "SimpleSpecConstants"
+               OpMemberName %SimpleSpecConstants 0 "Dummy"
+               OpName %ConstantBoolNoValue_SimpleSpecConstants "ConstantBoolNoValue_SimpleSpecConstants"
+               OpName %ConstantBool_SimpleSpecConstants "ConstantBool_SimpleSpecConstants"
+               OpName %ConstantIntNoValue_SimpleSpecConstants "ConstantIntNoValue_SimpleSpecConstants"
+               OpName %ConstantInt_SimpleSpecConstants "ConstantInt_SimpleSpecConstants"
+               OpName %ConstantRealNoValue_SimpleSpecConstants "ConstantRealNoValue_SimpleSpecConstants"
+               OpName %ConstantReal_SimpleSpecConstants "ConstantReal_SimpleSpecConstants"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %constantBoolNoValue "constantBoolNoValue"
+               OpName %constantBool "constantBool"
+               OpName %constantIntNoValue "constantIntNoValue"
+               OpName %constantInt "constantInt"
+               OpName %constantRealNoValue "constantRealNoValue"
+               OpName %constantReal "constantReal"
+               OpName %PreConstructor_SimpleSpecConstants "PreConstructor_SimpleSpecConstants"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_SimpleSpecConstants "EntryPoint_Main_SimpleSpecConstants"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %ConstantBoolNoValue_SimpleSpecConstants SpecId 1
+               OpDecorate %ConstantBool_SimpleSpecConstants SpecId 2
+               OpDecorate %ConstantIntNoValue_SimpleSpecConstants SpecId 3
+               OpDecorate %ConstantInt_SimpleSpecConstants SpecId 4
+               OpDecorate %ConstantRealNoValue_SimpleSpecConstants SpecId 5
+               OpDecorate %ConstantReal_SimpleSpecConstants SpecId 6
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%SimpleSpecConstants = OpTypeStruct %int
+%_ptr_Function_SimpleSpecConstants = OpTypePointer Function %SimpleSpecConstants
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_SimpleSpecConstants
+       %bool = OpTypeBool
+%_ptr_Function_bool = OpTypePointer Function %bool
+%ConstantBoolNoValue_SimpleSpecConstants = OpSpecConstantTrue %bool
+%ConstantBool_SimpleSpecConstants = OpSpecConstantFalse %bool
+%ConstantIntNoValue_SimpleSpecConstants = OpSpecConstant %int 1
+%ConstantInt_SimpleSpecConstants = OpSpecConstant %int 2
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+%ConstantRealNoValue_SimpleSpecConstants = OpSpecConstant %float 0.100000001
+%ConstantReal_SimpleSpecConstants = OpSpecConstant %float 0.200000003
+         %13 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_SimpleSpecConstants
+         %22 = OpLabel
+%constantBoolNoValue = OpVariable %_ptr_Function_bool Function
+%constantBool = OpVariable %_ptr_Function_bool Function
+%constantIntNoValue = OpVariable %_ptr_Function_int Function
+%constantInt = OpVariable %_ptr_Function_int Function
+%constantRealNoValue = OpVariable %_ptr_Function_float Function
+%constantReal = OpVariable %_ptr_Function_float Function
+               OpStore %constantBoolNoValue %ConstantBoolNoValue_SimpleSpecConstants
+               OpStore %constantBool %ConstantBool_SimpleSpecConstants
+               OpStore %constantIntNoValue %ConstantIntNoValue_SimpleSpecConstants
+               OpStore %constantInt %ConstantInt_SimpleSpecConstants
+               OpStore %constantRealNoValue %ConstantRealNoValue_SimpleSpecConstants
+               OpStore %constantReal %ConstantReal_SimpleSpecConstants
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_SimpleSpecConstants = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_SimpleSpecConstants
+         %31 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_SimpleSpecConstants
+         %34 = OpLabel
+         %35 = OpFunctionCall %void %PreConstructor_SimpleSpecConstants %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_SimpleSpecConstants
+         %38 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_SimpleSpecConstants
+         %41 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_SimpleSpecConstants = OpFunction %void None %13
+         %43 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_SimpleSpecConstants Function
+         %45 = OpFunctionCall %void %InitializeGlobals
+         %46 = OpFunctionCall %void %DefaultConstructor %self_4
+         %47 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %48 = OpFunctionCall %void %Main %self_4
+         %49 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %13
+         %50 = OpLabel
+               OpReturn
+               OpFunctionEnd

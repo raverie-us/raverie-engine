@@ -1,0 +1,99 @@
+[Pixel][UnitTest]
+struct Log2
+{
+  function Test_Static_Real()
+  {
+    var param0 = Real();
+    var result = Math.Log2(param0);
+  }
+
+  function Test_Static_Real2()
+  {
+    var param0 = Real2();
+    var result = Math.Log2(param0);
+  }
+
+  function Test_Static_Real2x2()
+  {
+    var param0 = Real2x2();
+    var result = Math.Log2(param0);
+  }
+
+  function Test_Static_Real2x3()
+  {
+    var param0 = Real2x3();
+    var result = Math.Log2(param0);
+  }
+
+  function Test_Static_Real2x4()
+  {
+    var param0 = Real2x4();
+    var result = Math.Log2(param0);
+  }
+
+  function Test_Static_Real3()
+  {
+    var param0 = Real3();
+    var result = Math.Log2(param0);
+  }
+
+  function Test_Static_Real3x2()
+  {
+    var param0 = Real3x2();
+    var result = Math.Log2(param0);
+  }
+
+  function Test_Static_Real3x3()
+  {
+    var param0 = Real3x3();
+    var result = Math.Log2(param0);
+  }
+
+  function Test_Static_Real3x4()
+  {
+    var param0 = Real3x4();
+    var result = Math.Log2(param0);
+  }
+
+  function Test_Static_Real4()
+  {
+    var param0 = Real4();
+    var result = Math.Log2(param0);
+  }
+
+  function Test_Static_Real4x2()
+  {
+    var param0 = Real4x2();
+    var result = Math.Log2(param0);
+  }
+
+  function Test_Static_Real4x3()
+  {
+    var param0 = Real4x3();
+    var result = Math.Log2(param0);
+  }
+
+  function Test_Static_Real4x4()
+  {
+    var param0 = Real4x4();
+    var result = Math.Log2(param0);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Real();
+    this.Test_Static_Real2();
+    this.Test_Static_Real2x2();
+    this.Test_Static_Real2x3();
+    this.Test_Static_Real2x4();
+    this.Test_Static_Real3();
+    this.Test_Static_Real3x2();
+    this.Test_Static_Real3x3();
+    this.Test_Static_Real3x4();
+    this.Test_Static_Real4();
+    this.Test_Static_Real4x2();
+    this.Test_Static_Real4x3();
+    this.Test_Static_Real4x4();
+  }
+}

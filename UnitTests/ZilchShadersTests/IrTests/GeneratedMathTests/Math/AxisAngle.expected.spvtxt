@@ -1,0 +1,145 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 79
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+          %2 = OpExtInstImport "GLSL.std.450"
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_AxisAngle "EntryPoint_Main_AxisAngle"
+               OpExecutionMode %EntryPoint_Main_AxisAngle OriginUpperLeft
+               OpSource Unknown 100
+               OpName %AxisAngle "AxisAngle"
+               OpMemberName %AxisAngle 0 "Dummy"
+               OpName %Quaternion "Quaternion"
+               OpMemberName %Quaternion 0 "Data"
+               OpName %Test_Static_Real3_Real "Test_Static_Real3_Real"
+               OpName %self "self"
+               OpName %axis_ "axis_"
+               OpName %radians_ "radians_"
+               OpName %result "result"
+               OpName %AxisAngle_0 "AxisAngle"
+               OpName %axis "axis"
+               OpName %radians "radians"
+               OpName %axis_Local "axis_Local"
+               OpName %radians_Local "radians_Local"
+               OpName %alpha "alpha"
+               OpName %sinAlpha "sinAlpha"
+               OpName %result_0 "result"
+               OpName %Main "Main"
+               OpName %self_0 "self"
+               OpName %PreConstructor_AxisAngle "PreConstructor_AxisAngle"
+               OpName %self_1 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_2 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_3 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_4 "self"
+               OpName %EntryPoint_Main_AxisAngle "EntryPoint_Main_AxisAngle"
+               OpName %self_5 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+  %AxisAngle = OpTypeStruct %int
+%_ptr_Function_AxisAngle = OpTypePointer Function %AxisAngle
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %9 = OpTypeFunction %void %_ptr_Function_AxisAngle
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+    %float_0 = OpConstant %float 0
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+ %Quaternion = OpTypeStruct %v4float
+%_ptr_Function_Quaternion = OpTypePointer Function %Quaternion
+         %18 = OpTypeFunction %Quaternion %v3float %float
+  %float_0_5 = OpConstant %float 0.5
+         %19 = OpTypeFunction %void
+%Test_Static_Real3_Real = OpFunction %void None %9
+       %self = OpFunctionParameter %_ptr_Function_AxisAngle
+         %24 = OpLabel
+      %axis_ = OpVariable %_ptr_Function_v3float Function
+   %radians_ = OpVariable %_ptr_Function_float Function
+     %result = OpVariable %_ptr_Function_Quaternion Function
+         %28 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %axis_ %28
+               OpStore %radians_ %float_0
+         %29 = OpLoad %v3float %axis_
+         %30 = OpLoad %float %radians_
+         %31 = OpFunctionCall %Quaternion %AxisAngle_0 %29 %30
+               OpStore %result %31
+               OpReturn
+               OpFunctionEnd
+%AxisAngle_0 = OpFunction %Quaternion None %18
+       %axis = OpFunctionParameter %v3float
+    %radians = OpFunctionParameter %float
+         %35 = OpLabel
+ %axis_Local = OpVariable %_ptr_Function_v3float Function
+%radians_Local = OpVariable %_ptr_Function_float Function
+      %alpha = OpVariable %_ptr_Function_float Function
+   %sinAlpha = OpVariable %_ptr_Function_float Function
+   %result_0 = OpVariable %_ptr_Function_Quaternion Function
+               OpStore %axis_Local %axis
+               OpStore %radians_Local %radians
+         %41 = OpLoad %float %radians_Local
+         %42 = OpFMul %float %41 %float_0_5
+               OpStore %alpha %42
+         %43 = OpLoad %float %alpha
+         %44 = OpExtInst %float %2 Sin %43
+               OpStore %sinAlpha %44
+         %45 = OpLoad %v3float %axis_Local
+         %46 = OpLoad %float %sinAlpha
+         %47 = OpVectorTimesScalar %v3float %45 %46
+         %48 = OpLoad %float %alpha
+         %49 = OpExtInst %float %2 Cos %48
+         %50 = OpCompositeConstruct %v4float %47 %49
+         %51 = OpCompositeConstruct %Quaternion %50
+               OpStore %result_0 %51
+         %52 = OpLoad %Quaternion %result_0
+               OpReturnValue %52
+               OpFunctionEnd
+       %Main = OpFunction %void None %9
+     %self_0 = OpFunctionParameter %_ptr_Function_AxisAngle
+         %55 = OpLabel
+         %56 = OpFunctionCall %void %Test_Static_Real3_Real %self_0
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_AxisAngle = OpFunction %void None %9
+     %self_1 = OpFunctionParameter %_ptr_Function_AxisAngle
+         %59 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %9
+     %self_2 = OpFunctionParameter %_ptr_Function_AxisAngle
+         %62 = OpLabel
+         %63 = OpFunctionCall %void %PreConstructor_AxisAngle %self_2
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %9
+     %self_3 = OpFunctionParameter %_ptr_Function_AxisAngle
+         %66 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %9
+     %self_4 = OpFunctionParameter %_ptr_Function_AxisAngle
+         %69 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_AxisAngle = OpFunction %void None %19
+         %71 = OpLabel
+     %self_5 = OpVariable %_ptr_Function_AxisAngle Function
+         %73 = OpFunctionCall %void %InitializeGlobals
+         %74 = OpFunctionCall %void %DefaultConstructor %self_5
+         %75 = OpFunctionCall %void %CopyInputs_Main %self_5
+         %76 = OpFunctionCall %void %Main %self_5
+         %77 = OpFunctionCall %void %CopyOutputs_Main %self_5
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %19
+         %78 = OpLabel
+               OpReturn
+               OpFunctionEnd

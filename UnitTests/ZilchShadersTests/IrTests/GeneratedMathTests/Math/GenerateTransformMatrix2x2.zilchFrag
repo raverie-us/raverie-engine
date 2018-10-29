@@ -1,0 +1,16 @@
+[Pixel][UnitTest]
+struct GenerateTransformMatrix2x2
+{
+  function Test_Static_Real_Real2()
+  {
+    var radians_ = Real();
+    var scale_ = Real2();
+    var result = Math.GenerateTransformMatrix2x2(radians_, scale_);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Real_Real2();
+  }
+}

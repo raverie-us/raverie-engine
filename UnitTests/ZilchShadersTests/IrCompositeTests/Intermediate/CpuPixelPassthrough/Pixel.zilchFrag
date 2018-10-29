@@ -1,0 +1,17 @@
+[Pixel]
+struct Pixel
+{
+  [StageInput] var Uv : Real2;
+  [StageInput("LocalNormal")] var Normal : Real3;
+  
+  // Var name matches, but override doesn't
+  [StageInput("Position")] var LocalPosition : Real3;
+  
+  // VertexColor doesn't match, but Color does
+  [StageInput("VertexColor")][StageInput("Color")] var MyColor : Real4;
+  
+  function Main()
+  {
+    
+  }
+}

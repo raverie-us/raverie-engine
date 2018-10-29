@@ -1,0 +1,2 @@
+  IrErrorTests\Attributes\StorageClass.zilchFrag(1): Invalid parameter type 'String' to attribute 'StorageClass'. Signature must be ' : Integer':
+  Invalid parameter type 'String' to attribute 'StorageClass'. Signature must be ' : Integer'

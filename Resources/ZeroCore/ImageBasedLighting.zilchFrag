@@ -19,20 +19,20 @@ struct ImageBasedLightingInputs
 [Pixel][PostProcess]
 struct ImageBasedLighting
 {
-  [BuiltInInput] var PerspectiveToView : Real4x4;
-  [BuiltInInput] var ViewToWorld : Real4x4;
-  [BuiltInInput] var ViewportSize : Real2;
+  [AppBuiltInInput] var PerspectiveToView : Real4x4;
+  [AppBuiltInInput] var ViewToWorld : Real4x4;
+  [AppBuiltInInput] var ViewportSize : Real2;
   
   [StageInput] var Uv : Real2;
   [StageInput] var PerspectivePosition : Real4;
   
-  [Input] var DitherTexture : Sampler2d;
-  [Input] var EnvironmentBrdfLut : Sampler2d;
-  [Input] var Skybox : SamplerCube;
+  [Input] var DitherTexture : SampledImage2d;
+  [Input] var EnvironmentBrdfLut : SampledImage2d;
+  [Input] var Skybox : SampledImageCube;
   [Input] var Intensity : Real = 1.0;
   
-  [Input] var GeometryBuffer0 : Sampler2d;
-  [Input] var GeometryBuffer1 : Sampler2d;
+  [Input] var GeometryBuffer0 : SampledImage2d;
+  [Input] var GeometryBuffer1 : SampledImage2d;
   
   [Input] var RenderDiffuse : Boolean = true;
   [Input] var RenderSpecular : Boolean = true;
@@ -68,7 +68,7 @@ struct ImageBasedLighting
   }
   
   [Static]
-  function Compute(inputs : ImageBasedLightingInputs, skybox : ref SamplerCube, brdfLut : ref Sampler2d) : Real3
+  function Compute(inputs : ImageBasedLightingInputs, skybox : ref SampledImageCube, brdfLut : ref SampledImage2d) : Real3
   {
     // Directions for sampling cubemap
     var diffuseDirection = inputs.WorldNormal;
@@ -84,8 +84,8 @@ struct ImageBasedLighting
     
     // Sample lod for specular is based on roughness unless screen space derivitives
     // are large enough then we sample with that mip level to prevent aliasing
-    var dx = Shader.Ddx(specularDirection * textureSize);
-    var dy = Shader.Ddy(specularDirection * textureSize);
+    var dx = ShaderIntrinsics.Ddx(specularDirection * textureSize);
+    var dy = ShaderIntrinsics.Ddy(specularDirection * textureSize);
     var mipLevel = Math.Sqrt(Math.Max(Math.LengthSq(dx), Math.LengthSq(dy)));
     mipLevel = 0.5 * Math.Log2(mipLevel) - 1.0;
     var sampleLod = Math.Max(inputs.Roughness * maxLod, mipLevel);

@@ -1,0 +1,4 @@
+  IrErrorTests\Implements.zilchFrag(5): The signature of a function with the [Implements] attribute must match an existing function.
+  Type 'Real3' does not contain the property 'YAxis : Real2'.:
+  The signature of a function with the [Implements] attribute must match an existing function.
+  Type 'Real3' does not contain the property 'YAxis : Real2'.

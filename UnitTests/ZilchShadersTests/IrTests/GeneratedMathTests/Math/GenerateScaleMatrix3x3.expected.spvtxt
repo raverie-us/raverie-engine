@@ -1,0 +1,162 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 95
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_GenerateScaleMatrix3x3 "EntryPoint_Main_GenerateScaleMatrix3x3"
+               OpExecutionMode %EntryPoint_Main_GenerateScaleMatrix3x3 OriginUpperLeft
+               OpSource Unknown 100
+               OpName %GenerateScaleMatrix3x3 "GenerateScaleMatrix3x3"
+               OpMemberName %GenerateScaleMatrix3x3 0 "Dummy"
+               OpName %Test_Static_Real2 "Test_Static_Real2"
+               OpName %self "self"
+               OpName %scale_ "scale_"
+               OpName %result "result"
+               OpName %GenerateScaleMatrix3x3_0 "GenerateScaleMatrix3x3"
+               OpName %scale "scale"
+               OpName %scale_Local "scale_Local"
+               OpName %Test_Static_Real3 "Test_Static_Real3"
+               OpName %self_0 "self"
+               OpName %scale__0 "scale_"
+               OpName %result_0 "result"
+               OpName %GenerateScaleMatrix3x3_1 "GenerateScaleMatrix3x3"
+               OpName %scale_0 "scale"
+               OpName %scale_Local_0 "scale_Local"
+               OpName %Main "Main"
+               OpName %self_1 "self"
+               OpName %PreConstructor_GenerateScaleMatrix3x3 "PreConstructor_GenerateScaleMatrix3x3"
+               OpName %self_2 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_3 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_4 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_5 "self"
+               OpName %EntryPoint_Main_GenerateScaleMatrix3x3 "EntryPoint_Main_GenerateScaleMatrix3x3"
+               OpName %self_6 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%GenerateScaleMatrix3x3 = OpTypeStruct %int
+%_ptr_Function_GenerateScaleMatrix3x3 = OpTypePointer Function %GenerateScaleMatrix3x3
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_GenerateScaleMatrix3x3
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+    %float_0 = OpConstant %float 0
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+%mat3v3float = OpTypeMatrix %v3float 3
+%_ptr_Function_mat3v3float = OpTypePointer Function %mat3v3float
+         %17 = OpTypeFunction %mat3v3float %v2float
+      %int_0 = OpConstant %int 0
+  %float_0_0 = OpConstant %float 0
+      %int_1 = OpConstant %int 1
+    %float_1 = OpConstant %float 1
+         %18 = OpTypeFunction %mat3v3float %v3float
+      %int_2 = OpConstant %int 2
+         %19 = OpTypeFunction %void
+%Test_Static_Real2 = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_GenerateScaleMatrix3x3
+         %28 = OpLabel
+     %scale_ = OpVariable %_ptr_Function_v2float Function
+     %result = OpVariable %_ptr_Function_mat3v3float Function
+         %31 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %scale_ %31
+         %32 = OpLoad %v2float %scale_
+         %33 = OpFunctionCall %mat3v3float %GenerateScaleMatrix3x3_0 %32
+               OpStore %result %33
+               OpReturn
+               OpFunctionEnd
+%GenerateScaleMatrix3x3_0 = OpFunction %mat3v3float None %17
+      %scale = OpFunctionParameter %v2float
+         %36 = OpLabel
+%scale_Local = OpVariable %_ptr_Function_v2float Function
+               OpStore %scale_Local %scale
+         %38 = OpAccessChain %_ptr_Function_float %scale_Local %int_0
+         %39 = OpLoad %float %38
+         %40 = OpCompositeConstruct %v3float %39 %float_0_0 %float_0_0
+         %41 = OpAccessChain %_ptr_Function_float %scale_Local %int_1
+         %42 = OpLoad %float %41
+         %43 = OpCompositeConstruct %v3float %float_0_0 %42 %float_0_0
+         %44 = OpCompositeConstruct %v3float %float_0_0 %float_0_0 %float_1
+         %45 = OpCompositeConstruct %mat3v3float %40 %43 %44
+               OpReturnValue %45
+               OpFunctionEnd
+%Test_Static_Real3 = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_GenerateScaleMatrix3x3
+         %48 = OpLabel
+   %scale__0 = OpVariable %_ptr_Function_v3float Function
+   %result_0 = OpVariable %_ptr_Function_mat3v3float Function
+         %51 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %scale__0 %51
+         %52 = OpLoad %v3float %scale__0
+         %53 = OpFunctionCall %mat3v3float %GenerateScaleMatrix3x3_1 %52
+               OpStore %result_0 %53
+               OpReturn
+               OpFunctionEnd
+%GenerateScaleMatrix3x3_1 = OpFunction %mat3v3float None %18
+    %scale_0 = OpFunctionParameter %v3float
+         %56 = OpLabel
+%scale_Local_0 = OpVariable %_ptr_Function_v3float Function
+               OpStore %scale_Local_0 %scale_0
+         %58 = OpAccessChain %_ptr_Function_float %scale_Local_0 %int_0
+         %59 = OpLoad %float %58
+         %60 = OpCompositeConstruct %v3float %59 %float_0_0 %float_0_0
+         %61 = OpAccessChain %_ptr_Function_float %scale_Local_0 %int_1
+         %62 = OpLoad %float %61
+         %63 = OpCompositeConstruct %v3float %float_0_0 %62 %float_0_0
+         %64 = OpAccessChain %_ptr_Function_float %scale_Local_0 %int_2
+         %65 = OpLoad %float %64
+         %66 = OpCompositeConstruct %v3float %float_0_0 %float_0_0 %65
+         %67 = OpCompositeConstruct %mat3v3float %60 %63 %66
+               OpReturnValue %67
+               OpFunctionEnd
+       %Main = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_GenerateScaleMatrix3x3
+         %70 = OpLabel
+         %71 = OpFunctionCall %void %Test_Static_Real2 %self_1
+         %72 = OpFunctionCall %void %Test_Static_Real3 %self_1
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_GenerateScaleMatrix3x3 = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_GenerateScaleMatrix3x3
+         %75 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_GenerateScaleMatrix3x3
+         %78 = OpLabel
+         %79 = OpFunctionCall %void %PreConstructor_GenerateScaleMatrix3x3 %self_3
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_4 = OpFunctionParameter %_ptr_Function_GenerateScaleMatrix3x3
+         %82 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_5 = OpFunctionParameter %_ptr_Function_GenerateScaleMatrix3x3
+         %85 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_GenerateScaleMatrix3x3 = OpFunction %void None %19
+         %87 = OpLabel
+     %self_6 = OpVariable %_ptr_Function_GenerateScaleMatrix3x3 Function
+         %89 = OpFunctionCall %void %InitializeGlobals
+         %90 = OpFunctionCall %void %DefaultConstructor %self_6
+         %91 = OpFunctionCall %void %CopyInputs_Main %self_6
+         %92 = OpFunctionCall %void %Main %self_6
+         %93 = OpFunctionCall %void %CopyOutputs_Main %self_6
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %19
+         %94 = OpLabel
+               OpReturn
+               OpFunctionEnd

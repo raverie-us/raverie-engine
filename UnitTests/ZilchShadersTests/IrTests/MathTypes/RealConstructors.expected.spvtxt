@@ -1,0 +1,88 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 44
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_RealConstructors "EntryPoint_Main_RealConstructors"
+               OpExecutionMode %EntryPoint_Main_RealConstructors OriginUpperLeft
+               OpSource Unknown 100
+               OpName %RealConstructors "RealConstructors"
+               OpMemberName %RealConstructors 0 "Dummy"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %r "r"
+               OpName %PreConstructor_RealConstructors "PreConstructor_RealConstructors"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_RealConstructors "EntryPoint_Main_RealConstructors"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%RealConstructors = OpTypeStruct %int
+%_ptr_Function_RealConstructors = OpTypePointer Function %RealConstructors
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_RealConstructors
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %float_0 = OpConstant %float 0
+      %int_1 = OpConstant %int 1
+    %float_2 = OpConstant %float 2
+    %float_3 = OpConstant %float 3
+         %11 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_RealConstructors
+         %18 = OpLabel
+          %r = OpVariable %_ptr_Function_float Function
+               OpStore %r %float_0
+         %20 = OpConvertSToF %float %int_1
+               OpStore %r %20
+               OpStore %r %float_2
+         %21 = OpFNegate %float %float_3
+               OpStore %r %21
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_RealConstructors = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_RealConstructors
+         %24 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_RealConstructors
+         %27 = OpLabel
+         %28 = OpFunctionCall %void %PreConstructor_RealConstructors %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_RealConstructors
+         %31 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_RealConstructors
+         %34 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_RealConstructors = OpFunction %void None %11
+         %36 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_RealConstructors Function
+         %38 = OpFunctionCall %void %InitializeGlobals
+         %39 = OpFunctionCall %void %DefaultConstructor %self_4
+         %40 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %41 = OpFunctionCall %void %Main %self_4
+         %42 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %11
+         %43 = OpLabel
+               OpReturn
+               OpFunctionEnd

@@ -1,0 +1,2 @@
+  IrErrorTests\Attributes\BadFunctionAttribute.zilchFrag(4) in Main: Attribute 'SomeAttribute' is not allowed on functions:
+  Attribute 'SomeAttribute' is not allowed on functions

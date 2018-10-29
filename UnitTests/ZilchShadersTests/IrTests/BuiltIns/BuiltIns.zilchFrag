@@ -1,0 +1,35 @@
+[Vertex][UnitTest]
+struct BuiltIns_Vertex
+{
+  
+  //[BuiltInOutput] var Position : Real4;
+  [HardwareBuiltInOutput] var ApiPerspectivePosition : Real4;
+  //[BuiltInOutput] var PointSize : Real;
+  
+  
+  
+  //[BuiltInOutput] var ClipDistance : Real4;
+  [HardwareBuiltInInput] var VertexId : Integer;
+  [HardwareBuiltInInput] var InstanceId : Integer;
+  
+  [EntryPoint]
+  function Main()
+  {
+    
+  }
+}
+
+[Pixel][UnitTest]
+struct BuiltIns_Pixel
+{
+  [HardwareBuiltInInput] var FragCoord : Real4;
+  [HardwareBuiltInInput] var PointCoord : Real2;
+  [HardwareBuiltInOutput] var FragDepth : Real;
+  [HardwareBuiltInInput] var PrimitiveId : Integer;
+  
+  [EntryPoint]
+  function Main()
+  {
+    
+  }
+}

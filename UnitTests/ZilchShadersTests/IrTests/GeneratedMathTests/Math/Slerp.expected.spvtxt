@@ -1,0 +1,511 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 308
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+          %2 = OpExtInstImport "GLSL.std.450"
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_Slerp "EntryPoint_Main_Slerp"
+               OpExecutionMode %EntryPoint_Main_Slerp OriginUpperLeft
+               OpSource Unknown 100
+               OpName %Slerp "Slerp"
+               OpMemberName %Slerp 0 "Dummy"
+               OpName %Quaternion "Quaternion"
+               OpMemberName %Quaternion 0 "Data"
+               OpName %Test_Static_Quaternion_Quaternion_Real "Test_Static_Quaternion_Quaternion_Real"
+               OpName %self "self"
+               OpName %start_ "start_"
+               OpName %end_ "end_"
+               OpName %t_ "t_"
+               OpName %result "result"
+               OpName %Slerp_0 "Slerp"
+               OpName %start "start"
+               OpName %end "end"
+               OpName %tValue "tValue"
+               OpName %start_Local "start_Local"
+               OpName %end_Local "end_Local"
+               OpName %tValue_Local "tValue_Local"
+               OpName %startR4 "startR4"
+               OpName %endR4 "endR4"
+               OpName %cosTheta "cosTheta"
+               OpName %flip "flip"
+               OpName %startVal "startVal"
+               OpName %endVal "endVal"
+               OpName %cSlerpEpsilon "cSlerpEpsilon"
+               OpName %theta "theta"
+               OpName %sinTheta "sinTheta"
+               OpName %resultR4 "resultR4"
+               OpName %ifTrue0 "ifTrue0"
+               OpName %ifMerge0 "ifMerge0"
+               OpName %ifTrue0_0 "ifTrue0"
+               OpName %ifFalse0 "ifFalse0"
+               OpName %ifMerge0_0 "ifMerge0"
+               OpName %ifTrue0_1 "ifTrue0"
+               OpName %ifMerge0_1 "ifMerge0"
+               OpName %Test_Static_Real2_Real2_Real "Test_Static_Real2_Real2_Real"
+               OpName %self_0 "self"
+               OpName %start__0 "start_"
+               OpName %end__0 "end_"
+               OpName %t__0 "t_"
+               OpName %result_0 "result"
+               OpName %Slerp_1 "Slerp"
+               OpName %start_0 "start"
+               OpName %end_0 "end"
+               OpName %t "t"
+               OpName %start_Local_0 "start_Local"
+               OpName %end_Local_0 "end_Local"
+               OpName %t_Local "t_Local"
+               OpName %dotVal "dotVal"
+               OpName %theta_0 "theta"
+               OpName %relativeVec "relativeVec"
+               OpName %ifTrue0_2 "ifTrue0"
+               OpName %ifFalse0_0 "ifFalse0"
+               OpName %ifMerge0_2 "ifMerge0"
+               OpName %Test_Static_Real3_Real3_Real "Test_Static_Real3_Real3_Real"
+               OpName %self_1 "self"
+               OpName %start__1 "start_"
+               OpName %end__1 "end_"
+               OpName %t__1 "t_"
+               OpName %result_1 "result"
+               OpName %Slerp_2 "Slerp"
+               OpName %start_1 "start"
+               OpName %end_1 "end"
+               OpName %t_0 "t"
+               OpName %start_Local_1 "start_Local"
+               OpName %end_Local_1 "end_Local"
+               OpName %t_Local_0 "t_Local"
+               OpName %normalizedStart "normalizedStart"
+               OpName %normalizedEnd "normalizedEnd"
+               OpName %dotVal_0 "dotVal"
+               OpName %theta_1 "theta"
+               OpName %relativeVec_0 "relativeVec"
+               OpName %ifTrue0_3 "ifTrue0"
+               OpName %ifTrue0_4 "ifTrue0"
+               OpName %ifFalse0_1 "ifFalse0"
+               OpName %ifMerge0_3 "ifMerge0"
+               OpName %ifFalse0_2 "ifFalse0"
+               OpName %ifMerge0_4 "ifMerge0"
+               OpName %Main "Main"
+               OpName %self_2 "self"
+               OpName %PreConstructor_Slerp "PreConstructor_Slerp"
+               OpName %self_3 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_4 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_5 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_6 "self"
+               OpName %EntryPoint_Main_Slerp "EntryPoint_Main_Slerp"
+               OpName %self_7 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+      %Slerp = OpTypeStruct %int
+%_ptr_Function_Slerp = OpTypePointer Function %Slerp
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %9 = OpTypeFunction %void %_ptr_Function_Slerp
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+    %float_0 = OpConstant %float 0
+    %float_1 = OpConstant %float 1
+ %Quaternion = OpTypeStruct %v4float
+%_ptr_Function_Quaternion = OpTypePointer Function %Quaternion
+         %16 = OpTypeFunction %Quaternion %Quaternion %Quaternion %float
+      %int_0 = OpConstant %int 0
+       %bool = OpTypeBool
+%_ptr_Function_bool = OpTypePointer Function %bool
+  %float_0_0 = OpConstant %float 0
+%float_9_99999975en06 = OpConstant %float 9.99999975e-06
+  %float_1_0 = OpConstant %float 1
+      %int_1 = OpConstant %int 1
+      %int_2 = OpConstant %int 2
+      %int_3 = OpConstant %int 3
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+         %21 = OpTypeFunction %v2float %v2float %v2float %float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+         %24 = OpTypeFunction %v3float %v3float %v3float %float
+         %25 = OpTypeFunction %void
+%Test_Static_Quaternion_Quaternion_Real = OpFunction %void None %9
+       %self = OpFunctionParameter %_ptr_Function_Slerp
+         %37 = OpLabel
+     %start_ = OpVariable %_ptr_Function_Quaternion Function
+       %end_ = OpVariable %_ptr_Function_Quaternion Function
+         %t_ = OpVariable %_ptr_Function_float Function
+     %result = OpVariable %_ptr_Function_Quaternion Function
+         %42 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_1
+         %43 = OpCompositeConstruct %Quaternion %42
+               OpStore %start_ %43
+         %44 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_1
+         %45 = OpCompositeConstruct %Quaternion %44
+               OpStore %end_ %45
+               OpStore %t_ %float_0
+         %46 = OpLoad %Quaternion %start_
+         %47 = OpLoad %Quaternion %end_
+         %48 = OpLoad %float %t_
+         %49 = OpFunctionCall %Quaternion %Slerp_0 %46 %47 %48
+               OpStore %result %49
+               OpReturn
+               OpFunctionEnd
+    %Slerp_0 = OpFunction %Quaternion None %16
+      %start = OpFunctionParameter %Quaternion
+        %end = OpFunctionParameter %Quaternion
+     %tValue = OpFunctionParameter %float
+         %54 = OpLabel
+%start_Local = OpVariable %_ptr_Function_Quaternion Function
+  %end_Local = OpVariable %_ptr_Function_Quaternion Function
+%tValue_Local = OpVariable %_ptr_Function_float Function
+    %startR4 = OpVariable %_ptr_Function_v4float Function
+      %endR4 = OpVariable %_ptr_Function_v4float Function
+   %cosTheta = OpVariable %_ptr_Function_float Function
+       %flip = OpVariable %_ptr_Function_bool Function
+   %startVal = OpVariable %_ptr_Function_float Function
+     %endVal = OpVariable %_ptr_Function_float Function
+%cSlerpEpsilon = OpVariable %_ptr_Function_float Function
+      %theta = OpVariable %_ptr_Function_float Function
+   %sinTheta = OpVariable %_ptr_Function_float Function
+   %resultR4 = OpVariable %_ptr_Function_v4float Function
+               OpStore %start_Local %start
+               OpStore %end_Local %end
+               OpStore %tValue_Local %tValue
+         %68 = OpAccessChain %_ptr_Function_v4float %start_Local %int_0
+         %69 = OpLoad %v4float %68
+         %70 = OpVectorShuffle %v4float %69 %69 0 1 2 3
+               OpStore %startR4 %70
+         %71 = OpAccessChain %_ptr_Function_v4float %end_Local %int_0
+         %72 = OpLoad %v4float %71
+         %73 = OpVectorShuffle %v4float %72 %72 0 1 2 3
+               OpStore %endR4 %73
+         %74 = OpLoad %v4float %startR4
+         %75 = OpLoad %v4float %endR4
+         %76 = OpDot %float %74 %75
+               OpStore %cosTheta %76
+         %77 = OpLoad %float %cosTheta
+         %78 = OpFOrdLessThan %bool %77 %float_0_0
+               OpStore %flip %78
+         %79 = OpLoad %bool %flip
+               OpSelectionMerge %ifMerge0 None
+               OpBranchConditional %79 %ifTrue0 %ifMerge0
+    %ifTrue0 = OpLabel
+         %81 = OpLoad %float %cosTheta
+         %82 = OpFNegate %float %81
+               OpStore %cosTheta %82
+               OpBranch %ifMerge0
+   %ifMerge0 = OpLabel
+               OpStore %startVal %float_0_0
+               OpStore %endVal %float_0_0
+               OpStore %cSlerpEpsilon %float_9_99999975en06
+         %84 = OpLoad %float %cosTheta
+         %85 = OpFSub %float %float_1_0 %84
+         %86 = OpLoad %float %cSlerpEpsilon
+         %87 = OpFOrdGreaterThan %bool %85 %86
+               OpSelectionMerge %ifMerge0_0 None
+               OpBranchConditional %87 %ifTrue0_0 %ifFalse0
+  %ifTrue0_0 = OpLabel
+         %89 = OpLoad %float %cosTheta
+         %90 = OpExtInst %float %2 Acos %89
+               OpStore %theta %90
+         %91 = OpLoad %float %theta
+         %92 = OpExtInst %float %2 Sin %91
+               OpStore %sinTheta %92
+         %93 = OpLoad %float %tValue_Local
+         %94 = OpFSub %float %float_1_0 %93
+         %95 = OpLoad %float %theta
+         %96 = OpFMul %float %94 %95
+         %97 = OpExtInst %float %2 Sin %96
+               OpStore %startVal %97
+         %98 = OpLoad %float %tValue_Local
+         %99 = OpLoad %float %theta
+        %100 = OpFMul %float %98 %99
+        %101 = OpExtInst %float %2 Sin %100
+               OpStore %endVal %101
+        %102 = OpLoad %float %startVal
+        %103 = OpLoad %float %sinTheta
+        %104 = OpFDiv %float %102 %103
+               OpStore %startVal %104
+        %105 = OpLoad %float %endVal
+        %106 = OpLoad %float %sinTheta
+        %107 = OpFDiv %float %105 %106
+               OpStore %endVal %107
+               OpBranch %ifMerge0_0
+   %ifFalse0 = OpLabel
+        %109 = OpLoad %float %tValue_Local
+        %110 = OpFSub %float %float_1_0 %109
+               OpStore %startVal %110
+        %111 = OpLoad %float %tValue_Local
+               OpStore %endVal %111
+               OpBranch %ifMerge0_0
+ %ifMerge0_0 = OpLabel
+        %113 = OpLoad %bool %flip
+               OpSelectionMerge %ifMerge0_1 None
+               OpBranchConditional %113 %ifTrue0_1 %ifMerge0_1
+  %ifTrue0_1 = OpLabel
+        %115 = OpLoad %float %endVal
+        %116 = OpFNegate %float %115
+               OpStore %endVal %116
+               OpBranch %ifMerge0_1
+ %ifMerge0_1 = OpLabel
+        %118 = OpLoad %v4float %startR4
+        %119 = OpLoad %float %startVal
+        %120 = OpVectorTimesScalar %v4float %118 %119
+        %121 = OpLoad %v4float %endR4
+        %122 = OpLoad %float %endVal
+        %123 = OpVectorTimesScalar %v4float %121 %122
+        %124 = OpFAdd %v4float %120 %123
+               OpStore %resultR4 %124
+        %125 = OpAccessChain %_ptr_Function_float %resultR4 %int_0
+        %126 = OpLoad %float %125
+        %127 = OpAccessChain %_ptr_Function_float %resultR4 %int_1
+        %128 = OpLoad %float %127
+        %129 = OpAccessChain %_ptr_Function_float %resultR4 %int_2
+        %130 = OpLoad %float %129
+        %131 = OpAccessChain %_ptr_Function_float %resultR4 %int_3
+        %132 = OpLoad %float %131
+        %133 = OpCompositeConstruct %v4float %126 %128 %130 %132
+        %134 = OpCompositeConstruct %Quaternion %133
+               OpReturnValue %134
+               OpFunctionEnd
+%Test_Static_Real2_Real2_Real = OpFunction %void None %9
+     %self_0 = OpFunctionParameter %_ptr_Function_Slerp
+        %137 = OpLabel
+   %start__0 = OpVariable %_ptr_Function_v2float Function
+     %end__0 = OpVariable %_ptr_Function_v2float Function
+       %t__0 = OpVariable %_ptr_Function_float Function
+   %result_0 = OpVariable %_ptr_Function_v2float Function
+        %142 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %start__0 %142
+        %143 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %end__0 %143
+               OpStore %t__0 %float_0
+        %144 = OpLoad %v2float %start__0
+        %145 = OpLoad %v2float %end__0
+        %146 = OpLoad %float %t__0
+        %147 = OpFunctionCall %v2float %Slerp_1 %144 %145 %146
+               OpStore %result_0 %147
+               OpReturn
+               OpFunctionEnd
+    %Slerp_1 = OpFunction %v2float None %21
+    %start_0 = OpFunctionParameter %v2float
+      %end_0 = OpFunctionParameter %v2float
+          %t = OpFunctionParameter %float
+        %152 = OpLabel
+%start_Local_0 = OpVariable %_ptr_Function_v2float Function
+%end_Local_0 = OpVariable %_ptr_Function_v2float Function
+    %t_Local = OpVariable %_ptr_Function_float Function
+     %dotVal = OpVariable %_ptr_Function_float Function
+    %theta_0 = OpVariable %_ptr_Function_float Function
+%relativeVec = OpVariable %_ptr_Function_v2float Function
+               OpStore %start_Local_0 %start_0
+               OpStore %end_Local_0 %end_0
+               OpStore %t_Local %t
+        %159 = OpLoad %v2float %start_Local_0
+        %160 = OpLoad %v2float %end_Local_0
+        %161 = OpDot %float %159 %160
+               OpStore %dotVal %161
+        %162 = OpLoad %float %dotVal
+        %163 = OpExtInst %float %2 Acos %162
+        %164 = OpLoad %float %t_Local
+        %165 = OpFMul %float %163 %164
+               OpStore %theta_0 %165
+        %166 = OpCompositeConstruct %v2float %float_0_0 %float_0_0
+               OpStore %relativeVec %166
+        %167 = OpFNegate %float %float_1_0
+        %168 = OpLoad %float %dotVal
+        %169 = OpFOrdEqual %bool %168 %167
+               OpSelectionMerge %ifMerge0_2 None
+               OpBranchConditional %169 %ifTrue0_2 %ifFalse0_0
+  %ifTrue0_2 = OpLabel
+        %171 = OpAccessChain %_ptr_Function_float %start_Local_0 %int_1
+        %172 = OpLoad %float %171
+        %173 = OpFNegate %float %172
+        %174 = OpAccessChain %_ptr_Function_float %start_Local_0 %int_0
+        %175 = OpLoad %float %174
+        %176 = OpCompositeConstruct %v2float %173 %175
+               OpStore %relativeVec %176
+               OpBranch %ifMerge0_2
+ %ifFalse0_0 = OpLabel
+        %178 = OpLoad %v2float %start_Local_0
+        %179 = OpLoad %float %dotVal
+        %180 = OpVectorTimesScalar %v2float %178 %179
+        %181 = OpLoad %v2float %end_Local_0
+        %182 = OpFSub %v2float %181 %180
+               OpStore %relativeVec %182
+               OpBranch %ifMerge0_2
+ %ifMerge0_2 = OpLabel
+        %184 = OpLoad %v2float %relativeVec
+        %185 = OpExtInst %v2float %2 Normalize %184
+               OpStore %relativeVec %185
+        %186 = OpLoad %float %theta_0
+        %187 = OpExtInst %float %2 Cos %186
+        %188 = OpLoad %v2float %start_Local_0
+        %189 = OpVectorTimesScalar %v2float %188 %187
+        %190 = OpLoad %float %theta_0
+        %191 = OpExtInst %float %2 Sin %190
+        %192 = OpLoad %v2float %relativeVec
+        %193 = OpVectorTimesScalar %v2float %192 %191
+        %194 = OpFAdd %v2float %189 %193
+               OpReturnValue %194
+               OpFunctionEnd
+%Test_Static_Real3_Real3_Real = OpFunction %void None %9
+     %self_1 = OpFunctionParameter %_ptr_Function_Slerp
+        %197 = OpLabel
+   %start__1 = OpVariable %_ptr_Function_v3float Function
+     %end__1 = OpVariable %_ptr_Function_v3float Function
+       %t__1 = OpVariable %_ptr_Function_float Function
+   %result_1 = OpVariable %_ptr_Function_v3float Function
+        %202 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %start__1 %202
+        %203 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %end__1 %203
+               OpStore %t__1 %float_0
+        %204 = OpLoad %v3float %start__1
+        %205 = OpLoad %v3float %end__1
+        %206 = OpLoad %float %t__1
+        %207 = OpFunctionCall %v3float %Slerp_2 %204 %205 %206
+               OpStore %result_1 %207
+               OpReturn
+               OpFunctionEnd
+    %Slerp_2 = OpFunction %v3float None %24
+    %start_1 = OpFunctionParameter %v3float
+      %end_1 = OpFunctionParameter %v3float
+        %t_0 = OpFunctionParameter %float
+        %212 = OpLabel
+%start_Local_1 = OpVariable %_ptr_Function_v3float Function
+%end_Local_1 = OpVariable %_ptr_Function_v3float Function
+  %t_Local_0 = OpVariable %_ptr_Function_float Function
+%normalizedStart = OpVariable %_ptr_Function_v3float Function
+%normalizedEnd = OpVariable %_ptr_Function_v3float Function
+   %dotVal_0 = OpVariable %_ptr_Function_float Function
+    %theta_1 = OpVariable %_ptr_Function_float Function
+%relativeVec_0 = OpVariable %_ptr_Function_v3float Function
+               OpStore %start_Local_1 %start_1
+               OpStore %end_Local_1 %end_1
+               OpStore %t_Local_0 %t_0
+        %221 = OpLoad %v3float %start_Local_1
+        %222 = OpExtInst %v3float %2 Normalize %221
+               OpStore %normalizedStart %222
+        %223 = OpLoad %v3float %end_Local_1
+        %224 = OpExtInst %v3float %2 Normalize %223
+               OpStore %normalizedEnd %224
+        %225 = OpLoad %v3float %normalizedStart
+        %226 = OpLoad %v3float %normalizedEnd
+        %227 = OpDot %float %225 %226
+               OpStore %dotVal_0 %227
+        %228 = OpLoad %float %dotVal_0
+        %229 = OpFNegate %float %float_1_0
+        %230 = OpExtInst %float %2 FClamp %228 %229 %float_1_0
+               OpStore %dotVal_0 %230
+        %231 = OpLoad %float %dotVal_0
+        %232 = OpExtInst %float %2 Acos %231
+        %233 = OpLoad %float %t_Local_0
+        %234 = OpFMul %float %232 %233
+               OpStore %theta_1 %234
+        %235 = OpCompositeConstruct %v3float %float_0_0 %float_0_0 %float_0_0
+               OpStore %relativeVec_0 %235
+        %236 = OpFNegate %float %float_1_0
+        %237 = OpLoad %float %dotVal_0
+        %238 = OpFOrdEqual %bool %237 %236
+               OpSelectionMerge %ifMerge0_4 None
+               OpBranchConditional %238 %ifTrue0_3 %ifFalse0_2
+  %ifTrue0_3 = OpLabel
+        %240 = OpAccessChain %_ptr_Function_float %normalizedStart %int_0
+        %241 = OpLoad %float %240
+        %242 = OpFOrdNotEqual %bool %241 %float_0_0
+               OpSelectionMerge %ifMerge0_3 None
+               OpBranchConditional %242 %ifTrue0_4 %ifFalse0_1
+  %ifTrue0_4 = OpLabel
+        %244 = OpAccessChain %_ptr_Function_float %normalizedStart %int_1
+        %245 = OpLoad %float %244
+        %246 = OpFNegate %float %245
+        %247 = OpAccessChain %_ptr_Function_float %normalizedStart %int_0
+        %248 = OpLoad %float %247
+        %249 = OpAccessChain %_ptr_Function_float %normalizedStart %int_2
+        %250 = OpLoad %float %249
+        %251 = OpCompositeConstruct %v3float %246 %248 %250
+               OpStore %relativeVec_0 %251
+               OpBranch %ifMerge0_3
+ %ifFalse0_1 = OpLabel
+        %253 = OpAccessChain %_ptr_Function_float %normalizedStart %int_0
+        %254 = OpLoad %float %253
+        %255 = OpAccessChain %_ptr_Function_float %normalizedStart %int_2
+        %256 = OpLoad %float %255
+        %257 = OpFNegate %float %256
+        %258 = OpAccessChain %_ptr_Function_float %normalizedStart %int_1
+        %259 = OpLoad %float %258
+        %260 = OpCompositeConstruct %v3float %254 %257 %259
+               OpStore %relativeVec_0 %260
+               OpBranch %ifMerge0_3
+ %ifMerge0_3 = OpLabel
+               OpBranch %ifMerge0_4
+ %ifFalse0_2 = OpLabel
+        %263 = OpLoad %v3float %normalizedStart
+        %264 = OpLoad %float %dotVal_0
+        %265 = OpVectorTimesScalar %v3float %263 %264
+        %266 = OpLoad %v3float %normalizedEnd
+        %267 = OpFSub %v3float %266 %265
+               OpStore %relativeVec_0 %267
+               OpBranch %ifMerge0_4
+ %ifMerge0_4 = OpLabel
+        %269 = OpLoad %v3float %relativeVec_0
+        %270 = OpExtInst %v3float %2 Normalize %269
+               OpStore %relativeVec_0 %270
+        %271 = OpLoad %float %theta_1
+        %272 = OpExtInst %float %2 Cos %271
+        %273 = OpLoad %v3float %normalizedStart
+        %274 = OpVectorTimesScalar %v3float %273 %272
+        %275 = OpLoad %float %theta_1
+        %276 = OpExtInst %float %2 Sin %275
+        %277 = OpLoad %v3float %relativeVec_0
+        %278 = OpVectorTimesScalar %v3float %277 %276
+        %279 = OpFAdd %v3float %274 %278
+               OpReturnValue %279
+               OpFunctionEnd
+       %Main = OpFunction %void None %9
+     %self_2 = OpFunctionParameter %_ptr_Function_Slerp
+        %282 = OpLabel
+        %283 = OpFunctionCall %void %Test_Static_Quaternion_Quaternion_Real %self_2
+        %284 = OpFunctionCall %void %Test_Static_Real2_Real2_Real %self_2
+        %285 = OpFunctionCall %void %Test_Static_Real3_Real3_Real %self_2
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_Slerp = OpFunction %void None %9
+     %self_3 = OpFunctionParameter %_ptr_Function_Slerp
+        %288 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %9
+     %self_4 = OpFunctionParameter %_ptr_Function_Slerp
+        %291 = OpLabel
+        %292 = OpFunctionCall %void %PreConstructor_Slerp %self_4
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %9
+     %self_5 = OpFunctionParameter %_ptr_Function_Slerp
+        %295 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %9
+     %self_6 = OpFunctionParameter %_ptr_Function_Slerp
+        %298 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_Slerp = OpFunction %void None %25
+        %300 = OpLabel
+     %self_7 = OpVariable %_ptr_Function_Slerp Function
+        %302 = OpFunctionCall %void %InitializeGlobals
+        %303 = OpFunctionCall %void %DefaultConstructor %self_7
+        %304 = OpFunctionCall %void %CopyInputs_Main %self_7
+        %305 = OpFunctionCall %void %Main %self_7
+        %306 = OpFunctionCall %void %CopyOutputs_Main %self_7
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %25
+        %307 = OpLabel
+               OpReturn
+               OpFunctionEnd

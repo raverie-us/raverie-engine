@@ -1,0 +1,173 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 101
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpCapability ImageQuery
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_ImageQueryLod "EntryPoint_Main_ImageQueryLod"
+               OpExecutionMode %EntryPoint_Main_ImageQueryLod OriginUpperLeft
+               OpSource Unknown 100
+               OpName %ImageQueryLod "ImageQueryLod"
+               OpMemberName %ImageQueryLod 0 "Uv"
+               OpMemberName %ImageQueryLod 1 "Uv3"
+               OpName %SampledImage_ImageQueryLod "SampledImage_ImageQueryLod"
+               OpName %Image_ImageQueryLod "Image_ImageQueryLod"
+               OpName %Sampler_ImageQueryLod "Sampler_ImageQueryLod"
+               OpName %SampledDepthImage_ImageQueryLod "SampledDepthImage_ImageQueryLod"
+               OpName %DepthImage_ImageQueryLod "DepthImage_ImageQueryLod"
+               OpName %SampledImageCube_ImageQueryLod "SampledImageCube_ImageQueryLod"
+               OpName %ImageCube_ImageQueryLod "ImageCube_ImageQueryLod"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %lodQuery "lodQuery"
+               OpName %PreConstructor_ImageQueryLod "PreConstructor_ImageQueryLod"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_ImageQueryLod "EntryPoint_Main_ImageQueryLod"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %SampledImage_ImageQueryLod Binding 0
+               OpDecorate %SampledImage_ImageQueryLod DescriptorSet 0
+               OpDecorate %Image_ImageQueryLod Binding 1
+               OpDecorate %Image_ImageQueryLod DescriptorSet 0
+               OpDecorate %Sampler_ImageQueryLod Binding 1
+               OpDecorate %Sampler_ImageQueryLod DescriptorSet 0
+               OpDecorate %SampledDepthImage_ImageQueryLod Binding 2
+               OpDecorate %SampledDepthImage_ImageQueryLod DescriptorSet 0
+               OpDecorate %DepthImage_ImageQueryLod Binding 3
+               OpDecorate %DepthImage_ImageQueryLod DescriptorSet 0
+               OpDecorate %SampledImageCube_ImageQueryLod Binding 4
+               OpDecorate %SampledImageCube_ImageQueryLod DescriptorSet 0
+               OpDecorate %ImageCube_ImageQueryLod Binding 5
+               OpDecorate %ImageCube_ImageQueryLod DescriptorSet 0
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+%ImageQueryLod = OpTypeStruct %v2float %v3float
+%_ptr_Function_ImageQueryLod = OpTypePointer Function %ImageQueryLod
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+         %12 = OpTypeFunction %void %_ptr_Function_ImageQueryLod
+    %float_0 = OpConstant %float 0
+         %13 = OpTypeImage %float 2D 0 0 0 1 Unknown
+%_ptr_UniformConstant_13 = OpTypePointer UniformConstant %13
+         %15 = OpTypeSampledImage %13
+%_ptr_UniformConstant_15 = OpTypePointer UniformConstant %15
+%SampledImage_ImageQueryLod = OpVariable %_ptr_UniformConstant_15 UniformConstant
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+      %int_0 = OpConstant %int 0
+%Image_ImageQueryLod = OpVariable %_ptr_UniformConstant_13 UniformConstant
+         %19 = OpTypeSampler
+%_ptr_UniformConstant_19 = OpTypePointer UniformConstant %19
+%Sampler_ImageQueryLod = OpVariable %_ptr_UniformConstant_19 UniformConstant
+         %21 = OpTypeImage %float 2D 1 0 0 1 Unknown
+%_ptr_UniformConstant_21 = OpTypePointer UniformConstant %21
+         %23 = OpTypeSampledImage %21
+%_ptr_UniformConstant_23 = OpTypePointer UniformConstant %23
+%SampledDepthImage_ImageQueryLod = OpVariable %_ptr_UniformConstant_23 UniformConstant
+%DepthImage_ImageQueryLod = OpVariable %_ptr_UniformConstant_21 UniformConstant
+         %25 = OpTypeImage %float Cube 0 0 0 1 Unknown
+%_ptr_UniformConstant_25 = OpTypePointer UniformConstant %25
+         %27 = OpTypeSampledImage %25
+%_ptr_UniformConstant_27 = OpTypePointer UniformConstant %27
+%SampledImageCube_ImageQueryLod = OpVariable %_ptr_UniformConstant_27 UniformConstant
+      %int_1 = OpConstant %int 1
+%ImageCube_ImageQueryLod = OpVariable %_ptr_UniformConstant_25 UniformConstant
+         %29 = OpTypeFunction %void
+       %Main = OpFunction %void None %12
+       %self = OpFunctionParameter %_ptr_Function_ImageQueryLod
+         %42 = OpLabel
+   %lodQuery = OpVariable %_ptr_Function_v2float Function
+         %44 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %lodQuery %44
+         %45 = OpLoad %15 %SampledImage_ImageQueryLod
+         %46 = OpAccessChain %_ptr_Function_v2float %self %int_0
+         %47 = OpLoad %v2float %46
+         %48 = OpImageQueryLod %v2float %45 %47
+               OpStore %lodQuery %48
+         %49 = OpLoad %13 %Image_ImageQueryLod
+         %50 = OpLoad %19 %Sampler_ImageQueryLod
+         %51 = OpSampledImage %15 %49 %50
+         %52 = OpAccessChain %_ptr_Function_v2float %self %int_0
+         %53 = OpLoad %v2float %52
+         %54 = OpImageQueryLod %v2float %51 %53
+               OpStore %lodQuery %54
+         %55 = OpLoad %23 %SampledDepthImage_ImageQueryLod
+         %56 = OpAccessChain %_ptr_Function_v2float %self %int_0
+         %57 = OpLoad %v2float %56
+         %58 = OpImageQueryLod %v2float %55 %57
+               OpStore %lodQuery %58
+         %59 = OpLoad %21 %DepthImage_ImageQueryLod
+         %60 = OpLoad %19 %Sampler_ImageQueryLod
+         %61 = OpSampledImage %23 %59 %60
+         %62 = OpAccessChain %_ptr_Function_v2float %self %int_0
+         %63 = OpLoad %v2float %62
+         %64 = OpImageQueryLod %v2float %61 %63
+               OpStore %lodQuery %64
+         %65 = OpLoad %27 %SampledImageCube_ImageQueryLod
+         %66 = OpAccessChain %_ptr_Function_v3float %self %int_1
+         %67 = OpLoad %v3float %66
+         %68 = OpImageQueryLod %v2float %65 %67
+               OpStore %lodQuery %68
+         %69 = OpLoad %25 %ImageCube_ImageQueryLod
+         %70 = OpLoad %19 %Sampler_ImageQueryLod
+         %71 = OpSampledImage %27 %69 %70
+         %72 = OpAccessChain %_ptr_Function_v3float %self %int_1
+         %73 = OpLoad %v3float %72
+         %74 = OpImageQueryLod %v2float %71 %73
+               OpStore %lodQuery %74
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_ImageQueryLod = OpFunction %void None %12
+     %self_0 = OpFunctionParameter %_ptr_Function_ImageQueryLod
+         %77 = OpLabel
+         %78 = OpAccessChain %_ptr_Function_v2float %self_0 %int_0
+         %79 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %78 %79
+         %80 = OpAccessChain %_ptr_Function_v3float %self_0 %int_1
+         %81 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %80 %81
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %12
+     %self_1 = OpFunctionParameter %_ptr_Function_ImageQueryLod
+         %84 = OpLabel
+         %85 = OpFunctionCall %void %PreConstructor_ImageQueryLod %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %12
+     %self_2 = OpFunctionParameter %_ptr_Function_ImageQueryLod
+         %88 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %12
+     %self_3 = OpFunctionParameter %_ptr_Function_ImageQueryLod
+         %91 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_ImageQueryLod = OpFunction %void None %29
+         %93 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_ImageQueryLod Function
+         %95 = OpFunctionCall %void %InitializeGlobals
+         %96 = OpFunctionCall %void %DefaultConstructor %self_4
+         %97 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %98 = OpFunctionCall %void %Main %self_4
+         %99 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %29
+        %100 = OpLabel
+               OpReturn
+               OpFunctionEnd

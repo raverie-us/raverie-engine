@@ -1,0 +1,40 @@
+[Pixel][UnitTest]
+struct AngleBetween
+{
+  function Test_Static_Quaternion_Quaternion()
+  {
+    var param0 = Quaternion();
+    var param1 = Quaternion();
+    var result = Math.AngleBetween(param0, param1);
+  }
+
+  function Test_Static_Real2_Real2()
+  {
+    var param0 = Real2();
+    var param1 = Real2();
+    var result = Math.AngleBetween(param0, param1);
+  }
+
+  function Test_Static_Real3_Real3()
+  {
+    var param0 = Real3();
+    var param1 = Real3();
+    var result = Math.AngleBetween(param0, param1);
+  }
+
+  function Test_Static_Real4_Real4()
+  {
+    var param0 = Real4();
+    var param1 = Real4();
+    var result = Math.AngleBetween(param0, param1);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Quaternion_Quaternion();
+    this.Test_Static_Real2_Real2();
+    this.Test_Static_Real3_Real3();
+    this.Test_Static_Real4_Real4();
+  }
+}

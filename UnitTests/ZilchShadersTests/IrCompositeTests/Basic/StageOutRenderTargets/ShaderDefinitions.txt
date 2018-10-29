@@ -1,0 +1,17 @@
+Array Shaders = 
+[
+  {
+    string ShaderName = "Basic",
+    Array FragmentNames = 
+    [
+      "PixelBasic",
+    ],
+  },
+  {
+    string ShaderName = "MultipleOutput",
+    Array FragmentNames = 
+    [
+      "PixelMultipleOutput",
+    ],
+  },
+],

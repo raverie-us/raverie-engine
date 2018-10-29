@@ -1,0 +1,16 @@
+// All Inputs
+[Vertex][UnitTest]
+struct UniformBuffersVertex10
+{
+  // Buffer2 (Misc)
+  [PropertyInput] var Bool1 : Boolean;
+  [PropertyInput] var Bool2 : Boolean2;
+  
+  [PropertyInput] var States : Boolean3;
+  [PropertyInput("States")] var IntStates : Integer3;
+  
+  [EntryPoint]
+  function Main()
+  {
+  }
+}

@@ -1,0 +1,321 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 182
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+          %2 = OpExtInstImport "GLSL.std.450"
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_GlslIntIntrinsics "EntryPoint_Main_GlslIntIntrinsics"
+               OpExecutionMode %EntryPoint_Main_GlslIntIntrinsics OriginUpperLeft
+               OpSource Unknown 100
+               OpName %GlslIntIntrinsics "GlslIntIntrinsics"
+               OpMemberName %GlslIntIntrinsics 0 "Dummy"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %TestInt "TestInt"
+               OpName %param0 "param0"
+               OpName %param1 "param1"
+               OpName %param2 "param2"
+               OpName %intParam "intParam"
+               OpName %result0 "result0"
+               OpName %result1 "result1"
+               OpName %result2 "result2"
+               OpName %result3 "result3"
+               OpName %result4 "result4"
+               OpName %result5 "result5"
+               OpName %result6 "result6"
+               OpName %TestInt_0 "TestInt"
+               OpName %param0_0 "param0"
+               OpName %param1_0 "param1"
+               OpName %param2_0 "param2"
+               OpName %intParam_0 "intParam"
+               OpName %result0_0 "result0"
+               OpName %result1_0 "result1"
+               OpName %result2_0 "result2"
+               OpName %result3_0 "result3"
+               OpName %result4_0 "result4"
+               OpName %result5_0 "result5"
+               OpName %result6_0 "result6"
+               OpName %TestInt_1 "TestInt"
+               OpName %param0_1 "param0"
+               OpName %param1_1 "param1"
+               OpName %param2_1 "param2"
+               OpName %intParam_1 "intParam"
+               OpName %result0_1 "result0"
+               OpName %result1_1 "result1"
+               OpName %result2_1 "result2"
+               OpName %result3_1 "result3"
+               OpName %result4_1 "result4"
+               OpName %result5_1 "result5"
+               OpName %result6_1 "result6"
+               OpName %TestInt_2 "TestInt"
+               OpName %param0_2 "param0"
+               OpName %param1_2 "param1"
+               OpName %param2_2 "param2"
+               OpName %intParam_2 "intParam"
+               OpName %result0_2 "result0"
+               OpName %result1_2 "result1"
+               OpName %result2_2 "result2"
+               OpName %result3_2 "result3"
+               OpName %result4_2 "result4"
+               OpName %result5_2 "result5"
+               OpName %result6_2 "result6"
+               OpName %PreConstructor_GlslIntIntrinsics "PreConstructor_GlslIntIntrinsics"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_GlslIntIntrinsics "EntryPoint_Main_GlslIntIntrinsics"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%GlslIntIntrinsics = OpTypeStruct %int
+%_ptr_Function_GlslIntIntrinsics = OpTypePointer Function %GlslIntIntrinsics
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %9 = OpTypeFunction %void %_ptr_Function_GlslIntIntrinsics
+         %10 = OpTypeFunction %void
+      %int_0 = OpConstant %int 0
+      %v2int = OpTypeVector %int 2
+%_ptr_Function_v2int = OpTypePointer Function %v2int
+      %v3int = OpTypeVector %int 3
+%_ptr_Function_v3int = OpTypePointer Function %v3int
+      %v4int = OpTypeVector %int 4
+%_ptr_Function_v4int = OpTypePointer Function %v4int
+       %Main = OpFunction %void None %9
+       %self = OpFunctionParameter %_ptr_Function_GlslIntIntrinsics
+         %20 = OpLabel
+         %21 = OpFunctionCall %void %TestInt
+         %22 = OpFunctionCall %void %TestInt_0
+         %23 = OpFunctionCall %void %TestInt_1
+         %24 = OpFunctionCall %void %TestInt_2
+               OpReturn
+               OpFunctionEnd
+    %TestInt = OpFunction %void None %10
+         %26 = OpLabel
+     %param0 = OpVariable %_ptr_Function_int Function
+     %param1 = OpVariable %_ptr_Function_int Function
+     %param2 = OpVariable %_ptr_Function_int Function
+   %intParam = OpVariable %_ptr_Function_int Function
+    %result0 = OpVariable %_ptr_Function_int Function
+    %result1 = OpVariable %_ptr_Function_int Function
+    %result2 = OpVariable %_ptr_Function_int Function
+    %result3 = OpVariable %_ptr_Function_int Function
+    %result4 = OpVariable %_ptr_Function_int Function
+    %result5 = OpVariable %_ptr_Function_int Function
+    %result6 = OpVariable %_ptr_Function_int Function
+               OpStore %param0 %int_0
+         %38 = OpLoad %int %param0
+               OpStore %param1 %38
+         %39 = OpLoad %int %param0
+               OpStore %param2 %39
+               OpStore %intParam %int_0
+         %40 = OpLoad %int %param0
+         %41 = OpExtInst %int %2 SAbs %40
+               OpStore %result0 %41
+         %42 = OpLoad %int %param0
+         %43 = OpExtInst %int %2 SSign %42
+               OpStore %result1 %43
+         %44 = OpLoad %int %param0
+         %45 = OpLoad %int %param1
+         %46 = OpExtInst %int %2 SMin %44 %45
+               OpStore %result2 %46
+         %47 = OpLoad %int %param0
+         %48 = OpLoad %int %param1
+         %49 = OpExtInst %int %2 SMax %47 %48
+               OpStore %result3 %49
+         %50 = OpLoad %int %param0
+         %51 = OpLoad %int %param1
+         %52 = OpLoad %int %param2
+         %53 = OpExtInst %int %2 SClamp %50 %51 %52
+               OpStore %result4 %53
+         %54 = OpLoad %int %param0
+         %55 = OpExtInst %int %2 FindILsb %54
+               OpStore %result5 %55
+         %56 = OpLoad %int %param0
+         %57 = OpExtInst %int %2 FindSMsb %56
+               OpStore %result6 %57
+               OpReturn
+               OpFunctionEnd
+  %TestInt_0 = OpFunction %void None %10
+         %59 = OpLabel
+   %param0_0 = OpVariable %_ptr_Function_v2int Function
+   %param1_0 = OpVariable %_ptr_Function_v2int Function
+   %param2_0 = OpVariable %_ptr_Function_v2int Function
+ %intParam_0 = OpVariable %_ptr_Function_int Function
+  %result0_0 = OpVariable %_ptr_Function_v2int Function
+  %result1_0 = OpVariable %_ptr_Function_v2int Function
+  %result2_0 = OpVariable %_ptr_Function_v2int Function
+  %result3_0 = OpVariable %_ptr_Function_v2int Function
+  %result4_0 = OpVariable %_ptr_Function_v2int Function
+  %result5_0 = OpVariable %_ptr_Function_v2int Function
+  %result6_0 = OpVariable %_ptr_Function_v2int Function
+         %71 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %param0_0 %71
+         %72 = OpLoad %v2int %param0_0
+               OpStore %param1_0 %72
+         %73 = OpLoad %v2int %param0_0
+               OpStore %param2_0 %73
+               OpStore %intParam_0 %int_0
+         %74 = OpLoad %v2int %param0_0
+         %75 = OpExtInst %v2int %2 SAbs %74
+               OpStore %result0_0 %75
+         %76 = OpLoad %v2int %param0_0
+         %77 = OpExtInst %v2int %2 SSign %76
+               OpStore %result1_0 %77
+         %78 = OpLoad %v2int %param0_0
+         %79 = OpLoad %v2int %param1_0
+         %80 = OpExtInst %v2int %2 SMin %78 %79
+               OpStore %result2_0 %80
+         %81 = OpLoad %v2int %param0_0
+         %82 = OpLoad %v2int %param1_0
+         %83 = OpExtInst %v2int %2 SMax %81 %82
+               OpStore %result3_0 %83
+         %84 = OpLoad %v2int %param0_0
+         %85 = OpLoad %v2int %param1_0
+         %86 = OpLoad %v2int %param2_0
+         %87 = OpExtInst %v2int %2 SClamp %84 %85 %86
+               OpStore %result4_0 %87
+         %88 = OpLoad %v2int %param0_0
+         %89 = OpExtInst %v2int %2 FindILsb %88
+               OpStore %result5_0 %89
+         %90 = OpLoad %v2int %param0_0
+         %91 = OpExtInst %v2int %2 FindSMsb %90
+               OpStore %result6_0 %91
+               OpReturn
+               OpFunctionEnd
+  %TestInt_1 = OpFunction %void None %10
+         %93 = OpLabel
+   %param0_1 = OpVariable %_ptr_Function_v3int Function
+   %param1_1 = OpVariable %_ptr_Function_v3int Function
+   %param2_1 = OpVariable %_ptr_Function_v3int Function
+ %intParam_1 = OpVariable %_ptr_Function_int Function
+  %result0_1 = OpVariable %_ptr_Function_v3int Function
+  %result1_1 = OpVariable %_ptr_Function_v3int Function
+  %result2_1 = OpVariable %_ptr_Function_v3int Function
+  %result3_1 = OpVariable %_ptr_Function_v3int Function
+  %result4_1 = OpVariable %_ptr_Function_v3int Function
+  %result5_1 = OpVariable %_ptr_Function_v3int Function
+  %result6_1 = OpVariable %_ptr_Function_v3int Function
+        %105 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+               OpStore %param0_1 %105
+        %106 = OpLoad %v3int %param0_1
+               OpStore %param1_1 %106
+        %107 = OpLoad %v3int %param0_1
+               OpStore %param2_1 %107
+               OpStore %intParam_1 %int_0
+        %108 = OpLoad %v3int %param0_1
+        %109 = OpExtInst %v3int %2 SAbs %108
+               OpStore %result0_1 %109
+        %110 = OpLoad %v3int %param0_1
+        %111 = OpExtInst %v3int %2 SSign %110
+               OpStore %result1_1 %111
+        %112 = OpLoad %v3int %param0_1
+        %113 = OpLoad %v3int %param1_1
+        %114 = OpExtInst %v3int %2 SMin %112 %113
+               OpStore %result2_1 %114
+        %115 = OpLoad %v3int %param0_1
+        %116 = OpLoad %v3int %param1_1
+        %117 = OpExtInst %v3int %2 SMax %115 %116
+               OpStore %result3_1 %117
+        %118 = OpLoad %v3int %param0_1
+        %119 = OpLoad %v3int %param1_1
+        %120 = OpLoad %v3int %param2_1
+        %121 = OpExtInst %v3int %2 SClamp %118 %119 %120
+               OpStore %result4_1 %121
+        %122 = OpLoad %v3int %param0_1
+        %123 = OpExtInst %v3int %2 FindILsb %122
+               OpStore %result5_1 %123
+        %124 = OpLoad %v3int %param0_1
+        %125 = OpExtInst %v3int %2 FindSMsb %124
+               OpStore %result6_1 %125
+               OpReturn
+               OpFunctionEnd
+  %TestInt_2 = OpFunction %void None %10
+        %127 = OpLabel
+   %param0_2 = OpVariable %_ptr_Function_v4int Function
+   %param1_2 = OpVariable %_ptr_Function_v4int Function
+   %param2_2 = OpVariable %_ptr_Function_v4int Function
+ %intParam_2 = OpVariable %_ptr_Function_int Function
+  %result0_2 = OpVariable %_ptr_Function_v4int Function
+  %result1_2 = OpVariable %_ptr_Function_v4int Function
+  %result2_2 = OpVariable %_ptr_Function_v4int Function
+  %result3_2 = OpVariable %_ptr_Function_v4int Function
+  %result4_2 = OpVariable %_ptr_Function_v4int Function
+  %result5_2 = OpVariable %_ptr_Function_v4int Function
+  %result6_2 = OpVariable %_ptr_Function_v4int Function
+        %139 = OpCompositeConstruct %v4int %int_0 %int_0 %int_0 %int_0
+               OpStore %param0_2 %139
+        %140 = OpLoad %v4int %param0_2
+               OpStore %param1_2 %140
+        %141 = OpLoad %v4int %param0_2
+               OpStore %param2_2 %141
+               OpStore %intParam_2 %int_0
+        %142 = OpLoad %v4int %param0_2
+        %143 = OpExtInst %v4int %2 SAbs %142
+               OpStore %result0_2 %143
+        %144 = OpLoad %v4int %param0_2
+        %145 = OpExtInst %v4int %2 SSign %144
+               OpStore %result1_2 %145
+        %146 = OpLoad %v4int %param0_2
+        %147 = OpLoad %v4int %param1_2
+        %148 = OpExtInst %v4int %2 SMin %146 %147
+               OpStore %result2_2 %148
+        %149 = OpLoad %v4int %param0_2
+        %150 = OpLoad %v4int %param1_2
+        %151 = OpExtInst %v4int %2 SMax %149 %150
+               OpStore %result3_2 %151
+        %152 = OpLoad %v4int %param0_2
+        %153 = OpLoad %v4int %param1_2
+        %154 = OpLoad %v4int %param2_2
+        %155 = OpExtInst %v4int %2 SClamp %152 %153 %154
+               OpStore %result4_2 %155
+        %156 = OpLoad %v4int %param0_2
+        %157 = OpExtInst %v4int %2 FindILsb %156
+               OpStore %result5_2 %157
+        %158 = OpLoad %v4int %param0_2
+        %159 = OpExtInst %v4int %2 FindSMsb %158
+               OpStore %result6_2 %159
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_GlslIntIntrinsics = OpFunction %void None %9
+     %self_0 = OpFunctionParameter %_ptr_Function_GlslIntIntrinsics
+        %162 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %9
+     %self_1 = OpFunctionParameter %_ptr_Function_GlslIntIntrinsics
+        %165 = OpLabel
+        %166 = OpFunctionCall %void %PreConstructor_GlslIntIntrinsics %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %9
+     %self_2 = OpFunctionParameter %_ptr_Function_GlslIntIntrinsics
+        %169 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %9
+     %self_3 = OpFunctionParameter %_ptr_Function_GlslIntIntrinsics
+        %172 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_GlslIntIntrinsics = OpFunction %void None %10
+        %174 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_GlslIntIntrinsics Function
+        %176 = OpFunctionCall %void %InitializeGlobals
+        %177 = OpFunctionCall %void %DefaultConstructor %self_4
+        %178 = OpFunctionCall %void %CopyInputs_Main %self_4
+        %179 = OpFunctionCall %void %Main %self_4
+        %180 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %10
+        %181 = OpLabel
+               OpReturn
+               OpFunctionEnd

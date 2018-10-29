@@ -1,0 +1,21 @@
+Array Shaders = 
+[
+  {
+    string ShaderName = "BasicSpecConstants",
+    Array FragmentNames = 
+    [
+      "Vertex",
+      "Geometry",
+      "Pixel"
+    ],
+  },
+  {
+    string ShaderName = "NameOverrideSpecConstants",
+    Array FragmentNames = 
+    [
+      "VertexOverride",
+      "GeometryOverride",
+      "PixelOverride"
+    ],
+  },
+],

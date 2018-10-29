@@ -1,0 +1,15 @@
+[Pixel][UnitTest]
+struct GenerateRotationMatrix2x2
+{
+  function Test_Static_Real()
+  {
+    var radians_ = Real();
+    var result = Math.GenerateRotationMatrix2x2(radians_);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Real();
+  }
+}

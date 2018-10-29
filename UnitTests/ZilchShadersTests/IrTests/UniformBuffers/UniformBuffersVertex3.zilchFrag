@@ -1,0 +1,22 @@
+// Sub-set of inputs (keep first)
+[Vertex][UnitTest]
+struct UniformBuffersVertex3
+{
+  // Buffer0 (Frame Data)
+  [AppBuiltInInput] var LogicTime : Real;
+  //[AppBuiltInInput] var FrameTime : Real;
+  
+  // Buffer1 (Camera Data)
+  [AppBuiltInInput] var NearPlane : Real;
+  //[AppBuiltInInput] var FarPlane : Real;
+  //[AppBuiltInInput] var ViewportSize : Real2;
+  
+  // Buffer2 (Misc)
+  [PropertyInput] var Position : Real3;
+  //[PropertyInput] var ObjectColor : Real4;
+  
+  [EntryPoint]
+  function Main()
+  {
+  }
+}

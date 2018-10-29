@@ -1,0 +1,36 @@
+struct MyStruct
+{
+  var Data : Real;
+}
+
+[Pixel][UnitTest]
+struct ExtensionMethods1
+{
+  [Extension(typeid(MyStruct))]
+  function Clear()
+  {
+    this.Data = 1.0;
+  }
+  
+  [Extension(typeid(MyStruct))]
+  function Scale(value : Real) : Real
+  {
+    return this.Data * value;
+  }
+  
+  [Static][Extension(typeid(MyStruct))]
+  function Empty() : MyStruct
+  {
+    var result = MyStruct();
+    result.Clear();
+    return result;
+  }
+  
+  [EntryPoint]
+  function Main()
+  {
+    var s = MyStruct.Empty();
+    s.Clear();
+    var result = s.Scale(2.0);
+  }
+}

@@ -1,0 +1,18 @@
+struct MathProjectOnVectorImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function ProjectOnVector(toBeProjected : Real2, normalizedVector : Real2) : Real2
+  {
+    return normalizedVector * Math.Dot(toBeProjected, normalizedVector);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function ProjectOnVector(toBeProjected : Real3, normalizedVector : Real3) : Real3
+  {
+    return normalizedVector * Math.Dot(toBeProjected, normalizedVector);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function ProjectOnVector(toBeProjected : Real4, normalizedVector : Real4) : Real4
+  {
+    return normalizedVector * Math.Dot(toBeProjected, normalizedVector);
+  }
+}

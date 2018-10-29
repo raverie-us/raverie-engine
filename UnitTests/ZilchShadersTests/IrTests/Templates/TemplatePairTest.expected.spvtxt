@@ -1,0 +1,198 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 106
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_TemplatePairTest "EntryPoint_Main_TemplatePairTest"
+               OpExecutionMode %EntryPoint_Main_TemplatePairTest OriginUpperLeft
+               OpSource Unknown 100
+               OpName %TemplatePairTest "TemplatePairTest"
+               OpMemberName %TemplatePairTest 0 "Dummy"
+               OpName %TPair_Integer__Real_ "TPair[Integer, Real]"
+               OpMemberName %TPair_Integer__Real_ 0 "First"
+               OpMemberName %TPair_Integer__Real_ 1 "Second"
+               OpName %TPair_Real2__TPair_Integer__Real__ "TPair[Real2, TPair[Integer, Real]]"
+               OpMemberName %TPair_Real2__TPair_Integer__Real__ 0 "First"
+               OpMemberName %TPair_Real2__TPair_Integer__Real__ 1 "Second"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %pair1 "pair1"
+               OpName %nestedPair "nestedPair"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_0 "self"
+               OpName %Set "Set"
+               OpName %self_1 "self"
+               OpName %first "first"
+               OpName %second "second"
+               OpName %first_Local "first_Local"
+               OpName %second_Local "second_Local"
+               OpName %_PreConstructor_TPair_Integer__Real_ "[PreConstructor]TPair[Integer, Real]"
+               OpName %self_2 "self"
+               OpName %DefaultConstructor_0 "DefaultConstructor"
+               OpName %self_3 "self"
+               OpName %Set_0 "Set"
+               OpName %self_4 "self"
+               OpName %first_0 "first"
+               OpName %second_0 "second"
+               OpName %first_Local_0 "first_Local"
+               OpName %second_Local_0 "second_Local"
+               OpName %_PreConstructor_TPair_Real2__TPair_Integer__Real__ "[PreConstructor]TPair[Real2, TPair[Integer, Real]]"
+               OpName %self_5 "self"
+               OpName %PreConstructor_TemplatePairTest "PreConstructor_TemplatePairTest"
+               OpName %self_6 "self"
+               OpName %DefaultConstructor_1 "DefaultConstructor"
+               OpName %self_7 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_8 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_9 "self"
+               OpName %EntryPoint_Main_TemplatePairTest "EntryPoint_Main_TemplatePairTest"
+               OpName %self_10 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%TemplatePairTest = OpTypeStruct %int
+%_ptr_Function_TemplatePairTest = OpTypePointer Function %TemplatePairTest
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_TemplatePairTest
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+%TPair_Integer__Real_ = OpTypeStruct %int %float
+%_ptr_Function_TPair_Integer__Real_ = OpTypePointer Function %TPair_Integer__Real_
+         %13 = OpTypeFunction %void %_ptr_Function_TPair_Integer__Real_ %int %float
+      %int_0 = OpConstant %int 0
+      %int_1 = OpConstant %int 1
+         %14 = OpTypeFunction %void %_ptr_Function_TPair_Integer__Real_
+    %float_0 = OpConstant %float 0
+      %int_2 = OpConstant %int 2
+    %float_3 = OpConstant %float 3
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+%TPair_Real2__TPair_Integer__Real__ = OpTypeStruct %v2float %TPair_Integer__Real_
+%_ptr_Function_TPair_Real2__TPair_Integer__Real__ = OpTypePointer Function %TPair_Real2__TPair_Integer__Real__
+         %19 = OpTypeFunction %void %_ptr_Function_TPair_Real2__TPair_Integer__Real__ %v2float %TPair_Integer__Real_
+         %20 = OpTypeFunction %void %_ptr_Function_TPair_Real2__TPair_Integer__Real__
+         %21 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_TemplatePairTest
+         %29 = OpLabel
+      %pair1 = OpVariable %_ptr_Function_TPair_Integer__Real_ Function
+         %31 = OpVariable %_ptr_Function_TPair_Integer__Real_ Function
+ %nestedPair = OpVariable %_ptr_Function_TPair_Real2__TPair_Integer__Real__ Function
+         %33 = OpVariable %_ptr_Function_TPair_Real2__TPair_Integer__Real__ Function
+         %34 = OpFunctionCall %void %DefaultConstructor %31
+         %35 = OpLoad %TPair_Integer__Real_ %31
+               OpStore %pair1 %35
+         %36 = OpFunctionCall %void %Set %pair1 %int_2 %float_3
+         %37 = OpFunctionCall %void %DefaultConstructor_0 %33
+         %38 = OpLoad %TPair_Real2__TPair_Integer__Real__ %33
+               OpStore %nestedPair %38
+         %39 = OpCompositeConstruct %v2float %float_0 %float_0
+         %40 = OpLoad %TPair_Integer__Real_ %pair1
+         %41 = OpFunctionCall %void %Set_0 %nestedPair %39 %40
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %14
+     %self_0 = OpFunctionParameter %_ptr_Function_TPair_Integer__Real_
+         %44 = OpLabel
+         %45 = OpFunctionCall %void %_PreConstructor_TPair_Integer__Real_ %self_0
+               OpReturn
+               OpFunctionEnd
+        %Set = OpFunction %void None %13
+     %self_1 = OpFunctionParameter %_ptr_Function_TPair_Integer__Real_
+      %first = OpFunctionParameter %int
+     %second = OpFunctionParameter %float
+         %50 = OpLabel
+%first_Local = OpVariable %_ptr_Function_int Function
+%second_Local = OpVariable %_ptr_Function_float Function
+               OpStore %first_Local %first
+               OpStore %second_Local %second
+         %53 = OpAccessChain %_ptr_Function_int %self_1 %int_0
+         %54 = OpLoad %int %first_Local
+               OpStore %53 %54
+         %55 = OpAccessChain %_ptr_Function_float %self_1 %int_1
+         %56 = OpLoad %float %second_Local
+               OpStore %55 %56
+               OpReturn
+               OpFunctionEnd
+%_PreConstructor_TPair_Integer__Real_ = OpFunction %void None %14
+     %self_2 = OpFunctionParameter %_ptr_Function_TPair_Integer__Real_
+         %59 = OpLabel
+         %60 = OpAccessChain %_ptr_Function_int %self_2 %int_0
+               OpStore %60 %int_0
+         %61 = OpAccessChain %_ptr_Function_float %self_2 %int_1
+               OpStore %61 %float_0
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor_0 = OpFunction %void None %20
+     %self_3 = OpFunctionParameter %_ptr_Function_TPair_Real2__TPair_Integer__Real__
+         %64 = OpLabel
+         %65 = OpFunctionCall %void %_PreConstructor_TPair_Real2__TPair_Integer__Real__ %self_3
+               OpReturn
+               OpFunctionEnd
+      %Set_0 = OpFunction %void None %19
+     %self_4 = OpFunctionParameter %_ptr_Function_TPair_Real2__TPair_Integer__Real__
+    %first_0 = OpFunctionParameter %v2float
+   %second_0 = OpFunctionParameter %TPair_Integer__Real_
+         %70 = OpLabel
+%first_Local_0 = OpVariable %_ptr_Function_v2float Function
+%second_Local_0 = OpVariable %_ptr_Function_TPair_Integer__Real_ Function
+               OpStore %first_Local_0 %first_0
+               OpStore %second_Local_0 %second_0
+         %73 = OpAccessChain %_ptr_Function_v2float %self_4 %int_0
+         %74 = OpLoad %v2float %first_Local_0
+               OpStore %73 %74
+         %75 = OpAccessChain %_ptr_Function_TPair_Integer__Real_ %self_4 %int_1
+         %76 = OpLoad %TPair_Integer__Real_ %second_Local_0
+               OpStore %75 %76
+               OpReturn
+               OpFunctionEnd
+%_PreConstructor_TPair_Real2__TPair_Integer__Real__ = OpFunction %void None %20
+     %self_5 = OpFunctionParameter %_ptr_Function_TPair_Real2__TPair_Integer__Real__
+         %79 = OpLabel
+         %80 = OpAccessChain %_ptr_Function_v2float %self_5 %int_0
+         %81 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %80 %81
+         %82 = OpAccessChain %_ptr_Function_TPair_Integer__Real_ %self_5 %int_1
+         %83 = OpFunctionCall %void %DefaultConstructor %82
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_TemplatePairTest = OpFunction %void None %8
+     %self_6 = OpFunctionParameter %_ptr_Function_TemplatePairTest
+         %86 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor_1 = OpFunction %void None %8
+     %self_7 = OpFunctionParameter %_ptr_Function_TemplatePairTest
+         %89 = OpLabel
+         %90 = OpFunctionCall %void %PreConstructor_TemplatePairTest %self_7
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_8 = OpFunctionParameter %_ptr_Function_TemplatePairTest
+         %93 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_9 = OpFunctionParameter %_ptr_Function_TemplatePairTest
+         %96 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_TemplatePairTest = OpFunction %void None %21
+         %98 = OpLabel
+    %self_10 = OpVariable %_ptr_Function_TemplatePairTest Function
+        %100 = OpFunctionCall %void %InitializeGlobals
+        %101 = OpFunctionCall %void %DefaultConstructor_1 %self_10
+        %102 = OpFunctionCall %void %CopyInputs_Main %self_10
+        %103 = OpFunctionCall %void %Main %self_10
+        %104 = OpFunctionCall %void %CopyOutputs_Main %self_10
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %21
+        %105 = OpLabel
+               OpReturn
+               OpFunctionEnd

@@ -1,0 +1,391 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 213
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpCapability Geometry
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Geometry %EntryPoint_Main_HardwareBuiltIn1_Geometry "EntryPoint_Main_HardwareBuiltIn1_Geometry" %PrimitiveId %gl_in %gl_out
+               OpExecutionMode %EntryPoint_Main_HardwareBuiltIn1_Geometry OutputVertices 3
+               OpExecutionMode %EntryPoint_Main_HardwareBuiltIn1_Geometry Triangles
+               OpExecutionMode %EntryPoint_Main_HardwareBuiltIn1_Geometry OutputTriangleStrip
+               OpSource Unknown 100
+               OpName %HardwareBuiltIn1_Geometry "HardwareBuiltIn1_Geometry"
+               OpMemberName %HardwareBuiltIn1_Geometry 0 "PrimitiveId"
+               OpMemberName %HardwareBuiltIn1_Geometry 1 "PerspectiveToApiPerspective"
+               OpName %HardwareBuiltIn1_GeoIn "HardwareBuiltIn1_GeoIn"
+               OpMemberName %HardwareBuiltIn1_GeoIn 0 "ApiPerspectivePosition"
+               OpName %HardwareBuiltIn1_GeoOut "HardwareBuiltIn1_GeoOut"
+               OpMemberName %HardwareBuiltIn1_GeoOut 0 "ApiPerspectivePosition"
+               OpName %OutputStream "OutputStream"
+               OpMemberName %OutputStream 0 "Output"
+               OpName %GeometryData "GeometryData"
+               OpMemberName %GeometryData 0 "PerspectivePosition"
+               OpName %OutputStream_0 "OutputStream"
+               OpMemberName %OutputStream_0 0 "Output"
+               OpName %Geometry "Geometry"
+               OpMemberName %Geometry 0 "Id"
+               OpName %HardwareBuiltIn1_GeometryTransformData "HardwareBuiltIn1_GeometryTransformData"
+               OpMemberName %HardwareBuiltIn1_GeometryTransformData 0 "LocalToWorld"
+               OpMemberName %HardwareBuiltIn1_GeometryTransformData 1 "PerspectiveToApiPerspective"
+               OpName %BuiltInVertexInTypeHardwareBuiltIn1_Geometry "BuiltInVertexInTypeHardwareBuiltIn1_Geometry"
+               OpMemberName %BuiltInVertexInTypeHardwareBuiltIn1_Geometry 0 "ApiPerspectivePosition"
+               OpName %BuiltInVertexInStreamTypeHardwareBuiltIn1_Geometry "BuiltInVertexInStreamTypeHardwareBuiltIn1_Geometry"
+               OpName %HardwareBuiltIn1_Geometrygl_out "HardwareBuiltIn1_Geometrygl_out"
+               OpMemberName %HardwareBuiltIn1_Geometrygl_out 0 "ApiPerspectivePosition"
+               OpName %PrimitiveId "PrimitiveId"
+               OpName %TransformData "TransformData"
+               OpName %gl_in "gl_in"
+               OpName %gl_out "gl_out"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %input "input"
+               OpName %output "output"
+               OpName %input_Local "input_Local"
+               OpName %output_Local "output_Local"
+               OpName %fragmentInput "fragmentInput"
+               OpName %i "i"
+               OpName %fragmentOutput "fragmentOutput"
+               OpName %geometry "geometry"
+               OpName %headerBlock "headerBlock"
+               OpName %conditionBlock "conditionBlock"
+               OpName %loop_body "loop-body"
+               OpName %continueBlock "continueBlock"
+               OpName %after_loop "after-loop"
+               OpName %PreConstructor_HardwareBuiltIn1_GeoIn "PreConstructor_HardwareBuiltIn1_GeoIn"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %PreConstructor_HardwareBuiltIn1_GeoOut "PreConstructor_HardwareBuiltIn1_GeoOut"
+               OpName %self_2 "self"
+               OpName %DefaultConstructor_0 "DefaultConstructor"
+               OpName %self_3 "self"
+               OpName %PreConstructor_GeometryData "PreConstructor_GeometryData"
+               OpName %self_4 "self"
+               OpName %DefaultConstructor_1 "DefaultConstructor"
+               OpName %self_5 "self"
+               OpName %Main_0 "Main"
+               OpName %self_6 "self"
+               OpName %input_0 "input"
+               OpName %output_0 "output"
+               OpName %input_Local_0 "input_Local"
+               OpName %output_Local_0 "output_Local"
+               OpName %PreConstructor_Geometry "PreConstructor_Geometry"
+               OpName %self_7 "self"
+               OpName %DefaultConstructor_2 "DefaultConstructor"
+               OpName %self_8 "self"
+               OpName %PreConstructor_HardwareBuiltIn1_Geometry "PreConstructor_HardwareBuiltIn1_Geometry"
+               OpName %self_9 "self"
+               OpName %DefaultConstructor_3 "DefaultConstructor"
+               OpName %self_10 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_11 "self"
+               OpName %inputStream "inputStream"
+               OpName %EntryPoint_Main_HardwareBuiltIn1_Geometry "EntryPoint_Main_HardwareBuiltIn1_Geometry"
+               OpName %self_12 "self"
+               OpName %inputStream_0 "inputStream"
+               OpName %outputStream "outputStream"
+               OpName %Append "Append"
+               OpName %stream "stream"
+               OpName %outputData "outputData"
+               OpName %vertexId "vertexId"
+               OpName %outDataLocal "outDataLocal"
+               OpName %Append_0 "Append"
+               OpName %stream_0 "stream"
+               OpName %outputData_0 "outputData"
+               OpName %vertexId_0 "vertexId"
+               OpName %outDataLocal_0 "outDataLocal"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %PrimitiveId BuiltIn PrimitiveId
+               OpDecorate %HardwareBuiltIn1_GeometryTransformData Block
+               OpMemberDecorate %HardwareBuiltIn1_GeometryTransformData 0 Offset 0
+               OpMemberDecorate %HardwareBuiltIn1_GeometryTransformData 0 MatrixStride 16
+               OpMemberDecorate %HardwareBuiltIn1_GeometryTransformData 0 ColMajor
+               OpMemberDecorate %HardwareBuiltIn1_GeometryTransformData 1 Offset 64
+               OpMemberDecorate %HardwareBuiltIn1_GeometryTransformData 1 MatrixStride 16
+               OpMemberDecorate %HardwareBuiltIn1_GeometryTransformData 1 ColMajor
+               OpDecorate %TransformData DescriptorSet 0
+               OpDecorate %TransformData Binding 2
+               OpDecorate %BuiltInVertexInTypeHardwareBuiltIn1_Geometry Block
+               OpMemberDecorate %BuiltInVertexInTypeHardwareBuiltIn1_Geometry 0 BuiltIn Position
+               OpDecorate %HardwareBuiltIn1_Geometrygl_out Block
+               OpMemberDecorate %HardwareBuiltIn1_Geometrygl_out 0 BuiltIn Position
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+%mat4v4float = OpTypeMatrix %v4float 4
+%_ptr_Function_mat4v4float = OpTypePointer Function %mat4v4float
+%HardwareBuiltIn1_Geometry = OpTypeStruct %int %mat4v4float
+%_ptr_Function_HardwareBuiltIn1_Geometry = OpTypePointer Function %HardwareBuiltIn1_Geometry
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+%HardwareBuiltIn1_GeoIn = OpTypeStruct %v4float
+%_ptr_Function_HardwareBuiltIn1_GeoIn = OpTypePointer Function %HardwareBuiltIn1_GeoIn
+         %18 = OpTypeFunction %void %_ptr_Function_HardwareBuiltIn1_GeoIn
+      %int_0 = OpConstant %int 0
+    %float_0 = OpConstant %float 0
+      %int_3 = OpConstant %int 3
+%_arr_HardwareBuiltIn1_GeoIn_int_3 = OpTypeArray %HardwareBuiltIn1_GeoIn %int_3
+%_ptr_Function__arr_HardwareBuiltIn1_GeoIn_int_3 = OpTypePointer Function %_arr_HardwareBuiltIn1_GeoIn_int_3
+%HardwareBuiltIn1_GeoOut = OpTypeStruct %v4float
+%_ptr_Function_HardwareBuiltIn1_GeoOut = OpTypePointer Function %HardwareBuiltIn1_GeoOut
+         %23 = OpTypeFunction %void %_ptr_Function_HardwareBuiltIn1_GeoOut
+%OutputStream = OpTypeStruct %HardwareBuiltIn1_GeoOut
+%_ptr_Function_OutputStream = OpTypePointer Function %OutputStream
+         %26 = OpTypeFunction %void %_ptr_Function_OutputStream %HardwareBuiltIn1_GeoOut %int
+         %27 = OpTypeFunction %void %_ptr_Function_HardwareBuiltIn1_Geometry %_arr_HardwareBuiltIn1_GeoIn_int_3 %OutputStream
+%GeometryData = OpTypeStruct %v4float
+%_ptr_Function_GeometryData = OpTypePointer Function %GeometryData
+         %30 = OpTypeFunction %void %_ptr_Function_GeometryData
+    %int_0_0 = OpConstant %int 0
+  %float_0_0 = OpConstant %float 0
+    %int_3_0 = OpConstant %int 3
+%_arr_GeometryData_int_3_0 = OpTypeArray %GeometryData %int_3_0
+%_ptr_Function__arr_GeometryData_int_3_0 = OpTypePointer Function %_arr_GeometryData_int_3_0
+%OutputStream_0 = OpTypeStruct %GeometryData
+%_ptr_Function_OutputStream_0 = OpTypePointer Function %OutputStream_0
+         %35 = OpTypeFunction %void %_ptr_Function_OutputStream_0 %GeometryData %int
+   %Geometry = OpTypeStruct %int
+%_ptr_Function_Geometry = OpTypePointer Function %Geometry
+         %38 = OpTypeFunction %void %_ptr_Function_Geometry %_arr_GeometryData_int_3_0 %OutputStream_0
+         %39 = OpTypeFunction %void %_ptr_Function_Geometry
+       %bool = OpTypeBool
+%_ptr_Function_bool = OpTypePointer Function %bool
+      %int_1 = OpConstant %int 1
+         %42 = OpTypeFunction %void %_ptr_Function_HardwareBuiltIn1_Geometry
+         %43 = OpTypeFunction %void %_ptr_Function_HardwareBuiltIn1_Geometry %_ptr_Function__arr_HardwareBuiltIn1_GeoIn_int_3
+%_ptr_Input_int = OpTypePointer Input %int
+%PrimitiveId = OpVariable %_ptr_Input_int Input
+%_ptr_Uniform_mat4v4float = OpTypePointer Uniform %mat4v4float
+%HardwareBuiltIn1_GeometryTransformData = OpTypeStruct %mat4v4float %mat4v4float
+%_ptr_Uniform_HardwareBuiltIn1_GeometryTransformData = OpTypePointer Uniform %HardwareBuiltIn1_GeometryTransformData
+%TransformData = OpVariable %_ptr_Uniform_HardwareBuiltIn1_GeometryTransformData Uniform
+%BuiltInVertexInTypeHardwareBuiltIn1_Geometry = OpTypeStruct %v4float
+%_ptr_Input_BuiltInVertexInTypeHardwareBuiltIn1_Geometry = OpTypePointer Input %BuiltInVertexInTypeHardwareBuiltIn1_Geometry
+%BuiltInVertexInStreamTypeHardwareBuiltIn1_Geometry = OpTypeArray %BuiltInVertexInTypeHardwareBuiltIn1_Geometry %int_3
+%_ptr_Input_BuiltInVertexInStreamTypeHardwareBuiltIn1_Geometry = OpTypePointer Input %BuiltInVertexInStreamTypeHardwareBuiltIn1_Geometry
+      %gl_in = OpVariable %_ptr_Input_BuiltInVertexInStreamTypeHardwareBuiltIn1_Geometry Input
+%_ptr_Input_v4float = OpTypePointer Input %v4float
+      %int_2 = OpConstant %int 2
+         %53 = OpTypeFunction %void
+%_ptr_Output_v4float = OpTypePointer Output %v4float
+%HardwareBuiltIn1_Geometrygl_out = OpTypeStruct %v4float
+%_ptr_Output_HardwareBuiltIn1_Geometrygl_out = OpTypePointer Output %HardwareBuiltIn1_Geometrygl_out
+     %gl_out = OpVariable %_ptr_Output_HardwareBuiltIn1_Geometrygl_out Output
+       %Main = OpFunction %void None %27
+       %self = OpFunctionParameter %_ptr_Function_HardwareBuiltIn1_Geometry
+      %input = OpFunctionParameter %_arr_HardwareBuiltIn1_GeoIn_int_3
+     %output = OpFunctionParameter %OutputStream
+         %73 = OpLabel
+%input_Local = OpVariable %_ptr_Function__arr_HardwareBuiltIn1_GeoIn_int_3 Function
+%output_Local = OpVariable %_ptr_Function_OutputStream Function
+%fragmentInput = OpVariable %_ptr_Function__arr_GeometryData_int_3_0 Function
+         %77 = OpVariable %_ptr_Function__arr_GeometryData_int_3_0 Function
+          %i = OpVariable %_ptr_Function_int Function
+%fragmentOutput = OpVariable %_ptr_Function_OutputStream_0 Function
+         %80 = OpVariable %_ptr_Function_OutputStream_0 Function
+   %geometry = OpVariable %_ptr_Function_Geometry Function
+         %82 = OpVariable %_ptr_Function_Geometry Function
+               OpStore %input_Local %input
+               OpStore %output_Local %output
+         %83 = OpLoad %_arr_GeometryData_int_3_0 %77
+               OpStore %fragmentInput %83
+               OpStore %i %int_0
+               OpBranch %headerBlock
+%headerBlock = OpLabel
+               OpLoopMerge %after_loop %continueBlock None
+               OpBranch %conditionBlock
+%conditionBlock = OpLabel
+         %86 = OpLoad %int %i
+         %87 = OpSLessThan %bool %86 %int_3
+               OpBranchConditional %87 %loop_body %after_loop
+  %loop_body = OpLabel
+               OpBranch %continueBlock
+%continueBlock = OpLabel
+         %90 = OpLoad %int %i
+         %91 = OpIAdd %int %90 %int_1
+               OpStore %i %91
+               OpBranch %headerBlock
+ %after_loop = OpLabel
+         %93 = OpLoad %OutputStream_0 %80
+               OpStore %fragmentOutput %93
+         %94 = OpFunctionCall %void %DefaultConstructor_2 %82
+         %95 = OpLoad %Geometry %82
+               OpStore %geometry %95
+         %96 = OpAccessChain %_ptr_Function_int %geometry %int_0
+         %97 = OpAccessChain %_ptr_Function_int %self %int_0
+         %98 = OpLoad %int %97
+               OpStore %96 %98
+         %99 = OpLoad %_arr_GeometryData_int_3_0 %fragmentInput
+        %100 = OpLoad %OutputStream_0 %fragmentOutput
+        %101 = OpFunctionCall %void %Main_0 %geometry %99 %100
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_HardwareBuiltIn1_GeoIn = OpFunction %void None %18
+     %self_0 = OpFunctionParameter %_ptr_Function_HardwareBuiltIn1_GeoIn
+        %104 = OpLabel
+        %105 = OpAccessChain %_ptr_Function_v4float %self_0 %int_0
+        %106 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %105 %106
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %18
+     %self_1 = OpFunctionParameter %_ptr_Function_HardwareBuiltIn1_GeoIn
+        %109 = OpLabel
+        %110 = OpFunctionCall %void %PreConstructor_HardwareBuiltIn1_GeoIn %self_1
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_HardwareBuiltIn1_GeoOut = OpFunction %void None %23
+     %self_2 = OpFunctionParameter %_ptr_Function_HardwareBuiltIn1_GeoOut
+        %113 = OpLabel
+        %114 = OpAccessChain %_ptr_Function_v4float %self_2 %int_0
+        %115 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %114 %115
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor_0 = OpFunction %void None %23
+     %self_3 = OpFunctionParameter %_ptr_Function_HardwareBuiltIn1_GeoOut
+        %118 = OpLabel
+        %119 = OpFunctionCall %void %PreConstructor_HardwareBuiltIn1_GeoOut %self_3
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_GeometryData = OpFunction %void None %30
+     %self_4 = OpFunctionParameter %_ptr_Function_GeometryData
+        %122 = OpLabel
+        %123 = OpAccessChain %_ptr_Function_v4float %self_4 %int_0_0
+        %124 = OpCompositeConstruct %v4float %float_0_0 %float_0_0 %float_0_0 %float_0_0
+               OpStore %123 %124
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor_1 = OpFunction %void None %30
+     %self_5 = OpFunctionParameter %_ptr_Function_GeometryData
+        %127 = OpLabel
+        %128 = OpFunctionCall %void %PreConstructor_GeometryData %self_5
+               OpReturn
+               OpFunctionEnd
+     %Main_0 = OpFunction %void None %38
+     %self_6 = OpFunctionParameter %_ptr_Function_Geometry
+    %input_0 = OpFunctionParameter %_arr_GeometryData_int_3_0
+   %output_0 = OpFunctionParameter %OutputStream_0
+        %133 = OpLabel
+%input_Local_0 = OpVariable %_ptr_Function__arr_GeometryData_int_3_0 Function
+%output_Local_0 = OpVariable %_ptr_Function_OutputStream_0 Function
+               OpStore %input_Local_0 %input_0
+               OpStore %output_Local_0 %output_0
+        %136 = OpAccessChain %_ptr_Function_GeometryData %input_Local_0 %int_0_0
+        %137 = OpLoad %GeometryData %136
+        %138 = OpFunctionCall %void %Append_0 %output_Local_0 %137 %int_0_0
+               OpEndPrimitive
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_Geometry = OpFunction %void None %39
+     %self_7 = OpFunctionParameter %_ptr_Function_Geometry
+        %142 = OpLabel
+        %143 = OpAccessChain %_ptr_Function_int %self_7 %int_0_0
+               OpStore %143 %int_0_0
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor_2 = OpFunction %void None %39
+     %self_8 = OpFunctionParameter %_ptr_Function_Geometry
+        %146 = OpLabel
+        %147 = OpFunctionCall %void %PreConstructor_Geometry %self_8
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_HardwareBuiltIn1_Geometry = OpFunction %void None %42
+     %self_9 = OpFunctionParameter %_ptr_Function_HardwareBuiltIn1_Geometry
+        %150 = OpLabel
+        %151 = OpAccessChain %_ptr_Function_int %self_9 %int_0
+               OpStore %151 %int_0
+        %152 = OpAccessChain %_ptr_Function_mat4v4float %self_9 %int_1
+        %153 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+        %154 = OpCompositeConstruct %mat4v4float %153 %153 %153 %153
+               OpStore %152 %154
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor_3 = OpFunction %void None %42
+    %self_10 = OpFunctionParameter %_ptr_Function_HardwareBuiltIn1_Geometry
+        %157 = OpLabel
+        %158 = OpFunctionCall %void %PreConstructor_HardwareBuiltIn1_Geometry %self_10
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %43
+    %self_11 = OpFunctionParameter %_ptr_Function_HardwareBuiltIn1_Geometry
+%inputStream = OpFunctionParameter %_ptr_Function__arr_HardwareBuiltIn1_GeoIn_int_3
+        %162 = OpLabel
+        %163 = OpAccessChain %_ptr_Function_int %self_11 %int_0
+        %164 = OpLoad %int %PrimitiveId
+               OpStore %163 %164
+        %165 = OpAccessChain %_ptr_Uniform_mat4v4float %TransformData %int_1
+        %166 = OpAccessChain %_ptr_Function_mat4v4float %self_11 %int_1
+        %167 = OpLoad %mat4v4float %165
+               OpStore %166 %167
+        %168 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeHardwareBuiltIn1_Geometry %gl_in %int_0
+        %169 = OpAccessChain %_ptr_Function_HardwareBuiltIn1_GeoIn %inputStream %int_0
+        %170 = OpAccessChain %_ptr_Function_v4float %169 %int_0
+        %171 = OpAccessChain %_ptr_Input_v4float %168 %int_0
+        %172 = OpLoad %v4float %171
+               OpStore %170 %172
+        %173 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeHardwareBuiltIn1_Geometry %gl_in %int_1
+        %174 = OpAccessChain %_ptr_Function_HardwareBuiltIn1_GeoIn %inputStream %int_1
+        %175 = OpAccessChain %_ptr_Function_v4float %174 %int_0
+        %176 = OpAccessChain %_ptr_Input_v4float %173 %int_0
+        %177 = OpLoad %v4float %176
+               OpStore %175 %177
+        %178 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeHardwareBuiltIn1_Geometry %gl_in %int_2
+        %179 = OpAccessChain %_ptr_Function_HardwareBuiltIn1_GeoIn %inputStream %int_2
+        %180 = OpAccessChain %_ptr_Function_v4float %179 %int_0
+        %181 = OpAccessChain %_ptr_Input_v4float %178 %int_0
+        %182 = OpLoad %v4float %181
+               OpStore %180 %182
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_HardwareBuiltIn1_Geometry = OpFunction %void None %53
+        %184 = OpLabel
+    %self_12 = OpVariable %_ptr_Function_HardwareBuiltIn1_Geometry Function
+%inputStream_0 = OpVariable %_ptr_Function__arr_HardwareBuiltIn1_GeoIn_int_3 Function
+%outputStream = OpVariable %_ptr_Function_OutputStream Function
+        %188 = OpFunctionCall %void %InitializeGlobals
+        %189 = OpFunctionCall %void %DefaultConstructor_3 %self_12
+        %190 = OpFunctionCall %void %CopyInputs_Main %self_12 %inputStream_0
+        %191 = OpLoad %_arr_HardwareBuiltIn1_GeoIn_int_3 %inputStream_0
+        %192 = OpLoad %OutputStream %outputStream
+        %193 = OpFunctionCall %void %Main %self_12 %191 %192
+               OpReturn
+               OpFunctionEnd
+     %Append = OpFunction %void None %26
+     %stream = OpFunctionParameter %_ptr_Function_OutputStream
+ %outputData = OpFunctionParameter %HardwareBuiltIn1_GeoOut
+   %vertexId = OpFunctionParameter %int
+        %197 = OpLabel
+%outDataLocal = OpVariable %_ptr_Function_HardwareBuiltIn1_GeoOut Function
+               OpStore %outDataLocal %outputData
+        %199 = OpAccessChain %_ptr_Output_v4float %gl_out %int_0
+        %200 = OpAccessChain %_ptr_Function_v4float %outDataLocal %int_0
+        %201 = OpLoad %v4float %200
+               OpStore %199 %201
+               OpEmitVertex
+               OpReturn
+               OpFunctionEnd
+   %Append_0 = OpFunction %void None %35
+   %stream_0 = OpFunctionParameter %_ptr_Function_OutputStream_0
+%outputData_0 = OpFunctionParameter %GeometryData
+ %vertexId_0 = OpFunctionParameter %int
+        %206 = OpLabel
+%outDataLocal_0 = OpVariable %_ptr_Function_GeometryData Function
+               OpStore %outDataLocal_0 %outputData_0
+        %208 = OpAccessChain %_ptr_Output_v4float %gl_out %int_0
+        %209 = OpAccessChain %_ptr_Function_v4float %outDataLocal_0 %int_0
+        %210 = OpLoad %v4float %209
+               OpStore %208 %210
+               OpEmitVertex
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %53
+        %212 = OpLabel
+               OpReturn
+               OpFunctionEnd

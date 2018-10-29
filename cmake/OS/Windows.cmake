@@ -40,3 +40,8 @@ MemoryDebugger
 MemoryTracker
 Nvtt
 )
+
+if(use_spirv_shared_library AND NOT generate_spirv_projects)
+  set(StaticExternals ${StaticExternals} SpirVTools)
+  set(SharedExternals ${SharedExternals} SpirVTools)
+endif()

@@ -1,0 +1,12 @@
+[UnitTest][Pixel]
+struct StructDestructor
+{
+  destructor()
+  {
+  }
+  
+  [EntryPoint]
+  function Main()
+  {
+  }
+}

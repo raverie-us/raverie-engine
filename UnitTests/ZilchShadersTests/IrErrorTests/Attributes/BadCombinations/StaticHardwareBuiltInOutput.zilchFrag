@@ -1,0 +1,10 @@
+[Pixel][UnitTest]
+struct StaticHardwareBuiltInOutput
+{
+  [Static][HardwareBuiltInOutput] var FragDepth : Real;
+  
+  [EntryPoint]
+  function Main()
+  {
+  }
+}

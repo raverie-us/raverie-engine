@@ -1,0 +1,35 @@
+struct GeometryData
+{
+}
+
+[Geometry(maxVertices : 3)]
+struct Geometry
+{
+  [SpecConstantInput] var Position : Real4;
+  [SpecConstantInput] var Value : Real;
+  
+  function Main(input : TriangleInput[GeometryData], output : TriangleOutput[GeometryData])
+  {
+    var value = this.Value;
+    var pos = this.Position;
+    
+    output.Append(input[0], 0);
+    output.Restart();
+  }
+}
+
+[Geometry(maxVertices : 3)]
+struct GeometryOverride
+{
+  [SpecConstantInput("Position")] var GeoPosition : Real4;
+  [SpecConstantInput("Value")] var Aux : Real;
+  
+  function Main(input : TriangleInput[GeometryData], output : TriangleOutput[GeometryData])
+  {
+    var value = this.GeoPosition;
+    var pos = this.Aux;
+    
+    output.Append(input[0], 0);
+    output.Restart();
+  }
+}

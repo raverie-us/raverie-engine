@@ -1,0 +1,210 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 114
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+          %2 = OpExtInstImport "GLSL.std.450"
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_ReflectAcrossVector "EntryPoint_Main_ReflectAcrossVector"
+               OpExecutionMode %EntryPoint_Main_ReflectAcrossVector OriginUpperLeft
+               OpSource Unknown 100
+               OpName %ReflectAcrossVector "ReflectAcrossVector"
+               OpMemberName %ReflectAcrossVector 0 "Dummy"
+               OpName %Test_Static_Real2_Real2 "Test_Static_Real2_Real2"
+               OpName %self "self"
+               OpName %toBeReflected_ "toBeReflected_"
+               OpName %vector_ "vector_"
+               OpName %result "result"
+               OpName %ReflectAcrossVector_0 "ReflectAcrossVector"
+               OpName %toBeReflected "toBeReflected"
+               OpName %vector "vector"
+               OpName %toBeReflected_Local "toBeReflected_Local"
+               OpName %vector_Local "vector_Local"
+               OpName %Test_Static_Real3_Real3 "Test_Static_Real3_Real3"
+               OpName %self_0 "self"
+               OpName %toBeReflected__0 "toBeReflected_"
+               OpName %vector__0 "vector_"
+               OpName %result_0 "result"
+               OpName %ReflectAcrossVector_1 "ReflectAcrossVector"
+               OpName %toBeReflected_0 "toBeReflected"
+               OpName %vector_0 "vector"
+               OpName %toBeReflected_Local_0 "toBeReflected_Local"
+               OpName %vector_Local_0 "vector_Local"
+               OpName %Test_Static_Real4_Real4 "Test_Static_Real4_Real4"
+               OpName %self_1 "self"
+               OpName %toBeReflected__1 "toBeReflected_"
+               OpName %vector__1 "vector_"
+               OpName %result_1 "result"
+               OpName %ReflectAcrossVector_2 "ReflectAcrossVector"
+               OpName %toBeReflected_1 "toBeReflected"
+               OpName %vector_1 "vector"
+               OpName %toBeReflected_Local_1 "toBeReflected_Local"
+               OpName %vector_Local_1 "vector_Local"
+               OpName %Main "Main"
+               OpName %self_2 "self"
+               OpName %PreConstructor_ReflectAcrossVector "PreConstructor_ReflectAcrossVector"
+               OpName %self_3 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_4 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_5 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_6 "self"
+               OpName %EntryPoint_Main_ReflectAcrossVector "EntryPoint_Main_ReflectAcrossVector"
+               OpName %self_7 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%ReflectAcrossVector = OpTypeStruct %int
+%_ptr_Function_ReflectAcrossVector = OpTypePointer Function %ReflectAcrossVector
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %9 = OpTypeFunction %void %_ptr_Function_ReflectAcrossVector
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+    %float_0 = OpConstant %float 0
+         %14 = OpTypeFunction %v2float %v2float %v2float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+         %17 = OpTypeFunction %v3float %v3float %v3float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+         %20 = OpTypeFunction %v4float %v4float %v4float
+         %21 = OpTypeFunction %void
+%Test_Static_Real2_Real2 = OpFunction %void None %9
+       %self = OpFunctionParameter %_ptr_Function_ReflectAcrossVector
+         %25 = OpLabel
+%toBeReflected_ = OpVariable %_ptr_Function_v2float Function
+    %vector_ = OpVariable %_ptr_Function_v2float Function
+     %result = OpVariable %_ptr_Function_v2float Function
+         %29 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %toBeReflected_ %29
+         %30 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %vector_ %30
+         %31 = OpLoad %v2float %toBeReflected_
+         %32 = OpLoad %v2float %vector_
+         %33 = OpFunctionCall %v2float %ReflectAcrossVector_0 %31 %32
+               OpStore %result %33
+               OpReturn
+               OpFunctionEnd
+%ReflectAcrossVector_0 = OpFunction %v2float None %14
+%toBeReflected = OpFunctionParameter %v2float
+     %vector = OpFunctionParameter %v2float
+         %37 = OpLabel
+%toBeReflected_Local = OpVariable %_ptr_Function_v2float Function
+%vector_Local = OpVariable %_ptr_Function_v2float Function
+               OpStore %toBeReflected_Local %toBeReflected
+               OpStore %vector_Local %vector
+         %40 = OpLoad %v2float %toBeReflected_Local
+         %41 = OpFNegate %v2float %40
+         %42 = OpLoad %v2float %vector_Local
+         %43 = OpExtInst %v2float %2 Reflect %41 %42
+               OpReturnValue %43
+               OpFunctionEnd
+%Test_Static_Real3_Real3 = OpFunction %void None %9
+     %self_0 = OpFunctionParameter %_ptr_Function_ReflectAcrossVector
+         %46 = OpLabel
+%toBeReflected__0 = OpVariable %_ptr_Function_v3float Function
+  %vector__0 = OpVariable %_ptr_Function_v3float Function
+   %result_0 = OpVariable %_ptr_Function_v3float Function
+         %50 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %toBeReflected__0 %50
+         %51 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %vector__0 %51
+         %52 = OpLoad %v3float %toBeReflected__0
+         %53 = OpLoad %v3float %vector__0
+         %54 = OpFunctionCall %v3float %ReflectAcrossVector_1 %52 %53
+               OpStore %result_0 %54
+               OpReturn
+               OpFunctionEnd
+%ReflectAcrossVector_1 = OpFunction %v3float None %17
+%toBeReflected_0 = OpFunctionParameter %v3float
+   %vector_0 = OpFunctionParameter %v3float
+         %58 = OpLabel
+%toBeReflected_Local_0 = OpVariable %_ptr_Function_v3float Function
+%vector_Local_0 = OpVariable %_ptr_Function_v3float Function
+               OpStore %toBeReflected_Local_0 %toBeReflected_0
+               OpStore %vector_Local_0 %vector_0
+         %61 = OpLoad %v3float %toBeReflected_Local_0
+         %62 = OpFNegate %v3float %61
+         %63 = OpLoad %v3float %vector_Local_0
+         %64 = OpExtInst %v3float %2 Reflect %62 %63
+               OpReturnValue %64
+               OpFunctionEnd
+%Test_Static_Real4_Real4 = OpFunction %void None %9
+     %self_1 = OpFunctionParameter %_ptr_Function_ReflectAcrossVector
+         %67 = OpLabel
+%toBeReflected__1 = OpVariable %_ptr_Function_v4float Function
+  %vector__1 = OpVariable %_ptr_Function_v4float Function
+   %result_1 = OpVariable %_ptr_Function_v4float Function
+         %71 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %toBeReflected__1 %71
+         %72 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %vector__1 %72
+         %73 = OpLoad %v4float %toBeReflected__1
+         %74 = OpLoad %v4float %vector__1
+         %75 = OpFunctionCall %v4float %ReflectAcrossVector_2 %73 %74
+               OpStore %result_1 %75
+               OpReturn
+               OpFunctionEnd
+%ReflectAcrossVector_2 = OpFunction %v4float None %20
+%toBeReflected_1 = OpFunctionParameter %v4float
+   %vector_1 = OpFunctionParameter %v4float
+         %79 = OpLabel
+%toBeReflected_Local_1 = OpVariable %_ptr_Function_v4float Function
+%vector_Local_1 = OpVariable %_ptr_Function_v4float Function
+               OpStore %toBeReflected_Local_1 %toBeReflected_1
+               OpStore %vector_Local_1 %vector_1
+         %82 = OpLoad %v4float %toBeReflected_Local_1
+         %83 = OpFNegate %v4float %82
+         %84 = OpLoad %v4float %vector_Local_1
+         %85 = OpExtInst %v4float %2 Reflect %83 %84
+               OpReturnValue %85
+               OpFunctionEnd
+       %Main = OpFunction %void None %9
+     %self_2 = OpFunctionParameter %_ptr_Function_ReflectAcrossVector
+         %88 = OpLabel
+         %89 = OpFunctionCall %void %Test_Static_Real2_Real2 %self_2
+         %90 = OpFunctionCall %void %Test_Static_Real3_Real3 %self_2
+         %91 = OpFunctionCall %void %Test_Static_Real4_Real4 %self_2
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_ReflectAcrossVector = OpFunction %void None %9
+     %self_3 = OpFunctionParameter %_ptr_Function_ReflectAcrossVector
+         %94 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %9
+     %self_4 = OpFunctionParameter %_ptr_Function_ReflectAcrossVector
+         %97 = OpLabel
+         %98 = OpFunctionCall %void %PreConstructor_ReflectAcrossVector %self_4
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %9
+     %self_5 = OpFunctionParameter %_ptr_Function_ReflectAcrossVector
+        %101 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %9
+     %self_6 = OpFunctionParameter %_ptr_Function_ReflectAcrossVector
+        %104 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_ReflectAcrossVector = OpFunction %void None %21
+        %106 = OpLabel
+     %self_7 = OpVariable %_ptr_Function_ReflectAcrossVector Function
+        %108 = OpFunctionCall %void %InitializeGlobals
+        %109 = OpFunctionCall %void %DefaultConstructor %self_7
+        %110 = OpFunctionCall %void %CopyInputs_Main %self_7
+        %111 = OpFunctionCall %void %Main %self_7
+        %112 = OpFunctionCall %void %CopyOutputs_Main %self_7
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %21
+        %113 = OpLabel
+               OpReturn
+               OpFunctionEnd

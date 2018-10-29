@@ -1,0 +1,18 @@
+[Pixel][UnitTest]
+struct MathProperties
+{
+  function Test_StaticE_Real()
+  {
+    var value = Math.E;
+  }
+  function Test_StaticPi_Real()
+  {
+    var value = Math.Pi;
+  }
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_StaticE_Real();
+    this.Test_StaticPi_Real();
+  }
+}

@@ -1,0 +1,135 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 70
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_Boolean2Implements "EntryPoint_Main_Boolean2Implements"
+               OpExecutionMode %EntryPoint_Main_Boolean2Implements OriginUpperLeft
+               OpSource Unknown 100
+               OpName %Boolean2Implements "Boolean2Implements"
+               OpMemberName %Boolean2Implements 0 "Dummy"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %x "x"
+               OpName %y "y"
+               OpName %zero "zero"
+               OpName %axis "axis"
+               OpName %XAxis "XAxis"
+               OpName %YAxis "YAxis"
+               OpName %Zero "Zero"
+               OpName %GetAxis "GetAxis"
+               OpName %value "value"
+               OpName %value_Local "value_Local"
+               OpName %result "result"
+               OpName %PreConstructor_Boolean2Implements "PreConstructor_Boolean2Implements"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_Boolean2Implements "EntryPoint_Main_Boolean2Implements"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%Boolean2Implements = OpTypeStruct %int
+%_ptr_Function_Boolean2Implements = OpTypePointer Function %Boolean2Implements
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_Boolean2Implements
+       %bool = OpTypeBool
+%_ptr_Function_bool = OpTypePointer Function %bool
+     %v2bool = OpTypeVector %bool 2
+%_ptr_Function_v2bool = OpTypePointer Function %v2bool
+         %13 = OpTypeFunction %v2bool
+       %true = OpConstantTrue %bool
+      %false = OpConstantFalse %bool
+         %14 = OpTypeFunction %v2bool %int
+      %int_1 = OpConstant %int 1
+         %15 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_Boolean2Implements
+         %21 = OpLabel
+          %x = OpVariable %_ptr_Function_v2bool Function
+          %y = OpVariable %_ptr_Function_v2bool Function
+       %zero = OpVariable %_ptr_Function_v2bool Function
+       %axis = OpVariable %_ptr_Function_v2bool Function
+         %26 = OpFunctionCall %v2bool %XAxis
+               OpStore %x %26
+         %27 = OpFunctionCall %v2bool %YAxis
+               OpStore %y %27
+         %28 = OpFunctionCall %v2bool %Zero
+               OpStore %zero %28
+         %29 = OpFunctionCall %v2bool %GetAxis %int_1
+               OpStore %axis %29
+               OpReturn
+               OpFunctionEnd
+      %XAxis = OpFunction %v2bool None %13
+         %31 = OpLabel
+         %32 = OpCompositeConstruct %v2bool %true %false
+               OpReturnValue %32
+               OpFunctionEnd
+      %YAxis = OpFunction %v2bool None %13
+         %34 = OpLabel
+         %35 = OpCompositeConstruct %v2bool %false %true
+               OpReturnValue %35
+               OpFunctionEnd
+       %Zero = OpFunction %v2bool None %13
+         %37 = OpLabel
+         %38 = OpCompositeConstruct %v2bool %false %false
+               OpReturnValue %38
+               OpFunctionEnd
+    %GetAxis = OpFunction %v2bool None %14
+      %value = OpFunctionParameter %int
+         %41 = OpLabel
+%value_Local = OpVariable %_ptr_Function_int Function
+     %result = OpVariable %_ptr_Function_v2bool Function
+               OpStore %value_Local %value
+         %44 = OpCompositeConstruct %v2bool %false %false
+               OpStore %result %44
+         %45 = OpLoad %int %value_Local
+         %46 = OpAccessChain %_ptr_Function_bool %result %45
+               OpStore %46 %true
+         %47 = OpLoad %v2bool %result
+               OpReturnValue %47
+               OpFunctionEnd
+%PreConstructor_Boolean2Implements = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_Boolean2Implements
+         %50 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_Boolean2Implements
+         %53 = OpLabel
+         %54 = OpFunctionCall %void %PreConstructor_Boolean2Implements %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_Boolean2Implements
+         %57 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_Boolean2Implements
+         %60 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_Boolean2Implements = OpFunction %void None %15
+         %62 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_Boolean2Implements Function
+         %64 = OpFunctionCall %void %InitializeGlobals
+         %65 = OpFunctionCall %void %DefaultConstructor %self_4
+         %66 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %67 = OpFunctionCall %void %Main %self_4
+         %68 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %15
+         %69 = OpLabel
+               OpReturn
+               OpFunctionEnd

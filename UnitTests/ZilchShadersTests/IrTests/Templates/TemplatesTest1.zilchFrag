@@ -1,0 +1,26 @@
+struct SimpleTemplate[Type]
+{
+  var Data : Type;
+  
+  function Set(data : Type)
+  {
+    this.Data = data;
+  }
+}
+
+[Pixel][UnitTest]
+struct TemplatesTest1
+{
+  [EntryPoint]
+  function Main()
+  {
+    var tReal = SimpleTemplate[Real]();
+    tReal.Set(1.0);
+    
+    var tReal2 = SimpleTemplate[Real2]();
+    tReal2.Set(Real2());
+    
+    var tNested = SimpleTemplate[SimpleTemplate[Real2]]();
+    tNested.Set(tReal2);
+  }
+}

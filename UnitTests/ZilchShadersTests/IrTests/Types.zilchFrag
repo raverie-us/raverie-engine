@@ -1,0 +1,24 @@
+[Pixel][UnitTest]
+struct Types
+{
+  var Data1 : Real;
+  var Data2 : Integer;
+  
+  function Main0()
+  {
+    var a = 0.0;
+    var b = Real2();
+    var c = a + 1.0;
+    //var r3x3 = Real3x3();
+    //var r3 = Real3();
+  }
+  
+  function Casts()
+  {
+    var i1 = 0;
+    var r1 = 1.0;
+    
+    r1 += i1;
+    i1 += r1 as Integer;
+  }
+}

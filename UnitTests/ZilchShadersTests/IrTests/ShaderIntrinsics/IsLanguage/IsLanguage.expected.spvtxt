@@ -1,0 +1,110 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 57
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_IsLanguage "EntryPoint_Main_IsLanguage"
+               OpExecutionMode %EntryPoint_Main_IsLanguage OriginUpperLeft
+               OpSource Unknown 100
+               OpName %IsLanguage "IsLanguage"
+               OpMemberName %IsLanguage 0 "Dummy"
+               OpName %LanguageId "LanguageId"
+               OpName %LanguageVersion "LanguageVersion"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %glslId "glslId"
+               OpName %versionIdMin "versionIdMin"
+               OpName %versionIdMax "versionIdMax"
+               OpName %isGlsl "isGlsl"
+               OpName %isGlslVersion "isGlslVersion"
+               OpName %PreConstructor_IsLanguage "PreConstructor_IsLanguage"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_IsLanguage "EntryPoint_Main_IsLanguage"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %LanguageId SpecId 1
+               OpDecorate %LanguageVersion SpecId 2
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+ %IsLanguage = OpTypeStruct %int
+%_ptr_Function_IsLanguage = OpTypePointer Function %IsLanguage
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_IsLanguage
+      %int_1 = OpConstant %int 1
+    %int_140 = OpConstant %int 140
+    %int_200 = OpConstant %int 200
+       %bool = OpTypeBool
+%_ptr_Function_bool = OpTypePointer Function %bool
+ %LanguageId = OpSpecConstant %int 2
+%LanguageVersion = OpSpecConstant %int 450
+         %11 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_IsLanguage
+         %19 = OpLabel
+     %glslId = OpVariable %_ptr_Function_int Function
+%versionIdMin = OpVariable %_ptr_Function_int Function
+%versionIdMax = OpVariable %_ptr_Function_int Function
+     %isGlsl = OpVariable %_ptr_Function_bool Function
+%isGlslVersion = OpVariable %_ptr_Function_bool Function
+               OpStore %glslId %int_1
+               OpStore %versionIdMin %int_140
+               OpStore %versionIdMax %int_200
+         %25 = OpLoad %int %glslId
+         %26 = OpIEqual %bool %LanguageId %25
+               OpStore %isGlsl %26
+         %27 = OpLoad %int %glslId
+         %28 = OpLoad %int %versionIdMin
+         %29 = OpLoad %int %versionIdMax
+         %30 = OpIEqual %bool %LanguageId %27
+         %31 = OpSLessThanEqual %bool %28 %LanguageVersion
+         %32 = OpSLessThanEqual %bool %LanguageVersion %29
+         %33 = OpLogicalAnd %bool %31 %32
+         %34 = OpLogicalAnd %bool %30 %33
+               OpStore %isGlslVersion %34
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_IsLanguage = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_IsLanguage
+         %37 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_IsLanguage
+         %40 = OpLabel
+         %41 = OpFunctionCall %void %PreConstructor_IsLanguage %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_IsLanguage
+         %44 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_IsLanguage
+         %47 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_IsLanguage = OpFunction %void None %11
+         %49 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_IsLanguage Function
+         %51 = OpFunctionCall %void %InitializeGlobals
+         %52 = OpFunctionCall %void %DefaultConstructor %self_4
+         %53 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %54 = OpFunctionCall %void %Main %self_4
+         %55 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %11
+         %56 = OpLabel
+               OpReturn
+               OpFunctionEnd

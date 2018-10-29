@@ -22,6 +22,9 @@ Zilch::Function* GetStaticFunction(Zilch::Type* type, StringParam fnName, String
 Zilch::Function* GetStaticFunction(Zilch::Type* type, StringParam fnName, StringParam p0, StringParam p1, StringParam p2, StringParam p3);
 Zilch::Function* GetStaticFunction(Zilch::Type* type, StringParam fnName, StringParam p0, StringParam p1, StringParam p2, StringParam p3, StringParam p4);
 
+Zilch::Function* GetConstructor(Zilch::Type* type, StringParam p0);
+Zilch::Function* GetConstructor(Zilch::Type* type, Array<String>& params);
+
 Zilch::Field* GetStaticMember(Zilch::Type* type, StringParam memberName);
 Zilch::Property* GetInstanceProperty(Zilch::Type* type, StringParam propName);
 Zilch::Property* GetStaticProperty(Zilch::Type* type, StringParam propName);

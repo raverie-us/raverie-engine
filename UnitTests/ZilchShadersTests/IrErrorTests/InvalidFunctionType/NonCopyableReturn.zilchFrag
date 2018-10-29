@@ -1,0 +1,10 @@
+[Pixel][UnitTest]
+struct NonCopyableReturn
+{
+  var Sampler : Sampler;
+  
+  function Main() : Sampler
+  {
+    return this.Sampler;
+  }
+}

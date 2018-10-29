@@ -1,0 +1,30 @@
+[Pixel][UnitTest]
+struct ImplementsMethods2
+{
+  [Static][Extension(typeid(Real3))][Implements]
+  var Zero : Real3
+  {
+    get { return Real3(); }
+  }
+  
+  [Static][Extension(typeid(Real3))][Implements]
+  var XAxis : Real3
+  {
+    get { return Real3(1, 0, 0); }
+  }
+  
+  [Extension(typeid(Real3))][Implements]
+  var ZX : Real2
+  {
+    get { return Real2(1, 2); }
+    //set { this.X = value.X; this.Z = value.Y; }
+  }
+  
+  [EntryPoint]
+  function Main()
+  {
+    var zero = Real3.Zero;
+    var x = Real3.XAxis;
+    var zx = x.ZX;
+  }
+}

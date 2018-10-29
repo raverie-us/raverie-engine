@@ -1,0 +1,15 @@
+[Vertex]
+struct Vertex
+{
+  [StageOutput] var ViewPosition : Real3;
+  [StageOutput] var PerspectivePosition : Real4;
+  [HardwareBuiltInOutput] var ApiPerspectivePosition : Real4;
+  
+  [StageInput][StageOutput] var Uv : Real2;
+  [StageOutput] var Time : Real;
+  
+  function Main()
+  {
+    
+  }
+}

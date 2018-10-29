@@ -1,0 +1,18 @@
+struct MathReflectAcrossVectorImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function ReflectAcrossVector(toBeReflected : Real2, vector : Real2) : Real2
+  {
+    return Math.ReflectAcrossPlane(-toBeReflected, vector);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function ReflectAcrossVector(toBeReflected : Real3, vector : Real3) : Real3
+  {
+    return Math.ReflectAcrossPlane(-toBeReflected, vector);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function ReflectAcrossVector(toBeReflected : Real4, vector : Real4) : Real4
+  {
+    return Math.ReflectAcrossPlane(-toBeReflected, vector);
+  }
+}

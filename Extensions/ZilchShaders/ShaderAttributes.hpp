@@ -9,33 +9,73 @@
 namespace Zero
 {
 
-//-------------------------------------------------------------------ShaderAttribute
-// Attribute information parsed from zilch. Currently just contains the
-// attribute name, will be extended later for parameters.
-class ShaderAttribute
+//-------------------------------------------------------------------ShaderIRAttributeParameter
+class ShaderIRAttributeParameter
 {
 public:
-  ShaderAttribute() {};
-  ShaderAttribute(StringParam attributeName);
+  ShaderIRAttributeParameter();
+  ShaderIRAttributeParameter(Zilch::AttributeParameter& param, Zilch::SyntaxNode* node);
 
-  Zilch::AttributeParameter* FindFirstParameter(StringParam name);
+  String GetName() const;
+  void SetName(StringParam name);
 
-  String mAttributeName;
-  Array<Zilch::AttributeParameter> mParameters;
+  Zilch::ConstantType::Enum GetType() const;
+
+  String GetStringValue() const;
+  void SetStringValue(StringParam stringValue);
+
+  int GetIntValue() const;
+  void SetIntValue(int intValue);
+
+  float GetFloatValue() const;
+  void SetFloatValue(float floatValue);
+
+  Zilch::Type* GetTypeValue() const;
+  void SetTypeValue(Zilch::Type* typeValue);
+
+  Zilch::CodeLocation* GetLocation();
+  void SetLocationNode(Zilch::SyntaxNode* node);
+
+  // Return the internal zilch attribute parameter. Mostly exposed for ease of binding.
+  Zilch::AttributeParameter& GetZilchAttributeParameter();
+
+private:
+  Zilch::AttributeParameter mParameter;
+  Zilch::SyntaxNode* mNode;
 };
 
-//-------------------------------------------------------------------ShaderAttributeList
-class ShaderAttributeList
+//-------------------------------------------------------------------ShaderIRAttribute
+class ShaderIRAttribute
 {
 public:
+  ShaderIRAttribute();
+  ShaderIRAttribute(StringParam attributeName, Zilch::SyntaxNode* locationNode);
+
+  ShaderIRAttributeParameter* FindFirstParameter(StringParam name);
+  Zilch::CodeLocation* GetLocation();
+
+  String mAttributeName;
+  Array<ShaderIRAttributeParameter> mParameters;
+  Zilch::SyntaxNode* mNode;
+
+  // Was this attribute created from another (e.g. [Input] implies [AppBuiltInInput]).
+  // Some errors are only valid if the attribute was explicitly declared.
+  bool mImplicitAttribute;
+};
+
+//-------------------------------------------------------------------ShaderIRAttributeList
+class ShaderIRAttributeList
+{
+public:
+  typedef Array<ShaderIRAttribute>::range Range;
 
   class NamedRange
   {
   public:
     NamedRange();
-    NamedRange(StringParam attributeToFind, Array<ShaderAttribute>::range range);
+    NamedRange(StringParam attributeToFind, const Range& range);
 
-    ShaderAttribute* Front();
+    ShaderIRAttribute* Front();
     bool Empty() const;
     void PopFront();
 
@@ -43,24 +83,20 @@ public:
     void SkipAttributes();
 
     String mAttributeToFind;
-    Array<ShaderAttribute>::range mRange;
+    Range mRange;
   };
 
-  typedef Array<ShaderAttribute>::range range;
-
-  ShaderAttribute* AddAttribute(StringParam attributeName, Zilch::AttributeNode* node);
+  ShaderIRAttribute* AddAttribute(StringParam attributeName, Zilch::AttributeNode* node);
   NamedRange FindAttributes(StringParam attributeName);
-  ShaderAttribute* FindFirstAttribute(StringParam attributeName);
-  range All();
+  ShaderIRAttribute* FindFirstAttribute(StringParam attributeName);
+  Range All();
   size_t Size();
 
-  ShaderAttribute* GetAtIndex(int index);
-  Zilch::CodeLocation* GetLocation(ShaderAttribute* shaderAttribute);
-  Zilch::CodeLocation* GetLocation(ShaderAttribute* shaderAttribute, Zilch::AttributeParameter* param);
+  ShaderIRAttribute* GetAtIndex(int index);
+  ShaderIRAttribute* operator[](int index);
 
 private:
-  Array<ShaderAttribute> mAttributes;
-  Array<Zilch::AttributeNode*> mNodes;
+  Array<ShaderIRAttribute> mAttributes;
 };
 
 }//namespace Zero

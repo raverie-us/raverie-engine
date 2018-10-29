@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)\Paths.props" />
+  <Import Project="$(BuildsPath)\ProjectConfigurations.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{34F0E1C6-C7FC-405F-9BF3-2CDBF6BBAAF7}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!--Import the Win32 property sheet (from the build folder) for each configuration-->
+  <ImportGroup Condition="'$(Platform)'=='Win32'" Label="PropertySheets">
+    <Import Project="$(ZERO_SOURCE)\Extensions\SpirV\SpirVTools.props" Condition="exists('$(ZERO_SOURCE)\Extensions\SpirV\SpirVTools.props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Platform)'=='x64'" Label="PropertySheets">
+    <Import Project="$(ZERO_SOURCE)\Build\x64.$(Configuration).props" Condition="exists('$(ZERO_SOURCE)\Build\x64.$(Configuration).props')" />
+  </ImportGroup>
+  <!--Add Static library with no CharacterSet for all x86 project configurations-->
+  <PropertyGroup Condition="'$(Platform)'=='Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ZILCH_SOURCE)\Project;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Precompiled.hpp</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="BaseShaderIRTranslator.hpp" />
+    <ClInclude Include="BaseShaderTranslator.hpp" />
+    <ClInclude Include="CodeRangeMapping.hpp" />
+    <ClInclude Include="CommonInstructions.hpp" />
+    <ClInclude Include="Compositor.hpp" />
+    <ClInclude Include="EntryPointGeneration.hpp" />
+    <ClInclude Include="ExtensionLibrary.hpp" />
+    <ClInclude Include="ForwardDeclarations.hpp" />
+    <ClInclude Include="GLSL.std.450.h" />
+    <ClInclude Include="GlslTranslator.hpp" />
+    <ClInclude Include="OperatorKeys.hpp" />
+    <ClInclude Include="ShaderAttributes.hpp" />
+    <ClInclude Include="ShaderByteStream.hpp" />
+    <ClInclude Include="ShaderErrors.hpp" />
+    <ClInclude Include="GenericTranslation.hpp" />
+    <ClInclude Include="GlslTranslation.hpp" />
+    <ClInclude Include="LibraryTranslationHelpers.hpp" />
+    <ClInclude Include="LibraryTranslator.hpp" />
+    <ClInclude Include="Precompiled.hpp" />
+    <ClInclude Include="ShaderCodeBuilder.hpp" />
+    <ClInclude Include="ShaderImageIntrinsics.hpp" />
+    <ClInclude Include="ShaderIntrinsicTypes.hpp" />
+    <ClInclude Include="ShaderIRLibraryTranslation.hpp" />
+    <ClInclude Include="SpirVSpecializationConstantPass.hpp" />
+    <ClInclude Include="StageRequirementsGatherer.hpp" />
+    <ClInclude Include="ZilchShaderGlslBackend.hpp" />
+    <ClInclude Include="ZilchSpirVDisassemblerBackend.hpp" />
+    <ClInclude Include="ZilchShaderIntrinsics.hpp" />
+    <ClInclude Include="ZilchShaderIRCore.hpp" />
+    <ClInclude Include="ZilchShaderIRCompositor.hpp" />
+    <ClInclude Include="ZilchShaderIRMeta.hpp" />
+    <ClInclude Include="spirv.hpp" />
+    <ClInclude Include="SpirVHelpers.hpp" />
+    <ClInclude Include="TypeDependencyCollector.hpp" />
+    <ClInclude Include="ZilchShaderIRLibrary.hpp" />
+    <ClInclude Include="ZilchShaderIRProject.hpp" />
+    <ClInclude Include="ZilchShaderIRReflection.hpp" />
+    <ClInclude Include="ZilchShaderIRPasses.hpp" />
+    <ClInclude Include="ZilchShaderSpirVBinaryBackend.hpp" />
+    <ClInclude Include="ZilchSpirVFrontEndValidation.hpp" />
+    <ClInclude Include="ZilchSpirVSettings.hpp" />
+    <ClInclude Include="ZilchShaderIRTranslationPass.hpp" />
+    <ClInclude Include="ShaderType.hpp" />
+    <ClInclude Include="SimpleZilchParser.hpp" />
+    <ClInclude Include="SimpleZilchShaderIRGenerator.hpp" />
+    <ClInclude Include="Translator.hpp" />
+    <ClInclude Include="ShaderLibrary.hpp" />
+    <ClInclude Include="ShaderProject.hpp" />
+    <ClInclude Include="SimpleZilchShaderGenerator.hpp" />
+    <ClInclude Include="TranslatorContext.hpp" />
+    <ClInclude Include="ZilchSpirVFrontEnd.hpp" />
+    <ClInclude Include="ZilchShaderIRShared.hpp" />
+    <ClInclude Include="ZilchShaderSettingsLibrary.hpp" />
+    <ClInclude Include="ZilchShaderSharedSettings.hpp" />
+    <ClInclude Include="ZilchShadersStandard.hpp" />
+    <ClInclude Include="ZilchTypeCollector.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ArithmeticInstructions.cpp" />
+    <ClCompile Include="BitInstructions.cpp" />
+    <ClCompile Include="CodeRangeMapping.cpp" />
+    <ClCompile Include="CommonInstructions.cpp" />
+    <ClCompile Include="Compositor.cpp" />
+    <ClCompile Include="ConversionInstructions.cpp" />
+    <ClCompile Include="EntryPointGeneration.cpp" />
+    <ClCompile Include="ExtensionLibrary.cpp" />
+    <ClCompile Include="FixedArray.cpp" />
+    <ClCompile Include="Glsl450Extensions.cpp" />
+    <ClCompile Include="GlslTranslator.cpp" />
+    <ClCompile Include="LogicalInstructions.cpp" />
+    <ClCompile Include="OperatorKeys.cpp" />
+    <ClCompile Include="ShaderAttributes.cpp" />
+    <ClCompile Include="ShaderByteStream.cpp" />
+    <ClCompile Include="ShaderErrors.cpp" />
+    <ClCompile Include="GenericTranslation.cpp" />
+    <ClCompile Include="GlslTranslation.cpp" />
+    <ClCompile Include="LibraryTranslationHelpers.cpp" />
+    <ClCompile Include="LibraryTranslator.cpp" />
+    <ClCompile Include="Precompiled.cpp">
+      <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="ShaderCodeBuilder.cpp" />
+    <ClCompile Include="ShaderImageIntrinsics.cpp" />
+    <ClCompile Include="ShaderIntrinsics.cpp" />
+    <ClCompile Include="ShaderIntrinsicTypes.cpp" />
+    <ClCompile Include="ShaderIRLibraryTranslation.cpp" />
+    <ClCompile Include="SpirVSpecializationConstantPass.cpp" />
+    <ClCompile Include="StageRequirementsGatherer.cpp" />
+    <ClCompile Include="ZilchShaderGlslBackend.cpp" />
+    <ClCompile Include="ZilchSpirVDisassemblerBackend.cpp" />
+    <ClCompile Include="ZilchShaderIntrinsics.cpp" />
+    <ClCompile Include="ZilchShaderIRCore.cpp" />
+    <ClCompile Include="ZilchShaderIRCompositor.cpp" />
+    <ClCompile Include="ZilchShaderIRMeta.cpp" />
+    <ClCompile Include="TypeDependencyCollector.cpp" />
+    <ClCompile Include="ZilchShaderIRLibrary.cpp" />
+    <ClCompile Include="ZilchShaderIRProject.cpp" />
+    <ClCompile Include="ZilchShaderIRReflection.cpp" />
+    <ClCompile Include="ZilchShaderIRPasses.cpp" />
+    <ClCompile Include="ZilchShaderSpirVBinaryBackend.cpp" />
+    <ClCompile Include="ZilchSpirVFrontEndValidation.cpp" />
+    <ClCompile Include="ZilchSpirVSettings.cpp" />
+    <ClCompile Include="ShaderType.cpp" />
+    <ClCompile Include="SimpleZilchParser.cpp" />
+    <ClCompile Include="SimpleZilchShaderIRGenerator.cpp" />
+    <ClCompile Include="Translator.cpp" />
+    <ClCompile Include="ShaderLibrary.cpp" />
+    <ClCompile Include="ShaderProject.cpp" />
+    <ClCompile Include="SimpleZilchShaderGenerator.cpp" />
+    <ClCompile Include="TranslatorContext.cpp" />
+    <ClCompile Include="ZilchSpirVFrontEnd.cpp" />
+    <ClCompile Include="ZilchShaderIRShared.cpp" />
+    <ClCompile Include="ZilchShaderSettingsLibrary.cpp" />
+    <ClCompile Include="ZilchShaderSharedSettings.cpp" />
+    <ClCompile Include="ZilchShadersStandard.cpp" />
+    <ClCompile Include="ZilchTypeCollector.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SpirV\SPIRV-Cross\SPIRV-Cross.vcxproj">
+      <Project>{f54e15f7-4e1d-4fea-b2d8-b796dfb2ab8c}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\SpirV\SPIRV-Tools-link\SPIRV-Tools-link.vcxproj">
+      <Project>{cdcdebcf-02b2-4427-a6b7-151096db6690}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\SpirV\SPIRV-Tools-opt\SPIRV-Tools-opt.vcxproj">
+      <Project>{23cccf58-5163-4976-872d-cfd37f9b9b84}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\SpirV\SPIRV-Tools\SPIRV-Tools.vcxproj">
+      <Project>{5f9b3f7f-7c7f-40f4-ac37-5c9b138a8438}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

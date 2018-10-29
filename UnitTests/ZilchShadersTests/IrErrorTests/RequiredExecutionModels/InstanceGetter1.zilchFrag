@@ -1,0 +1,25 @@
+[UnitTest][Vertex]
+struct InstanceGetter1
+{
+  function Main()
+  {
+    var helper = Helper();
+    var value = helper.Value;
+  }
+}
+
+struct Helper
+{
+  var Value : Real
+  {
+    get { return Helper.Kill(); }
+    set { Helper.Kill(); }
+  }
+  
+  [Static]
+  function Kill() : Real
+  {
+    ShaderIntrinsics.Kill();
+    return 1.0;
+  }
+}

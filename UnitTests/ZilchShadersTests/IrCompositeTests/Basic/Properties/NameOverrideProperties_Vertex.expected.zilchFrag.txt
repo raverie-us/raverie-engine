@@ -1,0 +1,16 @@
+[Vertex][UnitTest]
+struct NameOverrideProperties_Vertex
+{
+  [PropertyInput] var Position_VertexOverride : Real4;
+  [PropertyInput] var Value_VertexOverride : Real;
+
+  [EntryPoint]
+  function Main()
+  {
+    var vertexOverride = VertexOverride();
+    vertexOverride.VertexPosition = this.Position_VertexOverride;
+    vertexOverride.Aux = this.Value_VertexOverride;
+    vertexOverride.Main();
+
+  }
+}

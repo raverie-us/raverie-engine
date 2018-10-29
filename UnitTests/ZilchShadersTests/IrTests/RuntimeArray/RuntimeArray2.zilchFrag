@@ -1,0 +1,17 @@
+[Pixel][UnitTest]
+struct RuntimeArray2
+{
+  var Scalars : RuntimeArray[Real];
+  var Uvs : RuntimeArray[Real2];
+  var Velocities : RuntimeArray[Real3];
+  var Positions : RuntimeArray[Real4];
+  
+  [EntryPoint]
+  function Main()
+  {
+    var scalar = this.Scalars[0];
+    var uv = this.Uvs[0];
+    var vel = this.Velocities[0];
+    var pos = this.Positions[0];
+  }
+}

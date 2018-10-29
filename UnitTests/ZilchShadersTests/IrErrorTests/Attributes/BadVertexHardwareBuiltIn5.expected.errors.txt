@@ -1,0 +1,2 @@
+  IrErrorTests\Attributes\BadVertexHardwareBuiltIn5.zilchFrag(5): Field 'VertexId : Integer' does not match any provided HardwareBuiltInOutput with fragment type 'Vertex'.:
+  Field 'VertexId : Integer' does not match any provided HardwareBuiltInOutput with fragment type 'Vertex'.

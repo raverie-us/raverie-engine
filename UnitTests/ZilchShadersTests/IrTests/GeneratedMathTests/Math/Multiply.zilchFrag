@@ -1,0 +1,348 @@
+[Pixel][UnitTest]
+struct Multiply
+{
+  function Test_Static_Quaternion_Quaternion()
+  {
+    var by_ = Quaternion();
+    var the_ = Quaternion();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Quaternion_Real3()
+  {
+    var by_ = Quaternion();
+    var the_ = Real3();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real2x2_Real2()
+  {
+    var by_ = Real2x2();
+    var the_ = Real2();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real2x2_Real2x2()
+  {
+    var by_ = Real2x2();
+    var the_ = Real2x2();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real2x2_Real2x3()
+  {
+    var by_ = Real2x2();
+    var the_ = Real2x3();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real2x2_Real2x4()
+  {
+    var by_ = Real2x2();
+    var the_ = Real2x4();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real2x3_Real3()
+  {
+    var by_ = Real2x3();
+    var the_ = Real3();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real2x3_Real3x2()
+  {
+    var by_ = Real2x3();
+    var the_ = Real3x2();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real2x3_Real3x3()
+  {
+    var by_ = Real2x3();
+    var the_ = Real3x3();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real2x3_Real3x4()
+  {
+    var by_ = Real2x3();
+    var the_ = Real3x4();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real2x4_Real4()
+  {
+    var by_ = Real2x4();
+    var the_ = Real4();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real2x4_Real4x2()
+  {
+    var by_ = Real2x4();
+    var the_ = Real4x2();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real2x4_Real4x3()
+  {
+    var by_ = Real2x4();
+    var the_ = Real4x3();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real2x4_Real4x4()
+  {
+    var by_ = Real2x4();
+    var the_ = Real4x4();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real3x2_Real2()
+  {
+    var by_ = Real3x2();
+    var the_ = Real2();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real3x2_Real2x2()
+  {
+    var by_ = Real3x2();
+    var the_ = Real2x2();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real3x2_Real2x3()
+  {
+    var by_ = Real3x2();
+    var the_ = Real2x3();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real3x2_Real2x4()
+  {
+    var by_ = Real3x2();
+    var the_ = Real2x4();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real3x3_Real3()
+  {
+    var by_ = Real3x3();
+    var the_ = Real3();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real3x3_Real3x2()
+  {
+    var by_ = Real3x3();
+    var the_ = Real3x2();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real3x3_Real3x3()
+  {
+    var by_ = Real3x3();
+    var the_ = Real3x3();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real3x3_Real3x4()
+  {
+    var by_ = Real3x3();
+    var the_ = Real3x4();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real3x4_Real4()
+  {
+    var by_ = Real3x4();
+    var the_ = Real4();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real3x4_Real4x2()
+  {
+    var by_ = Real3x4();
+    var the_ = Real4x2();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real3x4_Real4x3()
+  {
+    var by_ = Real3x4();
+    var the_ = Real4x3();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real3x4_Real4x4()
+  {
+    var by_ = Real3x4();
+    var the_ = Real4x4();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real4x2_Real2()
+  {
+    var by_ = Real4x2();
+    var the_ = Real2();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real4x2_Real2x2()
+  {
+    var by_ = Real4x2();
+    var the_ = Real2x2();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real4x2_Real2x3()
+  {
+    var by_ = Real4x2();
+    var the_ = Real2x3();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real4x2_Real2x4()
+  {
+    var by_ = Real4x2();
+    var the_ = Real2x4();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real4x3_Real3()
+  {
+    var by_ = Real4x3();
+    var the_ = Real3();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real4x3_Real3x2()
+  {
+    var by_ = Real4x3();
+    var the_ = Real3x2();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real4x3_Real3x3()
+  {
+    var by_ = Real4x3();
+    var the_ = Real3x3();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real4x3_Real3x4()
+  {
+    var by_ = Real4x3();
+    var the_ = Real3x4();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real4x4_Real4()
+  {
+    var by_ = Real4x4();
+    var the_ = Real4();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real4x4_Real4x2()
+  {
+    var by_ = Real4x4();
+    var the_ = Real4x2();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real4x4_Real4x3()
+  {
+    var by_ = Real4x4();
+    var the_ = Real4x3();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  function Test_Static_Real4x4_Real4x4()
+  {
+    var by_ = Real4x4();
+    var the_ = Real4x4();
+    var result = Math.Multiply(by_, the_);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    //this.Test_Static_Integer2x2_Integer2();
+    //this.Test_Static_Integer2x2_Integer2x2();
+    //this.Test_Static_Integer2x2_Integer2x3();
+    //this.Test_Static_Integer2x2_Integer2x4();
+    //this.Test_Static_Integer2x3_Integer3();
+    //this.Test_Static_Integer2x3_Integer3x2();
+    //this.Test_Static_Integer2x3_Integer3x3();
+    //this.Test_Static_Integer2x3_Integer3x4();
+    //this.Test_Static_Integer2x4_Integer4();
+    //this.Test_Static_Integer2x4_Integer4x2();
+    //this.Test_Static_Integer2x4_Integer4x3();
+    //this.Test_Static_Integer2x4_Integer4x4();
+    //this.Test_Static_Integer3x2_Integer2();
+    //this.Test_Static_Integer3x2_Integer2x2();
+    //this.Test_Static_Integer3x2_Integer2x3();
+    //this.Test_Static_Integer3x2_Integer2x4();
+    //this.Test_Static_Integer3x3_Integer3();
+    //this.Test_Static_Integer3x3_Integer3x2();
+    //this.Test_Static_Integer3x3_Integer3x3();
+    //this.Test_Static_Integer3x3_Integer3x4();
+    //this.Test_Static_Integer3x4_Integer4();
+    //this.Test_Static_Integer3x4_Integer4x2();
+    //this.Test_Static_Integer3x4_Integer4x3();
+    //this.Test_Static_Integer3x4_Integer4x4();
+    //this.Test_Static_Integer4x2_Integer2();
+    //this.Test_Static_Integer4x2_Integer2x2();
+    //this.Test_Static_Integer4x2_Integer2x3();
+    //this.Test_Static_Integer4x2_Integer2x4();
+    //this.Test_Static_Integer4x3_Integer3();
+    //this.Test_Static_Integer4x3_Integer3x2();
+    //this.Test_Static_Integer4x3_Integer3x3();
+    //this.Test_Static_Integer4x3_Integer3x4();
+    //this.Test_Static_Integer4x4_Integer4();
+    //this.Test_Static_Integer4x4_Integer4x2();
+    //this.Test_Static_Integer4x4_Integer4x3();
+    //this.Test_Static_Integer4x4_Integer4x4();
+    this.Test_Static_Quaternion_Quaternion();
+    this.Test_Static_Quaternion_Real3();
+    this.Test_Static_Real2x2_Real2();
+    this.Test_Static_Real2x2_Real2x2();
+    this.Test_Static_Real2x2_Real2x3();
+    this.Test_Static_Real2x2_Real2x4();
+    this.Test_Static_Real2x3_Real3();
+    this.Test_Static_Real2x3_Real3x2();
+    this.Test_Static_Real2x3_Real3x3();
+    this.Test_Static_Real2x3_Real3x4();
+    this.Test_Static_Real2x4_Real4();
+    this.Test_Static_Real2x4_Real4x2();
+    this.Test_Static_Real2x4_Real4x3();
+    this.Test_Static_Real2x4_Real4x4();
+    this.Test_Static_Real3x2_Real2();
+    this.Test_Static_Real3x2_Real2x2();
+    this.Test_Static_Real3x2_Real2x3();
+    this.Test_Static_Real3x2_Real2x4();
+    this.Test_Static_Real3x3_Real3();
+    this.Test_Static_Real3x3_Real3x2();
+    this.Test_Static_Real3x3_Real3x3();
+    this.Test_Static_Real3x3_Real3x4();
+    this.Test_Static_Real3x4_Real4();
+    this.Test_Static_Real3x4_Real4x2();
+    this.Test_Static_Real3x4_Real4x3();
+    this.Test_Static_Real3x4_Real4x4();
+    this.Test_Static_Real4x2_Real2();
+    this.Test_Static_Real4x2_Real2x2();
+    this.Test_Static_Real4x2_Real2x3();
+    this.Test_Static_Real4x2_Real2x4();
+    this.Test_Static_Real4x3_Real3();
+    this.Test_Static_Real4x3_Real3x2();
+    this.Test_Static_Real4x3_Real3x3();
+    this.Test_Static_Real4x3_Real3x4();
+    this.Test_Static_Real4x4_Real4();
+    this.Test_Static_Real4x4_Real4x2();
+    this.Test_Static_Real4x4_Real4x3();
+    this.Test_Static_Real4x4_Real4x4();
+  }
+}

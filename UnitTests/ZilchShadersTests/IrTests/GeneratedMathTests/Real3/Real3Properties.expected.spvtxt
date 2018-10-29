@@ -1,0 +1,2414 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 1293
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_Real3Properties "EntryPoint_Main_Real3Properties"
+               OpExecutionMode %EntryPoint_Main_Real3Properties OriginUpperLeft
+               OpSource Unknown 100
+               OpName %Real3Properties "Real3Properties"
+               OpMemberName %Real3Properties 0 "Dummy"
+               OpName %Test_StaticCount_Integer "Test_StaticCount_Integer"
+               OpName %self "self"
+               OpName %value "value"
+               OpName %Test_Count_Integer "Test_Count_Integer"
+               OpName %self_0 "self"
+               OpName %instance "instance"
+               OpName %value_0 "value"
+               OpName %Test_StaticNegativeMin_Real3 "Test_StaticNegativeMin_Real3"
+               OpName %self_1 "self"
+               OpName %value_1 "value"
+               OpName %NegativeMin "NegativeMin"
+               OpName %NegativeMin_0 "NegativeMin"
+               OpName %PositiveMax "PositiveMax"
+               OpName %Test_StaticNegativeValueClosestToZero_Real3 "Test_StaticNegativeValueClosestToZero_Real3"
+               OpName %self_2 "self"
+               OpName %value_2 "value"
+               OpName %NegativeValueClosestToZero "NegativeValueClosestToZero"
+               OpName %NegativeValueClosestToZero_0 "NegativeValueClosestToZero"
+               OpName %PositiveValueClosestToZero "PositiveValueClosestToZero"
+               OpName %Test_StaticOne_Real3 "Test_StaticOne_Real3"
+               OpName %self_3 "self"
+               OpName %value_3 "value"
+               OpName %One "One"
+               OpName %Test_StaticPositiveMax_Real3 "Test_StaticPositiveMax_Real3"
+               OpName %self_4 "self"
+               OpName %value_4 "value"
+               OpName %PositiveMax_0 "PositiveMax"
+               OpName %Test_StaticPositiveValueClosestToZero_Real3 "Test_StaticPositiveValueClosestToZero_Real3"
+               OpName %self_5 "self"
+               OpName %value_5 "value"
+               OpName %PositiveValueClosestToZero_0 "PositiveValueClosestToZero"
+               OpName %Test_X_Real "Test_X_Real"
+               OpName %self_6 "self"
+               OpName %instance_0 "instance"
+               OpName %value_6 "value"
+               OpName %Test_StaticXAxis_Real3 "Test_StaticXAxis_Real3"
+               OpName %self_7 "self"
+               OpName %value_7 "value"
+               OpName %XAxis "XAxis"
+               OpName %Test_XX_Real2 "Test_XX_Real2"
+               OpName %self_8 "self"
+               OpName %instance_1 "instance"
+               OpName %value_8 "value"
+               OpName %Test_XXX_Real3 "Test_XXX_Real3"
+               OpName %self_9 "self"
+               OpName %instance_2 "instance"
+               OpName %value_9 "value"
+               OpName %Test_XXXX_Real4 "Test_XXXX_Real4"
+               OpName %self_10 "self"
+               OpName %instance_3 "instance"
+               OpName %value_10 "value"
+               OpName %Test_XXXY_Real4 "Test_XXXY_Real4"
+               OpName %self_11 "self"
+               OpName %instance_4 "instance"
+               OpName %value_11 "value"
+               OpName %Test_XXXZ_Real4 "Test_XXXZ_Real4"
+               OpName %self_12 "self"
+               OpName %instance_5 "instance"
+               OpName %value_12 "value"
+               OpName %Test_XXY_Real3 "Test_XXY_Real3"
+               OpName %self_13 "self"
+               OpName %instance_6 "instance"
+               OpName %value_13 "value"
+               OpName %Test_XXYX_Real4 "Test_XXYX_Real4"
+               OpName %self_14 "self"
+               OpName %instance_7 "instance"
+               OpName %value_14 "value"
+               OpName %Test_XXYY_Real4 "Test_XXYY_Real4"
+               OpName %self_15 "self"
+               OpName %instance_8 "instance"
+               OpName %value_15 "value"
+               OpName %Test_XXYZ_Real4 "Test_XXYZ_Real4"
+               OpName %self_16 "self"
+               OpName %instance_9 "instance"
+               OpName %value_16 "value"
+               OpName %Test_XXZ_Real3 "Test_XXZ_Real3"
+               OpName %self_17 "self"
+               OpName %instance_10 "instance"
+               OpName %value_17 "value"
+               OpName %Test_XXZX_Real4 "Test_XXZX_Real4"
+               OpName %self_18 "self"
+               OpName %instance_11 "instance"
+               OpName %value_18 "value"
+               OpName %Test_XXZY_Real4 "Test_XXZY_Real4"
+               OpName %self_19 "self"
+               OpName %instance_12 "instance"
+               OpName %value_19 "value"
+               OpName %Test_XXZZ_Real4 "Test_XXZZ_Real4"
+               OpName %self_20 "self"
+               OpName %instance_13 "instance"
+               OpName %value_20 "value"
+               OpName %Test_XY_Real2 "Test_XY_Real2"
+               OpName %self_21 "self"
+               OpName %instance_14 "instance"
+               OpName %value_21 "value"
+               OpName %Test_XYX_Real3 "Test_XYX_Real3"
+               OpName %self_22 "self"
+               OpName %instance_15 "instance"
+               OpName %value_22 "value"
+               OpName %Test_XYXX_Real4 "Test_XYXX_Real4"
+               OpName %self_23 "self"
+               OpName %instance_16 "instance"
+               OpName %value_23 "value"
+               OpName %Test_XYXY_Real4 "Test_XYXY_Real4"
+               OpName %self_24 "self"
+               OpName %instance_17 "instance"
+               OpName %value_24 "value"
+               OpName %Test_XYXZ_Real4 "Test_XYXZ_Real4"
+               OpName %self_25 "self"
+               OpName %instance_18 "instance"
+               OpName %value_25 "value"
+               OpName %Test_XYY_Real3 "Test_XYY_Real3"
+               OpName %self_26 "self"
+               OpName %instance_19 "instance"
+               OpName %value_26 "value"
+               OpName %Test_XYYX_Real4 "Test_XYYX_Real4"
+               OpName %self_27 "self"
+               OpName %instance_20 "instance"
+               OpName %value_27 "value"
+               OpName %Test_XYYY_Real4 "Test_XYYY_Real4"
+               OpName %self_28 "self"
+               OpName %instance_21 "instance"
+               OpName %value_28 "value"
+               OpName %Test_XYYZ_Real4 "Test_XYYZ_Real4"
+               OpName %self_29 "self"
+               OpName %instance_22 "instance"
+               OpName %value_29 "value"
+               OpName %Test_XYZ_Real3 "Test_XYZ_Real3"
+               OpName %self_30 "self"
+               OpName %instance_23 "instance"
+               OpName %value_30 "value"
+               OpName %Test_XYZX_Real4 "Test_XYZX_Real4"
+               OpName %self_31 "self"
+               OpName %instance_24 "instance"
+               OpName %value_31 "value"
+               OpName %Test_XYZY_Real4 "Test_XYZY_Real4"
+               OpName %self_32 "self"
+               OpName %instance_25 "instance"
+               OpName %value_32 "value"
+               OpName %Test_XYZZ_Real4 "Test_XYZZ_Real4"
+               OpName %self_33 "self"
+               OpName %instance_26 "instance"
+               OpName %value_33 "value"
+               OpName %Test_XZ_Real2 "Test_XZ_Real2"
+               OpName %self_34 "self"
+               OpName %instance_27 "instance"
+               OpName %value_34 "value"
+               OpName %Test_XZX_Real3 "Test_XZX_Real3"
+               OpName %self_35 "self"
+               OpName %instance_28 "instance"
+               OpName %value_35 "value"
+               OpName %Test_XZXX_Real4 "Test_XZXX_Real4"
+               OpName %self_36 "self"
+               OpName %instance_29 "instance"
+               OpName %value_36 "value"
+               OpName %Test_XZXY_Real4 "Test_XZXY_Real4"
+               OpName %self_37 "self"
+               OpName %instance_30 "instance"
+               OpName %value_37 "value"
+               OpName %Test_XZXZ_Real4 "Test_XZXZ_Real4"
+               OpName %self_38 "self"
+               OpName %instance_31 "instance"
+               OpName %value_38 "value"
+               OpName %Test_XZY_Real3 "Test_XZY_Real3"
+               OpName %self_39 "self"
+               OpName %instance_32 "instance"
+               OpName %value_39 "value"
+               OpName %Test_XZYX_Real4 "Test_XZYX_Real4"
+               OpName %self_40 "self"
+               OpName %instance_33 "instance"
+               OpName %value_40 "value"
+               OpName %Test_XZYY_Real4 "Test_XZYY_Real4"
+               OpName %self_41 "self"
+               OpName %instance_34 "instance"
+               OpName %value_41 "value"
+               OpName %Test_XZYZ_Real4 "Test_XZYZ_Real4"
+               OpName %self_42 "self"
+               OpName %instance_35 "instance"
+               OpName %value_42 "value"
+               OpName %Test_XZZ_Real3 "Test_XZZ_Real3"
+               OpName %self_43 "self"
+               OpName %instance_36 "instance"
+               OpName %value_43 "value"
+               OpName %Test_XZZX_Real4 "Test_XZZX_Real4"
+               OpName %self_44 "self"
+               OpName %instance_37 "instance"
+               OpName %value_44 "value"
+               OpName %Test_XZZY_Real4 "Test_XZZY_Real4"
+               OpName %self_45 "self"
+               OpName %instance_38 "instance"
+               OpName %value_45 "value"
+               OpName %Test_XZZZ_Real4 "Test_XZZZ_Real4"
+               OpName %self_46 "self"
+               OpName %instance_39 "instance"
+               OpName %value_46 "value"
+               OpName %Test_Y_Real "Test_Y_Real"
+               OpName %self_47 "self"
+               OpName %instance_40 "instance"
+               OpName %value_47 "value"
+               OpName %Test_StaticYAxis_Real3 "Test_StaticYAxis_Real3"
+               OpName %self_48 "self"
+               OpName %value_48 "value"
+               OpName %YAxis "YAxis"
+               OpName %Test_YX_Real2 "Test_YX_Real2"
+               OpName %self_49 "self"
+               OpName %instance_41 "instance"
+               OpName %value_49 "value"
+               OpName %Test_YXX_Real3 "Test_YXX_Real3"
+               OpName %self_50 "self"
+               OpName %instance_42 "instance"
+               OpName %value_50 "value"
+               OpName %Test_YXXX_Real4 "Test_YXXX_Real4"
+               OpName %self_51 "self"
+               OpName %instance_43 "instance"
+               OpName %value_51 "value"
+               OpName %Test_YXXY_Real4 "Test_YXXY_Real4"
+               OpName %self_52 "self"
+               OpName %instance_44 "instance"
+               OpName %value_52 "value"
+               OpName %Test_YXXZ_Real4 "Test_YXXZ_Real4"
+               OpName %self_53 "self"
+               OpName %instance_45 "instance"
+               OpName %value_53 "value"
+               OpName %Test_YXY_Real3 "Test_YXY_Real3"
+               OpName %self_54 "self"
+               OpName %instance_46 "instance"
+               OpName %value_54 "value"
+               OpName %Test_YXYX_Real4 "Test_YXYX_Real4"
+               OpName %self_55 "self"
+               OpName %instance_47 "instance"
+               OpName %value_55 "value"
+               OpName %Test_YXYY_Real4 "Test_YXYY_Real4"
+               OpName %self_56 "self"
+               OpName %instance_48 "instance"
+               OpName %value_56 "value"
+               OpName %Test_YXYZ_Real4 "Test_YXYZ_Real4"
+               OpName %self_57 "self"
+               OpName %instance_49 "instance"
+               OpName %value_57 "value"
+               OpName %Test_YXZ_Real3 "Test_YXZ_Real3"
+               OpName %self_58 "self"
+               OpName %instance_50 "instance"
+               OpName %value_58 "value"
+               OpName %Test_YXZX_Real4 "Test_YXZX_Real4"
+               OpName %self_59 "self"
+               OpName %instance_51 "instance"
+               OpName %value_59 "value"
+               OpName %Test_YXZY_Real4 "Test_YXZY_Real4"
+               OpName %self_60 "self"
+               OpName %instance_52 "instance"
+               OpName %value_60 "value"
+               OpName %Test_YXZZ_Real4 "Test_YXZZ_Real4"
+               OpName %self_61 "self"
+               OpName %instance_53 "instance"
+               OpName %value_61 "value"
+               OpName %Test_YY_Real2 "Test_YY_Real2"
+               OpName %self_62 "self"
+               OpName %instance_54 "instance"
+               OpName %value_62 "value"
+               OpName %Test_YYX_Real3 "Test_YYX_Real3"
+               OpName %self_63 "self"
+               OpName %instance_55 "instance"
+               OpName %value_63 "value"
+               OpName %Test_YYXX_Real4 "Test_YYXX_Real4"
+               OpName %self_64 "self"
+               OpName %instance_56 "instance"
+               OpName %value_64 "value"
+               OpName %Test_YYXY_Real4 "Test_YYXY_Real4"
+               OpName %self_65 "self"
+               OpName %instance_57 "instance"
+               OpName %value_65 "value"
+               OpName %Test_YYXZ_Real4 "Test_YYXZ_Real4"
+               OpName %self_66 "self"
+               OpName %instance_58 "instance"
+               OpName %value_66 "value"
+               OpName %Test_YYY_Real3 "Test_YYY_Real3"
+               OpName %self_67 "self"
+               OpName %instance_59 "instance"
+               OpName %value_67 "value"
+               OpName %Test_YYYX_Real4 "Test_YYYX_Real4"
+               OpName %self_68 "self"
+               OpName %instance_60 "instance"
+               OpName %value_68 "value"
+               OpName %Test_YYYY_Real4 "Test_YYYY_Real4"
+               OpName %self_69 "self"
+               OpName %instance_61 "instance"
+               OpName %value_69 "value"
+               OpName %Test_YYYZ_Real4 "Test_YYYZ_Real4"
+               OpName %self_70 "self"
+               OpName %instance_62 "instance"
+               OpName %value_70 "value"
+               OpName %Test_YYZ_Real3 "Test_YYZ_Real3"
+               OpName %self_71 "self"
+               OpName %instance_63 "instance"
+               OpName %value_71 "value"
+               OpName %Test_YYZX_Real4 "Test_YYZX_Real4"
+               OpName %self_72 "self"
+               OpName %instance_64 "instance"
+               OpName %value_72 "value"
+               OpName %Test_YYZY_Real4 "Test_YYZY_Real4"
+               OpName %self_73 "self"
+               OpName %instance_65 "instance"
+               OpName %value_73 "value"
+               OpName %Test_YYZZ_Real4 "Test_YYZZ_Real4"
+               OpName %self_74 "self"
+               OpName %instance_66 "instance"
+               OpName %value_74 "value"
+               OpName %Test_YZ_Real2 "Test_YZ_Real2"
+               OpName %self_75 "self"
+               OpName %instance_67 "instance"
+               OpName %value_75 "value"
+               OpName %Test_YZX_Real3 "Test_YZX_Real3"
+               OpName %self_76 "self"
+               OpName %instance_68 "instance"
+               OpName %value_76 "value"
+               OpName %Test_YZXX_Real4 "Test_YZXX_Real4"
+               OpName %self_77 "self"
+               OpName %instance_69 "instance"
+               OpName %value_77 "value"
+               OpName %Test_YZXY_Real4 "Test_YZXY_Real4"
+               OpName %self_78 "self"
+               OpName %instance_70 "instance"
+               OpName %value_78 "value"
+               OpName %Test_YZXZ_Real4 "Test_YZXZ_Real4"
+               OpName %self_79 "self"
+               OpName %instance_71 "instance"
+               OpName %value_79 "value"
+               OpName %Test_YZY_Real3 "Test_YZY_Real3"
+               OpName %self_80 "self"
+               OpName %instance_72 "instance"
+               OpName %value_80 "value"
+               OpName %Test_YZYX_Real4 "Test_YZYX_Real4"
+               OpName %self_81 "self"
+               OpName %instance_73 "instance"
+               OpName %value_81 "value"
+               OpName %Test_YZYY_Real4 "Test_YZYY_Real4"
+               OpName %self_82 "self"
+               OpName %instance_74 "instance"
+               OpName %value_82 "value"
+               OpName %Test_YZYZ_Real4 "Test_YZYZ_Real4"
+               OpName %self_83 "self"
+               OpName %instance_75 "instance"
+               OpName %value_83 "value"
+               OpName %Test_YZZ_Real3 "Test_YZZ_Real3"
+               OpName %self_84 "self"
+               OpName %instance_76 "instance"
+               OpName %value_84 "value"
+               OpName %Test_YZZX_Real4 "Test_YZZX_Real4"
+               OpName %self_85 "self"
+               OpName %instance_77 "instance"
+               OpName %value_85 "value"
+               OpName %Test_YZZY_Real4 "Test_YZZY_Real4"
+               OpName %self_86 "self"
+               OpName %instance_78 "instance"
+               OpName %value_86 "value"
+               OpName %Test_YZZZ_Real4 "Test_YZZZ_Real4"
+               OpName %self_87 "self"
+               OpName %instance_79 "instance"
+               OpName %value_87 "value"
+               OpName %Test_Z_Real "Test_Z_Real"
+               OpName %self_88 "self"
+               OpName %instance_80 "instance"
+               OpName %value_88 "value"
+               OpName %Test_StaticZAxis_Real3 "Test_StaticZAxis_Real3"
+               OpName %self_89 "self"
+               OpName %value_89 "value"
+               OpName %ZAxis "ZAxis"
+               OpName %Test_ZX_Real2 "Test_ZX_Real2"
+               OpName %self_90 "self"
+               OpName %instance_81 "instance"
+               OpName %value_90 "value"
+               OpName %Test_ZXX_Real3 "Test_ZXX_Real3"
+               OpName %self_91 "self"
+               OpName %instance_82 "instance"
+               OpName %value_91 "value"
+               OpName %Test_ZXXX_Real4 "Test_ZXXX_Real4"
+               OpName %self_92 "self"
+               OpName %instance_83 "instance"
+               OpName %value_92 "value"
+               OpName %Test_ZXXY_Real4 "Test_ZXXY_Real4"
+               OpName %self_93 "self"
+               OpName %instance_84 "instance"
+               OpName %value_93 "value"
+               OpName %Test_ZXXZ_Real4 "Test_ZXXZ_Real4"
+               OpName %self_94 "self"
+               OpName %instance_85 "instance"
+               OpName %value_94 "value"
+               OpName %Test_ZXY_Real3 "Test_ZXY_Real3"
+               OpName %self_95 "self"
+               OpName %instance_86 "instance"
+               OpName %value_95 "value"
+               OpName %Test_ZXYX_Real4 "Test_ZXYX_Real4"
+               OpName %self_96 "self"
+               OpName %instance_87 "instance"
+               OpName %value_96 "value"
+               OpName %Test_ZXYY_Real4 "Test_ZXYY_Real4"
+               OpName %self_97 "self"
+               OpName %instance_88 "instance"
+               OpName %value_97 "value"
+               OpName %Test_ZXYZ_Real4 "Test_ZXYZ_Real4"
+               OpName %self_98 "self"
+               OpName %instance_89 "instance"
+               OpName %value_98 "value"
+               OpName %Test_ZXZ_Real3 "Test_ZXZ_Real3"
+               OpName %self_99 "self"
+               OpName %instance_90 "instance"
+               OpName %value_99 "value"
+               OpName %Test_ZXZX_Real4 "Test_ZXZX_Real4"
+               OpName %self_100 "self"
+               OpName %instance_91 "instance"
+               OpName %value_100 "value"
+               OpName %Test_ZXZY_Real4 "Test_ZXZY_Real4"
+               OpName %self_101 "self"
+               OpName %instance_92 "instance"
+               OpName %value_101 "value"
+               OpName %Test_ZXZZ_Real4 "Test_ZXZZ_Real4"
+               OpName %self_102 "self"
+               OpName %instance_93 "instance"
+               OpName %value_102 "value"
+               OpName %Test_ZY_Real2 "Test_ZY_Real2"
+               OpName %self_103 "self"
+               OpName %instance_94 "instance"
+               OpName %value_103 "value"
+               OpName %Test_ZYX_Real3 "Test_ZYX_Real3"
+               OpName %self_104 "self"
+               OpName %instance_95 "instance"
+               OpName %value_104 "value"
+               OpName %Test_ZYXX_Real4 "Test_ZYXX_Real4"
+               OpName %self_105 "self"
+               OpName %instance_96 "instance"
+               OpName %value_105 "value"
+               OpName %Test_ZYXY_Real4 "Test_ZYXY_Real4"
+               OpName %self_106 "self"
+               OpName %instance_97 "instance"
+               OpName %value_106 "value"
+               OpName %Test_ZYXZ_Real4 "Test_ZYXZ_Real4"
+               OpName %self_107 "self"
+               OpName %instance_98 "instance"
+               OpName %value_107 "value"
+               OpName %Test_ZYY_Real3 "Test_ZYY_Real3"
+               OpName %self_108 "self"
+               OpName %instance_99 "instance"
+               OpName %value_108 "value"
+               OpName %Test_ZYYX_Real4 "Test_ZYYX_Real4"
+               OpName %self_109 "self"
+               OpName %instance_100 "instance"
+               OpName %value_109 "value"
+               OpName %Test_ZYYY_Real4 "Test_ZYYY_Real4"
+               OpName %self_110 "self"
+               OpName %instance_101 "instance"
+               OpName %value_110 "value"
+               OpName %Test_ZYYZ_Real4 "Test_ZYYZ_Real4"
+               OpName %self_111 "self"
+               OpName %instance_102 "instance"
+               OpName %value_111 "value"
+               OpName %Test_ZYZ_Real3 "Test_ZYZ_Real3"
+               OpName %self_112 "self"
+               OpName %instance_103 "instance"
+               OpName %value_112 "value"
+               OpName %Test_ZYZX_Real4 "Test_ZYZX_Real4"
+               OpName %self_113 "self"
+               OpName %instance_104 "instance"
+               OpName %value_113 "value"
+               OpName %Test_ZYZY_Real4 "Test_ZYZY_Real4"
+               OpName %self_114 "self"
+               OpName %instance_105 "instance"
+               OpName %value_114 "value"
+               OpName %Test_ZYZZ_Real4 "Test_ZYZZ_Real4"
+               OpName %self_115 "self"
+               OpName %instance_106 "instance"
+               OpName %value_115 "value"
+               OpName %Test_ZZ_Real2 "Test_ZZ_Real2"
+               OpName %self_116 "self"
+               OpName %instance_107 "instance"
+               OpName %value_116 "value"
+               OpName %Test_ZZX_Real3 "Test_ZZX_Real3"
+               OpName %self_117 "self"
+               OpName %instance_108 "instance"
+               OpName %value_117 "value"
+               OpName %Test_ZZXX_Real4 "Test_ZZXX_Real4"
+               OpName %self_118 "self"
+               OpName %instance_109 "instance"
+               OpName %value_118 "value"
+               OpName %Test_ZZXY_Real4 "Test_ZZXY_Real4"
+               OpName %self_119 "self"
+               OpName %instance_110 "instance"
+               OpName %value_119 "value"
+               OpName %Test_ZZXZ_Real4 "Test_ZZXZ_Real4"
+               OpName %self_120 "self"
+               OpName %instance_111 "instance"
+               OpName %value_120 "value"
+               OpName %Test_ZZY_Real3 "Test_ZZY_Real3"
+               OpName %self_121 "self"
+               OpName %instance_112 "instance"
+               OpName %value_121 "value"
+               OpName %Test_ZZYX_Real4 "Test_ZZYX_Real4"
+               OpName %self_122 "self"
+               OpName %instance_113 "instance"
+               OpName %value_122 "value"
+               OpName %Test_ZZYY_Real4 "Test_ZZYY_Real4"
+               OpName %self_123 "self"
+               OpName %instance_114 "instance"
+               OpName %value_123 "value"
+               OpName %Test_ZZYZ_Real4 "Test_ZZYZ_Real4"
+               OpName %self_124 "self"
+               OpName %instance_115 "instance"
+               OpName %value_124 "value"
+               OpName %Test_ZZZ_Real3 "Test_ZZZ_Real3"
+               OpName %self_125 "self"
+               OpName %instance_116 "instance"
+               OpName %value_125 "value"
+               OpName %Test_ZZZX_Real4 "Test_ZZZX_Real4"
+               OpName %self_126 "self"
+               OpName %instance_117 "instance"
+               OpName %value_126 "value"
+               OpName %Test_ZZZY_Real4 "Test_ZZZY_Real4"
+               OpName %self_127 "self"
+               OpName %instance_118 "instance"
+               OpName %value_127 "value"
+               OpName %Test_ZZZZ_Real4 "Test_ZZZZ_Real4"
+               OpName %self_128 "self"
+               OpName %instance_119 "instance"
+               OpName %value_128 "value"
+               OpName %Test_StaticZero_Real3 "Test_StaticZero_Real3"
+               OpName %self_129 "self"
+               OpName %value_129 "value"
+               OpName %Zero "Zero"
+               OpName %Main "Main"
+               OpName %self_130 "self"
+               OpName %PreConstructor_Real3Properties "PreConstructor_Real3Properties"
+               OpName %self_131 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_132 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_133 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_134 "self"
+               OpName %EntryPoint_Main_Real3Properties "EntryPoint_Main_Real3Properties"
+               OpName %self_135 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%Real3Properties = OpTypeStruct %int
+%_ptr_Function_Real3Properties = OpTypePointer Function %Real3Properties
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_Real3Properties
+      %int_3 = OpConstant %int 3
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+    %float_0 = OpConstant %float 0
+         %13 = OpTypeFunction %v3float
+         %14 = OpTypeFunction %float
+%float_3_40282002e_38 = OpConstant %float 3.40282002e+38
+%float_0x1_ffff84pn127 = OpConstant %float 0x1.ffff84p-127
+    %float_1 = OpConstant %float 1
+      %int_0 = OpConstant %int 0
+      %int_1 = OpConstant %int 1
+    %int_0_0 = OpConstant %int 0
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+    %int_1_0 = OpConstant %int 1
+      %int_2 = OpConstant %int 2
+         %19 = OpTypeFunction %void
+%Test_StaticCount_Integer = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_Real3Properties
+         %32 = OpLabel
+      %value = OpVariable %_ptr_Function_int Function
+               OpStore %value %int_3
+               OpReturn
+               OpFunctionEnd
+%Test_Count_Integer = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_Real3Properties
+         %36 = OpLabel
+   %instance = OpVariable %_ptr_Function_v3float Function
+    %value_0 = OpVariable %_ptr_Function_int Function
+         %39 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance %39
+               OpStore %value_0 %int_3
+               OpReturn
+               OpFunctionEnd
+%Test_StaticNegativeMin_Real3 = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_Real3Properties
+         %42 = OpLabel
+    %value_1 = OpVariable %_ptr_Function_v3float Function
+         %44 = OpFunctionCall %v3float %NegativeMin
+               OpStore %value_1 %44
+               OpReturn
+               OpFunctionEnd
+%NegativeMin = OpFunction %v3float None %13
+         %46 = OpLabel
+         %47 = OpFunctionCall %float %NegativeMin_0
+         %48 = OpCompositeConstruct %v3float %47 %47 %47
+               OpReturnValue %48
+               OpFunctionEnd
+%NegativeMin_0 = OpFunction %float None %14
+         %50 = OpLabel
+         %51 = OpFunctionCall %float %PositiveMax
+         %52 = OpFNegate %float %51
+               OpReturnValue %52
+               OpFunctionEnd
+%PositiveMax = OpFunction %float None %14
+         %54 = OpLabel
+               OpReturnValue %float_3_40282002e_38
+               OpFunctionEnd
+%Test_StaticNegativeValueClosestToZero_Real3 = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_Real3Properties
+         %57 = OpLabel
+    %value_2 = OpVariable %_ptr_Function_v3float Function
+         %59 = OpFunctionCall %v3float %NegativeValueClosestToZero
+               OpStore %value_2 %59
+               OpReturn
+               OpFunctionEnd
+%NegativeValueClosestToZero = OpFunction %v3float None %13
+         %61 = OpLabel
+         %62 = OpFunctionCall %float %NegativeValueClosestToZero_0
+         %63 = OpCompositeConstruct %v3float %62 %62 %62
+               OpReturnValue %63
+               OpFunctionEnd
+%NegativeValueClosestToZero_0 = OpFunction %float None %14
+         %65 = OpLabel
+         %66 = OpFunctionCall %float %PositiveValueClosestToZero
+         %67 = OpFNegate %float %66
+               OpReturnValue %67
+               OpFunctionEnd
+%PositiveValueClosestToZero = OpFunction %float None %14
+         %69 = OpLabel
+               OpReturnValue %float_0x1_ffff84pn127
+               OpFunctionEnd
+%Test_StaticOne_Real3 = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_Real3Properties
+         %72 = OpLabel
+    %value_3 = OpVariable %_ptr_Function_v3float Function
+         %74 = OpFunctionCall %v3float %One
+               OpStore %value_3 %74
+               OpReturn
+               OpFunctionEnd
+        %One = OpFunction %v3float None %13
+         %76 = OpLabel
+         %77 = OpCompositeConstruct %v3float %float_1 %float_1 %float_1
+               OpReturnValue %77
+               OpFunctionEnd
+%Test_StaticPositiveMax_Real3 = OpFunction %void None %8
+     %self_4 = OpFunctionParameter %_ptr_Function_Real3Properties
+         %80 = OpLabel
+    %value_4 = OpVariable %_ptr_Function_v3float Function
+         %82 = OpFunctionCall %v3float %PositiveMax_0
+               OpStore %value_4 %82
+               OpReturn
+               OpFunctionEnd
+%PositiveMax_0 = OpFunction %v3float None %13
+         %84 = OpLabel
+         %85 = OpFunctionCall %float %PositiveMax
+         %86 = OpCompositeConstruct %v3float %85 %85 %85
+               OpReturnValue %86
+               OpFunctionEnd
+%Test_StaticPositiveValueClosestToZero_Real3 = OpFunction %void None %8
+     %self_5 = OpFunctionParameter %_ptr_Function_Real3Properties
+         %89 = OpLabel
+    %value_5 = OpVariable %_ptr_Function_v3float Function
+         %91 = OpFunctionCall %v3float %PositiveValueClosestToZero_0
+               OpStore %value_5 %91
+               OpReturn
+               OpFunctionEnd
+%PositiveValueClosestToZero_0 = OpFunction %v3float None %13
+         %93 = OpLabel
+         %94 = OpFunctionCall %float %PositiveValueClosestToZero
+         %95 = OpCompositeConstruct %v3float %94 %94 %94
+               OpReturnValue %95
+               OpFunctionEnd
+%Test_X_Real = OpFunction %void None %8
+     %self_6 = OpFunctionParameter %_ptr_Function_Real3Properties
+         %98 = OpLabel
+ %instance_0 = OpVariable %_ptr_Function_v3float Function
+    %value_6 = OpVariable %_ptr_Function_float Function
+        %101 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_0 %101
+        %102 = OpAccessChain %_ptr_Function_float %instance_0 %int_0
+        %103 = OpLoad %float %102
+               OpStore %value_6 %103
+        %104 = OpAccessChain %_ptr_Function_float %instance_0 %int_0
+               OpStore %104 %float_0
+               OpReturn
+               OpFunctionEnd
+%Test_StaticXAxis_Real3 = OpFunction %void None %8
+     %self_7 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %107 = OpLabel
+    %value_7 = OpVariable %_ptr_Function_v3float Function
+        %109 = OpFunctionCall %v3float %XAxis
+               OpStore %value_7 %109
+               OpReturn
+               OpFunctionEnd
+      %XAxis = OpFunction %v3float None %13
+        %111 = OpLabel
+        %112 = OpConvertSToF %float %int_1
+        %113 = OpConvertSToF %float %int_0_0
+        %114 = OpConvertSToF %float %int_0_0
+        %115 = OpCompositeConstruct %v3float %112 %113 %114
+               OpReturnValue %115
+               OpFunctionEnd
+%Test_XX_Real2 = OpFunction %void None %8
+     %self_8 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %118 = OpLabel
+ %instance_1 = OpVariable %_ptr_Function_v3float Function
+    %value_8 = OpVariable %_ptr_Function_v2float Function
+        %121 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_1 %121
+        %122 = OpLoad %v3float %instance_1
+        %123 = OpVectorShuffle %v2float %122 %122 0 0
+               OpStore %value_8 %123
+               OpReturn
+               OpFunctionEnd
+%Test_XXX_Real3 = OpFunction %void None %8
+     %self_9 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %126 = OpLabel
+ %instance_2 = OpVariable %_ptr_Function_v3float Function
+    %value_9 = OpVariable %_ptr_Function_v3float Function
+        %129 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_2 %129
+        %130 = OpLoad %v3float %instance_2
+        %131 = OpVectorShuffle %v3float %130 %130 0 0 0
+               OpStore %value_9 %131
+               OpReturn
+               OpFunctionEnd
+%Test_XXXX_Real4 = OpFunction %void None %8
+    %self_10 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %134 = OpLabel
+ %instance_3 = OpVariable %_ptr_Function_v3float Function
+   %value_10 = OpVariable %_ptr_Function_v4float Function
+        %137 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_3 %137
+        %138 = OpLoad %v3float %instance_3
+        %139 = OpVectorShuffle %v4float %138 %138 0 0 0 0
+               OpStore %value_10 %139
+               OpReturn
+               OpFunctionEnd
+%Test_XXXY_Real4 = OpFunction %void None %8
+    %self_11 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %142 = OpLabel
+ %instance_4 = OpVariable %_ptr_Function_v3float Function
+   %value_11 = OpVariable %_ptr_Function_v4float Function
+        %145 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_4 %145
+        %146 = OpLoad %v3float %instance_4
+        %147 = OpVectorShuffle %v4float %146 %146 0 0 0 1
+               OpStore %value_11 %147
+               OpReturn
+               OpFunctionEnd
+%Test_XXXZ_Real4 = OpFunction %void None %8
+    %self_12 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %150 = OpLabel
+ %instance_5 = OpVariable %_ptr_Function_v3float Function
+   %value_12 = OpVariable %_ptr_Function_v4float Function
+        %153 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_5 %153
+        %154 = OpLoad %v3float %instance_5
+        %155 = OpVectorShuffle %v4float %154 %154 0 0 0 2
+               OpStore %value_12 %155
+               OpReturn
+               OpFunctionEnd
+%Test_XXY_Real3 = OpFunction %void None %8
+    %self_13 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %158 = OpLabel
+ %instance_6 = OpVariable %_ptr_Function_v3float Function
+   %value_13 = OpVariable %_ptr_Function_v3float Function
+        %161 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_6 %161
+        %162 = OpLoad %v3float %instance_6
+        %163 = OpVectorShuffle %v3float %162 %162 0 0 1
+               OpStore %value_13 %163
+               OpReturn
+               OpFunctionEnd
+%Test_XXYX_Real4 = OpFunction %void None %8
+    %self_14 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %166 = OpLabel
+ %instance_7 = OpVariable %_ptr_Function_v3float Function
+   %value_14 = OpVariable %_ptr_Function_v4float Function
+        %169 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_7 %169
+        %170 = OpLoad %v3float %instance_7
+        %171 = OpVectorShuffle %v4float %170 %170 0 0 1 0
+               OpStore %value_14 %171
+               OpReturn
+               OpFunctionEnd
+%Test_XXYY_Real4 = OpFunction %void None %8
+    %self_15 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %174 = OpLabel
+ %instance_8 = OpVariable %_ptr_Function_v3float Function
+   %value_15 = OpVariable %_ptr_Function_v4float Function
+        %177 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_8 %177
+        %178 = OpLoad %v3float %instance_8
+        %179 = OpVectorShuffle %v4float %178 %178 0 0 1 1
+               OpStore %value_15 %179
+               OpReturn
+               OpFunctionEnd
+%Test_XXYZ_Real4 = OpFunction %void None %8
+    %self_16 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %182 = OpLabel
+ %instance_9 = OpVariable %_ptr_Function_v3float Function
+   %value_16 = OpVariable %_ptr_Function_v4float Function
+        %185 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_9 %185
+        %186 = OpLoad %v3float %instance_9
+        %187 = OpVectorShuffle %v4float %186 %186 0 0 1 2
+               OpStore %value_16 %187
+               OpReturn
+               OpFunctionEnd
+%Test_XXZ_Real3 = OpFunction %void None %8
+    %self_17 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %190 = OpLabel
+%instance_10 = OpVariable %_ptr_Function_v3float Function
+   %value_17 = OpVariable %_ptr_Function_v3float Function
+        %193 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_10 %193
+        %194 = OpLoad %v3float %instance_10
+        %195 = OpVectorShuffle %v3float %194 %194 0 0 2
+               OpStore %value_17 %195
+               OpReturn
+               OpFunctionEnd
+%Test_XXZX_Real4 = OpFunction %void None %8
+    %self_18 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %198 = OpLabel
+%instance_11 = OpVariable %_ptr_Function_v3float Function
+   %value_18 = OpVariable %_ptr_Function_v4float Function
+        %201 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_11 %201
+        %202 = OpLoad %v3float %instance_11
+        %203 = OpVectorShuffle %v4float %202 %202 0 0 2 0
+               OpStore %value_18 %203
+               OpReturn
+               OpFunctionEnd
+%Test_XXZY_Real4 = OpFunction %void None %8
+    %self_19 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %206 = OpLabel
+%instance_12 = OpVariable %_ptr_Function_v3float Function
+   %value_19 = OpVariable %_ptr_Function_v4float Function
+        %209 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_12 %209
+        %210 = OpLoad %v3float %instance_12
+        %211 = OpVectorShuffle %v4float %210 %210 0 0 2 1
+               OpStore %value_19 %211
+               OpReturn
+               OpFunctionEnd
+%Test_XXZZ_Real4 = OpFunction %void None %8
+    %self_20 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %214 = OpLabel
+%instance_13 = OpVariable %_ptr_Function_v3float Function
+   %value_20 = OpVariable %_ptr_Function_v4float Function
+        %217 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_13 %217
+        %218 = OpLoad %v3float %instance_13
+        %219 = OpVectorShuffle %v4float %218 %218 0 0 2 2
+               OpStore %value_20 %219
+               OpReturn
+               OpFunctionEnd
+%Test_XY_Real2 = OpFunction %void None %8
+    %self_21 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %222 = OpLabel
+%instance_14 = OpVariable %_ptr_Function_v3float Function
+   %value_21 = OpVariable %_ptr_Function_v2float Function
+        %225 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_14 %225
+        %226 = OpLoad %v3float %instance_14
+        %227 = OpVectorShuffle %v2float %226 %226 0 1
+               OpStore %value_21 %227
+        %228 = OpCompositeConstruct %v2float %float_0 %float_0
+        %229 = OpLoad %v3float %instance_14
+        %230 = OpVectorShuffle %v3float %229 %228 3 4 2
+               OpStore %instance_14 %230
+               OpReturn
+               OpFunctionEnd
+%Test_XYX_Real3 = OpFunction %void None %8
+    %self_22 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %233 = OpLabel
+%instance_15 = OpVariable %_ptr_Function_v3float Function
+   %value_22 = OpVariable %_ptr_Function_v3float Function
+        %236 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_15 %236
+        %237 = OpLoad %v3float %instance_15
+        %238 = OpVectorShuffle %v3float %237 %237 0 1 0
+               OpStore %value_22 %238
+               OpReturn
+               OpFunctionEnd
+%Test_XYXX_Real4 = OpFunction %void None %8
+    %self_23 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %241 = OpLabel
+%instance_16 = OpVariable %_ptr_Function_v3float Function
+   %value_23 = OpVariable %_ptr_Function_v4float Function
+        %244 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_16 %244
+        %245 = OpLoad %v3float %instance_16
+        %246 = OpVectorShuffle %v4float %245 %245 0 1 0 0
+               OpStore %value_23 %246
+               OpReturn
+               OpFunctionEnd
+%Test_XYXY_Real4 = OpFunction %void None %8
+    %self_24 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %249 = OpLabel
+%instance_17 = OpVariable %_ptr_Function_v3float Function
+   %value_24 = OpVariable %_ptr_Function_v4float Function
+        %252 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_17 %252
+        %253 = OpLoad %v3float %instance_17
+        %254 = OpVectorShuffle %v4float %253 %253 0 1 0 1
+               OpStore %value_24 %254
+               OpReturn
+               OpFunctionEnd
+%Test_XYXZ_Real4 = OpFunction %void None %8
+    %self_25 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %257 = OpLabel
+%instance_18 = OpVariable %_ptr_Function_v3float Function
+   %value_25 = OpVariable %_ptr_Function_v4float Function
+        %260 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_18 %260
+        %261 = OpLoad %v3float %instance_18
+        %262 = OpVectorShuffle %v4float %261 %261 0 1 0 2
+               OpStore %value_25 %262
+               OpReturn
+               OpFunctionEnd
+%Test_XYY_Real3 = OpFunction %void None %8
+    %self_26 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %265 = OpLabel
+%instance_19 = OpVariable %_ptr_Function_v3float Function
+   %value_26 = OpVariable %_ptr_Function_v3float Function
+        %268 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_19 %268
+        %269 = OpLoad %v3float %instance_19
+        %270 = OpVectorShuffle %v3float %269 %269 0 1 1
+               OpStore %value_26 %270
+               OpReturn
+               OpFunctionEnd
+%Test_XYYX_Real4 = OpFunction %void None %8
+    %self_27 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %273 = OpLabel
+%instance_20 = OpVariable %_ptr_Function_v3float Function
+   %value_27 = OpVariable %_ptr_Function_v4float Function
+        %276 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_20 %276
+        %277 = OpLoad %v3float %instance_20
+        %278 = OpVectorShuffle %v4float %277 %277 0 1 1 0
+               OpStore %value_27 %278
+               OpReturn
+               OpFunctionEnd
+%Test_XYYY_Real4 = OpFunction %void None %8
+    %self_28 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %281 = OpLabel
+%instance_21 = OpVariable %_ptr_Function_v3float Function
+   %value_28 = OpVariable %_ptr_Function_v4float Function
+        %284 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_21 %284
+        %285 = OpLoad %v3float %instance_21
+        %286 = OpVectorShuffle %v4float %285 %285 0 1 1 1
+               OpStore %value_28 %286
+               OpReturn
+               OpFunctionEnd
+%Test_XYYZ_Real4 = OpFunction %void None %8
+    %self_29 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %289 = OpLabel
+%instance_22 = OpVariable %_ptr_Function_v3float Function
+   %value_29 = OpVariable %_ptr_Function_v4float Function
+        %292 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_22 %292
+        %293 = OpLoad %v3float %instance_22
+        %294 = OpVectorShuffle %v4float %293 %293 0 1 1 2
+               OpStore %value_29 %294
+               OpReturn
+               OpFunctionEnd
+%Test_XYZ_Real3 = OpFunction %void None %8
+    %self_30 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %297 = OpLabel
+%instance_23 = OpVariable %_ptr_Function_v3float Function
+   %value_30 = OpVariable %_ptr_Function_v3float Function
+        %300 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_23 %300
+        %301 = OpLoad %v3float %instance_23
+        %302 = OpVectorShuffle %v3float %301 %301 0 1 2
+               OpStore %value_30 %302
+        %303 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %304 = OpLoad %v3float %instance_23
+        %305 = OpVectorShuffle %v3float %304 %303 3 4 5
+               OpStore %instance_23 %305
+               OpReturn
+               OpFunctionEnd
+%Test_XYZX_Real4 = OpFunction %void None %8
+    %self_31 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %308 = OpLabel
+%instance_24 = OpVariable %_ptr_Function_v3float Function
+   %value_31 = OpVariable %_ptr_Function_v4float Function
+        %311 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_24 %311
+        %312 = OpLoad %v3float %instance_24
+        %313 = OpVectorShuffle %v4float %312 %312 0 1 2 0
+               OpStore %value_31 %313
+               OpReturn
+               OpFunctionEnd
+%Test_XYZY_Real4 = OpFunction %void None %8
+    %self_32 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %316 = OpLabel
+%instance_25 = OpVariable %_ptr_Function_v3float Function
+   %value_32 = OpVariable %_ptr_Function_v4float Function
+        %319 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_25 %319
+        %320 = OpLoad %v3float %instance_25
+        %321 = OpVectorShuffle %v4float %320 %320 0 1 2 1
+               OpStore %value_32 %321
+               OpReturn
+               OpFunctionEnd
+%Test_XYZZ_Real4 = OpFunction %void None %8
+    %self_33 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %324 = OpLabel
+%instance_26 = OpVariable %_ptr_Function_v3float Function
+   %value_33 = OpVariable %_ptr_Function_v4float Function
+        %327 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_26 %327
+        %328 = OpLoad %v3float %instance_26
+        %329 = OpVectorShuffle %v4float %328 %328 0 1 2 2
+               OpStore %value_33 %329
+               OpReturn
+               OpFunctionEnd
+%Test_XZ_Real2 = OpFunction %void None %8
+    %self_34 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %332 = OpLabel
+%instance_27 = OpVariable %_ptr_Function_v3float Function
+   %value_34 = OpVariable %_ptr_Function_v2float Function
+        %335 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_27 %335
+        %336 = OpLoad %v3float %instance_27
+        %337 = OpVectorShuffle %v2float %336 %336 0 2
+               OpStore %value_34 %337
+        %338 = OpCompositeConstruct %v2float %float_0 %float_0
+        %339 = OpLoad %v3float %instance_27
+        %340 = OpVectorShuffle %v3float %339 %338 3 1 4
+               OpStore %instance_27 %340
+               OpReturn
+               OpFunctionEnd
+%Test_XZX_Real3 = OpFunction %void None %8
+    %self_35 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %343 = OpLabel
+%instance_28 = OpVariable %_ptr_Function_v3float Function
+   %value_35 = OpVariable %_ptr_Function_v3float Function
+        %346 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_28 %346
+        %347 = OpLoad %v3float %instance_28
+        %348 = OpVectorShuffle %v3float %347 %347 0 2 0
+               OpStore %value_35 %348
+               OpReturn
+               OpFunctionEnd
+%Test_XZXX_Real4 = OpFunction %void None %8
+    %self_36 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %351 = OpLabel
+%instance_29 = OpVariable %_ptr_Function_v3float Function
+   %value_36 = OpVariable %_ptr_Function_v4float Function
+        %354 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_29 %354
+        %355 = OpLoad %v3float %instance_29
+        %356 = OpVectorShuffle %v4float %355 %355 0 2 0 0
+               OpStore %value_36 %356
+               OpReturn
+               OpFunctionEnd
+%Test_XZXY_Real4 = OpFunction %void None %8
+    %self_37 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %359 = OpLabel
+%instance_30 = OpVariable %_ptr_Function_v3float Function
+   %value_37 = OpVariable %_ptr_Function_v4float Function
+        %362 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_30 %362
+        %363 = OpLoad %v3float %instance_30
+        %364 = OpVectorShuffle %v4float %363 %363 0 2 0 1
+               OpStore %value_37 %364
+               OpReturn
+               OpFunctionEnd
+%Test_XZXZ_Real4 = OpFunction %void None %8
+    %self_38 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %367 = OpLabel
+%instance_31 = OpVariable %_ptr_Function_v3float Function
+   %value_38 = OpVariable %_ptr_Function_v4float Function
+        %370 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_31 %370
+        %371 = OpLoad %v3float %instance_31
+        %372 = OpVectorShuffle %v4float %371 %371 0 2 0 2
+               OpStore %value_38 %372
+               OpReturn
+               OpFunctionEnd
+%Test_XZY_Real3 = OpFunction %void None %8
+    %self_39 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %375 = OpLabel
+%instance_32 = OpVariable %_ptr_Function_v3float Function
+   %value_39 = OpVariable %_ptr_Function_v3float Function
+        %378 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_32 %378
+        %379 = OpLoad %v3float %instance_32
+        %380 = OpVectorShuffle %v3float %379 %379 0 2 1
+               OpStore %value_39 %380
+        %381 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %382 = OpLoad %v3float %instance_32
+        %383 = OpVectorShuffle %v3float %382 %381 3 5 4
+               OpStore %instance_32 %383
+               OpReturn
+               OpFunctionEnd
+%Test_XZYX_Real4 = OpFunction %void None %8
+    %self_40 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %386 = OpLabel
+%instance_33 = OpVariable %_ptr_Function_v3float Function
+   %value_40 = OpVariable %_ptr_Function_v4float Function
+        %389 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_33 %389
+        %390 = OpLoad %v3float %instance_33
+        %391 = OpVectorShuffle %v4float %390 %390 0 2 1 0
+               OpStore %value_40 %391
+               OpReturn
+               OpFunctionEnd
+%Test_XZYY_Real4 = OpFunction %void None %8
+    %self_41 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %394 = OpLabel
+%instance_34 = OpVariable %_ptr_Function_v3float Function
+   %value_41 = OpVariable %_ptr_Function_v4float Function
+        %397 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_34 %397
+        %398 = OpLoad %v3float %instance_34
+        %399 = OpVectorShuffle %v4float %398 %398 0 2 1 1
+               OpStore %value_41 %399
+               OpReturn
+               OpFunctionEnd
+%Test_XZYZ_Real4 = OpFunction %void None %8
+    %self_42 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %402 = OpLabel
+%instance_35 = OpVariable %_ptr_Function_v3float Function
+   %value_42 = OpVariable %_ptr_Function_v4float Function
+        %405 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_35 %405
+        %406 = OpLoad %v3float %instance_35
+        %407 = OpVectorShuffle %v4float %406 %406 0 2 1 2
+               OpStore %value_42 %407
+               OpReturn
+               OpFunctionEnd
+%Test_XZZ_Real3 = OpFunction %void None %8
+    %self_43 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %410 = OpLabel
+%instance_36 = OpVariable %_ptr_Function_v3float Function
+   %value_43 = OpVariable %_ptr_Function_v3float Function
+        %413 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_36 %413
+        %414 = OpLoad %v3float %instance_36
+        %415 = OpVectorShuffle %v3float %414 %414 0 2 2
+               OpStore %value_43 %415
+               OpReturn
+               OpFunctionEnd
+%Test_XZZX_Real4 = OpFunction %void None %8
+    %self_44 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %418 = OpLabel
+%instance_37 = OpVariable %_ptr_Function_v3float Function
+   %value_44 = OpVariable %_ptr_Function_v4float Function
+        %421 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_37 %421
+        %422 = OpLoad %v3float %instance_37
+        %423 = OpVectorShuffle %v4float %422 %422 0 2 2 0
+               OpStore %value_44 %423
+               OpReturn
+               OpFunctionEnd
+%Test_XZZY_Real4 = OpFunction %void None %8
+    %self_45 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %426 = OpLabel
+%instance_38 = OpVariable %_ptr_Function_v3float Function
+   %value_45 = OpVariable %_ptr_Function_v4float Function
+        %429 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_38 %429
+        %430 = OpLoad %v3float %instance_38
+        %431 = OpVectorShuffle %v4float %430 %430 0 2 2 1
+               OpStore %value_45 %431
+               OpReturn
+               OpFunctionEnd
+%Test_XZZZ_Real4 = OpFunction %void None %8
+    %self_46 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %434 = OpLabel
+%instance_39 = OpVariable %_ptr_Function_v3float Function
+   %value_46 = OpVariable %_ptr_Function_v4float Function
+        %437 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_39 %437
+        %438 = OpLoad %v3float %instance_39
+        %439 = OpVectorShuffle %v4float %438 %438 0 2 2 2
+               OpStore %value_46 %439
+               OpReturn
+               OpFunctionEnd
+%Test_Y_Real = OpFunction %void None %8
+    %self_47 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %442 = OpLabel
+%instance_40 = OpVariable %_ptr_Function_v3float Function
+   %value_47 = OpVariable %_ptr_Function_float Function
+        %445 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_40 %445
+        %446 = OpAccessChain %_ptr_Function_float %instance_40 %int_1_0
+        %447 = OpLoad %float %446
+               OpStore %value_47 %447
+        %448 = OpAccessChain %_ptr_Function_float %instance_40 %int_1_0
+               OpStore %448 %float_0
+               OpReturn
+               OpFunctionEnd
+%Test_StaticYAxis_Real3 = OpFunction %void None %8
+    %self_48 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %451 = OpLabel
+   %value_48 = OpVariable %_ptr_Function_v3float Function
+        %453 = OpFunctionCall %v3float %YAxis
+               OpStore %value_48 %453
+               OpReturn
+               OpFunctionEnd
+      %YAxis = OpFunction %v3float None %13
+        %455 = OpLabel
+        %456 = OpConvertSToF %float %int_0_0
+        %457 = OpConvertSToF %float %int_1
+        %458 = OpConvertSToF %float %int_0_0
+        %459 = OpCompositeConstruct %v3float %456 %457 %458
+               OpReturnValue %459
+               OpFunctionEnd
+%Test_YX_Real2 = OpFunction %void None %8
+    %self_49 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %462 = OpLabel
+%instance_41 = OpVariable %_ptr_Function_v3float Function
+   %value_49 = OpVariable %_ptr_Function_v2float Function
+        %465 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_41 %465
+        %466 = OpLoad %v3float %instance_41
+        %467 = OpVectorShuffle %v2float %466 %466 1 0
+               OpStore %value_49 %467
+        %468 = OpCompositeConstruct %v2float %float_0 %float_0
+        %469 = OpLoad %v3float %instance_41
+        %470 = OpVectorShuffle %v3float %469 %468 4 3 2
+               OpStore %instance_41 %470
+               OpReturn
+               OpFunctionEnd
+%Test_YXX_Real3 = OpFunction %void None %8
+    %self_50 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %473 = OpLabel
+%instance_42 = OpVariable %_ptr_Function_v3float Function
+   %value_50 = OpVariable %_ptr_Function_v3float Function
+        %476 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_42 %476
+        %477 = OpLoad %v3float %instance_42
+        %478 = OpVectorShuffle %v3float %477 %477 1 0 0
+               OpStore %value_50 %478
+               OpReturn
+               OpFunctionEnd
+%Test_YXXX_Real4 = OpFunction %void None %8
+    %self_51 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %481 = OpLabel
+%instance_43 = OpVariable %_ptr_Function_v3float Function
+   %value_51 = OpVariable %_ptr_Function_v4float Function
+        %484 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_43 %484
+        %485 = OpLoad %v3float %instance_43
+        %486 = OpVectorShuffle %v4float %485 %485 1 0 0 0
+               OpStore %value_51 %486
+               OpReturn
+               OpFunctionEnd
+%Test_YXXY_Real4 = OpFunction %void None %8
+    %self_52 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %489 = OpLabel
+%instance_44 = OpVariable %_ptr_Function_v3float Function
+   %value_52 = OpVariable %_ptr_Function_v4float Function
+        %492 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_44 %492
+        %493 = OpLoad %v3float %instance_44
+        %494 = OpVectorShuffle %v4float %493 %493 1 0 0 1
+               OpStore %value_52 %494
+               OpReturn
+               OpFunctionEnd
+%Test_YXXZ_Real4 = OpFunction %void None %8
+    %self_53 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %497 = OpLabel
+%instance_45 = OpVariable %_ptr_Function_v3float Function
+   %value_53 = OpVariable %_ptr_Function_v4float Function
+        %500 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_45 %500
+        %501 = OpLoad %v3float %instance_45
+        %502 = OpVectorShuffle %v4float %501 %501 1 0 0 2
+               OpStore %value_53 %502
+               OpReturn
+               OpFunctionEnd
+%Test_YXY_Real3 = OpFunction %void None %8
+    %self_54 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %505 = OpLabel
+%instance_46 = OpVariable %_ptr_Function_v3float Function
+   %value_54 = OpVariable %_ptr_Function_v3float Function
+        %508 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_46 %508
+        %509 = OpLoad %v3float %instance_46
+        %510 = OpVectorShuffle %v3float %509 %509 1 0 1
+               OpStore %value_54 %510
+               OpReturn
+               OpFunctionEnd
+%Test_YXYX_Real4 = OpFunction %void None %8
+    %self_55 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %513 = OpLabel
+%instance_47 = OpVariable %_ptr_Function_v3float Function
+   %value_55 = OpVariable %_ptr_Function_v4float Function
+        %516 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_47 %516
+        %517 = OpLoad %v3float %instance_47
+        %518 = OpVectorShuffle %v4float %517 %517 1 0 1 0
+               OpStore %value_55 %518
+               OpReturn
+               OpFunctionEnd
+%Test_YXYY_Real4 = OpFunction %void None %8
+    %self_56 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %521 = OpLabel
+%instance_48 = OpVariable %_ptr_Function_v3float Function
+   %value_56 = OpVariable %_ptr_Function_v4float Function
+        %524 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_48 %524
+        %525 = OpLoad %v3float %instance_48
+        %526 = OpVectorShuffle %v4float %525 %525 1 0 1 1
+               OpStore %value_56 %526
+               OpReturn
+               OpFunctionEnd
+%Test_YXYZ_Real4 = OpFunction %void None %8
+    %self_57 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %529 = OpLabel
+%instance_49 = OpVariable %_ptr_Function_v3float Function
+   %value_57 = OpVariable %_ptr_Function_v4float Function
+        %532 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_49 %532
+        %533 = OpLoad %v3float %instance_49
+        %534 = OpVectorShuffle %v4float %533 %533 1 0 1 2
+               OpStore %value_57 %534
+               OpReturn
+               OpFunctionEnd
+%Test_YXZ_Real3 = OpFunction %void None %8
+    %self_58 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %537 = OpLabel
+%instance_50 = OpVariable %_ptr_Function_v3float Function
+   %value_58 = OpVariable %_ptr_Function_v3float Function
+        %540 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_50 %540
+        %541 = OpLoad %v3float %instance_50
+        %542 = OpVectorShuffle %v3float %541 %541 1 0 2
+               OpStore %value_58 %542
+        %543 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %544 = OpLoad %v3float %instance_50
+        %545 = OpVectorShuffle %v3float %544 %543 4 3 5
+               OpStore %instance_50 %545
+               OpReturn
+               OpFunctionEnd
+%Test_YXZX_Real4 = OpFunction %void None %8
+    %self_59 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %548 = OpLabel
+%instance_51 = OpVariable %_ptr_Function_v3float Function
+   %value_59 = OpVariable %_ptr_Function_v4float Function
+        %551 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_51 %551
+        %552 = OpLoad %v3float %instance_51
+        %553 = OpVectorShuffle %v4float %552 %552 1 0 2 0
+               OpStore %value_59 %553
+               OpReturn
+               OpFunctionEnd
+%Test_YXZY_Real4 = OpFunction %void None %8
+    %self_60 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %556 = OpLabel
+%instance_52 = OpVariable %_ptr_Function_v3float Function
+   %value_60 = OpVariable %_ptr_Function_v4float Function
+        %559 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_52 %559
+        %560 = OpLoad %v3float %instance_52
+        %561 = OpVectorShuffle %v4float %560 %560 1 0 2 1
+               OpStore %value_60 %561
+               OpReturn
+               OpFunctionEnd
+%Test_YXZZ_Real4 = OpFunction %void None %8
+    %self_61 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %564 = OpLabel
+%instance_53 = OpVariable %_ptr_Function_v3float Function
+   %value_61 = OpVariable %_ptr_Function_v4float Function
+        %567 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_53 %567
+        %568 = OpLoad %v3float %instance_53
+        %569 = OpVectorShuffle %v4float %568 %568 1 0 2 2
+               OpStore %value_61 %569
+               OpReturn
+               OpFunctionEnd
+%Test_YY_Real2 = OpFunction %void None %8
+    %self_62 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %572 = OpLabel
+%instance_54 = OpVariable %_ptr_Function_v3float Function
+   %value_62 = OpVariable %_ptr_Function_v2float Function
+        %575 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_54 %575
+        %576 = OpLoad %v3float %instance_54
+        %577 = OpVectorShuffle %v2float %576 %576 1 1
+               OpStore %value_62 %577
+               OpReturn
+               OpFunctionEnd
+%Test_YYX_Real3 = OpFunction %void None %8
+    %self_63 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %580 = OpLabel
+%instance_55 = OpVariable %_ptr_Function_v3float Function
+   %value_63 = OpVariable %_ptr_Function_v3float Function
+        %583 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_55 %583
+        %584 = OpLoad %v3float %instance_55
+        %585 = OpVectorShuffle %v3float %584 %584 1 1 0
+               OpStore %value_63 %585
+               OpReturn
+               OpFunctionEnd
+%Test_YYXX_Real4 = OpFunction %void None %8
+    %self_64 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %588 = OpLabel
+%instance_56 = OpVariable %_ptr_Function_v3float Function
+   %value_64 = OpVariable %_ptr_Function_v4float Function
+        %591 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_56 %591
+        %592 = OpLoad %v3float %instance_56
+        %593 = OpVectorShuffle %v4float %592 %592 1 1 0 0
+               OpStore %value_64 %593
+               OpReturn
+               OpFunctionEnd
+%Test_YYXY_Real4 = OpFunction %void None %8
+    %self_65 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %596 = OpLabel
+%instance_57 = OpVariable %_ptr_Function_v3float Function
+   %value_65 = OpVariable %_ptr_Function_v4float Function
+        %599 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_57 %599
+        %600 = OpLoad %v3float %instance_57
+        %601 = OpVectorShuffle %v4float %600 %600 1 1 0 1
+               OpStore %value_65 %601
+               OpReturn
+               OpFunctionEnd
+%Test_YYXZ_Real4 = OpFunction %void None %8
+    %self_66 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %604 = OpLabel
+%instance_58 = OpVariable %_ptr_Function_v3float Function
+   %value_66 = OpVariable %_ptr_Function_v4float Function
+        %607 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_58 %607
+        %608 = OpLoad %v3float %instance_58
+        %609 = OpVectorShuffle %v4float %608 %608 1 1 0 2
+               OpStore %value_66 %609
+               OpReturn
+               OpFunctionEnd
+%Test_YYY_Real3 = OpFunction %void None %8
+    %self_67 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %612 = OpLabel
+%instance_59 = OpVariable %_ptr_Function_v3float Function
+   %value_67 = OpVariable %_ptr_Function_v3float Function
+        %615 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_59 %615
+        %616 = OpLoad %v3float %instance_59
+        %617 = OpVectorShuffle %v3float %616 %616 1 1 1
+               OpStore %value_67 %617
+               OpReturn
+               OpFunctionEnd
+%Test_YYYX_Real4 = OpFunction %void None %8
+    %self_68 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %620 = OpLabel
+%instance_60 = OpVariable %_ptr_Function_v3float Function
+   %value_68 = OpVariable %_ptr_Function_v4float Function
+        %623 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_60 %623
+        %624 = OpLoad %v3float %instance_60
+        %625 = OpVectorShuffle %v4float %624 %624 1 1 1 0
+               OpStore %value_68 %625
+               OpReturn
+               OpFunctionEnd
+%Test_YYYY_Real4 = OpFunction %void None %8
+    %self_69 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %628 = OpLabel
+%instance_61 = OpVariable %_ptr_Function_v3float Function
+   %value_69 = OpVariable %_ptr_Function_v4float Function
+        %631 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_61 %631
+        %632 = OpLoad %v3float %instance_61
+        %633 = OpVectorShuffle %v4float %632 %632 1 1 1 1
+               OpStore %value_69 %633
+               OpReturn
+               OpFunctionEnd
+%Test_YYYZ_Real4 = OpFunction %void None %8
+    %self_70 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %636 = OpLabel
+%instance_62 = OpVariable %_ptr_Function_v3float Function
+   %value_70 = OpVariable %_ptr_Function_v4float Function
+        %639 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_62 %639
+        %640 = OpLoad %v3float %instance_62
+        %641 = OpVectorShuffle %v4float %640 %640 1 1 1 2
+               OpStore %value_70 %641
+               OpReturn
+               OpFunctionEnd
+%Test_YYZ_Real3 = OpFunction %void None %8
+    %self_71 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %644 = OpLabel
+%instance_63 = OpVariable %_ptr_Function_v3float Function
+   %value_71 = OpVariable %_ptr_Function_v3float Function
+        %647 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_63 %647
+        %648 = OpLoad %v3float %instance_63
+        %649 = OpVectorShuffle %v3float %648 %648 1 1 2
+               OpStore %value_71 %649
+               OpReturn
+               OpFunctionEnd
+%Test_YYZX_Real4 = OpFunction %void None %8
+    %self_72 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %652 = OpLabel
+%instance_64 = OpVariable %_ptr_Function_v3float Function
+   %value_72 = OpVariable %_ptr_Function_v4float Function
+        %655 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_64 %655
+        %656 = OpLoad %v3float %instance_64
+        %657 = OpVectorShuffle %v4float %656 %656 1 1 2 0
+               OpStore %value_72 %657
+               OpReturn
+               OpFunctionEnd
+%Test_YYZY_Real4 = OpFunction %void None %8
+    %self_73 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %660 = OpLabel
+%instance_65 = OpVariable %_ptr_Function_v3float Function
+   %value_73 = OpVariable %_ptr_Function_v4float Function
+        %663 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_65 %663
+        %664 = OpLoad %v3float %instance_65
+        %665 = OpVectorShuffle %v4float %664 %664 1 1 2 1
+               OpStore %value_73 %665
+               OpReturn
+               OpFunctionEnd
+%Test_YYZZ_Real4 = OpFunction %void None %8
+    %self_74 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %668 = OpLabel
+%instance_66 = OpVariable %_ptr_Function_v3float Function
+   %value_74 = OpVariable %_ptr_Function_v4float Function
+        %671 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_66 %671
+        %672 = OpLoad %v3float %instance_66
+        %673 = OpVectorShuffle %v4float %672 %672 1 1 2 2
+               OpStore %value_74 %673
+               OpReturn
+               OpFunctionEnd
+%Test_YZ_Real2 = OpFunction %void None %8
+    %self_75 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %676 = OpLabel
+%instance_67 = OpVariable %_ptr_Function_v3float Function
+   %value_75 = OpVariable %_ptr_Function_v2float Function
+        %679 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_67 %679
+        %680 = OpLoad %v3float %instance_67
+        %681 = OpVectorShuffle %v2float %680 %680 1 2
+               OpStore %value_75 %681
+        %682 = OpCompositeConstruct %v2float %float_0 %float_0
+        %683 = OpLoad %v3float %instance_67
+        %684 = OpVectorShuffle %v3float %683 %682 0 3 4
+               OpStore %instance_67 %684
+               OpReturn
+               OpFunctionEnd
+%Test_YZX_Real3 = OpFunction %void None %8
+    %self_76 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %687 = OpLabel
+%instance_68 = OpVariable %_ptr_Function_v3float Function
+   %value_76 = OpVariable %_ptr_Function_v3float Function
+        %690 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_68 %690
+        %691 = OpLoad %v3float %instance_68
+        %692 = OpVectorShuffle %v3float %691 %691 1 2 0
+               OpStore %value_76 %692
+        %693 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %694 = OpLoad %v3float %instance_68
+        %695 = OpVectorShuffle %v3float %694 %693 5 3 4
+               OpStore %instance_68 %695
+               OpReturn
+               OpFunctionEnd
+%Test_YZXX_Real4 = OpFunction %void None %8
+    %self_77 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %698 = OpLabel
+%instance_69 = OpVariable %_ptr_Function_v3float Function
+   %value_77 = OpVariable %_ptr_Function_v4float Function
+        %701 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_69 %701
+        %702 = OpLoad %v3float %instance_69
+        %703 = OpVectorShuffle %v4float %702 %702 1 2 0 0
+               OpStore %value_77 %703
+               OpReturn
+               OpFunctionEnd
+%Test_YZXY_Real4 = OpFunction %void None %8
+    %self_78 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %706 = OpLabel
+%instance_70 = OpVariable %_ptr_Function_v3float Function
+   %value_78 = OpVariable %_ptr_Function_v4float Function
+        %709 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_70 %709
+        %710 = OpLoad %v3float %instance_70
+        %711 = OpVectorShuffle %v4float %710 %710 1 2 0 1
+               OpStore %value_78 %711
+               OpReturn
+               OpFunctionEnd
+%Test_YZXZ_Real4 = OpFunction %void None %8
+    %self_79 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %714 = OpLabel
+%instance_71 = OpVariable %_ptr_Function_v3float Function
+   %value_79 = OpVariable %_ptr_Function_v4float Function
+        %717 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_71 %717
+        %718 = OpLoad %v3float %instance_71
+        %719 = OpVectorShuffle %v4float %718 %718 1 2 0 2
+               OpStore %value_79 %719
+               OpReturn
+               OpFunctionEnd
+%Test_YZY_Real3 = OpFunction %void None %8
+    %self_80 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %722 = OpLabel
+%instance_72 = OpVariable %_ptr_Function_v3float Function
+   %value_80 = OpVariable %_ptr_Function_v3float Function
+        %725 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_72 %725
+        %726 = OpLoad %v3float %instance_72
+        %727 = OpVectorShuffle %v3float %726 %726 1 2 1
+               OpStore %value_80 %727
+               OpReturn
+               OpFunctionEnd
+%Test_YZYX_Real4 = OpFunction %void None %8
+    %self_81 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %730 = OpLabel
+%instance_73 = OpVariable %_ptr_Function_v3float Function
+   %value_81 = OpVariable %_ptr_Function_v4float Function
+        %733 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_73 %733
+        %734 = OpLoad %v3float %instance_73
+        %735 = OpVectorShuffle %v4float %734 %734 1 2 1 0
+               OpStore %value_81 %735
+               OpReturn
+               OpFunctionEnd
+%Test_YZYY_Real4 = OpFunction %void None %8
+    %self_82 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %738 = OpLabel
+%instance_74 = OpVariable %_ptr_Function_v3float Function
+   %value_82 = OpVariable %_ptr_Function_v4float Function
+        %741 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_74 %741
+        %742 = OpLoad %v3float %instance_74
+        %743 = OpVectorShuffle %v4float %742 %742 1 2 1 1
+               OpStore %value_82 %743
+               OpReturn
+               OpFunctionEnd
+%Test_YZYZ_Real4 = OpFunction %void None %8
+    %self_83 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %746 = OpLabel
+%instance_75 = OpVariable %_ptr_Function_v3float Function
+   %value_83 = OpVariable %_ptr_Function_v4float Function
+        %749 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_75 %749
+        %750 = OpLoad %v3float %instance_75
+        %751 = OpVectorShuffle %v4float %750 %750 1 2 1 2
+               OpStore %value_83 %751
+               OpReturn
+               OpFunctionEnd
+%Test_YZZ_Real3 = OpFunction %void None %8
+    %self_84 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %754 = OpLabel
+%instance_76 = OpVariable %_ptr_Function_v3float Function
+   %value_84 = OpVariable %_ptr_Function_v3float Function
+        %757 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_76 %757
+        %758 = OpLoad %v3float %instance_76
+        %759 = OpVectorShuffle %v3float %758 %758 1 2 2
+               OpStore %value_84 %759
+               OpReturn
+               OpFunctionEnd
+%Test_YZZX_Real4 = OpFunction %void None %8
+    %self_85 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %762 = OpLabel
+%instance_77 = OpVariable %_ptr_Function_v3float Function
+   %value_85 = OpVariable %_ptr_Function_v4float Function
+        %765 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_77 %765
+        %766 = OpLoad %v3float %instance_77
+        %767 = OpVectorShuffle %v4float %766 %766 1 2 2 0
+               OpStore %value_85 %767
+               OpReturn
+               OpFunctionEnd
+%Test_YZZY_Real4 = OpFunction %void None %8
+    %self_86 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %770 = OpLabel
+%instance_78 = OpVariable %_ptr_Function_v3float Function
+   %value_86 = OpVariable %_ptr_Function_v4float Function
+        %773 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_78 %773
+        %774 = OpLoad %v3float %instance_78
+        %775 = OpVectorShuffle %v4float %774 %774 1 2 2 1
+               OpStore %value_86 %775
+               OpReturn
+               OpFunctionEnd
+%Test_YZZZ_Real4 = OpFunction %void None %8
+    %self_87 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %778 = OpLabel
+%instance_79 = OpVariable %_ptr_Function_v3float Function
+   %value_87 = OpVariable %_ptr_Function_v4float Function
+        %781 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_79 %781
+        %782 = OpLoad %v3float %instance_79
+        %783 = OpVectorShuffle %v4float %782 %782 1 2 2 2
+               OpStore %value_87 %783
+               OpReturn
+               OpFunctionEnd
+%Test_Z_Real = OpFunction %void None %8
+    %self_88 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %786 = OpLabel
+%instance_80 = OpVariable %_ptr_Function_v3float Function
+   %value_88 = OpVariable %_ptr_Function_float Function
+        %789 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_80 %789
+        %790 = OpAccessChain %_ptr_Function_float %instance_80 %int_2
+        %791 = OpLoad %float %790
+               OpStore %value_88 %791
+        %792 = OpAccessChain %_ptr_Function_float %instance_80 %int_2
+               OpStore %792 %float_0
+               OpReturn
+               OpFunctionEnd
+%Test_StaticZAxis_Real3 = OpFunction %void None %8
+    %self_89 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %795 = OpLabel
+   %value_89 = OpVariable %_ptr_Function_v3float Function
+        %797 = OpFunctionCall %v3float %ZAxis
+               OpStore %value_89 %797
+               OpReturn
+               OpFunctionEnd
+      %ZAxis = OpFunction %v3float None %13
+        %799 = OpLabel
+        %800 = OpConvertSToF %float %int_0_0
+        %801 = OpConvertSToF %float %int_0_0
+        %802 = OpConvertSToF %float %int_1
+        %803 = OpCompositeConstruct %v3float %800 %801 %802
+               OpReturnValue %803
+               OpFunctionEnd
+%Test_ZX_Real2 = OpFunction %void None %8
+    %self_90 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %806 = OpLabel
+%instance_81 = OpVariable %_ptr_Function_v3float Function
+   %value_90 = OpVariable %_ptr_Function_v2float Function
+        %809 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_81 %809
+        %810 = OpLoad %v3float %instance_81
+        %811 = OpVectorShuffle %v2float %810 %810 2 0
+               OpStore %value_90 %811
+        %812 = OpCompositeConstruct %v2float %float_0 %float_0
+        %813 = OpLoad %v3float %instance_81
+        %814 = OpVectorShuffle %v3float %813 %812 4 1 3
+               OpStore %instance_81 %814
+               OpReturn
+               OpFunctionEnd
+%Test_ZXX_Real3 = OpFunction %void None %8
+    %self_91 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %817 = OpLabel
+%instance_82 = OpVariable %_ptr_Function_v3float Function
+   %value_91 = OpVariable %_ptr_Function_v3float Function
+        %820 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_82 %820
+        %821 = OpLoad %v3float %instance_82
+        %822 = OpVectorShuffle %v3float %821 %821 2 0 0
+               OpStore %value_91 %822
+               OpReturn
+               OpFunctionEnd
+%Test_ZXXX_Real4 = OpFunction %void None %8
+    %self_92 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %825 = OpLabel
+%instance_83 = OpVariable %_ptr_Function_v3float Function
+   %value_92 = OpVariable %_ptr_Function_v4float Function
+        %828 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_83 %828
+        %829 = OpLoad %v3float %instance_83
+        %830 = OpVectorShuffle %v4float %829 %829 2 0 0 0
+               OpStore %value_92 %830
+               OpReturn
+               OpFunctionEnd
+%Test_ZXXY_Real4 = OpFunction %void None %8
+    %self_93 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %833 = OpLabel
+%instance_84 = OpVariable %_ptr_Function_v3float Function
+   %value_93 = OpVariable %_ptr_Function_v4float Function
+        %836 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_84 %836
+        %837 = OpLoad %v3float %instance_84
+        %838 = OpVectorShuffle %v4float %837 %837 2 0 0 1
+               OpStore %value_93 %838
+               OpReturn
+               OpFunctionEnd
+%Test_ZXXZ_Real4 = OpFunction %void None %8
+    %self_94 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %841 = OpLabel
+%instance_85 = OpVariable %_ptr_Function_v3float Function
+   %value_94 = OpVariable %_ptr_Function_v4float Function
+        %844 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_85 %844
+        %845 = OpLoad %v3float %instance_85
+        %846 = OpVectorShuffle %v4float %845 %845 2 0 0 2
+               OpStore %value_94 %846
+               OpReturn
+               OpFunctionEnd
+%Test_ZXY_Real3 = OpFunction %void None %8
+    %self_95 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %849 = OpLabel
+%instance_86 = OpVariable %_ptr_Function_v3float Function
+   %value_95 = OpVariable %_ptr_Function_v3float Function
+        %852 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_86 %852
+        %853 = OpLoad %v3float %instance_86
+        %854 = OpVectorShuffle %v3float %853 %853 2 0 1
+               OpStore %value_95 %854
+        %855 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %856 = OpLoad %v3float %instance_86
+        %857 = OpVectorShuffle %v3float %856 %855 4 5 3
+               OpStore %instance_86 %857
+               OpReturn
+               OpFunctionEnd
+%Test_ZXYX_Real4 = OpFunction %void None %8
+    %self_96 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %860 = OpLabel
+%instance_87 = OpVariable %_ptr_Function_v3float Function
+   %value_96 = OpVariable %_ptr_Function_v4float Function
+        %863 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_87 %863
+        %864 = OpLoad %v3float %instance_87
+        %865 = OpVectorShuffle %v4float %864 %864 2 0 1 0
+               OpStore %value_96 %865
+               OpReturn
+               OpFunctionEnd
+%Test_ZXYY_Real4 = OpFunction %void None %8
+    %self_97 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %868 = OpLabel
+%instance_88 = OpVariable %_ptr_Function_v3float Function
+   %value_97 = OpVariable %_ptr_Function_v4float Function
+        %871 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_88 %871
+        %872 = OpLoad %v3float %instance_88
+        %873 = OpVectorShuffle %v4float %872 %872 2 0 1 1
+               OpStore %value_97 %873
+               OpReturn
+               OpFunctionEnd
+%Test_ZXYZ_Real4 = OpFunction %void None %8
+    %self_98 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %876 = OpLabel
+%instance_89 = OpVariable %_ptr_Function_v3float Function
+   %value_98 = OpVariable %_ptr_Function_v4float Function
+        %879 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_89 %879
+        %880 = OpLoad %v3float %instance_89
+        %881 = OpVectorShuffle %v4float %880 %880 2 0 1 2
+               OpStore %value_98 %881
+               OpReturn
+               OpFunctionEnd
+%Test_ZXZ_Real3 = OpFunction %void None %8
+    %self_99 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %884 = OpLabel
+%instance_90 = OpVariable %_ptr_Function_v3float Function
+   %value_99 = OpVariable %_ptr_Function_v3float Function
+        %887 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_90 %887
+        %888 = OpLoad %v3float %instance_90
+        %889 = OpVectorShuffle %v3float %888 %888 2 0 2
+               OpStore %value_99 %889
+               OpReturn
+               OpFunctionEnd
+%Test_ZXZX_Real4 = OpFunction %void None %8
+   %self_100 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %892 = OpLabel
+%instance_91 = OpVariable %_ptr_Function_v3float Function
+  %value_100 = OpVariable %_ptr_Function_v4float Function
+        %895 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_91 %895
+        %896 = OpLoad %v3float %instance_91
+        %897 = OpVectorShuffle %v4float %896 %896 2 0 2 0
+               OpStore %value_100 %897
+               OpReturn
+               OpFunctionEnd
+%Test_ZXZY_Real4 = OpFunction %void None %8
+   %self_101 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %900 = OpLabel
+%instance_92 = OpVariable %_ptr_Function_v3float Function
+  %value_101 = OpVariable %_ptr_Function_v4float Function
+        %903 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_92 %903
+        %904 = OpLoad %v3float %instance_92
+        %905 = OpVectorShuffle %v4float %904 %904 2 0 2 1
+               OpStore %value_101 %905
+               OpReturn
+               OpFunctionEnd
+%Test_ZXZZ_Real4 = OpFunction %void None %8
+   %self_102 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %908 = OpLabel
+%instance_93 = OpVariable %_ptr_Function_v3float Function
+  %value_102 = OpVariable %_ptr_Function_v4float Function
+        %911 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_93 %911
+        %912 = OpLoad %v3float %instance_93
+        %913 = OpVectorShuffle %v4float %912 %912 2 0 2 2
+               OpStore %value_102 %913
+               OpReturn
+               OpFunctionEnd
+%Test_ZY_Real2 = OpFunction %void None %8
+   %self_103 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %916 = OpLabel
+%instance_94 = OpVariable %_ptr_Function_v3float Function
+  %value_103 = OpVariable %_ptr_Function_v2float Function
+        %919 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_94 %919
+        %920 = OpLoad %v3float %instance_94
+        %921 = OpVectorShuffle %v2float %920 %920 2 1
+               OpStore %value_103 %921
+        %922 = OpCompositeConstruct %v2float %float_0 %float_0
+        %923 = OpLoad %v3float %instance_94
+        %924 = OpVectorShuffle %v3float %923 %922 0 4 3
+               OpStore %instance_94 %924
+               OpReturn
+               OpFunctionEnd
+%Test_ZYX_Real3 = OpFunction %void None %8
+   %self_104 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %927 = OpLabel
+%instance_95 = OpVariable %_ptr_Function_v3float Function
+  %value_104 = OpVariable %_ptr_Function_v3float Function
+        %930 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_95 %930
+        %931 = OpLoad %v3float %instance_95
+        %932 = OpVectorShuffle %v3float %931 %931 2 1 0
+               OpStore %value_104 %932
+        %933 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+        %934 = OpLoad %v3float %instance_95
+        %935 = OpVectorShuffle %v3float %934 %933 5 4 3
+               OpStore %instance_95 %935
+               OpReturn
+               OpFunctionEnd
+%Test_ZYXX_Real4 = OpFunction %void None %8
+   %self_105 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %938 = OpLabel
+%instance_96 = OpVariable %_ptr_Function_v3float Function
+  %value_105 = OpVariable %_ptr_Function_v4float Function
+        %941 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_96 %941
+        %942 = OpLoad %v3float %instance_96
+        %943 = OpVectorShuffle %v4float %942 %942 2 1 0 0
+               OpStore %value_105 %943
+               OpReturn
+               OpFunctionEnd
+%Test_ZYXY_Real4 = OpFunction %void None %8
+   %self_106 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %946 = OpLabel
+%instance_97 = OpVariable %_ptr_Function_v3float Function
+  %value_106 = OpVariable %_ptr_Function_v4float Function
+        %949 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_97 %949
+        %950 = OpLoad %v3float %instance_97
+        %951 = OpVectorShuffle %v4float %950 %950 2 1 0 1
+               OpStore %value_106 %951
+               OpReturn
+               OpFunctionEnd
+%Test_ZYXZ_Real4 = OpFunction %void None %8
+   %self_107 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %954 = OpLabel
+%instance_98 = OpVariable %_ptr_Function_v3float Function
+  %value_107 = OpVariable %_ptr_Function_v4float Function
+        %957 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_98 %957
+        %958 = OpLoad %v3float %instance_98
+        %959 = OpVectorShuffle %v4float %958 %958 2 1 0 2
+               OpStore %value_107 %959
+               OpReturn
+               OpFunctionEnd
+%Test_ZYY_Real3 = OpFunction %void None %8
+   %self_108 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %962 = OpLabel
+%instance_99 = OpVariable %_ptr_Function_v3float Function
+  %value_108 = OpVariable %_ptr_Function_v3float Function
+        %965 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_99 %965
+        %966 = OpLoad %v3float %instance_99
+        %967 = OpVectorShuffle %v3float %966 %966 2 1 1
+               OpStore %value_108 %967
+               OpReturn
+               OpFunctionEnd
+%Test_ZYYX_Real4 = OpFunction %void None %8
+   %self_109 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %970 = OpLabel
+%instance_100 = OpVariable %_ptr_Function_v3float Function
+  %value_109 = OpVariable %_ptr_Function_v4float Function
+        %973 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_100 %973
+        %974 = OpLoad %v3float %instance_100
+        %975 = OpVectorShuffle %v4float %974 %974 2 1 1 0
+               OpStore %value_109 %975
+               OpReturn
+               OpFunctionEnd
+%Test_ZYYY_Real4 = OpFunction %void None %8
+   %self_110 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %978 = OpLabel
+%instance_101 = OpVariable %_ptr_Function_v3float Function
+  %value_110 = OpVariable %_ptr_Function_v4float Function
+        %981 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_101 %981
+        %982 = OpLoad %v3float %instance_101
+        %983 = OpVectorShuffle %v4float %982 %982 2 1 1 1
+               OpStore %value_110 %983
+               OpReturn
+               OpFunctionEnd
+%Test_ZYYZ_Real4 = OpFunction %void None %8
+   %self_111 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %986 = OpLabel
+%instance_102 = OpVariable %_ptr_Function_v3float Function
+  %value_111 = OpVariable %_ptr_Function_v4float Function
+        %989 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_102 %989
+        %990 = OpLoad %v3float %instance_102
+        %991 = OpVectorShuffle %v4float %990 %990 2 1 1 2
+               OpStore %value_111 %991
+               OpReturn
+               OpFunctionEnd
+%Test_ZYZ_Real3 = OpFunction %void None %8
+   %self_112 = OpFunctionParameter %_ptr_Function_Real3Properties
+        %994 = OpLabel
+%instance_103 = OpVariable %_ptr_Function_v3float Function
+  %value_112 = OpVariable %_ptr_Function_v3float Function
+        %997 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_103 %997
+        %998 = OpLoad %v3float %instance_103
+        %999 = OpVectorShuffle %v3float %998 %998 2 1 2
+               OpStore %value_112 %999
+               OpReturn
+               OpFunctionEnd
+%Test_ZYZX_Real4 = OpFunction %void None %8
+   %self_113 = OpFunctionParameter %_ptr_Function_Real3Properties
+       %1002 = OpLabel
+%instance_104 = OpVariable %_ptr_Function_v3float Function
+  %value_113 = OpVariable %_ptr_Function_v4float Function
+       %1005 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_104 %1005
+       %1006 = OpLoad %v3float %instance_104
+       %1007 = OpVectorShuffle %v4float %1006 %1006 2 1 2 0
+               OpStore %value_113 %1007
+               OpReturn
+               OpFunctionEnd
+%Test_ZYZY_Real4 = OpFunction %void None %8
+   %self_114 = OpFunctionParameter %_ptr_Function_Real3Properties
+       %1010 = OpLabel
+%instance_105 = OpVariable %_ptr_Function_v3float Function
+  %value_114 = OpVariable %_ptr_Function_v4float Function
+       %1013 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_105 %1013
+       %1014 = OpLoad %v3float %instance_105
+       %1015 = OpVectorShuffle %v4float %1014 %1014 2 1 2 1
+               OpStore %value_114 %1015
+               OpReturn
+               OpFunctionEnd
+%Test_ZYZZ_Real4 = OpFunction %void None %8
+   %self_115 = OpFunctionParameter %_ptr_Function_Real3Properties
+       %1018 = OpLabel
+%instance_106 = OpVariable %_ptr_Function_v3float Function
+  %value_115 = OpVariable %_ptr_Function_v4float Function
+       %1021 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_106 %1021
+       %1022 = OpLoad %v3float %instance_106
+       %1023 = OpVectorShuffle %v4float %1022 %1022 2 1 2 2
+               OpStore %value_115 %1023
+               OpReturn
+               OpFunctionEnd
+%Test_ZZ_Real2 = OpFunction %void None %8
+   %self_116 = OpFunctionParameter %_ptr_Function_Real3Properties
+       %1026 = OpLabel
+%instance_107 = OpVariable %_ptr_Function_v3float Function
+  %value_116 = OpVariable %_ptr_Function_v2float Function
+       %1029 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_107 %1029
+       %1030 = OpLoad %v3float %instance_107
+       %1031 = OpVectorShuffle %v2float %1030 %1030 2 2
+               OpStore %value_116 %1031
+               OpReturn
+               OpFunctionEnd
+%Test_ZZX_Real3 = OpFunction %void None %8
+   %self_117 = OpFunctionParameter %_ptr_Function_Real3Properties
+       %1034 = OpLabel
+%instance_108 = OpVariable %_ptr_Function_v3float Function
+  %value_117 = OpVariable %_ptr_Function_v3float Function
+       %1037 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_108 %1037
+       %1038 = OpLoad %v3float %instance_108
+       %1039 = OpVectorShuffle %v3float %1038 %1038 2 2 0
+               OpStore %value_117 %1039
+               OpReturn
+               OpFunctionEnd
+%Test_ZZXX_Real4 = OpFunction %void None %8
+   %self_118 = OpFunctionParameter %_ptr_Function_Real3Properties
+       %1042 = OpLabel
+%instance_109 = OpVariable %_ptr_Function_v3float Function
+  %value_118 = OpVariable %_ptr_Function_v4float Function
+       %1045 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_109 %1045
+       %1046 = OpLoad %v3float %instance_109
+       %1047 = OpVectorShuffle %v4float %1046 %1046 2 2 0 0
+               OpStore %value_118 %1047
+               OpReturn
+               OpFunctionEnd
+%Test_ZZXY_Real4 = OpFunction %void None %8
+   %self_119 = OpFunctionParameter %_ptr_Function_Real3Properties
+       %1050 = OpLabel
+%instance_110 = OpVariable %_ptr_Function_v3float Function
+  %value_119 = OpVariable %_ptr_Function_v4float Function
+       %1053 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_110 %1053
+       %1054 = OpLoad %v3float %instance_110
+       %1055 = OpVectorShuffle %v4float %1054 %1054 2 2 0 1
+               OpStore %value_119 %1055
+               OpReturn
+               OpFunctionEnd
+%Test_ZZXZ_Real4 = OpFunction %void None %8
+   %self_120 = OpFunctionParameter %_ptr_Function_Real3Properties
+       %1058 = OpLabel
+%instance_111 = OpVariable %_ptr_Function_v3float Function
+  %value_120 = OpVariable %_ptr_Function_v4float Function
+       %1061 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_111 %1061
+       %1062 = OpLoad %v3float %instance_111
+       %1063 = OpVectorShuffle %v4float %1062 %1062 2 2 0 2
+               OpStore %value_120 %1063
+               OpReturn
+               OpFunctionEnd
+%Test_ZZY_Real3 = OpFunction %void None %8
+   %self_121 = OpFunctionParameter %_ptr_Function_Real3Properties
+       %1066 = OpLabel
+%instance_112 = OpVariable %_ptr_Function_v3float Function
+  %value_121 = OpVariable %_ptr_Function_v3float Function
+       %1069 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_112 %1069
+       %1070 = OpLoad %v3float %instance_112
+       %1071 = OpVectorShuffle %v3float %1070 %1070 2 2 1
+               OpStore %value_121 %1071
+               OpReturn
+               OpFunctionEnd
+%Test_ZZYX_Real4 = OpFunction %void None %8
+   %self_122 = OpFunctionParameter %_ptr_Function_Real3Properties
+       %1074 = OpLabel
+%instance_113 = OpVariable %_ptr_Function_v3float Function
+  %value_122 = OpVariable %_ptr_Function_v4float Function
+       %1077 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_113 %1077
+       %1078 = OpLoad %v3float %instance_113
+       %1079 = OpVectorShuffle %v4float %1078 %1078 2 2 1 0
+               OpStore %value_122 %1079
+               OpReturn
+               OpFunctionEnd
+%Test_ZZYY_Real4 = OpFunction %void None %8
+   %self_123 = OpFunctionParameter %_ptr_Function_Real3Properties
+       %1082 = OpLabel
+%instance_114 = OpVariable %_ptr_Function_v3float Function
+  %value_123 = OpVariable %_ptr_Function_v4float Function
+       %1085 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_114 %1085
+       %1086 = OpLoad %v3float %instance_114
+       %1087 = OpVectorShuffle %v4float %1086 %1086 2 2 1 1
+               OpStore %value_123 %1087
+               OpReturn
+               OpFunctionEnd
+%Test_ZZYZ_Real4 = OpFunction %void None %8
+   %self_124 = OpFunctionParameter %_ptr_Function_Real3Properties
+       %1090 = OpLabel
+%instance_115 = OpVariable %_ptr_Function_v3float Function
+  %value_124 = OpVariable %_ptr_Function_v4float Function
+       %1093 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_115 %1093
+       %1094 = OpLoad %v3float %instance_115
+       %1095 = OpVectorShuffle %v4float %1094 %1094 2 2 1 2
+               OpStore %value_124 %1095
+               OpReturn
+               OpFunctionEnd
+%Test_ZZZ_Real3 = OpFunction %void None %8
+   %self_125 = OpFunctionParameter %_ptr_Function_Real3Properties
+       %1098 = OpLabel
+%instance_116 = OpVariable %_ptr_Function_v3float Function
+  %value_125 = OpVariable %_ptr_Function_v3float Function
+       %1101 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_116 %1101
+       %1102 = OpLoad %v3float %instance_116
+       %1103 = OpVectorShuffle %v3float %1102 %1102 2 2 2
+               OpStore %value_125 %1103
+               OpReturn
+               OpFunctionEnd
+%Test_ZZZX_Real4 = OpFunction %void None %8
+   %self_126 = OpFunctionParameter %_ptr_Function_Real3Properties
+       %1106 = OpLabel
+%instance_117 = OpVariable %_ptr_Function_v3float Function
+  %value_126 = OpVariable %_ptr_Function_v4float Function
+       %1109 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_117 %1109
+       %1110 = OpLoad %v3float %instance_117
+       %1111 = OpVectorShuffle %v4float %1110 %1110 2 2 2 0
+               OpStore %value_126 %1111
+               OpReturn
+               OpFunctionEnd
+%Test_ZZZY_Real4 = OpFunction %void None %8
+   %self_127 = OpFunctionParameter %_ptr_Function_Real3Properties
+       %1114 = OpLabel
+%instance_118 = OpVariable %_ptr_Function_v3float Function
+  %value_127 = OpVariable %_ptr_Function_v4float Function
+       %1117 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_118 %1117
+       %1118 = OpLoad %v3float %instance_118
+       %1119 = OpVectorShuffle %v4float %1118 %1118 2 2 2 1
+               OpStore %value_127 %1119
+               OpReturn
+               OpFunctionEnd
+%Test_ZZZZ_Real4 = OpFunction %void None %8
+   %self_128 = OpFunctionParameter %_ptr_Function_Real3Properties
+       %1122 = OpLabel
+%instance_119 = OpVariable %_ptr_Function_v3float Function
+  %value_128 = OpVariable %_ptr_Function_v4float Function
+       %1125 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %instance_119 %1125
+       %1126 = OpLoad %v3float %instance_119
+       %1127 = OpVectorShuffle %v4float %1126 %1126 2 2 2 2
+               OpStore %value_128 %1127
+               OpReturn
+               OpFunctionEnd
+%Test_StaticZero_Real3 = OpFunction %void None %8
+   %self_129 = OpFunctionParameter %_ptr_Function_Real3Properties
+       %1130 = OpLabel
+  %value_129 = OpVariable %_ptr_Function_v3float Function
+       %1132 = OpFunctionCall %v3float %Zero
+               OpStore %value_129 %1132
+               OpReturn
+               OpFunctionEnd
+       %Zero = OpFunction %v3float None %13
+       %1134 = OpLabel
+       %1135 = OpConvertSToF %float %int_0_0
+       %1136 = OpCompositeConstruct %v3float %1135 %1135 %1135
+               OpReturnValue %1136
+               OpFunctionEnd
+       %Main = OpFunction %void None %8
+   %self_130 = OpFunctionParameter %_ptr_Function_Real3Properties
+       %1139 = OpLabel
+       %1140 = OpFunctionCall %void %Test_StaticCount_Integer %self_130
+       %1141 = OpFunctionCall %void %Test_Count_Integer %self_130
+       %1142 = OpFunctionCall %void %Test_StaticNegativeMin_Real3 %self_130
+       %1143 = OpFunctionCall %void %Test_StaticNegativeValueClosestToZero_Real3 %self_130
+       %1144 = OpFunctionCall %void %Test_StaticOne_Real3 %self_130
+       %1145 = OpFunctionCall %void %Test_StaticPositiveMax_Real3 %self_130
+       %1146 = OpFunctionCall %void %Test_StaticPositiveValueClosestToZero_Real3 %self_130
+       %1147 = OpFunctionCall %void %Test_X_Real %self_130
+       %1148 = OpFunctionCall %void %Test_StaticXAxis_Real3 %self_130
+       %1149 = OpFunctionCall %void %Test_XX_Real2 %self_130
+       %1150 = OpFunctionCall %void %Test_XXX_Real3 %self_130
+       %1151 = OpFunctionCall %void %Test_XXXX_Real4 %self_130
+       %1152 = OpFunctionCall %void %Test_XXXY_Real4 %self_130
+       %1153 = OpFunctionCall %void %Test_XXXZ_Real4 %self_130
+       %1154 = OpFunctionCall %void %Test_XXY_Real3 %self_130
+       %1155 = OpFunctionCall %void %Test_XXYX_Real4 %self_130
+       %1156 = OpFunctionCall %void %Test_XXYY_Real4 %self_130
+       %1157 = OpFunctionCall %void %Test_XXYZ_Real4 %self_130
+       %1158 = OpFunctionCall %void %Test_XXZ_Real3 %self_130
+       %1159 = OpFunctionCall %void %Test_XXZX_Real4 %self_130
+       %1160 = OpFunctionCall %void %Test_XXZY_Real4 %self_130
+       %1161 = OpFunctionCall %void %Test_XXZZ_Real4 %self_130
+       %1162 = OpFunctionCall %void %Test_XY_Real2 %self_130
+       %1163 = OpFunctionCall %void %Test_XYX_Real3 %self_130
+       %1164 = OpFunctionCall %void %Test_XYXX_Real4 %self_130
+       %1165 = OpFunctionCall %void %Test_XYXY_Real4 %self_130
+       %1166 = OpFunctionCall %void %Test_XYXZ_Real4 %self_130
+       %1167 = OpFunctionCall %void %Test_XYY_Real3 %self_130
+       %1168 = OpFunctionCall %void %Test_XYYX_Real4 %self_130
+       %1169 = OpFunctionCall %void %Test_XYYY_Real4 %self_130
+       %1170 = OpFunctionCall %void %Test_XYYZ_Real4 %self_130
+       %1171 = OpFunctionCall %void %Test_XYZ_Real3 %self_130
+       %1172 = OpFunctionCall %void %Test_XYZX_Real4 %self_130
+       %1173 = OpFunctionCall %void %Test_XYZY_Real4 %self_130
+       %1174 = OpFunctionCall %void %Test_XYZZ_Real4 %self_130
+       %1175 = OpFunctionCall %void %Test_XZ_Real2 %self_130
+       %1176 = OpFunctionCall %void %Test_XZX_Real3 %self_130
+       %1177 = OpFunctionCall %void %Test_XZXX_Real4 %self_130
+       %1178 = OpFunctionCall %void %Test_XZXY_Real4 %self_130
+       %1179 = OpFunctionCall %void %Test_XZXZ_Real4 %self_130
+       %1180 = OpFunctionCall %void %Test_XZY_Real3 %self_130
+       %1181 = OpFunctionCall %void %Test_XZYX_Real4 %self_130
+       %1182 = OpFunctionCall %void %Test_XZYY_Real4 %self_130
+       %1183 = OpFunctionCall %void %Test_XZYZ_Real4 %self_130
+       %1184 = OpFunctionCall %void %Test_XZZ_Real3 %self_130
+       %1185 = OpFunctionCall %void %Test_XZZX_Real4 %self_130
+       %1186 = OpFunctionCall %void %Test_XZZY_Real4 %self_130
+       %1187 = OpFunctionCall %void %Test_XZZZ_Real4 %self_130
+       %1188 = OpFunctionCall %void %Test_Y_Real %self_130
+       %1189 = OpFunctionCall %void %Test_StaticYAxis_Real3 %self_130
+       %1190 = OpFunctionCall %void %Test_YX_Real2 %self_130
+       %1191 = OpFunctionCall %void %Test_YXX_Real3 %self_130
+       %1192 = OpFunctionCall %void %Test_YXXX_Real4 %self_130
+       %1193 = OpFunctionCall %void %Test_YXXY_Real4 %self_130
+       %1194 = OpFunctionCall %void %Test_YXXZ_Real4 %self_130
+       %1195 = OpFunctionCall %void %Test_YXY_Real3 %self_130
+       %1196 = OpFunctionCall %void %Test_YXYX_Real4 %self_130
+       %1197 = OpFunctionCall %void %Test_YXYY_Real4 %self_130
+       %1198 = OpFunctionCall %void %Test_YXYZ_Real4 %self_130
+       %1199 = OpFunctionCall %void %Test_YXZ_Real3 %self_130
+       %1200 = OpFunctionCall %void %Test_YXZX_Real4 %self_130
+       %1201 = OpFunctionCall %void %Test_YXZY_Real4 %self_130
+       %1202 = OpFunctionCall %void %Test_YXZZ_Real4 %self_130
+       %1203 = OpFunctionCall %void %Test_YY_Real2 %self_130
+       %1204 = OpFunctionCall %void %Test_YYX_Real3 %self_130
+       %1205 = OpFunctionCall %void %Test_YYXX_Real4 %self_130
+       %1206 = OpFunctionCall %void %Test_YYXY_Real4 %self_130
+       %1207 = OpFunctionCall %void %Test_YYXZ_Real4 %self_130
+       %1208 = OpFunctionCall %void %Test_YYY_Real3 %self_130
+       %1209 = OpFunctionCall %void %Test_YYYX_Real4 %self_130
+       %1210 = OpFunctionCall %void %Test_YYYY_Real4 %self_130
+       %1211 = OpFunctionCall %void %Test_YYYZ_Real4 %self_130
+       %1212 = OpFunctionCall %void %Test_YYZ_Real3 %self_130
+       %1213 = OpFunctionCall %void %Test_YYZX_Real4 %self_130
+       %1214 = OpFunctionCall %void %Test_YYZY_Real4 %self_130
+       %1215 = OpFunctionCall %void %Test_YYZZ_Real4 %self_130
+       %1216 = OpFunctionCall %void %Test_YZ_Real2 %self_130
+       %1217 = OpFunctionCall %void %Test_YZX_Real3 %self_130
+       %1218 = OpFunctionCall %void %Test_YZXX_Real4 %self_130
+       %1219 = OpFunctionCall %void %Test_YZXY_Real4 %self_130
+       %1220 = OpFunctionCall %void %Test_YZXZ_Real4 %self_130
+       %1221 = OpFunctionCall %void %Test_YZY_Real3 %self_130
+       %1222 = OpFunctionCall %void %Test_YZYX_Real4 %self_130
+       %1223 = OpFunctionCall %void %Test_YZYY_Real4 %self_130
+       %1224 = OpFunctionCall %void %Test_YZYZ_Real4 %self_130
+       %1225 = OpFunctionCall %void %Test_YZZ_Real3 %self_130
+       %1226 = OpFunctionCall %void %Test_YZZX_Real4 %self_130
+       %1227 = OpFunctionCall %void %Test_YZZY_Real4 %self_130
+       %1228 = OpFunctionCall %void %Test_YZZZ_Real4 %self_130
+       %1229 = OpFunctionCall %void %Test_Z_Real %self_130
+       %1230 = OpFunctionCall %void %Test_StaticZAxis_Real3 %self_130
+       %1231 = OpFunctionCall %void %Test_ZX_Real2 %self_130
+       %1232 = OpFunctionCall %void %Test_ZXX_Real3 %self_130
+       %1233 = OpFunctionCall %void %Test_ZXXX_Real4 %self_130
+       %1234 = OpFunctionCall %void %Test_ZXXY_Real4 %self_130
+       %1235 = OpFunctionCall %void %Test_ZXXZ_Real4 %self_130
+       %1236 = OpFunctionCall %void %Test_ZXY_Real3 %self_130
+       %1237 = OpFunctionCall %void %Test_ZXYX_Real4 %self_130
+       %1238 = OpFunctionCall %void %Test_ZXYY_Real4 %self_130
+       %1239 = OpFunctionCall %void %Test_ZXYZ_Real4 %self_130
+       %1240 = OpFunctionCall %void %Test_ZXZ_Real3 %self_130
+       %1241 = OpFunctionCall %void %Test_ZXZX_Real4 %self_130
+       %1242 = OpFunctionCall %void %Test_ZXZY_Real4 %self_130
+       %1243 = OpFunctionCall %void %Test_ZXZZ_Real4 %self_130
+       %1244 = OpFunctionCall %void %Test_ZY_Real2 %self_130
+       %1245 = OpFunctionCall %void %Test_ZYX_Real3 %self_130
+       %1246 = OpFunctionCall %void %Test_ZYXX_Real4 %self_130
+       %1247 = OpFunctionCall %void %Test_ZYXY_Real4 %self_130
+       %1248 = OpFunctionCall %void %Test_ZYXZ_Real4 %self_130
+       %1249 = OpFunctionCall %void %Test_ZYY_Real3 %self_130
+       %1250 = OpFunctionCall %void %Test_ZYYX_Real4 %self_130
+       %1251 = OpFunctionCall %void %Test_ZYYY_Real4 %self_130
+       %1252 = OpFunctionCall %void %Test_ZYYZ_Real4 %self_130
+       %1253 = OpFunctionCall %void %Test_ZYZ_Real3 %self_130
+       %1254 = OpFunctionCall %void %Test_ZYZX_Real4 %self_130
+       %1255 = OpFunctionCall %void %Test_ZYZY_Real4 %self_130
+       %1256 = OpFunctionCall %void %Test_ZYZZ_Real4 %self_130
+       %1257 = OpFunctionCall %void %Test_ZZ_Real2 %self_130
+       %1258 = OpFunctionCall %void %Test_ZZX_Real3 %self_130
+       %1259 = OpFunctionCall %void %Test_ZZXX_Real4 %self_130
+       %1260 = OpFunctionCall %void %Test_ZZXY_Real4 %self_130
+       %1261 = OpFunctionCall %void %Test_ZZXZ_Real4 %self_130
+       %1262 = OpFunctionCall %void %Test_ZZY_Real3 %self_130
+       %1263 = OpFunctionCall %void %Test_ZZYX_Real4 %self_130
+       %1264 = OpFunctionCall %void %Test_ZZYY_Real4 %self_130
+       %1265 = OpFunctionCall %void %Test_ZZYZ_Real4 %self_130
+       %1266 = OpFunctionCall %void %Test_ZZZ_Real3 %self_130
+       %1267 = OpFunctionCall %void %Test_ZZZX_Real4 %self_130
+       %1268 = OpFunctionCall %void %Test_ZZZY_Real4 %self_130
+       %1269 = OpFunctionCall %void %Test_ZZZZ_Real4 %self_130
+       %1270 = OpFunctionCall %void %Test_StaticZero_Real3 %self_130
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_Real3Properties = OpFunction %void None %8
+   %self_131 = OpFunctionParameter %_ptr_Function_Real3Properties
+       %1273 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+   %self_132 = OpFunctionParameter %_ptr_Function_Real3Properties
+       %1276 = OpLabel
+       %1277 = OpFunctionCall %void %PreConstructor_Real3Properties %self_132
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+   %self_133 = OpFunctionParameter %_ptr_Function_Real3Properties
+       %1280 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+   %self_134 = OpFunctionParameter %_ptr_Function_Real3Properties
+       %1283 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_Real3Properties = OpFunction %void None %19
+       %1285 = OpLabel
+   %self_135 = OpVariable %_ptr_Function_Real3Properties Function
+       %1287 = OpFunctionCall %void %InitializeGlobals
+       %1288 = OpFunctionCall %void %DefaultConstructor %self_135
+       %1289 = OpFunctionCall %void %CopyInputs_Main %self_135
+       %1290 = OpFunctionCall %void %Main %self_135
+       %1291 = OpFunctionCall %void %CopyOutputs_Main %self_135
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %19
+       %1292 = OpLabel
+               OpReturn
+               OpFunctionEnd

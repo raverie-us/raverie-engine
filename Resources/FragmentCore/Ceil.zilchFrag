@@ -1,0 +1,50 @@
+struct MathCeilPlacesImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Ceil(value : Real, places : Integer) : Real
+  {
+    return Math.Ceil(value, places, 10);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Ceil(value : Real2, places : Integer) : Real2
+  {
+    return Math.Ceil(value, places, 10);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Ceil(value : Real3, places : Integer) : Real3
+  {
+    return Math.Ceil(value, places, 10);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Ceil(value : Real4, places : Integer) : Real4
+  {
+    return Math.Ceil(value, places, 10);
+  }
+}
+struct MathCeilPlacesBaseImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Ceil(value : Real, places : Integer, numericalBase : Integer) : Real
+  {
+    var scale = Math.Pow(numericalBase, places);
+    return Math.Ceil(value / scale) * scale;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Ceil(value : Real2, places : Integer, numericalBase : Integer) : Real2
+  {
+    var scale = Math.Pow(numericalBase, places);
+    return Math.Ceil(value / scale) * scale;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Ceil(value : Real3, places : Integer, numericalBase : Integer) : Real3
+  {
+    var scale = Math.Pow(numericalBase, places);
+    return Math.Ceil(value / scale) * scale;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function Ceil(value : Real4, places : Integer, numericalBase : Integer) : Real4
+  {
+    var scale = Math.Pow(numericalBase, places);
+    return Math.Ceil(value / scale) * scale;
+  }
+}

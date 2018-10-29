@@ -1,0 +1,320 @@
+[Pixel][UnitTest]
+struct Ceil
+{
+  function Test_Static_Real()
+  {
+    var param0 = Real();
+    var result = Math.Ceil(param0);
+  }
+
+  function Test_Static_Real2()
+  {
+    var param0 = Real2();
+    var result = Math.Ceil(param0);
+  }
+
+  function Test_Static_Real2x2()
+  {
+    var param0 = Real2x2();
+    var result = Math.Ceil(param0);
+  }
+
+  function Test_Static_Real2x3()
+  {
+    var param0 = Real2x3();
+    var result = Math.Ceil(param0);
+  }
+
+  function Test_Static_Real2x4()
+  {
+    var param0 = Real2x4();
+    var result = Math.Ceil(param0);
+  }
+
+  function Test_Static_Real3()
+  {
+    var param0 = Real3();
+    var result = Math.Ceil(param0);
+  }
+
+  function Test_Static_Real3x2()
+  {
+    var param0 = Real3x2();
+    var result = Math.Ceil(param0);
+  }
+
+  function Test_Static_Real3x3()
+  {
+    var param0 = Real3x3();
+    var result = Math.Ceil(param0);
+  }
+
+  function Test_Static_Real3x4()
+  {
+    var param0 = Real3x4();
+    var result = Math.Ceil(param0);
+  }
+
+  function Test_Static_Real4()
+  {
+    var param0 = Real4();
+    var result = Math.Ceil(param0);
+  }
+
+  function Test_Static_Real4x2()
+  {
+    var param0 = Real4x2();
+    var result = Math.Ceil(param0);
+  }
+
+  function Test_Static_Real4x3()
+  {
+    var param0 = Real4x3();
+    var result = Math.Ceil(param0);
+  }
+
+  function Test_Static_Real4x4()
+  {
+    var param0 = Real4x4();
+    var result = Math.Ceil(param0);
+  }
+
+  function Test_Static_Real_Integer()
+  {
+    var value_ = Real();
+    var places_ = Integer();
+    var result = Math.Ceil(value_, places_);
+  }
+
+  function Test_Static_Real_Integer_Integer()
+  {
+    var value_ = Real();
+    var places_ = Integer();
+    var numericalBase_ = Integer();
+    var result = Math.Ceil(value_, places_, numericalBase_);
+  }
+
+  function Test_Static_Real2_Integer()
+  {
+    var value_ = Real2();
+    var places_ = Integer();
+    var result = Math.Ceil(value_, places_);
+  }
+
+  function Test_Static_Real2_Integer_Integer()
+  {
+    var value_ = Real2();
+    var places_ = Integer();
+    var numericalBase_ = Integer();
+    var result = Math.Ceil(value_, places_, numericalBase_);
+  }
+
+  function Test_Static_Real2x2_Integer()
+  {
+    var value_ = Real2x2();
+    var places_ = Integer();
+    var result = Math.Ceil(value_, places_);
+  }
+
+  function Test_Static_Real2x2_Integer_Integer()
+  {
+    var value_ = Real2x2();
+    var places_ = Integer();
+    var numericalBase_ = Integer();
+    var result = Math.Ceil(value_, places_, numericalBase_);
+  }
+
+  function Test_Static_Real2x3_Integer()
+  {
+    var value_ = Real2x3();
+    var places_ = Integer();
+    var result = Math.Ceil(value_, places_);
+  }
+
+  function Test_Static_Real2x3_Integer_Integer()
+  {
+    var value_ = Real2x3();
+    var places_ = Integer();
+    var numericalBase_ = Integer();
+    var result = Math.Ceil(value_, places_, numericalBase_);
+  }
+
+  function Test_Static_Real2x4_Integer()
+  {
+    var value_ = Real2x4();
+    var places_ = Integer();
+    var result = Math.Ceil(value_, places_);
+  }
+
+  function Test_Static_Real2x4_Integer_Integer()
+  {
+    var value_ = Real2x4();
+    var places_ = Integer();
+    var numericalBase_ = Integer();
+    var result = Math.Ceil(value_, places_, numericalBase_);
+  }
+
+  function Test_Static_Real3_Integer()
+  {
+    var value_ = Real3();
+    var places_ = Integer();
+    var result = Math.Ceil(value_, places_);
+  }
+
+  function Test_Static_Real3_Integer_Integer()
+  {
+    var value_ = Real3();
+    var places_ = Integer();
+    var numericalBase_ = Integer();
+    var result = Math.Ceil(value_, places_, numericalBase_);
+  }
+
+  function Test_Static_Real3x2_Integer()
+  {
+    var value_ = Real3x2();
+    var places_ = Integer();
+    var result = Math.Ceil(value_, places_);
+  }
+
+  function Test_Static_Real3x2_Integer_Integer()
+  {
+    var value_ = Real3x2();
+    var places_ = Integer();
+    var numericalBase_ = Integer();
+    var result = Math.Ceil(value_, places_, numericalBase_);
+  }
+
+  function Test_Static_Real3x3_Integer()
+  {
+    var value_ = Real3x3();
+    var places_ = Integer();
+    var result = Math.Ceil(value_, places_);
+  }
+
+  function Test_Static_Real3x3_Integer_Integer()
+  {
+    var value_ = Real3x3();
+    var places_ = Integer();
+    var numericalBase_ = Integer();
+    var result = Math.Ceil(value_, places_, numericalBase_);
+  }
+
+  function Test_Static_Real3x4_Integer()
+  {
+    var value_ = Real3x4();
+    var places_ = Integer();
+    var result = Math.Ceil(value_, places_);
+  }
+
+  function Test_Static_Real3x4_Integer_Integer()
+  {
+    var value_ = Real3x4();
+    var places_ = Integer();
+    var numericalBase_ = Integer();
+    var result = Math.Ceil(value_, places_, numericalBase_);
+  }
+
+  function Test_Static_Real4_Integer()
+  {
+    var value_ = Real4();
+    var places_ = Integer();
+    var result = Math.Ceil(value_, places_);
+  }
+
+  function Test_Static_Real4_Integer_Integer()
+  {
+    var value_ = Real4();
+    var places_ = Integer();
+    var numericalBase_ = Integer();
+    var result = Math.Ceil(value_, places_, numericalBase_);
+  }
+
+  function Test_Static_Real4x2_Integer()
+  {
+    var value_ = Real4x2();
+    var places_ = Integer();
+    var result = Math.Ceil(value_, places_);
+  }
+
+  function Test_Static_Real4x2_Integer_Integer()
+  {
+    var value_ = Real4x2();
+    var places_ = Integer();
+    var numericalBase_ = Integer();
+    var result = Math.Ceil(value_, places_, numericalBase_);
+  }
+
+  function Test_Static_Real4x3_Integer()
+  {
+    var value_ = Real4x3();
+    var places_ = Integer();
+    var result = Math.Ceil(value_, places_);
+  }
+
+  function Test_Static_Real4x3_Integer_Integer()
+  {
+    var value_ = Real4x3();
+    var places_ = Integer();
+    var numericalBase_ = Integer();
+    var result = Math.Ceil(value_, places_, numericalBase_);
+  }
+
+  function Test_Static_Real4x4_Integer()
+  {
+    var value_ = Real4x4();
+    var places_ = Integer();
+    var result = Math.Ceil(value_, places_);
+  }
+
+  function Test_Static_Real4x4_Integer_Integer()
+  {
+    var value_ = Real4x4();
+    var places_ = Integer();
+    var numericalBase_ = Integer();
+    var result = Math.Ceil(value_, places_, numericalBase_);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Real();
+    this.Test_Static_Real2();
+    this.Test_Static_Real2x2();
+    this.Test_Static_Real2x3();
+    this.Test_Static_Real2x4();
+    this.Test_Static_Real3();
+    this.Test_Static_Real3x2();
+    this.Test_Static_Real3x3();
+    this.Test_Static_Real3x4();
+    this.Test_Static_Real4();
+    this.Test_Static_Real4x2();
+    this.Test_Static_Real4x3();
+    this.Test_Static_Real4x4();
+    this.Test_Static_Real_Integer();
+    this.Test_Static_Real_Integer_Integer();
+    this.Test_Static_Real2_Integer();
+    this.Test_Static_Real2_Integer_Integer();
+    this.Test_Static_Real2x2_Integer();
+    this.Test_Static_Real2x2_Integer_Integer();
+    this.Test_Static_Real2x3_Integer();
+    this.Test_Static_Real2x3_Integer_Integer();
+    this.Test_Static_Real2x4_Integer();
+    this.Test_Static_Real2x4_Integer_Integer();
+    this.Test_Static_Real3_Integer();
+    this.Test_Static_Real3_Integer_Integer();
+    this.Test_Static_Real3x2_Integer();
+    this.Test_Static_Real3x2_Integer_Integer();
+    this.Test_Static_Real3x3_Integer();
+    this.Test_Static_Real3x3_Integer_Integer();
+    this.Test_Static_Real3x4_Integer();
+    this.Test_Static_Real3x4_Integer_Integer();
+    this.Test_Static_Real4_Integer();
+    this.Test_Static_Real4_Integer_Integer();
+    this.Test_Static_Real4x2_Integer();
+    this.Test_Static_Real4x2_Integer_Integer();
+    this.Test_Static_Real4x3_Integer();
+    this.Test_Static_Real4x3_Integer_Integer();
+    this.Test_Static_Real4x4_Integer();
+    this.Test_Static_Real4x4_Integer_Integer();
+  }
+}

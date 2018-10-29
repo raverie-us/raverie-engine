@@ -1,0 +1,184 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 93
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %auto_main "auto_main"
+               OpExecutionMode %auto_main OriginUpperLeft
+               OpSource Unknown 100
+               OpName %Basic "Basic"
+               OpMemberName %Basic 0 "Dummy"
+               OpName %auto_main "auto_main"
+               OpName %SimpleFunction1 "SimpleFunction1"
+               OpName %self "self"
+               OpName %a "a"
+               OpName %SimpleFunction2 "SimpleFunction2"
+               OpName %self_0 "self"
+               OpName %a_0 "a"
+               OpName %SimpleFunction3 "SimpleFunction3"
+               OpName %self_1 "self"
+               OpName %BasicArithmetic1 "BasicArithmetic1"
+               OpName %self_2 "self"
+               OpName %a_1 "a"
+               OpName %b "b"
+               OpName %c "c"
+               OpName %d "d"
+               OpName %BasicArithmetic2 "BasicArithmetic2"
+               OpName %self_3 "self"
+               OpName %a_2 "a"
+               OpName %b_0 "b"
+               OpName %c_0 "c"
+               OpName %d_0 "d"
+               OpName %BasicBools1 "BasicBools1"
+               OpName %self_4 "self"
+               OpName %b_1 "b"
+               OpName %c_1 "c"
+               OpName %BasicBools2 "BasicBools2"
+               OpName %self_5 "self"
+               OpName %PreIncrement "PreIncrement"
+               OpName %self_6 "self"
+               OpName %a_3 "a"
+               OpName %PreDecrement "PreDecrement"
+               OpName %self_7 "self"
+               OpName %a_4 "a"
+               OpName %PreConstructor_Basic "PreConstructor_Basic"
+               OpName %self_8 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_9 "self"
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %3 = OpTypeFunction %void
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+      %Basic = OpTypeStruct %int
+%_ptr_Function_Basic = OpTypePointer Function %Basic
+          %8 = OpTypeFunction %int %_ptr_Function_Basic
+      %int_0 = OpConstant %int 0
+          %9 = OpTypeFunction %void %_ptr_Function_Basic
+      %int_1 = OpConstant %int 1
+      %int_2 = OpConstant %int 2
+      %int_3 = OpConstant %int 3
+       %bool = OpTypeBool
+%_ptr_Function_bool = OpTypePointer Function %bool
+       %true = OpConstantTrue %bool
+  %auto_main = OpFunction %void None %3
+         %18 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%SimpleFunction1 = OpFunction %int None %8
+       %self = OpFunctionParameter %_ptr_Function_Basic
+         %21 = OpLabel
+          %a = OpVariable %_ptr_Function_int Function
+               OpStore %a %int_0
+         %23 = OpLoad %int %a
+               OpReturnValue %23
+               OpFunctionEnd
+%SimpleFunction2 = OpFunction %void None %9
+     %self_0 = OpFunctionParameter %_ptr_Function_Basic
+         %26 = OpLabel
+        %a_0 = OpVariable %_ptr_Function_int Function
+               OpStore %a_0 %int_0
+               OpStore %a_0 %int_1
+               OpReturn
+               OpFunctionEnd
+%SimpleFunction3 = OpFunction %void None %9
+     %self_1 = OpFunctionParameter %_ptr_Function_Basic
+         %30 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%BasicArithmetic1 = OpFunction %void None %9
+     %self_2 = OpFunctionParameter %_ptr_Function_Basic
+         %33 = OpLabel
+        %a_1 = OpVariable %_ptr_Function_int Function
+          %b = OpVariable %_ptr_Function_int Function
+          %c = OpVariable %_ptr_Function_int Function
+          %d = OpVariable %_ptr_Function_int Function
+         %38 = OpIAdd %int %int_1 %int_2
+               OpStore %a_1 %38
+         %39 = OpLoad %int %a_1
+         %40 = OpISub %int %39 %int_3
+               OpStore %b %40
+         %41 = OpLoad %int %a_1
+         %42 = OpLoad %int %b
+         %43 = OpIMul %int %41 %42
+               OpStore %c %43
+         %44 = OpLoad %int %c
+         %45 = OpLoad %int %a_1
+         %46 = OpSDiv %int %44 %45
+               OpStore %d %46
+               OpReturn
+               OpFunctionEnd
+%BasicArithmetic2 = OpFunction %void None %9
+     %self_3 = OpFunctionParameter %_ptr_Function_Basic
+         %49 = OpLabel
+        %a_2 = OpVariable %_ptr_Function_int Function
+        %b_0 = OpVariable %_ptr_Function_int Function
+        %c_0 = OpVariable %_ptr_Function_int Function
+        %d_0 = OpVariable %_ptr_Function_int Function
+               OpStore %a_2 %int_1
+               OpStore %b_0 %int_2
+               OpStore %c_0 %int_3
+         %54 = OpLoad %int %a_2
+         %55 = OpLoad %int %b_0
+         %56 = OpIAdd %int %54 %55
+         %57 = OpIMul %int %int_1 %int_3
+         %58 = OpLoad %int %c_0
+         %59 = OpIAdd %int %58 %57
+         %60 = OpSDiv %int %56 %59
+               OpStore %d_0 %60
+         %61 = OpLoad %int %d_0
+         %62 = OpLoad %int %c_0
+         %63 = OpIAdd %int %61 %62
+               OpStore %d_0 %63
+               OpReturn
+               OpFunctionEnd
+%BasicBools1 = OpFunction %void None %9
+     %self_4 = OpFunctionParameter %_ptr_Function_Basic
+         %66 = OpLabel
+        %b_1 = OpVariable %_ptr_Function_bool Function
+        %c_1 = OpVariable %_ptr_Function_bool Function
+               OpStore %b_1 %true
+         %69 = OpLoad %bool %b_1
+         %70 = OpLogicalNot %bool %69
+               OpStore %c_1 %70
+               OpReturn
+               OpFunctionEnd
+%BasicBools2 = OpFunction %void None %9
+     %self_5 = OpFunctionParameter %_ptr_Function_Basic
+         %73 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%PreIncrement = OpFunction %void None %9
+     %self_6 = OpFunctionParameter %_ptr_Function_Basic
+         %76 = OpLabel
+        %a_3 = OpVariable %_ptr_Function_int Function
+               OpStore %a_3 %int_0
+         %78 = OpLoad %int %a_3
+         %79 = OpIAdd %int %78 %int_1
+               OpStore %a_3 %79
+               OpReturn
+               OpFunctionEnd
+%PreDecrement = OpFunction %void None %9
+     %self_7 = OpFunctionParameter %_ptr_Function_Basic
+         %82 = OpLabel
+        %a_4 = OpVariable %_ptr_Function_int Function
+               OpStore %a_4 %int_0
+         %84 = OpLoad %int %a_4
+         %85 = OpISub %int %84 %int_1
+               OpStore %a_4 %85
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_Basic = OpFunction %void None %9
+     %self_8 = OpFunctionParameter %_ptr_Function_Basic
+         %88 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %9
+     %self_9 = OpFunctionParameter %_ptr_Function_Basic
+         %91 = OpLabel
+         %92 = OpFunctionCall %void %PreConstructor_Basic %self_9
+               OpReturn
+               OpFunctionEnd

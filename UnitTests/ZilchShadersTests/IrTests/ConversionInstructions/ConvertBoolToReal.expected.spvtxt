@@ -1,0 +1,171 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 94
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_ConvertBoolToReal "EntryPoint_Main_ConvertBoolToReal"
+               OpExecutionMode %EntryPoint_Main_ConvertBoolToReal OriginUpperLeft
+               OpSource Unknown 100
+               OpName %ConvertBoolToReal "ConvertBoolToReal"
+               OpMemberName %ConvertBoolToReal 0 "Dummy"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %Test "Test"
+               OpName %b "b"
+               OpName %vec "vec"
+               OpName %Test_0 "Test"
+               OpName %b_0 "b"
+               OpName %vec_0 "vec"
+               OpName %zero "zero"
+               OpName %one "one"
+               OpName %Test_1 "Test"
+               OpName %b_1 "b"
+               OpName %vec_1 "vec"
+               OpName %zero_0 "zero"
+               OpName %one_0 "one"
+               OpName %Test_2 "Test"
+               OpName %b_2 "b"
+               OpName %vec_2 "vec"
+               OpName %zero_1 "zero"
+               OpName %one_1 "one"
+               OpName %PreConstructor_ConvertBoolToReal "PreConstructor_ConvertBoolToReal"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_ConvertBoolToReal "EntryPoint_Main_ConvertBoolToReal"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%ConvertBoolToReal = OpTypeStruct %int
+%_ptr_Function_ConvertBoolToReal = OpTypePointer Function %ConvertBoolToReal
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_ConvertBoolToReal
+          %9 = OpTypeFunction %void
+       %bool = OpTypeBool
+%_ptr_Function_bool = OpTypePointer Function %bool
+      %false = OpConstantFalse %bool
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %float_0 = OpConstant %float 0
+    %float_1 = OpConstant %float 1
+     %v2bool = OpTypeVector %bool 2
+%_ptr_Function_v2bool = OpTypePointer Function %v2bool
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+     %v3bool = OpTypeVector %bool 3
+%_ptr_Function_v3bool = OpTypePointer Function %v3bool
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+     %v4bool = OpTypeVector %bool 4
+%_ptr_Function_v4bool = OpTypePointer Function %v4bool
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_ConvertBoolToReal
+         %31 = OpLabel
+         %32 = OpFunctionCall %void %Test
+         %33 = OpFunctionCall %void %Test_0
+         %34 = OpFunctionCall %void %Test_1
+         %35 = OpFunctionCall %void %Test_2
+               OpReturn
+               OpFunctionEnd
+       %Test = OpFunction %void None %9
+         %37 = OpLabel
+          %b = OpVariable %_ptr_Function_bool Function
+        %vec = OpVariable %_ptr_Function_float Function
+               OpStore %b %false
+               OpStore %vec %float_0
+         %40 = OpLoad %bool %b
+         %41 = OpSelect %float %40 %float_1 %float_0
+               OpStore %vec %41
+               OpReturn
+               OpFunctionEnd
+     %Test_0 = OpFunction %void None %9
+         %43 = OpLabel
+        %b_0 = OpVariable %_ptr_Function_v2bool Function
+      %vec_0 = OpVariable %_ptr_Function_v2float Function
+         %46 = OpCompositeConstruct %v2bool %false %false
+               OpStore %b_0 %46
+         %47 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %vec_0 %47
+         %48 = OpLoad %v2bool %b_0
+       %zero = OpCompositeConstruct %v2float %float_0 %float_0
+        %one = OpCompositeConstruct %v2float %float_1 %float_1
+         %51 = OpSelect %v2float %48 %one %zero
+               OpStore %vec_0 %51
+               OpReturn
+               OpFunctionEnd
+     %Test_1 = OpFunction %void None %9
+         %53 = OpLabel
+        %b_1 = OpVariable %_ptr_Function_v3bool Function
+      %vec_1 = OpVariable %_ptr_Function_v3float Function
+         %56 = OpCompositeConstruct %v3bool %false %false %false
+               OpStore %b_1 %56
+         %57 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %vec_1 %57
+         %58 = OpLoad %v3bool %b_1
+     %zero_0 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+      %one_0 = OpCompositeConstruct %v3float %float_1 %float_1 %float_1
+         %61 = OpSelect %v3float %58 %one_0 %zero_0
+               OpStore %vec_1 %61
+               OpReturn
+               OpFunctionEnd
+     %Test_2 = OpFunction %void None %9
+         %63 = OpLabel
+        %b_2 = OpVariable %_ptr_Function_v4bool Function
+      %vec_2 = OpVariable %_ptr_Function_v4float Function
+         %66 = OpCompositeConstruct %v4bool %false %false %false %false
+               OpStore %b_2 %66
+         %67 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %vec_2 %67
+         %68 = OpLoad %v4bool %b_2
+     %zero_1 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+      %one_1 = OpCompositeConstruct %v4float %float_1 %float_1 %float_1 %float_1
+         %71 = OpSelect %v4float %68 %one_1 %zero_1
+               OpStore %vec_2 %71
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_ConvertBoolToReal = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_ConvertBoolToReal
+         %74 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_ConvertBoolToReal
+         %77 = OpLabel
+         %78 = OpFunctionCall %void %PreConstructor_ConvertBoolToReal %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_ConvertBoolToReal
+         %81 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_ConvertBoolToReal
+         %84 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_ConvertBoolToReal = OpFunction %void None %9
+         %86 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_ConvertBoolToReal Function
+         %88 = OpFunctionCall %void %InitializeGlobals
+         %89 = OpFunctionCall %void %DefaultConstructor %self_4
+         %90 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %91 = OpFunctionCall %void %Main %self_4
+         %92 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %9
+         %93 = OpLabel
+               OpReturn
+               OpFunctionEnd

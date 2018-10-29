@@ -1,0 +1,33 @@
+[Pixel][UnitTest]
+struct ImageQuerySize
+{
+  var Image : Image2d;
+  var SampledImage : SampledImage2d;
+  
+  var DepthImage : DepthImage2d;
+  var SampledDepthImage : SampledDepthImage2d;
+  
+  var ImageCube : ImageCube;
+  var SampledImageCube : SampledImageCube;
+  
+  [EntryPoint]
+  function Main()
+  {
+    var size = Integer2();
+    var lod = 1;
+    size = ShaderIntrinsics.ImageQuerySize(this.Image, lod);
+    size = ShaderIntrinsics.ImageQuerySize(this.SampledImage, lod);
+    //size = ShaderIntrinsics.ImageQuerySize(this.Image);
+    //size = ShaderIntrinsics.ImageQuerySize(this.SampledImage);
+    
+    size = ShaderIntrinsics.ImageQuerySize(this.DepthImage, lod);
+    size = ShaderIntrinsics.ImageQuerySize(this.SampledDepthImage, lod);
+    //size = ShaderIntrinsics.ImageQuerySize(this.DepthImage);
+    //size = ShaderIntrinsics.ImageQuerySize(this.SampledDepthImage);
+    
+    size = ShaderIntrinsics.ImageQuerySize(this.ImageCube, lod);
+    size = ShaderIntrinsics.ImageQuerySize(this.SampledImageCube, lod);
+    //size = ShaderIntrinsics.ImageQuerySize(this.ImageCube);
+    //size = ShaderIntrinsics.ImageQuerySize(this.SampledImageCube);
+  }
+}

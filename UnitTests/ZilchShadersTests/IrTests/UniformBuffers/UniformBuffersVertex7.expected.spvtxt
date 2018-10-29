@@ -1,0 +1,151 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 83
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Vertex %EntryPoint_Main_UniformBuffersVertex7 "EntryPoint_Main_UniformBuffersVertex7"
+               OpSource Unknown 100
+               OpName %UniformBuffersVertex7 "UniformBuffersVertex7"
+               OpMemberName %UniformBuffersVertex7 1 "R3x3"
+               OpMemberName %UniformBuffersVertex7 0 "R4x4"
+               OpMemberName %UniformBuffersVertex7 2 "R2x2"
+               OpMemberName %UniformBuffersVertex7 3 "End"
+               OpName %UniformBuffersVertex7Material "UniformBuffersVertex7Material"
+               OpMemberName %UniformBuffersVertex7Material 1 "R3x3"
+               OpMemberName %UniformBuffersVertex7Material 0 "R4x4"
+               OpMemberName %UniformBuffersVertex7Material 2 "R2x2"
+               OpMemberName %UniformBuffersVertex7Material 3 "End"
+               OpName %Material "Material"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %PreConstructor_UniformBuffersVertex7 "PreConstructor_UniformBuffersVertex7"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_UniformBuffersVertex7 "EntryPoint_Main_UniformBuffersVertex7"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %UniformBuffersVertex7Material Block
+               OpMemberDecorate %UniformBuffersVertex7Material 0 Offset 0
+               OpMemberDecorate %UniformBuffersVertex7Material 0 MatrixStride 16
+               OpMemberDecorate %UniformBuffersVertex7Material 0 ColMajor
+               OpMemberDecorate %UniformBuffersVertex7Material 1 Offset 64
+               OpMemberDecorate %UniformBuffersVertex7Material 1 MatrixStride 16
+               OpMemberDecorate %UniformBuffersVertex7Material 1 ColMajor
+               OpMemberDecorate %UniformBuffersVertex7Material 2 Offset 112
+               OpMemberDecorate %UniformBuffersVertex7Material 2 MatrixStride 16
+               OpMemberDecorate %UniformBuffersVertex7Material 2 ColMajor
+               OpMemberDecorate %UniformBuffersVertex7Material 3 Offset 144
+               OpDecorate %Material DescriptorSet 0
+               OpDecorate %Material Binding 3
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+%mat4v4float = OpTypeMatrix %v4float 4
+%_ptr_Function_mat4v4float = OpTypePointer Function %mat4v4float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+%mat3v3float = OpTypeMatrix %v3float 3
+%_ptr_Function_mat3v3float = OpTypePointer Function %mat3v3float
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+%mat2v2float = OpTypeMatrix %v2float 2
+%_ptr_Function_mat2v2float = OpTypePointer Function %mat2v2float
+%UniformBuffersVertex7 = OpTypeStruct %mat4v4float %mat3v3float %mat2v2float %float
+%_ptr_Function_UniformBuffersVertex7 = OpTypePointer Function %UniformBuffersVertex7
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+         %20 = OpTypeFunction %void %_ptr_Function_UniformBuffersVertex7
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+      %int_0 = OpConstant %int 0
+    %float_0 = OpConstant %float 0
+      %int_1 = OpConstant %int 1
+      %int_2 = OpConstant %int 2
+      %int_3 = OpConstant %int 3
+%_ptr_Uniform_mat4v4float = OpTypePointer Uniform %mat4v4float
+%UniformBuffersVertex7Material = OpTypeStruct %mat4v4float %mat3v3float %mat2v2float %float
+%_ptr_Uniform_UniformBuffersVertex7Material = OpTypePointer Uniform %UniformBuffersVertex7Material
+   %Material = OpVariable %_ptr_Uniform_UniformBuffersVertex7Material Uniform
+%_ptr_Uniform_mat3v3float = OpTypePointer Uniform %mat3v3float
+%_ptr_Uniform_mat2v2float = OpTypePointer Uniform %mat2v2float
+%_ptr_Uniform_float = OpTypePointer Uniform %float
+         %29 = OpTypeFunction %void
+       %Main = OpFunction %void None %20
+       %self = OpFunctionParameter %_ptr_Function_UniformBuffersVertex7
+         %38 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_UniformBuffersVertex7 = OpFunction %void None %20
+     %self_0 = OpFunctionParameter %_ptr_Function_UniformBuffersVertex7
+         %41 = OpLabel
+         %42 = OpAccessChain %_ptr_Function_mat4v4float %self_0 %int_0
+         %43 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+         %44 = OpCompositeConstruct %mat4v4float %43 %43 %43 %43
+               OpStore %42 %44
+         %45 = OpAccessChain %_ptr_Function_mat3v3float %self_0 %int_1
+         %46 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+         %47 = OpCompositeConstruct %mat3v3float %46 %46 %46
+               OpStore %45 %47
+         %48 = OpAccessChain %_ptr_Function_mat2v2float %self_0 %int_2
+         %49 = OpCompositeConstruct %v2float %float_0 %float_0
+         %50 = OpCompositeConstruct %mat2v2float %49 %49
+               OpStore %48 %50
+         %51 = OpAccessChain %_ptr_Function_float %self_0 %int_3
+               OpStore %51 %float_0
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %20
+     %self_1 = OpFunctionParameter %_ptr_Function_UniformBuffersVertex7
+         %54 = OpLabel
+         %55 = OpFunctionCall %void %PreConstructor_UniformBuffersVertex7 %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %20
+     %self_2 = OpFunctionParameter %_ptr_Function_UniformBuffersVertex7
+         %58 = OpLabel
+         %59 = OpAccessChain %_ptr_Uniform_mat4v4float %Material %int_0
+         %60 = OpAccessChain %_ptr_Function_mat4v4float %self_2 %int_0
+         %61 = OpLoad %mat4v4float %59
+               OpStore %60 %61
+         %62 = OpAccessChain %_ptr_Uniform_mat3v3float %Material %int_1
+         %63 = OpAccessChain %_ptr_Function_mat3v3float %self_2 %int_1
+         %64 = OpLoad %mat3v3float %62
+               OpStore %63 %64
+         %65 = OpAccessChain %_ptr_Uniform_mat2v2float %Material %int_2
+         %66 = OpAccessChain %_ptr_Function_mat2v2float %self_2 %int_2
+         %67 = OpLoad %mat2v2float %65
+               OpStore %66 %67
+         %68 = OpAccessChain %_ptr_Uniform_float %Material %int_3
+         %69 = OpAccessChain %_ptr_Function_float %self_2 %int_3
+         %70 = OpLoad %float %68
+               OpStore %69 %70
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %20
+     %self_3 = OpFunctionParameter %_ptr_Function_UniformBuffersVertex7
+         %73 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_UniformBuffersVertex7 = OpFunction %void None %29
+         %75 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_UniformBuffersVertex7 Function
+         %77 = OpFunctionCall %void %InitializeGlobals
+         %78 = OpFunctionCall %void %DefaultConstructor %self_4
+         %79 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %80 = OpFunctionCall %void %Main %self_4
+         %81 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %29
+         %82 = OpLabel
+               OpReturn
+               OpFunctionEnd

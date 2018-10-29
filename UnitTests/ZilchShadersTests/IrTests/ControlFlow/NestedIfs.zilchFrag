@@ -1,0 +1,140 @@
+[Pixel][UnitTest]
+struct NestedIfs
+{
+  function NestedIf0() : Integer
+  {
+    var one = 1;
+    var zero = 0;
+    var i0 = 0;
+    var i1 = 1;
+    var r0 = 0;
+    var r1 = 1;
+    
+    if(i0 == 0)
+    {
+      r0 = zero;
+      if(i1 == 0)
+        r1 = one;
+      r0 = zero;
+    }
+    var result = r0 + r1;
+    return result;
+  }
+  
+  function NestedIf1() : Integer
+  {
+    var one = 1;
+    var zero = 0;
+    var i0 = 0;
+    var i1 = 1;
+    var r0 = 0;
+    var r1 = 1;
+    if(i0 == zero)
+    {
+      r0 = zero;
+      if(i1 > 0)
+      {
+        r1 = one;
+      }
+      else
+      {
+        r1 = zero;
+      }
+      r0 = zero;
+    }
+    var result = r0 + r1;
+    return result;
+  }
+  
+  function NestedIf2() : Integer
+  {
+    var one = 1;
+    var zero = 0;
+    var nOne = -1;
+    var i0 = 0;
+    var i1 = 1;
+    var r0 = 0;
+    var r1 = 1;
+    
+    if(i0 == zero)
+    {
+      r0 = zero;
+      if(i1 > 0)
+      {
+        r1 = one;
+      }
+      else if(i1 < 0)
+      {
+        r1 = nOne;
+      }
+      else
+      {
+        r1 = zero;
+      }
+      r0 = zero;
+    }
+    var result = r0 + r1;
+    return result;
+  }
+  
+  function NestedIf3() : Integer
+  {
+    var one = 1;
+    var zero = 0;
+    var nOne = -1;
+    var i0 = 0;
+    var i1 = 1;
+    var r0 = 0;
+    var r1 = 1;
+    
+    if(i0 > 0)
+    {
+      r0 = one;
+      if(i1 > 0)
+      {
+        r1 = one;
+      }
+      r0 = one;
+    }
+    else
+    {
+      r0 = zero;
+      if(i1 > 0)
+      {
+        r1 = one;
+      }
+      r0 = zero;
+    }
+    var result = r0 + r1;
+    return result;
+  }
+  
+  function SuperNestedIf0() : Integer
+  {
+    var a = 0;
+    if(true)
+    {
+      a = 1;
+      if(false)
+      {
+        a = 2;
+        if(a > 3)
+          a = 3;
+        a = 4;
+      }
+      a = 3;
+    }
+    ++a;
+    return a;
+  }
+  
+  [EntryPoint]
+  function Main()
+  {
+    var i = 0;
+    i = this.NestedIf0();
+    i = this.NestedIf1();
+    i = this.NestedIf2();
+    i = this.NestedIf3();
+  }
+}

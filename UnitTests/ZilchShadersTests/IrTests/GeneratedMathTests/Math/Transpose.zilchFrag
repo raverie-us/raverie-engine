@@ -1,0 +1,89 @@
+[Pixel][UnitTest]
+struct Transpose
+{
+  function Test_Static_Real2x2()
+  {
+    var param0 = Real2x2();
+    var result = Math.Transpose(param0);
+  }
+
+  function Test_Static_Real2x3()
+  {
+    var param0 = Real2x3();
+    var result = Math.Transpose(param0);
+  }
+
+  function Test_Static_Real2x4()
+  {
+    var param0 = Real2x4();
+    var result = Math.Transpose(param0);
+  }
+
+  function Test_Static_Real3x2()
+  {
+    var param0 = Real3x2();
+    var result = Math.Transpose(param0);
+  }
+
+  function Test_Static_Real3x3()
+  {
+    var param0 = Real3x3();
+    var result = Math.Transpose(param0);
+  }
+
+  function Test_Static_Real3x4()
+  {
+    var param0 = Real3x4();
+    var result = Math.Transpose(param0);
+  }
+
+  function Test_Static_Real4x2()
+  {
+    var param0 = Real4x2();
+    var result = Math.Transpose(param0);
+  }
+
+  function Test_Static_Real4x3()
+  {
+    var param0 = Real4x3();
+    var result = Math.Transpose(param0);
+  }
+
+  function Test_Static_Real4x4()
+  {
+    var param0 = Real4x4();
+    var result = Math.Transpose(param0);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    //this.Test_Static_Boolean2x2();
+    //this.Test_Static_Boolean2x3();
+    //this.Test_Static_Boolean2x4();
+    //this.Test_Static_Boolean3x2();
+    //this.Test_Static_Boolean3x3();
+    //this.Test_Static_Boolean3x4();
+    //this.Test_Static_Boolean4x2();
+    //this.Test_Static_Boolean4x3();
+    //this.Test_Static_Boolean4x4();
+    //this.Test_Static_Integer2x2();
+    //this.Test_Static_Integer2x3();
+    //this.Test_Static_Integer2x4();
+    //this.Test_Static_Integer3x2();
+    //this.Test_Static_Integer3x3();
+    //this.Test_Static_Integer3x4();
+    //this.Test_Static_Integer4x2();
+    //this.Test_Static_Integer4x3();
+    //this.Test_Static_Integer4x4();
+    this.Test_Static_Real2x2();
+    this.Test_Static_Real2x3();
+    this.Test_Static_Real2x4();
+    this.Test_Static_Real3x2();
+    this.Test_Static_Real3x3();
+    this.Test_Static_Real3x4();
+    this.Test_Static_Real4x2();
+    this.Test_Static_Real4x3();
+    this.Test_Static_Real4x4();
+  }
+}

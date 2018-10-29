@@ -1,0 +1,15 @@
+[Pixel][UnitTest]
+struct RuntimeArray3
+{
+  var Positions : RuntimeArray[Real4];
+  var Velocities : RuntimeArray[Real4];
+  
+  [EntryPoint]
+  function Main()
+  {
+    var g = Real4(0.0, -10.0, 0.0, 0.0);
+    var dt = 0.016;
+    this.Velocities[0] += dt * g;
+    this.Positions[0] += dt * this.Velocities[0];
+  }
+}

@@ -1,0 +1,16 @@
+struct GeometryData
+{
+}
+
+[Geometry(maxVertices : 3)]
+struct Geometry
+{
+  [AppBuiltInInput] var LogicTime : Real;
+  [AppBuiltInInput("LocalToWorld")] var Transform : Real4x4;
+  
+  function Main(input : TriangleInput[GeometryData], output : TriangleOutput[GeometryData])
+  {
+    output.Append(input[0], 0);
+    output.Restart();
+  }
+}

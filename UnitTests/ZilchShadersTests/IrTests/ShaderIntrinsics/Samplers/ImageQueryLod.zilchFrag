@@ -1,0 +1,31 @@
+[Pixel][UnitTest]
+struct ImageQueryLod
+{
+  var Uv : Real2;
+  var Uv3 : Real3;
+  
+  var Sampler : Sampler;
+  
+  var Image : Image2d;
+  var SampledImage : SampledImage2d;
+  
+  var DepthImage : DepthImage2d;
+  var SampledDepthImage : SampledDepthImage2d;
+  
+  var ImageCube : ImageCube;
+  var SampledImageCube : SampledImageCube;
+  
+  [EntryPoint]
+  function Main()
+  {
+    var lodQuery = Real2();
+    lodQuery = ShaderIntrinsics.ImageQueryLod(this.SampledImage, this.Uv);
+    lodQuery = ShaderIntrinsics.ImageQueryLod(this.Image, this.Sampler, this.Uv);
+    
+    lodQuery = ShaderIntrinsics.ImageQueryLod(this.SampledDepthImage, this.Uv);
+    lodQuery = ShaderIntrinsics.ImageQueryLod(this.DepthImage, this.Sampler, this.Uv);
+    
+    lodQuery = ShaderIntrinsics.ImageQueryLod(this.SampledImageCube, this.Uv3);
+    lodQuery = ShaderIntrinsics.ImageQueryLod(this.ImageCube, this.Sampler, this.Uv3);
+  }
+}

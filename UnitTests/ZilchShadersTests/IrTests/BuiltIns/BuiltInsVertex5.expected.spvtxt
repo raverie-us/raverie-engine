@@ -1,0 +1,127 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 67
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Vertex %EntryPoint_Main_BuiltInsVertex5 "EntryPoint_Main_BuiltInsVertex5" %VertexId %InstanceId %PerVertexOut
+               OpSource Unknown 100
+               OpName %BuiltInsVertex5 "BuiltInsVertex5"
+               OpMemberName %BuiltInsVertex5 0 "IdOfVertex"
+               OpMemberName %BuiltInsVertex5 1 "IdOfInstance"
+               OpMemberName %BuiltInsVertex5 2 "PerspectivePosition"
+               OpMemberName %BuiltInsVertex5 3 "Size"
+               OpName %BuiltInsVertex5PerVertexOut "BuiltInsVertex5PerVertexOut"
+               OpMemberName %BuiltInsVertex5PerVertexOut 1 "PointSize"
+               OpMemberName %BuiltInsVertex5PerVertexOut 0 "ApiPerspectivePosition"
+               OpName %VertexId "VertexId"
+               OpName %InstanceId "InstanceId"
+               OpName %PerVertexOut "PerVertexOut"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %PreConstructor_BuiltInsVertex5 "PreConstructor_BuiltInsVertex5"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_BuiltInsVertex5 "EntryPoint_Main_BuiltInsVertex5"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %VertexId BuiltIn VertexId
+               OpDecorate %InstanceId BuiltIn InstanceId
+               OpDecorate %BuiltInsVertex5PerVertexOut Block
+               OpMemberDecorate %BuiltInsVertex5PerVertexOut 0 BuiltIn Position
+               OpMemberDecorate %BuiltInsVertex5PerVertexOut 1 BuiltIn PointSize
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+%BuiltInsVertex5 = OpTypeStruct %int %int %v4float %float
+%_ptr_Function_BuiltInsVertex5 = OpTypePointer Function %BuiltInsVertex5
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+         %12 = OpTypeFunction %void %_ptr_Function_BuiltInsVertex5
+      %int_0 = OpConstant %int 0
+      %int_1 = OpConstant %int 1
+      %int_2 = OpConstant %int 2
+    %float_0 = OpConstant %float 0
+      %int_3 = OpConstant %int 3
+%_ptr_Input_int = OpTypePointer Input %int
+   %VertexId = OpVariable %_ptr_Input_int Input
+ %InstanceId = OpVariable %_ptr_Input_int Input
+%_ptr_Output_v4float = OpTypePointer Output %v4float
+%BuiltInsVertex5PerVertexOut = OpTypeStruct %v4float %float
+%_ptr_Output_BuiltInsVertex5PerVertexOut = OpTypePointer Output %BuiltInsVertex5PerVertexOut
+%PerVertexOut = OpVariable %_ptr_Output_BuiltInsVertex5PerVertexOut Output
+%_ptr_Output_float = OpTypePointer Output %float
+         %18 = OpTypeFunction %void
+       %Main = OpFunction %void None %12
+       %self = OpFunctionParameter %_ptr_Function_BuiltInsVertex5
+         %29 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_BuiltInsVertex5 = OpFunction %void None %12
+     %self_0 = OpFunctionParameter %_ptr_Function_BuiltInsVertex5
+         %32 = OpLabel
+         %33 = OpAccessChain %_ptr_Function_int %self_0 %int_0
+               OpStore %33 %int_0
+         %34 = OpAccessChain %_ptr_Function_int %self_0 %int_1
+               OpStore %34 %int_0
+         %35 = OpAccessChain %_ptr_Function_v4float %self_0 %int_2
+         %36 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %35 %36
+         %37 = OpAccessChain %_ptr_Function_float %self_0 %int_3
+               OpStore %37 %float_0
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %12
+     %self_1 = OpFunctionParameter %_ptr_Function_BuiltInsVertex5
+         %40 = OpLabel
+         %41 = OpFunctionCall %void %PreConstructor_BuiltInsVertex5 %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %12
+     %self_2 = OpFunctionParameter %_ptr_Function_BuiltInsVertex5
+         %44 = OpLabel
+         %45 = OpAccessChain %_ptr_Function_int %self_2 %int_0
+         %46 = OpLoad %int %VertexId
+               OpStore %45 %46
+         %47 = OpAccessChain %_ptr_Function_int %self_2 %int_1
+         %48 = OpLoad %int %InstanceId
+               OpStore %47 %48
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %12
+     %self_3 = OpFunctionParameter %_ptr_Function_BuiltInsVertex5
+         %51 = OpLabel
+         %52 = OpAccessChain %_ptr_Output_v4float %PerVertexOut %int_0
+         %53 = OpAccessChain %_ptr_Function_v4float %self_3 %int_2
+         %54 = OpLoad %v4float %53
+               OpStore %52 %54
+         %55 = OpAccessChain %_ptr_Output_float %PerVertexOut %int_1
+         %56 = OpAccessChain %_ptr_Function_float %self_3 %int_3
+         %57 = OpLoad %float %56
+               OpStore %55 %57
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_BuiltInsVertex5 = OpFunction %void None %18
+         %59 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_BuiltInsVertex5 Function
+         %61 = OpFunctionCall %void %InitializeGlobals
+         %62 = OpFunctionCall %void %DefaultConstructor %self_4
+         %63 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %64 = OpFunctionCall %void %Main %self_4
+         %65 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %18
+         %66 = OpLabel
+               OpReturn
+               OpFunctionEnd

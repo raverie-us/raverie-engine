@@ -1,0 +1,12 @@
+[Vertex][UnitTest]
+struct UniformBuffersVertex8
+{
+  [PropertyInput] var Input0 : FixedArray[Real, 2] = FixedArray[Real, 2]();
+  [PropertyInput] var Input1 : FixedArray[Real3, 3] = FixedArray[Real3, 3]();
+  [PropertyInput] var Input2 : FixedArray[Real3x3, 4] = FixedArray[Real3x3, 4]();
+  
+  [EntryPoint]
+  function Main()
+  {
+  }
+}

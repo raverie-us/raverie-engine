@@ -1,0 +1,73 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 35
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Vertex %EntryPoint_Main_PixelTest_Vertex "EntryPoint_Main_PixelTest_Vertex"
+               OpSource Unknown 100
+               OpName %PixelTest_Vertex "PixelTest_Vertex"
+               OpMemberName %PixelTest_Vertex 0 "Dummy"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %PreConstructor_PixelTest_Vertex "PreConstructor_PixelTest_Vertex"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_PixelTest_Vertex "EntryPoint_Main_PixelTest_Vertex"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%PixelTest_Vertex = OpTypeStruct %int
+%_ptr_Function_PixelTest_Vertex = OpTypePointer Function %PixelTest_Vertex
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_PixelTest_Vertex
+          %9 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_PixelTest_Vertex
+         %12 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_PixelTest_Vertex = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_PixelTest_Vertex
+         %15 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_PixelTest_Vertex
+         %18 = OpLabel
+         %19 = OpFunctionCall %void %PreConstructor_PixelTest_Vertex %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_PixelTest_Vertex
+         %22 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_PixelTest_Vertex
+         %25 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_PixelTest_Vertex = OpFunction %void None %9
+         %27 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_PixelTest_Vertex Function
+         %29 = OpFunctionCall %void %InitializeGlobals
+         %30 = OpFunctionCall %void %DefaultConstructor %self_4
+         %31 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %32 = OpFunctionCall %void %Main %self_4
+         %33 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %9
+         %34 = OpLabel
+               OpReturn
+               OpFunctionEnd

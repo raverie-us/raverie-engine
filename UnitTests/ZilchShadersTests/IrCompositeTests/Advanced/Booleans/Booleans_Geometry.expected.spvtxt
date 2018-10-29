@@ -1,0 +1,652 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 394
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpCapability Geometry
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Geometry %EntryPoint_Main_Booleans_Geometry "EntryPoint_Main_Booleans_Geometry" %In %gl_in %Out %gl_out
+               OpExecutionMode %EntryPoint_Main_Booleans_Geometry OutputVertices 5
+               OpExecutionMode %EntryPoint_Main_Booleans_Geometry Triangles
+               OpExecutionMode %EntryPoint_Main_Booleans_Geometry OutputTriangleStrip
+               OpSource Unknown 100
+               OpName %Booleans_Geometry "Booleans_Geometry"
+               OpMemberName %Booleans_Geometry 0 "PerspectiveToApiPerspective"
+               OpName %Booleans_GeoIn "Booleans_GeoIn"
+               OpMemberName %Booleans_GeoIn 2 "Stage_MyVar1_Boolean"
+               OpMemberName %Booleans_GeoIn 0 "Stage_MyVar2_Boolean2"
+               OpMemberName %Booleans_GeoIn 4 "Stage_MyVar3_Boolean3"
+               OpMemberName %Booleans_GeoIn 1 "Stage_MyVar2_Integer2"
+               OpMemberName %Booleans_GeoIn 5 "Stage_MyVar3_Integer3"
+               OpMemberName %Booleans_GeoIn 6 "ApiPerspectivePosition"
+               OpMemberName %Booleans_GeoIn 3 "Stage_MyVar1_Integer"
+               OpName %Booleans_GeoOut "Booleans_GeoOut"
+               OpMemberName %Booleans_GeoOut 0 "Stage_MyVar1_Boolean"
+               OpMemberName %Booleans_GeoOut 2 "Stage_MyVar2_Boolean2"
+               OpMemberName %Booleans_GeoOut 4 "Stage_MyVar3_Boolean3"
+               OpMemberName %Booleans_GeoOut 3 "Stage_MyVar2_Integer2"
+               OpMemberName %Booleans_GeoOut 5 "Stage_MyVar3_Integer3"
+               OpMemberName %Booleans_GeoOut 6 "ApiPerspectivePosition"
+               OpMemberName %Booleans_GeoOut 1 "Stage_MyVar1_Integer"
+               OpName %OutputStream "OutputStream"
+               OpMemberName %OutputStream 0 "Output"
+               OpName %GeoData "GeoData"
+               OpMemberName %GeoData 0 "MyVar2"
+               OpMemberName %GeoData 1 "MyInt2"
+               OpName %OutputStream_0 "OutputStream"
+               OpMemberName %OutputStream_0 0 "Output"
+               OpName %Geometry "Geometry"
+               OpMemberName %Geometry 0 "Dummy"
+               OpName %Booleans_GeometryTransformData "Booleans_GeometryTransformData"
+               OpMemberName %Booleans_GeometryTransformData 0 "LocalToWorld"
+               OpMemberName %Booleans_GeometryTransformData 1 "PerspectiveToApiPerspective"
+               OpName %VertexInType_Booleans_Geometry "VertexInType_Booleans_Geometry"
+               OpMemberName %VertexInType_Booleans_Geometry 2 "MyVar1_Boolean"
+               OpMemberName %VertexInType_Booleans_Geometry 5 "MyVar3"
+               OpMemberName %VertexInType_Booleans_Geometry 1 "MyVar2"
+               OpMemberName %VertexInType_Booleans_Geometry 3 "MyVar1"
+               OpMemberName %VertexInType_Booleans_Geometry 4 "MyVar3_Boolean3"
+               OpMemberName %VertexInType_Booleans_Geometry 0 "MyVar2_Boolean2"
+               OpName %VertexInStreamTypeBooleans_Geometry "VertexInStreamTypeBooleans_Geometry"
+               OpName %BuiltInVertexInTypeBooleans_Geometry "BuiltInVertexInTypeBooleans_Geometry"
+               OpMemberName %BuiltInVertexInTypeBooleans_Geometry 0 "ApiPerspectivePosition"
+               OpName %BuiltInVertexInStreamTypeBooleans_Geometry "BuiltInVertexInStreamTypeBooleans_Geometry"
+               OpName %Booleans_GeometryOut "Booleans_GeometryOut"
+               OpMemberName %Booleans_GeometryOut 0 "MyVar1_Boolean"
+               OpMemberName %Booleans_GeometryOut 5 "MyVar3"
+               OpMemberName %Booleans_GeometryOut 1 "MyVar1"
+               OpMemberName %Booleans_GeometryOut 3 "MyVar2"
+               OpMemberName %Booleans_GeometryOut 4 "MyVar3_Boolean3"
+               OpMemberName %Booleans_GeometryOut 2 "MyVar2_Boolean2"
+               OpName %Booleans_Geometrygl_out "Booleans_Geometrygl_out"
+               OpMemberName %Booleans_Geometrygl_out 0 "ApiPerspectivePosition"
+               OpName %TransformData "TransformData"
+               OpName %In "In"
+               OpName %gl_in "gl_in"
+               OpName %Out "Out"
+               OpName %gl_out "gl_out"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %input "input"
+               OpName %output "output"
+               OpName %input_Local "input_Local"
+               OpName %output_Local "output_Local"
+               OpName %fragmentInput "fragmentInput"
+               OpName %i "i"
+               OpName %fragmentOutput "fragmentOutput"
+               OpName %geometry "geometry"
+               OpName %headerBlock "headerBlock"
+               OpName %conditionBlock "conditionBlock"
+               OpName %loop_body "loop-body"
+               OpName %continueBlock "continueBlock"
+               OpName %after_loop "after-loop"
+               OpName %PreConstructor_Booleans_GeoIn "PreConstructor_Booleans_GeoIn"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %PreConstructor_Booleans_GeoOut "PreConstructor_Booleans_GeoOut"
+               OpName %self_2 "self"
+               OpName %DefaultConstructor_0 "DefaultConstructor"
+               OpName %self_3 "self"
+               OpName %PreConstructor_GeoData "PreConstructor_GeoData"
+               OpName %self_4 "self"
+               OpName %DefaultConstructor_1 "DefaultConstructor"
+               OpName %self_5 "self"
+               OpName %Main_0 "Main"
+               OpName %self_6 "self"
+               OpName %input_0 "input"
+               OpName %output_0 "output"
+               OpName %input_Local_0 "input_Local"
+               OpName %output_Local_0 "output_Local"
+               OpName %outData "outData"
+               OpName %PreConstructor_Geometry "PreConstructor_Geometry"
+               OpName %self_7 "self"
+               OpName %DefaultConstructor_2 "DefaultConstructor"
+               OpName %self_8 "self"
+               OpName %PreConstructor_Booleans_Geometry "PreConstructor_Booleans_Geometry"
+               OpName %self_9 "self"
+               OpName %DefaultConstructor_3 "DefaultConstructor"
+               OpName %self_10 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_11 "self"
+               OpName %inputStream "inputStream"
+               OpName %EntryPoint_Main_Booleans_Geometry "EntryPoint_Main_Booleans_Geometry"
+               OpName %self_12 "self"
+               OpName %inputStream_0 "inputStream"
+               OpName %outputStream "outputStream"
+               OpName %Append "Append"
+               OpName %stream "stream"
+               OpName %outputData "outputData"
+               OpName %vertexId "vertexId"
+               OpName %outDataLocal "outDataLocal"
+               OpName %zero "zero"
+               OpName %one "one"
+               OpName %zero_0 "zero"
+               OpName %one_0 "one"
+               OpName %Append_0 "Append"
+               OpName %stream_0 "stream"
+               OpName %outputData_0 "outputData"
+               OpName %vertexId_0 "vertexId"
+               OpName %outDataLocal_0 "outDataLocal"
+               OpName %zero_1 "zero"
+               OpName %one_1 "one"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %Booleans_GeometryTransformData Block
+               OpMemberDecorate %Booleans_GeometryTransformData 0 Offset 0
+               OpMemberDecorate %Booleans_GeometryTransformData 0 MatrixStride 16
+               OpMemberDecorate %Booleans_GeometryTransformData 0 ColMajor
+               OpMemberDecorate %Booleans_GeometryTransformData 1 Offset 64
+               OpMemberDecorate %Booleans_GeometryTransformData 1 MatrixStride 16
+               OpMemberDecorate %Booleans_GeometryTransformData 1 ColMajor
+               OpDecorate %TransformData DescriptorSet 0
+               OpDecorate %TransformData Binding 2
+               OpDecorate %VertexInType_Booleans_Geometry Block
+               OpDecorate %In Location 0
+               OpDecorate %BuiltInVertexInTypeBooleans_Geometry Block
+               OpMemberDecorate %BuiltInVertexInTypeBooleans_Geometry 0 BuiltIn Position
+               OpDecorate %Booleans_GeometryOut Block
+               OpDecorate %Out Location 0
+               OpDecorate %Booleans_Geometrygl_out Block
+               OpMemberDecorate %Booleans_Geometrygl_out 0 BuiltIn Position
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+%mat4v4float = OpTypeMatrix %v4float 4
+%_ptr_Function_mat4v4float = OpTypePointer Function %mat4v4float
+%Booleans_Geometry = OpTypeStruct %mat4v4float
+%_ptr_Function_Booleans_Geometry = OpTypePointer Function %Booleans_Geometry
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+       %bool = OpTypeBool
+%_ptr_Function_bool = OpTypePointer Function %bool
+     %v2bool = OpTypeVector %bool 2
+%_ptr_Function_v2bool = OpTypePointer Function %v2bool
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+      %v2int = OpTypeVector %int 2
+%_ptr_Function_v2int = OpTypePointer Function %v2int
+     %v3bool = OpTypeVector %bool 3
+%_ptr_Function_v3bool = OpTypePointer Function %v3bool
+      %v3int = OpTypeVector %int 3
+%_ptr_Function_v3int = OpTypePointer Function %v3int
+%Booleans_GeoIn = OpTypeStruct %v2bool %v2int %bool %int %v3bool %v3int %v4float
+%_ptr_Function_Booleans_GeoIn = OpTypePointer Function %Booleans_GeoIn
+         %28 = OpTypeFunction %void %_ptr_Function_Booleans_GeoIn
+      %int_0 = OpConstant %int 0
+      %false = OpConstantFalse %bool
+      %int_1 = OpConstant %int 1
+      %int_2 = OpConstant %int 2
+      %int_3 = OpConstant %int 3
+      %int_4 = OpConstant %int 4
+      %int_5 = OpConstant %int 5
+      %int_6 = OpConstant %int 6
+    %float_0 = OpConstant %float 0
+%_arr_Booleans_GeoIn_int_3 = OpTypeArray %Booleans_GeoIn %int_3
+%_ptr_Function__arr_Booleans_GeoIn_int_3 = OpTypePointer Function %_arr_Booleans_GeoIn_int_3
+%Booleans_GeoOut = OpTypeStruct %bool %int %v2bool %v2int %v3bool %v3int %v4float
+%_ptr_Function_Booleans_GeoOut = OpTypePointer Function %Booleans_GeoOut
+         %33 = OpTypeFunction %void %_ptr_Function_Booleans_GeoOut
+%OutputStream = OpTypeStruct %Booleans_GeoOut
+%_ptr_Function_OutputStream = OpTypePointer Function %OutputStream
+         %36 = OpTypeFunction %void %_ptr_Function_OutputStream %Booleans_GeoOut %int
+         %37 = OpTypeFunction %void %_ptr_Function_Booleans_Geometry %_arr_Booleans_GeoIn_int_3 %OutputStream
+    %GeoData = OpTypeStruct %v2bool %v2int
+%_ptr_Function_GeoData = OpTypePointer Function %GeoData
+         %40 = OpTypeFunction %void %_ptr_Function_GeoData
+    %int_0_0 = OpConstant %int 0
+    %false_0 = OpConstantFalse %bool
+    %int_1_0 = OpConstant %int 1
+    %int_3_0 = OpConstant %int 3
+%_arr_GeoData_int_3_0 = OpTypeArray %GeoData %int_3_0
+%_ptr_Function__arr_GeoData_int_3_0 = OpTypePointer Function %_arr_GeoData_int_3_0
+%OutputStream_0 = OpTypeStruct %GeoData
+%_ptr_Function_OutputStream_0 = OpTypePointer Function %OutputStream_0
+         %45 = OpTypeFunction %void %_ptr_Function_OutputStream_0 %GeoData %int
+   %Geometry = OpTypeStruct %int
+%_ptr_Function_Geometry = OpTypePointer Function %Geometry
+         %48 = OpTypeFunction %void %_ptr_Function_Geometry %_arr_GeoData_int_3_0 %OutputStream_0
+         %49 = OpTypeFunction %void %_ptr_Function_Geometry
+         %50 = OpTypeFunction %void %_ptr_Function_Booleans_Geometry
+         %51 = OpTypeFunction %void %_ptr_Function_Booleans_Geometry %_ptr_Function__arr_Booleans_GeoIn_int_3
+%_ptr_Uniform_mat4v4float = OpTypePointer Uniform %mat4v4float
+%Booleans_GeometryTransformData = OpTypeStruct %mat4v4float %mat4v4float
+%_ptr_Uniform_Booleans_GeometryTransformData = OpTypePointer Uniform %Booleans_GeometryTransformData
+%TransformData = OpVariable %_ptr_Uniform_Booleans_GeometryTransformData Uniform
+%VertexInType_Booleans_Geometry = OpTypeStruct %v2int %v2int %int %int %v3int %v3int
+%_ptr_Input_VertexInType_Booleans_Geometry = OpTypePointer Input %VertexInType_Booleans_Geometry
+%VertexInStreamTypeBooleans_Geometry = OpTypeArray %VertexInType_Booleans_Geometry %int_3
+%_ptr_Input_VertexInStreamTypeBooleans_Geometry = OpTypePointer Input %VertexInStreamTypeBooleans_Geometry
+         %In = OpVariable %_ptr_Input_VertexInStreamTypeBooleans_Geometry Input
+%_ptr_Input_v2int = OpTypePointer Input %v2int
+%_ptr_Input_int = OpTypePointer Input %int
+%_ptr_Input_v3int = OpTypePointer Input %v3int
+%BuiltInVertexInTypeBooleans_Geometry = OpTypeStruct %v4float
+%_ptr_Input_BuiltInVertexInTypeBooleans_Geometry = OpTypePointer Input %BuiltInVertexInTypeBooleans_Geometry
+%BuiltInVertexInStreamTypeBooleans_Geometry = OpTypeArray %BuiltInVertexInTypeBooleans_Geometry %int_3
+%_ptr_Input_BuiltInVertexInStreamTypeBooleans_Geometry = OpTypePointer Input %BuiltInVertexInStreamTypeBooleans_Geometry
+      %gl_in = OpVariable %_ptr_Input_BuiltInVertexInStreamTypeBooleans_Geometry Input
+%_ptr_Input_v4float = OpTypePointer Input %v4float
+         %67 = OpTypeFunction %void
+%_ptr_Output_int = OpTypePointer Output %int
+%Booleans_GeometryOut = OpTypeStruct %int %int %v2int %v2int %v3int %v3int
+%_ptr_Output_Booleans_GeometryOut = OpTypePointer Output %Booleans_GeometryOut
+        %Out = OpVariable %_ptr_Output_Booleans_GeometryOut Output
+%_ptr_Output_v2int = OpTypePointer Output %v2int
+%_ptr_Output_v3int = OpTypePointer Output %v3int
+%_ptr_Output_v4float = OpTypePointer Output %v4float
+%Booleans_Geometrygl_out = OpTypeStruct %v4float
+%_ptr_Output_Booleans_Geometrygl_out = OpTypePointer Output %Booleans_Geometrygl_out
+     %gl_out = OpVariable %_ptr_Output_Booleans_Geometrygl_out Output
+       %Main = OpFunction %void None %37
+       %self = OpFunctionParameter %_ptr_Function_Booleans_Geometry
+      %input = OpFunctionParameter %_arr_Booleans_GeoIn_int_3
+     %output = OpFunctionParameter %OutputStream
+         %98 = OpLabel
+%input_Local = OpVariable %_ptr_Function__arr_Booleans_GeoIn_int_3 Function
+%output_Local = OpVariable %_ptr_Function_OutputStream Function
+%fragmentInput = OpVariable %_ptr_Function__arr_GeoData_int_3_0 Function
+        %102 = OpVariable %_ptr_Function__arr_GeoData_int_3_0 Function
+          %i = OpVariable %_ptr_Function_int Function
+%fragmentOutput = OpVariable %_ptr_Function_OutputStream_0 Function
+        %105 = OpVariable %_ptr_Function_OutputStream_0 Function
+   %geometry = OpVariable %_ptr_Function_Geometry Function
+        %107 = OpVariable %_ptr_Function_Geometry Function
+               OpStore %input_Local %input
+               OpStore %output_Local %output
+        %108 = OpLoad %_arr_GeoData_int_3_0 %102
+               OpStore %fragmentInput %108
+               OpStore %i %int_0
+               OpBranch %headerBlock
+%headerBlock = OpLabel
+               OpLoopMerge %after_loop %continueBlock None
+               OpBranch %conditionBlock
+%conditionBlock = OpLabel
+        %111 = OpLoad %int %i
+        %112 = OpSLessThan %bool %111 %int_3
+               OpBranchConditional %112 %loop_body %after_loop
+  %loop_body = OpLabel
+        %114 = OpLoad %int %i
+        %115 = OpAccessChain %_ptr_Function_GeoData %fragmentInput %114
+        %116 = OpAccessChain %_ptr_Function_v2bool %115 %int_0
+        %117 = OpLoad %int %i
+        %118 = OpAccessChain %_ptr_Function_Booleans_GeoIn %input_Local %117
+        %119 = OpAccessChain %_ptr_Function_v2bool %118 %int_0
+        %120 = OpLoad %v2bool %119
+               OpStore %116 %120
+        %121 = OpLoad %int %i
+        %122 = OpAccessChain %_ptr_Function_GeoData %fragmentInput %121
+        %123 = OpAccessChain %_ptr_Function_v2int %122 %int_1
+        %124 = OpLoad %int %i
+        %125 = OpAccessChain %_ptr_Function_Booleans_GeoIn %input_Local %124
+        %126 = OpAccessChain %_ptr_Function_v2int %125 %int_1
+        %127 = OpLoad %v2int %126
+               OpStore %123 %127
+               OpBranch %continueBlock
+%continueBlock = OpLabel
+        %129 = OpLoad %int %i
+        %130 = OpIAdd %int %129 %int_1
+               OpStore %i %130
+               OpBranch %headerBlock
+ %after_loop = OpLabel
+        %132 = OpLoad %OutputStream_0 %105
+               OpStore %fragmentOutput %132
+        %133 = OpFunctionCall %void %DefaultConstructor_2 %107
+        %134 = OpLoad %Geometry %107
+               OpStore %geometry %134
+        %135 = OpLoad %_arr_GeoData_int_3_0 %fragmentInput
+        %136 = OpLoad %OutputStream_0 %fragmentOutput
+        %137 = OpFunctionCall %void %Main_0 %geometry %135 %136
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_Booleans_GeoIn = OpFunction %void None %28
+     %self_0 = OpFunctionParameter %_ptr_Function_Booleans_GeoIn
+        %140 = OpLabel
+        %141 = OpAccessChain %_ptr_Function_v2bool %self_0 %int_0
+        %142 = OpCompositeConstruct %v2bool %false %false
+               OpStore %141 %142
+        %143 = OpAccessChain %_ptr_Function_v2int %self_0 %int_1
+        %144 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %143 %144
+        %145 = OpAccessChain %_ptr_Function_bool %self_0 %int_2
+               OpStore %145 %false
+        %146 = OpAccessChain %_ptr_Function_int %self_0 %int_3
+               OpStore %146 %int_0
+        %147 = OpAccessChain %_ptr_Function_v3bool %self_0 %int_4
+        %148 = OpCompositeConstruct %v3bool %false %false %false
+               OpStore %147 %148
+        %149 = OpAccessChain %_ptr_Function_v3int %self_0 %int_5
+        %150 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+               OpStore %149 %150
+        %151 = OpAccessChain %_ptr_Function_v4float %self_0 %int_6
+        %152 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %151 %152
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %28
+     %self_1 = OpFunctionParameter %_ptr_Function_Booleans_GeoIn
+        %155 = OpLabel
+        %156 = OpFunctionCall %void %PreConstructor_Booleans_GeoIn %self_1
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_Booleans_GeoOut = OpFunction %void None %33
+     %self_2 = OpFunctionParameter %_ptr_Function_Booleans_GeoOut
+        %159 = OpLabel
+        %160 = OpAccessChain %_ptr_Function_bool %self_2 %int_0
+               OpStore %160 %false
+        %161 = OpAccessChain %_ptr_Function_int %self_2 %int_1
+               OpStore %161 %int_0
+        %162 = OpAccessChain %_ptr_Function_v2bool %self_2 %int_2
+        %163 = OpCompositeConstruct %v2bool %false %false
+               OpStore %162 %163
+        %164 = OpAccessChain %_ptr_Function_v2int %self_2 %int_3
+        %165 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %164 %165
+        %166 = OpAccessChain %_ptr_Function_v3bool %self_2 %int_4
+        %167 = OpCompositeConstruct %v3bool %false %false %false
+               OpStore %166 %167
+        %168 = OpAccessChain %_ptr_Function_v3int %self_2 %int_5
+        %169 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+               OpStore %168 %169
+        %170 = OpAccessChain %_ptr_Function_v4float %self_2 %int_6
+        %171 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %170 %171
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor_0 = OpFunction %void None %33
+     %self_3 = OpFunctionParameter %_ptr_Function_Booleans_GeoOut
+        %174 = OpLabel
+        %175 = OpFunctionCall %void %PreConstructor_Booleans_GeoOut %self_3
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_GeoData = OpFunction %void None %40
+     %self_4 = OpFunctionParameter %_ptr_Function_GeoData
+        %178 = OpLabel
+        %179 = OpAccessChain %_ptr_Function_v2bool %self_4 %int_0_0
+        %180 = OpCompositeConstruct %v2bool %false_0 %false_0
+               OpStore %179 %180
+        %181 = OpAccessChain %_ptr_Function_v2int %self_4 %int_1_0
+        %182 = OpCompositeConstruct %v2int %int_0_0 %int_0_0
+               OpStore %181 %182
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor_1 = OpFunction %void None %40
+     %self_5 = OpFunctionParameter %_ptr_Function_GeoData
+        %185 = OpLabel
+        %186 = OpFunctionCall %void %PreConstructor_GeoData %self_5
+               OpReturn
+               OpFunctionEnd
+     %Main_0 = OpFunction %void None %48
+     %self_6 = OpFunctionParameter %_ptr_Function_Geometry
+    %input_0 = OpFunctionParameter %_arr_GeoData_int_3_0
+   %output_0 = OpFunctionParameter %OutputStream_0
+        %191 = OpLabel
+%input_Local_0 = OpVariable %_ptr_Function__arr_GeoData_int_3_0 Function
+%output_Local_0 = OpVariable %_ptr_Function_OutputStream_0 Function
+    %outData = OpVariable %_ptr_Function_GeoData Function
+               OpStore %input_Local_0 %input_0
+               OpStore %output_Local_0 %output_0
+        %195 = OpAccessChain %_ptr_Function_GeoData %input_Local_0 %int_0_0
+        %196 = OpLoad %GeoData %195
+               OpStore %outData %196
+        %197 = OpLoad %GeoData %outData
+        %198 = OpFunctionCall %void %Append_0 %output_Local_0 %197 %int_0_0
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_Geometry = OpFunction %void None %49
+     %self_7 = OpFunctionParameter %_ptr_Function_Geometry
+        %201 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor_2 = OpFunction %void None %49
+     %self_8 = OpFunctionParameter %_ptr_Function_Geometry
+        %204 = OpLabel
+        %205 = OpFunctionCall %void %PreConstructor_Geometry %self_8
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_Booleans_Geometry = OpFunction %void None %50
+     %self_9 = OpFunctionParameter %_ptr_Function_Booleans_Geometry
+        %208 = OpLabel
+        %209 = OpAccessChain %_ptr_Function_mat4v4float %self_9 %int_0
+        %210 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+        %211 = OpCompositeConstruct %mat4v4float %210 %210 %210 %210
+               OpStore %209 %211
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor_3 = OpFunction %void None %50
+    %self_10 = OpFunctionParameter %_ptr_Function_Booleans_Geometry
+        %214 = OpLabel
+        %215 = OpFunctionCall %void %PreConstructor_Booleans_Geometry %self_10
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %51
+    %self_11 = OpFunctionParameter %_ptr_Function_Booleans_Geometry
+%inputStream = OpFunctionParameter %_ptr_Function__arr_Booleans_GeoIn_int_3
+        %219 = OpLabel
+        %220 = OpAccessChain %_ptr_Uniform_mat4v4float %TransformData %int_1
+        %221 = OpAccessChain %_ptr_Function_mat4v4float %self_11 %int_0
+        %222 = OpLoad %mat4v4float %220
+               OpStore %221 %222
+        %223 = OpAccessChain %_ptr_Input_VertexInType_Booleans_Geometry %In %int_0
+        %224 = OpAccessChain %_ptr_Function_Booleans_GeoIn %inputStream %int_0
+        %225 = OpAccessChain %_ptr_Function_v2bool %224 %int_0
+        %226 = OpAccessChain %_ptr_Input_v2int %223 %int_0
+        %227 = OpLoad %v2int %226
+        %228 = OpCompositeConstruct %v2int %int_0 %int_0
+        %229 = OpINotEqual %v2bool %227 %228
+               OpStore %225 %229
+        %230 = OpAccessChain %_ptr_Function_v2int %224 %int_1
+        %231 = OpAccessChain %_ptr_Input_v2int %223 %int_1
+        %232 = OpLoad %v2int %231
+               OpStore %230 %232
+        %233 = OpAccessChain %_ptr_Function_bool %224 %int_2
+        %234 = OpAccessChain %_ptr_Input_int %223 %int_2
+        %235 = OpLoad %int %234
+        %236 = OpINotEqual %bool %235 %int_0
+               OpStore %233 %236
+        %237 = OpAccessChain %_ptr_Function_int %224 %int_3
+        %238 = OpAccessChain %_ptr_Input_int %223 %int_3
+        %239 = OpLoad %int %238
+               OpStore %237 %239
+        %240 = OpAccessChain %_ptr_Function_v3bool %224 %int_4
+        %241 = OpAccessChain %_ptr_Input_v3int %223 %int_4
+        %242 = OpLoad %v3int %241
+        %243 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+        %244 = OpINotEqual %v3bool %242 %243
+               OpStore %240 %244
+        %245 = OpAccessChain %_ptr_Function_v3int %224 %int_5
+        %246 = OpAccessChain %_ptr_Input_v3int %223 %int_5
+        %247 = OpLoad %v3int %246
+               OpStore %245 %247
+        %248 = OpAccessChain %_ptr_Input_VertexInType_Booleans_Geometry %In %int_1
+        %249 = OpAccessChain %_ptr_Function_Booleans_GeoIn %inputStream %int_1
+        %250 = OpAccessChain %_ptr_Function_v2bool %249 %int_0
+        %251 = OpAccessChain %_ptr_Input_v2int %248 %int_0
+        %252 = OpLoad %v2int %251
+        %253 = OpCompositeConstruct %v2int %int_0 %int_0
+        %254 = OpINotEqual %v2bool %252 %253
+               OpStore %250 %254
+        %255 = OpAccessChain %_ptr_Function_v2int %249 %int_1
+        %256 = OpAccessChain %_ptr_Input_v2int %248 %int_1
+        %257 = OpLoad %v2int %256
+               OpStore %255 %257
+        %258 = OpAccessChain %_ptr_Function_bool %249 %int_2
+        %259 = OpAccessChain %_ptr_Input_int %248 %int_2
+        %260 = OpLoad %int %259
+        %261 = OpINotEqual %bool %260 %int_0
+               OpStore %258 %261
+        %262 = OpAccessChain %_ptr_Function_int %249 %int_3
+        %263 = OpAccessChain %_ptr_Input_int %248 %int_3
+        %264 = OpLoad %int %263
+               OpStore %262 %264
+        %265 = OpAccessChain %_ptr_Function_v3bool %249 %int_4
+        %266 = OpAccessChain %_ptr_Input_v3int %248 %int_4
+        %267 = OpLoad %v3int %266
+        %268 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+        %269 = OpINotEqual %v3bool %267 %268
+               OpStore %265 %269
+        %270 = OpAccessChain %_ptr_Function_v3int %249 %int_5
+        %271 = OpAccessChain %_ptr_Input_v3int %248 %int_5
+        %272 = OpLoad %v3int %271
+               OpStore %270 %272
+        %273 = OpAccessChain %_ptr_Input_VertexInType_Booleans_Geometry %In %int_2
+        %274 = OpAccessChain %_ptr_Function_Booleans_GeoIn %inputStream %int_2
+        %275 = OpAccessChain %_ptr_Function_v2bool %274 %int_0
+        %276 = OpAccessChain %_ptr_Input_v2int %273 %int_0
+        %277 = OpLoad %v2int %276
+        %278 = OpCompositeConstruct %v2int %int_0 %int_0
+        %279 = OpINotEqual %v2bool %277 %278
+               OpStore %275 %279
+        %280 = OpAccessChain %_ptr_Function_v2int %274 %int_1
+        %281 = OpAccessChain %_ptr_Input_v2int %273 %int_1
+        %282 = OpLoad %v2int %281
+               OpStore %280 %282
+        %283 = OpAccessChain %_ptr_Function_bool %274 %int_2
+        %284 = OpAccessChain %_ptr_Input_int %273 %int_2
+        %285 = OpLoad %int %284
+        %286 = OpINotEqual %bool %285 %int_0
+               OpStore %283 %286
+        %287 = OpAccessChain %_ptr_Function_int %274 %int_3
+        %288 = OpAccessChain %_ptr_Input_int %273 %int_3
+        %289 = OpLoad %int %288
+               OpStore %287 %289
+        %290 = OpAccessChain %_ptr_Function_v3bool %274 %int_4
+        %291 = OpAccessChain %_ptr_Input_v3int %273 %int_4
+        %292 = OpLoad %v3int %291
+        %293 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+        %294 = OpINotEqual %v3bool %292 %293
+               OpStore %290 %294
+        %295 = OpAccessChain %_ptr_Function_v3int %274 %int_5
+        %296 = OpAccessChain %_ptr_Input_v3int %273 %int_5
+        %297 = OpLoad %v3int %296
+               OpStore %295 %297
+        %298 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeBooleans_Geometry %gl_in %int_0
+        %299 = OpAccessChain %_ptr_Function_Booleans_GeoIn %inputStream %int_0
+        %300 = OpAccessChain %_ptr_Function_v4float %299 %int_6
+        %301 = OpAccessChain %_ptr_Input_v4float %298 %int_0
+        %302 = OpLoad %v4float %301
+               OpStore %300 %302
+        %303 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeBooleans_Geometry %gl_in %int_1
+        %304 = OpAccessChain %_ptr_Function_Booleans_GeoIn %inputStream %int_1
+        %305 = OpAccessChain %_ptr_Function_v4float %304 %int_6
+        %306 = OpAccessChain %_ptr_Input_v4float %303 %int_0
+        %307 = OpLoad %v4float %306
+               OpStore %305 %307
+        %308 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeBooleans_Geometry %gl_in %int_2
+        %309 = OpAccessChain %_ptr_Function_Booleans_GeoIn %inputStream %int_2
+        %310 = OpAccessChain %_ptr_Function_v4float %309 %int_6
+        %311 = OpAccessChain %_ptr_Input_v4float %308 %int_0
+        %312 = OpLoad %v4float %311
+               OpStore %310 %312
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_Booleans_Geometry = OpFunction %void None %67
+        %314 = OpLabel
+    %self_12 = OpVariable %_ptr_Function_Booleans_Geometry Function
+%inputStream_0 = OpVariable %_ptr_Function__arr_Booleans_GeoIn_int_3 Function
+%outputStream = OpVariable %_ptr_Function_OutputStream Function
+        %318 = OpFunctionCall %void %InitializeGlobals
+        %319 = OpFunctionCall %void %DefaultConstructor_3 %self_12
+        %320 = OpFunctionCall %void %CopyInputs_Main %self_12 %inputStream_0
+        %321 = OpLoad %_arr_Booleans_GeoIn_int_3 %inputStream_0
+        %322 = OpLoad %OutputStream %outputStream
+        %323 = OpFunctionCall %void %Main %self_12 %321 %322
+               OpReturn
+               OpFunctionEnd
+     %Append = OpFunction %void None %36
+     %stream = OpFunctionParameter %_ptr_Function_OutputStream
+ %outputData = OpFunctionParameter %Booleans_GeoOut
+   %vertexId = OpFunctionParameter %int
+        %327 = OpLabel
+%outDataLocal = OpVariable %_ptr_Function_Booleans_GeoOut Function
+               OpStore %outDataLocal %outputData
+        %329 = OpAccessChain %_ptr_Output_int %Out %int_0
+        %330 = OpAccessChain %_ptr_Function_bool %outDataLocal %int_0
+        %331 = OpLoad %bool %330
+        %332 = OpSelect %int %331 %int_1 %int_0
+               OpStore %329 %332
+        %333 = OpAccessChain %_ptr_Output_int %Out %int_1
+        %334 = OpAccessChain %_ptr_Function_int %outDataLocal %int_1
+        %335 = OpLoad %int %334
+               OpStore %333 %335
+        %336 = OpAccessChain %_ptr_Output_v2int %Out %int_2
+        %337 = OpAccessChain %_ptr_Function_v2bool %outDataLocal %int_2
+        %338 = OpLoad %v2bool %337
+       %zero = OpCompositeConstruct %v2int %int_0 %int_0
+        %one = OpCompositeConstruct %v2int %int_1 %int_1
+        %341 = OpSelect %v2int %338 %one %zero
+               OpStore %336 %341
+        %342 = OpAccessChain %_ptr_Output_v2int %Out %int_3
+        %343 = OpAccessChain %_ptr_Function_v2int %outDataLocal %int_3
+        %344 = OpLoad %v2int %343
+               OpStore %342 %344
+        %345 = OpAccessChain %_ptr_Output_v3int %Out %int_4
+        %346 = OpAccessChain %_ptr_Function_v3bool %outDataLocal %int_4
+        %347 = OpLoad %v3bool %346
+     %zero_0 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+      %one_0 = OpCompositeConstruct %v3int %int_1 %int_1 %int_1
+        %350 = OpSelect %v3int %347 %one_0 %zero_0
+               OpStore %345 %350
+        %351 = OpAccessChain %_ptr_Output_v3int %Out %int_5
+        %352 = OpAccessChain %_ptr_Function_v3int %outDataLocal %int_5
+        %353 = OpLoad %v3int %352
+               OpStore %351 %353
+        %354 = OpAccessChain %_ptr_Output_v4float %gl_out %int_0
+        %355 = OpAccessChain %_ptr_Function_v4float %outDataLocal %int_6
+        %356 = OpLoad %v4float %355
+               OpStore %354 %356
+               OpEmitVertex
+               OpReturn
+               OpFunctionEnd
+   %Append_0 = OpFunction %void None %45
+   %stream_0 = OpFunctionParameter %_ptr_Function_OutputStream_0
+%outputData_0 = OpFunctionParameter %GeoData
+ %vertexId_0 = OpFunctionParameter %int
+        %361 = OpLabel
+%outDataLocal_0 = OpVariable %_ptr_Function_GeoData Function
+               OpStore %outDataLocal_0 %outputData_0
+        %363 = OpAccessChain %_ptr_Output_int %Out %int_0
+        %364 = OpAccessChain %_ptr_Input_VertexInType_Booleans_Geometry %In %vertexId_0
+        %365 = OpAccessChain %_ptr_Input_int %364 %int_2
+        %366 = OpLoad %int %365
+               OpStore %363 %366
+        %367 = OpAccessChain %_ptr_Output_int %Out %int_1
+        %368 = OpAccessChain %_ptr_Input_VertexInType_Booleans_Geometry %In %vertexId_0
+        %369 = OpAccessChain %_ptr_Input_int %368 %int_3
+        %370 = OpLoad %int %369
+               OpStore %367 %370
+        %371 = OpAccessChain %_ptr_Output_v2int %Out %int_2
+        %372 = OpAccessChain %_ptr_Function_v2bool %outDataLocal_0 %int_0
+        %373 = OpLoad %v2bool %372
+     %zero_1 = OpCompositeConstruct %v2int %int_0 %int_0
+      %one_1 = OpCompositeConstruct %v2int %int_1 %int_1
+        %376 = OpSelect %v2int %373 %one_1 %zero_1
+               OpStore %371 %376
+        %377 = OpAccessChain %_ptr_Output_v2int %Out %int_3
+        %378 = OpAccessChain %_ptr_Function_v2int %outDataLocal_0 %int_1
+        %379 = OpLoad %v2int %378
+               OpStore %377 %379
+        %380 = OpAccessChain %_ptr_Output_v3int %Out %int_4
+        %381 = OpAccessChain %_ptr_Input_VertexInType_Booleans_Geometry %In %vertexId_0
+        %382 = OpAccessChain %_ptr_Input_v3int %381 %int_4
+        %383 = OpLoad %v3int %382
+               OpStore %380 %383
+        %384 = OpAccessChain %_ptr_Output_v3int %Out %int_5
+        %385 = OpAccessChain %_ptr_Input_VertexInType_Booleans_Geometry %In %vertexId_0
+        %386 = OpAccessChain %_ptr_Input_v3int %385 %int_5
+        %387 = OpLoad %v3int %386
+               OpStore %384 %387
+        %388 = OpAccessChain %_ptr_Output_v4float %gl_out %int_0
+        %389 = OpAccessChain %_ptr_Input_BuiltInVertexInTypeBooleans_Geometry %gl_in %vertexId_0
+        %390 = OpAccessChain %_ptr_Input_v4float %389 %int_0
+        %391 = OpLoad %v4float %390
+               OpStore %388 %391
+               OpEmitVertex
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %67
+        %393 = OpLabel
+               OpReturn
+               OpFunctionEnd

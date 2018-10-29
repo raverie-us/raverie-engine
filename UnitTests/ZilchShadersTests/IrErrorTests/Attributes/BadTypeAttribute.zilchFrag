@@ -1,0 +1,7 @@
+[Vertex][SomeAttribute]
+struct BadTypeAttribute
+{
+  function Main()
+  {
+  }
+}

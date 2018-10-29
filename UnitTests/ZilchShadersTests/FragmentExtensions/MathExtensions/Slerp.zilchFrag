@@ -1,0 +1,50 @@
+struct MathSlerpImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function Slerp(start : Real2, end : Real2, t : Real) : Real2
+  {
+    var dotVal = Math.Dot(start, end);
+    var theta = Math.ACos(dotVal) * t;
+    
+    var relativeVec = Real2();
+    // If end is the negative of start, no direction is better to interpolate than
+    // another, so generate a random perpendicular vector to rotate towards
+    if(dotVal == -1.0)
+      relativeVec = Real2(-start.Y, start.X);
+    else
+      relativeVec = end - start * dotVal;
+    // Attempt normalize (zero vectors and start == end)
+    relativeVec = Math.Normalize(relativeVec);
+    return (start * Math.Cos(theta)) + (relativeVec * Math.Sin(theta));
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function Slerp(start : Real3, end : Real3, t : Real) : Real3
+  {
+    var normalizedStart = Math.Normalize(start);
+    var normalizedEnd = Math.Normalize(end);
+    
+    var dotVal = Math.Dot(normalizedStart, normalizedEnd);
+    // Safeguard for non-normalized and slight floating point errors
+    dotVal = Math.Clamp(dotVal, -1.0, 1.0);
+    var theta = Math.ACos(dotVal) * t;
+    
+    var relativeVec = Real3();
+    // If end is the negative of start, no direction is better to interpolate than
+    // another, so generate a random perpendicular vector to rotate towards
+    if(dotVal == -1.0)
+    {
+      // Unfortunately, a 3d perpendicular vector is not as simple, so try doing the 2d
+      // perpendicular with [x,y], but if x is zero then switch to [y,z] instead
+      if(normalizedStart.X != 0.0)
+        relativeVec = Real3(-normalizedStart.Y, normalizedStart.X, normalizedStart.Z);
+      else
+        relativeVec = Real3(normalizedStart.X, -normalizedStart.Z, normalizedStart.Y);
+    }
+    else
+      relativeVec = normalizedEnd - normalizedStart * dotVal;
+    // Attempt normalize (zero vectors and start == end)
+    relativeVec = Math.Normalize(relativeVec);
+    return (normalizedStart * Math.Cos(theta)) + (relativeVec * Math.Sin(theta));
+  }
+}

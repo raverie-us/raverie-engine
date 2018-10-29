@@ -1,0 +1,15 @@
+[UnitTest][Vertex]
+struct StaticExtensionMethod1
+{
+  function Main()
+  {
+    Math.Kill();
+  }
+  
+  [Static][Extension(typeid(Math))]
+  function Kill()
+  {
+    ShaderIntrinsics.Kill();
+  }
+}
+

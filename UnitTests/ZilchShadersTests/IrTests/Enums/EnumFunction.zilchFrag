@@ -1,0 +1,24 @@
+enum MyEnum
+{
+  Value1,
+  Value2,
+  Value3
+}
+
+[UnitTest][Pixel]
+struct EnumFunction
+{
+  function Test(value : MyEnum) : MyEnum
+  {
+    var result = value + 1;
+    return result;
+  }
+  
+  [EntryPoint]
+  function Main()
+  {
+    var value1 = this.Test(MyEnum.Value1);
+    var value2 = this.Test(MyEnum.Value2);
+    var value3 = this.Test(MyEnum.Value3);
+  }
+}

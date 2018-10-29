@@ -1,0 +1,37 @@
+struct MyStruct
+{
+  var Data : Real;
+}
+
+[Pixel][UnitTest]
+struct ExtensionMethods3
+{
+  // Test Static extension method on a user defined type
+  [Static][Extension(typeid(MyStruct))]
+  var Default : MyStruct
+  {
+    get
+    {
+      var result = MyStruct();
+      result.Data = 0;
+      return result;
+    }
+  }
+  
+  // Test Instance extension method on a user defined type
+  [Extension(typeid(MyStruct))]
+  var Scalar : Real
+  {
+    get
+    {
+      return this.Data;
+    }
+  }
+  
+  [EntryPoint]
+  function Main()
+  {
+    var myStruct = MyStruct.Default;
+    var scalar = myStruct.Scalar;
+  }
+}

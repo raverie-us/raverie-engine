@@ -1,0 +1,113 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 56
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_MathProperties "EntryPoint_Main_MathProperties"
+               OpExecutionMode %EntryPoint_Main_MathProperties OriginUpperLeft
+               OpSource Unknown 100
+               OpName %MathProperties "MathProperties"
+               OpMemberName %MathProperties 0 "Dummy"
+               OpName %Test_StaticE_Real "Test_StaticE_Real"
+               OpName %self "self"
+               OpName %value "value"
+               OpName %E "E"
+               OpName %Test_StaticPi_Real "Test_StaticPi_Real"
+               OpName %self_0 "self"
+               OpName %value_0 "value"
+               OpName %Pi "Pi"
+               OpName %Main "Main"
+               OpName %self_1 "self"
+               OpName %PreConstructor_MathProperties "PreConstructor_MathProperties"
+               OpName %self_2 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_3 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_4 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_5 "self"
+               OpName %EntryPoint_Main_MathProperties "EntryPoint_Main_MathProperties"
+               OpName %self_6 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%MathProperties = OpTypeStruct %int
+%_ptr_Function_MathProperties = OpTypePointer Function %MathProperties
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_MathProperties
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+         %11 = OpTypeFunction %float
+%float_2_71828175 = OpConstant %float 2.71828175
+%float_3_14159274 = OpConstant %float 3.14159274
+         %12 = OpTypeFunction %void
+%Test_StaticE_Real = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_MathProperties
+         %17 = OpLabel
+      %value = OpVariable %_ptr_Function_float Function
+         %19 = OpFunctionCall %float %E
+               OpStore %value %19
+               OpReturn
+               OpFunctionEnd
+          %E = OpFunction %float None %11
+         %21 = OpLabel
+               OpReturnValue %float_2_71828175
+               OpFunctionEnd
+%Test_StaticPi_Real = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_MathProperties
+         %24 = OpLabel
+    %value_0 = OpVariable %_ptr_Function_float Function
+         %26 = OpFunctionCall %float %Pi
+               OpStore %value_0 %26
+               OpReturn
+               OpFunctionEnd
+         %Pi = OpFunction %float None %11
+         %28 = OpLabel
+               OpReturnValue %float_3_14159274
+               OpFunctionEnd
+       %Main = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_MathProperties
+         %31 = OpLabel
+         %32 = OpFunctionCall %void %Test_StaticE_Real %self_1
+         %33 = OpFunctionCall %void %Test_StaticPi_Real %self_1
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_MathProperties = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_MathProperties
+         %36 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_MathProperties
+         %39 = OpLabel
+         %40 = OpFunctionCall %void %PreConstructor_MathProperties %self_3
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_4 = OpFunctionParameter %_ptr_Function_MathProperties
+         %43 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_5 = OpFunctionParameter %_ptr_Function_MathProperties
+         %46 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_MathProperties = OpFunction %void None %12
+         %48 = OpLabel
+     %self_6 = OpVariable %_ptr_Function_MathProperties Function
+         %50 = OpFunctionCall %void %InitializeGlobals
+         %51 = OpFunctionCall %void %DefaultConstructor %self_6
+         %52 = OpFunctionCall %void %CopyInputs_Main %self_6
+         %53 = OpFunctionCall %void %Main %self_6
+         %54 = OpFunctionCall %void %CopyOutputs_Main %self_6
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %12
+         %55 = OpLabel
+               OpReturn
+               OpFunctionEnd

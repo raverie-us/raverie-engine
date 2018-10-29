@@ -1,0 +1,189 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 105
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_RealMatrixIntrinsicTests "EntryPoint_Main_RealMatrixIntrinsicTests"
+               OpExecutionMode %EntryPoint_Main_RealMatrixIntrinsicTests OriginUpperLeft
+               OpSource Unknown 100
+               OpName %RealMatrixIntrinsicTests "RealMatrixIntrinsicTests"
+               OpMemberName %RealMatrixIntrinsicTests 0 "Dummy"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %Test "Test"
+               OpName %param0 "param0"
+               OpName %param1 "param1"
+               OpName %row "row"
+               OpName %column "column"
+               OpName %result0 "result0"
+               OpName %result2 "result2"
+               OpName %Test_0 "Test"
+               OpName %param0_0 "param0"
+               OpName %param1_0 "param1"
+               OpName %row_0 "row"
+               OpName %column_0 "column"
+               OpName %result0_0 "result0"
+               OpName %result2_0 "result2"
+               OpName %Test_1 "Test"
+               OpName %param0_1 "param0"
+               OpName %param1_1 "param1"
+               OpName %row_1 "row"
+               OpName %column_1 "column"
+               OpName %result0_1 "result0"
+               OpName %result2_1 "result2"
+               OpName %PreConstructor_RealMatrixIntrinsicTests "PreConstructor_RealMatrixIntrinsicTests"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_RealMatrixIntrinsicTests "EntryPoint_Main_RealMatrixIntrinsicTests"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%RealMatrixIntrinsicTests = OpTypeStruct %int
+%_ptr_Function_RealMatrixIntrinsicTests = OpTypePointer Function %RealMatrixIntrinsicTests
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_RealMatrixIntrinsicTests
+          %9 = OpTypeFunction %void
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+    %float_0 = OpConstant %float 0
+%mat2v2float = OpTypeMatrix %v2float 2
+%_ptr_Function_mat2v2float = OpTypePointer Function %mat2v2float
+    %float_1 = OpConstant %float 1
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+%mat3v3float = OpTypeMatrix %v3float 3
+%_ptr_Function_mat3v3float = OpTypePointer Function %mat3v3float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+%mat4v4float = OpTypeMatrix %v4float 4
+%_ptr_Function_mat4v4float = OpTypePointer Function %mat4v4float
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_RealMatrixIntrinsicTests
+         %28 = OpLabel
+         %29 = OpFunctionCall %void %Test
+         %30 = OpFunctionCall %void %Test_0
+         %31 = OpFunctionCall %void %Test_1
+               OpReturn
+               OpFunctionEnd
+       %Test = OpFunction %void None %9
+         %33 = OpLabel
+     %param0 = OpVariable %_ptr_Function_mat2v2float Function
+     %param1 = OpVariable %_ptr_Function_mat2v2float Function
+        %row = OpVariable %_ptr_Function_v2float Function
+     %column = OpVariable %_ptr_Function_v2float Function
+    %result0 = OpVariable %_ptr_Function_mat2v2float Function
+    %result2 = OpVariable %_ptr_Function_mat2v2float Function
+         %40 = OpCompositeConstruct %v2float %float_0 %float_0
+         %41 = OpCompositeConstruct %mat2v2float %40 %40
+               OpStore %param0 %41
+         %42 = OpLoad %mat2v2float %param0
+               OpStore %param1 %42
+         %43 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %row %43
+         %44 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %column %44
+         %45 = OpLoad %mat2v2float %param0
+         %46 = OpMatrixTimesScalar %mat2v2float %45 %float_1
+               OpStore %result0 %46
+         %47 = OpLoad %mat2v2float %param0
+         %48 = OpTranspose %mat2v2float %47
+               OpStore %result2 %48
+               OpReturn
+               OpFunctionEnd
+     %Test_0 = OpFunction %void None %9
+         %50 = OpLabel
+   %param0_0 = OpVariable %_ptr_Function_mat3v3float Function
+   %param1_0 = OpVariable %_ptr_Function_mat3v3float Function
+      %row_0 = OpVariable %_ptr_Function_v3float Function
+   %column_0 = OpVariable %_ptr_Function_v3float Function
+  %result0_0 = OpVariable %_ptr_Function_mat3v3float Function
+  %result2_0 = OpVariable %_ptr_Function_mat3v3float Function
+         %57 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+         %58 = OpCompositeConstruct %mat3v3float %57 %57 %57
+               OpStore %param0_0 %58
+         %59 = OpLoad %mat3v3float %param0_0
+               OpStore %param1_0 %59
+         %60 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %row_0 %60
+         %61 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %column_0 %61
+         %62 = OpLoad %mat3v3float %param0_0
+         %63 = OpMatrixTimesScalar %mat3v3float %62 %float_1
+               OpStore %result0_0 %63
+         %64 = OpLoad %mat3v3float %param0_0
+         %65 = OpTranspose %mat3v3float %64
+               OpStore %result2_0 %65
+               OpReturn
+               OpFunctionEnd
+     %Test_1 = OpFunction %void None %9
+         %67 = OpLabel
+   %param0_1 = OpVariable %_ptr_Function_mat4v4float Function
+   %param1_1 = OpVariable %_ptr_Function_mat4v4float Function
+      %row_1 = OpVariable %_ptr_Function_v4float Function
+   %column_1 = OpVariable %_ptr_Function_v4float Function
+  %result0_1 = OpVariable %_ptr_Function_mat4v4float Function
+  %result2_1 = OpVariable %_ptr_Function_mat4v4float Function
+         %74 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+         %75 = OpCompositeConstruct %mat4v4float %74 %74 %74 %74
+               OpStore %param0_1 %75
+         %76 = OpLoad %mat4v4float %param0_1
+               OpStore %param1_1 %76
+         %77 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %row_1 %77
+         %78 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %column_1 %78
+         %79 = OpLoad %mat4v4float %param0_1
+         %80 = OpMatrixTimesScalar %mat4v4float %79 %float_1
+               OpStore %result0_1 %80
+         %81 = OpLoad %mat4v4float %param0_1
+         %82 = OpTranspose %mat4v4float %81
+               OpStore %result2_1 %82
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_RealMatrixIntrinsicTests = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_RealMatrixIntrinsicTests
+         %85 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_RealMatrixIntrinsicTests
+         %88 = OpLabel
+         %89 = OpFunctionCall %void %PreConstructor_RealMatrixIntrinsicTests %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_RealMatrixIntrinsicTests
+         %92 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_RealMatrixIntrinsicTests
+         %95 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_RealMatrixIntrinsicTests = OpFunction %void None %9
+         %97 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_RealMatrixIntrinsicTests Function
+         %99 = OpFunctionCall %void %InitializeGlobals
+        %100 = OpFunctionCall %void %DefaultConstructor %self_4
+        %101 = OpFunctionCall %void %CopyInputs_Main %self_4
+        %102 = OpFunctionCall %void %Main %self_4
+        %103 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %9
+        %104 = OpLabel
+               OpReturn
+               OpFunctionEnd

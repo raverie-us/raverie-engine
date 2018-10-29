@@ -12,7 +12,7 @@ struct RESOURCE_NAME_Output
 [Geometry(maxVertices : 6)]
 struct RESOURCE_NAME_
 {
-	[BuiltInInput] var ViewToPerspective : Real4x4;
+	[AppBuiltInInput] var ViewToPerspective : Real4x4;
 	[PropertyInput] var Width : Real = 0.1;
 
 	function Main(input : PointInput[RESOURCE_NAME_Input], output : TriangleOutput[RESOURCE_NAME_Output])

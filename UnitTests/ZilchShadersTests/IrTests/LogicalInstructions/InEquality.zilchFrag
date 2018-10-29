@@ -1,0 +1,34 @@
+struct Helper[Type]
+{
+  [Static]
+  function Test()
+  {
+    var lhs = Type();
+    var rhs = Type();
+    
+    var result = lhs != rhs;
+  }
+}
+
+[Pixel][UnitTest]
+struct InEquality
+{
+  [EntryPoint]
+  function Main()
+  {
+    Helper[Real].Test();
+    //Helper[Real2].Test();
+    //Helper[Real3].Test();
+    //Helper[Real4].Test();
+    //
+    Helper[Integer].Test();
+    //Helper[Integer2].Test();
+    //Helper[Integer3].Test();
+    //Helper[Integer4].Test();
+    
+    Helper[Boolean].Test();
+    //Helper[Boolean2].Test();
+    //Helper[Boolean3].Test();
+    //Helper[Boolean4].Test();
+  }
+}

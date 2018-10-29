@@ -1,0 +1,2 @@
+  IrErrorTests\Attributes\BadCombinations\StaticSpecConstantInput.zilchFrag(4): Attribute 'SpecConstantInput' cannot be combined with attribute(s): Static:
+  Attribute 'SpecConstantInput' cannot be combined with attribute(s): Static

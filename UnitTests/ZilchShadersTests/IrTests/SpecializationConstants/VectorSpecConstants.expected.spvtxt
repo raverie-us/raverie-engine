@@ -1,0 +1,108 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 51
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_VectorSpecConstants "EntryPoint_Main_VectorSpecConstants"
+               OpExecutionMode %EntryPoint_Main_VectorSpecConstants OriginUpperLeft
+               OpSource Unknown 100
+               OpName %VectorSpecConstants "VectorSpecConstants"
+               OpMemberName %VectorSpecConstants 0 "Dummy"
+               OpName %ConstantInteger3_X_VectorSpecConstants "ConstantInteger3.X_VectorSpecConstants"
+               OpName %ConstantInteger3_Y_VectorSpecConstants "ConstantInteger3.Y_VectorSpecConstants"
+               OpName %ConstantInteger3_Z_VectorSpecConstants "ConstantInteger3.Z_VectorSpecConstants"
+               OpName %ConstantInteger3_VectorSpecConstants "ConstantInteger3_VectorSpecConstants"
+               OpName %ConstantReal3_X_VectorSpecConstants "ConstantReal3.X_VectorSpecConstants"
+               OpName %ConstantReal3_Y_VectorSpecConstants "ConstantReal3.Y_VectorSpecConstants"
+               OpName %ConstantReal3_Z_VectorSpecConstants "ConstantReal3.Z_VectorSpecConstants"
+               OpName %ConstantReal3_VectorSpecConstants "ConstantReal3_VectorSpecConstants"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %constantInteger3 "constantInteger3"
+               OpName %constantReal3 "constantReal3"
+               OpName %PreConstructor_VectorSpecConstants "PreConstructor_VectorSpecConstants"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_VectorSpecConstants "EntryPoint_Main_VectorSpecConstants"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %ConstantInteger3_X_VectorSpecConstants SpecId 1
+               OpDecorate %ConstantInteger3_Y_VectorSpecConstants SpecId 2
+               OpDecorate %ConstantInteger3_Z_VectorSpecConstants SpecId 3
+               OpDecorate %ConstantReal3_X_VectorSpecConstants SpecId 4
+               OpDecorate %ConstantReal3_Y_VectorSpecConstants SpecId 5
+               OpDecorate %ConstantReal3_Z_VectorSpecConstants SpecId 6
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%VectorSpecConstants = OpTypeStruct %int
+%_ptr_Function_VectorSpecConstants = OpTypePointer Function %VectorSpecConstants
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_VectorSpecConstants
+      %v3int = OpTypeVector %int 3
+%_ptr_Function_v3int = OpTypePointer Function %v3int
+%ConstantInteger3_X_VectorSpecConstants = OpSpecConstant %int 1
+%ConstantInteger3_Y_VectorSpecConstants = OpSpecConstant %int 2
+%ConstantInteger3_Z_VectorSpecConstants = OpSpecConstant %int 3
+%ConstantInteger3_VectorSpecConstants = OpSpecConstantComposite %v3int %ConstantInteger3_X_VectorSpecConstants %ConstantInteger3_Y_VectorSpecConstants %ConstantInteger3_Z_VectorSpecConstants
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+%ConstantReal3_X_VectorSpecConstants = OpSpecConstant %float 0.100000001
+%ConstantReal3_Y_VectorSpecConstants = OpSpecConstant %float 0.200000003
+%ConstantReal3_Z_VectorSpecConstants = OpSpecConstant %float 0.300000012
+%ConstantReal3_VectorSpecConstants = OpSpecConstantComposite %v3float %ConstantReal3_X_VectorSpecConstants %ConstantReal3_Y_VectorSpecConstants %ConstantReal3_Z_VectorSpecConstants
+         %15 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_VectorSpecConstants
+         %26 = OpLabel
+%constantInteger3 = OpVariable %_ptr_Function_v3int Function
+%constantReal3 = OpVariable %_ptr_Function_v3float Function
+               OpStore %constantInteger3 %ConstantInteger3_VectorSpecConstants
+               OpStore %constantReal3 %ConstantReal3_VectorSpecConstants
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_VectorSpecConstants = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_VectorSpecConstants
+         %31 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_VectorSpecConstants
+         %34 = OpLabel
+         %35 = OpFunctionCall %void %PreConstructor_VectorSpecConstants %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_VectorSpecConstants
+         %38 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_VectorSpecConstants
+         %41 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_VectorSpecConstants = OpFunction %void None %15
+         %43 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_VectorSpecConstants Function
+         %45 = OpFunctionCall %void %InitializeGlobals
+         %46 = OpFunctionCall %void %DefaultConstructor %self_4
+         %47 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %48 = OpFunctionCall %void %Main %self_4
+         %49 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %15
+         %50 = OpLabel
+               OpReturn
+               OpFunctionEnd

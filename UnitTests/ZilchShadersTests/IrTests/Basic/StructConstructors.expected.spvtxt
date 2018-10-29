@@ -1,0 +1,164 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 88
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_StructConstructors "EntryPoint_Main_StructConstructors"
+               OpExecutionMode %EntryPoint_Main_StructConstructors OriginUpperLeft
+               OpSource Unknown 100
+               OpName %StructConstructors "StructConstructors"
+               OpMemberName %StructConstructors 0 "Dummy"
+               OpName %TestStructNoConstructor "TestStructNoConstructor"
+               OpMemberName %TestStructNoConstructor 0 "Data"
+               OpName %TestStructWithConstructors "TestStructWithConstructors"
+               OpMemberName %TestStructWithConstructors 0 "Data"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %sNoC "sNoC"
+               OpName %sWithC "sWithC"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_0 "self"
+               OpName %PreConstructor_TestStructNoConstructor "PreConstructor_TestStructNoConstructor"
+               OpName %self_1 "self"
+               OpName %Constructor "Constructor"
+               OpName %self_2 "self"
+               OpName %Constructor_0 "Constructor"
+               OpName %self_3 "self"
+               OpName %data "data"
+               OpName %data_Local "data_Local"
+               OpName %PreConstructor_TestStructWithConstructors "PreConstructor_TestStructWithConstructors"
+               OpName %self_4 "self"
+               OpName %PreConstructor_StructConstructors "PreConstructor_StructConstructors"
+               OpName %self_5 "self"
+               OpName %DefaultConstructor_0 "DefaultConstructor"
+               OpName %self_6 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_7 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_8 "self"
+               OpName %EntryPoint_Main_StructConstructors "EntryPoint_Main_StructConstructors"
+               OpName %self_9 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%StructConstructors = OpTypeStruct %int
+%_ptr_Function_StructConstructors = OpTypePointer Function %StructConstructors
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_StructConstructors
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+%TestStructNoConstructor = OpTypeStruct %float
+%_ptr_Function_TestStructNoConstructor = OpTypePointer Function %TestStructNoConstructor
+         %13 = OpTypeFunction %void %_ptr_Function_TestStructNoConstructor
+      %int_0 = OpConstant %int 0
+    %float_0 = OpConstant %float 0
+%TestStructWithConstructors = OpTypeStruct %float
+%_ptr_Function_TestStructWithConstructors = OpTypePointer Function %TestStructWithConstructors
+         %16 = OpTypeFunction %void %_ptr_Function_TestStructWithConstructors %float
+         %17 = OpTypeFunction %void %_ptr_Function_TestStructWithConstructors
+    %float_1 = OpConstant %float 1
+      %int_1 = OpConstant %int 1
+    %float_2 = OpConstant %float 2
+         %18 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_StructConstructors
+         %26 = OpLabel
+       %sNoC = OpVariable %_ptr_Function_TestStructNoConstructor Function
+         %28 = OpVariable %_ptr_Function_TestStructNoConstructor Function
+     %sWithC = OpVariable %_ptr_Function_TestStructWithConstructors Function
+         %30 = OpVariable %_ptr_Function_TestStructWithConstructors Function
+         %31 = OpVariable %_ptr_Function_TestStructWithConstructors Function
+         %32 = OpFunctionCall %void %DefaultConstructor %28
+         %33 = OpLoad %TestStructNoConstructor %28
+               OpStore %sNoC %33
+         %34 = OpFunctionCall %void %Constructor %30
+         %35 = OpLoad %TestStructWithConstructors %30
+               OpStore %sWithC %35
+         %36 = OpFunctionCall %void %Constructor_0 %31 %float_2
+         %37 = OpLoad %TestStructWithConstructors %31
+               OpStore %sWithC %37
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %13
+     %self_0 = OpFunctionParameter %_ptr_Function_TestStructNoConstructor
+         %40 = OpLabel
+         %41 = OpFunctionCall %void %PreConstructor_TestStructNoConstructor %self_0
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_TestStructNoConstructor = OpFunction %void None %13
+     %self_1 = OpFunctionParameter %_ptr_Function_TestStructNoConstructor
+         %44 = OpLabel
+         %45 = OpAccessChain %_ptr_Function_float %self_1 %int_0
+               OpStore %45 %float_0
+               OpReturn
+               OpFunctionEnd
+%Constructor = OpFunction %void None %17
+     %self_2 = OpFunctionParameter %_ptr_Function_TestStructWithConstructors
+         %48 = OpLabel
+         %49 = OpFunctionCall %void %PreConstructor_TestStructWithConstructors %self_2
+         %50 = OpAccessChain %_ptr_Function_float %self_2 %int_0
+         %51 = OpConvertSToF %float %int_1
+               OpStore %50 %51
+               OpReturn
+               OpFunctionEnd
+%Constructor_0 = OpFunction %void None %16
+     %self_3 = OpFunctionParameter %_ptr_Function_TestStructWithConstructors
+       %data = OpFunctionParameter %float
+         %55 = OpLabel
+ %data_Local = OpVariable %_ptr_Function_float Function
+               OpStore %data_Local %data
+         %57 = OpFunctionCall %void %PreConstructor_TestStructWithConstructors %self_3
+         %58 = OpAccessChain %_ptr_Function_float %self_3 %int_0
+         %59 = OpLoad %float %data_Local
+               OpStore %58 %59
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_TestStructWithConstructors = OpFunction %void None %17
+     %self_4 = OpFunctionParameter %_ptr_Function_TestStructWithConstructors
+         %62 = OpLabel
+         %63 = OpAccessChain %_ptr_Function_float %self_4 %int_0
+         %64 = OpFNegate %float %float_1
+               OpStore %63 %64
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_StructConstructors = OpFunction %void None %8
+     %self_5 = OpFunctionParameter %_ptr_Function_StructConstructors
+         %67 = OpLabel
+         %68 = OpAccessChain %_ptr_Function_int %self_5 %int_0
+               OpStore %68 %int_0
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor_0 = OpFunction %void None %8
+     %self_6 = OpFunctionParameter %_ptr_Function_StructConstructors
+         %71 = OpLabel
+         %72 = OpFunctionCall %void %PreConstructor_StructConstructors %self_6
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_7 = OpFunctionParameter %_ptr_Function_StructConstructors
+         %75 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_8 = OpFunctionParameter %_ptr_Function_StructConstructors
+         %78 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_StructConstructors = OpFunction %void None %18
+         %80 = OpLabel
+     %self_9 = OpVariable %_ptr_Function_StructConstructors Function
+         %82 = OpFunctionCall %void %InitializeGlobals
+         %83 = OpFunctionCall %void %DefaultConstructor_0 %self_9
+         %84 = OpFunctionCall %void %CopyInputs_Main %self_9
+         %85 = OpFunctionCall %void %Main %self_9
+         %86 = OpFunctionCall %void %CopyOutputs_Main %self_9
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %18
+         %87 = OpLabel
+               OpReturn
+               OpFunctionEnd

@@ -6,12 +6,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
+#include "ShaderErrors.hpp"
+
 namespace Zilch
 {
-
-// Make a dummy function for binding FixedArray's functions. They don't need to do anything except be a valid function for calling.
-// The only function that should currently call this is the FixedArray's constructor when pre-constructing objects to find default values.
-void FixedArrayDummyFunction(Call& call, ExceptionReport& report) {}
 
 BoundType* InstantiateFixedArray(LibraryBuilder& builder, StringParam baseName, StringParam fullyQualifiedName, const Array<Constant>& templateTypes, const void* userData)
 {
@@ -21,11 +19,29 @@ BoundType* InstantiateFixedArray(LibraryBuilder& builder, StringParam baseName, 
   BoundType* arrayType = builder.AddBoundType(fullyQualifiedName, TypeCopyMode::ValueType, 0);
 
   // Bind all of the array's functions and properties (stubbed out since we're only using this for translation)
-  builder.AddBoundConstructor(arrayType, FixedArrayDummyFunction, ParameterArray());
-  builder.AddBoundFunction(arrayType, "Add", FixedArrayDummyFunction, OneParameter(templateType), core.VoidType, Zilch::FunctionOptions::None);
-  builder.AddBoundFunction(arrayType, "Get", FixedArrayDummyFunction, OneParameter(core.IntegerType, "index"), templateType, Zilch::FunctionOptions::None);
-  builder.AddBoundFunction(arrayType, "Set", FixedArrayDummyFunction, TwoParameters(core.IntegerType, "index", templateType, "value"), core.VoidType, Zilch::FunctionOptions::None);
-  builder.AddBoundGetterSetter(arrayType, "Count", core.IntegerType, nullptr, FixedArrayDummyFunction, Zilch::MemberOptions::None);
+  builder.AddBoundConstructor(arrayType, Zero::DummyBoundFunction, ParameterArray());
+  builder.AddBoundFunction(arrayType, "Add", Zero::DummyBoundFunction, OneParameter(templateType), core.VoidType, Zilch::FunctionOptions::None);
+  builder.AddBoundFunction(arrayType, "Get", Zero::DummyBoundFunction, OneParameter(core.IntegerType, "index"), templateType, Zilch::FunctionOptions::None);
+  builder.AddBoundFunction(arrayType, "Set", Zero::DummyBoundFunction, TwoParameters(core.IntegerType, "index", templateType, "value"), core.VoidType, Zilch::FunctionOptions::None);
+  builder.AddBoundGetterSetter(arrayType, "Count", core.IntegerType, nullptr, Zero::DummyBoundFunction, Zilch::MemberOptions::None);
+
+  return arrayType;
+}
+
+BoundType* InstantiateRuntimeArray(LibraryBuilder& builder, StringParam baseName, StringParam fullyQualifiedName, const Array<Constant>& templateTypes, const void* userData)
+{
+  Core& core = Core::GetInstance();
+  Type* templateType = templateTypes[0].TypeValue;
+  // Bind the arraytype
+  BoundType* arrayType = builder.AddBoundType(fullyQualifiedName, TypeCopyMode::ValueType, 0);
+  Attribute* storageAttribute = arrayType->AddAttribute(Zero::SpirVNameSettings::mStorageClassAttribute);
+  storageAttribute->AddParameter(spv::StorageClassStorageBuffer);
+  arrayType->AddAttribute(Zero::SpirVNameSettings::mNonCopyableAttributeName);
+
+  // Bind all of the array's functions and properties (stubbed out since we're only using this for translation)
+  builder.AddBoundFunction(arrayType, "Get", Zero::DummyBoundFunction, OneParameter(core.IntegerType, "index"), templateType, Zilch::FunctionOptions::None);
+  builder.AddBoundFunction(arrayType, "Set", Zero::DummyBoundFunction, TwoParameters(core.IntegerType, "index", templateType, "value"), core.VoidType, Zilch::FunctionOptions::None);
+  builder.AddBoundGetterSetter(arrayType, "Count", core.IntegerType, nullptr, Zero::DummyBoundFunction, Zilch::MemberOptions::None);
 
   return arrayType;
 }
@@ -37,10 +53,14 @@ BoundType* InstantiateGeometryInput(LibraryBuilder& builder, StringParam baseNam
 
   BoundType* selfType = builder.AddBoundType(fullyQualifiedName, TypeCopyMode::ValueType, 0);
   // Bind all of the functions and properties (stubbed out since we're only using this for translation)
-  builder.AddBoundConstructor(selfType, FixedArrayDummyFunction, ParameterArray());
-  builder.AddBoundFunction(selfType, "Get", FixedArrayDummyFunction, OneParameter(core.IntegerType), templateType, Zilch::FunctionOptions::None);
-  builder.AddBoundFunction(selfType, "Set", FixedArrayDummyFunction, TwoParameters(core.IntegerType, templateType), core.VoidType, Zilch::FunctionOptions::None);
-  builder.AddBoundGetterSetter(selfType, "Count", core.IntegerType, nullptr, FixedArrayDummyFunction, Zilch::MemberOptions::None);
+  builder.AddBoundConstructor(selfType, Zero::UnTranslatedBoundFunction, ParameterArray());
+  builder.AddBoundFunction(selfType, "Get", Zero::UnTranslatedBoundFunction, OneParameter(core.IntegerType), templateType, Zilch::FunctionOptions::None);
+  builder.AddBoundFunction(selfType, "Set", Zero::UnTranslatedBoundFunction, TwoParameters(core.IntegerType, templateType), core.VoidType, Zilch::FunctionOptions::None);
+  builder.AddBoundGetterSetter(selfType, "Count", core.IntegerType, nullptr, Zero::UnTranslatedBoundFunction, Zilch::MemberOptions::None);
+
+  Zilch::HandleOf<GeometryStreamUserData> handle = ZilchAllocate(GeometryStreamUserData);
+  handle->Set((spv::ExecutionMode)(int)userData);
+  selfType->Add(*handle);
 
   return selfType;
 }
@@ -51,10 +71,14 @@ BoundType* InstantiateGeometryOutput(LibraryBuilder& builder, StringParam baseNa
   Type* templateType = templateTypes[0].TypeValue;
 
   BoundType* selfType = builder.AddBoundType(fullyQualifiedName, TypeCopyMode::ValueType, 0);
-  selfType->CreatableInScript = false;
+  selfType->CreatableInScript = true;
   // Bind all of the functions and properties (stubbed out since we're only using this for translation)
-  builder.AddBoundFunction(selfType, "Append", FixedArrayDummyFunction, TwoParameters(templateType, core.IntegerType), core.VoidType, Zilch::FunctionOptions::None);
-  builder.AddBoundFunction(selfType, "Restart", FixedArrayDummyFunction, ParameterArray(), core.VoidType, Zilch::FunctionOptions::None);
+  builder.AddBoundFunction(selfType, "Append", Zero::UnTranslatedBoundFunction, TwoParameters(templateType, core.IntegerType), core.VoidType, Zilch::FunctionOptions::None);
+  builder.AddBoundFunction(selfType, "Restart", Zero::UnTranslatedBoundFunction, ParameterArray(), core.VoidType, Zilch::FunctionOptions::None);
+
+  Zilch::HandleOf<GeometryStreamUserData> handle = ZilchAllocate(GeometryStreamUserData);
+  handle->Set((spv::ExecutionMode)(int)userData);
+  selfType->Add(*handle);
 
   return selfType;
 }
@@ -66,7 +90,7 @@ BoundType* InstantiateGeometryStreamMover(LibraryBuilder& builder, StringParam b
 
   BoundType* selfType = builder.AddBoundType(fullyQualifiedName, TypeCopyMode::ValueType, 0);
   selfType->CreatableInScript = false;
-  builder.AddBoundFunction(selfType, "Move", FixedArrayDummyFunction, OneParameter(fromType), toType, Zilch::FunctionOptions::Static);
+  builder.AddBoundFunction(selfType, "Move", Zero::UnTranslatedBoundFunction, OneParameter(fromType), toType, Zilch::FunctionOptions::Static);
 
   return selfType;
 }
@@ -75,7 +99,21 @@ ZilchDefineStaticLibrary(ShaderIntrinsicsLibrary)
 {
   builder.CreatableInScriptDefault = false;
   
-  ZilchInitializeType(Shader);
+  // BoundType Components
+  ZilchInitializeType(GeometryStreamUserData);
+  ZilchInitializeType(GeometryFragmentUserData);
+  ZilchInitializeType(ComputeFragmentUserData);
+
+  // @Nate: These have to be uncommented for new shaders
+  ZilchInitializeType(ShaderIntrinsics);
+  ZilchInitializeType(Sampler);
+  ZilchInitializeType(Image2d);
+  ZilchInitializeType(StorageImage2d);
+  ZilchInitializeType(DepthImage2d);
+  ZilchInitializeType(ImageCube);
+  ZilchInitializeType(SampledImage2d);
+  ZilchInitializeType(SampledDepthImage2d);
+  ZilchInitializeType(SampledImageCube);
 
   // Bind the fixed array type instantiator (creates the different arrays when instantiated)
   {
@@ -89,6 +127,16 @@ ZilchDefineStaticLibrary(ShaderIntrinsicsLibrary)
     builder.AddTemplateInstantiator("FixedArray", InstantiateFixedArray, templateTypes, nullptr);
   }
 
+  // Bind the runtime array type instantiator (creates the different arrays when instantiated)
+  {
+    String runtimeArrayTypeName = Zero::SpirVNameSettings::mRuntimeArrayTypeName;
+    Array<Zilch::TemplateParameter> templateTypes;
+    TemplateParameter& typeParam = templateTypes.PushBack();
+    typeParam.Name = "Type";
+    typeParam.Type = ConstantType::Type;
+    builder.AddTemplateInstantiator(runtimeArrayTypeName, InstantiateRuntimeArray, templateTypes, nullptr);
+  }
+
   // Create the geometry shader input/output types
   {
     Array<Zilch::TemplateParameter> templateTypes;
@@ -96,13 +144,13 @@ ZilchDefineStaticLibrary(ShaderIntrinsicsLibrary)
     typeParam.Name = "Type";
     typeParam.Type = ConstantType::Type;
 
-    builder.AddTemplateInstantiator("PointInput", InstantiateGeometryInput, templateTypes, nullptr);
-    builder.AddTemplateInstantiator("LineInput", InstantiateGeometryInput, templateTypes, nullptr);
-    builder.AddTemplateInstantiator("TriangleInput", InstantiateGeometryInput, templateTypes, nullptr);
+    builder.AddTemplateInstantiator("PointInput", InstantiateGeometryInput, templateTypes, (int*)spv::ExecutionModeInputPoints);
+    builder.AddTemplateInstantiator("LineInput", InstantiateGeometryInput, templateTypes, (int*)spv::ExecutionModeInputLines);
+    builder.AddTemplateInstantiator("TriangleInput", InstantiateGeometryInput, templateTypes, (int*)spv::ExecutionModeTriangles);
 
-    builder.AddTemplateInstantiator("PointOutput", InstantiateGeometryOutput, templateTypes, nullptr);
-    builder.AddTemplateInstantiator("LineOutput", InstantiateGeometryOutput, templateTypes, nullptr);
-    builder.AddTemplateInstantiator("TriangleOutput", InstantiateGeometryOutput, templateTypes, nullptr);
+    builder.AddTemplateInstantiator("PointOutput", InstantiateGeometryOutput, templateTypes, (int*)spv::ExecutionModeOutputPoints);
+    builder.AddTemplateInstantiator("LineOutput", InstantiateGeometryOutput, templateTypes, (int*)spv::ExecutionModeOutputLineStrip);
+    builder.AddTemplateInstantiator("TriangleOutput", InstantiateGeometryOutput, templateTypes, (int*)spv::ExecutionModeOutputTriangleStrip);
   }
 
   // Create the GeometryStreamMoverType
@@ -120,3 +168,18 @@ ZilchDefineStaticLibrary(ShaderIntrinsicsLibrary)
 }
 
 }//namespace Zilch
+
+namespace Zero
+{
+
+//-------------------------------------------------------------------ShaderSettingsLibrary
+ZilchDefineStaticLibrary(ShaderSettingsLibrary)
+{
+  builder.CreatableInScriptDefault = false;
+
+  ZilchInitializeType(TranslationErrorEvent);
+  ZilchInitializeType(ValidationErrorEvent);
+  ZilchInitializeType(SpecializationConstantEvent);
+}
+
+}//namespace Zero

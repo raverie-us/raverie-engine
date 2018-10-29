@@ -1,0 +1,22 @@
+[Pixel][UnitTest]
+struct GenerateScaleMatrix3x3
+{
+  function Test_Static_Real2()
+  {
+    var scale_ = Real2();
+    var result = Math.GenerateScaleMatrix3x3(scale_);
+  }
+
+  function Test_Static_Real3()
+  {
+    var scale_ = Real3();
+    var result = Math.GenerateScaleMatrix3x3(scale_);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Real2();
+    this.Test_Static_Real3();
+  }
+}

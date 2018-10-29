@@ -1,0 +1,16 @@
+[Vertex][UnitTest]
+struct AppBuiltIns_Vertex
+{
+  [AppBuiltInInput] var LogicTime : Real;
+  [AppBuiltInInput] var LocalToWorld : Real4x4;
+
+  [EntryPoint]
+  function Main()
+  {
+    var vertex = Vertex();
+    vertex.LogicTime = this.LogicTime;
+    vertex.Transform = this.LocalToWorld;
+    vertex.Main();
+
+  }
+}

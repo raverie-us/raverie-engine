@@ -1,0 +1,32 @@
+[Pixel][UnitTest]
+struct MultiplyPoint
+{
+  function Test_Static_Real2x2_Real()
+  {
+    var by_ = Real2x2();
+    var the_ = Real();
+    var result = Math.MultiplyPoint(by_, the_);
+  }
+
+  function Test_Static_Real3x3_Real2()
+  {
+    var by_ = Real3x3();
+    var the_ = Real2();
+    var result = Math.MultiplyPoint(by_, the_);
+  }
+
+  function Test_Static_Real4x4_Real3()
+  {
+    var by_ = Real4x4();
+    var the_ = Real3();
+    var result = Math.MultiplyPoint(by_, the_);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Real2x2_Real();
+    this.Test_Static_Real3x3_Real2();
+    this.Test_Static_Real4x4_Real3();
+  }
+}

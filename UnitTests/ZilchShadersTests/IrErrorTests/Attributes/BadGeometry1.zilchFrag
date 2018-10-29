@@ -1,0 +1,11 @@
+struct GeoData
+{
+}
+
+[Geometry]
+struct BadGeometry1
+{
+  function Main(input : TriangleInput[GeoData], output : TriangleOutput[GeoData])
+  {
+  }
+}

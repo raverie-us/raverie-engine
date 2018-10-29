@@ -1,0 +1,171 @@
+[Pixel][UnitTest]
+struct DoWhileLoops
+{
+  function DoWhile0() : Integer
+  {
+    var a = 1;
+    do
+    {
+      --a;
+    }while(a < 0)
+    return a;
+  }
+  
+  function DoWhile0Break() : Integer
+  {
+    var a = 1;
+    do
+    {
+      break;
+    }while(a < 0)
+    return a;
+  }
+  
+  function DoWhile0Continue() : Integer
+  {
+    var a = 1;
+    do
+    {
+      continue;
+    }while(a < 0)
+    return a;
+  }
+  
+  function DoWhileIf0() : Integer
+  {
+    var a = 1;
+    do
+    {
+      if(a > 0)
+        continue;
+      --a;
+    }while(a < 0)
+    return a;
+  }
+  
+  function DoWhileIf1() : Integer
+  {
+    var a = 1;
+    do
+    {
+      if(a > 0)
+        break;
+      --a;
+    }while(a < 0)
+    return a;
+  }
+  
+  function DoWhileIf2() : Integer
+  {
+    var a = 1;
+    do
+    {
+      if(a > 0)
+        continue;
+      else if(a < 0)
+        break;
+      else
+        a = 0;
+      --a;
+    }while(a < 0)
+    return a;
+  }
+  
+  function DoNestedWhile0() : Integer
+  {
+    var a = 1;
+    do
+    {
+      var b = 1;
+      do
+      {
+        --b;
+      }while(b > 0)
+      --a;
+    }while(a > 0)
+    return a;
+  }
+  
+  function DoNestedWhile1() : Integer
+  {
+    var a = 1;
+    do
+    {
+      var b = 1;
+      do
+      {
+        continue;
+      }while(b > 0)
+      --a;
+    }while(a > 0)
+    return a;
+  }
+  
+  function DoNestedWhile2() : Integer
+  {
+    var a = 1;
+    do
+    {
+      var b = 1;
+      do
+      {
+        break;
+      }while(b > 0)
+      --a;
+    }while(a > 0)
+    return a;
+  }
+  
+  function DoNestedWhile3() : Integer
+  {
+    var a = 1;
+    do
+    {
+      var b = 1;
+      do
+      {
+        break;
+      }while(b > 0)
+      break;
+    }while(a > 0)
+    return a;
+  }
+  
+  /*function DoWhile2() : Integer
+  {
+    var a = 1;
+    while(a < 0)
+    {
+      var b = 1;
+      while(b != 0)
+      {
+        if((b / 2) == 0)
+        {
+          --b;
+          continue;
+        }
+        b = -2;
+        break;
+      }
+      
+      if(b < 0)
+        break;
+    }
+    return a;
+  }*/
+  
+  [EntryPoint]
+  function Main()
+  {
+    this.DoWhile0();
+    this.DoWhile0Break();
+    this.DoWhile0Continue();
+    this.DoWhileIf0();
+    this.DoWhileIf1();
+    this.DoWhileIf2();
+    this.DoNestedWhile0();
+    this.DoNestedWhile1();
+    this.DoNestedWhile2();
+    this.DoNestedWhile3();
+  }
+}

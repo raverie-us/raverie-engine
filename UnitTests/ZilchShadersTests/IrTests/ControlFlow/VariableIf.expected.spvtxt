@@ -1,0 +1,107 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 50
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_VariableIf "EntryPoint_Main_VariableIf"
+               OpExecutionMode %EntryPoint_Main_VariableIf OriginUpperLeft
+               OpSource Unknown 100
+               OpName %VariableIf "VariableIf"
+               OpMemberName %VariableIf 0 "Dummy"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %condition "condition"
+               OpName %value "value"
+               OpName %ifTrue0 "ifTrue0"
+               OpName %ifFalse0 "ifFalse0"
+               OpName %ifTrue1 "ifTrue1"
+               OpName %ifMerge1 "ifMerge1"
+               OpName %ifMerge0 "ifMerge0"
+               OpName %PreConstructor_VariableIf "PreConstructor_VariableIf"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_VariableIf "EntryPoint_Main_VariableIf"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+ %VariableIf = OpTypeStruct %int
+%_ptr_Function_VariableIf = OpTypePointer Function %VariableIf
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_VariableIf
+       %bool = OpTypeBool
+%_ptr_Function_bool = OpTypePointer Function %bool
+       %true = OpConstantTrue %bool
+      %int_1 = OpConstant %int 1
+      %int_2 = OpConstant %int 2
+         %11 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_VariableIf
+         %17 = OpLabel
+  %condition = OpVariable %_ptr_Function_bool Function
+      %value = OpVariable %_ptr_Function_int Function
+               OpStore %condition %true
+               OpStore %value %int_1
+         %20 = OpLoad %bool %condition
+               OpSelectionMerge %ifMerge0 None
+               OpBranchConditional %20 %ifTrue0 %ifFalse0
+    %ifTrue0 = OpLabel
+               OpStore %value %int_1
+               OpBranch %ifMerge0
+   %ifFalse0 = OpLabel
+         %23 = OpLoad %bool %condition
+         %24 = OpLogicalNot %bool %23
+               OpSelectionMerge %ifMerge1 None
+               OpBranchConditional %24 %ifTrue1 %ifMerge1
+    %ifTrue1 = OpLabel
+               OpStore %value %int_2
+               OpBranch %ifMerge1
+   %ifMerge1 = OpLabel
+               OpBranch %ifMerge0
+   %ifMerge0 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_VariableIf = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_VariableIf
+         %30 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_VariableIf
+         %33 = OpLabel
+         %34 = OpFunctionCall %void %PreConstructor_VariableIf %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_VariableIf
+         %37 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_VariableIf
+         %40 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_VariableIf = OpFunction %void None %11
+         %42 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_VariableIf Function
+         %44 = OpFunctionCall %void %InitializeGlobals
+         %45 = OpFunctionCall %void %DefaultConstructor %self_4
+         %46 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %47 = OpFunctionCall %void %Main %self_4
+         %48 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %11
+         %49 = OpLabel
+               OpReturn
+               OpFunctionEnd

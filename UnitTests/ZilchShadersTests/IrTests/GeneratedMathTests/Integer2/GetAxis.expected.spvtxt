@@ -1,0 +1,114 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 58
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_GetAxis "EntryPoint_Main_GetAxis"
+               OpExecutionMode %EntryPoint_Main_GetAxis OriginUpperLeft
+               OpSource Unknown 100
+               OpName %GetAxis "GetAxis"
+               OpMemberName %GetAxis 0 "Dummy"
+               OpName %Test_Integer "Test_Integer"
+               OpName %self "self"
+               OpName %param0 "param0"
+               OpName %result "result"
+               OpName %GetAxis_0 "GetAxis"
+               OpName %value "value"
+               OpName %value_Local "value_Local"
+               OpName %result_0 "result"
+               OpName %Main "Main"
+               OpName %self_0 "self"
+               OpName %PreConstructor_GetAxis "PreConstructor_GetAxis"
+               OpName %self_1 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_2 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_3 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_4 "self"
+               OpName %EntryPoint_Main_GetAxis "EntryPoint_Main_GetAxis"
+               OpName %self_5 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+    %GetAxis = OpTypeStruct %int
+%_ptr_Function_GetAxis = OpTypePointer Function %GetAxis
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_GetAxis
+      %int_0 = OpConstant %int 0
+      %v2int = OpTypeVector %int 2
+%_ptr_Function_v2int = OpTypePointer Function %v2int
+         %11 = OpTypeFunction %v2int %int
+    %int_0_0 = OpConstant %int 0
+      %int_1 = OpConstant %int 1
+         %12 = OpTypeFunction %void
+%Test_Integer = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_GetAxis
+         %18 = OpLabel
+     %param0 = OpVariable %_ptr_Function_int Function
+     %result = OpVariable %_ptr_Function_v2int Function
+               OpStore %param0 %int_0
+         %21 = OpLoad %int %param0
+         %22 = OpFunctionCall %v2int %GetAxis_0 %21
+               OpStore %result %22
+               OpReturn
+               OpFunctionEnd
+  %GetAxis_0 = OpFunction %v2int None %11
+      %value = OpFunctionParameter %int
+         %25 = OpLabel
+%value_Local = OpVariable %_ptr_Function_int Function
+   %result_0 = OpVariable %_ptr_Function_v2int Function
+               OpStore %value_Local %value
+         %28 = OpCompositeConstruct %v2int %int_0_0 %int_0_0
+               OpStore %result_0 %28
+         %29 = OpLoad %int %value_Local
+         %30 = OpAccessChain %_ptr_Function_int %result_0 %29
+               OpStore %30 %int_1
+         %31 = OpLoad %v2int %result_0
+               OpReturnValue %31
+               OpFunctionEnd
+       %Main = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_GetAxis
+         %34 = OpLabel
+         %35 = OpFunctionCall %void %Test_Integer %self_0
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_GetAxis = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_GetAxis
+         %38 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_GetAxis
+         %41 = OpLabel
+         %42 = OpFunctionCall %void %PreConstructor_GetAxis %self_2
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_GetAxis
+         %45 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_4 = OpFunctionParameter %_ptr_Function_GetAxis
+         %48 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_GetAxis = OpFunction %void None %12
+         %50 = OpLabel
+     %self_5 = OpVariable %_ptr_Function_GetAxis Function
+         %52 = OpFunctionCall %void %InitializeGlobals
+         %53 = OpFunctionCall %void %DefaultConstructor %self_5
+         %54 = OpFunctionCall %void %CopyInputs_Main %self_5
+         %55 = OpFunctionCall %void %Main %self_5
+         %56 = OpFunctionCall %void %CopyOutputs_Main %self_5
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %12
+         %57 = OpLabel
+               OpReturn
+               OpFunctionEnd

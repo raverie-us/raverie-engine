@@ -1,8 +1,8 @@
 [Vertex]
 struct RESOURCE_NAME_
 {
-	[BuiltInInput] var FrameTime : Real;
-	[BuiltInInput] var ViewToPerspective : Real4x4;
+	[AppBuiltInInput] var FrameTime : Real;
+	[AppBuiltInInput] var ViewToPerspective : Real4x4;
 
 	[Input][Output] var ViewPosition : Real3;
 	[Input] var ViewNormal : Real3;

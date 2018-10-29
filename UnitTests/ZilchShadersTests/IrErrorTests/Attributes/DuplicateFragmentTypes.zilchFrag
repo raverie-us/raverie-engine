@@ -1,0 +1,7 @@
+[Pixel][Vertex]
+struct DuplicateFragmentTypes
+{
+  function Main()
+  {
+  }
+}

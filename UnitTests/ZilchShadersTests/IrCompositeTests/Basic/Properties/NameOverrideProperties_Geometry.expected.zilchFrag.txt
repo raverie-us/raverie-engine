@@ -1,0 +1,28 @@
+struct NameOverrideProperties_GeoIn
+{
+  [HardwareBuiltInInput] var ApiPerspectivePosition : Real4;
+}
+struct NameOverrideProperties_GeoOut
+{
+  [HardwareBuiltInOutput] var ApiPerspectivePosition : Real4;
+}
+[Geometry(maxVertices : 3)][UnitTest]
+struct NameOverrideProperties_Geometry
+{
+  [PropertyInput] var Position_GeometryOverride : Real4;
+  [PropertyInput] var Value_GeometryOverride : Real;
+  [AppBuiltInInput] var PerspectiveToApiPerspective : Real4x4;
+  [EntryPoint]
+  function Main(input : TriangleInput[NameOverrideProperties_GeoIn], output : TriangleOutput[NameOverrideProperties_GeoOut])
+  {
+    var fragmentInput = TriangleInput[GeometryData]();
+    for(var i = 0; i < 3; ++i)
+    {
+    }
+    var fragmentOutput = TriangleOutput[GeometryData]();
+    var geometryOverride = GeometryOverride();
+    geometryOverride.GeoPosition = this.Position_GeometryOverride;
+    geometryOverride.Aux = this.Value_GeometryOverride;
+    geometryOverride.Main(fragmentInput, fragmentOutput);
+  }
+}

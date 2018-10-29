@@ -1,0 +1,11 @@
+[Pixel][UnitTest]
+struct ReadOnlyAssignment
+{
+  [Static][SpecConstant] var Var1 : Real;
+  
+  [EntryPoint]
+  function Main()
+  {
+    ReadOnlyAssignment.Var1 = 1.1;
+  }
+}

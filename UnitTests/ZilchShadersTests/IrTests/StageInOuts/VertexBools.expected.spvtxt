@@ -1,0 +1,162 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 93
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Vertex %EntryPoint_Main_VertexBools "EntryPoint_Main_VertexBools" %Out
+               OpSource Unknown 100
+               OpName %VertexBools "VertexBools"
+               OpMemberName %VertexBools 4 "MyVar3"
+               OpMemberName %VertexBools 5 "MyInt3"
+               OpMemberName %VertexBools 0 "MyVar1"
+               OpMemberName %VertexBools 1 "MyInt1"
+               OpMemberName %VertexBools 2 "MyVar2"
+               OpMemberName %VertexBools 3 "MyInt2"
+               OpName %VertexBoolsOut "VertexBoolsOut"
+               OpMemberName %VertexBoolsOut 0 "MyVar1_Boolean"
+               OpMemberName %VertexBoolsOut 5 "MyVar3"
+               OpMemberName %VertexBoolsOut 1 "MyVar1"
+               OpMemberName %VertexBoolsOut 3 "MyVar2"
+               OpMemberName %VertexBoolsOut 4 "MyVar3_Boolean3"
+               OpMemberName %VertexBoolsOut 2 "MyVar2_Boolean2"
+               OpName %Out "Out"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %PreConstructor_VertexBools "PreConstructor_VertexBools"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %zero "zero"
+               OpName %one "one"
+               OpName %zero_0 "zero"
+               OpName %one_0 "one"
+               OpName %EntryPoint_Main_VertexBools "EntryPoint_Main_VertexBools"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %VertexBoolsOut Block
+               OpDecorate %Out Location 0
+       %bool = OpTypeBool
+%_ptr_Function_bool = OpTypePointer Function %bool
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+     %v2bool = OpTypeVector %bool 2
+%_ptr_Function_v2bool = OpTypePointer Function %v2bool
+      %v2int = OpTypeVector %int 2
+%_ptr_Function_v2int = OpTypePointer Function %v2int
+     %v3bool = OpTypeVector %bool 3
+%_ptr_Function_v3bool = OpTypePointer Function %v3bool
+      %v3int = OpTypeVector %int 3
+%_ptr_Function_v3int = OpTypePointer Function %v3int
+%VertexBools = OpTypeStruct %bool %int %v2bool %v2int %v3bool %v3int
+%_ptr_Function_VertexBools = OpTypePointer Function %VertexBools
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+         %18 = OpTypeFunction %void %_ptr_Function_VertexBools
+      %int_0 = OpConstant %int 0
+      %false = OpConstantFalse %bool
+      %int_1 = OpConstant %int 1
+      %int_2 = OpConstant %int 2
+      %int_3 = OpConstant %int 3
+      %int_4 = OpConstant %int 4
+      %int_5 = OpConstant %int 5
+%_ptr_Output_int = OpTypePointer Output %int
+%VertexBoolsOut = OpTypeStruct %int %int %v2int %v2int %v3int %v3int
+%_ptr_Output_VertexBoolsOut = OpTypePointer Output %VertexBoolsOut
+        %Out = OpVariable %_ptr_Output_VertexBoolsOut Output
+%_ptr_Output_v2int = OpTypePointer Output %v2int
+%_ptr_Output_v3int = OpTypePointer Output %v3int
+         %24 = OpTypeFunction %void
+       %Main = OpFunction %void None %18
+       %self = OpFunctionParameter %_ptr_Function_VertexBools
+         %35 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_VertexBools = OpFunction %void None %18
+     %self_0 = OpFunctionParameter %_ptr_Function_VertexBools
+         %38 = OpLabel
+         %39 = OpAccessChain %_ptr_Function_bool %self_0 %int_0
+               OpStore %39 %false
+         %40 = OpAccessChain %_ptr_Function_int %self_0 %int_1
+               OpStore %40 %int_0
+         %41 = OpAccessChain %_ptr_Function_v2bool %self_0 %int_2
+         %42 = OpCompositeConstruct %v2bool %false %false
+               OpStore %41 %42
+         %43 = OpAccessChain %_ptr_Function_v2int %self_0 %int_3
+         %44 = OpCompositeConstruct %v2int %int_0 %int_0
+               OpStore %43 %44
+         %45 = OpAccessChain %_ptr_Function_v3bool %self_0 %int_4
+         %46 = OpCompositeConstruct %v3bool %false %false %false
+               OpStore %45 %46
+         %47 = OpAccessChain %_ptr_Function_v3int %self_0 %int_5
+         %48 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+               OpStore %47 %48
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %18
+     %self_1 = OpFunctionParameter %_ptr_Function_VertexBools
+         %51 = OpLabel
+         %52 = OpFunctionCall %void %PreConstructor_VertexBools %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %18
+     %self_2 = OpFunctionParameter %_ptr_Function_VertexBools
+         %55 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %18
+     %self_3 = OpFunctionParameter %_ptr_Function_VertexBools
+         %58 = OpLabel
+         %59 = OpAccessChain %_ptr_Output_int %Out %int_0
+         %60 = OpAccessChain %_ptr_Function_bool %self_3 %int_0
+         %61 = OpLoad %bool %60
+         %62 = OpSelect %int %61 %int_1 %int_0
+               OpStore %59 %62
+         %63 = OpAccessChain %_ptr_Output_int %Out %int_1
+         %64 = OpAccessChain %_ptr_Function_int %self_3 %int_1
+         %65 = OpLoad %int %64
+               OpStore %63 %65
+         %66 = OpAccessChain %_ptr_Output_v2int %Out %int_2
+         %67 = OpAccessChain %_ptr_Function_v2bool %self_3 %int_2
+         %68 = OpLoad %v2bool %67
+       %zero = OpCompositeConstruct %v2int %int_0 %int_0
+        %one = OpCompositeConstruct %v2int %int_1 %int_1
+         %71 = OpSelect %v2int %68 %one %zero
+               OpStore %66 %71
+         %72 = OpAccessChain %_ptr_Output_v2int %Out %int_3
+         %73 = OpAccessChain %_ptr_Function_v2int %self_3 %int_3
+         %74 = OpLoad %v2int %73
+               OpStore %72 %74
+         %75 = OpAccessChain %_ptr_Output_v3int %Out %int_4
+         %76 = OpAccessChain %_ptr_Function_v3bool %self_3 %int_4
+         %77 = OpLoad %v3bool %76
+     %zero_0 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+      %one_0 = OpCompositeConstruct %v3int %int_1 %int_1 %int_1
+         %80 = OpSelect %v3int %77 %one_0 %zero_0
+               OpStore %75 %80
+         %81 = OpAccessChain %_ptr_Output_v3int %Out %int_5
+         %82 = OpAccessChain %_ptr_Function_v3int %self_3 %int_5
+         %83 = OpLoad %v3int %82
+               OpStore %81 %83
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_VertexBools = OpFunction %void None %24
+         %85 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_VertexBools Function
+         %87 = OpFunctionCall %void %InitializeGlobals
+         %88 = OpFunctionCall %void %DefaultConstructor %self_4
+         %89 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %90 = OpFunctionCall %void %Main %self_4
+         %91 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %24
+         %92 = OpLabel
+               OpReturn
+               OpFunctionEnd

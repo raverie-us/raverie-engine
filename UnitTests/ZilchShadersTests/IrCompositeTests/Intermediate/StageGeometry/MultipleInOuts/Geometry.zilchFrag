@@ -1,0 +1,34 @@
+// Vertex:
+//[StageOutput] var ViewPosition : Real3;
+//[StageOutput] var PerspectivePosition : Real4;
+//[StageOutput] var Uv : Real2;
+//[StageOutput] var Time : Real;
+
+// Pixel:
+//[StageInput] var Uv : Real2;
+//[StageInput] var Color : Real4;
+//[StageInput] var Size : Real;
+//[StageInput] var Time : Real;
+
+// Geometry:
+//[PassThrough] var Uv : Real2;
+//[PassThrough] var Color : Real4;
+
+// Multi in/out mappings
+struct GeometryData
+{
+  // Time outputs to two different outputs
+  [StageInput][StageOutput][StageOutput("Size")] var Time : Real;
+  // Each of these inputs come from the same input
+  [StageInput("Time")] var LogicTime : Real;
+  [StageInput("Time")] var FrameTime : Real;
+}
+
+[Geometry(maxVertices : 3)]
+struct Geometry
+{
+  function Main(input : TriangleInput[GeometryData], output : TriangleOutput[GeometryData])
+  {
+    output.Append(input[0], 0);
+  }
+}

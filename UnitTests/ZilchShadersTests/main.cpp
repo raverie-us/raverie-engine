@@ -18,7 +18,7 @@ public:
 void ZilchCompilerErrorCallback(Zilch::ErrorEvent* e)
 {
   ZPrint("%s", e->GetFormattedMessage(Zilch::MessageFormat::MsvcCpp).c_str());
-  ZERO_DEBUG_BREAK;
+  ZeroDebugBreak();
 }
 
 void ZilchTranslationErrorCallback(TranslationErrorEvent* e)
@@ -27,34 +27,7 @@ void ZilchTranslationErrorCallback(TranslationErrorEvent* e)
   __debugbreak();
 }
 
-void TestRenderer(SimpleZilchShaderGenerator& shaderGenerator, BaseRenderer& renderer, ErrorReporter& report)
-{
-  // Test individual fragment compilation
-  TestShaderCompilationOfDirectory(shaderGenerator, renderer, "Tests", report);
-  // Test composite compilation and linking
-  TestCompilationAndLinkingOfCompositesInDirectory(shaderGenerator, renderer, "CompositeTests", report);
-  // Test composite running results (run the shader and compare against zilch)
-  TestRuntime(shaderGenerator, renderer, "RunningTests", report);
-}
-
-// Simple helper to contain common data for a language test
-class ShaderLanguageTestData
-{
-public:
-
-  SimpleZilchShaderGenerator mShaderGenerator;
-  BaseRenderer* mRenderer;
-  ErrorReporter* mErrorReporter;
-
-  ShaderLanguageTestData(BaseRenderer* renderer, BaseShaderTranslator* translator, ErrorReporter* reporter)
-    : mShaderGenerator(translator)
-  {
-    mRenderer = renderer;
-    mErrorReporter = reporter;
-  }
-};
-
-int main()
+void RunTests()
 {
   // Hook up a listener to print all output to the visual studio console
   VisualStudioListener visualStudioOutput;
@@ -68,37 +41,65 @@ int main()
   ErrorReporter glslReporter;
   GlslRenderer glslRenderer(drawContext);
 
+  RendererPackage glslPackage;
+  glslPackage.mErrorReporter = &glslReporter;
+  glslPackage.mRenderer = &glslRenderer;
+  glslPackage.mBackend = new ZilchShaderGlslBackend();
+
+  UnitTestPackage unitTestPackage;
+  unitTestPackage.mBackends.PushBack(new ZilchSpirVDisassemblerBackend());
+  unitTestPackage.mRenderPackages.PushBack(glslPackage);
+
+  String extensionsPath = "FragmentExtensions";
+  String fragmentSettingsPath = "../../Data/ZilchFragmentSettings";
+
+  SpirVNameSettings nameSettings;
+  SimpleZilchShaderIRGenerator::LoadNameSettings(nameSettings);
+  ZilchShaderSpirVSettings* settings = SimpleZilchShaderIRGenerator::CreateUnitTestSettings(nameSettings);
+  SimpleZilchShaderIRGenerator irGenerator(new ZilchSpirVFrontEnd(), settings);
+  Zilch::EventConnect(&irGenerator, Zilch::Events::CompilationError, ZilchCompilerErrorCallback);
+  Zilch::EventConnect(&irGenerator, Zero::Events::TranslationError, &ErrorReporter::OnTranslationError, &glslReporter);
+  Zilch::EventConnect(&irGenerator, Zilch::Events::CompilationError, &ErrorReporter::OnCompilationError, &glslReporter);
+  Zilch::EventConnect(&irGenerator, Zero::Events::ValidationError, &ErrorReporter::OnValidationError, &glslReporter);
+
+  irGenerator.SetupDependencies(extensionsPath);
+
+  TestDirectory(irGenerator, unitTestPackage, "IrTests", glslReporter, true);
+  TestDirectory(irGenerator, unitTestPackage, "IrCompositeTests", glslReporter, true);
+  TestRunning(irGenerator, unitTestPackage, "RunningIrTests", true);
+  
+  glslReporter.mAssert = false;
+  TestDirectory(irGenerator, unitTestPackage, "IrErrorTests", glslReporter, true);
+
+  // Run all of the unit test directories with our different translators/renderers
+  //for(size_t i = 0; i < shaderLanguages.Size(); ++i)
+  //{
+  //  ShaderLanguageTestData& shaderLanguage = *(shaderLanguages[i]);
+  //  SimpleZilchShaderGenerator& shaderGenerator = shaderLanguage.mShaderGenerator;
+  //  Zilch::EventConnect(&shaderGenerator, Zilch::Events::CompilationError, ZilchCompilerErrorCallback);
+  //  Zilch::EventConnect(&shaderGenerator, Zero::Events::TranslationError, ZilchTranslationErrorCallback);
+  //  shaderGenerator.LoadSettings(fragmentSettingsPath);
+  //  shaderGenerator.SetupDependencies(extensionsPath);
+  //
+  //  ZPrint("Running %s tests\n", shaderGenerator.mTranslator->GetFullLanguageString().c_str());
+  //  TestRenderer(shaderGenerator, *shaderLanguage.mRenderer, *shaderLanguage.mErrorReporter);
+  //}
+}
+
+int main()
+{
   Zilch::ZilchSetup zilchSetup;
 
   Zilch::Module module;
   ExecutableState::CallingState = module.Link();
 
   ShaderSettingsLibrary::InitializeInstance();
-  ShaderIntrinsicsLibrary::InitializeInstance();
   ShaderSettingsLibrary::GetInstance().GetLibrary();
-  String extensionsPath = FilePath::Combine(GetApplicationDirectory(), "FragmentCore");
-  String fragmentSettingsPath = FilePath::Combine(GetApplicationDirectory(), "ZilchFragmentSettings");
+  
+  RunTests();
 
-  // Add all of the current languages for translation
-  Array<ShaderLanguageTestData*> shaderLanguages;
-  shaderLanguages.PushBack(new ShaderLanguageTestData(&glslRenderer, new Glsl130Translator(), &glslReporter));
-  shaderLanguages.PushBack(new ShaderLanguageTestData(&glslRenderer, new Glsl150Translator(), &glslReporter));
-
-  // Run all of the unit test directories with our different translators/renderers
-  for(size_t i = 0; i < shaderLanguages.Size(); ++i)
-  {
-    ShaderLanguageTestData& shaderLanguage = *(shaderLanguages[i]);
-    SimpleZilchShaderGenerator& shaderGenerator = shaderLanguage.mShaderGenerator;
-    Zilch::EventConnect(&shaderGenerator, Zilch::Events::CompilationError, ZilchCompilerErrorCallback);
-    Zilch::EventConnect(&shaderGenerator, Zero::Events::TranslationError, ZilchTranslationErrorCallback);
-    shaderGenerator.LoadSettings(fragmentSettingsPath);
-    shaderGenerator.SetupDependencies(extensionsPath);
-
-    ZPrint("Running %s tests\n", shaderGenerator.mTranslator->GetFullLanguageString().c_str());
-    TestRenderer(shaderGenerator, *shaderLanguage.mRenderer, *shaderLanguage.mErrorReporter);
-  }
-
-  DeleteObjectsInContainer(shaderLanguages);
+  ShaderSettingsLibrary::GetInstance().Destroy();
+  delete ExecutableState::CallingState;
 
   return 0;
 }

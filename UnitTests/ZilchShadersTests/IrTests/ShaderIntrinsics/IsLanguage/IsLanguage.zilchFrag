@@ -1,0 +1,14 @@
+[Pixel][UnitTest]
+struct IsLanguage
+{
+  [EntryPoint]
+  function Main()
+  {
+    var glslId = 1;
+    var versionIdMin = 140;
+    var versionIdMax = 200;
+    
+    var isGlsl = ShaderIntrinsics.IsLanguage(glslId);
+    var isGlslVersion = ShaderIntrinsics.IsLanguage(glslId, versionIdMin, versionIdMax);
+  }
+}

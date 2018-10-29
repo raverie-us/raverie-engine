@@ -1,0 +1,70 @@
+[Pixel][UnitTest]
+struct CombinedTest_Pixel
+{
+  [StageInput(name : "Property1")] var Stage_Property1_Real : Real;
+  [StageInput(name : "Property2")] var Stage_Property2_Real : Real;
+  [StageInput(name : "Property3")] var Stage_Property3_Real : Real;
+  [StageInput(name : "Uv")] var Stage_Uv_Real2 : Real2;
+  [StageInput(name : "LocalPosition")] var Stage_LocalPosition_Real3 : Real3;
+  [PropertyInput] var Property4_Pixel1 : Real;
+  [PropertyInput] var Property5_Pixel1 : Real;
+  [PropertyInput] var Property6_Pixel1 : Real;
+  [HardwareBuiltInInput] var FragCoord : Real4;
+  [HardwareBuiltInInput] var PointCoord : Real2;
+  [AppBuiltInInput] var LogicTime : Real;
+  [AppBuiltInInput] var FrameTime : Real;
+
+  [EntryPoint]
+  function Main()
+  {
+    var pixel1 = Pixel1();
+    pixel1.Property1 = this.Stage_Property1_Real;
+    pixel1.Property2 = this.Stage_Property2_Real;
+    pixel1.Property3 = this.Stage_Property3_Real;
+    pixel1.Property4 = this.Property4_Pixel1;
+    pixel1.Property5 = this.Property5_Pixel1;
+    pixel1.Property6 = this.Property6_Pixel1;
+    pixel1.FragCoord = this.FragCoord;
+    pixel1.PointCoord = this.PointCoord;
+    pixel1.Uv = this.Stage_Uv_Real2;
+    pixel1.LocalPosition = this.Stage_LocalPosition_Real3;
+    pixel1.LogicTime = this.LogicTime;
+    pixel1.FrameTime = this.FrameTime;
+    pixel1.Main();
+
+    var pixel2 = Pixel2();
+    pixel2.Property1 = pixel1.Property1;
+    pixel2.Property2 = pixel1.Property2;
+    pixel2.Property3 = pixel1.Property3;
+    pixel2.Property4 = pixel1.Property4;
+    pixel2.Property5 = pixel1.Property5;
+    pixel2.Property6 = pixel1.Property6;
+    pixel2.FragCoord = pixel1.FragCoord;
+    pixel2.PointCoord = pixel1.PointCoord;
+    pixel2.Uv = pixel1.Uv;
+    pixel2.LocalPosition = pixel1.LocalPosition;
+    pixel2.LogicTime = pixel1.LogicTime;
+    pixel2.FrameTime = pixel1.FrameTime;
+    pixel2.FragmentVar1 = pixel1.FragmentVar1;
+    pixel2.FragmentVar2 = pixel1.FragmentVar2;
+    pixel2.Main();
+
+    var pixel3 = Pixel3();
+    pixel3.Property1 = pixel2.Property1;
+    pixel3.Property2 = pixel2.Property2;
+    pixel3.Property3 = pixel1.Property3;
+    pixel3.Property4 = pixel2.Property4;
+    pixel3.Property5 = pixel2.Property5;
+    pixel3.Property6 = pixel1.Property6;
+    pixel3.FragCoord = pixel2.FragCoord;
+    pixel3.PointCoord = this.PointCoord;
+    pixel3.Uv = pixel2.Uv;
+    pixel3.LocalPosition = this.Stage_LocalPosition_Real3;
+    pixel3.LogicTime = pixel2.LogicTime;
+    pixel3.FrameTime = this.FrameTime;
+    pixel3.FragmentVar1 = pixel2.FragmentVar1;
+    pixel3.FragmentVar2 = pixel1.FragmentVar2;
+    pixel3.Main();
+
+  }
+}

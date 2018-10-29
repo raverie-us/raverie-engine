@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	ZilchFragmentBuilder 
+	{
+		var Name = "Real2x3Implements"
+		var ResourceId = 0x5bcd0b11098e91f4
+	}
+}

@@ -1,0 +1,6 @@
+[Vertex]
+struct BadInputParam1
+{
+  // Wrong type
+  [Input(name : 1)] var MyVar : Real = 1.0;
+}

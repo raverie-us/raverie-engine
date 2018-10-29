@@ -1,0 +1,10 @@
+[Pixel][UnitTest]
+struct StaticAppBuiltInInput
+{
+  [Static][AppBuiltInInput] var Var1 : Real;
+  
+  [EntryPoint]
+  function Main()
+  {
+  }
+}

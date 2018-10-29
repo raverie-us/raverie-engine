@@ -1,0 +1,247 @@
+struct RealExtensions
+{
+  [Static][Extension(typeid(Real))][Implements]
+  var PositiveMax : Real
+  {
+    get {return 3.40282e+38; }
+  }
+  
+  [Static][Extension(typeid(Real))][Implements]
+  var PositiveValueClosestToZero : Real
+  {
+    get {return 1.17549e-38; }
+  }
+  
+  [Static][Extension(typeid(Real))][Implements]
+  var NegativeMin : Real
+  {
+    get {return -Real.PositiveMax; }
+  }
+  
+  [Static][Extension(typeid(Real))][Implements]
+  var NegativeValueClosestToZero : Real
+  {
+    get {return -Real.PositiveValueClosestToZero; }
+  }
+  
+  [Static][Extension(typeid(Real))][Implements]
+  var XAxis : Real
+  {
+    get {return 1; }
+  }
+  
+  [Static][Extension(typeid(Real))][Implements]
+  var Zero : Real
+  {
+    get {return 0; }
+  }
+  
+  [Static][Extension(typeid(Real))][Implements]
+  var One : Real
+  {
+    get {return 1; }
+  }
+  
+  [Static][Extension(typeid(Real))][Implements]
+  function GetAxis(value : Integer) : Real
+  {
+    if(value == 0)
+      return 1;
+    return 0;
+  }
+}
+
+struct Real2Extensions
+{
+  [Static][Extension(typeid(Real2))][Implements]
+  var XAxis : Real2
+  {
+    get {return Real2(1, 0); }
+  }
+  
+  [Static][Extension(typeid(Real2))][Implements]
+  var YAxis : Real2
+  {
+    get {return Real2(0, 1); }
+  }
+  
+  [Static][Extension(typeid(Real2))][Implements]
+  var Zero : Real2
+  {
+    get {return Real2(0); }
+  }
+  
+  [Static][Extension(typeid(Real2))][Implements]
+  var One : Real2
+  {
+    get {return Real2(1.0); }
+  }
+  
+  [Static][Extension(typeid(Real2))][Implements]
+  function GetAxis(value : Integer) : Real2
+  {
+    var result = Real2();
+    result[value] = 1.0;
+    return result;
+  }
+  
+  [Static][Extension(typeid(Real2))][Implements]
+  var PositiveMax : Real2
+  {
+    get {return Real2(Real.PositiveMax); }
+  }
+  
+  [Static][Extension(typeid(Real2))][Implements]
+  var PositiveValueClosestToZero : Real2
+  {
+    get {return Real2(Real.PositiveValueClosestToZero); }
+  }
+  
+  [Static][Extension(typeid(Real2))][Implements]
+  var NegativeMin : Real2
+  {
+    get {return Real2(Real.NegativeMin); }
+  }
+  
+  [Static][Extension(typeid(Real2))][Implements]
+  var NegativeValueClosestToZero : Real2
+  {
+    get {return Real2(Real.NegativeValueClosestToZero); }
+  }
+}
+
+struct Real3Extensions
+{
+  [Static][Extension(typeid(Real3))][Implements]
+  var XAxis : Real3
+  {
+    get {return Real3(1, 0, 0); }
+  }
+  
+  [Static][Extension(typeid(Real3))][Implements]
+  var YAxis : Real3
+  {
+    get {return Real3(0, 1, 0); }
+  }
+  
+  [Static][Extension(typeid(Real3))][Implements]
+  var ZAxis : Real3
+  {
+    get {return Real3(0, 0, 1); }
+  }
+  
+  [Static][Extension(typeid(Real3))][Implements]
+  var Zero : Real3
+  {
+    get {return Real3(0); }
+  }
+  
+  [Static][Extension(typeid(Real3))][Implements]
+  var One : Real3
+  {
+    get {return Real3(1.0); }
+  }
+  
+  [Static][Extension(typeid(Real3))][Implements]
+  function GetAxis(value : Integer) : Real3
+  {
+    var result = Real3();
+    result[value] = 1.0;
+    return result;
+  }
+  
+  [Static][Extension(typeid(Real3))][Implements]
+  var PositiveMax : Real3
+  {
+    get {return Real3(Real.PositiveMax); }
+  }
+  
+  [Static][Extension(typeid(Real3))][Implements]
+  var PositiveValueClosestToZero : Real3
+  {
+    get {return Real3(Real.PositiveValueClosestToZero); }
+  }
+  
+  [Static][Extension(typeid(Real3))][Implements]
+  var NegativeMin : Real3
+  {
+    get {return Real3(Real.NegativeMin); }
+  }
+  
+  [Static][Extension(typeid(Real3))][Implements]
+  var NegativeValueClosestToZero : Real3
+  {
+    get {return Real3(Real.NegativeValueClosestToZero); }
+  }
+}
+
+struct Real4Extensions
+{
+  [Static][Extension(typeid(Real4))][Implements]
+  var XAxis : Real4
+  {
+    get {return Real4(1, 0, 0, 0); }
+  }
+  
+  [Static][Extension(typeid(Real4))][Implements]
+  var YAxis : Real4
+  {
+    get {return Real4(0, 1, 0, 0); }
+  }
+  
+  [Static][Extension(typeid(Real4))][Implements]
+  var ZAxis : Real4
+  {
+    get {return Real4(0, 0, 1, 0); }
+  }
+  
+  [Static][Extension(typeid(Real4))][Implements]
+  var WAxis : Real4
+  {
+    get {return Real4(0, 0, 0, 1); }
+  }
+  
+  [Static][Extension(typeid(Real4))][Implements]
+  var Zero : Real4
+  {
+    get {return Real4(0); }
+  }
+  
+  [Static][Extension(typeid(Real4))][Implements]
+  var One : Real4
+  {
+    get {return Real4(1.0); }
+  }
+  
+  [Static][Extension(typeid(Real4))][Implements]
+  function GetAxis(value : Integer) : Real4
+  {
+    var result = Real4();
+    result[value] = 1.0;
+    return result;
+  }
+  
+  [Static][Extension(typeid(Real4))][Implements]
+  var PositiveMax : Real4
+  {
+    get {return Real4(Real.PositiveMax); }
+  }
+  
+  [Static][Extension(typeid(Real4))][Implements]
+  var PositiveValueClosestToZero : Real4
+  {
+    get {return Real4(Real.PositiveValueClosestToZero); }
+  }
+  
+  [Static][Extension(typeid(Real4))][Implements]
+  var NegativeMin : Real4
+  {
+    get {return Real4(Real.NegativeMin); }
+  }
+  
+  [Static][Extension(typeid(Real4))][Implements]
+  var NegativeValueClosestToZero : Real4
+  {
+    get {return Real4(Real.NegativeValueClosestToZero); }
+  }
+}

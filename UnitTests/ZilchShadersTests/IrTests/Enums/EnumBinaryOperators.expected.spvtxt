@@ -1,0 +1,139 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 70
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_EnumBinaryOperators "EntryPoint_Main_EnumBinaryOperators"
+               OpExecutionMode %EntryPoint_Main_EnumBinaryOperators OriginUpperLeft
+               OpSource Unknown 100
+               OpName %EnumBinaryOperators "EnumBinaryOperators"
+               OpMemberName %EnumBinaryOperators 0 "Dummy"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %result1 "result1"
+               OpName %result2 "result2"
+               OpName %result3 "result3"
+               OpName %result4 "result4"
+               OpName %result5 "result5"
+               OpName %result6 "result6"
+               OpName %result7 "result7"
+               OpName %result8 "result8"
+               OpName %result9 "result9"
+               OpName %result10 "result10"
+               OpName %result11 "result11"
+               OpName %result12 "result12"
+               OpName %result13 "result13"
+               OpName %result14 "result14"
+               OpName %result15 "result15"
+               OpName %PreConstructor_EnumBinaryOperators "PreConstructor_EnumBinaryOperators"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_EnumBinaryOperators "EntryPoint_Main_EnumBinaryOperators"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%EnumBinaryOperators = OpTypeStruct %int
+%_ptr_Function_EnumBinaryOperators = OpTypePointer Function %EnumBinaryOperators
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_EnumBinaryOperators
+      %int_0 = OpConstant %int 0
+      %int_1 = OpConstant %int 1
+       %bool = OpTypeBool
+%_ptr_Function_bool = OpTypePointer Function %bool
+      %int_2 = OpConstant %int 2
+         %11 = OpTypeFunction %void
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_EnumBinaryOperators
+         %17 = OpLabel
+    %result1 = OpVariable %_ptr_Function_int Function
+    %result2 = OpVariable %_ptr_Function_int Function
+    %result3 = OpVariable %_ptr_Function_int Function
+    %result4 = OpVariable %_ptr_Function_int Function
+    %result5 = OpVariable %_ptr_Function_int Function
+    %result6 = OpVariable %_ptr_Function_int Function
+    %result7 = OpVariable %_ptr_Function_int Function
+    %result8 = OpVariable %_ptr_Function_int Function
+    %result9 = OpVariable %_ptr_Function_bool Function
+   %result10 = OpVariable %_ptr_Function_bool Function
+   %result11 = OpVariable %_ptr_Function_bool Function
+   %result12 = OpVariable %_ptr_Function_bool Function
+   %result13 = OpVariable %_ptr_Function_bool Function
+   %result14 = OpVariable %_ptr_Function_bool Function
+   %result15 = OpVariable %_ptr_Function_int Function
+         %33 = OpIAdd %int %int_0 %int_1
+               OpStore %result1 %33
+         %34 = OpISub %int %int_0 %int_1
+               OpStore %result2 %34
+         %35 = OpIMul %int %int_0 %int_1
+               OpStore %result3 %35
+         %36 = OpSDiv %int %int_0 %int_1
+               OpStore %result4 %36
+         %37 = OpBitwiseOr %int %int_0 %int_1
+               OpStore %result5 %37
+         %38 = OpBitwiseAnd %int %int_0 %int_1
+               OpStore %result6 %38
+         %39 = OpBitwiseXor %int %int_0 %int_1
+               OpStore %result7 %39
+         %40 = OpSMod %int %int_0 %int_1
+               OpStore %result8 %40
+         %41 = OpIEqual %bool %int_0 %int_1
+               OpStore %result9 %41
+         %42 = OpINotEqual %bool %int_0 %int_1
+               OpStore %result10 %42
+         %43 = OpSGreaterThanEqual %bool %int_0 %int_1
+               OpStore %result11 %43
+         %44 = OpSLessThanEqual %bool %int_0 %int_1
+               OpStore %result12 %44
+         %45 = OpSGreaterThan %bool %int_0 %int_1
+               OpStore %result13 %45
+         %46 = OpSLessThan %bool %int_0 %int_1
+               OpStore %result14 %46
+         %47 = OpIAdd %int %int_0 %int_2
+               OpStore %result15 %47
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_EnumBinaryOperators = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_EnumBinaryOperators
+         %50 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_EnumBinaryOperators
+         %53 = OpLabel
+         %54 = OpFunctionCall %void %PreConstructor_EnumBinaryOperators %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_EnumBinaryOperators
+         %57 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_EnumBinaryOperators
+         %60 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_EnumBinaryOperators = OpFunction %void None %11
+         %62 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_EnumBinaryOperators Function
+         %64 = OpFunctionCall %void %InitializeGlobals
+         %65 = OpFunctionCall %void %DefaultConstructor %self_4
+         %66 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %67 = OpFunctionCall %void %Main %self_4
+         %68 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %11
+         %69 = OpLabel
+               OpReturn
+               OpFunctionEnd

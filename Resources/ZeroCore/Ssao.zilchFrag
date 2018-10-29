@@ -4,17 +4,17 @@
 [Pixel][PostProcess]
 struct SsaoFragment
 {
-  [BuiltInInput] var FarPlane : Real;
+  [AppBuiltInInput] var FarPlane : Real;
   
-  [BuiltInInput] var ViewToPerspective : Real4x4;
-  [BuiltInInput] var PerspectiveToView : Real4x4;
+  [AppBuiltInInput] var ViewToPerspective : Real4x4;
+  [AppBuiltInInput] var PerspectiveToView : Real4x4;
   
   [StageInput] var Uv : Real2;
   [StageInput] var PerspectivePosition : Real4;
   
   [Input] var TargetSize : Real2;
-  [Input] var SsaoRandom4x4 : Sampler2d;
-  [Input] var GeometryBuffer0 : Sampler2d;
+  [Input] var SsaoRandom4x4 : SampledImage2d;
+  [Input] var GeometryBuffer0 : SampledImage2d;
   
   [Input] var Radius : Real = 1.0;
   [Input] var Intensity : Real = 1.0;
@@ -156,13 +156,13 @@ struct JointBilateralOcclusionUpsample
   
   [StageInput] var Uv : Real2;
   
-  [Input] var GeometryBuffer0 : Sampler2d;
-  [Input] var HalfResGeometryBuffer0 : Sampler2d;
+  [Input] var GeometryBuffer0 : SampledImage2d;
+  [Input] var HalfResGeometryBuffer0 : SampledImage2d;
   [Input] var InvRes : Real2;
   [Input] var InvHalfRes : Real2;
   [Input] var HalfRes : Real2;
   
-  [Input] var OcclusionBuffer : Sampler2d;
+  [Input] var OcclusionBuffer : SampledImage2d;
   
   [Output] var Target0 : Real4;
   

@@ -45,7 +45,7 @@ void ZilchFragment::GetKeywords(Array<Completion>& keywordsOut)
 
   GraphicsEngine* graphicsEngine = Z::gEngine->has(GraphicsEngine);
   ZilchShaderGenerator* shaderGenerator = graphicsEngine->mShaderGenerator;
-  NameSettings& nameSettings = shaderGenerator->mSettings->mNameSettings;
+  SpirVNameSettings& nameSettings = shaderGenerator->mSpirVSettings->mNameSettings;
 
   // Create a map of special keywords that we can't use in shaders
   HashSet<String> badKeywords;
@@ -119,7 +119,7 @@ void ZilchFragment::GetLibrariesRecursive(Array<LibraryRef>& libraries, Resource
   {
     GraphicsEngine* graphicsEngine = Z::gEngine->has(GraphicsEngine);
     Zilch::LibraryRef wrapperLibrary = library->mSwapFragment.mCurrentLibrary;
-    ZilchShaderLibrary* internalFragmentLibrary = graphicsEngine->mShaderGenerator->GetInternalLibrary(wrapperLibrary);
+    ZilchShaderIRLibrary* internalFragmentLibrary = graphicsEngine->mShaderGenerator->GetInternalLibrary(wrapperLibrary);
     ErrorIf(internalFragmentLibrary == nullptr, "Didn't find an internal library for a wrapper library");
     libraries.PushBack(internalFragmentLibrary->mZilchLibrary);
   }
@@ -189,10 +189,10 @@ void ZilchFragmentManager::ValidateNewName(Status& status, StringParam name, Bou
 {
   // Check all shader types
   GraphicsEngine* graphicsEngine = Z::gEngine->has(GraphicsEngine);
-  ZilchShaderLibrary* lastFragmentLibrary = graphicsEngine->mShaderGenerator->GetCurrentInternalProjectLibrary();
+  ZilchShaderIRLibrary* lastFragmentLibrary = graphicsEngine->mShaderGenerator->GetCurrentInternalProjectLibrary();
   if (lastFragmentLibrary)
   {
-    ShaderType* shaderType = lastFragmentLibrary->FindType(name, true);
+    ZilchShaderIRType* shaderType = lastFragmentLibrary->FindType(name, true);
     if (shaderType != nullptr)
     {
       status.SetFailed(String::Format("Type '%s' is already a fragment type", name.c_str()));

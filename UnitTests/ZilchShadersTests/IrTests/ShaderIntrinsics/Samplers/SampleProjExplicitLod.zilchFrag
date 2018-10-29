@@ -1,0 +1,18 @@
+[Pixel][UnitTest]
+struct SampleProjExplicitLod
+{
+  var Uv : Real3;
+  
+  var Sampler : Sampler;
+  var Image : Image2d;
+  var SampledImage : SampledImage2d;
+  
+  [EntryPoint]
+  function Main()
+  {
+    var color = Real4();
+    var lod = 1.0;
+    color = ShaderIntrinsics.SampleProjExplicitLod(this.SampledImage, this.Uv, lod);
+    color = ShaderIntrinsics.SampleProjExplicitLod(this.Image, this.Sampler, this.Uv, lod);
+  }
+}

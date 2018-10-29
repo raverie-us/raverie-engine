@@ -1,0 +1,26 @@
+[Vertex][UnitTest]
+struct VertexTest_Vertex
+{
+
+  [EntryPoint]
+  function Main()
+  {
+    var vertex1 = Vertex1();
+    vertex1.Main();
+
+    var vertex2 = Vertex2();
+    vertex2.V2Value1 = vertex1.V1Value1;
+    vertex2.V2Value2 = vertex1.V1Value2;
+    vertex2.V2Value3 = vertex1.V1Value34;
+    vertex2.V2Value8 = vertex1.V1Value8;
+    vertex2.Main();
+
+    var vertex3 = Vertex3();
+    vertex3.V3Value1 = vertex2.V2Value1;
+    vertex3.V3Value2 = vertex1.V1Value2;
+    vertex3.V3Value4 = vertex1.V1Value34;
+    vertex3.V3Value8 = vertex2.V2Value8;
+    vertex3.Main();
+
+  }
+}

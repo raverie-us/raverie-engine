@@ -1,0 +1,31 @@
+// Vertex:
+//[StageOutput] var ViewPosition : Real3;
+//[StageOutput] var PerspectivePosition : Real4;
+//[StageOutput] var Uv : Real2;
+//[StageOutput] var Time : Real;
+
+// Pixel:
+//[StageInput] var Uv : Real2;
+//[StageInput] var Color : Real4;
+//[StageInput] var Size : Real;
+//[StageInput] var Time : Real;
+
+struct GeometryData
+{
+  [StageInput] var ViewPosition : Real3;
+  [StageInput] var PerspectivePosition : Real4;
+  [StageInput][StageOutput] var Uv : Real2;
+  [StageOutput] var Color : Real4;
+  [StageOutput] var Size : Real;
+  [StageInput][StageOutput] var Time : Real;
+}
+
+[Geometry(maxVertices : 3)]
+struct Geometry
+{
+  function Main(input : TriangleInput[GeometryData], output : TriangleOutput[GeometryData])
+  {
+    output.Append(input[0], 0);
+    output.Restart();
+  }
+}

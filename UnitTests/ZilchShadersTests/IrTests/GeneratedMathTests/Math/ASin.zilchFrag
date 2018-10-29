@@ -1,0 +1,99 @@
+[Pixel][UnitTest]
+struct ASin
+{
+  function Test_Static_Real()
+  {
+    var units_ = Real();
+    var result = Math.ASin(units_);
+  }
+
+  function Test_Static_Real2()
+  {
+    var units_ = Real2();
+    var result = Math.ASin(units_);
+  }
+
+  function Test_Static_Real2x2()
+  {
+    var units_ = Real2x2();
+    var result = Math.ASin(units_);
+  }
+
+  function Test_Static_Real2x3()
+  {
+    var units_ = Real2x3();
+    var result = Math.ASin(units_);
+  }
+
+  function Test_Static_Real2x4()
+  {
+    var units_ = Real2x4();
+    var result = Math.ASin(units_);
+  }
+
+  function Test_Static_Real3()
+  {
+    var units_ = Real3();
+    var result = Math.ASin(units_);
+  }
+
+  function Test_Static_Real3x2()
+  {
+    var units_ = Real3x2();
+    var result = Math.ASin(units_);
+  }
+
+  function Test_Static_Real3x3()
+  {
+    var units_ = Real3x3();
+    var result = Math.ASin(units_);
+  }
+
+  function Test_Static_Real3x4()
+  {
+    var units_ = Real3x4();
+    var result = Math.ASin(units_);
+  }
+
+  function Test_Static_Real4()
+  {
+    var units_ = Real4();
+    var result = Math.ASin(units_);
+  }
+
+  function Test_Static_Real4x2()
+  {
+    var units_ = Real4x2();
+    var result = Math.ASin(units_);
+  }
+
+  function Test_Static_Real4x3()
+  {
+    var units_ = Real4x3();
+    var result = Math.ASin(units_);
+  }
+
+  function Test_Static_Real4x4()
+  {
+    var units_ = Real4x4();
+    var result = Math.ASin(units_);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Real();
+    this.Test_Static_Real2();
+    this.Test_Static_Real2x2();
+    this.Test_Static_Real2x3();
+    this.Test_Static_Real2x4();
+    this.Test_Static_Real3();
+    this.Test_Static_Real3x2();
+    this.Test_Static_Real3x3();
+    this.Test_Static_Real3x4();
+    this.Test_Static_Real4();
+    this.Test_Static_Real4x2();
+    this.Test_Static_Real4x3();
+    this.Test_Static_Real4x4();
+  }
+}

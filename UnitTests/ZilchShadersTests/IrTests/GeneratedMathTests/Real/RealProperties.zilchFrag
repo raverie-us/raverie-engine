@@ -1,0 +1,79 @@
+[Pixel][UnitTest]
+struct RealProperties
+{
+  function Test_Count_Integer()
+  {
+    var instance = Real();
+    var value = instance.Count;
+  }
+  function Test_StaticCount_Integer()
+  {
+    var value = Real.Count;
+  }
+  function Test_StaticNegativeMin_Real()
+  {
+    var value = Real.NegativeMin;
+  }
+  function Test_StaticNegativeValueClosestToZero_Real()
+  {
+    var value = Real.NegativeValueClosestToZero;
+  }
+  function Test_StaticOne_Real()
+  {
+    var value = Real.One;
+  }
+  function Test_StaticPositiveMax_Real()
+  {
+    var value = Real.PositiveMax;
+  }
+  function Test_StaticPositiveValueClosestToZero_Real()
+  {
+    var value = Real.PositiveValueClosestToZero;
+  }
+  function Test_X_Real()
+  {
+    var instance = Real();
+    var value = instance.X;
+    instance.X = Real();
+  }
+  function Test_StaticXAxis_Real()
+  {
+    var value = Real.XAxis;
+  }
+  function Test_XX_Real2()
+  {
+    var instance = Real();
+    var value = instance.XX;
+  }
+  function Test_XXX_Real3()
+  {
+    var instance = Real();
+    var value = instance.XXX;
+  }
+  function Test_XXXX_Real4()
+  {
+    var instance = Real();
+    var value = instance.XXXX;
+  }
+  function Test_StaticZero_Real()
+  {
+    var value = Real.Zero;
+  }
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Count_Integer();
+    this.Test_StaticCount_Integer();
+    this.Test_StaticNegativeMin_Real();
+    this.Test_StaticNegativeValueClosestToZero_Real();
+    this.Test_StaticOne_Real();
+    this.Test_StaticPositiveMax_Real();
+    this.Test_StaticPositiveValueClosestToZero_Real();
+    this.Test_X_Real();
+    this.Test_StaticXAxis_Real();
+    this.Test_XX_Real2();
+    this.Test_XXX_Real3();
+    this.Test_XXXX_Real4();
+    this.Test_StaticZero_Real();
+  }
+}

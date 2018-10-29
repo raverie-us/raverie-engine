@@ -142,6 +142,15 @@ target_link_libraries(ZeroLauncherSharedLibrary
                       UiWidget 
                       CodeTranslator
 ) 
+
+if(NOT use_spirv_shared_library)
+target_link_libraries(ZeroEditor
+                      PUBLIC
+                      SPIRV-Tools
+                      SPIRV-Tools-opt
+                      )
+endif()
+
 # the launcher is going to need the chrome subprocess to run correctly
 add_dependencies(ZeroLauncherSharedLibrary
     BrowserSubProcess
@@ -401,6 +410,16 @@ copy_multiple_shared_objects(
     ${PortAudioSharedPath}
     ${SDLSharedPath}
 )
+
+if(use_spirv_shared_library)
+  copy_multiple_shared_objects(
+      ZeroEditor
+      ZeroLauncher
+      OUTPUT_DIRECTORY ${zero_binary_dir}
+      SHARED_OBJECT_LOCATIONS
+      ${SpirVToolsSharedPath}
+  )
+endif()
 
 if("${platform}" STREQUAL "Emscripten")
     message("should be calling zip directory")

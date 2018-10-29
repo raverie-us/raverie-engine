@@ -1,9 +1,0 @@
-[Version:1]
-TextContent 
-{
-	ZilchFragmentBuilder 
-	{
-		var Name = "Color"
-		var ResourceId = 0x5aa834094627fae2
-	}
-}

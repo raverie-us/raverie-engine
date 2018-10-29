@@ -12,6 +12,7 @@ namespace Zero
 namespace Events
 {
 ZilchDefineEvent(TranslationError);
+ZilchDefineEvent(ValidationError);
 }//namespace Events
 
  //-------------------------------------------------------------------TranslationErrorEvent
@@ -22,6 +23,28 @@ ZilchDefineType(TranslationErrorEvent, builder, type)
 String TranslationErrorEvent::GetFormattedMessage(Zilch::MessageFormat::Enum format)
 {
   return mLocation.GetFormattedStringWithMessage(format, mFullMessage);
+}
+
+//-------------------------------------------------------------------ValidationErrorEvent
+ZilchDefineType(ValidationErrorEvent, builder, type)
+{
+
+}
+
+String ValidationErrorEvent::GetFormattedMessage(Zilch::MessageFormat::Enum format)
+{
+
+  StringBuilder builder;
+  // Write the full message with the location
+  String msg = BuildString(mShortMessage, "\n", mFullMessage);
+  builder.Append(mLocation.GetFormattedStringWithMessage(format, msg));
+  // Append all call stack locations to the message (to trace the error)
+  for(size_t i = 0; i < mCallStack.Size(); ++i)
+  {
+    builder.AppendFormat("%s:\n", mCallStack[i].GetFormattedString(format).c_str());
+  }
+
+  return builder.ToString();
 }
 
 //-------------------------------------------------------------------ShaderCompilationErrors

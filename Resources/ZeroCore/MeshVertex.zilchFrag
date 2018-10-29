@@ -2,9 +2,9 @@
 [Vertex][CoreVertex]
 struct MeshVertex
 {
-  [BuiltInInput] var LocalToView : Real4x4;
-  [BuiltInInput] var LocalToViewNormal : Real3x3;
-  [BuiltInInput] var LocalToPerspective : Real4x4;
+  [AppBuiltInInput] var LocalToView : Real4x4;
+  [AppBuiltInInput] var LocalToViewNormal : Real3x3;
+  [AppBuiltInInput] var LocalToPerspective : Real4x4;
 
   [StageInput] var LocalPosition : Real3;
   [StageInput] var LocalTangent : Real3;

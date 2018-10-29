@@ -1,0 +1,12 @@
+[Vertex][UnitTest]
+struct Vertex
+{
+  // Outputs  
+  [HardwareBuiltInOutput("ApiPerspectivePosition")][StageOutput("PerspectivePosition")] var PerspectivePosition : Real4;
+  
+  [EntryPoint]
+  function Main()
+  {
+    
+  }
+}

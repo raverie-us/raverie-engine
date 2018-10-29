@@ -1,0 +1,21 @@
+struct MathMultiplyNormalImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function MultiplyNormal(by : Real2x2, the : Real) : Real
+  {
+    var promotedVector = Real2(the, 0);
+    return Math.Multiply(by, promotedVector).X;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function MultiplyNormal(by : Real3x3, the : Real2) : Real2
+  {
+    var promotedVector = Real3(the, 0);
+    return Math.Multiply(by, promotedVector).XY;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function MultiplyNormal(by : Real4x4, the : Real3) : Real3
+  {
+    var promotedVector = Real4(the, 0);
+    return Math.Multiply(by, promotedVector).XYZ;
+  }
+}

@@ -1,0 +1,27 @@
+[Pixel][UnitTest]
+struct Set
+{
+  function Test_Integer_Real3()
+  {
+    var y_ = Integer();
+    var value_ = Real3();
+    var instance_ = Real2x3();
+    instance_.Set(y_, value_);
+  }
+
+  function Test_Integer_Integer_Real()
+  {
+    var y_ = Integer();
+    var x_ = Integer();
+    var value_ = Real();
+    var instance_ = Real2x3();
+    instance_.Set(y_, x_, value_);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Integer_Real3();
+    this.Test_Integer_Integer_Real();
+  }
+}

@@ -1,0 +1,26 @@
+[Vertex]
+struct Vertex
+{
+  [SpecConstantInput] var Position : Real4;
+  [SpecConstantInput] var Value : Real;
+  
+  function Main()
+  {
+    var value = this.Value;
+    var pos = this.Position;
+  }
+}
+
+
+[Vertex]
+struct VertexOverride
+{
+  [SpecConstantInput("Position")] var VertexPosition : Real4;
+  [SpecConstantInput("Value")] var Aux : Real;
+  
+  function Main()
+  {
+    var value = this.VertexPosition;
+    var pos = this.Aux;
+  }
+}

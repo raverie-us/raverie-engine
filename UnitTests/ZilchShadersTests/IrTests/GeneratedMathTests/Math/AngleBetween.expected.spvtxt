@@ -1,0 +1,326 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 184
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+          %2 = OpExtInstImport "GLSL.std.450"
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_AngleBetween "EntryPoint_Main_AngleBetween"
+               OpExecutionMode %EntryPoint_Main_AngleBetween OriginUpperLeft
+               OpSource Unknown 100
+               OpName %AngleBetween "AngleBetween"
+               OpMemberName %AngleBetween 0 "Dummy"
+               OpName %Quaternion "Quaternion"
+               OpMemberName %Quaternion 0 "Data"
+               OpName %Test_Static_Quaternion_Quaternion "Test_Static_Quaternion_Quaternion"
+               OpName %self "self"
+               OpName %param0 "param0"
+               OpName %param1 "param1"
+               OpName %result "result"
+               OpName %AngleBetween_0 "AngleBetween"
+               OpName %lhs "lhs"
+               OpName %rhs "rhs"
+               OpName %lhs_Local "lhs_Local"
+               OpName %rhs_Local "rhs_Local"
+               OpName %dot "dot"
+               OpName %correctedDot "correctedDot"
+               OpName %angle "angle"
+               OpName %Dot "Dot"
+               OpName %lhs_0 "lhs"
+               OpName %rhs_0 "rhs"
+               OpName %lhs_Local_0 "lhs_Local"
+               OpName %rhs_Local_0 "rhs_Local"
+               OpName %Test_Static_Real2_Real2 "Test_Static_Real2_Real2"
+               OpName %self_0 "self"
+               OpName %param0_0 "param0"
+               OpName %param1_0 "param1"
+               OpName %result_0 "result"
+               OpName %AngleBetween_1 "AngleBetween"
+               OpName %param0_1 "param0"
+               OpName %param1_1 "param1"
+               OpName %param0_Local "param0_Local"
+               OpName %param1_Local "param1_Local"
+               OpName %dotVal "dotVal"
+               OpName %Test_Static_Real3_Real3 "Test_Static_Real3_Real3"
+               OpName %self_1 "self"
+               OpName %param0_2 "param0"
+               OpName %param1_2 "param1"
+               OpName %result_1 "result"
+               OpName %AngleBetween_2 "AngleBetween"
+               OpName %param0_3 "param0"
+               OpName %param1_3 "param1"
+               OpName %param0_Local_0 "param0_Local"
+               OpName %param1_Local_0 "param1_Local"
+               OpName %dotVal_0 "dotVal"
+               OpName %Test_Static_Real4_Real4 "Test_Static_Real4_Real4"
+               OpName %self_2 "self"
+               OpName %param0_4 "param0"
+               OpName %param1_4 "param1"
+               OpName %result_2 "result"
+               OpName %AngleBetween_3 "AngleBetween"
+               OpName %param0_5 "param0"
+               OpName %param1_5 "param1"
+               OpName %param0_Local_1 "param0_Local"
+               OpName %param1_Local_1 "param1_Local"
+               OpName %dotVal_1 "dotVal"
+               OpName %Main "Main"
+               OpName %self_3 "self"
+               OpName %PreConstructor_AngleBetween "PreConstructor_AngleBetween"
+               OpName %self_4 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_5 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_6 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_7 "self"
+               OpName %EntryPoint_Main_AngleBetween "EntryPoint_Main_AngleBetween"
+               OpName %self_8 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%AngleBetween = OpTypeStruct %int
+%_ptr_Function_AngleBetween = OpTypePointer Function %AngleBetween
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %9 = OpTypeFunction %void %_ptr_Function_AngleBetween
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+    %float_0 = OpConstant %float 0
+    %float_1 = OpConstant %float 1
+ %Quaternion = OpTypeStruct %v4float
+%_ptr_Function_Quaternion = OpTypePointer Function %Quaternion
+         %16 = OpTypeFunction %float %Quaternion %Quaternion
+      %int_0 = OpConstant %int 0
+  %float_1_0 = OpConstant %float 1
+    %float_2 = OpConstant %float 2
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+         %19 = OpTypeFunction %float %v2float %v2float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+         %22 = OpTypeFunction %float %v3float %v3float
+         %23 = OpTypeFunction %float %v4float %v4float
+         %24 = OpTypeFunction %void
+%Test_Static_Quaternion_Quaternion = OpFunction %void None %9
+       %self = OpFunctionParameter %_ptr_Function_AngleBetween
+         %32 = OpLabel
+     %param0 = OpVariable %_ptr_Function_Quaternion Function
+     %param1 = OpVariable %_ptr_Function_Quaternion Function
+     %result = OpVariable %_ptr_Function_float Function
+         %36 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_1
+         %37 = OpCompositeConstruct %Quaternion %36
+               OpStore %param0 %37
+         %38 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_1
+         %39 = OpCompositeConstruct %Quaternion %38
+               OpStore %param1 %39
+         %40 = OpLoad %Quaternion %param0
+         %41 = OpLoad %Quaternion %param1
+         %42 = OpFunctionCall %float %AngleBetween_0 %40 %41
+               OpStore %result %42
+               OpReturn
+               OpFunctionEnd
+%AngleBetween_0 = OpFunction %float None %16
+        %lhs = OpFunctionParameter %Quaternion
+        %rhs = OpFunctionParameter %Quaternion
+         %46 = OpLabel
+  %lhs_Local = OpVariable %_ptr_Function_Quaternion Function
+  %rhs_Local = OpVariable %_ptr_Function_Quaternion Function
+        %dot = OpVariable %_ptr_Function_float Function
+%correctedDot = OpVariable %_ptr_Function_float Function
+      %angle = OpVariable %_ptr_Function_float Function
+               OpStore %lhs_Local %lhs
+               OpStore %rhs_Local %rhs
+         %52 = OpLoad %Quaternion %lhs_Local
+         %53 = OpLoad %Quaternion %rhs_Local
+         %54 = OpFunctionCall %float %Dot %52 %53
+               OpStore %dot %54
+         %55 = OpLoad %float %dot
+         %56 = OpFNegate %float %float_1_0
+         %57 = OpExtInst %float %2 FClamp %55 %56 %float_1_0
+               OpStore %dot %57
+         %58 = OpLoad %float %dot
+         %59 = OpExtInst %float %2 FAbs %58
+               OpStore %correctedDot %59
+         %60 = OpLoad %float %correctedDot
+         %61 = OpExtInst %float %2 Acos %60
+         %62 = OpFMul %float %float_2 %61
+               OpStore %angle %62
+         %63 = OpLoad %float %angle
+               OpReturnValue %63
+               OpFunctionEnd
+        %Dot = OpFunction %float None %16
+      %lhs_0 = OpFunctionParameter %Quaternion
+      %rhs_0 = OpFunctionParameter %Quaternion
+         %67 = OpLabel
+%lhs_Local_0 = OpVariable %_ptr_Function_Quaternion Function
+%rhs_Local_0 = OpVariable %_ptr_Function_Quaternion Function
+               OpStore %lhs_Local_0 %lhs_0
+               OpStore %rhs_Local_0 %rhs_0
+         %70 = OpAccessChain %_ptr_Function_v4float %lhs_Local_0 %int_0
+         %71 = OpLoad %v4float %70
+         %72 = OpVectorShuffle %v4float %71 %71 0 1 2 3
+         %73 = OpAccessChain %_ptr_Function_v4float %rhs_Local_0 %int_0
+         %74 = OpLoad %v4float %73
+         %75 = OpVectorShuffle %v4float %74 %74 0 1 2 3
+         %76 = OpDot %float %72 %75
+               OpReturnValue %76
+               OpFunctionEnd
+%Test_Static_Real2_Real2 = OpFunction %void None %9
+     %self_0 = OpFunctionParameter %_ptr_Function_AngleBetween
+         %79 = OpLabel
+   %param0_0 = OpVariable %_ptr_Function_v2float Function
+   %param1_0 = OpVariable %_ptr_Function_v2float Function
+   %result_0 = OpVariable %_ptr_Function_float Function
+         %83 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %param0_0 %83
+         %84 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %param1_0 %84
+         %85 = OpLoad %v2float %param0_0
+         %86 = OpLoad %v2float %param1_0
+         %87 = OpFunctionCall %float %AngleBetween_1 %85 %86
+               OpStore %result_0 %87
+               OpReturn
+               OpFunctionEnd
+%AngleBetween_1 = OpFunction %float None %19
+   %param0_1 = OpFunctionParameter %v2float
+   %param1_1 = OpFunctionParameter %v2float
+         %91 = OpLabel
+%param0_Local = OpVariable %_ptr_Function_v2float Function
+%param1_Local = OpVariable %_ptr_Function_v2float Function
+     %dotVal = OpVariable %_ptr_Function_float Function
+               OpStore %param0_Local %param0_1
+               OpStore %param1_Local %param1_1
+         %95 = OpLoad %v2float %param0_Local
+         %96 = OpLoad %v2float %param1_Local
+         %97 = OpDot %float %95 %96
+               OpStore %dotVal %97
+         %98 = OpLoad %float %dotVal
+         %99 = OpFNegate %float %float_1_0
+        %100 = OpExtInst %float %2 FClamp %98 %99 %float_1_0
+               OpStore %dotVal %100
+        %101 = OpLoad %float %dotVal
+        %102 = OpExtInst %float %2 Acos %101
+               OpReturnValue %102
+               OpFunctionEnd
+%Test_Static_Real3_Real3 = OpFunction %void None %9
+     %self_1 = OpFunctionParameter %_ptr_Function_AngleBetween
+        %105 = OpLabel
+   %param0_2 = OpVariable %_ptr_Function_v3float Function
+   %param1_2 = OpVariable %_ptr_Function_v3float Function
+   %result_1 = OpVariable %_ptr_Function_float Function
+        %109 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %param0_2 %109
+        %110 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %param1_2 %110
+        %111 = OpLoad %v3float %param0_2
+        %112 = OpLoad %v3float %param1_2
+        %113 = OpFunctionCall %float %AngleBetween_2 %111 %112
+               OpStore %result_1 %113
+               OpReturn
+               OpFunctionEnd
+%AngleBetween_2 = OpFunction %float None %22
+   %param0_3 = OpFunctionParameter %v3float
+   %param1_3 = OpFunctionParameter %v3float
+        %117 = OpLabel
+%param0_Local_0 = OpVariable %_ptr_Function_v3float Function
+%param1_Local_0 = OpVariable %_ptr_Function_v3float Function
+   %dotVal_0 = OpVariable %_ptr_Function_float Function
+               OpStore %param0_Local_0 %param0_3
+               OpStore %param1_Local_0 %param1_3
+        %121 = OpLoad %v3float %param0_Local_0
+        %122 = OpLoad %v3float %param1_Local_0
+        %123 = OpDot %float %121 %122
+               OpStore %dotVal_0 %123
+        %124 = OpLoad %float %dotVal_0
+        %125 = OpFNegate %float %float_1_0
+        %126 = OpExtInst %float %2 FClamp %124 %125 %float_1_0
+               OpStore %dotVal_0 %126
+        %127 = OpLoad %float %dotVal_0
+        %128 = OpExtInst %float %2 Acos %127
+               OpReturnValue %128
+               OpFunctionEnd
+%Test_Static_Real4_Real4 = OpFunction %void None %9
+     %self_2 = OpFunctionParameter %_ptr_Function_AngleBetween
+        %131 = OpLabel
+   %param0_4 = OpVariable %_ptr_Function_v4float Function
+   %param1_4 = OpVariable %_ptr_Function_v4float Function
+   %result_2 = OpVariable %_ptr_Function_float Function
+        %135 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %param0_4 %135
+        %136 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %param1_4 %136
+        %137 = OpLoad %v4float %param0_4
+        %138 = OpLoad %v4float %param1_4
+        %139 = OpFunctionCall %float %AngleBetween_3 %137 %138
+               OpStore %result_2 %139
+               OpReturn
+               OpFunctionEnd
+%AngleBetween_3 = OpFunction %float None %23
+   %param0_5 = OpFunctionParameter %v4float
+   %param1_5 = OpFunctionParameter %v4float
+        %143 = OpLabel
+%param0_Local_1 = OpVariable %_ptr_Function_v4float Function
+%param1_Local_1 = OpVariable %_ptr_Function_v4float Function
+   %dotVal_1 = OpVariable %_ptr_Function_float Function
+               OpStore %param0_Local_1 %param0_5
+               OpStore %param1_Local_1 %param1_5
+        %147 = OpLoad %v4float %param0_Local_1
+        %148 = OpLoad %v4float %param1_Local_1
+        %149 = OpDot %float %147 %148
+               OpStore %dotVal_1 %149
+        %150 = OpLoad %float %dotVal_1
+        %151 = OpFNegate %float %float_1_0
+        %152 = OpExtInst %float %2 FClamp %150 %151 %float_1_0
+               OpStore %dotVal_1 %152
+        %153 = OpLoad %float %dotVal_1
+        %154 = OpExtInst %float %2 Acos %153
+               OpReturnValue %154
+               OpFunctionEnd
+       %Main = OpFunction %void None %9
+     %self_3 = OpFunctionParameter %_ptr_Function_AngleBetween
+        %157 = OpLabel
+        %158 = OpFunctionCall %void %Test_Static_Quaternion_Quaternion %self_3
+        %159 = OpFunctionCall %void %Test_Static_Real2_Real2 %self_3
+        %160 = OpFunctionCall %void %Test_Static_Real3_Real3 %self_3
+        %161 = OpFunctionCall %void %Test_Static_Real4_Real4 %self_3
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_AngleBetween = OpFunction %void None %9
+     %self_4 = OpFunctionParameter %_ptr_Function_AngleBetween
+        %164 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %9
+     %self_5 = OpFunctionParameter %_ptr_Function_AngleBetween
+        %167 = OpLabel
+        %168 = OpFunctionCall %void %PreConstructor_AngleBetween %self_5
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %9
+     %self_6 = OpFunctionParameter %_ptr_Function_AngleBetween
+        %171 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %9
+     %self_7 = OpFunctionParameter %_ptr_Function_AngleBetween
+        %174 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_AngleBetween = OpFunction %void None %24
+        %176 = OpLabel
+     %self_8 = OpVariable %_ptr_Function_AngleBetween Function
+        %178 = OpFunctionCall %void %InitializeGlobals
+        %179 = OpFunctionCall %void %DefaultConstructor %self_8
+        %180 = OpFunctionCall %void %CopyInputs_Main %self_8
+        %181 = OpFunctionCall %void %Main %self_8
+        %182 = OpFunctionCall %void %CopyOutputs_Main %self_8
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %24
+        %183 = OpLabel
+               OpReturn
+               OpFunctionEnd

@@ -1,0 +1,143 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 79
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_PassToFunctions "EntryPoint_Main_PassToFunctions"
+               OpExecutionMode %EntryPoint_Main_PassToFunctions OriginUpperLeft
+               OpSource Unknown 100
+               OpName %PassToFunctions "PassToFunctions"
+               OpMemberName %PassToFunctions 0 "Uv"
+               OpName %SampledImage_PassToFunctions "SampledImage_PassToFunctions"
+               OpName %Image_PassToFunctions "Image_PassToFunctions"
+               OpName %Sampler_PassToFunctions "Sampler_PassToFunctions"
+               OpName %SampleCombined "SampleCombined"
+               OpName %self "self"
+               OpName %sampler "sampler"
+               OpName %SampleSplit "SampleSplit"
+               OpName %self_0 "self"
+               OpName %image "image"
+               OpName %sampler_0 "sampler"
+               OpName %Main "Main"
+               OpName %self_1 "self"
+               OpName %color "color"
+               OpName %PreConstructor_PassToFunctions "PreConstructor_PassToFunctions"
+               OpName %self_2 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_3 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_4 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_5 "self"
+               OpName %EntryPoint_Main_PassToFunctions "EntryPoint_Main_PassToFunctions"
+               OpName %self_6 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %SampledImage_PassToFunctions Binding 0
+               OpDecorate %SampledImage_PassToFunctions DescriptorSet 0
+               OpDecorate %Image_PassToFunctions Binding 1
+               OpDecorate %Image_PassToFunctions DescriptorSet 0
+               OpDecorate %Sampler_PassToFunctions Binding 1
+               OpDecorate %Sampler_PassToFunctions DescriptorSet 0
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+%PassToFunctions = OpTypeStruct %v2float
+%_ptr_Function_PassToFunctions = OpTypePointer Function %PassToFunctions
+    %v4float = OpTypeVector %float 4
+%_ptr_Function_v4float = OpTypePointer Function %v4float
+         %10 = OpTypeImage %float 2D 0 0 0 1 Unknown
+%_ptr_UniformConstant_10 = OpTypePointer UniformConstant %10
+         %12 = OpTypeSampledImage %10
+%_ptr_UniformConstant_12 = OpTypePointer UniformConstant %12
+         %14 = OpTypeFunction %v4float %_ptr_Function_PassToFunctions %_ptr_UniformConstant_12
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+      %int_0 = OpConstant %int 0
+         %17 = OpTypeSampler
+%_ptr_UniformConstant_17 = OpTypePointer UniformConstant %17
+         %19 = OpTypeFunction %v4float %_ptr_Function_PassToFunctions %_ptr_UniformConstant_10 %_ptr_UniformConstant_17
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+         %22 = OpTypeFunction %void %_ptr_Function_PassToFunctions
+    %float_0 = OpConstant %float 0
+%SampledImage_PassToFunctions = OpVariable %_ptr_UniformConstant_12 UniformConstant
+%Image_PassToFunctions = OpVariable %_ptr_UniformConstant_10 UniformConstant
+%Sampler_PassToFunctions = OpVariable %_ptr_UniformConstant_17 UniformConstant
+         %23 = OpTypeFunction %void
+%SampleCombined = OpFunction %v4float None %14
+       %self = OpFunctionParameter %_ptr_Function_PassToFunctions
+    %sampler = OpFunctionParameter %_ptr_UniformConstant_12
+         %32 = OpLabel
+         %33 = OpLoad %12 %sampler
+         %34 = OpAccessChain %_ptr_Function_v2float %self %int_0
+         %35 = OpLoad %v2float %34
+         %36 = OpImageSampleImplicitLod %v4float %33 %35
+               OpReturnValue %36
+               OpFunctionEnd
+%SampleSplit = OpFunction %v4float None %19
+     %self_0 = OpFunctionParameter %_ptr_Function_PassToFunctions
+      %image = OpFunctionParameter %_ptr_UniformConstant_10
+  %sampler_0 = OpFunctionParameter %_ptr_UniformConstant_17
+         %41 = OpLabel
+         %42 = OpLoad %10 %image
+         %43 = OpLoad %17 %sampler_0
+         %44 = OpSampledImage %12 %42 %43
+         %45 = OpAccessChain %_ptr_Function_v2float %self_0 %int_0
+         %46 = OpLoad %v2float %45
+         %47 = OpImageSampleImplicitLod %v4float %44 %46
+               OpReturnValue %47
+               OpFunctionEnd
+       %Main = OpFunction %void None %22
+     %self_1 = OpFunctionParameter %_ptr_Function_PassToFunctions
+         %50 = OpLabel
+      %color = OpVariable %_ptr_Function_v4float Function
+         %52 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %color %52
+         %53 = OpFunctionCall %v4float %SampleCombined %self_1 %SampledImage_PassToFunctions
+               OpStore %color %53
+         %54 = OpFunctionCall %v4float %SampleSplit %self_1 %Image_PassToFunctions %Sampler_PassToFunctions
+               OpStore %color %54
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_PassToFunctions = OpFunction %void None %22
+     %self_2 = OpFunctionParameter %_ptr_Function_PassToFunctions
+         %57 = OpLabel
+         %58 = OpAccessChain %_ptr_Function_v2float %self_2 %int_0
+         %59 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %58 %59
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %22
+     %self_3 = OpFunctionParameter %_ptr_Function_PassToFunctions
+         %62 = OpLabel
+         %63 = OpFunctionCall %void %PreConstructor_PassToFunctions %self_3
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %22
+     %self_4 = OpFunctionParameter %_ptr_Function_PassToFunctions
+         %66 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %22
+     %self_5 = OpFunctionParameter %_ptr_Function_PassToFunctions
+         %69 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_PassToFunctions = OpFunction %void None %23
+         %71 = OpLabel
+     %self_6 = OpVariable %_ptr_Function_PassToFunctions Function
+         %73 = OpFunctionCall %void %InitializeGlobals
+         %74 = OpFunctionCall %void %DefaultConstructor %self_6
+         %75 = OpFunctionCall %void %CopyInputs_Main %self_6
+         %76 = OpFunctionCall %void %Main %self_6
+         %77 = OpFunctionCall %void %CopyOutputs_Main %self_6
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %23
+         %78 = OpLabel
+               OpReturn
+               OpFunctionEnd

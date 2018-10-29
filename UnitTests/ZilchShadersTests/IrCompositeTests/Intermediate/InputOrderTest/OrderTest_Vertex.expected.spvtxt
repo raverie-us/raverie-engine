@@ -1,0 +1,498 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 278
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Vertex %EntryPoint_Main_OrderTest_Vertex "EntryPoint_Main_OrderTest_Vertex" %Uv %LocalPosition %Out %VertexId %InstanceId
+               OpSource Unknown 100
+               OpName %OrderTest_Vertex "OrderTest_Vertex"
+               OpMemberName %OrderTest_Vertex 9 "InstanceId"
+               OpMemberName %OrderTest_Vertex 7 "Property3_Vertex1"
+               OpMemberName %OrderTest_Vertex 12 "NearPlane"
+               OpMemberName %OrderTest_Vertex 2 "Stage_Property3_Real"
+               OpMemberName %OrderTest_Vertex 0 "Stage_Uv_Real2"
+               OpMemberName %OrderTest_Vertex 8 "VertexId"
+               OpMemberName %OrderTest_Vertex 11 "FrameTime"
+               OpMemberName %OrderTest_Vertex 1 "Stage_LocalPosition_Real3"
+               OpMemberName %OrderTest_Vertex 13 "Property2_Vertex2"
+               OpMemberName %OrderTest_Vertex 6 "Property2_Vertex1"
+               OpMemberName %OrderTest_Vertex 4 "Stage_NearPlane_Real"
+               OpMemberName %OrderTest_Vertex 10 "LogicTime"
+               OpMemberName %OrderTest_Vertex 3 "Stage_VertexId_Integer"
+               OpMemberName %OrderTest_Vertex 5 "Property1_Vertex1"
+               OpName %Vertex1 "Vertex1"
+               OpMemberName %Vertex1 4 "InstanceId"
+               OpMemberName %Vertex1 7 "LogicTime"
+               OpMemberName %Vertex1 2 "Property3"
+               OpMemberName %Vertex1 5 "Uv"
+               OpMemberName %Vertex1 6 "LocalPosition"
+               OpMemberName %Vertex1 9 "NearPlane"
+               OpMemberName %Vertex1 0 "Property1"
+               OpMemberName %Vertex1 8 "FrameTime"
+               OpMemberName %Vertex1 1 "Property2"
+               OpMemberName %Vertex1 3 "VertexId"
+               OpName %Vertex2 "Vertex2"
+               OpMemberName %Vertex2 3 "InstanceId"
+               OpMemberName %Vertex2 6 "LogicTime"
+               OpMemberName %Vertex2 5 "LocalPosition"
+               OpMemberName %Vertex2 4 "Uv"
+               OpMemberName %Vertex2 0 "Property1"
+               OpMemberName %Vertex2 7 "FrameTime"
+               OpMemberName %Vertex2 1 "Property2"
+               OpMemberName %Vertex2 2 "VertexId"
+               OpName %OrderTest_VertexMaterial "OrderTest_VertexMaterial"
+               OpMemberName %OrderTest_VertexMaterial 1 "Property2_Vertex1"
+               OpMemberName %OrderTest_VertexMaterial 2 "Property3_Vertex1"
+               OpMemberName %OrderTest_VertexMaterial 0 "Property1_Vertex1"
+               OpMemberName %OrderTest_VertexMaterial 3 "Property2_Vertex2"
+               OpName %OrderTest_VertexFrame_Data "OrderTest_VertexFrame Data"
+               OpMemberName %OrderTest_VertexFrame_Data 0 "LogicTime"
+               OpMemberName %OrderTest_VertexFrame_Data 1 "FrameTime"
+               OpName %OrderTest_VertexCameraData "OrderTest_VertexCameraData"
+               OpMemberName %OrderTest_VertexCameraData 2 "ViewportSize"
+               OpMemberName %OrderTest_VertexCameraData 0 "NearPlane"
+               OpMemberName %OrderTest_VertexCameraData 1 "FarPlane"
+               OpName %OrderTest_VertexOut "OrderTest_VertexOut"
+               OpMemberName %OrderTest_VertexOut 1 "LocalPosition"
+               OpMemberName %OrderTest_VertexOut 0 "Uv"
+               OpMemberName %OrderTest_VertexOut 2 "Property3"
+               OpMemberName %OrderTest_VertexOut 4 "NearPlane"
+               OpMemberName %OrderTest_VertexOut 3 "VertexId"
+               OpName %Uv "Uv"
+               OpName %LocalPosition "LocalPosition"
+               OpName %VertexId "VertexId"
+               OpName %InstanceId "InstanceId"
+               OpName %Material "Material"
+               OpName %Frame_Data "Frame Data"
+               OpName %CameraData "CameraData"
+               OpName %Out "Out"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %vertex1 "vertex1"
+               OpName %vertex2 "vertex2"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_0 "self"
+               OpName %Main_0 "Main"
+               OpName %self_1 "self"
+               OpName %PreConstructor_Vertex1 "PreConstructor_Vertex1"
+               OpName %self_2 "self"
+               OpName %DefaultConstructor_0 "DefaultConstructor"
+               OpName %self_3 "self"
+               OpName %Main_1 "Main"
+               OpName %self_4 "self"
+               OpName %PreConstructor_Vertex2 "PreConstructor_Vertex2"
+               OpName %self_5 "self"
+               OpName %PreConstructor_OrderTest_Vertex "PreConstructor_OrderTest_Vertex"
+               OpName %self_6 "self"
+               OpName %DefaultConstructor_1 "DefaultConstructor"
+               OpName %self_7 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_8 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_9 "self"
+               OpName %EntryPoint_Main_OrderTest_Vertex "EntryPoint_Main_OrderTest_Vertex"
+               OpName %self_10 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+               OpDecorate %Uv Location 1
+               OpDecorate %LocalPosition Location 3
+               OpDecorate %OrderTest_VertexOut Block
+               OpDecorate %Out Location 0
+               OpDecorate %VertexId BuiltIn VertexId
+               OpDecorate %InstanceId BuiltIn InstanceId
+               OpDecorate %OrderTest_VertexMaterial Block
+               OpMemberDecorate %OrderTest_VertexMaterial 0 Offset 0
+               OpMemberDecorate %OrderTest_VertexMaterial 1 Offset 4
+               OpMemberDecorate %OrderTest_VertexMaterial 2 Offset 8
+               OpMemberDecorate %OrderTest_VertexMaterial 3 Offset 12
+               OpDecorate %Material DescriptorSet 0
+               OpDecorate %Material Binding 3
+               OpDecorate %OrderTest_VertexFrame_Data Block
+               OpMemberDecorate %OrderTest_VertexFrame_Data 0 Offset 0
+               OpMemberDecorate %OrderTest_VertexFrame_Data 1 Offset 4
+               OpDecorate %Frame_Data DescriptorSet 0
+               OpDecorate %Frame_Data Binding 0
+               OpDecorate %OrderTest_VertexCameraData Block
+               OpMemberDecorate %OrderTest_VertexCameraData 0 Offset 0
+               OpMemberDecorate %OrderTest_VertexCameraData 1 Offset 4
+               OpMemberDecorate %OrderTest_VertexCameraData 2 Offset 8
+               OpDecorate %CameraData DescriptorSet 0
+               OpDecorate %CameraData Binding 1
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%OrderTest_Vertex = OpTypeStruct %v2float %v3float %float %int %float %float %float %float %int %int %float %float %float %float
+%_ptr_Function_OrderTest_Vertex = OpTypePointer Function %OrderTest_Vertex
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+         %14 = OpTypeFunction %void %_ptr_Function_OrderTest_Vertex
+    %Vertex1 = OpTypeStruct %float %float %float %int %int %v2float %v3float %float %float %float
+%_ptr_Function_Vertex1 = OpTypePointer Function %Vertex1
+         %17 = OpTypeFunction %void %_ptr_Function_Vertex1
+      %int_0 = OpConstant %int 0
+    %float_0 = OpConstant %float 0
+      %int_1 = OpConstant %int 1
+      %int_2 = OpConstant %int 2
+      %int_3 = OpConstant %int 3
+      %int_4 = OpConstant %int 4
+      %int_5 = OpConstant %int 5
+      %int_6 = OpConstant %int 6
+      %int_7 = OpConstant %int 7
+      %int_8 = OpConstant %int 8
+      %int_9 = OpConstant %int 9
+    %int_0_0 = OpConstant %int 0
+    %int_5_0 = OpConstant %int 5
+    %int_1_0 = OpConstant %int 1
+    %int_6_0 = OpConstant %int 6
+    %int_2_0 = OpConstant %int 2
+    %int_7_0 = OpConstant %int 7
+    %int_3_0 = OpConstant %int 3
+    %int_8_0 = OpConstant %int 8
+    %int_4_0 = OpConstant %int 4
+    %int_9_0 = OpConstant %int 9
+     %int_10 = OpConstant %int 10
+     %int_11 = OpConstant %int 11
+     %int_12 = OpConstant %int 12
+    %Vertex2 = OpTypeStruct %float %float %int %int %v2float %v3float %float %float
+%_ptr_Function_Vertex2 = OpTypePointer Function %Vertex2
+         %20 = OpTypeFunction %void %_ptr_Function_Vertex2
+     %int_13 = OpConstant %int 13
+  %float_0_0 = OpConstant %float 0
+%_ptr_Input_v2float = OpTypePointer Input %v2float
+         %Uv = OpVariable %_ptr_Input_v2float Input
+%_ptr_Input_v3float = OpTypePointer Input %v3float
+%LocalPosition = OpVariable %_ptr_Input_v3float Input
+%_ptr_Input_int = OpTypePointer Input %int
+   %VertexId = OpVariable %_ptr_Input_int Input
+ %InstanceId = OpVariable %_ptr_Input_int Input
+%_ptr_Uniform_float = OpTypePointer Uniform %float
+%OrderTest_VertexMaterial = OpTypeStruct %float %float %float %float
+%_ptr_Uniform_OrderTest_VertexMaterial = OpTypePointer Uniform %OrderTest_VertexMaterial
+   %Material = OpVariable %_ptr_Uniform_OrderTest_VertexMaterial Uniform
+%OrderTest_VertexFrame_Data = OpTypeStruct %float %float
+%_ptr_Uniform_OrderTest_VertexFrame_Data = OpTypePointer Uniform %OrderTest_VertexFrame_Data
+ %Frame_Data = OpVariable %_ptr_Uniform_OrderTest_VertexFrame_Data Uniform
+%OrderTest_VertexCameraData = OpTypeStruct %float %float %v2float
+%_ptr_Uniform_OrderTest_VertexCameraData = OpTypePointer Uniform %OrderTest_VertexCameraData
+ %CameraData = OpVariable %_ptr_Uniform_OrderTest_VertexCameraData Uniform
+%_ptr_Output_v2float = OpTypePointer Output %v2float
+%OrderTest_VertexOut = OpTypeStruct %v2float %v3float %float %int %float
+%_ptr_Output_OrderTest_VertexOut = OpTypePointer Output %OrderTest_VertexOut
+        %Out = OpVariable %_ptr_Output_OrderTest_VertexOut Output
+%_ptr_Output_v3float = OpTypePointer Output %v3float
+%_ptr_Output_float = OpTypePointer Output %float
+%_ptr_Output_int = OpTypePointer Output %int
+         %37 = OpTypeFunction %void
+       %Main = OpFunction %void None %14
+       %self = OpFunctionParameter %_ptr_Function_OrderTest_Vertex
+         %74 = OpLabel
+    %vertex1 = OpVariable %_ptr_Function_Vertex1 Function
+         %76 = OpVariable %_ptr_Function_Vertex1 Function
+    %vertex2 = OpVariable %_ptr_Function_Vertex2 Function
+         %78 = OpVariable %_ptr_Function_Vertex2 Function
+         %79 = OpFunctionCall %void %DefaultConstructor %76
+         %80 = OpLoad %Vertex1 %76
+               OpStore %vertex1 %80
+         %81 = OpAccessChain %_ptr_Function_float %vertex1 %int_0_0
+         %82 = OpAccessChain %_ptr_Function_float %self %int_5_0
+         %83 = OpLoad %float %82
+               OpStore %81 %83
+         %84 = OpAccessChain %_ptr_Function_float %vertex1 %int_1_0
+         %85 = OpAccessChain %_ptr_Function_float %self %int_6_0
+         %86 = OpLoad %float %85
+               OpStore %84 %86
+         %87 = OpAccessChain %_ptr_Function_float %vertex1 %int_2_0
+         %88 = OpAccessChain %_ptr_Function_float %self %int_7_0
+         %89 = OpLoad %float %88
+               OpStore %87 %89
+         %90 = OpAccessChain %_ptr_Function_int %vertex1 %int_3_0
+         %91 = OpAccessChain %_ptr_Function_int %self %int_8_0
+         %92 = OpLoad %int %91
+               OpStore %90 %92
+         %93 = OpAccessChain %_ptr_Function_int %vertex1 %int_4_0
+         %94 = OpAccessChain %_ptr_Function_int %self %int_9_0
+         %95 = OpLoad %int %94
+               OpStore %93 %95
+         %96 = OpAccessChain %_ptr_Function_v2float %vertex1 %int_5_0
+         %97 = OpAccessChain %_ptr_Function_v2float %self %int_0_0
+         %98 = OpLoad %v2float %97
+               OpStore %96 %98
+         %99 = OpAccessChain %_ptr_Function_v3float %vertex1 %int_6_0
+        %100 = OpAccessChain %_ptr_Function_v3float %self %int_1_0
+        %101 = OpLoad %v3float %100
+               OpStore %99 %101
+        %102 = OpAccessChain %_ptr_Function_float %vertex1 %int_7_0
+        %103 = OpAccessChain %_ptr_Function_float %self %int_10
+        %104 = OpLoad %float %103
+               OpStore %102 %104
+        %105 = OpAccessChain %_ptr_Function_float %vertex1 %int_8_0
+        %106 = OpAccessChain %_ptr_Function_float %self %int_11
+        %107 = OpLoad %float %106
+               OpStore %105 %107
+        %108 = OpAccessChain %_ptr_Function_float %vertex1 %int_9_0
+        %109 = OpAccessChain %_ptr_Function_float %self %int_12
+        %110 = OpLoad %float %109
+               OpStore %108 %110
+        %111 = OpFunctionCall %void %Main_0 %vertex1
+        %112 = OpFunctionCall %void %DefaultConstructor_0 %78
+        %113 = OpLoad %Vertex2 %78
+               OpStore %vertex2 %113
+        %114 = OpAccessChain %_ptr_Function_float %vertex2 %int_0_0
+        %115 = OpAccessChain %_ptr_Function_float %vertex1 %int_0_0
+        %116 = OpLoad %float %115
+               OpStore %114 %116
+        %117 = OpAccessChain %_ptr_Function_float %vertex2 %int_1_0
+        %118 = OpAccessChain %_ptr_Function_float %self %int_13
+        %119 = OpLoad %float %118
+               OpStore %117 %119
+        %120 = OpAccessChain %_ptr_Function_int %vertex2 %int_2_0
+        %121 = OpAccessChain %_ptr_Function_int %vertex1 %int_3_0
+        %122 = OpLoad %int %121
+               OpStore %120 %122
+        %123 = OpAccessChain %_ptr_Function_int %vertex2 %int_3_0
+        %124 = OpAccessChain %_ptr_Function_int %self %int_9_0
+        %125 = OpLoad %int %124
+               OpStore %123 %125
+        %126 = OpAccessChain %_ptr_Function_v2float %vertex2 %int_4_0
+        %127 = OpAccessChain %_ptr_Function_v2float %vertex1 %int_5_0
+        %128 = OpLoad %v2float %127
+               OpStore %126 %128
+        %129 = OpAccessChain %_ptr_Function_v3float %vertex2 %int_5_0
+        %130 = OpAccessChain %_ptr_Function_v3float %self %int_1_0
+        %131 = OpLoad %v3float %130
+               OpStore %129 %131
+        %132 = OpAccessChain %_ptr_Function_float %vertex2 %int_6_0
+        %133 = OpAccessChain %_ptr_Function_float %vertex1 %int_7_0
+        %134 = OpLoad %float %133
+               OpStore %132 %134
+        %135 = OpAccessChain %_ptr_Function_float %vertex2 %int_7_0
+        %136 = OpAccessChain %_ptr_Function_float %self %int_11
+        %137 = OpLoad %float %136
+               OpStore %135 %137
+        %138 = OpFunctionCall %void %Main_1 %vertex2
+        %139 = OpAccessChain %_ptr_Function_v2float %self %int_0_0
+        %140 = OpAccessChain %_ptr_Function_v2float %vertex1 %int_5_0
+        %141 = OpLoad %v2float %140
+               OpStore %139 %141
+        %142 = OpAccessChain %_ptr_Function_v3float %self %int_1_0
+        %143 = OpAccessChain %_ptr_Function_v3float %vertex1 %int_6_0
+        %144 = OpLoad %v3float %143
+               OpStore %142 %144
+        %145 = OpAccessChain %_ptr_Function_float %self %int_2_0
+        %146 = OpAccessChain %_ptr_Function_float %vertex1 %int_2_0
+        %147 = OpLoad %float %146
+               OpStore %145 %147
+        %148 = OpAccessChain %_ptr_Function_int %self %int_3_0
+        %149 = OpAccessChain %_ptr_Function_int %vertex1 %int_3_0
+        %150 = OpLoad %int %149
+               OpStore %148 %150
+        %151 = OpAccessChain %_ptr_Function_float %self %int_4_0
+        %152 = OpAccessChain %_ptr_Function_float %vertex1 %int_9_0
+        %153 = OpLoad %float %152
+               OpStore %151 %153
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %17
+     %self_0 = OpFunctionParameter %_ptr_Function_Vertex1
+        %156 = OpLabel
+        %157 = OpFunctionCall %void %PreConstructor_Vertex1 %self_0
+               OpReturn
+               OpFunctionEnd
+     %Main_0 = OpFunction %void None %17
+     %self_1 = OpFunctionParameter %_ptr_Function_Vertex1
+        %160 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_Vertex1 = OpFunction %void None %17
+     %self_2 = OpFunctionParameter %_ptr_Function_Vertex1
+        %163 = OpLabel
+        %164 = OpAccessChain %_ptr_Function_float %self_2 %int_0
+               OpStore %164 %float_0
+        %165 = OpAccessChain %_ptr_Function_float %self_2 %int_1
+               OpStore %165 %float_0
+        %166 = OpAccessChain %_ptr_Function_float %self_2 %int_2
+               OpStore %166 %float_0
+        %167 = OpAccessChain %_ptr_Function_int %self_2 %int_3
+               OpStore %167 %int_0
+        %168 = OpAccessChain %_ptr_Function_int %self_2 %int_4
+               OpStore %168 %int_0
+        %169 = OpAccessChain %_ptr_Function_v2float %self_2 %int_5
+        %170 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %169 %170
+        %171 = OpAccessChain %_ptr_Function_v3float %self_2 %int_6
+        %172 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %171 %172
+        %173 = OpAccessChain %_ptr_Function_float %self_2 %int_7
+               OpStore %173 %float_0
+        %174 = OpAccessChain %_ptr_Function_float %self_2 %int_8
+               OpStore %174 %float_0
+        %175 = OpAccessChain %_ptr_Function_float %self_2 %int_9
+               OpStore %175 %float_0
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor_0 = OpFunction %void None %20
+     %self_3 = OpFunctionParameter %_ptr_Function_Vertex2
+        %178 = OpLabel
+        %179 = OpFunctionCall %void %PreConstructor_Vertex2 %self_3
+               OpReturn
+               OpFunctionEnd
+     %Main_1 = OpFunction %void None %20
+     %self_4 = OpFunctionParameter %_ptr_Function_Vertex2
+        %182 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_Vertex2 = OpFunction %void None %20
+     %self_5 = OpFunctionParameter %_ptr_Function_Vertex2
+        %185 = OpLabel
+        %186 = OpAccessChain %_ptr_Function_float %self_5 %int_0
+               OpStore %186 %float_0
+        %187 = OpAccessChain %_ptr_Function_float %self_5 %int_1
+               OpStore %187 %float_0
+        %188 = OpAccessChain %_ptr_Function_int %self_5 %int_2
+               OpStore %188 %int_0
+        %189 = OpAccessChain %_ptr_Function_int %self_5 %int_3
+               OpStore %189 %int_0
+        %190 = OpAccessChain %_ptr_Function_v2float %self_5 %int_4
+        %191 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %190 %191
+        %192 = OpAccessChain %_ptr_Function_v3float %self_5 %int_5
+        %193 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %192 %193
+        %194 = OpAccessChain %_ptr_Function_float %self_5 %int_6
+               OpStore %194 %float_0
+        %195 = OpAccessChain %_ptr_Function_float %self_5 %int_7
+               OpStore %195 %float_0
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_OrderTest_Vertex = OpFunction %void None %14
+     %self_6 = OpFunctionParameter %_ptr_Function_OrderTest_Vertex
+        %198 = OpLabel
+        %199 = OpAccessChain %_ptr_Function_v2float %self_6 %int_0_0
+        %200 = OpCompositeConstruct %v2float %float_0_0 %float_0_0
+               OpStore %199 %200
+        %201 = OpAccessChain %_ptr_Function_v3float %self_6 %int_1_0
+        %202 = OpCompositeConstruct %v3float %float_0_0 %float_0_0 %float_0_0
+               OpStore %201 %202
+        %203 = OpAccessChain %_ptr_Function_float %self_6 %int_2_0
+               OpStore %203 %float_0_0
+        %204 = OpAccessChain %_ptr_Function_int %self_6 %int_3_0
+               OpStore %204 %int_0_0
+        %205 = OpAccessChain %_ptr_Function_float %self_6 %int_4_0
+               OpStore %205 %float_0_0
+        %206 = OpAccessChain %_ptr_Function_float %self_6 %int_5_0
+               OpStore %206 %float_0_0
+        %207 = OpAccessChain %_ptr_Function_float %self_6 %int_6_0
+               OpStore %207 %float_0_0
+        %208 = OpAccessChain %_ptr_Function_float %self_6 %int_7_0
+               OpStore %208 %float_0_0
+        %209 = OpAccessChain %_ptr_Function_int %self_6 %int_8_0
+               OpStore %209 %int_0_0
+        %210 = OpAccessChain %_ptr_Function_int %self_6 %int_9_0
+               OpStore %210 %int_0_0
+        %211 = OpAccessChain %_ptr_Function_float %self_6 %int_10
+               OpStore %211 %float_0_0
+        %212 = OpAccessChain %_ptr_Function_float %self_6 %int_11
+               OpStore %212 %float_0_0
+        %213 = OpAccessChain %_ptr_Function_float %self_6 %int_12
+               OpStore %213 %float_0_0
+        %214 = OpAccessChain %_ptr_Function_float %self_6 %int_13
+               OpStore %214 %float_0_0
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor_1 = OpFunction %void None %14
+     %self_7 = OpFunctionParameter %_ptr_Function_OrderTest_Vertex
+        %217 = OpLabel
+        %218 = OpFunctionCall %void %PreConstructor_OrderTest_Vertex %self_7
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %14
+     %self_8 = OpFunctionParameter %_ptr_Function_OrderTest_Vertex
+        %221 = OpLabel
+        %222 = OpAccessChain %_ptr_Function_v2float %self_8 %int_0_0
+        %223 = OpLoad %v2float %Uv
+               OpStore %222 %223
+        %224 = OpAccessChain %_ptr_Function_v3float %self_8 %int_1_0
+        %225 = OpLoad %v3float %LocalPosition
+               OpStore %224 %225
+        %226 = OpAccessChain %_ptr_Function_int %self_8 %int_8_0
+        %227 = OpLoad %int %VertexId
+               OpStore %226 %227
+        %228 = OpAccessChain %_ptr_Function_int %self_8 %int_9_0
+        %229 = OpLoad %int %InstanceId
+               OpStore %228 %229
+        %230 = OpAccessChain %_ptr_Uniform_float %Material %int_0_0
+        %231 = OpAccessChain %_ptr_Function_float %self_8 %int_5_0
+        %232 = OpLoad %float %230
+               OpStore %231 %232
+        %233 = OpAccessChain %_ptr_Uniform_float %Material %int_1_0
+        %234 = OpAccessChain %_ptr_Function_float %self_8 %int_6_0
+        %235 = OpLoad %float %233
+               OpStore %234 %235
+        %236 = OpAccessChain %_ptr_Uniform_float %Material %int_2_0
+        %237 = OpAccessChain %_ptr_Function_float %self_8 %int_7_0
+        %238 = OpLoad %float %236
+               OpStore %237 %238
+        %239 = OpAccessChain %_ptr_Uniform_float %Material %int_3_0
+        %240 = OpAccessChain %_ptr_Function_float %self_8 %int_13
+        %241 = OpLoad %float %239
+               OpStore %240 %241
+        %242 = OpAccessChain %_ptr_Uniform_float %Frame_Data %int_0_0
+        %243 = OpAccessChain %_ptr_Function_float %self_8 %int_10
+        %244 = OpLoad %float %242
+               OpStore %243 %244
+        %245 = OpAccessChain %_ptr_Uniform_float %Frame_Data %int_1_0
+        %246 = OpAccessChain %_ptr_Function_float %self_8 %int_11
+        %247 = OpLoad %float %245
+               OpStore %246 %247
+        %248 = OpAccessChain %_ptr_Uniform_float %CameraData %int_0_0
+        %249 = OpAccessChain %_ptr_Function_float %self_8 %int_12
+        %250 = OpLoad %float %248
+               OpStore %249 %250
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %14
+     %self_9 = OpFunctionParameter %_ptr_Function_OrderTest_Vertex
+        %253 = OpLabel
+        %254 = OpAccessChain %_ptr_Output_v2float %Out %int_0_0
+        %255 = OpAccessChain %_ptr_Function_v2float %self_9 %int_0_0
+        %256 = OpLoad %v2float %255
+               OpStore %254 %256
+        %257 = OpAccessChain %_ptr_Output_v3float %Out %int_1_0
+        %258 = OpAccessChain %_ptr_Function_v3float %self_9 %int_1_0
+        %259 = OpLoad %v3float %258
+               OpStore %257 %259
+        %260 = OpAccessChain %_ptr_Output_float %Out %int_2_0
+        %261 = OpAccessChain %_ptr_Function_float %self_9 %int_2_0
+        %262 = OpLoad %float %261
+               OpStore %260 %262
+        %263 = OpAccessChain %_ptr_Output_int %Out %int_3_0
+        %264 = OpAccessChain %_ptr_Function_int %self_9 %int_3_0
+        %265 = OpLoad %int %264
+               OpStore %263 %265
+        %266 = OpAccessChain %_ptr_Output_float %Out %int_4_0
+        %267 = OpAccessChain %_ptr_Function_float %self_9 %int_4_0
+        %268 = OpLoad %float %267
+               OpStore %266 %268
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_OrderTest_Vertex = OpFunction %void None %37
+        %270 = OpLabel
+    %self_10 = OpVariable %_ptr_Function_OrderTest_Vertex Function
+        %272 = OpFunctionCall %void %InitializeGlobals
+        %273 = OpFunctionCall %void %DefaultConstructor_1 %self_10
+        %274 = OpFunctionCall %void %CopyInputs_Main %self_10
+        %275 = OpFunctionCall %void %Main %self_10
+        %276 = OpFunctionCall %void %CopyOutputs_Main %self_10
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %37
+        %277 = OpLabel
+               OpReturn
+               OpFunctionEnd

@@ -1,0 +1,35 @@
+[Pixel][UnitTest]
+struct Slerp
+{
+  function Test_Static_Quaternion_Quaternion_Real()
+  {
+    var start_ = Quaternion();
+    var end_ = Quaternion();
+    var t_ = Real();
+    var result = Math.Slerp(start_, end_, t_);
+  }
+
+  function Test_Static_Real2_Real2_Real()
+  {
+    var start_ = Real2();
+    var end_ = Real2();
+    var t_ = Real();
+    var result = Math.Slerp(start_, end_, t_);
+  }
+
+  function Test_Static_Real3_Real3_Real()
+  {
+    var start_ = Real3();
+    var end_ = Real3();
+    var t_ = Real();
+    var result = Math.Slerp(start_, end_, t_);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Static_Quaternion_Quaternion_Real();
+    this.Test_Static_Real2_Real2_Real();
+    this.Test_Static_Real3_Real3_Real();
+  }
+}

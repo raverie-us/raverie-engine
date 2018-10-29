@@ -1,0 +1,16 @@
+[Pixel][UnitTest]
+struct Get
+{
+  function Test_Integer()
+  {
+    var param0 = Integer();
+    var instance_ = Real3();
+    var result = instance_.Get(param0);
+  }
+
+  [EntryPoint]
+  function Main()
+  {
+    this.Test_Integer();
+  }
+}

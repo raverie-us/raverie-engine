@@ -1,0 +1,16 @@
+[Pixel][UnitTest]
+struct NameOverrideSpecConstants_Pixel
+{
+  [Static][SpecConstant] var Position_PixelOverride : Real4;
+  [Static][SpecConstant] var Value_PixelOverride : Real;
+
+  [EntryPoint]
+  function Main()
+  {
+    var pixelOverride = PixelOverride();
+    pixelOverride.PixelPosition = NameOverrideSpecConstants_Pixel.Position_PixelOverride;
+    pixelOverride.Aux = NameOverrideSpecConstants_Pixel.Value_PixelOverride;
+    pixelOverride.Main();
+
+  }
+}

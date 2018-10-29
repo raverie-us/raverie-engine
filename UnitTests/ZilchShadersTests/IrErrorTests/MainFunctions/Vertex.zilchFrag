@@ -1,0 +1,4 @@
+[Vertex]
+struct Vertex
+{
+}

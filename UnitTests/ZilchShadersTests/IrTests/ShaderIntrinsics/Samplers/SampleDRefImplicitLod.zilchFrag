@@ -1,0 +1,18 @@
+[Pixel][UnitTest]
+struct SampleDRefImplicitLod
+{
+  var Uv : Real2;
+  
+  var Sampler : Sampler;
+  var DepthImage : DepthImage2d;
+  var SampledDepthImage : SampledDepthImage2d;
+  
+  [EntryPoint]
+  function Main()
+  {
+    var depthCompare = 1.0;
+    var depthResult = 1.0;
+    depthResult = ShaderIntrinsics.SampleDRefImplicitLod(this.SampledDepthImage, this.Uv, depthCompare);
+    depthResult = ShaderIntrinsics.SampleDRefImplicitLod(this.DepthImage, this.Sampler, this.Uv, depthCompare);
+  }
+}

@@ -1,0 +1,23 @@
+struct ParticleData
+{
+  var Velocity : Real3;
+  var Position : Real4;
+}
+
+struct ParticleArrayData
+{
+  var Array : FixedArray[ParticleData, 5];
+}
+
+[Pixel][UnitTest]
+struct RuntimeArray10
+{
+  var Data : RuntimeArray[ParticleArrayData];
+  
+  [EntryPoint]
+  function Main()
+  {
+    var count = this.Data.Count;
+    var particle = this.Data[0];
+  }
+}

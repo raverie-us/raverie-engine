@@ -1,0 +1,38 @@
+[Pixel][UnitTest]
+struct ExtensionMethods2
+{
+  [Extension(typeid(Real3))]
+  function Clear()
+  {
+    this.X = 0.0;
+    this.Y = 0.0;
+    this.Z = 0.0;
+  }
+  
+  [Extension(typeid(Real3))]
+  function ComponentSum() : Real
+  {
+    return this.X + this.Y + this.Z;
+  }
+  
+  [Static][Extension(typeid(Real3))]
+  function Two() : Real3
+  {
+    return Real3(2.0);
+  }
+  
+  [Static][Extension(typeid(Real2))]
+  function Two() : Real2
+  {
+    return Real2(2.0);
+  }
+  
+  [EntryPoint]
+  function Main()
+  {
+    var r3 = Real3.Two();
+    var r2 = Real2.Two();
+    var sum = r3.ComponentSum();
+    r3.Clear();
+  }
+}

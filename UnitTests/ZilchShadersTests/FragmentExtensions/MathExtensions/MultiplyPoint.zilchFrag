@@ -1,0 +1,27 @@
+struct MathMultiplyPointImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function MultiplyPoint(by : Real2x2, the : Real) : Real
+  {
+    var promotedVector = Real2(the, 1);
+    var transformedPoint = Math.Multiply(by, promotedVector);
+    var result = transformedPoint.X / transformedPoint.Y;
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function MultiplyPoint(by : Real3x3, the : Real2) : Real2
+  {
+    var promotedVector = Real3(the, 1);
+    var transformedPoint = Math.Multiply(by, promotedVector);
+    var result = transformedPoint.XY / transformedPoint.Z;
+    return result;
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function MultiplyPoint(by : Real4x4, the : Real3) : Real3
+  {
+    var promotedVector = Real4(the, 1);
+    var transformedPoint = Math.Multiply(by, promotedVector);
+    var result = transformedPoint.XYZ / transformedPoint.W;
+    return result;
+  }
+}

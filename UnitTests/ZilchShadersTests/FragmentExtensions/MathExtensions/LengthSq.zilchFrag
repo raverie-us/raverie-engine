@@ -1,0 +1,18 @@
+struct MathLengthSqImplements
+{
+  [Static][Extension(typeid(Math))][Implements]
+  function LengthSq(param0 : Real2) : Real
+  {
+    return Math.Dot(param0, param0);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function LengthSq(param0 : Real3) : Real
+  {
+    return Math.Dot(param0, param0);
+  }
+  [Static][Extension(typeid(Math))][Implements]
+  function LengthSq(param0 : Real4) : Real
+  {
+    return Math.Dot(param0, param0);
+  }
+}

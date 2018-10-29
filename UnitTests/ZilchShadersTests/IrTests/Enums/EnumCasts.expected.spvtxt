@@ -1,0 +1,101 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 48
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_EnumCasts "EntryPoint_Main_EnumCasts"
+               OpExecutionMode %EntryPoint_Main_EnumCasts OriginUpperLeft
+               OpSource Unknown 100
+               OpName %EnumCasts "EnumCasts"
+               OpMemberName %EnumCasts 0 "Dummy"
+               OpName %ToFromInt "ToFromInt"
+               OpName %self "self"
+               OpName %intValue "intValue"
+               OpName %enumValue "enumValue"
+               OpName %SameCast "SameCast"
+               OpName %self_0 "self"
+               OpName %value "value"
+               OpName %Main "Main"
+               OpName %self_1 "self"
+               OpName %PreConstructor_EnumCasts "PreConstructor_EnumCasts"
+               OpName %self_2 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_3 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_4 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_5 "self"
+               OpName %EntryPoint_Main_EnumCasts "EntryPoint_Main_EnumCasts"
+               OpName %self_6 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+  %EnumCasts = OpTypeStruct %int
+%_ptr_Function_EnumCasts = OpTypePointer Function %EnumCasts
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_EnumCasts
+      %int_0 = OpConstant %int 0
+          %9 = OpTypeFunction %void
+  %ToFromInt = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_EnumCasts
+         %13 = OpLabel
+   %intValue = OpVariable %_ptr_Function_int Function
+  %enumValue = OpVariable %_ptr_Function_int Function
+               OpStore %intValue %int_0
+         %16 = OpLoad %int %intValue
+               OpStore %enumValue %16
+               OpReturn
+               OpFunctionEnd
+   %SameCast = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_EnumCasts
+         %19 = OpLabel
+      %value = OpVariable %_ptr_Function_int Function
+               OpStore %value %int_0
+               OpReturn
+               OpFunctionEnd
+       %Main = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_EnumCasts
+         %23 = OpLabel
+         %24 = OpFunctionCall %void %ToFromInt %self_1
+         %25 = OpFunctionCall %void %SameCast %self_1
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_EnumCasts = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_EnumCasts
+         %28 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_EnumCasts
+         %31 = OpLabel
+         %32 = OpFunctionCall %void %PreConstructor_EnumCasts %self_3
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_4 = OpFunctionParameter %_ptr_Function_EnumCasts
+         %35 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_5 = OpFunctionParameter %_ptr_Function_EnumCasts
+         %38 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_EnumCasts = OpFunction %void None %9
+         %40 = OpLabel
+     %self_6 = OpVariable %_ptr_Function_EnumCasts Function
+         %42 = OpFunctionCall %void %InitializeGlobals
+         %43 = OpFunctionCall %void %DefaultConstructor %self_6
+         %44 = OpFunctionCall %void %CopyInputs_Main %self_6
+         %45 = OpFunctionCall %void %Main %self_6
+         %46 = OpFunctionCall %void %CopyOutputs_Main %self_6
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %9
+         %47 = OpLabel
+               OpReturn
+               OpFunctionEnd

@@ -1,0 +1,125 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 78
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_FixedArrayTest2 "EntryPoint_Main_FixedArrayTest2"
+               OpExecutionMode %EntryPoint_Main_FixedArrayTest2 OriginUpperLeft
+               OpSource Unknown 100
+               OpName %FixedArrayTest2 "FixedArrayTest2"
+               OpMemberName %FixedArrayTest2 0 "Data"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %localArray "localArray"
+               OpName %matrixArray "matrixArray"
+               OpName %PreConstructor_FixedArrayTest2 "PreConstructor_FixedArrayTest2"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_FixedArrayTest2 "EntryPoint_Main_FixedArrayTest2"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+      %int_3 = OpConstant %int 3
+%_arr_float_int_3 = OpTypeArray %float %int_3
+%_ptr_Function__arr_float_int_3 = OpTypePointer Function %_arr_float_int_3
+%FixedArrayTest2 = OpTypeStruct %_arr_float_int_3
+%_ptr_Function_FixedArrayTest2 = OpTypePointer Function %FixedArrayTest2
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+         %12 = OpTypeFunction %void %_ptr_Function_FixedArrayTest2
+    %float_3 = OpConstant %float 3
+    %float_2 = OpConstant %float 2
+%float_1_10000002 = OpConstant %float 1.10000002
+      %int_0 = OpConstant %int 0
+%_arr_int_int_3 = OpTypeArray %int %int_3
+%_ptr_Function__arr_int_int_3 = OpTypePointer Function %_arr_int_int_3
+      %int_1 = OpConstant %int 1
+      %int_2 = OpConstant %int 2
+      %int_4 = OpConstant %int 4
+      %int_5 = OpConstant %int 5
+    %v3float = OpTypeVector %float 3
+%_ptr_Function_v3float = OpTypePointer Function %v3float
+    %float_0 = OpConstant %float 0
+%mat3v3float = OpTypeMatrix %v3float 3
+%_ptr_Function_mat3v3float = OpTypePointer Function %mat3v3float
+%_arr_mat3v3float_int_2 = OpTypeArray %mat3v3float %int_2
+%_ptr_Function__arr_mat3v3float_int_2 = OpTypePointer Function %_arr_mat3v3float_int_2
+    %float_1 = OpConstant %float 1
+         %21 = OpTypeFunction %void
+       %Main = OpFunction %void None %12
+       %self = OpFunctionParameter %_ptr_Function_FixedArrayTest2
+         %35 = OpLabel
+ %localArray = OpVariable %_ptr_Function__arr_int_int_3 Function
+%matrixArray = OpVariable %_ptr_Function__arr_mat3v3float_int_2 Function
+         %38 = OpCompositeConstruct %_arr_float_int_3 %float_3 %float_2 %float_1_10000002
+         %39 = OpAccessChain %_ptr_Function__arr_float_int_3 %self %int_0
+               OpStore %39 %38
+         %40 = OpCompositeConstruct %_arr_int_int_3 %int_1 %int_2 %int_3
+               OpStore %localArray %40
+         %41 = OpAccessChain %_ptr_Function__arr_float_int_3 %self %int_0
+         %42 = OpAccessChain %_ptr_Function_float %41 %int_0
+         %43 = OpLoad %float %42
+         %44 = OpConvertFToS %int %43
+         %45 = OpCompositeConstruct %_arr_int_int_3 %int_4 %int_5 %44
+               OpStore %localArray %45
+         %46 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+         %47 = OpCompositeConstruct %mat3v3float %46 %46 %46
+         %48 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+         %49 = OpCompositeConstruct %mat3v3float %48 %48 %48
+         %50 = OpCompositeConstruct %_arr_mat3v3float_int_2 %47 %49
+               OpStore %matrixArray %50
+         %51 = OpAccessChain %_ptr_Function_mat3v3float %matrixArray %int_1
+         %52 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+         %53 = OpCompositeConstruct %mat3v3float %52 %52 %52
+               OpStore %51 %53
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_FixedArrayTest2 = OpFunction %void None %12
+     %self_0 = OpFunctionParameter %_ptr_Function_FixedArrayTest2
+         %56 = OpLabel
+         %57 = OpAccessChain %_ptr_Function__arr_float_int_3 %self_0 %int_0
+         %58 = OpCompositeConstruct %_arr_float_int_3 %float_1 %float_2 %float_3
+               OpStore %57 %58
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %12
+     %self_1 = OpFunctionParameter %_ptr_Function_FixedArrayTest2
+         %61 = OpLabel
+         %62 = OpFunctionCall %void %PreConstructor_FixedArrayTest2 %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %12
+     %self_2 = OpFunctionParameter %_ptr_Function_FixedArrayTest2
+         %65 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %12
+     %self_3 = OpFunctionParameter %_ptr_Function_FixedArrayTest2
+         %68 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_FixedArrayTest2 = OpFunction %void None %21
+         %70 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_FixedArrayTest2 Function
+         %72 = OpFunctionCall %void %InitializeGlobals
+         %73 = OpFunctionCall %void %DefaultConstructor %self_4
+         %74 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %75 = OpFunctionCall %void %Main %self_4
+         %76 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %21
+         %77 = OpLabel
+               OpReturn
+               OpFunctionEnd

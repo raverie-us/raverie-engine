@@ -1201,12 +1201,12 @@ void GraphicsEngine::OnScriptsCompiledPrePatch(ZilchCompileEvent* event)
     if (!modifiedLibrary->mSwapFragment.HasPendingLibrary())
       continue;
 
-    ZilchShaderLibraryRef currentLibrary =
+    ZilchShaderIRLibraryRef currentLibrary =
       mShaderGenerator->GetCurrentInternalLibrary(modifiedLibrary->mSwapFragment.mCurrentLibrary);
     ZilchFragmentTypeMap& currentFragmentTypes =
       mShaderGenerator->mFragmentTypes;
 
-    ZilchShaderLibraryRef pendingLibrary =
+    ZilchShaderIRLibraryRef pendingLibrary =
       mShaderGenerator->GetPendingInternalLibrary(modifiedLibrary->mSwapFragment.mPendingLibrary);
     ZilchFragmentTypeMap& pendingFragmentTypes =
       mShaderGenerator->mPendingFragmentTypes[modifiedLibrary->mSwapFragment.mPendingLibrary];
@@ -1214,43 +1214,56 @@ void GraphicsEngine::OnScriptsCompiledPrePatch(ZilchCompileEvent* event)
     // Find removed types
     if (currentLibrary != nullptr)
     {
-      forRange (ShaderType* shaderType, currentLibrary->mTypes.Values())
+      forRange (ZilchShaderIRType* shaderType, currentLibrary->mTypes.Values())
       {
-        if (shaderType->mFlags.IsSet(ShaderTypeFlags::Native))
+        ShaderIRTypeMeta* shaderTypeMeta = shaderType->mMeta;
+        if(shaderTypeMeta == nullptr)
           continue;
+
+        // @Nate: This flag doesn't exist anymore.
+        //if (shaderType->mFlags.IsSet(ShaderTypeFlags::Native))
+        //  continue;
 
         // Skip if type still exists
-        if (pendingLibrary->mTypes.ContainsKey(shaderType->mZilchName))
+        if (pendingLibrary->mTypes.ContainsKey(shaderTypeMeta->mZilchName))
           continue;
 
-        ZilchFragmentType::Enum fragmentType = currentFragmentTypes.FindValue(shaderType->mZilchName, ZilchFragmentType::Fragment);
-        RemovedFragment(fragmentType, shaderType->mZilchName);
+        ZilchFragmentType::Enum fragmentType = currentFragmentTypes.FindValue(shaderTypeMeta->mZilchName, ZilchFragmentType::Fragment);
+        RemovedFragment(fragmentType, shaderTypeMeta->mZilchName);
       }
     }
 
     // Find added/modified types
     if (mModifiedFragmentFiles.Empty() == false)
     {
-      forRange (ShaderType* shaderType, pendingLibrary->mTypes.Values())
+      forRange (ZilchShaderIRType* shaderType, pendingLibrary->mTypes.Values())
       {
-        if (shaderType->mFlags.IsSet(ShaderTypeFlags::Native))
+        ShaderIRTypeMeta* shaderTypeMeta = shaderType->mMeta;
+        if(shaderTypeMeta == nullptr)
+          continue;
+
+        // @Nate: This flag doesn't exist anymore.
+        //if (shaderType->mFlags.IsSet(ShaderTypeFlags::Native))
+        //  continue;
+
+        if(shaderTypeMeta->mComplexUserData.GetSize() == 0)
           continue;
 
         // Identify new/modified types.
         // We currently only have one class written to the complex user data
         // so we can hard-code passing 0 in (for the index).
-        FragmentUserData& fragmentUserData = shaderType->mComplexUserData.ReadObject<FragmentUserData>(0);
+        FragmentUserData& fragmentUserData = shaderTypeMeta->mComplexUserData.ReadObject<FragmentUserData>(0);
         String resourceName = fragmentUserData.mResourceName;
         if (mModifiedFragmentFiles.Contains(resourceName))
         {
           // Check for fragments that used to have a special attribute and add them to the appropriate removed list
-          ZilchFragmentType::Enum currentFragmentType = currentFragmentTypes.FindValue(shaderType->mZilchName, ZilchFragmentType::Fragment);
-          ZilchFragmentType::Enum pendingFragmentType = pendingFragmentTypes.FindValue(shaderType->mZilchName, ZilchFragmentType::Fragment);
+          ZilchFragmentType::Enum currentFragmentType = currentFragmentTypes.FindValue(shaderTypeMeta->mZilchName, ZilchFragmentType::Fragment);
+          ZilchFragmentType::Enum pendingFragmentType = pendingFragmentTypes.FindValue(shaderTypeMeta->mZilchName, ZilchFragmentType::Fragment);
 
           if (pendingFragmentType != currentFragmentType)
-            RemovedFragment(currentFragmentType, shaderType->mZilchName);
+            RemovedFragment(currentFragmentType, shaderTypeMeta->mZilchName);
 
-          ModifiedFragment(pendingFragmentType, shaderType->mZilchName);
+          ModifiedFragment(pendingFragmentType, shaderTypeMeta->mZilchName);
 
           // If current type is fragment and pending type isn't then any affected composites
           // are just going to get removed and don't need to be checked
@@ -1258,17 +1271,21 @@ void GraphicsEngine::OnScriptsCompiledPrePatch(ZilchCompileEvent* event)
           {
             forRange (UniqueComposite& composite, mUniqueComposites.Values())
             {
-              if (composite.mFragmentNameMap.Contains(shaderType->mZilchName))
+              if (composite.mFragmentNameMap.Contains(shaderTypeMeta->mZilchName))
                 mModifiedComposites.Insert(composite.mName);
             }
           }
 
           // Find all types dependent on this one and also list them as modified
-          HashSet<ShaderType*> dependents;
+          HashSet<ZilchShaderIRType*> dependents;
           pendingLibrary->GetAllDependents(shaderType, dependents);
-          forRange (ShaderType* dependent, dependents.All())
+          forRange (ZilchShaderIRType* dependent, dependents.All())
           {
-            ZilchFragmentType::Enum dependentType = pendingFragmentTypes.FindValue(dependent->mZilchName, ZilchFragmentType::Fragment);
+            ShaderIRTypeMeta* dependentTypeMeta = dependent->mMeta;
+            if(dependentTypeMeta == nullptr)
+              continue;
+
+            ZilchFragmentType::Enum dependentType = pendingFragmentTypes.FindValue(dependentTypeMeta->mZilchName, ZilchFragmentType::Fragment);
 
             // Do not need to check composites unless it's a regular fragment type
             // Composites will otherwise be handled by the other fragment types being modified
@@ -1279,13 +1296,13 @@ void GraphicsEngine::OnScriptsCompiledPrePatch(ZilchCompileEvent* event)
               // but if a composite results in being removed it will correctly be removed from this list
               forRange (UniqueComposite& composite, mUniqueComposites.Values())
               {
-                if (composite.mFragmentNameMap.Contains(dependent->mZilchName))
+                if (composite.mFragmentNameMap.Contains(dependentTypeMeta->mZilchName))
                   mModifiedComposites.Insert(composite.mName);
               }
             }
             else
             {
-              ModifiedFragment(dependentType, dependent->mZilchName);
+              ModifiedFragment(dependentType, dependentTypeMeta->mZilchName);
             }
           }
         }

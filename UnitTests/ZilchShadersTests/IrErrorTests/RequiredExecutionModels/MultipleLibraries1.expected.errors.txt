@@ -1,0 +1,5 @@
+  IrErrorTests\RequiredExecutionModels\MultipleLibraries1.zilchFrag(5): Invalid shader stage combination
+  'MultipleLibraries1.Main' requires shader stage Vertex but references 'ShaderIntrinsics.SampleImplicitLod' which requires stage Pixel
+  IrErrorTests\RequiredExecutionModels\MultipleLibraries1.zilchFrag(7) in Main:
+  FragmentExtensions\SampledImageExtensions.zilchFrag(6) in Sample:
+
