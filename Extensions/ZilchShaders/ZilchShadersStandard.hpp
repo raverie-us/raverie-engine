@@ -36,6 +36,7 @@
 
 #include "BaseShaderIRTranslator.hpp"
 #include "ShaderIntrinsicsStaticZilchLibrary.hpp"
+#include "CycleDetection.hpp"
 #include "StageRequirementsGatherer.hpp"
 #include "SimpleZilchParser.hpp"
 #include "EntryPointGeneration.hpp"

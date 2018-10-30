@@ -48,6 +48,7 @@ public:
   void OnZilchFragmentCompilationError(Zilch::ErrorEvent* event);
   void OnZilchFragmentTypeParsed(Zilch::ParseEvent* event);
   void OnZilchFragmentTranslationError(TranslationErrorEvent* event);
+  void OnZilchFragmentValidationError(ValidationErrorEvent* event);
 
   ZilchShaderIRLibraryRef GetInternalLibrary(LibraryRef library);
   ZilchShaderIRLibraryRef GetCurrentInternalLibrary(LibraryRef library);

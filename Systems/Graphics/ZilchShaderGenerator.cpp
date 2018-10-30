@@ -187,6 +187,7 @@ void ZilchShaderGenerator::InitializeSpirV()
   EventConnect(&mFragmentsProject, Zilch::Events::CompilationError, &ZilchShaderGenerator::OnZilchFragmentCompilationError, this);
   EventConnect(&mFragmentsProject, Zilch::Events::TypeParsed, &ZilchShaderGenerator::OnZilchFragmentTypeParsed, this);
   EventConnect(&mFragmentsProject, Events::TranslationError, &ZilchShaderGenerator::OnZilchFragmentTranslationError, this);
+  EventConnect(&mFragmentsProject, Events::ValidationError, &ZilchShaderGenerator::OnZilchFragmentValidationError, this);
 }
 
 //**************************************************************************************************
@@ -825,6 +826,13 @@ void ZilchShaderGenerator::OnZilchFragmentTypeParsed(Zilch::ParseEvent* event)
 
 //**************************************************************************************************
 void ZilchShaderGenerator::OnZilchFragmentTranslationError(TranslationErrorEvent* event)
+{
+  String fullMessage = event->GetFormattedMessage(Zilch::MessageFormat::Python);
+  ZilchFragmentManager::GetInstance()->DispatchScriptError(Events::SyntaxError, event->mShortMessage, fullMessage, event->mLocation);
+}
+
+//**************************************************************************************************
+void ZilchShaderGenerator::OnZilchFragmentValidationError(ValidationErrorEvent* event)
 {
   String fullMessage = event->GetFormattedMessage(Zilch::MessageFormat::Python);
   ZilchFragmentManager::GetInstance()->DispatchScriptError(Events::SyntaxError, event->mShortMessage, fullMessage, event->mLocation);

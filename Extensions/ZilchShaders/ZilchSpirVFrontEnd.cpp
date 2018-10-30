@@ -250,6 +250,11 @@ bool ZilchSpirVFrontEnd::Translate(Zilch::SyntaxTree& syntaxTree, ZilchShaderIRP
   bool stageRequirementsValid = gatherer.Run(syntaxTree, library, mProject);
   mErrorTriggered |= stageRequirementsValid;
 
+  // Do another pass to find cycles (recursion is illegal in shaders)
+  CycleDetection cycleDetection(mSettings);
+  bool cyclesFound = cycleDetection.Run(syntaxTree, library, mProject);
+  mErrorTriggered |= cyclesFound;
+
   return !mErrorTriggered;
 }
 

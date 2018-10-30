@@ -11,6 +11,7 @@ target_sources(ZilchShaders
     ${CMAKE_CURRENT_LIST_DIR}/BitInstructions.cpp
     ${CMAKE_CURRENT_LIST_DIR}/CommonInstructions.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ConversionInstructions.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/CycleDetection.cpp
     ${CMAKE_CURRENT_LIST_DIR}/EntryPointGeneration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ExtensionLibrary.cpp
     ${CMAKE_CURRENT_LIST_DIR}/FixedArray.cpp
@@ -53,6 +54,7 @@ target_sources(ZilchShaders
 #  PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/BaseShaderIRTranslator.hpp
     ${CMAKE_CURRENT_LIST_DIR}/CommonInstructions.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/CycleDetection.hpp
     ${CMAKE_CURRENT_LIST_DIR}/EntryPointGeneration.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ExtensionLibrary.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ForwardDeclarations.hpp
