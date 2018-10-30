@@ -2745,7 +2745,7 @@ bool ZilchSpirVFrontEnd::ResolveSetter(Zilch::BinaryOperatorNode* node, ZilchSha
     arguments.PushBack(resultValue);
 
     // Turn this into a function call
-    ZilchShaderIROp* functionCallOp = GenerateFunctionCall(shaderFunction, context);
+    ZilchShaderIROp* functionCallOp = GenerateFunctionCall(context->mCurrentBlock, shaderFunction, context);
     WalkMemberAccessFunctionCall(arguments, memberAccessNode, shaderFunction, context);
     return true;
   }
@@ -3007,7 +3007,7 @@ ZilchShaderIROp* ZilchSpirVFrontEnd::AddSpecializationConstantRecursively(void* 
   String errorMsg = String::Format("Type '%s' is not valid as a specialization constant.", varType->mName.c_str());
   SendTranslationError(codeLocation, errorMsg);
   // Return a dummy constant so that we don't crash. This is not valid spir-v though.
-  return BuildIROpNoBlockAdd(OpType::OpSpecConstantComposite, varType, context);
+  return CreateSpecializationConstant(key, OpType::OpSpecConstantComposite, varType, context);
 }
 
 ZilchShaderIROp* ZilchSpirVFrontEnd::CreateSpecializationConstant(void* key, OpType opType, ZilchShaderIRType* varType, ZilchSpirVFrontEndContext* context)

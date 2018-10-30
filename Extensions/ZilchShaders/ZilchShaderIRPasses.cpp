@@ -97,7 +97,7 @@ void BaseSpirVOptimizerPass::DestroyOptimizerOptions(spv_optimizer_options& opti
   {
     char* flag = options->flags_[flagIndex];
     if(flag == nullptr)
-      return;
+      break;
 
     delete flag;
     ++flagIndex;
