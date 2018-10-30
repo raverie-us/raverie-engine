@@ -1,0 +1,23 @@
+[UnitTest][Vertex]
+struct InstanceSetter1
+{
+  function Main()
+  {
+    var helper = Helper();
+    helper.Value = 1.0;
+  }
+}
+
+struct Helper
+{
+  var Value : Real
+  {
+    get { return 1.0; }
+    set { this.Set(value); }
+  }
+  
+  function Set(value : Real)
+  {
+    this.Value = value;
+  }
+}

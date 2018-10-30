@@ -1,0 +1,8 @@
+[UnitTest][Pixel]
+struct InstanceFunctions1
+{
+  function Main()
+  {
+    this.Main();
+  }
+}

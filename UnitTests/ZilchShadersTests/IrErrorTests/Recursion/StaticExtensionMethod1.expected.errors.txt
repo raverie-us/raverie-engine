@@ -1,0 +1,6 @@
+  IrErrorTests\Recursion\StaticExtensionMethod1.zilchFrag(6) in Main: Recursion is illegal in shaders
+  Object calls itself via the stack:
+  IrErrorTests\Recursion\StaticExtensionMethod1.zilchFrag(6) in Main:
+  IrErrorTests\Recursion\StaticExtensionMethod1.zilchFrag(12) in Run:
+  IrErrorTests\Recursion\StaticExtensionMethod1.zilchFrag(18) in Run:
+

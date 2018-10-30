@@ -1,0 +1,27 @@
+struct Helper1
+{
+  function Run()
+  {
+    var helper2 = Helper2();
+    helper2.Run();
+  }
+}
+
+struct Helper2
+{
+  function Run()
+  {
+    var helper1 = Helper1();
+    helper1.Run();
+  }
+}
+
+[UnitTest][Pixel]
+struct InstanceFunctions3
+{
+  function Main()
+  {
+    var helper = Helper1();
+    helper.Run();
+  }
+}

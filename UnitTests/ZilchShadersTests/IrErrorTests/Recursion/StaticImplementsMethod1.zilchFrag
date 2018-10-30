@@ -1,0 +1,22 @@
+[UnitTest][Vertex]
+struct StaticImplementsMethod1
+{
+  function Main()
+  {
+    var r2 = Real2();
+    var result = Math.Dot(r2, r2);
+  }
+  
+  [Static]
+  function Dot(lhs : Real2, rhs : Real2) : Real
+  {
+    return Math.Dot(lhs, rhs);
+  }
+  
+  [Static][Extension(typeid(Math))][Implements]
+  function Dot(lhs : Real2, rhs : Real2) : Real
+  {
+    return StaticImplementsMethod1.Dot(lhs, rhs);
+  }
+}
+

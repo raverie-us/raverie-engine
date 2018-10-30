@@ -1,0 +1,25 @@
+[UnitTest][Vertex]
+struct InstanceExtensionMethod1
+{
+  function Main()
+  {
+    var helper = Helper();
+    helper.Kill();
+  }
+  
+  [Extension(typeid(Helper))]
+  function Kill()
+  {
+    this.Test();
+  }
+}
+
+struct Helper
+{
+  function Test() : Real
+  {
+    this.Kill();
+    return 1.0;
+  }
+}
+

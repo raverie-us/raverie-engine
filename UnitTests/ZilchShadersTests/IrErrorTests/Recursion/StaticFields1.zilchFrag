@@ -1,0 +1,11 @@
+[UnitTest][Pixel]
+struct StaticFields1
+{
+  [Static] var Field : Real = StaticFields1.GetValue();
+  
+  [Static]
+  function GetValue() : Real
+  {
+    return StaticFields1.Field;
+  }
+}

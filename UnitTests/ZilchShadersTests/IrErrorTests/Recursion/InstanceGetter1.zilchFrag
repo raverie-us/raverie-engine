@@ -1,0 +1,23 @@
+[UnitTest][Vertex]
+struct InstanceGetter1
+{
+  function Main()
+  {
+    var helper = Helper();
+    var value = helper.Value;
+  }
+}
+
+struct Helper
+{
+  var Value : Real
+  {
+    get { return this.Get(); }
+    set { }
+  }
+  
+  function Get() : Real
+  {
+    return this.Value;
+  }
+}

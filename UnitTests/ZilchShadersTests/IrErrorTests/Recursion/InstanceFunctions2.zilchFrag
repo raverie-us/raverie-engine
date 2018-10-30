@@ -1,0 +1,18 @@
+[UnitTest][Pixel]
+struct InstanceFunctions2
+{
+  function Main()
+  {
+    this.Function1();
+  }
+  
+  function Function1()
+  {
+    this.Function2();
+  }
+  
+  function Function2()
+  {
+    this.Function1();
+  }
+}

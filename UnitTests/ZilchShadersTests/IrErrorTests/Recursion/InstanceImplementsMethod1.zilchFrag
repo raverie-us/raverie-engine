@@ -1,0 +1,22 @@
+[UnitTest][Vertex]
+struct InstanceImplementsMethod1
+{
+  function Main()
+  {
+    InstanceImplementsMethod1.Run();
+  }
+  
+  [Static]
+  function Run() : Real
+  {
+    var r3 = Real3();
+    var result = r3.Get(1);
+    return 0.0;
+  }
+  
+  [Extension(typeid(Real3))][Implements]
+  function Get(axis : Integer) : Real
+  {
+    return InstanceImplementsMethod1.Run();
+  }
+}

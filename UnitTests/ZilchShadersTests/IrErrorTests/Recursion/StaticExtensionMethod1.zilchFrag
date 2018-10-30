@@ -1,0 +1,21 @@
+[UnitTest][Vertex]
+struct StaticExtensionMethod1
+{
+  function Main()
+  {
+    Math.Run();
+  }
+  
+  [Static][Extension(typeid(Math))]
+  function Run()
+  {
+    StaticExtensionMethod1.Run();
+  }
+  
+  [Static]
+  function Run()
+  {
+    Math.Run();
+  }
+}
+

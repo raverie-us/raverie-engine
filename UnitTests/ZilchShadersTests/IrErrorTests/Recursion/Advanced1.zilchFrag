@@ -1,0 +1,43 @@
+[UnitTest][Vertex]
+struct Advanced1
+{
+  function Main()
+  {
+    var helper = Helper1();
+  }
+}
+
+struct Helper1
+{
+  var Field : Real = Helper1.GetValue();
+  [Static] var StaticField : Real = Helper1.GetData();
+  
+  constructor()
+  {
+  }
+  
+  [Static]
+  function GetValue() : Real
+  {
+    var helper2 = Helper2();
+    return helper2.Field;
+  }
+  
+  [Static]
+  function GetData() : Real
+  {
+    var helper = Helper1();
+    return 1.0;
+  }
+}
+
+struct Helper2
+{
+  var Field : Real = Helper2.GetData();
+  
+  [Static]
+  function GetData() : Real
+  {
+    return Helper1.StaticField;
+  }
+}

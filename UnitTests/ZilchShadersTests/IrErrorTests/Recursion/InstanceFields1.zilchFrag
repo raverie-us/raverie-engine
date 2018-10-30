@@ -1,0 +1,20 @@
+[UnitTest][Vertex]
+struct InstanceFields1
+{
+  function Main()
+  {
+    var helper = Helper();
+  }
+}
+
+struct Helper
+{
+  var Field : Real = Helper.GetValue();
+  
+  [Static]
+  function GetValue() : Real
+  {
+    var helper = Helper();
+    return helper.Field;
+  }
+}

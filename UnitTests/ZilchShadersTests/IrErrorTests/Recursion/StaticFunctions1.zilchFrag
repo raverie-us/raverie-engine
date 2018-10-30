@@ -1,0 +1,21 @@
+
+[UnitTest][Pixel]
+struct StaticFunctions1
+{
+  function Main()
+  {
+    StaticFunctions1.Function1();
+  }
+  
+  [Static]
+  function Function1()
+  {
+    StaticFunctions1.Function2();
+  }
+  
+  [Static]
+  function Function2()
+  {
+    StaticFunctions1.Function1();
+  }
+}

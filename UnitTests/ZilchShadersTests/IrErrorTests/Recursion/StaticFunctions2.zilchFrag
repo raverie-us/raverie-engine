@@ -1,0 +1,26 @@
+struct Helper1
+{
+  [Static]
+  function Run()
+  {
+    Helper2.Run();
+  }
+}
+
+struct Helper2
+{
+  [Static]
+  function Run()
+  {
+    Helper1.Run();
+  }
+}
+
+[UnitTest][Pixel]
+struct StaticFunctions2
+{
+  function Main()
+  {
+    Helper1.Run();
+  }
+}
