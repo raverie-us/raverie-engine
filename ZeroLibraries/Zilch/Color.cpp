@@ -388,12 +388,12 @@ namespace Zilch
         )                                                 \
       );                                                  \
     }
-    #include "Math/ColorDefinitions.hpp"
+    #include "ColorDefinitions.hpp"
     #undef DefineColor
   }
 
   //***************************************************************************
   #define DefineColor(name, r, g, b, a) const Real4 ColorsClass::name = FloatColorRGBA(r, g, b, a);
-  #include "Math/ColorDefinitions.hpp"
+  #include "ColorDefinitions.hpp"
   #undef DefineColor
 }

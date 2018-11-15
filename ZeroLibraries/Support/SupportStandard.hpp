@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Common/CommonStandard.hpp"
-#include "Platform/PlatformStandard.hpp"
+#include "PlatformStandard.hpp"
 
 #include "Urls.hpp"
 #include "FileSupport.hpp"

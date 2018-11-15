@@ -7,8 +7,8 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "Platform/FileSystem.hpp"
-#include "Platform/File.hpp"
+#include "FileSystem.hpp"
+#include "File.hpp"
 #include "LegacyDataTreeParser.hpp"
 
 namespace Zero

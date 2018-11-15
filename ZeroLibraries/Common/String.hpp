@@ -10,9 +10,9 @@
 #pragma once
 
 #include "Rune.hpp"
-#include "Platform/UnicodeUtility.hpp"
+#include "UnicodeUtility.hpp"
 #include "Standard.hpp"
-#include "Platform/Atomic.hpp"
+#include "Atomic.hpp"
 
 #define ZeroStringPooling
 

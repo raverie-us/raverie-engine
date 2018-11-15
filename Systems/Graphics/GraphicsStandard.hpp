@@ -5,7 +5,7 @@
 
 // Other projects
 #include "Common/CommonStandard.hpp"
-#include "Platform/PlatformStandard.hpp"
+#include "PlatformStandard.hpp"
 #include "Engine/EngineStandard.hpp"
 #include "Meta/MetaStandard.hpp"
 #include "SpatialPartition/SpatialPartitionStandard.hpp"

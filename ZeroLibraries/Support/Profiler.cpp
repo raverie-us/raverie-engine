@@ -9,7 +9,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 #include "Profiler.hpp"
-#include "Platform/Timer.hpp"
+#include "Timer.hpp"
 #include "Misc.hpp"
 
 namespace Zero

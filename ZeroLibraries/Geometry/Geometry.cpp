@@ -9,7 +9,7 @@
 #include "Precompiled.hpp"
 #include "Geometry/Geometry.hpp"
 #include "Geometry/Solids.hpp"
-#include "Math/Math.hpp"
+#include "Math.hpp"
 
 namespace Geometry
 {

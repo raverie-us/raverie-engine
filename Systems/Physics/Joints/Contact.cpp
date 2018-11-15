@@ -8,8 +8,8 @@
 
 #ifdef USESSE
 #include "Physics/Joints/ConstraintFragmentsSse.hpp"
-#include "Math/SimVectors.hpp"
-#include "Math/SimMatrix3.hpp"
+#include "SimVectors.hpp"
+#include "SimMatrix3.hpp"
 #endif
 //////////////////////////////////////////////////////////////////////////
 ///C: dot(p2 - p1,n) = 0

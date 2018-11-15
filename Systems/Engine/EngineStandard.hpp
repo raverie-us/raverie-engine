@@ -7,7 +7,7 @@
 #pragma once
 
 #include "Common/CommonStandard.hpp"
-#include "Platform/PlatformStandard.hpp"
+#include "PlatformStandard.hpp"
 #include "Serialization/SerializationStandard.hpp"
 #include "Meta/MetaStandard.hpp"
 #include "Support/SupportStandard.hpp"

@@ -8,9 +8,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-#include "Math/SimMath.hpp"
-#include "Math/SimVectors.hpp"
-#include "Math/SimMatrix3.hpp"
+#include "SimMath.hpp"
+#include "SimVectors.hpp"
+#include "SimMatrix3.hpp"
 
 namespace Zero
 {

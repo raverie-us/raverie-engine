@@ -10,7 +10,7 @@
 #pragma once
 
 #include "Common/CommonStandard.hpp"
-#include "Platform/PlatformStandard.hpp"
+#include "PlatformStandard.hpp"
 
 // Prevent including winsock1.
 #define _WINSOCKAPI_

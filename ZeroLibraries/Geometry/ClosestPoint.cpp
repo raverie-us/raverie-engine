@@ -11,7 +11,7 @@
 #include "Precompiled.hpp"
 #include "Geometry/Intersection.hpp"
 #include "GeometryStandard.hpp"
-#include "Math/Math.hpp"
+#include "Math.hpp"
 
 namespace Intersection
 {

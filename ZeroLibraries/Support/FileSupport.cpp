@@ -6,10 +6,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 #include "FileSupport.hpp"
-#include "Platform/FileSystem.hpp"
+#include "FileSystem.hpp"
 #include "StringBuilder.hpp"
 #include "Regex.hpp"
-#include "Platform/FilePath.hpp"
+#include "FilePath.hpp"
 #include "Common/Time.hpp"
 
 namespace Zero

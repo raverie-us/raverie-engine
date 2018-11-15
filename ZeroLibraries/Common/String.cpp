@@ -8,7 +8,7 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "Platform/ThreadSync.hpp"
+#include "ThreadSync.hpp"
 
 namespace Zero
 {

@@ -9,9 +9,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 #include "SourceControl.hpp"
-#include "Platform/Process.hpp"
+#include "Process.hpp"
 #include "StringBuilder.hpp"
-#include "Platform/FileSystem.hpp"
+#include "FileSystem.hpp"
 
 namespace Zero
 {

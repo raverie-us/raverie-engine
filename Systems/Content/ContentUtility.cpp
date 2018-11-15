@@ -10,8 +10,8 @@
 #include "Precompiled.hpp"
 #include "ContentUtility.hpp"
 #include "ContentItem.hpp"
-#include "Platform/FileSystem.hpp"
-#include "Platform/FilePath.hpp"
+#include "FileSystem.hpp"
+#include "FilePath.hpp"
 
 namespace Zero
 {

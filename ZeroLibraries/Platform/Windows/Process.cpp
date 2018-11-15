@@ -9,8 +9,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "Precompiled.hpp"
-#include "Platform/Process.hpp"
-#include "Platform/FilePath.hpp"
+#include "Process.hpp"
+#include "FilePath.hpp"
 
 namespace Zero
 {

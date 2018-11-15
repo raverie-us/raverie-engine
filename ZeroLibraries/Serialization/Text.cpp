@@ -9,7 +9,7 @@
 #include "Precompiled.hpp"
 #include "Text.hpp"
 #include "StringConversion.hpp"
-#include "Platform/File.hpp"
+#include "File.hpp"
 #include "CharacterTraits.hpp"
 #include "Support/FileSupport.hpp"
 #include "SerializationUtility.hpp"

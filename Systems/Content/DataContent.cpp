@@ -9,13 +9,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 #include "DataContent.hpp"
-#include "Platform/FileSystem.hpp"
+#include "FileSystem.hpp"
 #include "ContentLibrary.hpp"
 #include "Serialization/Simple.hpp"
-#include "Platform/Process.hpp"
+#include "Process.hpp"
 #include "ContentSystem.hpp"
 #include "RichAnimation.hpp"
-#include "Platform/FilePath.hpp"
+#include "FilePath.hpp"
 #include "ZilchPluginContent.hpp"
 
 namespace Zero

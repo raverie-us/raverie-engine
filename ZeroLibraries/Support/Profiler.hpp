@@ -12,7 +12,7 @@
 #include "Typedefs.hpp"
 #include "Array.hpp"
 #include "InList.hpp"
-#include "Platform/Timer.hpp"
+#include "Timer.hpp"
 
 namespace Zero
 {

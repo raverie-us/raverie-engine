@@ -6,11 +6,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 #include "Importer.hpp"
-#include "Platform/FileSystem.hpp"
-#include "Platform/FilePath.hpp"
+#include "FileSystem.hpp"
+#include "FilePath.hpp"
 #include "ToString.hpp"
 #include "Support/Archive.hpp"
-#include "Platform/Utilities.hpp"
+#include "Utilities.hpp"
 
 namespace Zero
 {
