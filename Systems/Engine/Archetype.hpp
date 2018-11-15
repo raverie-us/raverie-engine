@@ -54,6 +54,9 @@ public:
   DataNode* GetDataTree() override;
   String GetStringData();
 
+  /// Attempt to get a base class if we have one.
+  Archetype* GetBaseArchetype();
+
   /// Name of the file from which this archetype was created.
   String mLoadPath;
   /// An Archetype can be a Cog, Space, or GameSession. It's okay for this to be a raw BoundType*

@@ -212,6 +212,12 @@ String Archetype::GetStringData()
   return ReadFileIntoString(mLoadPath);
 }
 
+//**************************************************************************************************
+Archetype* Archetype::GetBaseArchetype()
+{
+  return ArchetypeManager::GetInstance()->FindOrNull(mBaseResourceIdName);
+}
+
 //---------------------------------------------------------------------------------- ArchetypeLoader
 class ArchetypeLoader : public ResourceLoader
 {
