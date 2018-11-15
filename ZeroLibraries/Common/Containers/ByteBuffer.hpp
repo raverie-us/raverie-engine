@@ -10,7 +10,7 @@
 #pragma once
 #include "Containers/Array.hpp"
 #include "String/String.hpp"
-#include "Common/Utility/Status.hpp"
+#include "Status.hpp"
 
 namespace Zero
 {

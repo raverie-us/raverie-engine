@@ -8,7 +8,7 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "Utility/Typedefs.hpp"
+#include "Typedefs.hpp"
 
 //*NOTE - Includes a library dependency and should be moved.
 

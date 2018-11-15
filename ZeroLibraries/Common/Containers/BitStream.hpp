@@ -7,9 +7,9 @@
 #pragma once
 
 // Includes
-#include "Utility/EnumDeclaration.hpp"
-#include "Utility/BitMath.hpp"
-#include "Utility/UintNType.hpp"
+#include "EnumDeclaration.hpp"
+#include "BitMath.hpp"
+#include "UintNType.hpp"
 #include "String/String.hpp"
 
 //---------------------------------------------------------------------------------//

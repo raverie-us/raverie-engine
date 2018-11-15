@@ -11,7 +11,7 @@
 
 #include "Rune.hpp"
 #include "Platform/UnicodeUtility.hpp"
-#include "Utility/Standard.hpp"
+#include "Standard.hpp"
 #include "Platform/Atomic.hpp"
 
 #define ZeroStringPooling

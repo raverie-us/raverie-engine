@@ -8,7 +8,7 @@
 
 // Includes
 #include "Containers/ArrayMap.hpp"
-#include "Utility/IdStore.hpp"
+#include "IdStore.hpp"
 
 namespace Zero
 {

@@ -8,7 +8,7 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "Utility/Standard.hpp"
+#include "Standard.hpp"
 #include "Platform/File.hpp"
 
 namespace Zero

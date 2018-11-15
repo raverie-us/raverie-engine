@@ -7,7 +7,7 @@
 #pragma once
 
 // Includes
-#include "Utility/Typedefs.hpp"
+#include "Typedefs.hpp"
 
 // Fixed-Width Signed Integral Types
 typedef smax intmax;

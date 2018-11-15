@@ -9,7 +9,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Math/Math.hpp"
-#include "Utility/Typedefs.hpp"
+#include "Typedefs.hpp"
 
 typedef unsigned int ByteColor;
 

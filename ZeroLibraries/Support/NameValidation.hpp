@@ -9,7 +9,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "String/String.hpp"
-#include "Utility/Status.hpp"
+#include "Status.hpp"
 
 namespace Zero
 {

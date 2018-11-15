@@ -1,6 +1,6 @@
 #include "Precompiled.hpp"
 #include "Containers/Hashing.hpp"
-#include "Utility/Guid.hpp"
+#include "Guid.hpp"
 
 namespace Zero
 {

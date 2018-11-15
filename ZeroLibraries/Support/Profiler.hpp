@@ -9,7 +9,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-#include "Utility/Typedefs.hpp"
+#include "Typedefs.hpp"
 #include "Containers/Array.hpp"
 #include "Containers/InList.hpp"
 #include "Platform/Timer.hpp"

@@ -12,7 +12,7 @@
 // Includes
 #include "String/String.hpp"
 #include "Containers/Array.hpp"
-#include "Utility/EnumDeclaration.hpp"
+#include "EnumDeclaration.hpp"
 
 namespace Zero
 {

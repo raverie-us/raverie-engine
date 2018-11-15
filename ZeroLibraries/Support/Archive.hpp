@@ -10,8 +10,8 @@
 #pragma once
 //#include "Containers/Array.hpp"
 //#include "Platform/File.hpp"
-//#include "Utility/EnumDeclaration.hpp"
-//#include "Utility/Status.hpp"
+//#include "EnumDeclaration.hpp"
+//#include "Status.hpp"
 
 namespace Zero
 {

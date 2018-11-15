@@ -8,8 +8,8 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "Utility/Typedefs.hpp"
-#include "Utility/Standard.hpp"
+#include "Typedefs.hpp"
+#include "Standard.hpp"
 
 /*
 

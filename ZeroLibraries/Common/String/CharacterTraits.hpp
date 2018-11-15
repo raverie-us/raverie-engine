@@ -8,8 +8,8 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "Utility/EnumDeclaration.hpp"
-#include "Utility/Typedefs.hpp"
+#include "EnumDeclaration.hpp"
+#include "Typedefs.hpp"
 
 namespace Zero
 {

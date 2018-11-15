@@ -10,7 +10,7 @@
 #pragma once
 
 #include "Math/Reals.hpp"
-#include "Utility/Typedefs.hpp"
+#include "Typedefs.hpp"
 #include "Math/ErrorCallbacks.hpp"
 
 namespace Math

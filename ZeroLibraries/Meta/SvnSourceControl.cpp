@@ -5,7 +5,7 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "Utility/Status.hpp"
+#include "Status.hpp"
 #include "SourceControl.hpp"
 #include "String/StringBuilder.hpp"
 

@@ -8,7 +8,7 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "Utility/Typedefs.hpp"
+#include "Typedefs.hpp"
 #include "FixedString.hpp"
 #include "String.hpp"
 

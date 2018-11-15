@@ -8,7 +8,7 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "Utility/Typedefs.hpp"
+#include "Typedefs.hpp"
 //quick ARM compiler fix, project isn't seeing/building this before console.hpp
 #include <stdarg.h>
 

@@ -9,7 +9,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-#include "Utility/Typedefs.hpp"
+#include "Typedefs.hpp"
 #include "common/Time.hpp"
 
 namespace Zero

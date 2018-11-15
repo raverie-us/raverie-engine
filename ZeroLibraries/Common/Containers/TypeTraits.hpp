@@ -11,7 +11,7 @@
 
 #include <utility>
 #include <typeinfo>
-#include "Utility/Typedefs.hpp"
+#include "Typedefs.hpp"
 
 namespace Zero
 {
