@@ -265,6 +265,7 @@ bool Skeleton::TestRay(GraphicsRayCast& raycast)
 void Skeleton::MarkModified()
 {
   mNeedsRebuild = true;
+  DisconnectAll(GetSpace(), this);
   ConnectThisTo(GetSpace(), Events::UpdateSkeletons, OnUpdateSkeletons);
 }
 

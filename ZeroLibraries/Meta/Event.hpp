@@ -75,7 +75,7 @@ class EventConnection
 public:
   OverloadedNew();
 
-  EventConnection();
+  EventConnection(EventDispatcher* dispatcher, StringParam eventId);
   virtual ~EventConnection();
 
   // Prints details about the location and name of an event connection
@@ -86,10 +86,17 @@ public:
   /// Invoke the event
   virtual void Invoke(Event* event)=0;
   virtual void DebugDraw(){};
+  
+  virtual DataBlock GetFunctionPointer()=0;
+  size_t Hash();
+  bool operator==(EventConnection& lhs);
 
   /// A helper that connects this connection to both receiver (tests for validation too)
   void ConnectToReceiverAndDispatcher(
     StringParam eventId, EventReceiver* receiver, EventDispatcher* dispatcher);
+
+  /// Removes this specific event connection from the dispatcher it is attached to
+  void DisconnectSelf();
 
   /// The ThisObject is the object listening to the event
   /// if the connection is a member function, not the object
@@ -102,6 +109,10 @@ public:
   Link<EventConnection> ReceiverLink;
   /// Link for all connection on a signal
   Link<EventConnection> DispatcherLink;
+  /// Link for all queued event disconnects
+  Link<EventConnection> DisconnectLink;
+  /// This dispatcher for this event connection
+  EventDispatcher* mDispatcher;
   /// The type that the event is registered for (the parameter type)
   BoundType* EventType;
   /// Name identifier of the event, used by receiver since its connections aren't mapped
@@ -115,6 +126,7 @@ public:
 
 typedef InList<EventConnection, &EventConnection::DispatcherLink> DispatchList;
 typedef InList<EventConnection, &EventConnection::ReceiverLink> ReceiverList;
+typedef InList<EventConnection, &EventConnection::DisconnectLink> DisconnectList;
 
 //--------------------------------------------------------------- Event Receiver
 /// Object needed to receive events from other objects. Cleans up connections
@@ -167,8 +179,25 @@ public:
   /// Is the 'this' object on one of the connections in the list
   /// See EventConnection::ThisObject
   bool IsConnected(ObjPtr thisObject);
+
 private:
   DispatchList mConnections;
+};
+
+//------------------------------------------------------------- Event Connection Hash Policy
+struct ConnectionPointerHashPolicy
+{
+  // Hashing operator
+  size_t operator()(EventConnection* value)
+  {
+    return value->Hash();
+  }
+
+  // Comparison operator
+  bool Equal(EventConnection* a, EventConnection* b)
+  {
+    return (*a == *b);
+  }
 };
 
 //------------------------------------------------------------- Event Dispatcher
@@ -191,6 +220,8 @@ public:
   /// Add a new EventConnection to this Dispatcher
   void Connect(StringParam eventId, EventConnection* connect);
 
+  bool IsUniqueConnection(EventConnection* connection);
+
   /// Remove all connections with the given 'this' 
   /// object from all event lists
   /// See EventConnection::ThisObject
@@ -209,8 +240,10 @@ public:
   bool IsAnyConnected(StringParam eventId);
 
 private:
+  friend class EventConnection;
   typedef HashMap<String, EventDispatchList*> EventMapType;
   EventMapType mEvents;
+  HashSet<EventConnection*, ConnectionPointerHashPolicy> mUniqueConnections;
 };
 
 //--------------------------------------------------- Member Function Connection
@@ -218,10 +251,12 @@ template<typename classType, typename eventType>
 struct MemberFunctionConnection : public EventConnection
 {
   typedef void (classType::*FuncType)(eventType*);
+  typedef void (classType::**FuncPointer)(eventType*);
   FuncType MyFunction;
   classType* MyObject;
 
-  MemberFunctionConnection(classType* instance, FuncType func)
+  MemberFunctionConnection(EventDispatcher* dispatcher, StringParam eventId, classType* instance, FuncType func)
+  : EventConnection(dispatcher, eventId)
   {
     MyObject = instance;
     MyFunction = func;
@@ -232,17 +267,35 @@ struct MemberFunctionConnection : public EventConnection
   {
     (MyObject->*MyFunction)((eventType*)event);
   }
+
+  DataBlock GetFunctionPointer() override
+  {
+    FuncPointer functionPointer = &MyFunction;
+    return DataBlock((byte*)functionPointer, sizeof(FuncType));
+  }
 };
 
 ///Create an event connection
 template<typename targetType, typename classType, typename eventType>
-inline void Connect(targetType* dispatcher, StringParam eventId,
+inline void Connect(targetType* dispatcherObject, StringParam eventId,
                     classType* receiver, void (classType::*function)(eventType*))
 {
-  ReturnIf(dispatcher==NULL,, "Dispatcher is NULL");
+  ReturnIf(dispatcherObject == nullptr,, "Dispatcher is NULL");
+  
+  EventDispatcher* dispatcher = dispatcherObject->GetDispatcher();
 
   MemberFunctionConnection<classType, eventType>* connection = 
-          new MemberFunctionConnection<classType, eventType>(receiver, function);
+          new MemberFunctionConnection<classType, eventType>(dispatcher, eventId, receiver, function);
+
+  if (!dispatcher->IsUniqueConnection(connection))
+  {
+    String className = ZilchTypeId(targetType)->ToString();
+    String error = String::Format("The event id '%s' already has a connection to this event handler for class %s", eventId.c_str(), className.c_str());
+    DoNotifyException("Duplicate Event Connection", error);
+    connection->Flags.SetFlag(ConnectionFlags::DoNotDisconnect);
+    delete connection;
+    return;
+  }
 
   // For safety, we store the event's type on the connection so we can validate it
   BoundType* type = ZilchTypeId(eventType);
@@ -250,8 +303,7 @@ inline void Connect(targetType* dispatcher, StringParam eventId,
   ErrorIf(type->IsInitialized() == false,
     "The event type was never initialized using ZilchDeclareType / ZilchDefineType / ZilchInitializeType");
 
-  connection->ConnectToReceiverAndDispatcher(eventId,
-    receiver->GetReceiver(), dispatcher->GetDispatcher());
+  connection->ConnectToReceiverAndDispatcher(eventId, receiver->GetReceiver(), dispatcher);
 }
 
 #define DeclareEvent(name) extern const String name
@@ -275,14 +327,22 @@ template<typename eventType>
 struct StaticFunctionConnection : public EventConnection
 {
   typedef void (*FuncType)(eventType*);
+  typedef void (**FuncPointer)(eventType*);
   FuncType MyFunction;
-  StaticFunctionConnection(FuncType func)
+  StaticFunctionConnection(EventDispatcher* dispatcher, StringParam eventId, FuncType func)
+    : EventConnection(dispatcher, eventId)
   {
     MyFunction = func;
   }
   virtual void Invoke(Event* event)
   {
     (*MyFunction)((eventType*)event);
+  }
+
+  DataBlock GetFunctionPointer() override
+  {
+    FuncPointer functionPointer = &MyFunction;
+    return DataBlock((byte*)functionPointer, sizeof(FuncType));
   }
 };
 

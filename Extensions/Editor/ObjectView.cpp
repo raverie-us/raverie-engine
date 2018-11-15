@@ -1239,8 +1239,9 @@ void ObjectView::SetSpace(Space* space)
   ConnectThisTo(mSource, Events::DataActivated, OnDataActivated);
   ConnectThisTo(space, Events::SpaceObjectsChanged, OnSpaceChange);
   ConnectThisTo(space, Events::SpaceDestroyed, OnSpaceDestroyed);
-
+  
   MetaSelection* selection = Z::gEditor->GetSelection();
+  DisconnectAll(selection, this);
   ConnectThisTo(selection, Events::SelectionChanged, OnSelectionChanged);
   ConnectThisTo(selection, Events::SelectionFinal, OnSelectionChanged);
 }

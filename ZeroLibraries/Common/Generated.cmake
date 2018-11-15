@@ -28,6 +28,7 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/Containers/BlockArray.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Containers/ByteBuffer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Containers/ByteBuffer.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Containers/ContainerCommon.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Containers/ContainerCommon.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Containers/CyclicArray.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Containers/HashedContainer.hpp

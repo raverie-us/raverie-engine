@@ -25,6 +25,7 @@ public:
   BitField(u32 field) { U32Field = field; }
 
   bool operator==(const BitField& rhs) { return U32Field == rhs.U32Field; }
+  bool operator!=(const BitField& rhs) { return U32Field != rhs.U32Field; }
   inline void SetFlag(u32 flag) {U32Field |= flag;}
   inline void ClearFlag(u32 flag) {U32Field &= ~flag;}
   inline void ToggleFlag(u32 flag) {U32Field ^= flag;}

@@ -18,9 +18,9 @@ namespace Events
 }
 
 DeclareEnum3(PreviewImportance,
-  None,    // No useful way to display element
-  Simple,  // Decorative or just a icon not very useful
-  High);   // Needed to be able to edit object
+             None,    // No useful way to display element
+             Simple,  // Decorative or just a icon not very useful
+             High);   // Needed to be able to edit object
 
 //--------------------------------------------------- Preview Widget Initializer
 struct PreviewWidgetInitializer
@@ -43,8 +43,8 @@ public:
   PreviewWidget(Composite* parent);
   PreviewWidget(PreviewWidgetInitializer& initializer);
 
-  virtual void AnimatePreview(PreviewAnimate::Enum value){}
-  virtual Handle GetEditObject(){return Handle();}
+  virtual void AnimatePreview(PreviewAnimate::Enum value) {}
+  virtual Handle GetEditObject() { return Handle(); }
   virtual void SetInteractive(bool interactive) { mInteractive = interactive; };
 
   /// Widget Interface.
@@ -65,7 +65,7 @@ public:
   PreviewWidgetGroup(Composite* parent, StringParam name);
 
   PreviewWidget* AddPreviewWidget(StringParam name, HandleParam instance,
-               PreviewImportance::Enum minImportance = PreviewImportance::None);
+                                  PreviewImportance::Enum minImportance = PreviewImportance::None);
   void AnimatePreview(PreviewAnimate::Enum value) override;
 
   /// Widget Interface.
@@ -89,7 +89,7 @@ typedef PreviewWidget* (*CreatePreviewWidget)(PreviewWidgetInitializer& initiali
 struct PreviewWidgetCreator
 {
   PreviewWidgetCreator()
-    :Importance(PreviewImportance::None), Creator(NULL){}
+    :Importance(PreviewImportance::None), Creator(nullptr) {}
   PreviewWidgetCreator(PreviewImportance::Enum importance, CreatePreviewWidget creator)
     :Importance(importance), Creator(creator)
   {}
@@ -118,11 +118,9 @@ class ResourcePreview
 public:
   static PreviewWidget* CreatePreviewWidget(Composite* parent, StringParam name,
                                             HandleParam instance,
-                                   PreviewImportance::Enum minImportance = PreviewImportance::None);
+                                            PreviewImportance::Enum minImportance = PreviewImportance::None);
 
   static PreviewImportance::Enum GetPreviewImportance(BoundType* resourceType);
 };
-
-
 
 }//namespace Zero

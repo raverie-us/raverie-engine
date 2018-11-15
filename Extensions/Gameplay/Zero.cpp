@@ -78,11 +78,39 @@ void ZeroStatic::Connect(Object* target, StringParam eventId, DelegateParam dele
   // Get the event support object (Dispatcher/Receiver)
   EventDispatcher* dispatcher = target->GetDispatcherObject();
   Object* receiverObject = delegate.ThisHandle.Get<Object*>();
+
+  if (receiverObject == nullptr)
+  {
+    DoNotifyException("The object is null", "Cannot connect a null object");
+    return;
+  }
+
   EventReceiver* receiver = receiverObject->GetReceiverObject();
 
+  if (dispatcher == nullptr)
+  {
+    DoNotifyException("The dispatcher is null", "Cannot connect a null dispatcher");
+    return;
+  }
+
+  if (receiver == nullptr)
+  {
+    DoNotifyException("The receiver is null", "Cannot connect a null receiver");
+    return;
+  }
+
   // Create the connection
-  ZilchScriptConnection* connection = new ZilchScriptConnection(delegate);
+  ZilchScriptConnection* connection = new ZilchScriptConnection(dispatcher, eventId, delegate);
   connection->EventType = eventType;
+
+  if (!dispatcher->IsUniqueConnection(connection))
+  {
+    String error = String::Format("The event id '%s' already has a connection to this event handler", eventId.c_str());
+    DoNotifyException("Duplicate Event Connection", error);
+    connection->Flags.SetFlag(ConnectionFlags::DoNotDisconnect);
+    delete connection;
+    return;
+  }
 
   // Connect
   connection->ConnectToReceiverAndDispatcher(eventId, receiver, dispatcher);
@@ -196,7 +224,8 @@ SoundSystem* ZeroStatic::GetAudio()
 
 //---------------------------------------------------------------------------- ZilchScriptConnection
 //**************************************************************************************************
-ZilchScriptConnection::ZilchScriptConnection(DelegateParam delagate)
+ZilchScriptConnection::ZilchScriptConnection(EventDispatcher* dispatcher, StringParam eventId, DelegateParam delagate)
+  : EventConnection(dispatcher, eventId)
 {
   Flags.SetFlag(ConnectionFlags::Script);
   mDelegate = delagate;
@@ -259,6 +288,12 @@ void ZilchScriptConnection::Invoke(Event* e)
   // to prevent callbacks like 'KeyDown' from constantly throwing exceptions
   if(report.HasThrownExceptions())
     mStatePatchId = ExecutableState::CallingState->PatchId;
+}
+
+//**************************************************************************************************
+DataBlock ZilchScriptConnection::GetFunctionPointer()
+{
+  return DataBlock((byte*)&mDelegate.BoundFunction, sizeof(Function*));
 }
 
 }//namespace Zero

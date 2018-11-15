@@ -107,7 +107,7 @@ public:
 
   void SetSize(Vec2 newSize);
   void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
-  
+
   HandleOf<Cog> mCameraObject;
 };
 //--------------------------------------------- Space Preview Mouse Manipulation
@@ -138,7 +138,7 @@ public:
   void OnMouseScroll(MouseEvent* event);
   void OnDestroy();
   void OnUpdate(UpdateEvent* updateEvent);
-  
+
   Vec2 GetMinSize() override;
   void UpdateViewDistance();
   void UpdateViewDistance(Vec3 viewDirection);
@@ -225,7 +225,7 @@ public:
 
   Handle GetEditObject() override;
   void OnReload(ResourceEvent* event);
-  
+
   HandleOf<Animation> mAnimation;
 };
 
@@ -242,7 +242,7 @@ class TexturePreview : public PreviewWidget
 public:
   TexturePreview(PreviewWidgetInitializer& initializer);
   void UpdateTransform();
-  
+
   TextureView* mImage;
 };
 
@@ -275,7 +275,7 @@ public:
 
   void UpdateTransform() override;
   Vec2 GetHalfSize() override;
-  
+
   PixelBuffer* mGradientBlockBuffer;
   TextureView* mGradientBlockDisplay;
 };
@@ -288,7 +288,7 @@ public:
 
   void AddCurve(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, SampleCurve* curveObject);
   void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect);
-  
+
   Handle mObject;
 };
 
@@ -336,7 +336,7 @@ public:
   ~GameArchetypePreview();
 
   Handle GetEditObject() override;
-  
+
   HandleOf<GameSession> mObject;
   bool UsingEditorGameSession;
 };

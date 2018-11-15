@@ -64,6 +64,19 @@ PropertyView::~PropertyView()
 }
 
 //******************************************************************************
+void PropertyView::DisconnectAllObjects()
+{
+  // Disconnect from all old objects
+  forRange(HandleParam oldObject, mSelectedObjects.All())
+  {
+    // Disconnect if the handle is a valid Object
+    if (Object* object = oldObject.Get<Object*>())
+      if (EventDispatcher* dispatcher = object->GetDispatcherObject())
+        dispatcher->Disconnect(this);
+  }
+}
+
+//******************************************************************************
 Handle PropertyView::GetObject()
 {
   return mSelectedObject;
@@ -73,6 +86,8 @@ Handle PropertyView::GetObject()
 void PropertyView::Invalidate()
 {
   this->MarkAsNeedsUpdate();
+
+  DisconnectAllObjects();
 
   // We need to release handles in case of meta changing. See the comment
   // above ObjectPropertyNode::ReleaseHandles
@@ -123,13 +138,7 @@ void PropertyView::Rebuild()
 void PropertyView::SetObject(HandleParam newObject, 
                              PropertyInterface* newInterface)
 {
-  // Disconnect from all old objects
-  forRange(Handle oldObject, mSelectedObjects.All())
-  {
-    // Disconnect if the handle is a valid Object
-    if(Object* object = oldObject.Get<Object*>())
-      object->GetDispatcherObject()->Disconnect(this);
-  }
+  DisconnectAllObjects();
 
   // We no longer care about the old objects
   mSelectedObjects.Clear();

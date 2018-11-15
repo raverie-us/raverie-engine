@@ -98,9 +98,11 @@ Object* ObjectEvent::GetSource()
 //------------------------------------------------------------- Event Connection
 Array<Delegate> EventConnection::sDelayDestructDelegates;
 
-EventConnection::EventConnection()
-  :ThisObject(NULL),
-   EventType(NULL)
+EventConnection::EventConnection(EventDispatcher* dispatcher, StringParam eventId)
+  :ThisObject(nullptr),
+   EventType(nullptr),
+   mDispatcher(dispatcher),
+   mEventId(eventId)
 {
 }
 
@@ -152,6 +154,40 @@ bool ValidateEvent(StringParam eventId, BoundType* typeSent)
   return true;
 }
 
+bool EventConnection::operator==(EventConnection& lhs)
+{
+  if (ThisObject != lhs.ThisObject)
+    return false;
+  
+  if (mDispatcher != lhs.mDispatcher)
+    return false;
+
+  if (mEventId != lhs.mEventId)
+    return false;
+  
+  DataBlock rhsFunc = GetFunctionPointer();
+  DataBlock lhsFunc = lhs.GetFunctionPointer();
+
+  if (rhsFunc != lhsFunc)
+    return false;
+  
+  if (Flags != lhs.Flags)
+    return false;
+
+  return true;
+}
+
+size_t EventConnection::Hash()
+{
+  DataBlock thisObjectPointer((byte*)&ThisObject, sizeof(ObjPtr));
+  DataBlock dispatcherPointer((byte*)&mDispatcher, sizeof(EventDispatcher*));
+  DataBlock functionPointer = GetFunctionPointer();
+  return thisObjectPointer.Hash() ^
+         dispatcherPointer.Hash() ^
+         functionPointer.Hash()   ^
+         mEventId.Hash();
+}
+
 void EventConnection::ConnectToReceiverAndDispatcher(
   StringParam eventId, EventReceiver* receiver, EventDispatcher* dispatcher)
 {
@@ -160,7 +196,6 @@ void EventConnection::ConnectToReceiverAndDispatcher(
   if(!ValidateEvent(eventId, EventType))
     return;
 
-  mEventId = eventId;
   dispatcher->Connect(eventId, this);
   receiver->Connect(this);
 }
@@ -168,6 +203,20 @@ void EventConnection::ConnectToReceiverAndDispatcher(
 void EventConnection::DelayDestructDelegates()
 {
   sDelayDestructDelegates.Clear();
+}
+
+// When the EventConnection itself is deleted it will unlink itself from the 
+// receiver and dispatcher lists so we just need to handle removing its entry
+// for the unique connection list to properly handle delay destructed event connections
+// i.e ZilchEventConnections during patching
+void EventConnection::DisconnectSelf()
+{
+  if (mDispatcher)
+  {
+    // Remove the event connection from the unique connections list
+    mDispatcher->mUniqueConnections.Erase(this);
+    mDispatcher = nullptr;
+  }
 }
 
 //----------------------------------------------------------------- Event Signal
@@ -205,7 +254,7 @@ void EventDispatchList::Dispatch(Event* event)
   // and dispatch to those too (could have undesired behavior, but at least it isn't crashing)
   EventConnection* back = &mConnections.Back();
   EventConnection* end = mConnections.End();
-  EventConnection* current = NULL;
+  EventConnection* current = nullptr;
 
   do
   {
@@ -241,6 +290,10 @@ void EventDispatchList::Dispatch(Event* event)
       //delete invalid events only during iteration
       //to prevent removed connections from breaking
       //iteration.
+
+      //have the event connection disconnect itself to clear its unique connection entry
+      //that is used to avoid duplicate event connections
+      current->DisconnectSelf();
       delete current;
     }
     else
@@ -315,6 +368,13 @@ EventReceiver::EventReceiver()
 
 void EventReceiver::DestroyConnections()
 {
+  // When an event receiver dies the dispatcher isn't guaranteed to die
+  // so we need the connections to disconnect themselves to remove
+  // their unique connection key from the event dispatcher
+  forRange(EventConnection& connection, mConnections)
+  {
+    connection.DisconnectSelf();
+  }
   // Inform all connections that the receiving object has been destroyed.
   // They will remove themselves automatically in the destructor.
   OnlyDeleteObjectIn(mConnections);
@@ -358,45 +418,13 @@ EventDispatcher::~EventDispatcher()
   //Detach all listening objects
   DeleteObjectsInContainer(mEvents);
   EventConnection::DelayDestructDelegates();
-}
-
-void EventDispatcher::DisconnectEvent(StringParam eventId, ObjPtr thisObject)
-{
-  EventMapType::range r = mEvents.Find(eventId);
-  if(!r.Empty())
-  {
-    r.Front().second->Disconnect(thisObject);
-  }
-}
-
-bool EventDispatcher::IsConnected(StringParam eventId, ObjPtr thisObject)
-{
-  EventMapType::range r = mEvents.Find(eventId);
-  if(!r.Empty())
-  {
-    return r.Front().second->IsConnected(thisObject);
-  }
-  return false;
-}
-
-bool EventDispatcher::IsAnyConnected(StringParam eventId)
-{
-  EventMapType::range r = mEvents.Find(eventId);
-  return !r.Empty();
-}
-
-void EventDispatcher::Disconnect(ObjPtr thisObject)
-{
-  EventMapType::range r = mEvents.All();
-  for(;!r.Empty();r.PopFront())
-  {
-    r.Front().second->Disconnect(thisObject);
-  }
+  //Clear all tracking of unique connections that were all just detached
+  mUniqueConnections.Clear();
 }
 
 void EventDispatcher::Dispatch(StringParam eventId, Event* event)
 {
-  if(event == NULL)
+  if(event == nullptr)
   {
     DoNotifyException("Invalid event", "Cannot dispatch a null event");
     return;
@@ -474,8 +502,86 @@ void EventDispatcher::Connect(StringParam eventId, EventConnection* connection)
 
   //Bind the connection to the event list
   list->Connect(connection);
+  mUniqueConnections.Insert(connection);
 }
 
+bool EventDispatcher::IsUniqueConnection(EventConnection* connection)
+{
+  // Check if the dispatcher has a valid event connections of the same type
+  // as invalid event connections are being delay destructed
+  if(EventConnection* otherConnection = mUniqueConnections.FindValue(connection, nullptr))
+    return false;
+
+  return true;
+}
+
+void EventDispatcher::Disconnect(ObjPtr thisObject)
+{
+  // Find all the connection keys for the object being disconnected from
+  DisconnectList toErase;
+  forRange(EventConnection* connection, mUniqueConnections.All())
+  {
+    if (connection->ThisObject == thisObject)
+      toErase.PushBack(connection);
+  }
+
+  // Remove the keys tracking unique connections that were disconnected
+  while (!toErase.Empty())
+  {
+    mUniqueConnections.Erase(&toErase.Front());
+    toErase.PopFront();
+  }
+
+  // Disconnect the events connected to thisObject
+  EventMapType::range r = mEvents.All();
+  for (; !r.Empty(); r.PopFront())
+  {
+    r.Front().second->Disconnect(thisObject);
+  }
+}
+
+void EventDispatcher::DisconnectEvent(StringParam eventId, ObjPtr thisObject)
+{
+  // Find all the connection keys for the event and object being disconnected from
+  DisconnectList toErase;
+  forRange(EventConnection* connection, mUniqueConnections.All())
+  {
+    if (connection->mEventId == eventId && connection->ThisObject == thisObject)
+      toErase.PushBack(connection);
+  }
+
+  // Remove the keys tracking unique connections that were disconnected
+  while (!toErase.Empty())
+  {
+    mUniqueConnections.Erase(&toErase.Front());
+    toErase.PopFront();
+  }
+
+  // Disconnect the events with eventId on thisObject
+  EventMapType::range r = mEvents.Find(eventId);
+  if (!r.Empty())
+  {
+    r.Front().second->Disconnect(thisObject);
+  }
+}
+
+bool EventDispatcher::IsConnected(StringParam eventId, ObjPtr thisObject)
+{
+  EventMapType::range r = mEvents.Find(eventId);
+  if (!r.Empty())
+  {
+    return r.Front().second->IsConnected(thisObject);
+  }
+  return false;
+}
+
+bool EventDispatcher::IsAnyConnected(StringParam eventId)
+{
+  EventMapType::range r = mEvents.Find(eventId);
+  return !r.Empty();
+}
+
+//------------------------------------------------------------- Event Object
 void EventObject::DispatchEvent(StringParam eventId, Event* event)
 {
   this->GetDispatcher()->Dispatch(eventId, event);
