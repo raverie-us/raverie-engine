@@ -87,9 +87,7 @@ target_include_directories(Support
 )
 target_include_directories(Zilch
     PUBLIC
-        ${CurrentDirectory}/Zilch/Project
-        ${CurrentDirectory}/Zilch/Project/Zilch
-        ${VLD_INCLUDE_DIRS}
+        ${CurrentDirectory}/Zilch
         ${CurrentDirectory}
 )
 
@@ -110,7 +108,6 @@ target_link_libraries(Geometry
 target_link_libraries(Zilch
                       PUBLIC
                       Common
-                      ${VLD_LIBRARIES}
 )
 target_link_libraries(Meta
                       PUBLIC
@@ -161,6 +158,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         Serialization
         SpatialPartition
         Support
+        Zilch
         CONFIGS ${supported_configs}
         BASEPATH ${zero_build_out}
         PLATFORM ${platform}
@@ -170,18 +168,6 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         PRECOMPILED_HEADER_NAME "Precompiled.hpp"
         PRECOMPILED_SOURCE_NAME "Precompiled.cpp"
         TARGET_SUBFOLDER
-    )
-    zero_multitarget_output_settings(
-        Zilch 
-        CONFIGS ${supported_configs}
-        BASEPATH ${zero_build_out}
-        PLATFORM ${platform}
-        CONFIG ${configuration}
-        BITS ${bit}
-        TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET}
-        PRECOMPILED_HEADER_NAME "Zilch.hpp"
-        PRECOMPILED_SOURCE_NAME "Zilch.cpp"
-        TARGET_SUBFOLDER "Zilch/Project"
     )
 endif()
 

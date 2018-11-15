@@ -10,7 +10,7 @@
 #include "Platform/PlatformStandard.hpp"
 #include "Meta/MetaStandard.hpp"
 
-#include "Zilch/Zilch.hpp"
+#include "Zilch/Precompiled.hpp"
 using namespace Zilch;
 
 namespace Zero

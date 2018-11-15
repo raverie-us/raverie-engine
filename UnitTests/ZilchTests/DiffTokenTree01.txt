@@ -1,0 +1,1812 @@
+\0
+| Start
+| | OpenBracket*
+| | | [
+| Start
+| | Enum
+| | | Identifier*
+| | | | V
+| | | | e
+| | | | r
+| | | | s
+| | | | i
+| | | | o
+| | | | n
+| Start
+| | Colon*
+| | | :
+| Start
+| | StringLiteral*
+| | | \"
+| | | 1
+| | | \"
+| Start
+| | CloseBracket*
+| | | ]
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| Start
+| | Enum
+| | | Identifier*
+| | | | C
+| | | | o
+| | | | g
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | OpenBracket*
+| | | [
+| Start
+| | Enum
+| | | Identifier*
+| | | | I
+| | | | d
+| Start
+| | Colon*
+| | | :
+| Start
+| | StringLiteral*
+| | | \"
+| | | 6
+| | | 9
+| | | 7
+| | | c
+| | | b
+| | | e
+| | | 7
+| | | 9
+| | | f
+| | | 7
+| | | 5
+| | | a
+| | | 8
+| | | 9
+| | | b
+| | | c
+| | | \"
+| Start
+| | CloseBracket*
+| | | ]
+| Start
+| | OpenBracket*
+| | | [
+| Start
+| | Enum
+| | | Identifier*
+| | | | I
+| | | | n
+| | | | h
+| | | | e
+| | | | r
+| | | | i
+| | | | t
+| Start
+| | Colon*
+| | | :
+| Start
+| | StringLiteral*
+| | | \"
+| | | L
+| | | i
+| | | v
+| | | i
+| | | n
+| | | g
+| | | :
+| | | 0
+| | | 9
+| | | 8
+| | | 0
+| | | 9
+| | | 8
+| | | a
+| | | \"
+| Start
+| | CloseBracket*
+| | | ]
+| Start
+| | OpenBracket*
+| | | [
+| Start
+| | Enum
+| | | Identifier*
+| | | | O
+| | | | r
+| | | | d
+| | | | e
+| | | | r
+| | | | O
+| | | | v
+| | | | e
+| | | | r
+| | | | r
+| | | | i
+| | | | d
+| | | | e
+| Start
+| | CloseBracket*
+| | | ]
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| Start
+| | OpenCurley*
+| | | {
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | v
+| | | | a
+| | | | r
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | N
+| | | | a
+| | | | m
+| | | | e
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Assignment*
+| | | =
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | StringLiteral*
+| | | \"
+| | | B
+| | | o
+| | | b
+| | | \"
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | | \r
+| | | \n
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | A
+| | | | r
+| | | | c
+| | | | h
+| | | | e
+| | | | t
+| | | | y
+| | | | p
+| | | | e
+| | | | d
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| Start
+| | OpenCurley*
+| | | {
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | v
+| | | | a
+| | | | r
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | A
+| | | | r
+| | | | c
+| | | | h
+| | | | e
+| | | | t
+| | | | y
+| | | | p
+| | | | e
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Assignment*
+| | | =
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | StringLiteral*
+| | | \"
+| | | P
+| | | e
+| | | r
+| | | s
+| | | o
+| | | n
+| | | :
+| | | 8
+| | | f
+| | | b
+| | | 8
+| | | 0
+| | | 9
+| | | 8
+| | | 0
+| | | 8
+| | | b
+| | | a
+| | | 8
+| | | 9
+| | | 0
+| | | \"
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | v
+| | | | a
+| | | | r
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | M
+| | | | o
+| | | | d
+| | | | i
+| | | | f
+| | | | i
+| | | | e
+| | | | d
+| | | | F
+| | | | r
+| | | | o
+| | | | m
+| | | | A
+| | | | r
+| | | | c
+| | | | h
+| | | | e
+| | | | t
+| | | | y
+| | | | p
+| | | | e
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Assignment*
+| | | =
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | t
+| | | | r
+| | | | u
+| | | | e
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| Start
+| | CloseCurley*
+| | | }
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | T
+| | | | r
+| | | | a
+| | | | n
+| | | | s
+| | | | f
+| | | | o
+| | | | r
+| | | | m
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| Start
+| | OpenCurley*
+| | | {
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | v
+| | | | a
+| | | | r
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | T
+| | | | r
+| | | | a
+| | | | n
+| | | | s
+| | | | l
+| | | | a
+| | | | t
+| | | | i
+| | | | o
+| | | | n
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Assignment*
+| | | =
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | V
+| | | | e
+| | | | c
+| | | | 3
+| Start
+| | OpenCurley*
+| | | {
+| Start
+| | Float
+| | | Integer*
+| | | | 8
+| Start
+| | Comma*
+| | | ,
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Float
+| | | Integer*
+| | | | -
+| | | | 8
+| Start
+| | Comma*
+| | | ,
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Float*
+| | | Integer*
+| | | | 0
+| | | .
+| | | 0
+| | | 1
+| | | 0
+| | | 0
+| | | 0
+| | | 0
+| | | 0
+| | | 0
+| | | 5
+| | | 4
+| Start
+| | CloseCurley*
+| | | }
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | v
+| | | | a
+| | | | r
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | S
+| | | | c
+| | | | a
+| | | | l
+| | | | e
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Assignment*
+| | | =
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | V
+| | | | e
+| | | | c
+| | | | 3
+| Start
+| | OpenCurley*
+| | | {
+| Start
+| | Float
+| | | Integer*
+| | | | 1
+| Start
+| | Comma*
+| | | ,
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Float
+| | | Integer*
+| | | | 1
+| Start
+| | Comma*
+| | | ,
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Float
+| | | Integer*
+| | | | 1
+| Start
+| | CloseCurley*
+| | | }
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | v
+| | | | a
+| | | | r
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | R
+| | | | o
+| | | | t
+| | | | a
+| | | | t
+| | | | i
+| | | | o
+| | | | n
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Assignment*
+| | | =
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | Q
+| | | | u
+| | | | a
+| | | | t
+| Start
+| | OpenCurley*
+| | | {
+| Start
+| | Float
+| | | Integer*
+| | | | 0
+| Start
+| | Comma*
+| | | ,
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Float
+| | | Integer*
+| | | | 0
+| Start
+| | Comma*
+| | | ,
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Float
+| | | Integer*
+| | | | 0
+| Start
+| | Comma*
+| | | ,
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Float
+| | | Integer*
+| | | | 1
+| Start
+| | CloseCurley*
+| | | }
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| Start
+| | CloseCurley*
+| | | }
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | C
+| | | | a
+| | | | m
+| | | | e
+| | | | r
+| | | | a
+| | | | V
+| | | | i
+| | | | e
+| | | | w
+| | | | p
+| | | | o
+| | | | r
+| | | | t
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| Start
+| | OpenCurley*
+| | | {
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | v
+| | | | a
+| | | | r
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | C
+| | | | a
+| | | | m
+| | | | e
+| | | | r
+| | | | a
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Assignment*
+| | | =
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | C
+| | | | o
+| | | | g
+| | | | P
+| | | | a
+| | | | t
+| | | | h
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | OpenCurley*
+| | | {
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | v
+| | | | a
+| | | | r
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | P
+| | | | a
+| | | | t
+| | | | h
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Assignment*
+| | | =
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | StringLiteral*
+| | | \"
+| | | \"
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | v
+| | | | a
+| | | | r
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | R
+| | | | e
+| | | | s
+| | | | o
+| | | | l
+| | | | v
+| | | | e
+| | | | d
+| | | | N
+| | | | u
+| | | | l
+| | | | l
+| | | | E
+| | | | r
+| | | | r
+| | | | o
+| | | | r
+| | | | O
+| | | | c
+| | | | c
+| | | | u
+| | | | r
+| | | | r
+| | | | e
+| | | | d
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Assignment*
+| | | =
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | f
+| | | | a
+| | | | l
+| | | | s
+| | | | e
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | v
+| | | | a
+| | | | r
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | R
+| | | | e
+| | | | s
+| | | | o
+| | | | l
+| | | | v
+| | | | e
+| | | | d
+| | | | C
+| | | | o
+| | | | g
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Assignment*
+| | | =
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Float
+| | | Integer*
+| | | | 4
+| | | | 2
+| | | | 9
+| | | | 4
+| | | | 9
+| | | | 6
+| | | | 7
+| | | | 2
+| | | | 9
+| | | | 3
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | v
+| | | | a
+| | | | r
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | P
+| | | | a
+| | | | t
+| | | | h
+| | | | P
+| | | | r
+| | | | e
+| | | | f
+| | | | e
+| | | | r
+| | | | e
+| | | | n
+| | | | c
+| | | | e
+| | | | 0
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Assignment*
+| | | =
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum*
+| | | Identifier*
+| | | | C
+| | | | o
+| | | | g
+| | | | P
+| | | | a
+| | | | t
+| | | | h
+| | | | P
+| | | | r
+| | | | e
+| | | | f
+| | | | e
+| | | | r
+| | | | e
+| | | | n
+| | | | c
+| | | | e
+| | | .
+| | | C
+| | | o
+| | | g
+| | | R
+| | | e
+| | | l
+| | | a
+| | | t
+| | | i
+| | | v
+| | | e
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | CloseCurley*
+| | | }
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| Start
+| | CloseCurley*
+| | | }
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | A
+| | | | r
+| | | | r
+| | | | a
+| | | | y
+| | | | T
+| | | | e
+| | | | s
+| | | | t
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| Start
+| | OpenCurley*
+| | | {
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | v
+| | | | a
+| | | | r
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | I
+| | | | n
+| | | | d
+| | | | i
+| | | | c
+| | | | e
+| | | | s
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Assignment*
+| | | =
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | A
+| | | | r
+| | | | r
+| | | | a
+| | | | y
+| Start
+| | OpenCurley*
+| | | {
+| Start
+| | Float
+| | | Integer*
+| | | | 5
+| Start
+| | Comma*
+| | | ,
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Float
+| | | Integer*
+| | | | 1
+| | | | 5
+| Start
+| | Comma*
+| | | ,
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Float
+| | | Integer*
+| | | | 3
+| Start
+| | Comma*
+| | | ,
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Float
+| | | Integer*
+| | | | 9
+| Start
+| | CloseCurley*
+| | | }
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | v
+| | | | a
+| | | | r
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | R
+| | | | e
+| | | | s
+| | | | o
+| | | | u
+| | | | r
+| | | | c
+| | | | e
+| | | | s
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Assignment*
+| | | =
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | A
+| | | | r
+| | | | r
+| | | | a
+| | | | y
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | OpenCurley*
+| | | {
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | R
+| | | | e
+| | | | s
+| | | | o
+| | | | u
+| | | | r
+| | | | c
+| | | | e
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | OpenCurley*
+| | | {
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | v
+| | | | a
+| | | | r
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | R
+| | | | e
+| | | | s
+| | | | o
+| | | | u
+| | | | r
+| | | | c
+| | | | e
+| | | | I
+| | | | d
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Assignment*
+| | | =
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Float
+| | | Integer
+| | | | 0
+| | | | Hex*
+| | | | | x
+| | | | | 5
+| | | | | 7
+| | | | | 6
+| | | | | d
+| | | | | b
+| | | | | 8
+| | | | | 0
+| | | | | 9
+| | | | | a
+| | | | | d
+| | | | | 9
+| | | | | e
+| | | | | e
+| | | | | 6
+| | | | | c
+| | | | | 8
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | v
+| | | | a
+| | | | r
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | T
+| | | | y
+| | | | p
+| | | | e
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Assignment*
+| | | =
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | StringLiteral*
+| | | \"
+| | | C
+| | | o
+| | | l
+| | | o
+| | | r
+| | | G
+| | | r
+| | | a
+| | | d
+| | | i
+| | | e
+| | | n
+| | | t
+| | | \"
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | v
+| | | | a
+| | | | r
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | N
+| | | | a
+| | | | m
+| | | | e
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Assignment*
+| | | =
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | StringLiteral*
+| | | \"
+| | | D
+| | | i
+| | | n
+| | | k
+| | | l
+| | | e
+| | | \"
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | v
+| | | | a
+| | | | r
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | L
+| | | | o
+| | | | c
+| | | | a
+| | | | t
+| | | | i
+| | | | o
+| | | | n
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Assignment*
+| | | =
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | StringLiteral*
+| | | \"
+| | | D
+| | | i
+| | | n
+| | | k
+| | | l
+| | | e
+| | | .
+| | | C
+| | | o
+| | | l
+| | | o
+| | | r
+| | | G
+| | | r
+| | | a
+| | | d
+| | | i
+| | | e
+| | | n
+| | | t
+| | | .
+| | | d
+| | | a
+| | | t
+| | | a
+| | | \"
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | CloseCurley*
+| | | }
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | R
+| | | | e
+| | | | s
+| | | | o
+| | | | u
+| | | | r
+| | | | c
+| | | | e
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | OpenCurley*
+| | | {
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | v
+| | | | a
+| | | | r
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | R
+| | | | e
+| | | | s
+| | | | o
+| | | | u
+| | | | r
+| | | | c
+| | | | e
+| | | | I
+| | | | d
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Assignment*
+| | | =
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Float
+| | | Integer
+| | | | 0
+| | | | Hex*
+| | | | | x
+| | | | | 5
+| | | | | 5
+| | | | | 6
+| | | | | 5
+| | | | | 3
+| | | | | 0
+| | | | | 7
+| | | | | 8
+| | | | | 0
+| | | | | 4
+| | | | | 3
+| | | | | 2
+| | | | | 2
+| | | | | 0
+| | | | | 0
+| | | | | d
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | v
+| | | | a
+| | | | r
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | T
+| | | | y
+| | | | p
+| | | | e
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Assignment*
+| | | =
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | StringLiteral*
+| | | \"
+| | | L
+| | | e
+| | | v
+| | | e
+| | | l
+| | | \"
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | v
+| | | | a
+| | | | r
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | N
+| | | | a
+| | | | m
+| | | | e
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Assignment*
+| | | =
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | StringLiteral*
+| | | \"
+| | | L
+| | | e
+| | | v
+| | | e
+| | | l
+| | | \"
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | v
+| | | | a
+| | | | r
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | L
+| | | | o
+| | | | c
+| | | | a
+| | | | t
+| | | | i
+| | | | o
+| | | | n
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | Assignment*
+| | | =
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | StringLiteral*
+| | | \"
+| | | L
+| | | e
+| | | v
+| | | e
+| | | l
+| | | .
+| | | d
+| | | a
+| | | t
+| | | a
+| | | \"
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | CloseCurley*
+| | | }
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | CloseCurley*
+| | | }
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| Start
+| | CloseCurley*
+| | | }
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | H
+| | | | i
+| | | | e
+| | | | r
+| | | | a
+| | | | r
+| | | | c
+| | | | h
+| | | | y
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| Start
+| | OpenCurley*
+| | | {
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | Enum
+| | | Identifier*
+| | | | C
+| | | | o
+| | | | g
+| Start
+| | Whitespace*
+| | |  
+| Start
+| | OpenBracket*
+| | | [
+| Start
+| | Enum
+| | | Identifier*
+| | | | I
+| | | | d
+| Start
+| | Colon*
+| | | :
+| Start
+| | StringLiteral*
+| | | \"
+| | | 5
+| | | 2
+| | | 7
+| | | c
+| | | b
+| | | e
+| | | 7
+| | | 9
+| | | f
+| | | 7
+| | | 5
+| | | a
+| | | 8
+| | | 9
+| | | b
+| | | 5
+| | | \"
+| Start
+| | CloseBracket*
+| | | ]
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | OpenCurley*
+| | | {
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| | |  
+| | |  
+| Start
+| | CloseCurley*
+| | | }
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| | |  
+| | |  
+| Start
+| | CloseCurley*
+| | | }
+| Start
+| | Whitespace*
+| | | \r
+| | | \n
+| Start
+| | CloseCurley*
+| | | }
+| Start
+| | Whitespace*
+| | | \r
+| | | \n

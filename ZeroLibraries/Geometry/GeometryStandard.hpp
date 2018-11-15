@@ -9,7 +9,7 @@
 // Standard includes
 #include "Common/CommonStandard.hpp"
 
-#include "Zilch/Zilch.hpp"
+#include "Zilch/Precompiled.hpp"
 using namespace Zilch;
 
 namespace Geometry

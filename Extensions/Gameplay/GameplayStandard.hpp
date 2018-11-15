@@ -14,7 +14,7 @@
 #include "Support/SupportStandard.hpp"
 
 // Zilch Library Dependencies
-#include "Zilch/Zilch.hpp"
+#include "Zilch/Precompiled.hpp"
 using namespace Zilch;
 
 namespace Zero
