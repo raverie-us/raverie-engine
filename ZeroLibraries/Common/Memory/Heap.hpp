@@ -81,9 +81,61 @@ public:
   {
   }
 
-  MemPtr Allocate(size_t numberOfBytes){return mNode->Allocate(numberOfBytes); };
-  void Deallocate(MemPtr ptr, size_t numberOfBytes){mNode->Deallocate(ptr, numberOfBytes);}
+  MemPtr Allocate(size_t numberOfBytes) { return mNode->Allocate(numberOfBytes); };
+  void Deallocate(MemPtr ptr, size_t numberOfBytes) { mNode->Deallocate(ptr, numberOfBytes); }
   NodeType* mNode;
+};
+
+// This allocater has to be stored on the container.
+template<typename NodeType, size_t ReserveSizeInBytes>
+class ZeroSharedTemplate ReservedSizeAllocator : public Memory::StandardMemory
+{
+  typedef ReservedSizeAllocator<NodeType, ReserveSizeInBytes> this_type;
+
+public:
+  ReservedSizeAllocator()
+    : mNode(Memory::GetGlobalHeap())
+    , mAllocated(false)
+  {
+  }
+
+  ReservedSizeAllocator(cstr name)
+    : mNode(Memory::GetNamedHeap(name))
+    , mAllocated(false)
+  {
+  }
+
+  ReservedSizeAllocator(NodeType* manager)
+    : mNode(manager)
+    , mAllocated(false)
+  {
+  }
+
+  MemPtr Allocate(size_t numberOfBytes)
+  {
+    if (!mAllocated && numberOfBytes <= ReserveSizeInBytes)
+    {
+      mAllocated = true;
+      return mReserved;
+    }
+
+    return mNode->Allocate(numberOfBytes);
+  }
+
+  void Deallocate(MemPtr ptr, size_t numberOfBytes)
+  {
+    if (ptr == mReserved)
+    {
+      mAllocated = false;
+      return;
+    }
+
+    mNode->Deallocate(ptr, numberOfBytes);
+  }
+
+  NodeType* mNode;
+  byte mReserved[ReserveSizeInBytes];
+  bool mAllocated;
 };
 
 // This allocator specifically works with 
@@ -124,6 +176,9 @@ public:
 };
 
 typedef TypedAllocator<Memory::Heap> HeapAllocator;
+
+template <size_t ReserveSizeInBytes>
+using ReservedSizeHeapAllocator = ReservedSizeAllocator<Memory::Heap, ReserveSizeInBytes>;
 
 //Override default
 typedef TypedAllocator<Memory::Heap> DefaultAllocator;

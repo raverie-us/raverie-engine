@@ -50,6 +50,11 @@ public:
 #include "DefaultGame.hpp"
 #include "PlayGame.hpp"
 
+#include "PriorityQueue.hpp"
+#include "PathFinder.hpp"
+#include "PathFinderGrid.hpp"
+#include "PathFinderMesh.hpp"
+
 #include "MarchingSquares.hpp"
 #include "RandomContext.hpp"
 

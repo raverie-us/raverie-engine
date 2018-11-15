@@ -25,6 +25,13 @@ target_sources(Gameplay
     ${CMAKE_CURRENT_LIST_DIR}/MouseCapture.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Orientation.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Orientation.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/PathFinder.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/PathFinder.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/PathFinderGrid.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/PathFinderGrid.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/PathFinderMesh.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/PathFinderMesh.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/PriorityQueue.hpp
     ${CMAKE_CURRENT_LIST_DIR}/PlayGame.cpp
     ${CMAKE_CURRENT_LIST_DIR}/PlayGame.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp

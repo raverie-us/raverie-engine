@@ -57,6 +57,7 @@ target_sources(Engine
     ${CMAKE_CURRENT_LIST_DIR}/ComponentMeta.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Configuration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Configuration.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/CopyOnWrite.hpp
     ${CMAKE_CURRENT_LIST_DIR}/DataSource.cpp
     ${CMAKE_CURRENT_LIST_DIR}/DataSource.hpp
     ${CMAKE_CURRENT_LIST_DIR}/DebugDraw.cpp

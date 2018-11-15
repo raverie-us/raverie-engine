@@ -173,6 +173,7 @@ private:
 #include "Spline.hpp"
 #include "HierarchySpline.hpp"
 #include "AsyncProcess.hpp"
+#include "CopyOnWrite.hpp"
 
 // Co-dependent libraries
 #include "Content/ContentStandard.hpp"

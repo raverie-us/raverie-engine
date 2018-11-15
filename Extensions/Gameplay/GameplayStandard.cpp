@@ -16,6 +16,7 @@ namespace Zero
 ZilchDefineEnum(BrowserModifiers);
 ZilchDefineEnum(OrientationBases);
 ZilchDefineEnum(SplineAnimatorMode);
+ZilchDefineEnum(PathFinderStatus);
 
 ZilchDefineRange(IndexedHalfEdgeMeshVertexArray::RangeType);
 ZilchDefineRange(IndexedHalfEdgeMeshEdgeArray::RangeType);
@@ -31,6 +32,7 @@ ZilchDefineStaticLibrary(GameplayLibrary)
   ZilchInitializeEnumAs(BrowserModifiers, "WebBrowserModifiers");
   ZilchInitializeEnum(OrientationBases);
   ZilchInitializeEnum(SplineAnimatorMode);
+  ZilchInitializeEnum(PathFinderStatus);
 
   // Ranges
   ZilchInitializeRangeAs(IndexedHalfEdgeMeshVertexArray::RangeType, "IndexedHalfEdgeMeshVertexArrayRange");
@@ -68,6 +70,13 @@ ZilchDefineStaticLibrary(GameplayLibrary)
   ZilchInitializeType(RandomContext);
   ZilchInitializeType(CameraViewport);
   ZilchInitializeType(DefaultGameSetup);
+  ZilchInitializeType(PathFinderBaseEvent);
+  ZilchInitializeTypeAs(PathFinderEvent<Vec3>, "PathFinderEvent");
+  ZilchInitializeTypeAs(PathFinderEvent<IntVec3>, "PathFinderGridEvent");
+  ZilchInitializeType(PathFinder);
+  ZilchInitializeType(PathFinderRequest);
+  ZilchInitializeType(PathFinderGrid);
+  ZilchInitializeType(PathFinderMesh);
 
   ZilchInitializeType(SplineParticleEmitter);
   ZilchInitializeType(SplineParticleAnimator);

@@ -273,6 +273,11 @@ Vector3 ToVector3(Vec4Param v)
   return Vector3(v.x, v.y, v.z);
 }
 
+Vector3 ToVector3(IntVec3Param v)
+{
+  return Vector3((real)v.x, (real)v.y, (real)v.z);
+}
+
 ///Converts an axis-angle pair to a 3x3 (in radians). Axis is stored in the
 ///Vector4's xyz and the angle is stored in the w. Axis is assumed to be 
 ///normalized.

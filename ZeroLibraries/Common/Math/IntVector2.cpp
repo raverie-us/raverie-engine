@@ -228,6 +228,11 @@ IntVector2 Max(IntVec2Param lhs, IntVec2Param rhs)
                     Math::Max(lhs.y, rhs.y));
 }
 
+int Dot(IntVec2Param lhs, IntVec2Param rhs)
+{
+  return lhs.x * rhs.x + lhs.y * rhs.y;
+}
+
 IntVector2  IntVector2::operator~() const
 {
   return IntVector2(~x,

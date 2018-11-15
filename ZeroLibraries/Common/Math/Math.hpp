@@ -65,6 +65,9 @@ ZeroShared Vector3 ToVector3(Vec2Param v, real z = real(0.0));
 /// Converts from Vector4 to Vector3, removing the w component.
 ZeroShared Vector3 ToVector3(Vec4Param v);
 
+/// Converts from IntVec3 to Vector3.
+ZeroShared Vector3 ToVector3(IntVec3Param v);
+
 /// Converts from Vector3 to Vector4, adding the given w component.
 ZeroShared inline Vec4 ToVector4(Vec3Param v, real w = real(0.0)){return Vec4(v.x, v.y, v.z, w);}
 
