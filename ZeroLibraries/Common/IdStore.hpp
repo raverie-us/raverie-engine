@@ -7,7 +7,7 @@
 #pragma once
 
 // Includes
-#include "Containers/ArraySet.hpp"
+#include "ArraySet.hpp"
 #include "UintNType.hpp"
 
 namespace Zero

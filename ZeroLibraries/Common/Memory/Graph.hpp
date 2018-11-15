@@ -9,7 +9,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Memory.hpp"
-#include "Containers/InList.hpp"
+#include "InList.hpp"
 #include "String/FixedString.hpp"
 
 namespace Zero

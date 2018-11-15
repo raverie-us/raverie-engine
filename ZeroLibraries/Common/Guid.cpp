@@ -1,5 +1,5 @@
 #include "Precompiled.hpp"
-#include "Containers/Hashing.hpp"
+#include "Hashing.hpp"
 #include "Guid.hpp"
 
 namespace Zero

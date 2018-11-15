@@ -8,7 +8,7 @@
 
 // Includes
 #include "Diagnostic/Diagnostic.hpp"
-#include "Containers/TypeTraits.hpp"
+#include "TypeTraits.hpp"
 #include "BitTypes.hpp"
 #include "Log2.hpp"
 

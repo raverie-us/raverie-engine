@@ -9,7 +9,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 #include "String/StringBuilder.hpp"
-#include "Containers/Algorithm.hpp"
+#include "Algorithm.hpp"
 #include "StringReplacement.hpp"
 
 namespace Zero

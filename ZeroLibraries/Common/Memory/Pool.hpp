@@ -8,7 +8,7 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "Containers/Array.hpp"
+#include "Array.hpp"
 #include "Graph.hpp"
 
 namespace Zero

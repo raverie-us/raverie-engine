@@ -11,7 +11,7 @@
 
 // Includes
 #include "String/String.hpp"
-#include "Containers/Array.hpp"
+#include "Array.hpp"
 #include "EnumDeclaration.hpp"
 
 namespace Zero

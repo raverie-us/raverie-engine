@@ -21,32 +21,32 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/VirtualAny.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Permuter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Permuter.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Containers/Algorithm.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Containers/Allocator.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Containers/Array.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Containers/ArrayMap.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Containers/ArraySet.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Containers/BitStream.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Containers/BitStream.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Containers/BitStream.inl
-    ${CMAKE_CURRENT_LIST_DIR}/Containers/BlockArray.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Containers/ByteBuffer.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Containers/ByteBuffer.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Containers/ContainerCommon.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Containers/ContainerCommon.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Containers/CyclicArray.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Containers/HashedContainer.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Containers/Hashing.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Containers/HashMap.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Containers/HashSet.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Containers/InList.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Containers/OrderedHashMap.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Containers/OrderedHashSet.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Containers/OwnedArray.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Containers/SlotMap.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Containers/SortedArray.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Containers/TypeTraits.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Containers/UnsortedMap.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Algorithm.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Allocator.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Array.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ArrayMap.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ArraySet.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/BitStream.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/BitStream.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/BitStream.inl
+    ${CMAKE_CURRENT_LIST_DIR}/BlockArray.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ByteBuffer.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ByteBuffer.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ContainerCommon.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ContainerCommon.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/CyclicArray.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/HashedContainer.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Hashing.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/HashMap.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/HashSet.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/InList.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/OrderedHashMap.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/OrderedHashSet.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/OwnedArray.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/SlotMap.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/SortedArray.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/TypeTraits.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/UnsortedMap.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Diagnostic/Console.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Diagnostic/Console.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Diagnostic/Diagnostic.cpp

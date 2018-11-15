@@ -8,8 +8,8 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "Containers/TypeTraits.hpp"
-#include "Containers/ContainerCommon.hpp"
+#include "TypeTraits.hpp"
+#include "ContainerCommon.hpp"
 #include "StringConversion.hpp"
 
 namespace Zero

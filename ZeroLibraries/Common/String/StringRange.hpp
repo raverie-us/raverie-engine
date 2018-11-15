@@ -8,7 +8,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-#include "Containers/Hashing.hpp"
+#include "Hashing.hpp"
 #include "String/String.hpp"
 
 namespace Zero

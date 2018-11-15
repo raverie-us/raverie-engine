@@ -7,7 +7,7 @@
 #pragma once
 
 // Includes
-#include "Containers/ArrayMap.hpp"
+#include "ArrayMap.hpp"
 #include "IdStore.hpp"
 
 namespace Zero

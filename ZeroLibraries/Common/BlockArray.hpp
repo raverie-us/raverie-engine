@@ -9,9 +9,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-#include "Containers/ContainerCommon.hpp"
-#include "Containers/Allocator.hpp"
-#include "Containers/Algorithm.hpp"
+#include "ContainerCommon.hpp"
+#include "Allocator.hpp"
+#include "Algorithm.hpp"
 
 namespace Zero
 {

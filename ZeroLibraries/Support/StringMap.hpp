@@ -10,8 +10,8 @@
 
 #pragma once
 #include "String/String.hpp"
-#include "Containers/HashMap.hpp"
-#include "Containers/Array.hpp"
+#include "HashMap.hpp"
+#include "Array.hpp"
 
 namespace Zero
 {

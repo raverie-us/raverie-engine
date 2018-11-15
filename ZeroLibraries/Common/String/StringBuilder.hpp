@@ -8,7 +8,7 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "Containers/ByteBuffer.hpp"
+#include "ByteBuffer.hpp"
 
 namespace Zero
 {

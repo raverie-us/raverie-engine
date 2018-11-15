@@ -7,8 +7,8 @@
 #pragma once
 
 // Includes
-#include "Containers/ArraySet.hpp"
-#include "Containers/BitStream.hpp"
+#include "ArraySet.hpp"
+#include "BitStream.hpp"
 
 namespace Zero
 {
