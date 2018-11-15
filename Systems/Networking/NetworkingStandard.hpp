@@ -32,7 +32,7 @@ public:
 } // namespace Zero
 
 // Extension Library Dependencies
-#include "Dash/DashStandard.hpp"
+#include "Replication/ReplicationStandard.hpp"
 
 // Core Library Dependencies
 #include "Engine/EngineStandard.hpp"

@@ -1,9 +1,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 ///
-/// \file DashStandard.cpp
-/// 
-/// Authors: Joshua Claeys
-/// Copyright 2016, DigiPen Institute of Technology
+/// Authors: Andrew Colean
+/// Copyright 2015, DigiPen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
-#include "Precompiled.hpp"
+#pragma once
+
+#include "ReplicationStandard.hpp"

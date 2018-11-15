@@ -125,7 +125,7 @@ bool Peer::operator  <(Guid rhs) const
 
 ProtocolId Peer::GetProtocolId()
 {
-  static const ProtocolId protocolId(String("Dash Peer").Hash());
+  static const ProtocolId protocolId(String("Replication Peer").Hash());
   return protocolId;
 }
 

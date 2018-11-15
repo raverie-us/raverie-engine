@@ -12,7 +12,7 @@ set(CurrentDirectory ${CMAKE_CURRENT_LIST_DIR})
 # define all of the libraries that are in this folder
 ################################################################################
 add_library(Common "") 
-add_library(Dash "")
+add_library(Replication "")
 add_library(Geometry "")
 add_library(Meta "")
 add_library(Serialization "")
@@ -24,7 +24,7 @@ add_library(Zilch "")
 # Explicitly define the folders as they are not organized how we want
 ################################################################################
 set_target_properties(Common           PROPERTIES FOLDER "ZeroLibraries")
-set_target_properties(Dash             PROPERTIES FOLDER "ZeroLibraries")
+set_target_properties(Replication      PROPERTIES FOLDER "ZeroLibraries")
 set_target_properties(Geometry         PROPERTIES FOLDER "ZeroLibraries")
 set_target_properties(Meta             PROPERTIES FOLDER "ZeroLibraries")
 set_target_properties(Serialization    PROPERTIES FOLDER "ZeroLibraries")
@@ -36,7 +36,7 @@ set_target_properties(Zilch            PROPERTIES FOLDER "ZeroLibraries")
 # include filelists for each library
 ################################################################################
 include(Common/CMakeLists.txt)
-include(Dash/CMakeLists.txt)
+include(Replication/CMakeLists.txt)
 include(Geometry/CMakeLists.txt)
 include(Meta/CMakeLists.txt)
 
@@ -55,9 +55,9 @@ target_include_directories(Common
         ${CurrentDirectory}/Common
         ${CurrentDirectory}
 )
-target_include_directories(Dash
+target_include_directories(Replication
     PUBLIC
-        ${CurrentDirectory}/Dash 
+        ${CurrentDirectory}/Replication 
         ${CurrentDirectory}
 )
 target_include_directories(Geometry
@@ -94,7 +94,7 @@ target_include_directories(Zilch
 ################################################################################
 # set the linked libraries for all of our targets
 ################################################################################
-target_link_libraries(Dash
+target_link_libraries(Replication
                       PUBLIC
                       Common
                       Zilch                      
@@ -134,7 +134,7 @@ target_link_libraries(Support
 ################################################################################
 zero_multitarget_output_directories(
     Common
-    Dash
+    Replication
     Geometry
     Meta
     Serialization
@@ -152,7 +152,7 @@ zero_multitarget_output_directories(
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL "LLVM-vs2014"))
     zero_multitarget_output_settings(
         Common 
-        Dash 
+        Replication 
         Geometry
         Meta 
         Serialization
@@ -177,7 +177,7 @@ endif()
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL "LLVM-vs2014"))
     zero_multitarget_compile_options(  
         Common 
-        Dash 
+        Replication 
         Geometry
         Meta 
         Serialization
@@ -247,7 +247,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
 else()
     zero_multitarget_compile_options(
         Common 
-        Dash 
+        Replication 
         Geometry
         Meta 
         Serialization
@@ -261,7 +261,7 @@ else()
     )
     set_target_properties(
         Common 
-        Dash 
+        Replication 
         Geometry
         Meta 
         Serialization
@@ -280,7 +280,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
     # set the correct subsystems for executable targets, and set stack size for the editor
     set_target_properties(
         Common
-        Dash
+        Replication
         Geometry
         Meta
         Serialization
@@ -296,7 +296,7 @@ endif()
 # Group source into folders
 ################################################################################
 zero_subfolder_source_group(${zero_core_path} ZeroLibraries Common "")
-zero_subfolder_source_group(${zero_core_path} ZeroLibraries Dash "")
+zero_subfolder_source_group(${zero_core_path} ZeroLibraries Replication "")
 zero_subfolder_source_group(${zero_core_path} ZeroLibraries Geometry "")
 zero_subfolder_source_group(${zero_core_path} ZeroLibraries Meta "")
 zero_subfolder_source_group(${zero_core_path} ZeroLibraries Serialization "")

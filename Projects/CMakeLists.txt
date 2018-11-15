@@ -80,7 +80,7 @@ target_link_libraries(ZeroEditor
                       Sound 
                       Platform 
                       Content 
-                      Dash 
+                      Replication 
                       UiWidget
                       Startup
                       Zilch
@@ -111,7 +111,7 @@ target_link_libraries(ZeroLauncher
                       Startup 
                       Platform 
                       Content 
-                      Dash 
+                      Replication 
                       Zilch 
                       UiWidget 
                       CodeTranslator
@@ -137,7 +137,7 @@ target_link_libraries(ZeroLauncherSharedLibrary
                       Startup 
                       Platform 
                       Content 
-                      Dash 
+                      Replication 
                       Zilch 
                       UiWidget 
                       CodeTranslator

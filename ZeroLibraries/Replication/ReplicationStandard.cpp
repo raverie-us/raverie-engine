@@ -1,9 +1,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 ///
-/// Authors: Andrew Colean
-/// Copyright 2015, DigiPen Institute of Technology
+/// \file ReplicationStandard.cpp
+/// 
+/// Authors: Joshua Claeys
+/// Copyright 2016, DigiPen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
-#pragma once
-
-#include "DashStandard.hpp"
+#include "Precompiled.hpp"

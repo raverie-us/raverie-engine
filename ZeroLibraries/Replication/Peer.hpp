@@ -49,7 +49,7 @@ public:
   // Member Functions
   //
 
-  /// Returns the Dash Peer protocol identifier
+  /// Returns the Replication Peer protocol identifier
   static ProtocolId GetProtocolId();
 
   /// Returns the peer's permanent GUID
