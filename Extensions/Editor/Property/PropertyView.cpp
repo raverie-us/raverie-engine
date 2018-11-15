@@ -87,8 +87,6 @@ void PropertyView::Invalidate()
 {
   this->MarkAsNeedsUpdate();
 
-  DisconnectAllObjects();
-
   // We need to release handles in case of meta changing. See the comment
   // above ObjectPropertyNode::ReleaseHandles
   if(mRoot)
@@ -167,8 +165,8 @@ void PropertyView::SetObject(HandleParam newObject,
     // Connect if handle is a valid Object
     if(Object* objectPointer = object.Get<Object*>())
     {
-      ConnectThisTo(objectPointer, Events::ComponentsModified, OnInvalidate);
-      ConnectThisTo(objectPointer, Events::ObjectStructureModified, OnInvalidate);
+      Connect(objectPointer, Events::ComponentsModified, this, &ZilchSelf::OnInvalidate, ConnectNotify::Ignore);
+      Connect(objectPointer, Events::ObjectStructureModified, this, &ZilchSelf::OnInvalidate, ConnectNotify::Ignore);
     }
   }
 

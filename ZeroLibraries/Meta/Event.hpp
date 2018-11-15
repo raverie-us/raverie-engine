@@ -275,10 +275,13 @@ struct MemberFunctionConnection : public EventConnection
   }
 };
 
+DeclareEnum3(ConnectNotify, Exception, ExceptionAssert, Ignore)
+
 ///Create an event connection
 template<typename targetType, typename classType, typename eventType>
 inline void Connect(targetType* dispatcherObject, StringParam eventId,
-                    classType* receiver, void (classType::*function)(eventType*))
+                    classType* receiver, void (classType::*function)(eventType*),
+                    ConnectNotify::Enum notify = ConnectNotify::Exception)
 {
   ReturnIf(dispatcherObject == nullptr,, "Dispatcher is NULL");
   
@@ -289,9 +292,15 @@ inline void Connect(targetType* dispatcherObject, StringParam eventId,
 
   if (!dispatcher->IsUniqueConnection(connection))
   {
-    String className = ZilchTypeId(targetType)->ToString();
-    String error = String::Format("The event id '%s' already has a connection to this event handler for class %s", eventId.c_str(), className.c_str());
-    DoNotifyException("Duplicate Event Connection", error);
+    if (notify != ConnectNotify::Ignore)
+    {
+      String className = ZilchTypeId(targetType)->ToString();
+      String error = String::Format("The event id '%s' already has a connection to this event handler for class %s", eventId.c_str(), className.c_str());
+      if (notify == ConnectNotify::ExceptionAssert)
+        DoNotifyExceptionAssert("Duplicate Event Connection", error);
+      else
+        DoNotifyException("Duplicate Event Connection", error);
+    }
     connection->Flags.SetFlag(ConnectionFlags::DoNotDisconnect);
     delete connection;
     return;
@@ -311,7 +320,7 @@ inline void Connect(targetType* dispatcherObject, StringParam eventId,
 #define DefineEvent(name) const String name = #name
 
 #define ConnectThisTo(target, eventname, handle) \
-  do { Zero::Connect(target, eventname, this, &ZilchSelf::handle); } while (false)
+  do { ::Zero::Connect(target, eventname, this, &ZilchSelf::handle, ::Zero::ConnectNotify::ExceptionAssert); } while (false)
 
 #define DisconnectAll(sender, receiver) sender->GetDispatcher()->Disconnect(receiver);
 
