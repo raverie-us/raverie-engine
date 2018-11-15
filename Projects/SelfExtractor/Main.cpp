@@ -119,7 +119,7 @@ void Extract(const Array<String>& arguments)
 
   // If we're here, it means we successfully opened the data file.
   // Check the signature at the end to be sure we can self extract.
-  if (!file.Seek((u64)-(s64)cSignatureSize, FileOrigin::End))
+  if (!file.Seek((u64)-(s64)cSignatureSize, SeekOrigin::End))
     return FatalError("Unable to seek to the end of the file to read the signature.");
 
   byte buffer[cSignatureSize];
@@ -136,7 +136,7 @@ void Extract(const Array<String>& arguments)
   // data is in the data section at the end of the executable.
   // Note that the size is *always* in little endian format.
   u64 archiveSize = 0;
-  if (!file.Seek((u64)-(s64)(cSignatureSize + sizeof(archiveSize)), FileOrigin::End))
+  if (!file.Seek((u64)-(s64)(cSignatureSize + sizeof(archiveSize)), SeekOrigin::End))
     return FatalError("Unable to seek to the end of the file to read the archive size.");
 
   amount = file.Read(status, (byte*)&archiveSize, sizeof(archiveSize));
@@ -148,7 +148,7 @@ void Extract(const Array<String>& arguments)
     archiveSize = EndianSwap(archiveSize);
 
   // Now backup by the size of the archive.
-  if (!file.Seek((u64)-(s64)(sizeof(archiveSize) + archiveSize), FileOrigin::End))
+  if (!file.Seek((u64)-(s64)(sizeof(archiveSize) + archiveSize), SeekOrigin::End))
     return FatalError("Unable to seek to the end of the file to read the archive size.");
 
   // Start reading the file at the specified location, and extract it to the directory.
