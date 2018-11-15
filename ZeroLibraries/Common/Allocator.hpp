@@ -16,8 +16,8 @@
 
 #if UseMemoryGraph
 
-#include "Memory/Graph.hpp"
-#include "Memory/Heap.hpp"
+#include "Graph.hpp"
+#include "Heap.hpp"
 
 #else
 

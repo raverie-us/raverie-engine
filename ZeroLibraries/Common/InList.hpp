@@ -9,7 +9,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-#include "Diagnostic/Diagnostic.hpp"
+#include "Diagnostic.hpp"
 #include "ContainerCommon.hpp"
 
 namespace Zero

@@ -9,7 +9,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #pragma once
-#include "String/String.hpp"
+#include "String.hpp"
 #include "HashMap.hpp"
 #include "Array.hpp"
 

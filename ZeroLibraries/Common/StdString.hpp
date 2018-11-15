@@ -9,7 +9,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-#include "Memory/ZeroAllocator.hpp"
+#include "ZeroAllocator.hpp"
 #include "Hashing.hpp"
 
 namespace Zero

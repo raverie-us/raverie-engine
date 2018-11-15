@@ -8,12 +8,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 #include "Text.hpp"
-#include "String/StringConversion.hpp"
+#include "StringConversion.hpp"
 #include "Platform/File.hpp"
-#include "String/CharacterTraits.hpp"
+#include "CharacterTraits.hpp"
 #include "Support/FileSupport.hpp"
 #include "SerializationUtility.hpp"
-#include "String/ToString.hpp"
+#include "ToString.hpp"
 
 namespace Zero
 {

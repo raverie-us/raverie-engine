@@ -10,7 +10,7 @@
 #include "Precompiled.hpp"
 #include "SourceControl.hpp"
 #include "Platform/Process.hpp"
-#include "String/StringBuilder.hpp"
+#include "StringBuilder.hpp"
 #include "Platform/FileSystem.hpp"
 
 namespace Zero

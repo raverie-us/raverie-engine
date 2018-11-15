@@ -9,7 +9,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Array.hpp"
-#include "String/String.hpp"
+#include "String.hpp"
 #include "Status.hpp"
 
 namespace Zero

@@ -7,8 +7,8 @@
 #include "Precompiled.hpp"
 #include "FileSupport.hpp"
 #include "Platform/FileSystem.hpp"
-#include "String/StringBuilder.hpp"
-#include "Regex/Regex.hpp"
+#include "StringBuilder.hpp"
+#include "Regex.hpp"
 #include "Platform/FilePath.hpp"
 #include "Common/Time.hpp"
 

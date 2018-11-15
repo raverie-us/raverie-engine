@@ -7,7 +7,7 @@
 #pragma once
 
 // Includes
-#include "Diagnostic/Diagnostic.hpp"
+#include "Diagnostic.hpp"
 #include "TypeTraits.hpp"
 #include "BitTypes.hpp"
 #include "Log2.hpp"

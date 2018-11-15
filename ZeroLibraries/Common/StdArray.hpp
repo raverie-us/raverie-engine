@@ -12,7 +12,7 @@
 
 #include "ContainerCommon.hpp"
 #include <vector>
-#include "Memory/ZeroAllocator.hpp"
+#include "ZeroAllocator.hpp"
 
 namespace Zero
 {

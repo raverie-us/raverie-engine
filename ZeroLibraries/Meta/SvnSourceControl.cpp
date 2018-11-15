@@ -7,7 +7,7 @@
 #include "Precompiled.hpp"
 #include "Status.hpp"
 #include "SourceControl.hpp"
-#include "String/StringBuilder.hpp"
+#include "StringBuilder.hpp"
 
 namespace Zero
 {

@@ -10,7 +10,7 @@
 #pragma once
 
 // Includes
-#include "String/String.hpp"
+#include "String.hpp"
 #include "Array.hpp"
 #include "EnumDeclaration.hpp"
 

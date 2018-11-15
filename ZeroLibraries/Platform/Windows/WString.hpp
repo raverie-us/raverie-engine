@@ -3,7 +3,7 @@
 /// Copyright 2016, DigiPen Institute of Technology
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "String/String.hpp"
+#include "String.hpp"
 
 namespace Zero
 {

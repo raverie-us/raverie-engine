@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Hashing.hpp"
-#include "String/String.hpp"
+#include "String.hpp"
 
 namespace Zero
 {

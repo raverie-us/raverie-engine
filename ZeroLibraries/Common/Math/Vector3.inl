@@ -4,7 +4,7 @@
 /// Copyright 2010-2012, DigiPen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
-#include "Diagnostic/Diagnostic.hpp"
+#include "Diagnostic.hpp"
 
 namespace Math
 {

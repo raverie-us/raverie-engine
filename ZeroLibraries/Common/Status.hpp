@@ -5,9 +5,9 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-// #include "String/String.hpp"
+// #include "String.hpp"
 #include "EnumDeclaration.hpp"
-// #include "String/StringBuilder.hpp"
+// #include "StringBuilder.hpp"
 
 namespace Zero
 {

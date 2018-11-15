@@ -8,7 +8,7 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "String/StringBuilder.hpp"
+#include "StringBuilder.hpp"
 #include "Algorithm.hpp"
 #include "StringReplacement.hpp"
 

@@ -47,13 +47,13 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/SortedArray.hpp
     ${CMAKE_CURRENT_LIST_DIR}/TypeTraits.hpp
     ${CMAKE_CURRENT_LIST_DIR}/UnsortedMap.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Diagnostic/Console.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Diagnostic/Console.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Diagnostic/Diagnostic.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Diagnostic/Diagnostic.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Lexer/Lexer.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Lexer/Lexer.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Lexer/Lexer.inl
+    ${CMAKE_CURRENT_LIST_DIR}/Console.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Console.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Diagnostic.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Diagnostic.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Lexer.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Lexer.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Lexer.inl
     ${CMAKE_CURRENT_LIST_DIR}/Math/BasicNativeTypesMath.inl
     ${CMAKE_CURRENT_LIST_DIR}/Math/BlockVector3.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Math/BlockVector3.hpp
@@ -118,19 +118,19 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/Math/Vector4.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Math/VectorHashPolicy.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Math/WeightedProbabilityTable.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Memory/Block.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Memory/Block.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Memory/Graph.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Memory/Graph.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Memory/Heap.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Memory/Heap.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Memory/LocalStackAllocator.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Memory/Memory.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Memory/Pool.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Memory/Pool.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Memory/Stack.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Memory/Stack.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Memory/ZeroAllocator.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Block.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Block.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Graph.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Graph.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Heap.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Heap.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/LocalStackAllocator.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Memory.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Pool.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Pool.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Stack.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Stack.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ZeroAllocator.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Atomic.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Audio.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Browser.hpp
@@ -188,28 +188,28 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Utilities.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/WebRequest.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/WebRequest.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Regex/Regex.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Regex/Regex.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/StlBinding/Array.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/StlBinding/Associative.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/StlBinding/String.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/String/CharacterTraits.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/String/CharacterTraits.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/String/FixedString.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/String/Rune.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/String/Rune.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/String/String.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/String/String.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/String/StringBuilder.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/String/StringBuilder.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/String/StringConversion.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/String/StringConversion.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/String/StringRange.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/String/StringRange.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/String/StringUtility.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/String/StringUtility.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/String/ToString.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/String/ToString.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Regex.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Regex.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/StdArray.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/StdAssociative.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/StdString.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/CharacterTraits.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/CharacterTraits.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/FixedString.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Rune.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Rune.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/String.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/String.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/StringBuilder.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/StringBuilder.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/StringConversion.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/StringConversion.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/StringRange.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/StringRange.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/StringUtility.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/StringUtility.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ToString.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ToString.hpp
     ${CMAKE_CURRENT_LIST_DIR}/BasicNativeTypes.inl
     ${CMAKE_CURRENT_LIST_DIR}/BitField.hpp
     ${CMAKE_CURRENT_LIST_DIR}/BitMath.hpp

@@ -5,7 +5,7 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "String/StringBuilder.hpp"
+#include "StringBuilder.hpp"
 
 namespace Zero
 {

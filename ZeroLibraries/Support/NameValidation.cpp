@@ -11,9 +11,9 @@
 
 #include <ctype.h>
 #include "NameValidation.hpp"
-#include "String/StringBuilder.hpp"
-#include "String/CharacterTraits.hpp"
-#include "String/StringUtility.hpp"
+#include "StringBuilder.hpp"
+#include "CharacterTraits.hpp"
+#include "StringUtility.hpp"
 
 namespace Zero
 {

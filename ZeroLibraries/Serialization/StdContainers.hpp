@@ -17,9 +17,9 @@
 #include <algorithm>
 #include <utility>
 
-#include "Memory/Graph.hpp"
-#include "Memory/ZeroAllocator.hpp"
-#include "StlBinding/String.hpp"
+#include "Graph.hpp"
+#include "ZeroAllocator.hpp"
+#include "StdString.hpp"
 #include "Serialization\SerializationTraits.hpp"
 #include "Serialization\Serialization.hpp"
 

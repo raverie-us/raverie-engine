@@ -10,7 +10,7 @@
 #pragma once
 #include "Memory.hpp"
 #include "InList.hpp"
-#include "String/FixedString.hpp"
+#include "FixedString.hpp"
 
 namespace Zero
 {

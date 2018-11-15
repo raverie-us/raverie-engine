@@ -10,7 +10,7 @@
 #include "EnumDeclaration.hpp"
 #include "BitMath.hpp"
 #include "UintNType.hpp"
-#include "String/String.hpp"
+#include "String.hpp"
 
 //---------------------------------------------------------------------------------//
 //                           BitStream Configuration                               //
