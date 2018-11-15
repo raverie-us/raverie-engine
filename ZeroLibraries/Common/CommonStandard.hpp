@@ -88,6 +88,7 @@ public:
 #include "Memory/Pool.hpp"
 #include "Memory/Stack.hpp"
 #include "Memory/ZeroAllocator.hpp"
+#include "Permuter.hpp"
 #include "String/Rune.hpp"
 #include "String/String.hpp"
 #include "String/FixedString.hpp"

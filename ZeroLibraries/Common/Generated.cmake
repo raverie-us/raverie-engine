@@ -17,6 +17,8 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/ThreadableLoop.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ThreadableLoop.hpp
     ${CMAKE_CURRENT_LIST_DIR}/VirtualAny.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Permuter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Permuter.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Containers/Algorithm.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Containers/Allocator.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Containers/Array.hpp
