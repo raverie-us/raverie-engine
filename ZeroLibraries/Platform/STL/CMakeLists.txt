@@ -1,9 +1,10 @@
-################################################################################
-# Add any files that need to be manually added in this file.
-# Link: https://github.com/playmer/CmakeBuilder 
-################################################################################
-#Adds generated list, do not remove line unless you are sure you want to ignore the generated file.
-include(${CMAKE_CURRENT_LIST_DIR}/Generated.cmake)
 target_sources(Platform
-PRIVATE
+  PRIVATE
+    ${CMAKE_CURRENT_LIST_DIR}/Atomic.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/File.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/FileSystem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/FpControl.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Process.cpp
 )
