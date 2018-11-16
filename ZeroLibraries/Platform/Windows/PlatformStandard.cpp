@@ -15,6 +15,8 @@ namespace Zero
 //**************************************************************************************************
 void PlatformLibrary::Initialize()
 {
+  Thread::MainThreadId = Thread::GetCurrentThreadId();
+
   // Initialize platform socket library
   Zero::Status socketLibraryInitStatus;
   Zero::Socket::InitializeSocketLibrary(socketLibraryInitStatus);

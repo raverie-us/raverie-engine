@@ -20,10 +20,13 @@ namespace Events
   DefineEvent(LogicUpdate);
   DefineEvent(PreviewUpdate);
   DefineEvent(EngineUpdate);
+  DefineEvent(EngineDebuggerUpdate);
   DefineEvent(EngineShutdown);
   DefineEvent(ActionFrameUpdate);
   DefineEvent(ActionLogicUpdate);
 }
+
+const float cFixedDt = (1.0f / 60.0f);
 
 System* CreateTimeSystem(){ return new TimeSystem();}
 
@@ -82,9 +85,8 @@ TimeSpace::TimeSpace()
   mRealTimePassed = 0.0;
   mScaledClampedTimePassed = 0.0;
 
-  const float cInitialDt = (1.0f / 60.0f);
-  mRealDt = cInitialDt;
-  mScaledClampedDt = cInitialDt;
+  mRealDt = cFixedDt;
+  mScaledClampedDt = cFixedDt;
 }
 
 TimeSpace::~TimeSpace()
@@ -280,7 +282,7 @@ TimeSystem::~TimeSystem()
 
 }
 
-void TimeSystem::Update()
+void TimeSystem::Update(bool debugger)
 {
   mTimer.Update();
   float dt = (float)mTimer.TimeDelta();
@@ -315,17 +317,20 @@ void TimeSystem::Update()
 
   // We can pretend that the rest of the engine runs at a fixed frame rate
   if (gDeterministicMode)
-    dt = 1.0f / 60.0f;
+    dt = cFixedDt;
 
   mEngineDt = dt;
   mEngineRuntime = mTimer.Time();
 
-  // Update every space in the engine
-  TimeSpaceList::range range = List.All();
-  for(; !range.Empty(); range.PopFront())
+  if (!debugger)
   {
-    TimeSpace& timeSpace = range.Front();
-    timeSpace.Update(dt);
+    // Update every space in the engine
+    TimeSpaceList::range range = List.All();
+    for (; !range.Empty(); range.PopFront())
+    {
+      TimeSpace& timeSpace = range.Front();
+      timeSpace.Update(dt);
+    }
   }
 
   UpdateEvent uiUpdate(dt, 0, 0, 0);

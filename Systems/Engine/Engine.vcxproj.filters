@@ -282,9 +282,6 @@
     <ClCompile Include="AnimationGraphEvents.cpp">
       <Filter>EngineComponents\AnimationGraph</Filter>
     </ClCompile>
-    <ClCompile Include="ScriptDebugEngine.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
     <ClCompile Include="OsWindow.cpp">
       <Filter>Shell</Filter>
     </ClCompile>
@@ -374,6 +371,9 @@
     <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="Action\ActionEase.cpp">
       <Filter>Action</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptEvents.cpp">
+      <Filter>Script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -511,9 +511,6 @@
     </ClInclude>
     <ClInclude Include="CogId.hpp">
       <Filter>Composition</Filter>
-    </ClInclude>
-    <ClInclude Include="ScriptDebugEngine.hpp">
-      <Filter>Script</Filter>
     </ClInclude>
     <ClInclude Include="HierarchyRange.hpp">
       <Filter>EngineComponents\Hierarchy</Filter>
@@ -674,6 +671,9 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="Rectangle.hpp" />
+    <ClInclude Include="ScriptEvents.hpp">
+      <Filter>Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="PropertyTrack.inl">

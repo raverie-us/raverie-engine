@@ -197,6 +197,12 @@ void CogRestoreState::DestroyObject(bool restoreSpaceModifiedState)
   if(object == nullptr || space == nullptr)
     return;
 
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("Operations", "Cannot destroy objects when in read-only mode");
+    return;
+  }
+
   // Mark our parent as modified
   if(Cog* parent = object->GetParent())
   {

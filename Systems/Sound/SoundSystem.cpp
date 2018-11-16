@@ -286,8 +286,11 @@ int SoundSystem::GetOutputChannels()
 }
 
 //**************************************************************************************************
-void SoundSystem::Update()
+void SoundSystem::Update(bool debugger)
 {
+  if (debugger)
+    return;
+  
   // Update audio system 
   mAudioSystem->Update();
 

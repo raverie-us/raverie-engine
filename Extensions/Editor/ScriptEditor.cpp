@@ -687,6 +687,12 @@ Document* DocumentEditor::GetDocument()
 
 void DocumentEditor::SaveDocument()
 {
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("Save", "Cannot save when in read-only mode");
+    return;
+  }
+
   if(mDocument)
   {
     StringRange text = GetAllText();
@@ -751,7 +757,6 @@ void DocumentEditor::OnFocusIn()
 ScriptEditor::ScriptEditor(Composite* parent)
   :DocumentEditor(parent)
 {
-  mDebugEngine = nullptr;
   mCharacterWasAdded = false;
 
   mCallTipLine = 0;
@@ -771,17 +776,6 @@ ScriptEditor::~ScriptEditor()
 {
 }
 
-const int InstructionMarker = 2;
-const int BreakPointMarker = 1;
-
-void ScriptEditor::OnDebugBreak(DebugEngineEvent* event)
-{
-  ClearMarker(-1, InstructionMarker);
-  // METAREFACTOR Confirm this should subtract 1 from PrimaryLine (PrimaryLine starts at 1, 0 is invalid)
-  GoToLine(event->Location.PrimaryLine - 1);
-  SetMarker(event->Location.PrimaryLine - 1, InstructionMarker);
-}
-
 void ScriptEditor::OnFocusOut()
 {
   DocumentEditor::OnFocusOut();
@@ -792,18 +786,18 @@ void ScriptEditor::OnFocusIn()
   DocumentEditor::OnFocusIn();
 }
 
-void ScriptEditor::OnDebugException(DebugEngineEvent* event)
+void ScriptEditor::BreakpointsClicked(int line, int position)
 {
-  if( mDocument->GetPath() == event->Location.Origin )
-  {
-    String errMsg = FormatErrorMessage(event->Message,event->Location.PrimaryCharacter);
-    this->SetAnnotation(event->Location.PrimaryLine - 1, errMsg);
+  ICodeInspector* inspector = GetCodeInspector();
+  if (!inspector)
+    return;
 
-    // If the error is a runtime clear Focus to prevent any keys
-    // held down from typing in the editor
-    if(event->EventId != Events::SyntaxError)
-      this->LoseFocus();
-  }
+  bool result = inspector->ToggleBreakpoint((size_t)line);
+
+  if (result)
+    this->SetMarker(line, BreakPointMarker);
+  else
+    this->ClearMarker(line, BreakPointMarker);
 }
 
 CodeLocation GetCurrentLocation(ScriptEditor* editor)
@@ -813,13 +807,6 @@ CodeLocation GetCurrentLocation(ScriptEditor* editor)
   // METAREFACTOR - Confirm this should be + 1
   location.PrimaryLine = editor->GetCurrentLine() + 1;
   return location;
-}
-
-void ScriptEditor::SetDebugEngine(ScriptDebugEngine* debugEngine)
-{
-  mDebugEngine = debugEngine;
-  ///ConnectThisTo(mDebugEngine, Events::DebugBreak, OnDebugBreak);
-  //ConnectThisTo(mDebugEngine, Events::DebugException, OnDebugException);
 }
 
 void ScriptEditor::OnKeyUp(KeyboardEvent* event)
@@ -877,21 +864,6 @@ void ScriptEditor::OnKeyDown(KeyboardEvent* event)
     if (code && (event->Key == 'K'))
     {
       this->BlockComment(code->GetSingleLineCommentToken().c_str());
-    }
-
-    // Debugger commands
-    if(mDebugEngine)
-    {
-      if(event->Key == Keys::Up)
-        mDebugEngine->SetBreakMode(BreakMode::BreakNormal, 0);
-      if(event->Key == Keys::Down)
-        mDebugEngine->SetBreakMode(BreakMode::BreakOnStack, 0);
-      if(event->Key == Keys::Right)
-        mDebugEngine->SetBreakMode(BreakMode::BreakOnStack, 1);
-      if(event->Key == Keys::Left)
-        mDebugEngine->SetBreakMode(BreakMode::BreakOnStack, -1);
-
-      ClearMarker(-1, InstructionMarker);
     }
   }
   
@@ -953,19 +925,6 @@ void ScriptEditor::OnKeyDown(KeyboardEvent* event)
   }
 
   DocumentEditor::OnKeyDown(event);
-
-  //if(event->Key == KeyCodes::F6)
-  //{
-  //  DebugValue value;
-  //  mDebugEngine->EvaluateIdentifier(value, "self");
-  //}
-
-  //if(event->Key == KeyCodes::F5)
-  //{
-  //  CodeLocation l = GetCurrentLocation(this);
-  //  mDebugEngine->SetBreakPoint(l);
-  //  this->SetMarker(l.LineNumber, BreakPointMarker);
-  //}
 }
 
 void ScriptEditor::ShowAutoComplete(Array<Completion>& tips, CompletionConfidence::Enum confidence)
@@ -976,6 +935,30 @@ void ScriptEditor::ShowAutoComplete(Array<Completion>& tips, CompletionConfidenc
 void ScriptEditor::OnAutoCompleteItemDoubleClicked(ObjectEvent* event)
 {
   this->AttemptFinishAutoComplete(UserCompletion::ExplitilyRequested);
+}
+
+void ScriptEditor::OnTextModified(Event* event)
+{
+  ZilchBase::OnTextModified(event);
+
+  ICodeInspector* inspector = GetCodeInspector();
+  if (!inspector)
+    return;
+
+  inspector->ClearBreakpoints();
+
+  // Walk all breakpoint markers
+  int line = -1;
+  for(;;)
+  {
+    line = GetNextMarker(line + 1, BreakPointMarker);
+  
+    if (line == -1)
+      break;
+  
+    if (inspector->SetBreakpoint((size_t)line, true) == false)
+      this->ClearMarker(line, BreakPointMarker);
+  }
 }
 
 void ScriptEditor::ShowAutoComplete(Array<Completion>& completions, int cursorOffset, CompletionConfidence::Enum confidence)
@@ -1189,9 +1172,19 @@ void ScriptEditor::Unindent(size_t line)
 String ScriptEditor::GetDocumentDisplayName()
 {
   if (mDocument)
-  {
     return mDocument->GetDisplayName();
-  }
+
+  return String();
+}
+
+String ScriptEditor::GetOrigin()
+{
+  Resource* resource = GetResource();
+  if (resource)
+    return resource->GetOrigin();
+
+  if (mDocument)
+    return mDocument->GetPath();
 
   return String();
 }
@@ -1319,27 +1312,67 @@ void ScriptEditor::OnMouseMove(MouseEvent* event)
   DocumentResource* resource = GetResource();
   
   if (resource == nullptr)
+  {
+    mLastLocation = CodeLocation();
     return;
+  }
   
   ICodeInspector* codeInspector = resource->GetCodeInspector();
   
   if (codeInspector == nullptr)
+  {
+    mLastLocation = CodeLocation();
     return;
+  }
   
   int cursor = GetCursorFromScreenPosition(event->Position);
 
   if (cursor == -1)
   {
     mToolTip.SafeDestroy();
+    mLastLocation = CodeLocation();
     return;
   }
   
   CodeDefinition definition;
   codeInspector->AttemptGetDefinition(this, cursor, definition);
   
-  if (!definition.ToolTip.Empty())
+  //// Don't keep showing the tooltip if we're at the same location and moving the mouse slightly
+  if (definition.ElementLocation.IsSamePositionAndOrigin(mLastLocation))
+    return;
+  
+  mLastLocation = definition.ElementLocation;
+
+  Any value;
+  Array<QueryResult> results;
+  if (definition.DefinedVariable != nullptr)
+    value = codeInspector->QueryExpression(definition.DefinedVariable->Name, results);
+
+  String tooltipText = definition.ToolTip;
+
+  if (value.IsHoldingValue())
   {
-    ToolTip* tooltip = ShowToolTip(definition.ToolTip, Vec3(event->Position));
+    StringBuilder builder;
+
+    bool isFirst = true;
+    forRange(QueryResult& result, results)
+    {
+      if (!isFirst)
+        builder.Append("  ");
+
+      builder.Append(result.Name);
+      builder.Append(": ");
+      builder.Append(result.Value);
+      builder.Append("\n");
+      isFirst = false;
+    }
+
+    tooltipText = builder.ToString();
+  }
+
+  if (!tooltipText.Empty())
+  {
+    ToolTip* tooltip = ShowToolTip(tooltipText, Vec3(event->Position));
 
     const void* codeUserData = definition.NameLocation.CodeUserData;
     if (codeUserData)
@@ -1362,6 +1395,20 @@ void ScriptEditor::OnRightClick(MouseEvent* event)
   contextMenu->SizeToContents();
   contextMenu->SetBelowMouse(event->GetMouse(), Pixels(-1, -1));
   event->GetMouse()->SetCursor(Cursor::Arrow);
+}
+
+void ScriptEditor::ScriptError(ScriptEvent* event)
+{
+  if (mDocument->GetPath() != event->Location.Origin)
+    return;
+  
+  String errMsg = FormatErrorMessage(event->Message, event->Location.PrimaryCharacter);
+  this->SetAnnotation(event->Location.PrimaryLine - 1, errMsg);
+
+  // If the error is a runtime clear Focus to prevent any keys
+  // held down from typing in the editor
+  if (event->EventId != Events::SyntaxError)
+    this->LoseFocus();
 }
 
 void ScriptEditor::OnCharacterAdded(TextEditorEvent* event)

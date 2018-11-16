@@ -352,9 +352,9 @@ public:
     Mouse* mouse = Z::gMouse;
     menu->SetBelowMouse(mouse, Pixels(0, 0));
 
-    ConnectMenu(menu, "By Command", OnCommand);
-    ConnectMenu(menu, "By Binding ($)", OnBinding);
-    ConnectMenu(menu, "By Tag (.)", OnTag);
+    ConnectMenu(menu, "By Command", OnCommand, true);
+    ConnectMenu(menu, "By Binding ($)", OnBinding, true);
+    ConnectMenu(menu, "By Tag (.)", OnTag, true);
   }
 
   void OnCommand(Event* event)
@@ -932,9 +932,9 @@ void HotKeyEditor::OnCommandRightClick(TreeEvent* event)
   Mouse* mouse = Z::gMouse;
   menu->SetBelowMouse(mouse, Pixels(0, 0));
   mRowIndex = event->Row->mIndex;
-  ConnectMenu(menu, "Rename", OnCommandRename);
-  ConnectMenu(menu, "Rebind", OnCommandRebind);
-  ConnectMenu(menu, "Delete", OnCommandDelete);
+  ConnectMenu(menu, "Rename", OnCommandRename, false);
+  ConnectMenu(menu, "Rebind", OnCommandRebind, false);
+  ConnectMenu(menu, "Delete", OnCommandDelete, false);
 }
 
 /******************************************************************************/

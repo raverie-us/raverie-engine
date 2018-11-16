@@ -144,6 +144,9 @@ public:
   {
     forRange(ObjectPropertyNode* propertyNode, node->mProperties.All())
     {
+      if (!propertyNode->mProperty)
+        continue;
+
       Property* metaProperty = propertyNode->mProperty;
       if(metaProperty->Name == "ScriptSource")
       {

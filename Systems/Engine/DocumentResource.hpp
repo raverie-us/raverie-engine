@@ -50,6 +50,8 @@ struct CallTip
 
 DeclareEnum2(CompletionConfidence, Unsure, Perfect);
 
+class ScriptEvent;
+
 /// Implemented by the script editor to provide functionality to the code inspector
 class ICodeEditor
 {
@@ -101,6 +103,9 @@ public:
   /// Get's the name of the document we're editing. Often times this can be used in place of a class name for dynamic languages
   virtual String GetDocumentDisplayName() = 0;
 
+  /// Get's the a unqiue name that will always identify the file (and may be printed from CodeLocations).
+  virtual String GetOrigin() = 0;
+
   /// Sorts call-tips from least to most parameters, and then alphabetically by type
   static void SortCallTips(Array<CallTip>& tips);
 
@@ -151,8 +156,26 @@ public:
 
   /// Generate the last part of a definition of a function
   /// The cursor will be placed directly before this part
-  // Use the tab character to indicate indenting (will be replaced with the editor's settings)
+  /// Use the tab character to indicate indenting (will be replaced with the editor's settings)
   virtual String GenerateConnectFunctionEnd();
+
+  /// Queries an expressions current value if we're running in a debugger (may return an empty Any)
+  virtual Any QueryExpression(StringParam expression, Array<QueryResult>& results);
+
+  /// Attempts to set a breakpoint (returns true if a breakpoint is set, false otherwise).
+  virtual bool SetBreakpoint(size_t line, bool breakpoint);
+
+  /// Returns true if a breakpoint is set at this location, false otherwise.
+  virtual bool HasBreakpoint(size_t line);
+
+  /// Get all the breakpoint locations.
+  virtual void GetBreakpoints(Array<size_t>& breakpointLines);
+
+  /// Clear all the breakpoints in the current document.
+  virtual void ClearBreakpoints();
+
+  /// Toggle a breakpoint on the given line. Returns if a breakpoint was set.
+  bool ToggleBreakpoint(size_t line);
 
   /// Get the keyword right before our cursor (a keyword is [a-zA-Z][a-zA-Z0-9]*)
   /// This is useful for implementing 'CanStartLocalWordCompletion', to prevent completion after keywords like 'class'

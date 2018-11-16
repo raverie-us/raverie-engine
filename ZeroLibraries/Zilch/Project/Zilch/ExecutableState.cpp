@@ -1537,10 +1537,11 @@ namespace Zilch
     Timeout& timeout = this->Timeouts.Back();
 
     // Accumulate ticks for our timer
-    timeout.AccumulatedTicks += ticksSinceLastCheck;
+    if (!this->EnableDebugEvents)
+      timeout.AccumulatedTicks += ticksSinceLastCheck;
     
     // If we exceed the timeout, we need to throw an exception and stop everything
-    if (timeout.AccumulatedTicks > timeout.LengthTicks)
+    if (timeout.AccumulatedTicks > timeout.LengthTicks && !this->EnableDebugEvents)
     {
       // Throw an exception to say we timed out
       this->ThrowException

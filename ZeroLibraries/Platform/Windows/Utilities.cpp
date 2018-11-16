@@ -89,14 +89,17 @@ u64 GetMacAddress()
 
 
 // Debug break (only if a debugger is attached)
-void DebugBreak()
+bool DebugBreak()
 {
   // If the debugger is attached...
   if (IsDebuggerAttached() == true)
   {
     // Trigger a break point!
     ZERO_DEBUG_BREAK;
+    return true;
   }
+
+  return false;
 }
 
 cwstr windowsVerbNames[] = {NULL, L"open", L"edit", L"run"};

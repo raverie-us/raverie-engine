@@ -14,6 +14,12 @@ namespace Zero
 
 void RunGroupImport(ImportOptions& options)
 {
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("Content", "Cannot add content items in read-only mode");
+    return;
+  }
+
   ContentLibrary* library = options.mLibrary;
 
   Array<ContentItem*> contentToBuild;

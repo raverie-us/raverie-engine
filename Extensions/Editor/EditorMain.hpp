@@ -56,7 +56,9 @@ public:
   DocumentEditor* OpenTextFile(StringParam filename) override;
   DocumentEditor* OpenDocumentResource(DocumentResource* docResource) override;
   DocumentEditor* OpenTextFileAuto(StringParam file) override;
-  void OnScriptError(DebugEngineEvent* event);
+  void OnScriptError(ScriptEvent* event);
+  void OnDebuggerPaused(ScriptEvent* event);
+  void OnDebuggerResumed(ScriptEvent* event);
   
   void OnBlockingTaskStart(BlockingTaskEvent* event);
   void OnBlockingTaskFinish(Event* event);

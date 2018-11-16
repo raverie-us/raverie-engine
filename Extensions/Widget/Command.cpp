@@ -92,6 +92,7 @@ Command::Command()
   mExecuter = nullptr;
   DevOnly = false;
   Active = false;
+  ReadOnly = false;
 }
 
 Command::~Command()
@@ -108,6 +109,7 @@ void Command::Serialize(Serializer& stream)
   SerializeNameDefault(Function, String());
   SerializeName(Tags);
   SerializeNameDefault(DevOnly, false);
+  SerializeNameDefault(ReadOnly, false);
 }
 
 void Command::SetActive(bool active)
@@ -172,6 +174,17 @@ void Command::ChangeState()
   this->GetDispatcher()->Dispatch(Events::CommandStateChange, &toSend);
 }
 
+void Command::ExecuteCommand()
+{
+  if (Z::gEngine->IsReadOnly() && !ReadOnly)
+  {
+    DoNotifyWarning("Command", BuildString("Cannot execute command ", Name, " because we are in read-only mode"));
+    return;
+  }
+
+  Execute();
+}
+
 String SeperateWords(StringParam sourceString)
 {
   StringBuilder output;
@@ -214,7 +227,7 @@ String CommandSearchProvider::GetType(SearchViewResult& element)
 void CommandSearchProvider::RunCommand(SearchView* searchView, SearchViewResult& element)
 {
   Command* command = (Command*)element.Data;
-  command->Execute();
+  command->ExecuteCommand();
 }
 
 Composite* CommandSearchProvider::CreatePreview(Composite* parent, SearchViewResult& element)
@@ -305,13 +318,14 @@ Command* CommandManager::CreateFromName(StringParam name)
   return new Command();
 }
 
-Command* CommandManager::AddCommand(StringParam commandName, CommandExecuter* executer)
+Command* CommandManager::AddCommand(StringParam commandName, CommandExecuter* executer, bool readOnly)
 {
   Command* existingCommand = NamedCommands.FindValue(commandName, nullptr);
   if(existingCommand)
   {
     // Command already loaded but binding executer
     existingCommand->mExecuter = executer;
+    existingCommand->ReadOnly = readOnly;
     if(existingCommand->Description.Empty())
       existingCommand->Description = executer->GetDescription();
     return existingCommand;
@@ -321,6 +335,7 @@ Command* CommandManager::AddCommand(StringParam commandName, CommandExecuter* ex
   Command* command = new Command();
   command->Name = commandName;
   command->mExecuter = executer;
+  command->ReadOnly = readOnly;
   command->DisplayName = SeperateWords(commandName);
 
   if(command->Description.Empty())
@@ -359,7 +374,7 @@ void CommandManager::RunParsedCommands()
     String commandName = range.Front().first;
     Command* command = GetCommand(commandName);
     if(command)
-      command->Execute();
+      command->ExecuteCommand();
   }
 }
 
@@ -403,7 +418,7 @@ bool CommandManager::TestCommandKeyboardShortcuts(KeyboardEvent* event)
     return false;
 
   event->Handled = true;
-  command->Execute();
+  command->ExecuteCommand();
   return true;
 }
 

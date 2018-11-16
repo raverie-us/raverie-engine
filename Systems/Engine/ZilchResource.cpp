@@ -344,11 +344,9 @@ void ZilchDocumentResource::PrepForAutoComplete(ICodeEditor* editor, Project& pr
   Array<LibraryRef> libraries;
   GetLibraries(libraries);
 
-  String documentName = editor->GetDocumentDisplayName();
-
   for (uint i = 0; i < libraries.Size(); ++i)
     dependencies.PushBack(libraries[i]);
-  project.AddCodeFromString(allText, documentName, editor->GetDocumentResource());
+  project.AddCodeFromString(allText, editor->GetOrigin(), editor->GetDocumentResource());
 }
 
 //**************************************************************************************************
@@ -358,7 +356,44 @@ void ZilchDocumentResource::AttemptGetDefinition(ICodeEditor* editor, size_t cur
   Module dependencies;
   PrepForAutoComplete(editor, project, dependencies);
 
-  project.GetDefinitionInfo(dependencies, cursorPosition, editor->GetDocumentDisplayName(), definition);
+  project.GetDefinitionInfo(dependencies, cursorPosition, editor->GetOrigin(), definition);
+}
+
+//**************************************************************************************************
+Any ZilchDocumentResource::QueryExpression(StringParam expression, Array<QueryResult>& results)
+{
+  return ZilchManager::GetInstance()->mDebugger.QueryExpression(expression, results);
+}
+
+//**************************************************************************************************
+bool ZilchDocumentResource::SetBreakpoint(size_t line, bool breakpoint)
+{
+  // Zilch uses 1 based lines and the code editor uses 0 based lines
+  return ZilchManager::GetInstance()->mDebugger.SetBreakpoint(GetOrigin(), line + 1, breakpoint);
+}
+
+//**************************************************************************************************
+bool ZilchDocumentResource::HasBreakpoint(size_t line)
+{
+  // Zilch uses 1 based lines and the code editor uses 0 based lines
+  return ZilchManager::GetInstance()->mDebugger.HasBreakpoint(GetOrigin(), line + 1);
+}
+
+//**************************************************************************************************
+void ZilchDocumentResource::GetBreakpoints(Array<size_t>& breakpointLines)
+{
+  if (!ZilchManager::GetInstance()->mDebugger.Breakpoints.ContainsKey(GetOrigin()))
+    return;
+
+  // Zilch uses 1 based lines and the code editor uses 0 based lines
+  forRange(size_t line, ZilchManager::GetInstance()->mDebugger.Breakpoints[GetOrigin()].All())
+    breakpointLines.PushBack(line - 1);
+}
+
+//**************************************************************************************************
+void ZilchDocumentResource::ClearBreakpoints()
+{
+  ZilchManager::GetInstance()->mDebugger.ClearBreakpoints(GetOrigin());
 }
 
 //**************************************************************************************************
@@ -368,7 +403,7 @@ void ZilchDocumentResource::GetAutoCompleteInfo(ICodeEditor* editor, AutoComplet
   Module dependencies;
   PrepForAutoComplete(editor, project, dependencies);
 
-  project.GetAutoCompleteInfo(dependencies, editor->GetCaretPosition(), editor->GetDocumentDisplayName(), info);
+  project.GetAutoCompleteInfo(dependencies, editor->GetCaretPosition(), editor->GetOrigin(), info);
 
   // Don't show types marked as hidden
   for (uint i = info.CompletionEntries.Size() - 1; i < info.CompletionEntries.Size(); --i)

@@ -99,6 +99,9 @@ public:
   /// Forcibly crash the engine. Mostly for debugging/testing crash handling.
   void CrashEngine();
 
+  /// The engine may be in read only mode (such as when debugging a breakpoint).
+  bool IsReadOnly();
+
   /// What frame is the engine currently on. Used for debugging
   u64 mFrameCounter;
   // If engine has resources for display of loading
@@ -106,6 +109,9 @@ public:
 
   // For detecting Intel drivers to handle driver bugs.
   bool mIntel;
+
+  // If we're currently debugging scripts which means we have a special very limited update.
+  bool mIsDebugging;
 
   static bool sInLauncher;
 private:

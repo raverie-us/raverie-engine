@@ -1399,7 +1399,7 @@ void LauncherWindow::OnLauncherRunCommand(LauncherCommunicationEvent* e)
   CommandManager* commands = CommandManager::GetInstance();
   Command* command = commands->GetCommand(e->mExtraData);
   if(command != nullptr)
-    command->Execute();
+    command->ExecuteCommand();
 }
 
 //******************************************************************************

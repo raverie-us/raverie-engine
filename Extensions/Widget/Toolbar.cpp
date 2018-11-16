@@ -86,7 +86,7 @@ void CommandSubItem::OnLeftClick(MouseEvent* e)
   CommandCaptureContextEvent commandCaptureEvent;
   commandCaptureEvent.ActiveSet = CommandManager::GetInstance();
   this->DispatchBubble(Events::CommandCaptureContext, &commandCaptureEvent);
-  mCommand->Execute();
+  mCommand->ExecuteCommand();
   mPopUp->Destroy();
 }
 

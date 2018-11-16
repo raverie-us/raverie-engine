@@ -1457,29 +1457,29 @@ void ControlPoint::OnRightMouseUp(MouseEvent* event)
   menu->SetBelowMouse(mouse, Pixels(0,0));
 
   // Create the delete button
-  ConnectMenu(menu, "Delete", OnDelete);
+  ConnectMenu(menu, "Delete", OnDelete, false);
 
   // Create the split button
   cstr tangentName = "Split Tangents";
   if(TangentsSplit())
     tangentName = "Join Tangents";
-  ConnectMenu(menu, tangentName, OnSplitTangents);
+  ConnectMenu(menu, tangentName, OnSplitTangents, false);
 
   // Create the linear button
   cstr linearTangentName = "Linear Tangents";
   if(InIsLinear() || OutIsLinear())
     linearTangentName = "Manual Tangents";
-  ConnectMenu(menu, linearTangentName, OnLinearTangents);
+  ConnectMenu(menu, linearTangentName, OnLinearTangents, false);
 
   // Create the weighted button
   cstr itemWeightedName = "Weighted Tangents";
   if(IsWeighted())
     itemWeightedName = "Non Weighted Tangents";
-  ConnectMenu(menu, itemWeightedName, OnWeightedTangents);
+  ConnectMenu(menu, itemWeightedName, OnWeightedTangents, false);
 
   // Only weighted tangents can be normalized
   if(IsWeighted())
-    ConnectMenu(menu, "Normalize", OnNormalizeTangents);
+    ConnectMenu(menu, "Normalize", OnNormalizeTangents, false);
   
   event->Handled = true;
 }
@@ -1811,17 +1811,17 @@ void Tangent::OnRightMouseUp(MouseEvent* e)
   cstr linearTangentName = "Linear Tangents";
   if(IsLinear())
     linearTangentName = "Manual Tangents";
-  ConnectMenu(menu, linearTangentName, OnLinearPressed);
+  ConnectMenu(menu, linearTangentName, OnLinearPressed, false);
 
   // Create the weighted button
   cstr itemWeightedName = "Weighted Tangents";
   if(IsWeighted())
     itemWeightedName = "Non Weighted Tangents";
-  ConnectMenu(menu, itemWeightedName, OnWeightedPressed);
+  ConnectMenu(menu, itemWeightedName, OnWeightedPressed, false);
 
   // Only weighted tangents can be normalized
   if(IsWeighted())
-    ConnectMenu(menu, "Normalize", OnNormalize);
+    ConnectMenu(menu, "Normalize", OnNormalize, false);
 }
 
 //******************************************************************************

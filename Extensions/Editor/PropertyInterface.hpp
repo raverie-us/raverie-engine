@@ -35,6 +35,9 @@ struct ObjectPropertyNode
   void ReleaseHandles();
 
   bool IsPropertyGroup();
+  
+  /// Get how far this object node is down in the hierarchy (0 if it has no parent).
+  size_t GetDepth();
 
   ObjectPropertyNode* FindChildGroup(StringRange groupName);
 

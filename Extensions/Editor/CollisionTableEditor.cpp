@@ -208,10 +208,10 @@ void CollisionGroupLabel::OnRightMouseUp(Event* e)
   mTableEditor->mMatrix->mContextMenuHandle = menu;
 
   //create all of the items with their correct callbacks on pressed
-  ConnectMenu(menu, "Set all to skip detection", OnSetSkipDetect);
-  ConnectMenu(menu, "Set all to skip resolution", OnSetSkipResolve);
-  ConnectMenu(menu, "Set all to resolve", OnSetResolve);
-  ConnectMenu(menu, "Remove group", OnRemoveGroup);
+  ConnectMenu(menu, "Set all to skip detection", OnSetSkipDetect, false);
+  ConnectMenu(menu, "Set all to skip resolution", OnSetSkipResolve, false);
+  ConnectMenu(menu, "Set all to resolve", OnSetResolve, false);
+  ConnectMenu(menu, "Remove group", OnRemoveGroup, false);
 }
 
 void CollisionGroupLabel::OnSetSkipDetect(Event* event)

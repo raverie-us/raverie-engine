@@ -13,8 +13,6 @@ namespace Zero
 {
 
 class Document;
-class ScriptDebugEngine;
-class DebugEngineEvent;
 class ResourceDocument;
 class WindowTabEvent;
 
@@ -45,7 +43,7 @@ public:
   void OnClearAllAnnotations(Event* event);
   void OnDocumentRemoved(Event* event);
   void OnDocumentReload(Event* event);
-  void OnTextModified(Event* event);
+  virtual void OnTextModified(Event* event);
 
   void OnSave(SavingEvent* event);
   void OnSaveCheck(SavingEvent* event);
@@ -141,21 +139,20 @@ class ScriptEditor : public DocumentEditor, public ICodeEditor
 {
 public:
   typedef ScriptEditor ZilchSelf;
+  typedef DocumentEditor ZilchBase;
   ScriptEditor(Composite* parent);
   ~ScriptEditor();
-  void SetDebugEngine(ScriptDebugEngine* debugEngine);
 
   void Save() override;
   void OnKeyDown(KeyboardEvent* event) override;
   void OnKeyUp(KeyboardEvent* event);
-  void OnDebugBreak(DebugEngineEvent* event);
-  void OnDebugException(DebugEngineEvent* event);
   void OnCharacterAdded(TextEditorEvent* event);
   void OnRightClick(MouseEvent* event);
   void OnMouseDown(MouseEvent* event);
   void OnMouseScroll(MouseEvent* event);
   void OnMouseMove(MouseEvent* event);
   void OnAutoCompleteItemDoubleClicked(ObjectEvent* event);
+  void OnTextModified(Event* event) override;
   void CheckPopups();
   CallTipPopUp* GetCallTip();
   AutoCompletePopUp* GetAutoComplete();
@@ -187,18 +184,20 @@ public:
   void Indent(size_t line) override;
   void Unindent(size_t line) override;
   String GetDocumentDisplayName() override;
+  String GetOrigin() override;
 
   // TextEditor Interface
   void OnFocusIn() override;
   void OnFocusOut() override;
   ICodeEditor* GetCodeEditor() override { return this; }
+  void BreakpointsClicked(int line, int position) override;
+  void ScriptError(ScriptEvent* event) override;
 
   /// Formats the arrow line that points at the given
   /// character offset for an error message
   String FormatErrorMessage(StringParam message, int offset);
 
   /// Get the previous world on line.
-  ScriptDebugEngine* mDebugEngine;
   HandleOf<CallTipPopUp> mCallTip;
   int mCallTipLine;
   int mCallTipStart;
@@ -207,6 +206,7 @@ public:
   int mAutoCompleteStart;
   bool mCharacterWasAdded;
   HandleOf<ToolTip> mToolTip;
+  CodeLocation mLastLocation;
 };
 
 ScriptEditor* CreateScriptEditor(Composite* parent, ResourceDocument* scriptDocument);

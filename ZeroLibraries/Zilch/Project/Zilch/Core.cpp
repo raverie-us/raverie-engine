@@ -3867,6 +3867,7 @@ namespace Zilch
     ZilchInitializeType(ExceptionEvent);
     ZilchInitializeType(ConsoleEvent);
     ZilchInitializeType(DebuggerEvent);
+    ZilchInitializeType(DebuggerTextEvent);
     ZilchInitializeType(MemoryLeakEvent);
     ZilchInitializeType(OpcodeEvent);
     ZilchInitializeType(FatalErrorEvent);

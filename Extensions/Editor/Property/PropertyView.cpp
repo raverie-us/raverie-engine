@@ -130,8 +130,11 @@ void PropertyView::SetObject(HandleParam newObject,
   forRange(Handle oldObject, mSelectedObjects.All())
   {
     // Disconnect if the handle is a valid Object
-    if(Object* object = oldObject.Get<Object*>())
-      object->GetDispatcherObject()->Disconnect(this);
+    if (Object* object = oldObject.Get<Object*>())
+    {
+      if (EventDispatcher* dispatcher = object->GetDispatcherObject())
+        dispatcher->Disconnect(this);
+    }
   }
 
   // We no longer care about the old objects
@@ -161,8 +164,11 @@ void PropertyView::SetObject(HandleParam newObject,
     // Connect if handle is a valid Object
     if(Object* objectPointer = object.Get<Object*>())
     {
-      ConnectThisTo(objectPointer, Events::ComponentsModified, OnInvalidate);
-      ConnectThisTo(objectPointer, Events::ObjectStructureModified, OnInvalidate);
+      if (EventDispatcher* dispatcher = objectPointer->GetDispatcherObject())
+      {
+        ConnectThisTo(objectPointer, Events::ComponentsModified, OnInvalidate);
+        ConnectThisTo(objectPointer, Events::ObjectStructureModified, OnInvalidate);
+      }
     }
   }
 

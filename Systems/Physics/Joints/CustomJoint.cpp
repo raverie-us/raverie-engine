@@ -102,7 +102,7 @@ void CustomConstraintInfo::SetErrorAndBias(real error)
 void CustomConstraintInfo::ComputeSpring(float frequencyHz, float dampRatio)
 {
   // Default dt to 60 fps
-  float dt = 1.0f / 60.0f;
+  float dt = cFixedDt;
   CustomJoint* joint = mOwner;
   // Get dt from the space if we have it
   if(joint == nullptr)

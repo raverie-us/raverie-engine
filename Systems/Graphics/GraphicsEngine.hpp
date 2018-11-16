@@ -58,7 +58,7 @@ public:
 
   cstr GetName() override;
   void Initialize(SystemInitializer& initializer) override;
-  void Update() override;
+  void Update(bool debugger) override;
 
   void OnEngineShutdown(Event* event);
 

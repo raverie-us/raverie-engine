@@ -117,6 +117,11 @@ public:
   /// Gets the name of the resource (or the contents file path if we have it)
   String GetNameOrFilePath();
 
+  /// Gets the origin (named specifically to be used with Zilch compilation).
+  /// This is what gets set on the Origin member of all CodeLocations.
+  /// It's also used for setting breakpoints and should be unique per file.
+  String GetOrigin();
+
   /// Can this resource be saved?
   bool IsWritable();
 

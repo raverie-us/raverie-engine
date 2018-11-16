@@ -77,6 +77,18 @@ public:
   // Get the OsHandle to the thread.
   OsHandle GetThreadHandle();
 
+  // Get the thread id of this thread
+  size_t GetThreadId();
+
+  // Get the current thread id of the running thread
+  static size_t GetCurrentThreadId();
+
+  // Is this the thread that the platform library was initialized on?
+  static bool IsMainThread();
+
+  // The id of the main thread that the platform library was initialized on
+  static size_t MainThreadId;
+
   // Template Helper for creating Entry Functions
   // From member functions
   template<typename classType, OsInt (classType::*MemberFunction)()>

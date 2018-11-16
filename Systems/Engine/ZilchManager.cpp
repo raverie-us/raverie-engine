@@ -66,6 +66,11 @@ ZilchManager::ZilchManager() :
   mLastCompileResult(CompileResult::CompilationSucceeded)
 {
   ConnectThisTo(Z::gEngine, Events::EngineUpdate, OnEngineUpdate);
+
+  EventConnect(&mDebugger, Zilch::Events::DebuggerPause, &ZilchManager::OnDebuggerPause, this, &mDebugger);
+  EventConnect(&mDebugger, Zilch::Events::DebuggerResume, &ZilchManager::OnDebuggerResume, this, &mDebugger);
+  EventConnect(&mDebugger, Zilch::Events::DebuggerPauseUpdate, &ZilchManager::OnDebuggerPauseUpdate, this, &mDebugger);
+  EventConnect(&mDebugger, Zilch::Events::DebuggerBreakNotAllowed, &ZilchManager::OnDebuggerBreakNotAllowed, this, &mDebugger);
 }
 
 //**************************************************************************************************
@@ -81,6 +86,12 @@ void ZilchManager::TriggerCompileExternally()
 //**************************************************************************************************
 void ZilchManager::InternalCompile()
 {
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("Zilch", "Cannot recompile scripts while in read-only mode.");
+    return;
+  }
+
   if (!mShouldAttemptCompile)
     return;
   mShouldAttemptCompile = false;
@@ -138,6 +149,38 @@ void ZilchManager::InternalCompile()
 void ZilchManager::OnEngineUpdate(UpdateEvent* event)
 {
   InternalCompile();
+}
+
+//**************************************************************************************************
+void ZilchManager::OnDebuggerPause(Zilch::DebuggerEvent* event)
+{
+  ScriptEvent toSend;
+  toSend.Location = *event->Location;
+  toSend.Script = (DocumentResource*)event->Location->CodeUserData;
+  Z::gResources->DispatchEvent(Events::DebuggerPaused, &toSend);
+}
+
+//**************************************************************************************************
+void ZilchManager::OnDebuggerResume(Zilch::DebuggerEvent* event)
+{
+  ScriptEvent toSend;
+  toSend.Location = *event->Location;
+  toSend.Script = (DocumentResource*)event->Location->CodeUserData;
+  Z::gResources->DispatchEvent(Events::DebuggerResumed, &toSend);
+}
+
+//**************************************************************************************************
+void ZilchManager::OnDebuggerPauseUpdate(Zilch::DebuggerEvent* event)
+{
+  Z::gEngine->mIsDebugging = true;
+  Z::gEngine->Update();
+  Z::gEngine->mIsDebugging = false;
+}
+
+//**************************************************************************************************
+void ZilchManager::OnDebuggerBreakNotAllowed(Zilch::DebuggerTextEvent* event)
+{
+  DoNotifyWarning("Debugger", event->Text);
 }
 
 }//namespace Zero

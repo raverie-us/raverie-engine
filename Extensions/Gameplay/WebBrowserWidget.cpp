@@ -78,6 +78,7 @@ WebBrowserWidget::WebBrowserWidget(Composite* composite, const WebBrowserSetup& 
   SetSize(Math::ToVec2(browser->GetSize()));
 
   ConnectThisTo(Z::gEngine, Events::EngineUpdate, OnEngineUpdate);
+  ConnectThisTo(Z::gEngine, Events::EngineDebuggerUpdate, OnEngineUpdate);
 
   ConnectThisTo(mAddressText, Events::TextSubmit, OnAddressTextSubmit);
 

@@ -864,7 +864,10 @@ LRESULT WindowsOsWindow::WindowProcedure(HWND hwnd, UINT messageId, WPARAM wPara
 
     case WM_TIMER:
     {
+      WindowsShellSystem* shellSystem = (WindowsShellSystem*)Z::gEngine->has(OsShell);
+      shellSystem->mIsUpdating = true;
       Z::gEngine->Update();
+      shellSystem->mIsUpdating = false;
       return MessageHandled;
     }
 
@@ -1223,14 +1226,13 @@ void WindowsShellSystem::Initialize(SystemInitializer& initializer)
   RegisterWindowClass(hInstance);
 }
 
-void WindowsShellSystem::Update()
+void WindowsShellSystem::Update(bool debugging)
 {
   // Prevent recursion due to cases where call Z::gEngine->Update(),
   // such as in the WM_TIMER message handling
   if (mIsUpdating)
     return;
 
-  mIsUpdating = true;
   RawInputUpdate();
   Keyboard* keyboard = Keyboard::GetInstance();
   keyboard->Update();
@@ -1264,8 +1266,6 @@ void WindowsShellSystem::Update()
   // CEF WebBrowser that may cause the message pump to run.
   Event toSend;
   DispatchEvent(Events::OsShellUpdate, &toSend);
-
-  mIsUpdating = false;
 }
 
 cstr WindowsShellSystem::GetName()

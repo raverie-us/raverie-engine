@@ -124,7 +124,7 @@ public:
 
   // System Interface
   void Initialize(SystemInitializer& initializer) override;
-  void Update() override;
+  void Update(bool debugging) override;
   cstr GetName() override;
 
   // OsShell Interface

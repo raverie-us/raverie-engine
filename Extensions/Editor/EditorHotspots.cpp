@@ -40,7 +40,7 @@ void CommandHotspot::OnClick(Matches& matches)
   Command* command = CommandManager::GetInstance()->GetCommand(commandName);
   if(command)
   {
-    command->Execute();
+    command->ExecuteCommand();
   }
   else
   {

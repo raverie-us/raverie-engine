@@ -254,8 +254,8 @@ void TabWidget::OnRightClick(Event* event)
   ContextMenu* menu = new ContextMenu(this);
   Mouse* mouse = Z::gMouse;
   menu->SetBelowMouse(mouse, Pixels(0,0) );
-  ConnectMenu(menu, "Close", OnClickClose);
-  ConnectMenu(menu, "Close All But This", OnCloseAllOtherTabs);
+  ConnectMenu(menu, "Close", OnClickClose, true);
+  ConnectMenu(menu, "Close All But This", OnCloseAllOtherTabs, true);
   // Disabled until reimplemented
   // ConnectMenu(menu, "Move to New Window", OnNewWindow);
 }

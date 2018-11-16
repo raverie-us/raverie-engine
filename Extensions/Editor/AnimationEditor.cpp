@@ -998,7 +998,7 @@ void AnimationEditor::OnPropertyContextMenu(ContextMenuEvent* e)
 
     mContextMenuProperty = e->mProperty;
     mContextMenuInstance = e->mInstance;
-    ConnectMenu(e->mMenu, "Key Frame", OnCreateKeyFrame);
+    ConnectMenu(e->mMenu, "Key Frame", OnCreateKeyFrame, false);
   }
 }
 

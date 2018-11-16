@@ -232,6 +232,15 @@ public:
   void SetMarkerBackgroundColor(int marker, int background);
   void SetMarker(int line, int type);
   void ClearMarker(int line, int type);
+  bool MarkerExists(int line, int type);
+  int GetMarkerMask(int line);
+  int GetNextMarker(int lineStart, int type);
+  int GetPreviousMarker(int lineStart, int type);
+  int GetNextMarkerMask(int lineStart, int markerMask);
+  int GetPreviousMarkerMask(int lineStart, int markerMask);
+
+  static const int InstructionMarker = 2;
+  static const int BreakPointMarker = 1;
 
   //------------------------------------------------------------ Event Handlers
 
@@ -289,7 +298,11 @@ public:
   //Send to derived classes
   virtual void OnNotify(Scintilla::SCNotification& scn);
 
+  virtual void BreakpointsClicked(int line, int position) {}
+
   virtual ICodeEditor* GetCodeEditor() { return nullptr; }
+
+  virtual void ScriptError(ScriptEvent* event) {}
 
   //------------------------------------------------------------ Members
 

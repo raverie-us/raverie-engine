@@ -374,6 +374,9 @@ bool EventDispatcher::IsAnyConnected(StringParam eventId)
 
 void EventDispatcher::Disconnect(ObjPtr thisObject)
 {
+  ErrorIf(this == nullptr, "This is being called on a null dispatcher");
+  ErrorIf(thisObject == nullptr, "thisObject was null");
+
   EventMapType::range r = mEvents.All();
   for(;!r.Empty();r.PopFront())
   {

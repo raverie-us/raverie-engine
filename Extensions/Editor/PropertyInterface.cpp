@@ -55,6 +55,21 @@ bool ObjectPropertyNode::IsPropertyGroup()
 }
 
 //******************************************************************************
+size_t ObjectPropertyNode::GetDepth()
+{
+  size_t depth = 0;
+  ObjectPropertyNode* parent = mParent;
+
+  while (parent)
+  {
+    ++depth;
+    parent = parent->mParent;
+  }
+
+  return depth;
+}
+
+//******************************************************************************
 ObjectPropertyNode* ObjectPropertyNode::FindChildGroup(StringRange groupName)
 {
   forRange(ObjectPropertyNode* child, mContainedObjects.All())
@@ -255,9 +270,7 @@ ObjectPropertyNode* PropertyInterface::BuildObjectTree(ObjectPropertyNode* paren
     if(function->HasAttribute(FunctionAttributes::cProperty) || 
        function->HasAttribute(FunctionAttributes::cDisplay))
     {
-      // METAREFACTOR - 0 param
       // We can only display methods with 0 parameters
-      //if(function->HasOverloadWithNoParams)
       if(function->FunctionType->Parameters.Empty())
         node->mFunctions.PushBack(function);
     }

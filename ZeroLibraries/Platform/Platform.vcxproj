@@ -84,6 +84,7 @@
       <PrecompiledHeader Condition="'$(Platform)'=='Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Platform)'=='x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Thread.cpp" />
     <ClCompile Include="UnicodeUtility.cpp" />
     <ClCompile Include="Process.cpp" />
   </ItemGroup>

@@ -32,6 +32,14 @@ namespace Zilch
   {
     ZilchErrorIfNotStarted(Any);
 
+    // If the other type is the any type, then just clear ourselves
+    if (Type::IsAnyType(type))
+    {
+      this->StoredType = nullptr;
+      memset(this->Data, 0, sizeof(this->Data));
+      return;
+    }
+
     // Get how big the copyable size of the object is (size of a handle, or the entire value size)
     size_t copyableSize = type->GetCopyableSize();
 

@@ -59,6 +59,18 @@ public:
   // If dirtied we attempt to compile every engine update (checks dirty flag)
   void OnEngineUpdate(UpdateEvent* event);
 
+  // When the debugger first pauses on a line
+  void OnDebuggerPause(Zilch::DebuggerEvent* event);
+
+  // When the debugger resumes execution
+  void OnDebuggerResume(Zilch::DebuggerEvent* event);
+
+  // When the debugger is paused on a line and updates
+  void OnDebuggerPauseUpdate(Zilch::DebuggerEvent* event);
+
+  // When the debugger skips a breakpoint
+  void OnDebuggerBreakNotAllowed(Zilch::DebuggerTextEvent* event);
+
   // The last library we properly built (set inside CompileLoadedScriptsIntoLibrary)
   // Once this library becomes in use by an executable state, we CANNOT update it, or any ZilchMeta types
   LibraryRef mCurrentFragmentProjectLibrary;
@@ -77,6 +89,8 @@ public:
   // This lets us know elsewhere that anything related to types or scripts have changed.
   // For example: We prevent duplicate exceptions until this version changes.
   int mVersion;
+
+  Debugger mDebugger;
 };
 
 }//namespace Zero

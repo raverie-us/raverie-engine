@@ -58,6 +58,9 @@ namespace Zilch
     // This hash matches the hash used in the CodeEntry, and can generally be used to map back to files
     size_t GetHash();
 
+    // Check if another code location is at the same position and origin (only uses StartPosition/EndPosition)
+    bool IsSamePositionAndOrigin(const CodeLocation& rhs);
+
     // Every file and code string compiled gets a unique id
     String Code;
     

@@ -55,8 +55,8 @@ ZilchDefineType(MenuBar, builder, type)
 
 //------------------------------------------------------------ ContextMenuItem
 
-ContextMenuItem::ContextMenuItem(ContextMenu* parent, StringParam name)
-  :Composite(parent)
+ContextMenuItem::ContextMenuItem(ContextMenu* parent, StringParam name, bool readOnly)
+  :Composite(parent), mReadOnly(readOnly)
 {
   mBackground = CreateAttached<Element>(cWhiteSquare);
   mBorder = CreateAttached<Element>(cWhiteSquare);
@@ -70,6 +70,7 @@ ContextMenuItem::ContextMenuItem(ContextMenu* parent, StringParam name)
   mText = new Text(this, cText);
   mText->SetSizing(SizeAxis::X, SizePolicy::Flex, 20);
   mText->SetText(name);
+  mName = name;
   mText->SizeToContents();
 
   Spacer* spacer = new Spacer(this);
@@ -281,6 +282,7 @@ void ContextMenuItem::SetName(StringParam name, StringParam icon)
 
 void ContextMenuItem::SetCommand(Command* command)
 {
+  mReadOnly = command->ReadOnly;
   SetName(command->DisplayName);
   mShortcut->SetText(command->Shortcut);
   mCommand = command;
@@ -290,6 +292,12 @@ void ContextMenuItem::SetCommand(Command* command)
 
 void ContextMenuItem::OnLeftMouseUp(MouseEvent* event)
 {
+  if (Z::gEngine->IsReadOnly() && !mReadOnly)
+  {
+    DoNotifyWarning("Context Menu", BuildString("Cannot execute menu item ", mName, " because we are in read-only mode"));
+    return;
+  }
+
   ObjectEvent eventToSend(this);
   this->DispatchEvent(Events::MenuItemSelected, &eventToSend);
   this->GetParent()->DispatchEvent(Events::MenuItemSelected, &eventToSend);
@@ -297,7 +305,7 @@ void ContextMenuItem::OnLeftMouseUp(MouseEvent* event)
   this->GetParent()->Destroy();
 
   if(mCommand)
-    mCommand->Execute();
+    mCommand->ExecuteCommand();
 }
 
 //------------------------------------------------------------ ContextMenu

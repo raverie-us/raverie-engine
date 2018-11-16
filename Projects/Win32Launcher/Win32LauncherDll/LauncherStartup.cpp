@@ -14,7 +14,6 @@ System* CreateSoundSystem();
 System* CreateGraphicsSystem();
 System* CreatePhysicsSystem();
 System* CreateTimeSystem();
-System* CreateActionSystem();
 
 bool LoadContent(Cog* configCog)
 {
@@ -93,7 +92,6 @@ bool ZeroLauncherStartup(Engine* engine, StringMap& arguments, StringParam dllPa
     engine->AddSystem(CreateOsShellSystem());
     engine->AddSystem(CreateTimeSystem());
     engine->AddSystem(CreatePhysicsSystem());
-    engine->AddSystem(CreateActionSystem());
     engine->AddSystem(CreateSoundSystem());
     engine->AddSystem(CreateGraphicsSystem());
 

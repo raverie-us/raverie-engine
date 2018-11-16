@@ -256,8 +256,7 @@ void ZilchFragmentManager::DispatchScriptError(StringParam eventId, StringParam 
 
   if (!isDuplicate)
   {
-    DebugEngineEvent e;
-    e.Handled = false;
+    ScriptEvent e;
     e.Script = resource;
     e.Message = shortMessage;
     e.Location = location;

@@ -234,7 +234,8 @@ template<typename targetType, typename classType, typename eventType>
 inline void Connect(targetType* dispatcher, StringParam eventId,
                     classType* receiver, void (classType::*function)(eventType*))
 {
-  ReturnIf(dispatcher==NULL,, "Dispatcher is NULL");
+  ReturnIf(dispatcher == nullptr || !dispatcher->GetDispatcher(), , "Dispatcher is null");
+  ReturnIf(receiver == nullptr || !receiver->GetReceiver(), , "Receiver is null");
 
   MemberFunctionConnection<classType, eventType>* connection = 
           new MemberFunctionConnection<classType, eventType>(receiver, function);

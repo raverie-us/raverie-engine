@@ -173,6 +173,10 @@ void EditorViewport::SetUpEditorCamera()
 
 ReactiveViewport* EditorViewport::GetReactiveViewport()
 {
+  // When in read-only mode, pretend as if there is no reactive viewport so we stop all events
+  if (Z::gEngine->IsReadOnly())
+    return nullptr;
+
   CameraViewport* cameraViewport = mEditorCamera.has(CameraViewport);
   if (cameraViewport != nullptr)
     return Type::DynamicCast<ReactiveViewport*>((Viewport*)cameraViewport->mViewport);

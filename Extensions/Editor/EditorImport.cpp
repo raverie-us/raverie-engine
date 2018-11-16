@@ -402,6 +402,12 @@ void BuildSoundCues(ResourcePackage* package, AudioOptions* options)
 
 void DoEditorSideImporting(ResourcePackage* package, ImportOptions* options)
 {
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("Content", "Cannot add content items in read-only mode");
+    return;
+  }
+
   forRange(ContentItem* item, package->EditorProcessing.All())
   {
     TextureContent* textureContent = item->has(TextureContent);

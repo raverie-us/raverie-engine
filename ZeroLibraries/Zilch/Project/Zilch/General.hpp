@@ -240,9 +240,6 @@ namespace Zilch
     // This macro will remove any of its contents for compilers that don't need it
     #define ZilchDefineStaticThreadLocal(StaticVariableDefinition) StaticVariableDefinition
     
-    // Atttempts to trigger a breakpoint in the debugger
-    #define ZilchDebugBreak() __debugbreak()
-
     // Converts a string to a double integer
     #define ZilchStringToDoubleInteger(CStr, Base) (long long)_strtoui64(CStr, nullptr, Base)
 
@@ -271,9 +268,6 @@ namespace Zilch
     // On some compilers we still need to define static thread locals (as members of a class)
     // This macro will remove any of its contents for compilers that don't need it
     #define ZilchDefineStaticThreadLocal(StaticVariableDefinition)
-
-    // Atttempts to trigger a breakpoint in the debugger
-    #define ZilchDebugBreak()
 
     // Converts a string to a double integer
     #define ZilchStringToDoubleInteger(CStr, Base) (long long)strtoull(CStr, nullptr, Base)

@@ -51,8 +51,6 @@ public:
 
   //Internals
   void OnPreZilchProjectCompilation(ZilchPreCompilationEvent* e);
-  // We need to periodically pump the debugger for messages
-  void OnEngineUpdate(Event* event);
 
   static void DispatchScriptError(StringParam eventId, StringParam shortMessage, StringParam fullMessage, const CodeLocation& location);
   static void DispatchZeroZilchError(const CodeLocation& location, StringParam message, Project* buildingProject);

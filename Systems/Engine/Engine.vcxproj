@@ -123,7 +123,7 @@
     <ClCompile Include="ResourceLibrary.cpp" />
     <ClCompile Include="ResourceSystem.cpp" />
     <ClCompile Include="ResourceTable.cpp" />
-    <ClCompile Include="ScriptDebugEngine.cpp" />
+    <ClCompile Include="ScriptEvents.cpp" />
     <ClCompile Include="HierarchySpline.cpp" />
     <ClCompile Include="Spline.cpp" />
     <ClCompile Include="System.cpp" />
@@ -211,7 +211,7 @@
     <ClInclude Include="GamePadSystem.hpp" />
     <ClInclude Include="JobSystem.hpp" />
     <ClInclude Include="ResourceSystem.hpp" />
-    <ClInclude Include="ScriptDebugEngine.hpp" />
+    <ClInclude Include="ScriptEvents.hpp" />
     <ClInclude Include="ResourceTable.hpp" />
     <ClInclude Include="HierarchySpline.hpp" />
     <ClInclude Include="Spline.hpp" />

@@ -44,7 +44,7 @@ ZeroShared u64 GetMacAddress();
 ZeroShared bool IsDebuggerAttached();
 
 // Debug break (only if a debugger is attached)
-ZeroShared void DebugBreak();
+ZeroShared bool DebugBreak();
 
 // Verb used to open file
 DeclareEnum4(Verb, Default, Open, Edit, Run);

@@ -417,10 +417,10 @@ void WeightedTableBar::OnRightMouseUp(MouseEvent* mouseEvent)
   mWeightedTableView->mContextMenuHandle = menu;
 
   //Create the duplicate item
-  ConnectMenu(menu, "Duplicate Item", OnDuplicate);
+  ConnectMenu(menu, "Duplicate Item", OnDuplicate, false);
 
   //create the remove item
-  ConnectMenu(menu, "Remove Item", OnRemove);
+  ConnectMenu(menu, "Remove Item", OnRemove, false);
 }
 
 void WeightedTableBar::OnProbabilityChanged(Event*)
@@ -884,7 +884,7 @@ void ResourceWeightedTableView::OnRightMouseUp(MouseEvent* mouseEvent)
   mContextMenuHandle = menu;
 
   //create the add item
-  ConnectMenu(menu, "Add Item", OnAddItem);
+  ConnectMenu(menu, "Add Item", OnAddItem, false);
 }
 
 void ResourceWeightedTableView::OnMaxWeightChanged(Event*)
@@ -1404,11 +1404,11 @@ void ResourceTableTreeView::OnAddContextMenu(MouseEvent* e)
   // Determine whether to add an add or remove context menu depending on if anything is selected
   if(entries.Empty())
   {
-    ConnectMenu(menu, "Add Row", OnAddRow);
+    ConnectMenu(menu, "Add Row", OnAddRow, false);
   }
   else
   {
-    ConnectMenu(menu, "Remove Selected Rows", OnRemoveRow);
+    ConnectMenu(menu, "Remove Selected Rows", OnRemoveRow, false);
   }
 
   //the context menu will not properly set it's size (it computes the size it

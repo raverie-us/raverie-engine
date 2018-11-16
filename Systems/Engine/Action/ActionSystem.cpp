@@ -59,27 +59,4 @@ void ActionSpace::UpdateActions(UpdateEvent* updateEvent, ActionExecuteMode::Enu
   }
 }
 
-//-------------------------------------------------------------------ActionSystem
-
-ZilchDefineType(ActionSystem, builder, type)
-{
-}
-
-ActionSystem::ActionSystem()
-{
-}
-
-ActionSystem::~ActionSystem()
-{
-}
-
-void ActionSystem::Initialize(SystemInitializer& initializer)
-{
-}
-
-System* CreateActionSystem()
-{
-  return new ActionSystem();
-}
-
 }//namespace Zero

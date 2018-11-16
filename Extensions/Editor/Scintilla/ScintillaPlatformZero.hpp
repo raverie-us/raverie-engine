@@ -54,7 +54,8 @@ public:
   void SetUnicodeMode(bool unicodeMode_) override;
   void SetDBCSMode(int codePage) override;
 
-  enum DrawType { Lines, Quads, Text };
+  void MakeViewNode(Zero::PrimitiveType::Enum primitive, StringParam textureName);
+  void MakeViewNode(Zero::PrimitiveType::Enum primitive, Zero::Texture* texture);
 
   Zero::Widget* mWidget;
 
@@ -67,7 +68,6 @@ public:
 
   float mLastX;
   float mLastY;
-  DrawType mDrawType;
 };
 
 #ifdef SCI_NAMESPACE

@@ -195,7 +195,6 @@ ZilchScriptManager::ZilchScriptManager(BoundType* resourceType)
   AddLoader("ZilchScript", new ZilchScriptLoader());
 
   //listen for when we should compile
-  ConnectThisTo(Z::gEngine, Events::EngineUpdate, OnEngineUpdate);
   Zilch::EventConnect(ExecutableState::CallingState, Zilch::Events::UnhandledException, ZeroZilchExceptionCallback);
   Zilch::EventConnect(ExecutableState::CallingState, Zilch::Events::FatalError, ZeroZilchFatalErrorCallback);
 
@@ -245,12 +244,6 @@ void ZilchScriptManager::OnPreZilchProjectCompilation(ZilchPreCompilationEvent* 
   EventConnect(e->mProject, Zilch::Events::CompilationError, ZeroZilchErrorCallback);
 }
 
-void ZilchScriptManager::OnEngineUpdate(Event* event)
-{
-  //METAREFACTOR
-  //mDebugger.Update();
-}
-
 void ZilchScriptManager::DispatchScriptError(StringParam eventId, StringParam shortMessage, StringParam fullMessage, const CodeLocation& location)
 {
   ZilchScriptManager* instance = ZilchScriptManager::GetInstance();
@@ -267,8 +260,7 @@ void ZilchScriptManager::DispatchScriptError(StringParam eventId, StringParam sh
 
   if (!isDuplicate)
   {
-    DebugEngineEvent e;
-    e.Handled = false;
+    ScriptEvent e;
     e.Script = Type::DynamicCast<DocumentResource*>(resource);
     e.Message = shortMessage;
     e.Location = location;

@@ -281,6 +281,12 @@ public:
   bool mGamePending;
   bool mStopGame;
 
+  void DebuggerResume();
+  void DebuggerPause();
+  void DebuggerStepIn();
+  void DebuggerStepOver();
+  void DebuggerStepOut();
+
   Array<CogId> mSelectionGizmos;
   UniquePointer<EventObject> mSimpleDebuggerListener;
 };

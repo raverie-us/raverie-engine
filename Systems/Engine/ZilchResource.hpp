@@ -45,6 +45,11 @@ public:
   String GenerateConnectFunctionEnd() override;
   void FindPositionToGenerateFunction(ICodeEditor* editor, int& positionOut, String& indent) override;
   void AttemptGetDefinition(ICodeEditor* editor, size_t cursorPosition, CodeDefinition& definition) override;
+  Any QueryExpression(StringParam expression, Array<QueryResult>& results) override;
+  bool SetBreakpoint(size_t line, bool breakpoint) override;
+  bool HasBreakpoint(size_t line) override;
+  void GetBreakpoints(Array<size_t>& breakpointLines) override;
+  void ClearBreakpoints() override;
 
   static void ValidateScriptName(Status& status, StringParam name);
 

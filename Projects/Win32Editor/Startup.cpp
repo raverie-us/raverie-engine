@@ -28,7 +28,6 @@ System* CreateSoundSystem();
 System* CreateGraphicsSystem();
 System* CreatePhysicsSystem();
 System* CreateTimeSystem();
-System* CreateActionSystem();
 
 void CreateEditor(Cog* config, StringParam project, StringParam newProjectName);
 void CreateGame(Cog* config, Cog* projectCog, StringParam projectFile);
@@ -61,7 +60,6 @@ bool Startup(Engine* engine, StringMap& arguments, String projectFile)
     engine->AddSystem(CreateOsShellSystem());
     engine->AddSystem(CreateTimeSystem());
     engine->AddSystem(CreatePhysicsSystem());
-    engine->AddSystem(CreateActionSystem());
     engine->AddSystem(CreateSoundSystem());
     engine->AddSystem(CreateGraphicsSystem());
 
@@ -104,7 +102,7 @@ bool Startup(Engine* engine, StringMap& arguments, String projectFile)
     CommandManager* commandManager = CommandManager::GetInstance();
     Command* command = commandManager->GetCommand("WriteBuildInfo");
     if(command != nullptr)
-      command->Execute();
+      command->ExecuteCommand();
   }
 
   return true;

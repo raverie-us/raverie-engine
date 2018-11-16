@@ -470,6 +470,12 @@ String Resource::GetNameOrFilePath()
   return Name;
 }
 
+String Resource::GetOrigin()
+{
+  // This will ensure it's always unique
+  return ResourceIdName;
+}
+
 bool Resource::IsWritable()
 {
   if(mContentItem)

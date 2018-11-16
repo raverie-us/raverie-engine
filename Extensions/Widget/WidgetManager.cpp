@@ -19,6 +19,7 @@ WidgetManager::WidgetManager()
   IdCounter = 0;
   mWidgetActionSpace = new ActionSpace();
   ConnectThisTo(Z::gEngine, Events::EngineUpdate, OnEngineUpdate);
+  ConnectThisTo(Z::gEngine, Events::EngineDebuggerUpdate, OnEngineUpdate);
   ConnectThisTo(Z::gEngine, Events::EngineShutdown, OnShutdown);
 }
 

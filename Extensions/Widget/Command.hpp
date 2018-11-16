@@ -82,14 +82,14 @@ public:
   /// Is this command currently able to run? Checks the command's executer if it exists.
   bool IsEnabled();
   
-
-  virtual void Execute();
-
   /// Sets the ToolTip member value.
   void Format();
   
   /// Sends out that the state of this command changed
   void ChangeState();
+
+  /// Checks flags such as read only and executes the command if it's ok to run
+  void ExecuteCommand();
 
   /// Name of the command.
   String Name;
@@ -109,6 +109,8 @@ public:
   bool DevOnly;
   /// Is the command active used for tools and togglable commands
   bool Active;
+  /// Is the command read only (doesn't affect state)
+  bool ReadOnly;
 
   //-------------------------------------------------------------------Generated Data
   // Tool tip or short description.
@@ -116,6 +118,9 @@ public:
   // Tags on this object
   HashSet<String> TagList;
   CommandExecuter* mExecuter;
+
+protected:
+  virtual void Execute();
 };
 
 //-------------------------------------------------------------------CommandSearchProvider
@@ -167,7 +172,7 @@ public:
   Command* CreateFromName(StringParam name);
   
   /// Creates a command by name with a executer (callback).
-  Command* AddCommand(StringParam commandName, CommandExecuter* executer);
+  Command* AddCommand(StringParam commandName, CommandExecuter* executer, bool readOnly = false);
   void AddCommand(Command* command);
   /// Finds a command by name.
   Command* GetCommand(StringParam name);

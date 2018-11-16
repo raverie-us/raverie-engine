@@ -138,7 +138,7 @@ private:
 #include "LauncherConfiguration.hpp"
 #include "DebugDraw.hpp"
 #include "ResourceLoaderTemplates.hpp"
-#include "ScriptDebugEngine.hpp"
+#include "ScriptEvents.hpp"
 #include "TextResource.hpp"
 #include "BuildVersion.hpp"
 #include "EditorSettings.hpp"

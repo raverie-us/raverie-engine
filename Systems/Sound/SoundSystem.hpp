@@ -194,7 +194,7 @@ public:
   static GranularSynthNode* GranularSynthNode() { return new Zero::GranularSynthNode(); }
 
 //Internals
-  void Update();
+  void Update(bool debugger) override;
   void StopPreview();
   float PitchToSemitones(float pitch);
   float SemitonesToPitch(float semitones);

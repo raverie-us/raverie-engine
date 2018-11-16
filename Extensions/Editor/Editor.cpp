@@ -214,6 +214,11 @@ ZilchDefineType(Editor, builder, type)
   ZilchBindMethod(SetMainPropertyViewObject);
   ZilchBindMethod(EditResource);
   ZilchBindMethod(CreateDockableWindow);
+  ZilchBindMethod(DebuggerResume);
+  ZilchBindMethod(DebuggerPause);
+  ZilchBindMethod(DebuggerStepIn);
+  ZilchBindMethod(DebuggerStepOver);
+  ZilchBindMethod(DebuggerStepOut);
 }
 
 Editor::Editor(Composite* parent)
@@ -253,6 +258,7 @@ Editor::Editor(Composite* parent)
   ConnectThisTo(selection, Events::SelectionFinal, OnSelectionFinal);
   ConnectThisTo(this, Events::SaveCheck, OnSaveCheck);
   ConnectThisTo(Z::gEngine, Events::EngineUpdate, OnEngineUpdate);
+  ConnectThisTo(Z::gEngine, Events::EngineDebuggerUpdate, OnEngineUpdate);
   ConnectThisTo(Z::gResources, Events::ResourcesUnloaded, OnResourcesUnloaded);
 
   BoundType* editorMeta = ZilchTypeId(Editor);
@@ -831,6 +837,11 @@ void EditorSaveResource(Resource* resource)
   if(resource == nullptr)
     return;
 
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("Resource", "Cannot save a resource while in read-only mode.");
+    return;
+  }
 
   // Check for resource not Writable
   if(!resource->IsWritable())
@@ -856,6 +867,13 @@ void EditorSaveResource(Resource* resource)
 
 Status Editor::SaveAll(bool showNotify)
 {
+  if (Z::gEngine->IsReadOnly())
+  {
+    static const String cMessage("Cannot save a while in read-only mode.");
+    DoNotifyWarning("Resource", cMessage);
+    return Status(StatusState::Failure, cMessage);
+  }
+
   // Reset the focus to save any changes in progress (setting text, etc)
   GetRootWidget()->FocusReset();
 
@@ -1205,7 +1223,7 @@ void Editor::ExecuteCommand(StringParam commandName)
   Command* command = mCommands->NamedCommands.FindValue(commandName, nullptr);
   if(command)
   {
-    command->Execute();
+    command->ExecuteCommand();
   }
   else
   {
@@ -1295,8 +1313,33 @@ void Editor::DisplayGameSession(StringParam name, GameSession* gameSession)
   mGames.PushBack(gameSession);
 }
 
+void FocusTabbedWidget(Widget* widget)
+{
+  if (!widget)
+    return;
+
+  Window* window = GetWindowContaining(widget);
+  if (window && window->mTabArea)
+    window->mTabArea->SelectTabWith(widget);
+
+  widget->TakeFocus();
+}
+
 GameSession* Editor::PlayGame(PlayGameOptions::Enum options, bool takeFocus, bool startGame)
 {
+  // If the debugger is breakpointed then we signal it to resume instead of playing a new game
+  Zilch::Debugger& debugger = ZilchManager::GetInstance()->mDebugger;
+  if (debugger.IsBreakpointed || debugger.Action != Zilch::DebuggerAction::Resume)
+  {
+    debugger.Resume();
+
+    GameRange games = GetGames();
+    forRange(GameSession* game : games)
+      FocusTabbedWidget(game->mGameWidget);
+
+    return nullptr;
+  }
+
   // Is there a level to start on?
   Level* playLevel = GetStartingLevel();
   if(playLevel == nullptr)
@@ -1399,6 +1442,13 @@ void Editor::EditGameSpaces()
 
 void Editor::StepGame()
 {
+  Zilch::Debugger& debugger = ZilchManager::GetInstance()->mDebugger;
+  if (debugger.IsBreakpointed)
+  {
+    DoNotifyWarning("Editor", "Cannot step the game while we're paused in the debugger");
+    return;
+  }
+
   // Get all the current games
   GameRange games = GetGames();
 
@@ -1427,6 +1477,8 @@ void Editor::DestroyGames()
 
 void Editor::StopGame()
 {
+  ZilchManager::GetInstance()->mDebugger.Resume();
+
   // Wait until after system updates to stop game.
   // This prevents events such as LogicUpdate from happening in an unexpected state.
   if (GetGames().Empty() == false)
@@ -1562,6 +1614,31 @@ void Editor::OnSaveRestartMessageBox(MessageBoxEvent* event)
   
   // This was a restart request
   Os::SystemOpenFile(GetApplication().c_str());
+}
+
+void Editor::DebuggerResume()
+{
+  ZilchManager::GetInstance()->mDebugger.Resume();
+}
+
+void Editor::DebuggerPause()
+{
+  ZilchManager::GetInstance()->mDebugger.Pause();
+}
+
+void Editor::DebuggerStepIn()
+{
+  ZilchManager::GetInstance()->mDebugger.StepIn();
+}
+
+void Editor::DebuggerStepOver()
+{
+  ZilchManager::GetInstance()->mDebugger.StepOver();
+}
+
+void Editor::DebuggerStepOut()
+{
+  ZilchManager::GetInstance()->mDebugger.StepOut();
 }
 
 }//namespace Zero

@@ -573,26 +573,26 @@ void AnimationTrackView::OnTreeRightClick(TreeEvent* e)
   
   if(track->Type == TrackType::Object)
   {
-    ConnectMenu(menu, "Rename", OnRename);
+    ConnectMenu(menu, "Rename", OnRename, false);
   }
 
   if(track->Type == TrackType::SubProperty)
   {
-    ConnectMenu(menu, "Clear Keys", OnClearKeys);
+    ConnectMenu(menu, "Clear Keys", OnClearKeys, false);
   }
   else
   {
     // Add an option to delete the track
     if(track->mDisabled)
     {
-      ConnectMenu(menu, "Enable", OnToggleEnable);
+      ConnectMenu(menu, "Enable", OnToggleEnable, false);
     }
     else
     {
-      ConnectMenu(menu, "Disable", OnToggleEnable);
+      ConnectMenu(menu, "Disable", OnToggleEnable, false);
     }
 
-    ConnectMenu(menu, "Delete", OnDeleteTrack);
+    ConnectMenu(menu, "Delete", OnDeleteTrack, false);
   }
 
   // Store a context

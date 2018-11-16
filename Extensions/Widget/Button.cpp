@@ -237,7 +237,7 @@ void ButtonBase::Activate()
     CommandCaptureContextEvent commandCaptureEvent;
     commandCaptureEvent.ActiveSet = CommandManager::GetInstance();
     this->DispatchBubble(Events::CommandCaptureContext, &commandCaptureEvent);
-    mCommand->Execute();
+    mCommand->ExecuteCommand();
   }
 }
 
