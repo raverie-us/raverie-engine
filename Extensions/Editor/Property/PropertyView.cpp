@@ -165,8 +165,11 @@ void PropertyView::SetObject(HandleParam newObject,
     // Connect if handle is a valid Object
     if(Object* objectPointer = object.Get<Object*>())
     {
-      Connect(objectPointer, Events::ComponentsModified, this, &ZilchSelf::OnInvalidate, ConnectNotify::Ignore);
-      Connect(objectPointer, Events::ObjectStructureModified, this, &ZilchSelf::OnInvalidate, ConnectNotify::Ignore);
+      if (EventDispatcher* dispatcher = objectPointer->GetDispatcherObject())
+      {
+        Connect(objectPointer, Events::ComponentsModified, this, &ZilchSelf::OnInvalidate, ConnectNotify::Ignore);
+        Connect(objectPointer, Events::ObjectStructureModified, this, &ZilchSelf::OnInvalidate, ConnectNotify::Ignore);
+      }
     }
   }
 

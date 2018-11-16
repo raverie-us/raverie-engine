@@ -96,6 +96,19 @@ Menus menus =
 	
 	Menu =
 	{	
+		string Name = "DebuggerToolbar",
+		Array Entries = 
+		[
+			"DebuggerResume",
+			"DebuggerPause",
+			"DebuggerStepIn",
+			"DebuggerStepOver",
+			"DebuggerStepOut",
+		]
+	}
+	
+	Menu =
+	{	
 		string Name = "HelpToolbar",
 		Array Entries = 
 		[

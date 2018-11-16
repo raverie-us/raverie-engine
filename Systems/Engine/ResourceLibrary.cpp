@@ -552,7 +552,7 @@ bool ResourceLibrary::CompileScripts(HashSet<ResourceLibrary*>& modifiedLibrarie
     // Templates shouldn't be compiled. They contain potentially invalid code and identifiers
     // such as RESOURCE_NAME_ that are replaced when a new resource is created from the template
     if(script->GetResourceTemplate() == nullptr)
-      mScriptProject.AddCodeFromString(script->mText, script->GetNameOrFilePath(), script);
+      mScriptProject.AddCodeFromString(script->mText, script->GetOrigin(), script);
   }
 
   mSwapScript.mPendingLibrary = mScriptProject.Compile(this->Name, dependencies, EvaluationMode::Project);

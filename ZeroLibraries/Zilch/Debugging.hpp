@@ -22,6 +22,15 @@ namespace Zilch
     // Sent when we resume execution after being paused
     // Note that stepping a single line will resume and then pause again
     ZilchDeclareEvent(DebuggerResume, DebuggerEvent);
+
+    // Sent when we a breakpoint is added (either locally or by remote client)
+    ZilchDeclareEvent(DebuggerBreakpointedAdded, DebuggerEvent);
+
+    // Sent when we a breakpoint is added (either locally or by remote client)
+    ZilchDeclareEvent(DebuggerBreakpointedRemoved, DebuggerEvent);
+
+    // Sent when we skip a breakpoint or a step due to an externally defined reason
+    ZilchDeclareEvent(DebuggerBreakNotAllowed, DebuggerEvent);
   }
 
   // When the debugger pauses or resumes, we send this event out
@@ -37,22 +46,29 @@ namespace Zilch
     ExecutableState* State;
 
     // The location of where we're at in script (generally where we're paused)
-    CodeLocation* Location;
+    const CodeLocation* Location;
   };
 
-  // Any data we receive from the debugger
-  class ZeroShared DebuggerMessage
+  // When the debugger needs to send a message
+  class ZeroShared DebuggerTextEvent : public DebuggerEvent
   {
   public:
-    // The root of the json tree
-    JsonValue* JsonRoot;
+    ZilchDeclareType(TypeCopyMode::ReferenceType);
 
-    // The message that we're currently processing
-    String Type;
+    // The text/message that the debugger is sending
+    String Text;
   };
 
-  // The debugger message handler function
-  typedef void (*MessageFn)(const DebuggerMessage& message, void* userData);
+  // Returned from querying an expression in the debugger
+  class QueryResult
+  {
+  public:
+    QueryResult();
+
+    String Name;
+    String Value;
+    bool Expandable;
+  };
 
   namespace DebuggerAction
   {
@@ -66,24 +82,192 @@ namespace Zilch
     };
   }
 
-  // The debugger hosts a web-socket connection and allows an external program to
-  // place breakpoints, step over lines, see the call stack, inspect variables, etc
-  // The debugger is NOT thread safe, so only ExecutableStates from the same thread
-  // should be added to the debugger. Note however that you can create multiple
-  // debuggers hosted on different ports for different threads
-  // Note: The debugger must be periodically updated
+  // The base debugger handles placing breakpoints and signals events when the breakpoints are hit.
+  // It also handles pausing and stepping.
   class ZeroShared Debugger : public EventHandler
   {
   public:
     // sends DebuggerPauseUpdate : DebuggerEvent;
     // sends DebuggerPause : DebuggerEvent;
     // sends DebuggerResume : DebuggerEvent;
+    // sends DebuggerBreakpointedAdded : DebuggerEvent;
+    // sends DebuggerBreakpointedRemoved : DebuggerEvent;
+    // sends DebuggerBreakNotAllowed : DebuggerTextEvent;
 
     // Constructor
     Debugger();
 
     // Destructor
     ~Debugger();
+
+    // Pauses the call stack for whatever is currently executing in Zilch.
+    void Pause();
+
+    // If the debugger is currently paused/breakpointed this will resume operation.
+    void Resume();
+
+    // If the debugger is currently paused/breakpointed this will step over the current line.
+    // If the debugger is not paused this will pause it.
+    void StepOver();
+
+    // If the debugger is currently paused/breakpointed this will step into the
+    // current line if it is a function, or over if there is nothing to step into.
+    // If the debugger is not paused this will pause it.
+    void StepIn();
+
+    // If the debugger is currently paused/breakpointed step out of the current function.
+    // If there is no Zilch function above this point, this will resume execution.
+    // If the debugger is not paused this will pause it.
+    void StepOut();
+
+    // Attempts to set a breakpoint at a given code location. Note that the library must
+    // be added for this to succeed otherwise the debugger wont know if it's a valid location.
+    bool SetBreakpoint(StringParam origin, size_t line, bool breakpoint);
+
+    // Attempts to set a breakpoint at a given code location. Note that the library must
+    // be added for this to succeed otherwise the debugger wont know if it's a valid location.
+    bool SetBreakpoint(const CodeLocation& location, bool breakpoint);
+
+    // Get if a breakpoint exists at a given location.
+    bool HasBreakpoint(StringParam origin, size_t line);
+
+    // Get if a breakpoint exists at a given location.
+    bool HasBreakpoint(const CodeLocation& location);
+
+    // Clear breakpoints for a given document/origin
+    void ClearBreakpoints(StringParam origin);
+
+    // Clear all breakpoints for all documents/origins
+    void ClearAllBreakpoints();
+
+    // Checks if a type has any debuggable properties (expandable)
+    static bool HasDebuggableProperties(Type* type);
+
+    // Attempts to find a code entry by origin
+    CodeEntry* FindCodeEntry(StringParam origin);
+
+    // Evaluates an expression and outputs the value of the expression as well as sub-properties.
+    // Returns the actual value of the expression an an Any.
+    Any Debugger::QueryExpression(StringParam expression, Array<QueryResult>& results);
+
+  protected:
+
+    // Lets us know when we stopped an execution point
+    virtual void DebuggerPause(const CodeLocation& codeLocation);
+
+    // Lets us know when we stopped an execution point and is updating
+    virtual void DebuggerPauseUpdate(const CodeLocation& codeLocation);
+
+    // When we resume execution, we want to tell the remote client to clear the execution point
+    virtual void DebuggerResume();
+
+    // Callbacks from the state:
+    // Every time the executable state steps into an opcode, this function is called
+    virtual void OnOpcodePreStep(OpcodeEvent* e);
+
+    // Every time the executable state steps into a function, this function is called
+    virtual void OnEnterFunction(OpcodeEvent* e);
+
+    // Every time the executable state steps out of a function, this function is called
+    virtual void OnExitFunction(OpcodeEvent* e);
+
+    // Every time the executable state steps out of a function, this function is called
+    virtual void OnException(ExceptionEvent* e);
+
+    // Whenever we print anything out using the console, we want to know about it
+    virtual void OnConsoleWrite(ConsoleEvent* event);
+
+    // Called after state changes and when we're paused on a breakpoint
+    virtual void Update();
+
+  private:
+
+    // The break loop will pause all execution on this thread, only processing debugger messages
+    void Breakpoint(const CodeLocation& codeLocation);
+
+    // Attach callbacks to the executable state
+    void AttachCallbacks();
+
+    // Detach callbacks from the executable state
+    void DetachCallbacks();
+
+    // Attaches or detaches depending on if the Action or we have breakpoints.
+    void UpdateAttach();
+
+  public:
+
+    // As we walk over lines of code (callbacks from any running ExecutableState)
+    // we will check to see if the line exists in this breakpoints map
+    // The map maps from origin to line numbers
+    HashMap<String, HashSet<size_t> > Breakpoints;
+
+    // Whether we've attached to the executable state
+    bool IsAttached;
+
+    // If this string is not empty we will send an event with this message when we hit the breakpoint and continue execution
+    String DoNotAllowBreakReason;
+
+    // If we're already in a breakpoint (prevents breaking within a breakpoint when we send external updates)
+    bool IsBreakpointed;
+
+    // The last action that was queued up by the debugger for the current state
+    DebuggerAction::Enum Action;
+
+  private:
+
+    // Store the last location id and line
+    CodeLocation LastLocation;
+
+    // The last call stack position (how deep we were)
+    size_t LastCallStackDepth;
+
+    // When we're doing stepping, we need to save the last location here (but not update it with each opcode step)
+    CodeLocation StepLocation;
+
+    // The call stack depth where we're stepping out of (state context relative operations)
+    size_t StepOutOverCallStackDepth;
+
+    // The libraries whose code we are currently viewing
+    Array<LibraryRef> Libraries;
+
+    // If the last opcode we hit was a dis-allowed breakpoint, then we use this to make sure we don't keep
+    // sending events over and over for every opcode we execute (just do it the first time until we clear this flag)
+    bool WasLastDisallowedBreak;
+  };
+
+  // Every platform should define an error handler
+  ZeroShared bool DebugErrorHandler(ErrorSignaler::ErrorData& errorData);
+
+  // Any data we receive from the debugger
+  class ZeroShared DebuggerMessage
+  {
+  public:
+    // The root of the json tree
+    JsonValue* JsonRoot;
+
+    // The message that we're currently processing
+    String Type;
+  };
+
+  // The debugger message handler function
+  typedef void(*MessageFn)(const DebuggerMessage& message, void* userData);
+
+  // The debugger hosts a web-socket connection and allows an external program to
+  // place breakpoints, step over lines, see the call stack, inspect variables, etc
+  // The debugger is NOT thread safe, so only ExecutableStates from the same thread
+  // should be added to the debugger. Note however that you can create multiple
+  // debuggers hosted on different ports for different threads
+  // Note: The debugger must be periodically updated. The WebDebugger can be used
+  // locally just like the BaseDebugger but will remote connections over local
+  // handling of debugging events.
+  class ZeroShared WebDebugger : public Debugger
+  {
+  public:
+    // Constructor
+    WebDebugger();
+
+    // Destructor
+    ~WebDebugger();
 
     // Starts the debugger hosting on a given port
     void Host(int port);
@@ -93,22 +277,6 @@ namespace Zilch
 
     // The debugger must be periodically updated to ensure that it receives remote messages
     void Update();
-
-    // Adds a project whose files we track
-    // We use the hashes of the code from each file to show code entries in the debugger (as well as file name)
-    void AddProject(Project* project);
-
-    // Remove a project that we no longer want to track
-    void RemoveProject(Project* project);
-
-    // Adds a state to be debugged (this will inform any running debuggers of the new state)
-    // Be sure to remove any states that get deleted (they will not be automatically removed!)
-    // A state can only be added once (multiple times will be ignored)
-    void AddState(ExecutableState* state);
-
-    // Removes a state from the list of states to be debugged
-    // It is safe to call this more than once (and can be called even when the state was not added)
-    void RemoveState(ExecutableState* state);
 
     // When we receive a custom json message, this will attempt to handle it
     void AddMessageHandler(StringParam type, MessageFn callback, void* userData);
@@ -127,14 +295,8 @@ namespace Zilch
     // When we resume execution, we want to tell the remote client to clear the execution point
     void SetExecutionPoint(CodeLocation* codeLocation, ExecutableState* state);
 
-    // When we resume execution, we want to tell the remote client to clear the execution point
-    void ClearExecutionPoint();
-
     // The break loop will pause all execution on this thread, only processing debugger messages
     void PauseExecution(CodeLocation* codeLocation, ExecutableState* state);
-
-    // Checks if a type has any debuggable properties (expandable)
-    static bool HasDebuggableProperties(Type* type);
 
     // Called when the remote debugger connects to us
     void OnAcceptedConnection(WebSocketEvent* event);
@@ -148,9 +310,6 @@ namespace Zilch
 
     // Called when the remote debugger disconnects
     void OnDisconnected(WebSocketEvent* event);
-
-    // Attempts to find a code entry by hash (first starting with the project, then with each executable state)
-    CodeEntry* FindCodeEntry(size_t hash);
 
     // Messages from the client:
     // When we receive a remote message to add a breakpoint for a code file and line
@@ -166,7 +325,7 @@ namespace Zilch
     static void OnStepIn(const DebuggerMessage& message, void* userData);
     static void OnStepOut(const DebuggerMessage& message, void* userData);
     
-    // When the user attempted to view an item in the explorer, we're repsonsible for sending what to show
+    // When the user attempted to view an item in the explorer, we're responsible for sending what to show
     static void OnViewExplorerItem(const DebuggerMessage& message, void* userData);
     
     // When the debugger attempts to query an expression (such as when hovering over a variable or watching an expression)
@@ -190,48 +349,7 @@ namespace Zilch
 
   private:
 
-    // This data must be cleared properly upon the client disconnecting
-    //******** BEGIN CLEARED DATA ********//
-    
-    // The last action that was queued up by the debugger for the current state
-    DebuggerAction::Enum Action;
-
-    // As we walk over lines of code (callbacks from any running ExecutableState)
-    // we will check to see if the line exists in this breakpoints map
-    // The map maps from code hash values to line numbers
-    HashMap<size_t, HashSet<size_t> > Breakpoints;
-
-    // Store the last location id and line
-    CodeLocation LastLocation;
-
-    // The last call stack position (how deep we were)
-    size_t LastCallStackDepth;
-
-    // The last state that we were accessing
-    ExecutableState* LastState;
-
-    // When we're doing stepping, we need to save the last location here (but not update it with each opcode step)
-    CodeLocation StepLocation;
-
-    // The call stack depth where we're stepping out of (state context relative operations)
-    size_t StepOutOverCallStackDepth;
-
-    // The state we were using when stepping out / over (state context relative operations)
-    ExecutableState* StepOutOverState;
-
-    //******** END CLEARED DATA ********//
-
-    // The states we are currently debugging
-    Array<ExecutableState*> States;
-
-    // The projects whose code we are currently viewing
-    Array<Project*> Projects;
-
-    // We need to check if any projects change files, then update the remote end if that happens
-    // Currently we just scan the projects each update for any changes (we detect changes by looking for hash code changes)
-    unsigned long long AllProjectsHashCode;
-
-    // When we recieve messages from the remote client, we look here to handle any messages
+    // When we receive messages from the remote client, we look here to handle any messages
     class DebuggerMessageDelegate
     {
     public:

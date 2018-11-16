@@ -58,6 +58,9 @@ public:
 
   enum DrawType { Lines, Quads, Text };
 
+  void MakeViewNode(Zero::PrimitiveType::Enum primitive, StringParam textureName);
+  void MakeViewNode(Zero::PrimitiveType::Enum primitive, Zero::Texture* texture);
+
   Zero::Widget* mWidget;
 
   Zero::ViewBlock* mViewBlock;
@@ -69,7 +72,6 @@ public:
 
   float mLastX;
   float mLastY;
-  DrawType mDrawType;
 };
 
 #ifdef SCI_NAMESPACE

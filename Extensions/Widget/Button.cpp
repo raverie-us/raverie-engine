@@ -262,7 +262,7 @@ void ButtonBase::Activate()
     this->DispatchBubble(Events::CommandCaptureContext, &commandCaptureEvent);
 
     // Only execute the primary command.
-    mCommands[0]->Execute();
+    mCommands[0]->ExecuteCommand();
   }
 }
 

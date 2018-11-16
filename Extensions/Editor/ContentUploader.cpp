@@ -231,9 +231,9 @@ void ContentExportTile::OnRightClick(MouseEvent* e)
   menu->SetBelowMouse(mouse, Pixels(0,0) );
 
   if(mMissingDependencies)
-    ConnectMenu(menu, "Add Dependencies", OnAddDependencies);
+    ConnectMenu(menu, "Add Dependencies", OnAddDependencies, false);
 
-  ConnectMenu(menu, "Remove", OnRemove);
+  ConnectMenu(menu, "Remove", OnRemove, false);
 }
 
 //******************************************************************************

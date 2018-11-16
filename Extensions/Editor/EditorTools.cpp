@@ -59,7 +59,7 @@ void SetupTools(Editor* editor)
   // Add commands for all tools
   forRange(ToolData* data, Tools->mTools.mToolArray.All())
   {
-    commands->AddCommand(data->GetName(), new ToolSelectionCommand());
+    commands->AddCommand(data->GetName(), new ToolSelectionCommand(), true);
   }
 }
 

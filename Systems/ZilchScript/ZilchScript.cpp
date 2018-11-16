@@ -273,8 +273,7 @@ void ZilchScriptManager::DispatchScriptError(StringParam eventId, StringParam sh
 
   if (!isDuplicate)
   {
-    DebugEngineEvent e;
-    e.Handled = false;
+    ScriptEvent e;
     e.Script = Type::DynamicCast<DocumentResource*>(resource);
     e.Message = shortMessage;
     e.Location = location;

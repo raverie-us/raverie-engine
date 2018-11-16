@@ -589,28 +589,52 @@ DocumentEditor* EditorMain::OpenTextFileAuto(StringParam file)
   return OpenTextFile(file);
 }
 
-void EditorMain::OnScriptError(DebugEngineEvent* event)
+void EditorMain::OnScriptError(ScriptEvent* event)
 {
-  if(event->Handled == false)
-  {
-    // At the moment we always pause due to a syntax error or exception
-    // If we are live editing, we really want to continue (live edit may need to be a mode)
-    SetGamePaused(true);
+  // At the moment we always pause due to a syntax error or exception
+  // If we are live editing, we really want to continue (live edit may need to be a mode)
+  SetGamePaused(true);
 
-    if(event->Script)
-    {
-      //debug exception needs the full file path, so set the filename now to the full path
-      event->Location.Origin = event->Script->LoadPath;
-      event->Handled = true;
-      ScriptEditor* editor = (ScriptEditor*)OpenDocumentResource(event->Script);
-      editor->OnDebugException(event);
-    }
-    // If there was no valid script to display an error message on then just do-notify the warning message.
-    else
-    {
-      DoNotifyWarning("Script Error", event->Message);
-    }
+  if(event->Script)
+  {
+    //debug exception needs the full file path, so set the filename now to the full path
+    event->Location.Origin = event->Script->LoadPath;
+    DocumentEditor* editor = OpenDocumentResource(event->Script);
+    if (!editor)
+      return;
+
+    editor->ScriptError(event);
   }
+  // If there was no valid script to display an error message on then just do-notify the warning message.
+  else
+  {
+    DoNotifyWarning("Script Error", event->Message);
+  }
+}
+
+void EditorMain::OnDebuggerPaused(ScriptEvent* event)
+{
+  // JC or TS commented that we should remove these lines in a code review,
+  // but the reason was unclear. Investigate this!
+  forRange(DocumentEditor* otherEditor, DocumentManager::GetInstance()->Instances)
+    otherEditor->ClearMarker(-1, TextEditor::InstructionMarker);
+
+  if (event->Script == nullptr)
+    return;
+
+  DocumentEditor* editor = OpenDocumentResource(event->Script);
+  if (!editor)
+    return;
+
+  // CodeLocations use 1 based indices
+  editor->SetMarker(event->Location.StartLine - 1, TextEditor::InstructionMarker);
+  editor->ScrollToLine(event->Location.StartLine - 1)
+}
+
+void EditorMain::OnDebuggerResumed(ScriptEvent* event)
+{
+  forRange(DocumentEditor* otherEditor, DocumentManager::GetInstance()->Instances)
+    otherEditor->ClearMarker(-1, TextEditor::InstructionMarker);
 }
 
 void EditorMain::OnBlockingTaskStart(BlockingTaskEvent* event)
@@ -898,6 +922,8 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
   // Listen to the resource system if any unhandled exception or syntax error occurs
   Connect(Z::gResources, Events::UnhandledException, editorMain, &EditorMain::OnScriptError);
   Connect(Z::gResources, Events::SyntaxError, editorMain, &EditorMain::OnScriptError);
+  Connect(Z::gResources, Events::DebuggerPaused, editorMain, &EditorMain::OnDebuggerPaused);
+  Connect(Z::gResources, Events::DebuggerResumed, editorMain, &EditorMain::OnDebuggerResumed);
 
   // For setting the default docked windows' width to a percentage
   // to make a better initial layout on smaller resolutions
@@ -1029,6 +1055,10 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
       helpToolbar->SetDockMode(DockMode::DockRight);
       new BackgroundTaskButton(helpToolbar);
       helpToolbar->LoadMenu("HelpToolbar");
+
+      ToolBar* debuggerToolbar = new ToolBar(toolBarArea);
+      debuggerToolbar->SetDockMode(DockMode::DockRight);
+      debuggerToolbar->LoadMenu("DebuggerToolbar");
     }
   }
 

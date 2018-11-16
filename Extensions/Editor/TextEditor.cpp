@@ -1,4 +1,4 @@
-﻿///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 ///
 /// \file TextEditor.cpp
 /// Implementation of the TextEditor Widget.
@@ -193,9 +193,6 @@ static int KeyTranslate(int keyIn)
 const int LineNumberMargin = 0;
 const int DebuggingMargin = 1;
 const int FoldingMargin = 2;
-
-const int DebugInstructionIndex = 2;
-const int DebugBreakPointIndex = 1;
 
 const float cTextEditorVScrollWellWidth = 9.0f;
 const float cTextEditorVScrollSliderWidth = 6.0f;
@@ -477,7 +474,7 @@ void TextEditor::SetLexer(uint lexer)
       SendEditor(SCI_SETKEYWORDS, 1, (sptr_t)zilchSpecial);
       SendEditor(SCI_SETVIEWWS, SCWS_INVISIBLE);
       mLineNumbers = true;
-      //mBreakpoints = true;
+      mBreakpoints = true;
       break;
     }
   }
@@ -499,13 +496,13 @@ void TextEditor::UpdateMargins(ColorScheme& scheme)
     SendEditor(SCI_SETMARGINSENSITIVEN, DebuggingMargin, true);
     SendEditor(SCI_SETMARGINMASKN, DebuggingMargin, 0x000000FF);
 
-    SendEditor(SCI_MARKERDEFINE, DebugBreakPointIndex, SC_MARK_ROUNDRECT);
-    SendEditor(SCI_MARKERSETFORE, DebugBreakPointIndex, ColorBlack);
-    SendEditor(SCI_MARKERSETBACK, DebugBreakPointIndex, Red);
+    SendEditor(SCI_MARKERDEFINE, BreakPointMarker, SC_MARK_CIRCLE);
+    SendEditor(SCI_MARKERSETFORE, BreakPointMarker, Red);
+    SendEditor(SCI_MARKERSETBACK, BreakPointMarker, Red);
 
-    SendEditor(SCI_MARKERDEFINE, DebugInstructionIndex, SC_MARK_ROUNDRECT);
-    SendEditor(SCI_MARKERSETFORE, DebugInstructionIndex, ColorBlack);
-    SendEditor(SCI_MARKERSETBACK, DebugInstructionIndex, Yellow);
+    SendEditor(SCI_MARKERDEFINE, InstructionMarker, SC_MARK_SHORTARROW);
+    SendEditor(SCI_MARKERSETFORE, InstructionMarker, Yellow);
+    SendEditor(SCI_MARKERSETBACK, InstructionMarker, Yellow);
   }
   else
   {
@@ -1601,6 +1598,26 @@ void TextEditor::ClearMarker(int line, int type)
     SendEditor(SCI_MARKERDELETE, line, type);
 }
 
+int TextEditor::GetNextMarker(int lineStart, int type)
+{
+  return GetNextMarkerMask(lineStart, (1 << type));
+}
+
+int TextEditor::GetPreviousMarker(int lineStart, int type)
+{
+  return GetPreviousMarkerMask(lineStart, (1 << type));
+}
+
+int TextEditor::GetNextMarkerMask(int lineStart, int markerMask)
+{
+  return SendEditor(SCI_MARKERNEXT, lineStart, markerMask);
+}
+
+int TextEditor::GetPreviousMarkerMask(int lineStart, int markerMask)
+{
+  return SendEditor(SCI_MARKERPREVIOUS, lineStart, markerMask);
+}
+
 void TextEditor::SetMarkerForegroundColor(int marker, int foreground)
 {
   SendEditor(SCI_MARKERSETFORE, marker, foreground);
@@ -1620,6 +1637,16 @@ void TextEditor::SetMarkerColors(int marker, int foreground, int background)
 void TextEditor::SetMarker(int line, int type)
 {
   SendEditor(SCI_MARKERADD, line, type);
+}
+
+bool TextEditor::MarkerExists(int line, int type)
+{
+  return (GetMarkerMask(line) & (1 << type)) != 0;
+}
+
+int TextEditor::GetMarkerMask(int line)
+{
+  return SendEditor(SCI_MARKERGET, line);;
 }
 
 Vec3 TextEditor::GetScreenPositionOfCursor()
@@ -1790,7 +1817,7 @@ void TextEditor::OnNotify(Scintilla::SCNotification& notify)
   const int modifiers = notify.modifiers;
   const int position = notify.position;
   const int margin = notify.margin;
-  const int line_number = SendEditor(SCI_LINEFROMPOSITION, position, 0);
+  const int lineNumber = SendEditor(SCI_LINEFROMPOSITION, position, 0);
 
   switch(notify.nmhdr.code)
   {
@@ -1801,8 +1828,10 @@ void TextEditor::OnNotify(Scintilla::SCNotification& notify)
 
   case SCN_MARGINCLICK:
     {
-      if(margin == FoldingMargin)
-        SendEditor(SCI_TOGGLEFOLD, line_number, 0);
+      if (margin == FoldingMargin)
+        SendEditor(SCI_TOGGLEFOLD, lineNumber, 0);
+      else if (margin == DebuggingMargin)
+        BreakpointsClicked(lineNumber, position);
     }
     break;
 

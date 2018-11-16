@@ -167,7 +167,7 @@ class ContextMenuItem : public Composite
 {
 public:
   typedef ContextMenuItem ZilchSelf;
-  ContextMenuItem(Composite* parent, ContextMenuEntry* entry);
+  ContextMenuItem(Composite* parent, ContextMenuEntry* entry, bool readOnly = false);
 
   void SetName(StringParam name, StringParam icon = String());
   void SetCommand(Command* command);
@@ -189,6 +189,9 @@ public:
 
   /// Whether or not the item is selectable.
   bool mEnabled;
+
+  /// Whether or not the item is read only (doesn't modify state).
+  bool mReadOnly;
 
   ContextMenu* GetParentMenu();
 
@@ -333,8 +336,8 @@ public:
   String mMenuName;
 };
 
-#define ConnectMenu(menu, optionName, function)                    \
-  { ContextMenuEntry* entry = menu->AddEntry(String(optionName)); \
+#define ConnectMenu(menu, optionName, function, readOnly)         \
+  { ContextMenuEntry* entry = menu->AddEntry(String(optionName), readOnly); \
    ConnectThisTo(entry, Zero::Events::MenuItemSelected, function); }
 
 //**************************************************************************************************

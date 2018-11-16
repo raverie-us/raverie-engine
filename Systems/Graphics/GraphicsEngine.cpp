@@ -162,11 +162,14 @@ void GraphicsEngine::Initialize(SystemInitializer& initializer)
 }
 
 //**************************************************************************************************
-void GraphicsEngine::Update()
+void GraphicsEngine::Update(bool debugger)
 {
   // Do not try to run rendering while this job is going.
   if (ThreadingEnabled && mShowProgressJob->IsRunning())
     return;
+
+  ZilchManager::GetInstance()->mDebugger.DoNotAllowBreakReason =
+    "Cannot currently break within the graphics engine because it must continue running in editor";
 
   ProfileScopeTree("GraphicsSystem", "Engine", Color::Blue);
 
@@ -256,6 +259,8 @@ void GraphicsEngine::Update()
                                                         "Expand the component 'DebugSettings' (or add it) and modify 'MaxDebugObjects'.");
 
   gDebugDraw->ClearObjects();
+
+  ZilchManager::GetInstance()->mDebugger.DoNotAllowBreakReason.Clear();
 }
 
 //**************************************************************************************************

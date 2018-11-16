@@ -200,7 +200,7 @@ public:
   uint mSeed;
 
 //Internals
-  void Update();
+  void Update(bool debugger) override;
   void StopPreview();
   void AddSoundSpace(SoundSpace* space, bool isEditor);
   void RemoveSoundSpace(SoundSpace* space, bool isEditor);

@@ -53,6 +53,7 @@ Commands commands =
 		string Name = "ShowProjectFolder",
 		string Description = "Show the folder the project is located in the file system",
 		string Tags = "Project",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -60,6 +61,7 @@ Commands commands =
 		string Name = "ShowContentOutput",
 		string Description = "Show the project's content output folder",
 		string Tags = "Project",
+		bool ReadOnly = true,
 	},
 
 	// Editor Commands
@@ -131,6 +133,7 @@ Commands commands =
 		string IconName = "Copy",
 		string Shortcut = "Ctrl+C",
 		string Tags = "Edit",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -156,6 +159,7 @@ Commands commands =
 		string Description = "",
 		string Shortcut = "Alt+Left",
 		string Tags = "Select",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -164,6 +168,7 @@ Commands commands =
 		string Description = "",
 		string Shortcut = "Alt+Right",
 		string Tags = "Select",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -172,6 +177,7 @@ Commands commands =
 		string Description = "Select no objects",
 		string Shortcut = "Shift+D",
 		string Tags = "Select",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -181,6 +187,7 @@ Commands commands =
 		string IconName = "Up",
 		string Shortcut = "Shift+W",
 		string Tags = "Select",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -190,6 +197,7 @@ Commands commands =
 		string IconName = "DoubleUp",
 		string Shortcut = "Shift+Q",
 		string Tags = "Select",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -198,6 +206,7 @@ Commands commands =
 		string Description = "Select the first child",
 		string IconName = "Down",
 		string Tags = "Select",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -206,6 +215,7 @@ Commands commands =
 		string Description = "Select the next sibling",
 		string IconName = "Right",
 		string Tags = "Select",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -214,6 +224,7 @@ Commands commands =
 		string Description = "Select all in tree",
 		string IconName = "DoubleDown",
 		string Tags = "Select",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -223,6 +234,7 @@ Commands commands =
 		string IconName = "BigPlus",
 		string Shortcut = "Shift+A",
 		string Tags = "Select",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -232,6 +244,7 @@ Commands commands =
 		string IconName = "",
 		string Shortcut = "Shift+G",
 		string Tags = "Select",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -241,6 +254,7 @@ Commands commands =
 		string IconName = "",
 		string Shortcut = "Shift+S",
 		string Tags = "Select",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -250,6 +264,7 @@ Commands commands =
 		string IconName = "",
 		string Shortcut = "F",
 		string Tags = "Select",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -259,6 +274,7 @@ Commands commands =
 		string IconName = "",
 		string Shortcut = "FF",
 		string Tags = "Select",
+		bool ReadOnly = true,
 	},
 
 
@@ -270,6 +286,7 @@ Commands commands =
 		string Name = "UnhideAll",
 		string Description = "Unhide all objects",
 		string Tags = "Hide",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -277,6 +294,7 @@ Commands commands =
 		string Name = "HideSelected",
 		string Description = "Hide selected objects",
 		string Tags = "Hide",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -284,6 +302,7 @@ Commands commands =
 		string Name = "UnhideSelected",
 		string Description = "Unhide selected objects",
 		string Tags = "Hide",
+		bool ReadOnly = true,
 	},
 
 	//---------------------------------------------  Game
@@ -296,6 +315,7 @@ Commands commands =
 		string Shortcut = "F5",
 		string Function = "Editor.PlaySingleGame",
 		string Tags = "Game",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -306,6 +326,7 @@ Commands commands =
 		string Shortcut = "Ctrl+F5",
 		string Function = "Editor.PlayNewGame",
 		string Tags = "Game",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -316,6 +337,7 @@ Commands commands =
 		string Shortcut = "F6",
 		string Function = "Editor.ToggleGamePaused",
 		string Tags = "Game",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -326,6 +348,7 @@ Commands commands =
 		string Shortcut = "F7",
 		string Function = "Editor.StepGame",
 		string Tags = "Game",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -336,6 +359,7 @@ Commands commands =
 		string Shortcut = "F8",
 		string Function = "Editor.StopGame",
 		string Tags = "Game",
+		bool ReadOnly = true,
 	},
 
 	//------------------------------------------ Export
@@ -370,6 +394,7 @@ Commands commands =
 		string IconName = "Console",
 		string Shortcut = "~",
 		string Tags = "Windows",
+		bool ReadOnly = true,
 	},
 
   Command =
@@ -394,6 +419,7 @@ Commands commands =
 		string Description = "Show the Browser Window",
 		string IconName = "Browser",
 		string Tags = "Windows",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -402,6 +428,7 @@ Commands commands =
 		string Description = "Show the Zero Market where you can download content for your projects",
 		string IconName = "Market",
 		string Tags = "Windows",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -410,6 +437,7 @@ Commands commands =
 		string Description = "A place where users can talk to each other and share content",
 		string IconName = "Chat",
 		string Tags = "Windows",
+		bool ReadOnly = true,
 	},
 	
 	Command =
@@ -419,6 +447,7 @@ Commands commands =
 		string IconName = "Animator",
 		string Tags = "Windows",
 		bool DevOnly = false,
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -428,6 +457,7 @@ Commands commands =
 		string IconName = "FindReplace",
 		string Shortcut = "Ctrl+F",
 		string Tags = "Windows",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -437,6 +467,7 @@ Commands commands =
 		string IconName = "FindReplace",
 		string Shortcut = "Ctrl+Shift+F",
 		string Tags = "Windows",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -446,6 +477,7 @@ Commands commands =
 		string IconName = "FindReplace",
 		string Shortcut = "Ctrl+H",
 		string Tags = "Windows",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -455,6 +487,7 @@ Commands commands =
 		string IconName = "FindReplace",
 		string Shortcut = "Ctrl+Shift+H",
 		string Tags = "Windows",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -463,6 +496,7 @@ Commands commands =
 		string Description = "Report a bug",
 		string IconName = "BugIcon",
 		string Tags = "Windows",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -472,6 +506,7 @@ Commands commands =
 		string IconName = "Commands",
 		string Shortcut = "Ctrl+Shift+C",
 		string Tags = "Windows",
+		bool ReadOnly = true,
 	},
 	
   Command =
@@ -481,6 +516,7 @@ Commands commands =
  		string IconName = "OperationHistory",
  		string Shortcut = "Ctrl+Shift+O",
  		string Tags = "Windows",
+		bool ReadOnly = true,
  	},
 
 	Command =
@@ -489,6 +525,7 @@ Commands commands =
 		string Description = "Show the Tools Window",
 		string IconName = "Tools",
 		string Tags = "Windows",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -497,6 +534,7 @@ Commands commands =
 		string Description = "Show the Property Window",
 		string IconName = "Properties",
 		string Tags = "Windows",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -505,6 +543,7 @@ Commands commands =
 		string Description = "Show the Library Window",
 		string IconName = "Library",
 		string Tags = "Windows",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -513,6 +552,7 @@ Commands commands =
 		string Description = "Show the Objects Window",
 		string IconName = "Tree",
 		string Tags = "Windows",
+		bool ReadOnly = true,
 	},
   
 	Command =
@@ -520,6 +560,7 @@ Commands commands =
 		string Name = "Help",
 		string Description = "Display documentation for the engine",
 		string Tags = "Editor Help",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -528,6 +569,7 @@ Commands commands =
 		string Description = "Edit color scheme",
 		string IconName = "CautionTriangle",
 		string Tags = "Editor",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -545,6 +587,7 @@ Commands commands =
 		string IconName = "Properties",
 		string Shortcut = "Shift+P",
 		string Tags = "Select",
+		bool ReadOnly = true,
 	},
 	
 	Command =
@@ -554,6 +597,7 @@ Commands commands =
 		string IconName = "Properties",
 		string Shortcut = "Shift+E",
 		string Tags = "Select",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -561,6 +605,7 @@ Commands commands =
 		string Name = "VolumeMeter",
 		string Description = "Show the Volume Meter Window",
 		string Tags = "Windows Sound",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -568,6 +613,7 @@ Commands commands =
 		string Name = "SoundNodeGraph",
 		string Description = "Show the Sound Node Graph Window",
 		string Tags = "Windows Sound",
+		bool ReadOnly = true,
 	},
 	
 	Command =
@@ -578,12 +624,69 @@ Commands commands =
 	},
 	
 	// ------------------------------------------ More editor commands	
+
+	Command =
+	{
+		string Name = "DebuggerResume",
+		string Description = "Resumes execution if the debugger is paused",
+		string IconName = "DebuggerResume",
+		string Shortcut = "Alt+F5",
+		string Function = "Editor.DebuggerResume",
+		string Tags = "Debugger",
+		bool ReadOnly = true,
+	},
+
+	Command =
+	{
+		string Name = "DebuggerPause",
+		string Description = "Pauses where script is currently executing",
+		string IconName = "DebuggerPause",
+		string Shortcut = "Ctrl+Break",
+		string Function = "Editor.DebuggerPause",
+		string Tags = "Debugger",
+		bool ReadOnly = true,
+	},
+
+	Command =
+	{
+		string Name = "DebuggerStepIn",
+		string Description = "Steps into a function or over a line of code",
+		string IconName = "DebuggerStepIn",
+		string Shortcut = "Alt+Right",
+		string Function = "Editor.DebuggerStepIn",
+		string Tags = "Debugger",
+		bool ReadOnly = true,
+	},
+
+	Command =
+	{
+		string Name = "DebuggerStepOver",
+		string Description = "Steps over a function call or line of code",
+		string IconName = "DebuggerStepOver",
+		string Shortcut = "Alt+Down",
+		string Function = "Editor.DebuggerStepOver",
+		string Tags = "Debugger",
+		bool ReadOnly = true,
+	},
+
+	Command =
+	{
+		string Name = "DebuggerStepOut",
+		string Description = "Steps out of the current function",
+		string IconName = "DebuggerStepOut",
+		string Shortcut = "Alt+Left",
+		string Function = "Editor.DebuggerStepOut",
+		string Tags = "Debugger",
+		bool ReadOnly = true,
+	},
+
 	Command =
 	{
 		string Name = "GoToDefinition",
 		string Description = "Using the current cursor in the current open script we will attempt to go to the definition of that type, member, or variable",
 		string Tags = "Editor Script",
 		string Shortcut = "F12",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -599,6 +702,7 @@ Commands commands =
 		string Description = "Print this version date and revision number in the console and copies them to the clipboard",
 		string IconName = "Console",
 		string Tags = "Editor",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -607,6 +711,7 @@ Commands commands =
 		string Description = "Displays a performance graph",
 		string IconName = "Performance",
 		string Tags = "Editor",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -615,6 +720,7 @@ Commands commands =
 		string Description = "Displays a graph",
 		string IconName = "Performance",
 		string Tags = "Editor",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -623,6 +729,7 @@ Commands commands =
 		string Description = "Used to compare broad phase performance",
 		string IconName = "Performance",
 		string Tags = "Editor",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -656,6 +763,7 @@ Commands commands =
 		string Shortcut = "",
 		string IconName = "SelectTool",
 		string Tags = "Tool",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -665,6 +773,7 @@ Commands commands =
 		string Shortcut = "",
 		string IconName = "TranslateGizmo",
 		string Tags = "Tool",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -674,6 +783,7 @@ Commands commands =
 		string Shortcut = "",
 		string IconName = "RotateGizmo",
 		string Tags = "Tool",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -683,6 +793,7 @@ Commands commands =
 		string Shortcut = "",
 		string IconName = "ScaleGizmo",
 		string Tags = "Tool",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -692,6 +803,7 @@ Commands commands =
 		string Description = "Enables the Manipulator Tool",
 		string IconName = "ManipulatorGizmo",
 		string Tags = "Tool",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -701,6 +813,7 @@ Commands commands =
 		string Description = "Enables the TileEditor2D tool",
 		string IconName = "TileEditor2D",
 		string Tags = "Tool",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -710,6 +823,7 @@ Commands commands =
 		string Description = "Enables the HeightMapTool tool",
 		string IconName = "HeightMapTool",
 		string Tags = "Tool",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -719,6 +833,7 @@ Commands commands =
 		string Description = "Enables the JointTool tool",
 		string IconName = "JointTool",
 		string Tags = "Tool",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -728,6 +843,7 @@ Commands commands =
 		string Description = "Enables the CreationTool tool",
 		string IconName = "CreationTool",
 		string Tags = "Tool",
+		bool ReadOnly = true,
 	},
   
   Command =
@@ -737,12 +853,14 @@ Commands commands =
 		string Description = "Enables the ParentingTool tool",
 		string IconName = "ParentingTool",
 		string Tags = "Tool",
+		bool ReadOnly = true,
 	},
 
 	Command =
 	{
 		string Name = "ShowCoreLibrary",
 		string Tags = "Tool",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -750,6 +868,7 @@ Commands commands =
 		string Name = "ResetCamera",
 		string Description = "Resets the camera to look at the origin",
 		string Tags = "Camera",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -757,6 +876,7 @@ Commands commands =
 		string Name = "AlignSelectedCameraToCamera",
 		string Description = "Aligns the selected camera to the editor's camera",
 		string Tags = "Camera",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -764,6 +884,7 @@ Commands commands =
 		string Name = "AlignCameraToSelectedCamera",
 		string Description = "Aligns the editor camera to the selected camera",
 		string Tags = "Camera",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -779,6 +900,7 @@ Commands commands =
 		string Name = "TakeProjectScreenshot",
 		string Description = "Takes a screen shot for the project. Disables automatically taking a project screen shot every time you save.",
 		string Tags = "",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -786,6 +908,7 @@ Commands commands =
 		string Name = "EnableAutoProjectScreenshot",
 		string Description = "Enables automatically taking a project screen shot every time you save.",
 		string Tags = "",
+		bool ReadOnly = true,
 	},
 
 	Command =
@@ -793,6 +916,7 @@ Commands commands =
 		string Name = "DisableAutoProjectScreenshot",
 		string Description = "Disables automatically taking a project screen shot every time you save. Use the 'TakeProjectScreenshot' command to take the screen shot manually.",
 		string Tags = "",
+		bool ReadOnly = true,
 	},
 
 },

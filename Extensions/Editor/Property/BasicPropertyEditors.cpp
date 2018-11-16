@@ -217,11 +217,11 @@ void DirectProperty::OnRightMouseUpLabel(MouseEvent* event)
   {
     if (IsModified())
     {
-      ConnectMenu(menu, "Revert", OnRevert);
+      ConnectMenu(menu, "Revert", OnRevert, false);
     }
     else
     {
-      ConnectMenu(menu, "Mark Modified", OnMarkModified);
+      ConnectMenu(menu, "Mark Modified", OnMarkModified, false);
     }
   }
 

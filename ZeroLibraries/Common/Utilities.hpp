@@ -44,7 +44,7 @@ ZeroShared bool IsDebuggerAttached();
 ZeroShared void DebuggerOutput(const char* message);
 
 // Debug break (only if a debugger is attached)
-ZeroShared void DebugBreak();
+ZeroShared bool DebugBreak();
 
 // Attempts to enable memory leak checking (break on 
 ZeroShared void EnableMemoryLeakChecking(int breakOnAllocation = -1);

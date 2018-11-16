@@ -59,6 +59,18 @@ public:
   // If dirtied we attempt to compile every engine update (checks dirty flag)
   void OnEngineUpdate(UpdateEvent* event);
 
+  // When the debugger first pauses on a line
+  void OnDebuggerPause(Zilch::DebuggerEvent* event);
+
+  // When the debugger resumes execution
+  void OnDebuggerResume(Zilch::DebuggerEvent* event);
+
+  // When the debugger is paused on a line and updates
+  void OnDebuggerPauseUpdate(Zilch::DebuggerEvent* event);
+
+  // When the debugger skips a breakpoint
+  void OnDebuggerBreakNotAllowed(Zilch::DebuggerTextEvent* event);
+
   // Tells the debugger to start hosting.
   void HostDebugger();
 

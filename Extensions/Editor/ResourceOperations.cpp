@@ -11,6 +11,12 @@ namespace Zero
 
 Resource* AddResourceFromFile(StringParam filePath, StringParam resourceType)
 {
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("Resources", "Cannot add resources while in read-only mode");
+    return nullptr;
+  }
+
   ContentLibrary* contentLibrary = Z::gEditor->mProjectLibrary;
   ResourceLibrary* resourceLibrary = Z::gResources->GetResourceLibrary(contentLibrary->Name);
 
@@ -63,6 +69,12 @@ Resource* AddResourceFromFile(StringParam filePath, StringParam resourceType)
 
 void AddResourcesFromFiles(const Array<String>& files, StringParam resourceType)
 {
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("Resources", "Cannot add resources while in read-only mode");
+    return;
+  }
+
   ContentLibrary* contentLibrary = Z::gEditor->mProjectLibrary;
   ResourceLibrary* resourceLibrary = Z::gResources->GetResourceLibrary(contentLibrary->Name);
 
@@ -77,6 +89,12 @@ void AddResourcesFromFiles(const Array<String>& files, StringParam resourceType)
 
 Resource* AddNewResource(ResourceManager* resourceManager, ResourceAdd& resourceAdd)
 {
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("Resources", "Cannot add resources while in read-only mode");
+    return nullptr;
+  }
+
   String resourceTypeName = resourceManager->mResourceTypeName;
 
   String resourceExtension = resourceManager->mExtension;
@@ -167,6 +185,12 @@ Resource* AddNewResource(ResourceManager* resourceManager, ResourceAdd& resource
 
 Resource* DuplicateResource(Resource* resource, StringParam expectedNewName)
 {
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("Resources", "Cannot add resources while in read-only mode");
+    return nullptr;
+  }
+
   ContentLibrary* library = Z::gEditor->mProjectLibrary;
   ResourceManager* resourceManager = resource->GetManager();
   String resourceTypeName = resourceManager->mResourceTypeName;
@@ -234,6 +258,12 @@ Resource* DuplicateResource(Resource* resource, StringParam expectedNewName)
 
 bool RenameResource(Resource* resource, StringParam newName)
 {
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("Resources", "Cannot rename resources while in read-only mode");
+    return nullptr;
+  }
+
   //if there's no resource and no resource builder, there is nothing to do.
   if(!(resource && resource->GetBuilder()))
     return false;
@@ -320,6 +350,12 @@ bool InPackage(Resource* resource, ResourcePackage* package)
 // Unload all resources that where not loaded when the content item was built. Used for content reloading.
 void UnloadInactive(ContentItem* contentItem, ResourceLibrary* resourceLibrary, ResourcePackage* package)
 {
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("Resources", "Cannot unload resources while in read-only mode");
+    return;
+  }
+
   Array<Resource*> resourcesToDelete;
 
   //Gather all resources from the same content item that are not loaded in the new package
@@ -363,6 +399,12 @@ void ReloadResource(Resource* resource)
 
 void ReloadContentItem(ContentItem* contentItem)
 {
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("Resources", "Cannot reload resources while in read-only mode");
+    return;
+  }
+
   ZPrint("Reloading content '%s'\n", contentItem->Filename.c_str());
 
   // Save any changes made to the meta file for exporting
@@ -401,6 +443,12 @@ void EditResourceExternal(Resource* resource)
 
 void RemoveResource(Resource* resource)
 {
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("Resources", "Cannot remove resources while in read-only mode");
+    return;
+  }
+
   ContentItem* contentItem = resource->mContentItem;
 
   // Does the resource have a content item that needs to be removed?
@@ -458,6 +506,12 @@ void RemoveResource(Resource* resource)
 
 Resource* LoadResourceFromNewContentItem(ResourceManager* resourceManager, ContentItem* newContentItem, Resource* resource)
 {
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("Resources", "Cannot add resources while in read-only mode");
+    return nullptr;
+  }
+
   // Build the content item to get a resource package with one resource
   Status status;
   ResourcePackage package;
@@ -570,6 +624,12 @@ String GetEditorTrash()
 // 6. Upload to an archetype, use archetype to upload to a different archetype
 Resource* NewResourceOnWrite(ResourceManager* resourceManager, BoundType* resourceType, StringParam property, Space* space, Resource* resource, Archetype* archetype, bool modified)
 {
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("Resources", "Cannot create resources while in read-only mode");
+    return resource;
+  }
+
   // Check for valid resource manager
   if (!resourceManager)
     return resource;

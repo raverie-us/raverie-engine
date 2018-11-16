@@ -169,9 +169,9 @@ public:
       Insert(inputRange.Front());
   }
 
-  void Insert(const value_type& value)
+  bool Insert(const value_type& value)
   {
-    base_type::InsertInternal(value, base_type::OnCollisionOverride);
+    return base_type::InsertInternal(value, base_type::OnCollisionOverride);
   }
 
   bool InsertOrError(const value_type& value)

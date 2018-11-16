@@ -148,7 +148,7 @@ namespace Zilch
     Any CreateDelegate(const Any& instance);
 
     // Attempts to invoke a function with the specified arguments, or throws an exception
-    Any Invoke(const Any& instance, ArrayClass<Any>* arguments);
+    Any Invoke(const Any& instance, ArrayClass<Any>* arguments = nullptr);
 
     // Computes the hash and stores it
     void ComputeHash();

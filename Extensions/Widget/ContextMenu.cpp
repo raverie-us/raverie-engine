@@ -560,6 +560,7 @@ void ContextMenuItem::SetName(StringParam name, StringParam icon)
 
 void ContextMenuItem::SetCommand(Command* command)
 {
+  mReadOnly = command->ReadOnly;
   SetName(command->GetDisplayName());
   mShortcut->SetText(command->Shortcut);
   mCommand = command;
@@ -569,6 +570,12 @@ void ContextMenuItem::SetCommand(Command* command)
 
 void ContextMenuItem::OnLeftClick(MouseEvent* event)
 {
+  if (Z::gEngine->IsReadOnly() && !mReadOnly)
+  {
+    DoNotifyWarning("Context Menu", BuildString("Cannot execute menu item ", mName, " because we are in read-only mode"));
+    return;
+  }
+
   if (!mEnabled)
     return;
 
@@ -589,7 +596,7 @@ void ContextMenuItem::OnLeftClick(MouseEvent* event)
       current = current->mParent;
     }
 
-    mCommand->Execute();
+    mCommand->ExecuteCommand();
 
     commandContext = recover;
   }

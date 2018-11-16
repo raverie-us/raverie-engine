@@ -317,11 +317,11 @@ public:
     Mouse* mouse = Z::gMouse;
     menu->SetBelowMouse(mouse, Pixels(0,0) );
  
-    ConnectMenu(menu, "Broad Search", OnBroadSearch);
-    ConnectMenu(menu, "By Name (#)", OnName);
-    ConnectMenu(menu, "By Component (.)", OnComponent);
-    ConnectMenu(menu, "By Resource ($)", OnResource);
-    ConnectMenu(menu, "By Archetype (@)", OnArchetype);
+    ConnectMenu(menu, "Broad Search", OnBroadSearch, true);
+    ConnectMenu(menu, "By Name (#)", OnName, true);
+    ConnectMenu(menu, "By Component (.)", OnComponent, true);
+    ConnectMenu(menu, "By Resource ($)", OnResource, true);
+    ConnectMenu(menu, "By Archetype (@)", OnArchetype, true);
   }
 
   void OnBroadSearch(Event* event)
@@ -812,6 +812,12 @@ public:
 
   bool SetData(DataEntry* dataEntry, AnyParam variant, StringParam column) override
   {
+    if (Z::gEngine->IsReadOnly())
+    {
+      DoNotifyWarning("Resources", "Cannot change objects in read-only mode");
+      return false;
+    }
+
     Object* object = (Object*)dataEntry;
     Cog* cog = Type::DynamicCast<Cog*>(object);
     if(cog == nullptr)
@@ -843,6 +849,14 @@ public:
   void CanMove(Status& status, DataEntry* source, DataEntry* destination,
                InsertMode::Type insertMode)
   {
+    if (Z::gEngine->IsReadOnly())
+    {
+      static const String cMessage("Cannot move objects in read-only mode");
+      DoNotifyWarning("Resources", cMessage);
+      status.SetFailed(cMessage, InsertError::Invalid);
+      return;
+    }
+
     Object* sourceObject = (Object*)source;
     Cog* sourceCog = Type::DynamicCast<Cog*>(sourceObject);
 
@@ -922,6 +936,12 @@ public:
 
   bool Move(DataEntry* destinationEntry, DataEntry* movingEntry, InsertMode::Type insertMode)
   {
+    if (Z::gEngine->IsReadOnly())
+    {
+      DoNotifyWarning("Resources", "Cannot move objects in read-only mode");
+      return false;
+    }
+
     ReturnIf(Type::DynamicCast<Cog*>((Object*)destinationEntry) == nullptr, nullptr, "This should always be a Cog");
     ReturnIf(Type::DynamicCast<Cog*>((Object*)movingEntry) == nullptr, nullptr, "This should always be a Cog");
 
@@ -959,6 +979,12 @@ public:
   bool Move(DataEntry* destinationEntry, Array<DataIndex>& indicesToMove,
             InsertMode::Type insertMode) override
   {
+    if (Z::gEngine->IsReadOnly())
+    {
+      DoNotifyWarning("Resources", "Cannot move objects in read-only mode");
+      return false;
+    }
+
     ReturnIf(indicesToMove.Empty(), false, "Nothing to move");
     ReturnIf(Type::DynamicCast<Cog*>((Object*)destinationEntry) == nullptr, nullptr, "This should always be a Cog");
     OperationQueue* queue = Z::gEditor->GetOperationQueue();
@@ -993,6 +1019,12 @@ public:
 
   void OnMetaDrop(MetaDropEvent* e, DataEntry* mouseOver, InsertMode::Enum mode) override
   {
+    if (Z::gEngine->IsReadOnly())
+    {
+      DoNotifyWarning("Resources", "Cannot drag-drop in read-only mode");
+      return;
+    }
+
     // If an archetype was dropped on the row, attach 
     if(Archetype* archetype = e->Instance.Get<Archetype*>())
     {
@@ -1331,12 +1363,24 @@ void ObjectView::BuildFormat(TreeFormatting& formatting)
 
 void ObjectView::OnRename(ObjectEvent* event)
 {
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("Resources", "Cannot rename objects in read-only mode");
+    return;
+  }
+
   TreeRow* row = mTree->FindRowByIndex(mCommandIndex);
   row->Edit(CommonColumns::Name);
 }
 
 void ObjectView::OnDelete(ObjectEvent* event)
 {
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("ObjectView", "Cannot delete objects while in read-only mode");
+    return;
+  }
+
   MetaSelection* selection = Z::gEditor->GetSelection();
   if(selection->Empty())
     return;
@@ -1472,10 +1516,10 @@ void ObjectView::OnTreeRightClick(TreeEvent* event)
     // will attach to this cog)
     menu->mRootEntry->mContext.Add(cog);
 
-    ConnectMenu(menu, "Rename", OnRename);
-    ConnectMenu(menu, "Delete", OnDelete);
+    ConnectMenu(menu, "Rename", OnRename, false);
+    ConnectMenu(menu, "Delete", OnDelete, false);
     if(LocalModifications::GetInstance()->IsChildOrderModified(cog->has(Hierarchy)))
-      ConnectMenu(menu, "Restore Child Order", OnRestoreChildOrder);
+      ConnectMenu(menu, "Restore Child Order", OnRestoreChildOrder, false);
 
     menu->AddDivider();
     // Set our icon to the arrow indicating a sub menu
@@ -1490,7 +1534,7 @@ void ObjectView::OnTreeRightClick(TreeEvent* event)
   }
   else
   {
-    ConnectMenu(menu, "Restore", OnRestore);
+    ConnectMenu(menu, "Restore", OnRestore, false);
   }
 
   menu->ShiftOntoScreen(ToVector3(mouse->GetClientPosition()));

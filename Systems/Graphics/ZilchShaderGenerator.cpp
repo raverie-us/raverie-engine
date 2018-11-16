@@ -393,7 +393,7 @@ LibraryRef ZilchShaderGenerator::BuildFragmentsLibrary(Module& dependencies, Arr
       continue;
 
     ZilchFragment* fragment = (ZilchFragment*)resource;
-    mFragmentsProject.AddCodeFromString(fragment->mText, fragment->LoadPath, resource);
+    mFragmentsProject.AddCodeFromString(fragment->mText, fragment->GetOrigin(), resource);
   }
 
   // Internal dependencies used to build the internal library

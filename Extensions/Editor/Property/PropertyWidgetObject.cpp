@@ -628,6 +628,9 @@ void PropertyWidgetObject::OpenNode(bool animate)
   {
     Property* property = propertyNode->mProperty;
 
+    if (property == nullptr)
+      continue;
+
     // Get the type of the property
     BoundType* propertyType = Type::GetBoundType(property->PropertyType);
 
@@ -793,6 +796,12 @@ void PropertyWidgetObject::OpenNode(bool animate)
 //******************************************************************************
 void PropertyWidgetObject::RemoveSelf()
 {
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("Property View", "Cannot remove components while in read-only mode");
+    return;
+  }
+
   SetActive(false);
   Handle parentInstance = mParentWidgetObject->mNode->mObject;
   Handle selfInstance = mNode->mObject;
@@ -815,6 +824,12 @@ void PropertyWidgetObject::RemoveSelf()
 //******************************************************************************
 void PropertyWidgetObject::AnimateRemoveSelf()
 {
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("Property View", "Cannot remove components while in read-only mode");
+    return;
+  }
+
   // Verify that the widget object exists
   if(mParentWidgetObject == nullptr)
   {
@@ -900,6 +915,12 @@ void PropertyWidgetObject::OnRemove(ObjectEvent* event)
 //******************************************************************************
 void PropertyWidgetObject::OnRestore(ObjectEvent* e)
 {
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("Property View", "Cannot restore while in read-only mode");
+    return;
+  }
+
   LocalModifications* modifications = LocalModifications::GetInstance();
 
   OperationQueue* opQueue = Z::gEditor->GetOperationQueue();
@@ -932,9 +953,9 @@ void PropertyWidgetObject::OnRightClick(MouseEvent* event)
   }
   else if(!mLocallyRemoved)
   {
-    ConnectMenu(menu, "Remove", OnRemove);
-    ConnectMenu(menu, "View Docs", OnViewDoc);
-    ConnectMenu(menu, "View Online Docs", OnViewOnlineDocs);
+    ConnectMenu(menu, "Remove", OnRemove, false);
+    ConnectMenu(menu, "View Docs", OnViewDoc, true);
+    ConnectMenu(menu, "View Online Docs", OnViewOnlineDocs, true);
   }
 }
 
@@ -1284,6 +1305,12 @@ public:
 
     if(newIndex != oldIndex)
     {
+      if (Z::gEngine->IsReadOnly())
+      {
+        DoNotifyWarning("Property View", "Cannot move components while in read-only mode");
+        return;
+      }
+
       uint insertIndex = newIndex;
       if(oldIndex < newIndex)
         insertIndex += 1;
@@ -1400,6 +1427,12 @@ Handle PropertyWidgetObject::GetParentObject()
 //******************************************************************************
 void PropertyWidgetObject::StartChildDrag(Mouse* mouse, PropertyWidgetObject* child)
 {
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("Property View", "Cannot move components while in read-only mode");
+    return;
+  }
+
   // Don't do anything if the components can't be reordered
   MetaComposition* composition = mComposition;
   if (composition == nullptr)

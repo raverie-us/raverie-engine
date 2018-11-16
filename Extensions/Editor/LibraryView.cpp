@@ -178,6 +178,12 @@ public:
   //****************************************************************************
   bool SetData(DataEntry* dataEntry, AnyParam variant, StringParam column) override
   {
+    if (Z::gEngine->IsReadOnly())
+    {
+      DoNotifyWarning("Resources", "Cannot rename resources in read-only mode");
+      return false;
+    }
+
     LibDataEntry* entry = (LibDataEntry*)dataEntry;
     Resource* resource = entry->mResource;
 
@@ -729,15 +735,15 @@ void LibraryView::OnRightClickObject(Composite* objectToAttachTo, DataIndex inde
   Resource* resource = entry->mResource;
   if(resource)
   {
-    ConnectMenu(menu, "Edit", OnEdit);
-    ConnectMenu(menu, "Rename", OnRename);
-    ConnectMenu(menu, "Edit Content Meta", OnEditMeta);
-    ConnectMenu(menu, "Edit Tags", OnEditTags);
-    ConnectMenu(menu, "Remove", OnRemove);
+    ConnectMenu(menu, "Edit", OnEdit, true);
+    ConnectMenu(menu, "Rename", OnRename, false);
+    ConnectMenu(menu, "Edit Content Meta", OnEditMeta, false);
+    ConnectMenu(menu, "Edit Tags", OnEditTags, false);
+    ConnectMenu(menu, "Remove", OnRemove, false);
 
     if(resource && resource->mManager->mCanDuplicate)
     {
-      ConnectMenu(menu, "Duplicate", OnDuplicate);
+      ConnectMenu(menu, "Duplicate", OnDuplicate, false);
     }
 
     BoundType* resourceType = ZilchVirtualTypeId(resource);
@@ -745,15 +751,15 @@ void LibraryView::OnRightClickObject(Composite* objectToAttachTo, DataIndex inde
     // Add composing and translation test functions for materials
     if(resourceType->IsA(ZilchTypeId(Material)))
     {
-      ConnectMenu(menu, "ComposeZilchMaterial", OnComposeZilchMaterial);
-      ConnectMenu(menu, "TranslateZilchPixelMaterial", OnTranslateZilchPixelMaterial);
-      ConnectMenu(menu, "TranslateZilchGeometryMaterial", OnTranslateZilchGeometryMaterial);
-      ConnectMenu(menu, "TranslateZilchVertexMaterial", OnTranslateZilchVertexMaterial);
+      ConnectMenu(menu, "ComposeZilchMaterial", OnComposeZilchMaterial, false);
+      ConnectMenu(menu, "TranslateZilchPixelMaterial", OnTranslateZilchPixelMaterial, false);
+      ConnectMenu(menu, "TranslateZilchGeometryMaterial", OnTranslateZilchGeometryMaterial, false);
+      ConnectMenu(menu, "TranslateZilchVertexMaterial", OnTranslateZilchVertexMaterial, false);
     }
     // Add a translation tests function for fragments
     if(resourceType->IsA(ZilchTypeId(ZilchFragment)))
     {
-      ConnectMenu(menu, "TranslateFragment", OnTranslateFragment);
+      ConnectMenu(menu, "TranslateFragment", OnTranslateFragment, false);
     }
 
     AddResourceOptionsToMenu(menu, resourceType->Name, true);
@@ -763,7 +769,7 @@ void LibraryView::OnRightClickObject(Composite* objectToAttachTo, DataIndex inde
     // When right clicking on a resource tag show an "Add 'resourceType'" option if the user can add this type of resource
     if(AddResourceOptionsToMenu(menu, entry->mTag))
       menu->AddDivider();
-    ConnectMenu(menu, "Add Tag To Search", OnAddTagToSearch);
+    ConnectMenu(menu, "Add Tag To Search", OnAddTagToSearch, true);
   }
 
   menu->SizeToContents();
@@ -831,6 +837,12 @@ void LibraryView::OnKeyDown(KeyboardEvent* event)
 
   if(event->Key == Keys::F2)
   {
+    if (Z::gEngine->IsReadOnly())
+    {
+      DoNotifyWarning("Resources", "Cannot rename resources while in read-only mode");
+      return;
+    }
+
     DataSelection* selection = mTreeView->GetSelection();
     // check if we have something currently selected
     if(selection)
@@ -1025,6 +1037,12 @@ void LibraryView::SelectAll()
 //******************************************************************************
 void LibraryView::OnRemove(ObjectEvent* event)
 {
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("Resources", "Cannot remove resources while in read-only mode");
+    return;
+  }
+
   String message, title;
 
   // This isn't the resource count, because it may contain rows that are tags
@@ -1459,6 +1477,12 @@ void LibraryView::SetTagEditorCurrentHeight(float height)
 //******************************************************************************
 void LibraryView::RenameAtIndex(DataIndex& dataIndex)
 {
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("Resources", "Cannot rename resources in read-only mode");
+    return;
+  }
+
   if (mTreeView->GetActive())
   {
     TreeRow* row = mTreeView->FindRowByIndex(dataIndex);

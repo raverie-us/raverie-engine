@@ -34,7 +34,7 @@ public:
   virtual void Initialize(SystemInitializer& initializer) {}
 
   /// All systems are updated every game frame.
-  virtual void Update() {}
+  virtual void Update(bool debugger) {}
 };
 
 }//namespace Zero

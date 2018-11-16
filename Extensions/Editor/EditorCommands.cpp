@@ -1257,31 +1257,31 @@ void BindEditorCommands(Cog* configCog, CommandManager* commands)
   commands->AddCommand("Redo", BindCommandFunction(EditorRedo));
 
   commands->AddCommand("Cut", BindCommandFunction(SaveToClipBoardAndDelete));
-  commands->AddCommand("Copy", BindCommandFunction(SaveSelectionToClipboard));
+  commands->AddCommand("Copy", BindCommandFunction(SaveSelectionToClipboard), true);
   commands->AddCommand("Paste", BindCommandFunction(LoadObjectFromClipboard));
   commands->AddCommand("Delete", BindCommandFunction(DeleteSelectedObjects));
   commands->AddCommand("Duplicate", BindCommandFunction(DuplicateSelection));
 
-  commands->AddCommand("SelectNone", BindCommandFunction(Deselect));
-  commands->AddCommand("SelectAllInTree", BindCommandFunction(SelectAllInTree));
-  commands->AddCommand("SelectRoot", BindCommandFunction(SelectTopInTreeNoObj));
-  commands->AddCommand("SelectParent", BindCommandFunction(SelectParent));
-  commands->AddCommand("SelectChild", BindCommandFunction(SelectChild));
-  commands->AddCommand("SelectSibling", BindCommandFunction(SelectSibling));
-  commands->AddCommand("SelectAll", BindCommandFunction(SelectAll));
+  commands->AddCommand("SelectNone", BindCommandFunction(Deselect), true);
+  commands->AddCommand("SelectAllInTree", BindCommandFunction(SelectAllInTree), true);
+  commands->AddCommand("SelectRoot", BindCommandFunction(SelectTopInTreeNoObj), true);
+  commands->AddCommand("SelectParent", BindCommandFunction(SelectParent), true);
+  commands->AddCommand("SelectChild", BindCommandFunction(SelectChild), true);
+  commands->AddCommand("SelectSibling", BindCommandFunction(SelectSibling), true);
+  commands->AddCommand("SelectAll", BindCommandFunction(SelectAll), true);
 
-  commands->AddCommand("SelectSpace", BindCommandFunction(SelectSpace));
-  commands->AddCommand("SelectGame", BindCommandFunction(SelectGame));
+  commands->AddCommand("SelectSpace", BindCommandFunction(SelectSpace), true);
+  commands->AddCommand("SelectGame", BindCommandFunction(SelectGame), true);
 
-  commands->AddCommand("PreviousSelection", BindCommandFunction(PreviousSelection));
-  commands->AddCommand("NextSelection", BindCommandFunction(NextSelection));
+  commands->AddCommand("PreviousSelection", BindCommandFunction(PreviousSelection), true);
+  commands->AddCommand("NextSelection", BindCommandFunction(NextSelection), true);
 
-  commands->AddCommand("CenterSelected", BindCommandFunction(CenterSelected));
-  commands->AddCommand("FrameSelected", BindCommandFunction(FrameSelected));
+  commands->AddCommand("CenterSelected", BindCommandFunction(CenterSelected), true);
+  commands->AddCommand("FrameSelected", BindCommandFunction(FrameSelected), true);
 
-  commands->AddCommand("UnhideAll", BindCommandFunction(UnhideAll));
-  commands->AddCommand("HideSelected", BindCommandFunction(HideSelected));
-  commands->AddCommand("UnhideSelected", BindCommandFunction(UnHideSelected));
+  commands->AddCommand("UnhideAll", BindCommandFunction(UnhideAll), true);
+  commands->AddCommand("HideSelected", BindCommandFunction(HideSelected), true);
+  commands->AddCommand("UnhideSelected", BindCommandFunction(UnHideSelected), true);
 
   commands->AddCommand("ResetTransform", BindCommandFunction(ResetTransform));
   commands->AddCommand("MoveToLookPoint", BindCommandFunction(MoveToLookPoint));
@@ -1301,9 +1301,9 @@ void BindEditorCommands(Cog* configCog, CommandManager* commands)
   commands->AddCommand("ImportHeightMap", BindCommandFunction(ImportHeightMap));
 
 
-  commands->AddCommand("ResetCamera", BindCommandFunction(ResetCamera));
-  commands->AddCommand("AlignSelectedCameraToCamera", BindCommandFunction(AlignSelectedCameraToCamera));
-  commands->AddCommand("AlignCameraToSelectedCamera", BindCommandFunction(AlignCameraToSelectedCamera));
+  commands->AddCommand("ResetCamera", BindCommandFunction(ResetCamera), true);
+  commands->AddCommand("AlignSelectedCameraToCamera", BindCommandFunction(AlignSelectedCameraToCamera), true);
+  commands->AddCommand("AlignCameraToSelectedCamera", BindCommandFunction(AlignCameraToSelectedCamera), true);
 
   commands->AddCommand("AddComponent", BindCommandFunction(AddComponent));
 
@@ -1312,7 +1312,7 @@ void BindEditorCommands(Cog* configCog, CommandManager* commands)
   commands->AddCommand("EnableAutoProjectScreenshot", BindCommandFunction(EnableAutoProjectScreenshot));
   commands->AddCommand("DisableAutoProjectScreenshot", BindCommandFunction(DisableAutoProjectScreenshot));
 
-  commands->AddCommand("GoToDefinition", BindCommandFunction(GoToDefinition));
+  commands->AddCommand("GoToDefinition", BindCommandFunction(GoToDefinition), true);
   commands->AddCommand("Add", BindCommandFunction(Add));
 
   Command* editInGameCommand = commands->AddCommand("EditInGame", BindCommandFunction(EditInGame));

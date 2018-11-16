@@ -146,8 +146,8 @@ void BindArchiveCommands(Cog* config, CommandManager* commands)
   commands->AddCommand("ExportAndPlayGame", BindCommandFunction(ExportAndPlayGame));
   commands->AddCommand("ExportContent", BindCommandFunction(ExportContent));
 
-  commands->AddCommand("ShowProjectFolder", BindCommandFunction(ShowProjectFolder));
-  commands->AddCommand("ShowContentOutput", BindCommandFunction(ShowContentOutput));
+  commands->AddCommand("ShowProjectFolder", BindCommandFunction(ShowProjectFolder), true);
+  commands->AddCommand("ShowContentOutput", BindCommandFunction(ShowContentOutput), true);
 }
 
 }

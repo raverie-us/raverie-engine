@@ -41,23 +41,4 @@ public:
   IntrusiveLink(ActionSpace, link);
 };
 
-//------------------------------------------------------------------------------
-///System that manages queued actions.
-class ActionSystem : public System
-{
-public:
-  ZilchDeclareType(ActionSystem, TypeCopyMode::ReferenceType);
-  
-  ActionSystem();
-  ~ActionSystem();
-
-  // System Interface
-  cstr GetName() override { return "Action"; }
-  void Initialize(SystemInitializer& initializer) override;
-  
-  InList<ActionSpace> ActionsSpaces;
-};
-
-System* CreateActionSystem();
-
 }//namespace Zero

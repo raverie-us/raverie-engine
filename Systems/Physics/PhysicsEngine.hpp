@@ -32,7 +32,7 @@ public:
   // System Interface
   cstr GetName() override;
   void Initialize(SystemInitializer& initializer) override;
-  void Update() override;
+  void Update(bool debugger) override;
 
   typedef InList<PhysicsSpace, &PhysicsSpace::EngineLink> SpaceList;
   SpaceList::range GetSpaces();

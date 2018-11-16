@@ -11,6 +11,7 @@ CommandList
 			var Tags = Array
 			{
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -40,6 +41,7 @@ CommandList
 			{
 				"Camera"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -50,6 +52,7 @@ CommandList
 			{
 				"Camera"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -60,6 +63,7 @@ CommandList
 			{
 				"Windows"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -90,6 +94,7 @@ CommandList
 			{
 				"Editor"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -100,6 +105,7 @@ CommandList
 			{
 				"Windows"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -110,6 +116,7 @@ CommandList
 			{
 				"Editor"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -140,6 +147,7 @@ CommandList
 			{
 				"Windows"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -150,6 +158,7 @@ CommandList
 			{
 				"Windows"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -161,6 +170,7 @@ CommandList
 				"Editor"
 				"Help"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -171,6 +181,7 @@ CommandList
 			{
 				"Edit"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -417,6 +428,7 @@ CommandList
 			var Tags = Array
 			{
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -426,6 +438,7 @@ CommandList
 			var Tags = Array
 			{
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -446,6 +459,7 @@ CommandList
 			{
 				"Editor"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -455,6 +469,7 @@ CommandList
 			var Tags = Array
 			{
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -464,6 +479,7 @@ CommandList
 			var Tags = Array
 			{
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -541,6 +557,7 @@ CommandList
 			{
 				"Windows"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -551,6 +568,7 @@ CommandList
 			{
 				"Windows"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -579,6 +597,7 @@ CommandList
 			{
 				"Select"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -590,6 +609,7 @@ CommandList
 				"Script"
 				"Editor"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -600,6 +620,7 @@ CommandList
 			{
 				"Editor"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -620,6 +641,7 @@ CommandList
 			{
 				"Tool"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -631,6 +653,7 @@ CommandList
 				"Editor"
 				"Help"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -641,6 +664,7 @@ CommandList
 			{
 				"Hide"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -687,6 +711,7 @@ CommandList
 			{
 				"Tool"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -697,6 +722,7 @@ CommandList
 			{
 				"Windows"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -707,6 +733,7 @@ CommandList
 			{
 				"Tool"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -717,6 +744,7 @@ CommandList
 			{
 				"Windows"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -727,6 +755,7 @@ CommandList
 			{
 				"Windows"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -737,6 +766,7 @@ CommandList
 			{
 				"Editor"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -785,6 +815,7 @@ CommandList
 			{
 				"Select"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -795,6 +826,7 @@ CommandList
 			{
 				"Windows"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -843,6 +875,7 @@ CommandList
 			var Tags = Array
 			{
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -863,6 +896,7 @@ CommandList
 			{
 				"Game"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -873,6 +907,7 @@ CommandList
 			{
 				"Editor"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -883,6 +918,7 @@ CommandList
 			{
 				"Game"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -893,6 +929,7 @@ CommandList
 			{
 				"Game"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -912,6 +949,7 @@ CommandList
 			{
 				"Select"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -922,6 +960,7 @@ CommandList
 			{
 				"Windows"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -981,6 +1020,7 @@ CommandList
 			{
 				"Windows"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1000,6 +1040,7 @@ CommandList
 			{
 				"Camera"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1029,6 +1070,7 @@ CommandList
 			{
 				"Tool"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1059,6 +1101,7 @@ CommandList
 			{
 				"Tool"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1069,6 +1112,7 @@ CommandList
 			{
 				"Select"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1079,6 +1123,7 @@ CommandList
 			{
 				"Select"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1089,6 +1134,7 @@ CommandList
 			{
 				"Select"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1099,6 +1145,7 @@ CommandList
 			{
 				"Select"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1109,6 +1156,7 @@ CommandList
 			{
 				"Select"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1119,6 +1167,7 @@ CommandList
 			{
 				"Select"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1129,6 +1178,7 @@ CommandList
 			{
 				"Select"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1139,6 +1189,7 @@ CommandList
 			{
 				"Select"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1149,6 +1200,7 @@ CommandList
 			{
 				"Select"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1159,6 +1211,7 @@ CommandList
 			{
 				"Select"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1169,6 +1222,7 @@ CommandList
 			{
 				"Select"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1179,6 +1233,7 @@ CommandList
 			{
 				"Tool"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1189,6 +1244,7 @@ CommandList
 			{
 				"Project"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1199,6 +1255,7 @@ CommandList
 			{
 				"Tool"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1209,6 +1266,7 @@ CommandList
 			{
 				"Project"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1220,6 +1278,7 @@ CommandList
 				"Windows"
 				"Sound"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1229,6 +1288,7 @@ CommandList
 			var Tags = Array
 			{
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1239,6 +1299,7 @@ CommandList
 			{
 				"Game"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1249,6 +1310,7 @@ CommandList
 			{
 				"Game"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1268,6 +1330,7 @@ CommandList
 			var Tags = Array
 			{
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1278,6 +1341,7 @@ CommandList
 			{
 				"Tool"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1287,6 +1351,7 @@ CommandList
 			var Tags = Array
 			{
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1297,6 +1362,7 @@ CommandList
 			{
 				"Windows"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1307,6 +1373,7 @@ CommandList
 			{
 				"Tool"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1327,6 +1394,7 @@ CommandList
 			{
 				"Hide"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1337,6 +1405,7 @@ CommandList
 			{
 				"Hide"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{
@@ -1348,6 +1417,7 @@ CommandList
 				"Windows"
 				"Sound"
 			}
+			var ReadOnly = true
 		}
 		Object
 		{

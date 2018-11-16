@@ -440,8 +440,11 @@ GranularSynthNode* SoundSystem::GranularSynthNode()
 }
 
 //**************************************************************************************************
-void SoundSystem::Update()
+void SoundSystem::Update(bool debugger)
 {
+  if (debugger)
+    return;
+
   // Update spaces (also updates emitters)
   forRange(SoundSpace& space, mSpaces.All())
     space.Update();

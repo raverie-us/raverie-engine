@@ -156,11 +156,20 @@ void ConsoleUi::OnLeftClick(MouseEvent* event)
 
 void ConsoleUi::ConsoleLog(FilterType filterType, cstr message)
 {
-  //Send this class an event to prevent make sure the printing happens 
-  //on the main ui thread.
   ConsoleTextEvent* event = new ConsoleTextEvent();
   event->Text = message;
-  Z::gDispatch->Dispatch(this, Events::ConsolePrint, event);
+
+  // If we're already on the main thread, just print immediately
+  if (Thread::IsMainThread())
+  {
+    OnConsolePrint(event);
+  }
+  else
+  {
+    //Send this class an event to prevent make sure the printing happens 
+    //on the main ui thread.
+    Z::gDispatch->Dispatch(this, Events::ConsolePrint, event);
+  }
 }
 
 }

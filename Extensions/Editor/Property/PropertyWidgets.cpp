@@ -113,6 +113,12 @@ FloatingSearchView* AddObjectWidget::OpenSearch(Vec3 position)
 //******************************************************************************
 void AddObjectWidget::OnLeftClick(MouseEvent* event)
 {
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("Property View", "Cannot add components while in read-only mode");
+    return;
+  }
+
   Handle parentObject = mParentWidgetObject->mNode->mObject;
   if(MetaArray* metaArray = mMetaArray)
   {
@@ -175,6 +181,12 @@ void AddObjectWidget::OnAlternateSearchCompleted(AlternateSearchCompletedEvent* 
 //******************************************************************************
 void AddObjectWidget::OnSearchCompleted(SearchViewEvent* event)
 {
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("Property View", "Cannot add components while in read-only mode");
+    return;
+  }
+
   BoundType* boundType = (BoundType*)event->Element->Data;
   Handle parentObject = mParentWidgetObject->mNode->mObject;
 

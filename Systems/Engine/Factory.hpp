@@ -47,9 +47,6 @@ public:
   ///Add a Cog to the destroy list for delayed destruction.
   void Destroy(Cog* gameObject);
 
-  //Default update.
-  virtual void Update();
-
   ///Name of the system is factory.
   virtual cstr GetName() { return "Factory"; }
 

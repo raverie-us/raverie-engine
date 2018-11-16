@@ -20,8 +20,7 @@ void DispatchCodeTranslatorScriptError(StringParam eventId, StringParam shortMes
   if(resource == nullptr)
     return;
 
-  DebugEngineEvent e;
-  e.Handled = false;
+  ScriptEvent e;
   e.Script = documentResource;
   e.Message = shortMessage;
   e.Location = location;

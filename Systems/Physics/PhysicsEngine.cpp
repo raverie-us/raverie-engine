@@ -47,8 +47,11 @@ void PhysicsEngine::Initialize(SystemInitializer& initializer)
   IBroadPhase::SetCastFrustumCallBack(&Physics::CollisionManager::TestFrustumVsObject);
 }
 
-void PhysicsEngine::Update()
+void PhysicsEngine::Update(bool debugger)
 {
+  if (debugger)
+    return;
+
   ProfileScopeTree("PhysicsEngineUpdate", "Engine", Color::Yellow);
 
   // Update each physics space

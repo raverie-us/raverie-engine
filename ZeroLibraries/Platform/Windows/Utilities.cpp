@@ -79,14 +79,17 @@ u64 GetMacAddress()
 
 
 // Debug break (only if a debugger is attached)
-void DebugBreak()
+bool DebugBreak()
 {
   // If the debugger is attached...
   if (IsDebuggerAttached() == true)
   {
     // Trigger a break point!
     ZeroDebugBreak();
+    return true;
   }
+
+  return false;
 }
 
 void EnableMemoryLeakChecking(int breakOnAllocation)

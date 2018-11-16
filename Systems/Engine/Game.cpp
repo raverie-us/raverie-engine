@@ -192,6 +192,12 @@ void GameSession::Quit()
   if(mQuiting)
     return;
 
+  // Always make sure the debugger resumes when we exit a game session
+  // Technically this is not correct for multiple game sessions or debugging editor features
+  // however, for now we'll just decide that this is the behavior and maybe later we can
+  // scan the call stack to find which GameSession(s) we're running
+  ZilchManager::GetInstance()->mDebugger.Resume();
+
   mQuiting = true;
   this->Destroy();
 

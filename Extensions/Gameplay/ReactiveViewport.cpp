@@ -159,6 +159,11 @@ ReactiveSpace* ReactiveViewport::GetReactiveSpace()
   if (space == nullptr)
     return nullptr;
 
+  // If we're currently debugging, pretend we don't have
+  // a reactive space which will cancel all reactive events
+  if (Z::gEngine->mIsDebugging)
+    return nullptr;
+
   // Grab the reactive space component, which stores who we're hovering over per space
   ReactiveSpace* reactiveSpace = space->has(ReactiveSpace);
   if (reactiveSpace == nullptr)
@@ -530,6 +535,10 @@ bool GameWidget::TakeFocusOverride()
 void GameWidget::OnKeyDown(KeyboardEvent* event)
 {
   if (event->Handled)
+    return;
+
+  // If we're debugging we don't want to give the engine extra events
+  if (Z::gEngine->mIsDebugging)
     return;
 
   GameSession* game = mGame;

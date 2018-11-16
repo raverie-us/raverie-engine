@@ -9,17 +9,18 @@ ImageContent
 		var Compression = TextureCompression.None
 		var AddressingX = TextureAddressing.Clamp
 		var AddressingY = TextureAddressing.Clamp
-		var Filtering = TextureFiltering.Nearest
-		var Anisotropy = TextureAnisotropy.x1
-		var MipMapping = TextureMipMapping.None
-		var PremultipliedAlpha = false
-		var GammaCorrection = false
+ 		var Filtering = TextureFiltering.Nearest
+ 		var Anisotropy = TextureAnisotropy.x1
+ 		var MipMapping = TextureMipMapping.None
++		var HalfScaleCount = 0
+ 		var PremultipliedAlpha = false
+ 		var GammaCorrection = false
 	}
 	TextureInfo 
 	{
-		var FileType = "png"
-		var LoadFormat = "RGBA8"
-		var Dimensions = "256 x 256"
-		var Size = "0.250 MB"
+ 		var FileType = "png"
+ 		var LoadFormat = "RGBA8"
+ 		var Dimensions = "256 x 284"
+ 		var Size = "0.277 MB"
 	}
 }

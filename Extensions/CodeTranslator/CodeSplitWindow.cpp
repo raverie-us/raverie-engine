@@ -53,7 +53,7 @@ void CodeSplitWindow::OnKeyDown(KeyboardEvent* event)
     
     Command* command = commands->GetCommand(mCommandToRunOnSave);
     if(command)
-      command->Execute();
+      command->ExecuteCommand();
   }
 }
 

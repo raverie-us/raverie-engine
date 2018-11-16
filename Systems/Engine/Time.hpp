@@ -20,10 +20,13 @@ namespace Events
   DeclareEvent(LogicUpdate);
   DeclareEvent(PreviewUpdate);
   DeclareEvent(EngineUpdate);
+  DeclareEvent(EngineDebuggerUpdate);
   DeclareEvent(EngineShutdown);
   DeclareEvent(ActionFrameUpdate);
   DeclareEvent(ActionLogicUpdate);
 }
+
+extern const float cFixedDt;
 
 class TimeSystem;
 class TimeConfig;
@@ -150,7 +153,7 @@ public:
   void Initialize(SystemInitializer& initializer) override;
   
   // System Interface
-  void Update() override;
+  void Update(bool debugger) override;
   cstr GetName() override { return "TimeSystem"; }
 
   float GetTargetDt() const;

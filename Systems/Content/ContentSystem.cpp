@@ -264,6 +264,15 @@ public:
 ContentItem* ContentSystem::AddContentItemToLibrary(Status& status, AddContentItemInfo& info)
 {
   status = Status();
+
+  if (Z::gEngine->IsReadOnly())
+  {
+    const String cMessage("Cannot add content items in read-only mode");
+    DoNotifyWarning("Content", cMessage);
+    status.SetFailed(cMessage);
+    return nullptr;
+  }
+
   ContentAddCleanUp cleanUp;
 
   ContentLibrary* library = info.Library;

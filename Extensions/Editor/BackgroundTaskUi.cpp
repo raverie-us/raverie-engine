@@ -189,7 +189,8 @@ void BackgroundTaskButton::UpdateProgressBar()
     mActiveTasks = true;
   }
 
-  averagePercent /= float(count);
+  if (count != 0)
+    averagePercent /= float(count);
   mAverageProgress->SetPercentage(averagePercent);
 
   // If all tasks are done, mark them so we don't use them for the average

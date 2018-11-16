@@ -49,11 +49,17 @@ namespace Zilch
     result.PrimaryLine      = result.EndLine;
     return result;
   }
-  
+
   //***************************************************************************
   size_t CodeLocation::GetHash()
   {
     return this->Code.Hash() ^ this->Origin.Hash() * 5689;
+  }
+
+  //***************************************************************************
+  bool CodeLocation::IsSamePositionAndOrigin(const CodeLocation& rhs)
+  {
+    return this->StartPosition == rhs.StartPosition && this->EndPosition == rhs.EndPosition && this->Origin == rhs.Origin;
   }
 
   //***************************************************************************

@@ -55,7 +55,11 @@ void ZeroDoNotify(StringParam title, StringParam message, StringParam icon, Noti
       event->Icon = icon;
       event->Type = type;
 
-      Z::gDispatch->Dispatch(Z::gEngine, Events::Notify, event);
+      // If we're already on the main thread, just dispatch it immediately
+      if (Thread::IsMainThread())
+        Z::gEngine->DispatchEvent(Events::Notify, event);
+      else
+        Z::gDispatch->Dispatch(Z::gEngine, Events::Notify, event);
     }    
   }
   
@@ -101,6 +105,7 @@ Engine::Engine()
   mHaveLoadingResources = false;
   mTimePassed = 0.0f;
   mAutoShutdown = false;
+  mIsDebugging = false;
 }
 
 //******************************************************************************
@@ -160,27 +165,47 @@ void Engine::MainLoopFunction(void* enginePointer)
 //******************************************************************************
 void Engine::Update()
 {
-  ProfileScope("Engine");
-
-  Z::gTracker->ClearDeletedObjects();
-
-  Z::gDispatch->DispatchEvents();
-
-  LoadPendingLevels();
-
-  // Update every system and tell each one how much
-  // time has passed since the last update
-  for(unsigned i = 0; i < mSystems.Size(); ++i)
+  if (mIsDebugging)
   {
-    mSystems[i]->Update();
+    // We explicitly do not clear deleted objects because
+    // this may destroy cogs that were active in the frozen stack.
+
+    // We also do not dispatch events from the thread queue.
+    // We let them sit there until we return to the original engine update.
+
+    // Loaded levels are left pending (no LoadPendingLevels).
+
+    // Update every system that allows debug update.
+    for (unsigned i = 0; i < mSystems.Size(); ++i)
+      mSystems[i]->Update(mIsDebugging);
+
+    UpdateEvent toSend(cFixedDt, cFixedDt, mTimePassed, 0);
+    DispatchEvent(Events::EngineDebuggerUpdate, &toSend);
+
+    // Don't update the frame counter or time since frames aren't running.
   }
+  else
+  {
+    ProfileScope("Engine");
 
-  float dt = mTimeSystem ? mTimeSystem->mEngineDt : 0.0f;
-  mTimePassed += dt;
-  UpdateEvent toSend(dt, dt, mTimePassed, 0);
-  DispatchEvent(Events::EngineUpdate, &toSend);
+    Z::gTracker->ClearDeletedObjects();
 
-  ++mFrameCounter;
+    Z::gDispatch->DispatchEvents();
+
+    LoadPendingLevels();
+
+    // Update every system and tell each one how much
+    // time has passed since the last update
+    for (unsigned i = 0; i < mSystems.Size(); ++i)
+      mSystems[i]->Update(mIsDebugging);
+
+    float dt = mTimeSystem ? mTimeSystem->mEngineDt : 0.0f;
+    mTimePassed += dt;
+    UpdateEvent toSend(dt, dt, mTimePassed, 0);
+    DispatchEvent(Events::EngineUpdate, &toSend);
+
+    ++mFrameCounter;
+  }
 }
 
 //******************************************************************************
@@ -392,6 +417,12 @@ void Engine::CrashEngine()
   memset((void*)Z::gEngine, 0xffffff, 9999);
   memset((void*)Z::gTracker, 0xffffff, 9999);
   memset(nullptr, 0xffffff, 9999);
+}
+
+//******************************************************************************
+bool Engine::IsReadOnly()
+{
+  return mIsDebugging;
 }
 
 //******************************************************************************

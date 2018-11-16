@@ -486,6 +486,8 @@ bool EventDispatcher::HasReceivers(StringParam eventId)
 
 void EventDispatcher::Connect(StringParam eventId, EventConnection* connection)
 {
+  ErrorIf(this == nullptr, "This is being called on a null dispatcher");
+
   //Check to see if the signal has been mapped
   EventMapType::range r = mEvents.Find(eventId);
   EventDispatchList* list = nullptr;
@@ -507,6 +509,8 @@ void EventDispatcher::Connect(StringParam eventId, EventConnection* connection)
 
 bool EventDispatcher::IsUniqueConnection(EventConnection* connection)
 {
+  ErrorIf(this == nullptr, "This is being called on a null dispatcher");
+
   // Check if the dispatcher has a valid event connections of the same type
   // as invalid event connections are being delay destructed
   if(EventConnection* otherConnection = mUniqueConnections.FindValue(connection, nullptr))
@@ -517,6 +521,10 @@ bool EventDispatcher::IsUniqueConnection(EventConnection* connection)
 
 void EventDispatcher::Disconnect(ObjPtr thisObject)
 {
+
+  ErrorIf(this == nullptr, "This is being called on a null dispatcher");
+  ErrorIf(thisObject == nullptr, "thisObject was null");
+
   // Find all the connection keys for the object being disconnected from
   DisconnectList toErase;
   forRange(EventConnection* connection, mUniqueConnections.All())
@@ -542,6 +550,9 @@ void EventDispatcher::Disconnect(ObjPtr thisObject)
 
 void EventDispatcher::DisconnectEvent(StringParam eventId, ObjPtr thisObject)
 {
+  ErrorIf(this == nullptr, "This is being called on a null dispatcher");
+  ErrorIf(thisObject == nullptr, "thisObject was null");
+
   // Find all the connection keys for the event and object being disconnected from
   DisconnectList toErase;
   forRange(EventConnection* connection, mUniqueConnections.All())
@@ -567,6 +578,9 @@ void EventDispatcher::DisconnectEvent(StringParam eventId, ObjPtr thisObject)
 
 bool EventDispatcher::IsConnected(StringParam eventId, ObjPtr thisObject)
 {
+  ErrorIf(this == nullptr, "This is being called on a null dispatcher");
+  ErrorIf(thisObject == nullptr, "thisObject was null");
+
   EventMapType::range r = mEvents.Find(eventId);
   if (!r.Empty())
   {
@@ -577,6 +591,8 @@ bool EventDispatcher::IsConnected(StringParam eventId, ObjPtr thisObject)
 
 bool EventDispatcher::IsAnyConnected(StringParam eventId)
 {
+  ErrorIf(this == nullptr, "This is being called on a null dispatcher");
+
   EventMapType::range r = mEvents.Find(eventId);
   return !r.Empty();
 }

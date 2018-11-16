@@ -220,6 +220,34 @@ String ICodeInspector::GenerateConnectFunctionEnd()
   return String();
 }
 
+Any ICodeInspector::QueryExpression(StringParam expression, Array<QueryResult>& results)
+{
+  return Any();
+}
+
+bool ICodeInspector::SetBreakpoint(size_t line, bool breakpoint)
+{
+  return false;
+}
+
+bool ICodeInspector::HasBreakpoint(size_t line)
+{
+  return false;
+}
+
+void ICodeInspector::GetBreakpoints(Array<size_t>& breakpointLines)
+{
+}
+
+void ICodeInspector::ClearBreakpoints()
+{
+}
+
+bool ICodeInspector::ToggleBreakpoint(size_t line)
+{
+  return SetBreakpoint(line, !HasBreakpoint(line));
+}
+
 bool ICodeInspector::UnindentOnCharacter(ICodeEditor* editor, Rune added, Rune lookFor)
 {
   if (added == lookFor)

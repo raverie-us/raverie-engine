@@ -169,6 +169,12 @@ Cog* CreateFromArchetype(OperationQueue* queue, Space* space,
 //******************************************************************************
 void UploadToArchetype(OperationQueue* queue, Cog* cog)
 {
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("Archetype", "Cannot upload to archetype while in read-only mode");
+    return;
+  }
+
   UploadToArchetypeOperation* op = new UploadToArchetypeOperation(cog);
   op->CacheArchetype(cog->GetArchetype());
   op->Redo();
@@ -179,6 +185,12 @@ void UploadToArchetype(OperationQueue* queue, Cog* cog)
 Archetype* UploadToArchetype(OperationQueue* queue, Cog* cog, StringParam archetypeName,
                              Archetype* baseArchetype)
 {
+  if (Z::gEngine->IsReadOnly())
+  {
+    DoNotifyWarning("Archetype", "Cannot upload to archetype while in read-only mode");
+    return nullptr;
+  }
+
   // Create the operation to cache the current cog before making any changes
   UploadToNewArchetypeOperation* op = new UploadToNewArchetypeOperation(cog);
   

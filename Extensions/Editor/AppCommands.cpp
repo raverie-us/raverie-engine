@@ -195,13 +195,13 @@ void RunZilchDebugger()
 
 void BindAppCommands(Cog* config, CommandManager* commands)
 {
-  commands->AddCommand("About", BindCommandFunction(ShowAbout));
+  commands->AddCommand("About", BindCommandFunction(ShowAbout), true);
 
   commands->AddCommand("Exit", BindCommandFunction(ExitEditor));
-  commands->AddCommand("ToggleFullScreen", BindCommandFunction(FullScreen));
+  commands->AddCommand("ToggleFullScreen", BindCommandFunction(FullScreen), true);
   commands->AddCommand("Restart", BindCommandFunction(Restart));
 
-  commands->AddCommand("BuildVersion", BindCommandFunction(BuildVersion));
+  commands->AddCommand("BuildVersion", BindCommandFunction(BuildVersion), true);
   commands->AddCommand("WriteBuildInfo", BindCommandFunction(WriteBuildInfo));
   commands->AddCommand("RunUnitTests", BindCommandFunction(RunUnitTests));
   commands->AddCommand("RecordUnitTestFile", BindCommandFunction(RecordUnitTestFile));
@@ -215,9 +215,9 @@ void BindAppCommands(Cog* config, CommandManager* commands)
     commands->AddCommand("HostZilchDebugger", BindCommandFunction(HostZilchDebugger));
     commands->AddCommand("RunZilchDebugger", BindCommandFunction(RunZilchDebugger));
   }
-  commands->AddCommand("Help", BindCommandFunction(OpenHelp));
-  commands->AddCommand("ZeroHub", BindCommandFunction(OpenZeroHub));
-  commands->AddCommand("Documentation", BindCommandFunction(OpenDocumentation));
+  commands->AddCommand("Help", BindCommandFunction(OpenHelp), true);
+  commands->AddCommand("ZeroHub", BindCommandFunction(OpenZeroHub), true);
+  commands->AddCommand("Documentation", BindCommandFunction(OpenDocumentation), true);
 }
 
 }

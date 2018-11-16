@@ -622,8 +622,4 @@ void Factory::Destroy(Cog* gameObject)
   mTracker->Destroy(gameObject);
 }
 
-void Factory::Update()
-{
-}
-
 }//namespace Zero

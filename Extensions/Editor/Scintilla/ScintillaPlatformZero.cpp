@@ -12,6 +12,9 @@
 
 using namespace Math;
 
+static const String White("White");
+static const String Circle("Circle");
+
 PRectangle ToPRectangle(Zero::Widget* widget)
 {
   Vec3 p = widget->GetTranslation();
@@ -77,13 +80,7 @@ void SurfaceImpl::MoveTo(int x_, int y_)
 
 void SurfaceImpl::LineTo(int x_, int y_)
 {
-  if (mViewNode == nullptr || mDrawType != Lines)
-  {
-    mDrawType = Lines;
-    Zero::Texture* texture = Zero::TextureManager::FindOrNull("White");
-    mViewNode = &mWidget->AddRenderNodes(*mViewBlock, *mFrameBlock, mClipRect, texture);
-    mViewNode->mStreamedVertexType = Zero::PrimitiveType::Lines;
-  }
+  MakeViewNode(Zero::PrimitiveType::Lines, White);
 
   Vec3 newPoint = Vec3(x_, y_, 0) + Vec3(1.0f, 1.0f, 0.0f);
   Vec3 oldPoint = Vec3(mLastX, mLastY, 0) + Vec3(1.0f, 1.0f, 0.0f);
@@ -103,18 +100,49 @@ void SurfaceImpl::LineTo(int x_, int y_)
 
 void SurfaceImpl::Polygon(Point *pts, int npts, ColourDesired fore, ColourDesired back)
 {
-  ErrorIf(true, "Not implemented.");
+  MakeViewNode(Zero::PrimitiveType::Triangles, White);
+
+  Vec4 color = ToFloatColor(0xFF000000 | fore.AsLong());
+
+  if (npts == 3)
+  {
+    for (size_t p = 0; p < 3; ++p)
+    {
+      Vec3 point = Math::TransformPoint(mViewNode->mLocalToView, Vec3(pts[p].x, pts[p].y, 0) + Vec3(1.0f, 1.0f, 0.0f));
+      Zero::StreamedVertex vertex(point, Vec2::cZero, color, Vec2::cZero);
+      mFrameBlock->mRenderQueues->mStreamedVertices.PushBack(vertex);
+    }
+  }
+  else
+  {
+    Array<Vec2> vertices;
+    for (int i = 0; i < npts; ++i)
+    {
+      Vec3 point = Math::TransformPoint(mViewNode->mLocalToView, Vec3(pts[i].x, pts[i].y, 0) + Vec3(1.0f, 1.0f, 0.0f));
+      vertices.PushBack(Math::ToVector2(point));
+    }
+
+    Array<size_t> indices;
+    if (Geometry::Triangulate(vertices, &indices))
+    {
+      for (size_t i = 0; i < indices.Size(); i += 3)
+      {
+        for (size_t p = 0; p < 3; ++p)
+        {
+          Vec3 point = Math::ToVector3(vertices[indices[i + p]]);
+          Zero::StreamedVertex vertex(point, Vec2::cZero, color, Vec2::cZero);
+          mFrameBlock->mRenderQueues->mStreamedVertices.PushBack(vertex);
+        }
+      }
+    }
+  }
+
+  mViewNode->mStreamedVertexCount = mFrameBlock->mRenderQueues->mStreamedVertices.Size() - mViewNode->mStreamedVertexStart;
 }
 
 void SurfaceImpl::RectangleDraw(PRectangle rc, ColourDesired fore, ColourDesired back)
 {
-  if (mViewNode == nullptr || mDrawType != Lines)
-  {
-    mDrawType = Lines;
-    Zero::Texture* texture = Zero::TextureManager::FindOrNull("White");
-    mViewNode = &mWidget->AddRenderNodes(*mViewBlock, *mFrameBlock, mClipRect, texture);
-    mViewNode->mStreamedVertexType = Zero::PrimitiveType::Lines;
-  }
+  MakeViewNode(Zero::PrimitiveType::Lines, White);
 
   Vec3 pos0 = Vec3(rc.left, rc.top, 0);
   Vec3 pos1 = Vec3(rc.right, rc.bottom, 0);
@@ -125,12 +153,7 @@ void SurfaceImpl::RectangleDraw(PRectangle rc, ColourDesired fore, ColourDesired
 
 void SurfaceImpl::FillRectangle(PRectangle rc, ColourDesired back)
 {
-  if (mViewNode == nullptr || mDrawType != Quads)
-  {
-    mDrawType = Quads;
-    Zero::Texture* texture = Zero::TextureManager::FindOrNull("White");
-    mViewNode = &mWidget->AddRenderNodes(*mViewBlock, *mFrameBlock, mClipRect, texture);
-  }
+  MakeViewNode(Zero::PrimitiveType::Triangles, White);
 
   Vec3 pos0 = Vec3(rc.left, rc.top, 0);
   Vec3 pos1 = Vec3(rc.right, rc.bottom, 0);
@@ -146,7 +169,7 @@ void SurfaceImpl::FillRectangle(PRectangle rc, Surface &surfacePattern)
 
 void SurfaceImpl::RoundedRectangle(PRectangle rc, ColourDesired fore, ColourDesired back)
 {
-  ErrorIf(true, "Not implemented.");
+  RectangleDraw(rc, fore, back);
 }
 
 void SurfaceImpl::AlphaRectangle(PRectangle rc, int cornerSize, ColourDesired fill, int alphaFill, ColourDesired outline, int alphaOutline, int flags)
@@ -174,7 +197,13 @@ void SurfaceImpl::DrawRGBAImage(PRectangle rc, int width, int height, const unsi
 
 void SurfaceImpl::Ellipse(PRectangle rc, ColourDesired fore, ColourDesired back)
 {
-  ErrorIf(true, "Not implemented.");
+  MakeViewNode(Zero::PrimitiveType::Triangles, Circle);
+
+  Vec3 pos0 = Vec3(rc.left, rc.top, 0);
+  Vec3 pos1 = Vec3(rc.right + 2, rc.bottom + 2, 0);
+  Vec4 color = ToFloatColor(back.AsLong());
+
+  mFrameBlock->mRenderQueues->AddStreamedQuad(*mViewNode, pos0, pos1, Vec2(0, 0), Vec2(1, 1), color);
 }
 
 void SurfaceImpl::Copy(PRectangle rc, Point from, Surface &surfaceSource)
@@ -189,11 +218,7 @@ void SurfaceImpl::DrawTextNoClip(PRectangle rc, Font &font_, XYPOSITION ybase, c
 
   Zero::RenderFont* font = (Zero::RenderFont*)font_.fid;
 
-  if (mViewNode == nullptr || mDrawType != Text)
-  {
-    mDrawType = Text;
-    mViewNode = &mWidget->AddRenderNodes(*mViewBlock, *mFrameBlock, mClipRect, font->mTexture);
-  }
+  MakeViewNode(Zero::PrimitiveType::Triangles, font->mTexture);
 
   Zero::StringRange text(s, s + len);
   Vec2 textStart = Vec2(rc.left, rc.top);
@@ -216,11 +241,7 @@ void SurfaceImpl::DrawTextTransparent(PRectangle rc, Font &font_, XYPOSITION yba
 
   Zero::RenderFont* font = (Zero::RenderFont*)font_.fid;
 
-  if (mViewNode == nullptr || mDrawType != Text)
-  {
-    mDrawType = Text;
-    mViewNode = &mWidget->AddRenderNodes(*mViewBlock, *mFrameBlock, mClipRect, font->mTexture);
-  }
+  MakeViewNode(Zero::PrimitiveType::Triangles, font->mTexture);
 
   Zero::StringRange text(s, s + len);
   Vec2 textStart = Vec2(rc.left, rc.top);
@@ -401,6 +422,25 @@ void SurfaceImpl::RoundedLineRectHelper(PRectangle rc, int cornerEmulation, Colo
   mViewNode->mStreamedVertexType = Zero::PrimitiveType::Lines;
 }
 
+void SurfaceImpl::MakeViewNode(Zero::PrimitiveType::Enum primitive, StringParam textureName)
+{
+  Zero::Texture* texture = Zero::TextureManager::FindOrNull(textureName);
+  return MakeViewNode(primitive, texture);
+}
+
+void SurfaceImpl::MakeViewNode(Zero::PrimitiveType::Enum primitive, Zero::Texture* texture)
+{
+  bool needsNewViewNode =
+    mViewNode == nullptr ||
+    mViewNode->mStreamedVertexType != primitive ||
+    mFrameBlock->mFrameNodes[mViewNode->mFrameNodeIndex].mTextureRenderData != texture->mRenderData;
+  
+  if (needsNewViewNode)
+  {
+    mViewNode = &mWidget->AddRenderNodes(*mViewBlock, *mFrameBlock, mClipRect, texture);
+    mViewNode->mStreamedVertexType = primitive;
+  }
+}
 
 class DynamicLibraryImpl : public DynamicLibrary
 {

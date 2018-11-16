@@ -392,7 +392,7 @@ void MultiConvexMeshPoint::OnRightMouseDown(MouseEvent* e)
   menu->SetBelowMouse(mouse, Pixels(0,0));
 
   //and add an option to delete ourself
-  ConnectMenu(menu, "Delete Point", OnDeletePoint);
+  ConnectMenu(menu, "Delete Point", OnDeletePoint, false);
 }
 
 void MultiConvexMeshPoint::OnMouseEnter(MouseEvent* e)
@@ -1150,11 +1150,11 @@ void MultiConvexMeshEditor::OnRightMouseDown(MouseEvent* e)
 
   if(FindPointAtScreenPosition(mCachedMousePosition) == NULL)
   {
-    ConnectMenu(menu, "Add Point", OnAddPoint);
+    ConnectMenu(menu, "Add Point", OnAddPoint, false);
   }
   else
   {
-    ConnectMenu(menu, "Delete Point", OnRemovePoint);
+    ConnectMenu(menu, "Delete Point", OnRemovePoint, false);
   }
 }
 

@@ -239,7 +239,7 @@ void KeyFrameIcon::OnRightMouseUp(MouseEvent* e)
   }
 
   // Create the delete button
-  ConnectMenu(menu, "Delete", OnDelete);
+  ConnectMenu(menu, "Delete", OnDelete, false);
 }
 
 //******************************************************************************

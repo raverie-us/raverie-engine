@@ -217,7 +217,7 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(OsWindowBorderHitTest);
   ZilchInitializeType(OsMouseDropEvent);
   ZilchInitializeType(SavingEvent);
-  ZilchInitializeType(DebugEngineEvent);
+  ZilchInitializeType(ScriptEvent);
   ZilchInitializeType(DataEvent);
   ZilchInitializeType(DataReplaceEvent);
   ZilchInitializeType(CogReplaceEvent);
@@ -306,7 +306,6 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(ActionGroup);
   ZilchInitializeType(ActionSequence);
   ZilchInitializeType(ActionSpace);
-  ZilchInitializeType(ActionSystem);
   ZilchInitializeType(ActionDelay);
 
   ZilchInitializeType(CogInitializer);

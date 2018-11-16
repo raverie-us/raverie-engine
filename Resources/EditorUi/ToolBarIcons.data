@@ -171,22 +171,6 @@ DefinitionSet =
 		float[] Uv1 = [ 28 , 28 ],
 	},
 	
-	ImageDefinition Market =
-	{
-		string Texture = "ToolIcons",
-		int ImageMode = 0,
-		float[] Uv0 = [ 31, 143 ],
-		float[] Uv1 = [ 41 , 20 ],
-	},
-	
-	ImageDefinition Chat =
-	{
-		string Texture = "ToolIcons",
-		int ImageMode = 0,
-		float[] Uv0 = [ 74, 143 ],
-		float[] Uv1 = [ 28 , 20 ],
-	},
-	
 	//---------------------------------------------------------------------- Row 4
 	ImageDefinition ToolGroup =
 	{
@@ -342,13 +326,61 @@ DefinitionSet =
 		float[] Uv1 = [ 28 , 28 ],
 	},
 	
-	ImageDefinition TheVoidFull = 
+	ImageDefinition Market =
 	{
 		string Texture = "ToolIcons",
 		int ImageMode = 0,
-		float[] Uv0 = [ 112, 140 ],
-		float[] Uv1 = [ 56 , 28 ],
-	}, 
+		float[] Uv0 = [ 31, 143 ],
+		float[] Uv1 = [ 41 , 20 ],
+	},
+	
+	ImageDefinition Chat =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 74, 143 ],
+		float[] Uv1 = [ 28 , 20 ],
+	},
+	
+	ImageDefinition DebuggerResume =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 0, 256 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition DebuggerPause =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 28, 256 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition DebuggerStepIn =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 56, 256 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition DebuggerStepOver =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 84, 256 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
+	
+	ImageDefinition DebuggerStepOut =
+	{
+		string Texture = "ToolIcons",
+		int ImageMode = 0,
+		float[] Uv0 = [ 112, 256 ],
+		float[] Uv1 = [ 28 , 28 ],
+	},
 	
 	//---------------------------------------------------------------------- Row 7
 	ImageDefinition Console =
