@@ -427,6 +427,7 @@ ContextMenuItem::ContextMenuItem(Composite* parent, ContextMenuEntry* entry)
   : Composite(parent),
     mEntry(entry)
 {
+  mName = entry->mName;
   mParentMenu = (ContextMenu*)parent;
   mBackground = CreateAttached<Element>(cWhiteSquare);
   mBorder = CreateAttached<Element>(cWhiteSquare);
