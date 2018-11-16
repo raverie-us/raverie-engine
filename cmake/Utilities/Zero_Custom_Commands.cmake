@@ -76,7 +76,7 @@ function(editor_post_build_step aTarget aZeroCoreDirectory aLibOutputDirectory a
         # executes "cmake -E copy_if_different
         COMMAND ${CMAKE_COMMAND} -E copy_if_different  
         # input file
-        ${aZeroCoreDirectory}/Projects/Win32Shared/ErrorDialog.exe
+        ${aZeroCoreDirectory}/Tools/ErrorDialog.exe
         #output file
         ${aBuildOutputDirectory}/${aTarget}/ErrorDialog.exe
     )
@@ -206,7 +206,7 @@ function(launcher_post_build aTarget aZeroCoreDirectory aProjectDirectory aBuild
 
     create_build_info(
         ${aTarget}
-        ${CurrentDirectory}/${aTarget}/${aTarget}
+        ${CurrentDirectory}/${aTarget}
         ${aZeroCoreDirectory}
         ${aBuildOutputDirectory}
         ${aBuildOutputDirectory}

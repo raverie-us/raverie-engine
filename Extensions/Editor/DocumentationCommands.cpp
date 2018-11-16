@@ -13,11 +13,9 @@ namespace Zero
   String GetDocumentationLocation()
   {
     String sourceDir = Z::gEngine->GetConfigCog()->has(MainConfig)->SourceDirectory;
-    String documentationLocation = FilePath::Combine(sourceDir.All(), "Projects", "Editor");
+    String documentationLocation = FilePath::Combine(sourceDir.All(), "BuildOutput", "Documentation");
 
-
-    if (!FileExists(documentationLocation))
-      CreateDirectoryAndParents(documentationLocation);
+    CreateDirectoryAndParents(documentationLocation);
     return documentationLocation;
   }
 

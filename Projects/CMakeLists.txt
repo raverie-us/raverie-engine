@@ -25,8 +25,8 @@ set_target_properties(BrowserSubProcess  PROPERTIES FOLDER "Projects")
 # include filelists for each library
 ################################################################################
 include(ZeroEditor/CMakeLists.txt)
-include(ZeroLauncher/ZeroLauncher/CMakeLists.txt)
-include(ZeroLauncher/ZeroLauncherSharedLibrary/CMakeLists.txt)
+include(ZeroLauncher/CMakeLists.txt)
+include(ZeroLauncherSharedLibrary/CMakeLists.txt)
 include(BrowserSubProcess/CMakeLists.txt)
 
 ################################################################################
@@ -41,13 +41,13 @@ target_include_directories(ZeroEditor
 target_include_directories(ZeroLauncher 
     PUBLIC 
         ${CurrentDirectory}
-        ${CurrentDirectory}/ZeroLauncher/ZeroLauncher
-        ${CurrentDirectory}/ZeroLauncher/ZeroLauncherSharedLibrary
+        ${CurrentDirectory}/ZeroLauncher
+        ${CurrentDirectory}/ZeroLauncherSharedLibrary
 )
 target_include_directories(ZeroLauncherSharedLibrary 
     PUBLIC 
         ${CurrentDirectory}
-        ${CurrentDirectory}/ZeroLauncher/ZeroLauncherSharedLibrary
+        ${CurrentDirectory}/ZeroLauncherSharedLibrary
         ${Dependencies_Root}
         ${Source_Root}
 )
@@ -216,7 +216,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         TOOLSET ${CMAKE_VS_PLATFORM_TOOLSET}
         PRECOMPILED_HEADER_NAME "Precompiled.hpp"
         PRECOMPILED_SOURCE_NAME "Precompiled.cpp"
-        TARGET_SUBFOLDER ZeroLauncher
+        TARGET_SUBFOLDER
     )
 
     zero_multitarget_output_settings(
@@ -384,7 +384,7 @@ endif()
 ################################################################################
 zero_subfolder_source_group_ignore_target_folder(${zero_core_path} Projects ZeroEditor "${zero_core_path}/Projects")
 zero_subfolder_source_group_ignore_target_folder(${zero_core_path} Projects ZeroLauncher "${zero_core_path}/Projects")
-zero_subfolder_source_group(${zero_core_path} Projects/ZeroLauncher ZeroLauncherSharedLibrary "${zero_core_path}/Projects")
+zero_subfolder_source_group(${zero_core_path} Projects ZeroLauncherSharedLibrary "${zero_core_path}/Projects")
 
 zero_subfolder_source_group(${zero_core_path} Projects BrowserSubProcess "")
 
@@ -488,7 +488,7 @@ editor_post_build_step(
 launcher_shared_post_build(
     ZeroLauncherSharedLibrary 
     ${zero_core_path}
-    ${CurrentDirectory}/ZeroLauncher/ZeroLauncherSharedLibrary
+    ${CurrentDirectory}/ZeroLauncherSharedLibrary
     ${zero_binary_dir}
 )
 
@@ -509,7 +509,7 @@ add_custom_command(
 launcher_post_build(
     ZeroLauncher 
     ${zero_core_path}
-    ${CurrentDirectory}/ZeroLauncher/ZeroLauncher
+    ${CurrentDirectory}
     ${zero_binary_dir}
 )
 

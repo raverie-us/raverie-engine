@@ -1,7 +1,3 @@
-################################################################################
-# Generated using Joshua T. Fisher's 'CMake Builder'.
-# Link: https://github.com/playmer/CmakeBuilder 
-################################################################################
 target_sources(ZeroLauncherSharedLibrary
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/ActiveProjectMenu.cpp
