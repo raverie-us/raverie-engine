@@ -1,2 +1,0 @@
-// Redirect
-#include "../Precompiled.hpp"

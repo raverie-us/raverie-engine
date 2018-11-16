@@ -54,7 +54,7 @@ target_include_directories(CodeTranslator
 )
 target_include_directories(Editor 
     PUBLIC 
-        ${CurrentDirectory}/../ZeroLibraries/Zilch/Project    
+        ${CurrentDirectory}/../ZeroLibraries/Zilch
         ${CurrentDirectory}/Widget
         ${CurrentDirectory}/Editor
         ${CurrentDirectory}/../Systems
