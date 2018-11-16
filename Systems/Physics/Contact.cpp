@@ -7,7 +7,7 @@
 #include "Precompiled.hpp"
 
 #ifdef USESSE
-#include "Physics/Joints/ConstraintFragmentsSse.hpp"
+#include "ConstraintFragmentsSse.hpp"
 #include "SimVectors.hpp"
 #include "SimMatrix3.hpp"
 #endif

@@ -20,12 +20,16 @@ syntax: glob
 *.opendb
 *.db-shm
 *.db-wal
+*.cache
+*.ide
+*.tmp
+*.d
+*.dblite
 
 LocalBuildEnvironment.cmd
 LocalPaths.props
 BuildVersion.inl
 WindowsBuild/
-*.dblite
 
 BuildOutput
 Build/Output
@@ -39,11 +43,7 @@ ZeroDevTools/
 Extensions/UiWidget/Debug/*
 AudioTest/*
 enc_temp_folder/
-*.ide
 .arcconfig
-*.cache
-*.TMP
-*.d
 DevTools/
 
 # ignore the whole CMake Build directory

@@ -159,7 +159,7 @@ ZilchDefineStaticLibrary(PhysicsLibrary)
 #define JointType(jointType)              \
   ZilchInitializeType(jointType);         \
   ZilchInitializeType(jointType##Block);
-#include "Physics/Joints/JointList.hpp"
+#include "JointList.hpp"
 #undef JointType
   ZilchInitializeType(ContactBlock);
 

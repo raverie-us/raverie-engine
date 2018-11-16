@@ -20,7 +20,7 @@ namespace JointEnums
 
   enum JointTypes
   {
-#include "Physics/Joints/JointList.hpp"
+#include "JointList.hpp"
       JointCount
   };
 
@@ -38,7 +38,7 @@ namespace JointTypes
 // Declare the actual Enum
 enum Enum
 {
-#include "Physics/Joints/JointList.hpp"
+#include "JointList.hpp"
   Size
 };
 #undef JointType
@@ -47,7 +47,7 @@ enum Enum
 #define JointType(type) #type,
 static const cstr Names[] =
 {
-#include "Physics/Joints/JointList.hpp"
+#include "JointList.hpp"
   "Size"
 };
 #undef JointType

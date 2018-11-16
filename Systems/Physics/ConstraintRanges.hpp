@@ -416,7 +416,7 @@ typedef BaseConstraintRange<Joint, Joint, BodyFilterPolicy<Joint> > JointBodyRan
   typedef BaseConstraintRange<Joint, type, BodyFilterPolicy<type> > type##BodyRange; \
   typedef BaseJointGraphEdge<type> type##GraphEdge;
 
-#include "Physics/Joints/JointList.hpp"
+#include "JointList.hpp"
 
 #undef JointType
 

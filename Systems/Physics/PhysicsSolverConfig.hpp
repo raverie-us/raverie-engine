@@ -91,7 +91,7 @@ struct ContactBlock : public ConstraintConfigBlock
     ZilchDeclareType(jointType##Block, TypeCopyMode::ReferenceType);   \
     jointType##Block() {mJointId = Zero::JointEnums::jointType##Type;} \
   };
-#include "Physics/Joints/JointList.hpp"
+#include "JointList.hpp"
 #undef JointType
 
 
