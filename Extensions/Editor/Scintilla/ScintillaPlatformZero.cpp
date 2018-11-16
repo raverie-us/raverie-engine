@@ -176,12 +176,16 @@ void SurfaceImpl::AlphaRectangle(PRectangle rc, int cornerSize, ColourDesired fi
 {
   RoundedLineRectHelper(rc, cornerSize, fill, alphaFill, outline, alphaOutline, flags);
 
+  MakeViewNode(Zero::PrimitiveType::Triangles, White);
+
+  /*
   if(mViewNode == nullptr || mDrawType != Quads)
   {
     mDrawType = Quads;
     Zero::Texture* texture = Zero::TextureManager::FindOrNull("White");
     mViewNode = &mWidget->AddRenderNodes(*mViewBlock, *mFrameBlock, mClipRect, texture);
   }
+  */
 
   Vec3 pos0 = Vec3(rc.left, rc.top, 0);
   Vec3 pos1 = Vec3(rc.right, rc.bottom , 0);
@@ -366,6 +370,8 @@ void SurfaceImpl::SetDBCSMode(int codePage)
 // then: 'cornerSize' is 1, and thus 'cornerEmulation' is 1.
 void SurfaceImpl::RoundedLineRectHelper(PRectangle rc, int cornerEmulation, ColourDesired fill, int alphaFill, ColourDesired outline, int alphaOutline, int flags)
 {
+  MakeViewNode(Zero::PrimitiveType::Lines, White);
+  /*
   if(mViewNode == nullptr || mDrawType != Lines)
   {
     mDrawType = Lines;
@@ -373,6 +379,7 @@ void SurfaceImpl::RoundedLineRectHelper(PRectangle rc, int cornerEmulation, Colo
     mViewNode = &mWidget->AddRenderNodes(*mViewBlock, *mFrameBlock, mClipRect, texture);
     mViewNode->mStreamedVertexType = Zero::PrimitiveType::Lines;
   }
+  */
 
   // Prevent the bottom line of the outline rect from getting clipped by Scintilla.
   const int cScintillaCorrection = 1;

@@ -138,10 +138,10 @@ public:
 /// resource package. Used to manage resource lifetimes.
 /// EventHandler is Zilch's EventObject and is needed for compilation events. This should be
 /// removed once we combine the two
-class ResourceLibrary : public EventObject, public EventHandler
+class ResourceLibrary : public SafeId32EventObject, public EventHandler
 {
 public:
-  ZilchDeclareType(ResourceLibrary, TypeCopyMode::ReferenceType);
+  ZilchDeclareDerivedTypeExplicit(ResourceLibrary, SafeId32EventObject, TypeCopyMode::ReferenceType);
 
   ResourceLibrary();
   ~ResourceLibrary();

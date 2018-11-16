@@ -283,10 +283,10 @@ inline void Connect(targetType* dispatcherObject, StringParam eventId,
                     classType* receiver, void (classType::*function)(eventType*),
                     ConnectNotify::Enum notify = ConnectNotify::Exception)
 {
-  ReturnIf(dispatcher == nullptr || !dispatcher->GetDispatcher(), , "Dispatcher is null");
+  ReturnIf(dispatcherObject == nullptr, , "Dispatcher object is null");
   ReturnIf(receiver == nullptr || !receiver->GetReceiver(), , "Receiver is null");
-
   EventDispatcher* dispatcher = dispatcherObject->GetDispatcher();
+  ReturnIf(dispatcher == nullptr, , "Dispatcher is null");
 
   MemberFunctionConnection<classType, eventType>* connection = 
           new MemberFunctionConnection<classType, eventType>(dispatcher, eventId, receiver, function);

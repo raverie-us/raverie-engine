@@ -38,14 +38,10 @@ namespace Zilch
   Debugger::Debugger() :
     Action(DebuggerAction::Resume),
     LastCallStackDepth(0),
-    LastState(nullptr),
     StepOutOverCallStackDepth(0),
     IsAttached(false),
     IsBreakpointed(false),
     WasLastDisallowedBreak(false)
-    StepOutOverState(nullptr),
-    AllProjectsHashCode(0),
-    Server(1)
   {
     // We want to know when the console writes anything
     EventConnect(&Console::Events, Events::ConsoleWrite, &Debugger::OnConsoleWrite, this);

@@ -244,7 +244,6 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(SimpleAnimation);
   ZilchInitializeType(HeightMap);
   ZilchInitializeType(Area);
-  ZilchInitializeType(ActionSpace);
   ZilchInitializeType(AnimationGraph);
   ZilchInitializeType(ProjectSettings);
   ZilchInitializeType(ProjectDescription);

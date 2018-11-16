@@ -122,7 +122,7 @@ ZilchDefineType(ContextMenuEntry, builder, type)
   ZeroBindDocumented();
   ZilchBindConstructor();
 
-  ZilchBindOverloadedMethodAs(AddEntry, ZilchInstanceOverload(ContextMenuEntry*, StringParam), "AddEntry");
+  ZilchBindOverloadedMethodAs(AddEntry, ZilchInstanceOverload(ContextMenuEntry*, StringParam, bool), "AddEntry");
   ZilchBindMethod(AddDivider);
   ZilchBindMethod(AddCommandByName);
   ZilchBindOverloadedMethodAs(RemoveEntry, ZilchInstanceOverload(void, StringParam), "RemoveEntry");
@@ -136,11 +136,12 @@ ZilchDefineType(ContextMenuEntry, builder, type)
   ZeroBindEvent(Events::ContextMenuCreated, ContextMenuEvent);
 }
 
-ContextMenuEntry::ContextMenuEntry(StringParam name, StringParam icon)
+ContextMenuEntry::ContextMenuEntry(StringParam name, StringParam icon, bool readOnly)
   : mName(name)
   , mIcon(icon)
   , mEnabled(true)
   , mParent(nullptr)
+  , mReadOnly(readOnly)
 {
   ConnectThisTo(this, Events::MenuItemSelected, OnItemSelected);
   ConnectThisTo(this, Events::MenuItemHover, OnItemHover);
@@ -193,9 +194,9 @@ void ContextMenuEntry::AddEntry(ContextMenuEntry* entry)
   this->DispatchEvent(Events::MenuEntryModified, &event);
 }
 
-ContextMenuEntry* ContextMenuEntry::AddEntry(StringParam name)
+ContextMenuEntry* ContextMenuEntry::AddEntry(StringParam name, bool readOnly)
 {
-  ContextMenuEntry* entry = new ContextMenuEntry(name);
+  ContextMenuEntry* entry = new ContextMenuEntry(name, String(), readOnly);
   AddEntry(entry);
   return entry;
 }
@@ -449,6 +450,7 @@ ContextMenuItem::ContextMenuItem(Composite* parent, ContextMenuEntry* entry)
 
   mCommand = nullptr;
   mEnabled = mEntry->mEnabled;
+  mReadOnly = mEntry->mReadOnly;
   mActive = false;
   
   ConnectThisTo(this, Events::LeftClick, OnLeftClick);
@@ -758,9 +760,9 @@ Zero::ContextMenuEntry* ContextMenu::GetRootEntry()
   return mRootEntry;
 }
 
-ContextMenuEntry* ContextMenu::AddEntry(StringParam name)
+ContextMenuEntry* ContextMenu::AddEntry(StringParam name, bool readOnly)
 {
-  return mRootEntry->AddEntry(name);
+  return mRootEntry->AddEntry(name, readOnly);
 }
 
 void ContextMenu::AddDivider()

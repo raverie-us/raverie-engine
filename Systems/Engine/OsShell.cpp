@@ -46,7 +46,7 @@ cstr OsShell::GetName()
 }
 
 
-void OsShell::Update()
+void OsShell::Update(bool debugger)
 {
   // Prevent recursion due to cases where call Z::gEngine->Update(),
   // such as in the WM_TIMER message handling

@@ -200,8 +200,6 @@ ResourceLibrary::ResourceLibrary()
   EventConnect(&mScriptProject, Zilch::Events::PostSyntaxer, &ResourceLibrary::OnScriptProjectPostSyntaxer, this);
   EventConnect(&mScriptProject, Zilch::Events::TypeParsed, &EngineLibraryExtensions::TypeParsedCallback);
 
-  ZilchManager::GetInstance()->mDebugger.AddProject(&mScriptProject);
-
   ObjectEvent toSend(this);
   Z::gResources->DispatchEvent(Events::ResourceLibraryConstructed, &toSend);
 }
@@ -209,7 +207,6 @@ ResourceLibrary::ResourceLibrary()
 //**************************************************************************************************
 ResourceLibrary::~ResourceLibrary()
 {
-  ZilchManager::GetInstance()->mDebugger.RemoveProject(&mScriptProject);
 }
 
 //**************************************************************************************************

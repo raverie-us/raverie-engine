@@ -35,7 +35,7 @@ public:
 
   /// System interface
   cstr GetName() override;
-  void Update() override;
+  void Update(bool debugger) override;
 
   /// Name of the Shell's operating system.
   String GetOsName();

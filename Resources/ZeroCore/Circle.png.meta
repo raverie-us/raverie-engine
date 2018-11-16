@@ -32,8 +32,15 @@ ImageContent
 		var Slices = Real4{0, 0, 0, 0}
 		var Fill = SpriteFill.Stretch
 	}
-	ContentEditorOptions
+	ContentEditorOptions 
 	{
 		var ShowInEditor = true
+	}
+	TextureInfo 
+	{
+		var FileType = "png"
+		var LoadFormat = "RGBA8"
+		var Dimensions = "64 x 64"
+		var Size = "0.021 MB"
 	}
 }

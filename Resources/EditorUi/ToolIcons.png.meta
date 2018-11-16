@@ -12,7 +12,7 @@ ImageContent
  		var Filtering = TextureFiltering.Nearest
  		var Anisotropy = TextureAnisotropy.x1
  		var MipMapping = TextureMipMapping.None
-+		var HalfScaleCount = 0
+ 		var HalfScaleCount = 0
  		var PremultipliedAlpha = false
  		var GammaCorrection = false
 	}

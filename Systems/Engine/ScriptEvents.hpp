@@ -28,9 +28,9 @@ class DocumentResource;
 class ScriptEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeCopyMode::ReferenceType);
+  ZilchDeclareType(ScriptEvent, TypeCopyMode::ReferenceType);
 
-  ScriptEvent() { Script = NULL; }
+  ScriptEvent() { Script = nullptr; }
   CodeLocation Location;
   String Message;
   /// The document resource that should be displayed due to an error

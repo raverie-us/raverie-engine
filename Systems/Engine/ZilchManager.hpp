@@ -71,9 +71,6 @@ public:
   // When the debugger skips a breakpoint
   void OnDebuggerBreakNotAllowed(Zilch::DebuggerTextEvent* event);
 
-  // Tells the debugger to start hosting.
-  void HostDebugger();
-
   // The last library we properly built (set inside CompileLoadedScriptsIntoLibrary)
   // Once this library becomes in use by an executable state, we CANNOT update it, or any ZilchMeta types
   LibraryRef mCurrentFragmentProjectLibrary;

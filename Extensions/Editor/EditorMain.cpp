@@ -628,7 +628,7 @@ void EditorMain::OnDebuggerPaused(ScriptEvent* event)
 
   // CodeLocations use 1 based indices
   editor->SetMarker(event->Location.StartLine - 1, TextEditor::InstructionMarker);
-  editor->ScrollToLine(event->Location.StartLine - 1)
+  editor->GoToLine(event->Location.StartLine - 1);
 }
 
 void EditorMain::OnDebuggerResumed(ScriptEvent* event)

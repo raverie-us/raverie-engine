@@ -13,7 +13,6 @@ namespace Zero
 {
 
 typedef InList<Actions> ActiveListsType;
-class ActionSystem;
 class UpdateEvent;
 
 
@@ -37,8 +36,6 @@ public:
 
   ActiveListsType ActiveLists;
   ActiveListsType ScheduledLists;
-
-  IntrusiveLink(ActionSpace, link);
 };
 
 }//namespace Zero

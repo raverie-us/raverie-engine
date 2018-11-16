@@ -1373,7 +1373,7 @@ GameSession* Editor::PlayGame(PlayGameOptions::Enum options, bool takeFocus, boo
     debugger.Resume();
 
     GameRange games = GetGames();
-    forRange(GameSession* game : games)
+    forRange(GameSession* game, games)
       FocusTabbedWidget(game->mGameWidget);
 
     return nullptr;

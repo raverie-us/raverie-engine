@@ -171,6 +171,7 @@ target_sources(Engine
     ${CMAKE_CURRENT_LIST_DIR}/SampleCurve.hpp
     ${CMAKE_CURRENT_LIST_DIR}/SceneGraph.cpp
     ${CMAKE_CURRENT_LIST_DIR}/SceneGraph.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ScriptEvents.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ScriptEvents.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ShortcutsDoc.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ShortcutsDoc.hpp

@@ -79,14 +79,14 @@ class ContextMenuEntry : public SafeId32EventObject
 public:
   ZilchDeclareType(ContextMenuEntry, TypeCopyMode::ReferenceType);
 
-  ContextMenuEntry(StringParam name = String(), StringParam icon = String());
+  ContextMenuEntry(StringParam name = String(), StringParam icon = String(), bool readOnly = false);
   virtual ~ContextMenuEntry();
 
   // Context Menu Entry Interface (for use in zilch and C++)
   /// Adds the provided entry to the this entries children
   void AddEntry(ContextMenuEntry* entry);
   /// Adds a new entry with the provided name with an icon if one is provided to this menu entries children
-  ContextMenuEntry* AddEntry(StringParam name = String());
+  ContextMenuEntry* AddEntry(StringParam name = String(), bool readOnly = false);
   ContextMenuEntry* AddDivider();
   ContextMenuEntry* AddCommand(Command* command);
   ContextMenuEntry* AddCommandByName(StringParam commandName);
@@ -129,6 +129,8 @@ public:
   bool mEnabled;
   // If provided a tooltip can display the reason why the item is disabled
   String mDisabledText;
+  /// Whether or not the item is read only (doesn't modify state).
+  bool mReadOnly;
 };
 
 class ContextMenuEntryDivider : public ContextMenuEntry
@@ -167,7 +169,7 @@ class ContextMenuItem : public Composite
 {
 public:
   typedef ContextMenuItem ZilchSelf;
-  ContextMenuItem(Composite* parent, ContextMenuEntry* entry, bool readOnly = false);
+  ContextMenuItem(Composite* parent, ContextMenuEntry* entry);
 
   void SetName(StringParam name, StringParam icon = String());
   void SetCommand(Command* command);
@@ -260,7 +262,7 @@ public:
 
   // ContextMenuEntry builder functions
   ContextMenuEntry* GetRootEntry();
-  ContextMenuEntry* AddEntry(StringParam name);
+  ContextMenuEntry* AddEntry(StringParam name, bool readOnly = false);
   void AddDivider();
   void AddZeroContextMenu(StringParam menuName);
   void AddCommand(Command* command);

@@ -22,8 +22,8 @@ class AddObjectWidget;
 class ResourceSearchProvider : public SearchProvider
 {
 public:
-  ResourceLibrary* mDefaultLibrary;
-  ResourceLibrary* mResourceLibrary;
+  HandleOf<ResourceLibrary> mDefaultLibrary;
+  HandleOf<ResourceLibrary> mResourceLibrary;
   bool mShowHidden;
 
   // If providing a default library, then that library should not contain hidden

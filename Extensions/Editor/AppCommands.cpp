@@ -179,20 +179,6 @@ void PlayUnitTestFile()
   unitTestSystem->PlayFromZeroTestFile();
 }
 
-void HostZilchDebugger()
-{
-  ZilchManager* manager = ZilchManager::GetInstance();
-  manager->HostDebugger();
-}
-
-void RunZilchDebugger()
-{
-  HostZilchDebugger();
-  String debuggerPath = FilePath::Combine(Z::gContentSystem->ToolPath, "ZilchDebugger.html");
-  Os::SystemOpenFile(debuggerPath.c_str());
-}
-
-
 void BindAppCommands(Cog* config, CommandManager* commands)
 {
   commands->AddCommand("About", BindCommandFunction(ShowAbout), true);
@@ -211,9 +197,6 @@ void BindAppCommands(Cog* config, CommandManager* commands)
   {
     commands->AddCommand("OpenTestWidgets", BindCommandFunction(OpenTestWidgetsCommand));
     commands->AddCommand("CrashEngine", BindCommandFunction(CrashEngine));
-
-    commands->AddCommand("HostZilchDebugger", BindCommandFunction(HostZilchDebugger));
-    commands->AddCommand("RunZilchDebugger", BindCommandFunction(RunZilchDebugger));
   }
   commands->AddCommand("Help", BindCommandFunction(OpenHelp), true);
   commands->AddCommand("ZeroHub", BindCommandFunction(OpenZeroHub), true);
