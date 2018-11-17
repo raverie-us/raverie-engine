@@ -23,14 +23,14 @@ add_library(Zilch "")
 ################################################################################
 # Explicitly define the folders as they are not organized how we want
 ################################################################################
-set_target_properties(Common           PROPERTIES FOLDER "ZeroLibraries")
-set_target_properties(Replication      PROPERTIES FOLDER "ZeroLibraries")
-set_target_properties(Geometry         PROPERTIES FOLDER "ZeroLibraries")
-set_target_properties(Meta             PROPERTIES FOLDER "ZeroLibraries")
-set_target_properties(Serialization    PROPERTIES FOLDER "ZeroLibraries")
-set_target_properties(SpatialPartition PROPERTIES FOLDER "ZeroLibraries")
-set_target_properties(Support          PROPERTIES FOLDER "ZeroLibraries")
-set_target_properties(Zilch            PROPERTIES FOLDER "ZeroLibraries")
+set_target_properties(Common           PROPERTIES FOLDER "Libraries")
+set_target_properties(Replication      PROPERTIES FOLDER "Libraries")
+set_target_properties(Geometry         PROPERTIES FOLDER "Libraries")
+set_target_properties(Meta             PROPERTIES FOLDER "Libraries")
+set_target_properties(Serialization    PROPERTIES FOLDER "Libraries")
+set_target_properties(SpatialPartition PROPERTIES FOLDER "Libraries")
+set_target_properties(Support          PROPERTIES FOLDER "Libraries")
+set_target_properties(Zilch            PROPERTIES FOLDER "Libraries")
 
 ################################################################################
 # include filelists for each library
@@ -295,11 +295,11 @@ endif()
 ################################################################################
 # Group source into folders
 ################################################################################
-zero_subfolder_source_group(${zero_core_path} ZeroLibraries Common "")
-zero_subfolder_source_group(${zero_core_path} ZeroLibraries Replication "")
-zero_subfolder_source_group(${zero_core_path} ZeroLibraries Geometry "")
-zero_subfolder_source_group(${zero_core_path} ZeroLibraries Meta "")
-zero_subfolder_source_group(${zero_core_path} ZeroLibraries Serialization "")
-zero_subfolder_source_group(${zero_core_path} ZeroLibraries SpatialPartition "")
-zero_subfolder_source_group(${zero_core_path} ZeroLibraries Support "")
-zero_subfolder_source_group(${zero_core_path} ZeroLibraries Zilch "")
+zero_subfolder_source_group(${zero_core_path} Libraries Common "")
+zero_subfolder_source_group(${zero_core_path} Libraries Replication "")
+zero_subfolder_source_group(${zero_core_path} Libraries Geometry "")
+zero_subfolder_source_group(${zero_core_path} Libraries Meta "")
+zero_subfolder_source_group(${zero_core_path} Libraries Serialization "")
+zero_subfolder_source_group(${zero_core_path} Libraries SpatialPartition "")
+zero_subfolder_source_group(${zero_core_path} Libraries Support "")
+zero_subfolder_source_group(${zero_core_path} Libraries Zilch "")

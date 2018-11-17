@@ -54,11 +54,11 @@ target_include_directories(CodeTranslator
 )
 target_include_directories(Editor 
     PUBLIC 
-        ${CurrentDirectory}/../ZeroLibraries/Zilch
+        ${CurrentDirectory}/../Libraries/Zilch
         ${CurrentDirectory}/Widget
         ${CurrentDirectory}/Editor
         ${CurrentDirectory}/../Systems
-        ${CurrentDirectory}/../ZeroLibraries
+        ${CurrentDirectory}/../Libraries
         ${CurrentDirectory}
 )
 target_include_directories(Gameplay
