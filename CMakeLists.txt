@@ -102,7 +102,6 @@ add_subdirectory(External)
 
 # zero source and related projects
 add_subdirectory(Extensions)
-add_subdirectory(Systems)
 add_subdirectory(Libraries)
 add_subdirectory(Projects)
 
