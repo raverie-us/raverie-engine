@@ -1,7 +1,6 @@
 # use glob syntax.
 syntax: glob
 
-# visual studio files
 *.ncb
 *.suo
 *.user
@@ -25,28 +24,28 @@ syntax: glob
 *.tmp
 *.d
 *.dblite
+*.arcconfig
 
 LocalBuildEnvironment.cmd
 LocalPaths.props
 BuildVersion.inl
 WindowsBuild/
 
-BuildOutput
-Build/Output
+BuildOutput/
+Build/Output/
 Install/
 CMakeBuilds/
 Data/ContentStore/
 Data/ZilchCustomPluginShared/
-Tools/GeometryProcessor
-Tools/ImageProcessor
+Tools/GeometryProcessor/
+Tools/ImageProcessor/
 ZeroDevTools/
 Extensions/UiWidget/Debug/*
 AudioTest/*
 enc_temp_folder/
-.arcconfig
 DevTools/
-
-# ignore the whole CMake Build directory
+WebBuild/
+*.generated.*
 CMakeBuild/*
 
 # ...Except these file types since a user might have added source in this folder in error
@@ -60,5 +59,3 @@ CMakeBuild/*
 !CMakeBuild/*/*.h
 !CMakeBuild/*/*.inl
 !CMakeBuild/*/*.zilchscript
-
-WebBuild/

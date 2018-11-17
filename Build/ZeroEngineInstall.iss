@@ -39,7 +39,7 @@ WizardImageFile=ZeroInstall.bmp
 ChangesEnvironment=yes
 ChangesAssociations=yes
 PrivilegesRequired=none
-LicenseFile=ZeroEngineEula.txt
+LicenseFile=../License.txt
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
