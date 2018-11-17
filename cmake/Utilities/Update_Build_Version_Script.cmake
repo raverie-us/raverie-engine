@@ -95,7 +95,7 @@ execute_process(
     # input
     "${tempFile}"
     # output
-    "${ZERO_CORE_ROOT}/Systems/Engine/BuildVersion.inl"
+    "${ZERO_CORE_ROOT}/Libraries/Engine/BuildVersion.inl"
 )
 
 
