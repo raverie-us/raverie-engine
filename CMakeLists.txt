@@ -101,7 +101,6 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 add_subdirectory(External)
 
 # zero source and related projects
-add_subdirectory(Extensions)
 add_subdirectory(Libraries)
 add_subdirectory(Projects)
 

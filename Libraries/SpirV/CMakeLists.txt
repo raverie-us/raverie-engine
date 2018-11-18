@@ -20,7 +20,7 @@ endif()
 ################################################################################
 # Explicitly define the folders as they are not organized how we want
 ################################################################################
-set_target_properties(SPIRV-Cross PROPERTIES FOLDER "Extensions")
+set_target_properties(SPIRV-Cross PROPERTIES FOLDER "Libraries")
 
 ################################################################################
 # include filelists for each library
@@ -126,4 +126,4 @@ endif()
 ################################################################################
 # Group source into folders
 ################################################################################
-zero_subfolder_source_group(${zero_core_path} Extensions/SpirV SPIRV-Cross "")
+zero_subfolder_source_group(${zero_core_path} Libraries/SpirV SPIRV-Cross "")

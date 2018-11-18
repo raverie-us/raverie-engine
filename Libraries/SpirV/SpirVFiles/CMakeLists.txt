@@ -29,8 +29,8 @@ endif ()
 ################################################################################
 # Explicitly define the folders as they are not organized how we want
 ################################################################################
-set_target_properties(SPIRV-Tools PROPERTIES FOLDER "Extensions")
-set_target_properties(SPIRV-Tools-opt PROPERTIES FOLDER "Extensions")
+set_target_properties(SPIRV-Tools PROPERTIES FOLDER "Libraries")
+set_target_properties(SPIRV-Tools-opt PROPERTIES FOLDER "Libraries")
 
 ################################################################################
 # include filelists for each library
@@ -233,4 +233,4 @@ endif()
 ################################################################################
 # Group source into folders
 ################################################################################
-#zero_subfolder_source_group(${zero_core_path} Extensions/SpirV/SpirVFiles SPIRV-Tools "")
+#zero_subfolder_source_group(${zero_core_path} Libraries/SpirV/SpirVFiles SPIRV-Tools "")

@@ -8,12 +8,19 @@ get_filename_component(ParentDirectory ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 # get our current directory
 set(CurrentDirectory ${CMAKE_CURRENT_LIST_DIR})
 
+if(use_spirv_shared_library)
+  set(SpirVToolsCompileOptions -DSPIRV_TOOLS_SHAREDLIB)
+endif()
+
 ################################################################################
 # define all of the libraries that are in this folder
 ################################################################################
-add_library(Common "") 
+add_library(CodeTranslator "")
+add_library(Common "")
 add_library(Content "")
+add_library(Editor "")
 add_library(Engine "")
+add_library(Gameplay "")
 add_library(Geometry "")
 add_library(Graphics "")
 add_library(Meta "")
@@ -25,15 +32,21 @@ add_library(Sound "")
 add_library(SpatialPartition  "")
 add_library(Startup "")
 add_library(Support "")
+add_library(UiWidget "")
+add_library(Widget "")
 add_library(Zilch "")
 add_library(ZilchScript "")
+add_library(ZilchShaders "")
 
 ################################################################################
 # include filelists for each library
 ################################################################################
+include(CodeTranslator/CMakeLists.txt)
 include(Common/CMakeLists.txt)
 include(Content/CMakeLists.txt)
+include(Editor/CMakeLists.txt)
 include(Engine/CMakeLists.txt)
+include(Gameplay/CMakeLists.txt)
 include(Geometry/CMakeLists.txt)
 include(Graphics/CMakeLists.txt)
 include(Meta/CMakeLists.txt)
@@ -45,8 +58,13 @@ include(Sound/CMakeLists.txt)
 include(SpatialPartition/CMakeLists.txt)
 include(Startup/CMakeLists.txt)
 include(Support/CMakeLists.txt)
+include(UiWidget/CMakeLists.txt)
+include(Widget/CMakeLists.txt)
 include(Zilch/CMakeLists.txt)
 include(ZilchScript/CMakeLists.txt)
+include(ZilchShaders/CMakeLists.txt)
+
+add_subdirectory(SpirV)
 
 # platform is going to define its own target
 add_subdirectory(Platform)
@@ -54,9 +72,12 @@ add_subdirectory(Platform)
 # define include directories for all of our libraries
 ################################################################################
 
+target_include_directories(CodeTranslator PUBLIC ${CurrentDirectory} ${CurrentDirectory}/CodeTranslator)
 target_include_directories(Common PUBLIC ${CurrentDirectory} ${CurrentDirectory}/Common)
 target_include_directories(Content PUBLIC ${CurrentDirectory} ${CurrentDirectory}/Content)
+target_include_directories(Editor PUBLIC ${CurrentDirectory} ${CurrentDirectory}/Editor)
 target_include_directories(Engine PUBLIC ${CurrentDirectory} ${CurrentDirectory}/Engine)
+target_include_directories(Gameplay PUBLIC ${CurrentDirectory} ${CurrentDirectory}/Gameplay)
 target_include_directories(Geometry PUBLIC ${CurrentDirectory} ${CurrentDirectory}/Geometry)
 target_include_directories(Graphics PUBLIC ${CurrentDirectory} ${CurrentDirectory}/Graphics)
 target_include_directories(Meta PUBLIC ${CurrentDirectory} ${CurrentDirectory}/Meta)
@@ -68,8 +89,25 @@ target_include_directories(Sound PUBLIC ${CurrentDirectory} ${CurrentDirectory}/
 target_include_directories(SpatialPartition PUBLIC ${CurrentDirectory} ${CurrentDirectory}/SpatialPartition)
 target_include_directories(Startup PUBLIC ${CurrentDirectory} ${CurrentDirectory}/Startup)
 target_include_directories(Support PUBLIC ${CurrentDirectory} ${CurrentDirectory}/Support)
+target_include_directories(UiWidget PUBLIC ${CurrentDirectory} ${CurrentDirectory}/UiWidget)
+target_include_directories(Widget PUBLIC ${CurrentDirectory} ${CurrentDirectory}/Widget)
 target_include_directories(Zilch PUBLIC ${CurrentDirectory} ${CurrentDirectory}/Zilch)
 target_include_directories(ZilchScript PUBLIC ${CurrentDirectory} ${CurrentDirectory}/ZilchScript)
+
+target_include_directories(ZilchShaders
+    PUBLIC
+        ${CurrentDirectory}
+        ${CurrentDirectory}/ZilchShaders
+        ${CurrentDirectory}/SpirV/SPIRV-Cross
+        ${CurrentDirectory}/SpirV/SpirVFiles
+        ${CurrentDirectory}/SpirV/SpirVFiles/external
+        ${CurrentDirectory}/SpirV/SpirVFiles/external/SPIRV-Headers/include
+        ${CurrentDirectory}/SpirV/SpirVFiles/include
+        ${CurrentDirectory}/SpirV/SpirVFiles/include/spirv-tools
+        ${CurrentDirectory}/SpirV/SpirVFiles/build
+        ${CurrentDirectory}/SpirV/SpirVFiles/tools
+        ${CurrentDirectory}/SpirV/SpirVFiles/source
+)
 
 ################################################################################
 # set the linked libraries for all of our targets
@@ -79,12 +117,12 @@ target_link_libraries(Replication
                       Common
                       Zilch
                       Geometry
-) 
+)
 target_link_libraries(Geometry
                       PUBLIC
                       Common
                       Zilch
-) 
+)
 target_link_libraries(Zilch
                       PUBLIC
                       Common
@@ -121,49 +159,84 @@ target_link_libraries(Engine
                       Common
                       Geometry
                       Zilch
-)  
+)
 target_link_libraries(Graphics
                       PUBLIC
                       Common
                       Geometry
                       ZilchShaders
                       ${FreetypeStatic}
-) 
+)
 target_link_libraries(Networking
                       PUBLIC
                       Common
                       Geometry
-) 
+)
 target_link_libraries(Physics
                       PUBLIC
                       Zilch
-) 
+)
 target_link_libraries(Sound
                       PUBLIC
                       Common
                       Geometry
                       ${OpusStatic}
-) 
+)
 target_link_libraries(Startup
                       PUBLIC
                       Common
                       Geometry
                       Graphics
-) 
+)
 target_link_libraries(ZilchScript
                       PUBLIC
                       Common
                       Geometry
                       Editor
 )
+target_link_libraries(CodeTranslator
+                      PUBLIC
+                      Engine
+)
+target_link_libraries(Editor
+                      PUBLIC
+                      Common
+)
+target_link_libraries(ZilchShaders
+                      PRIVATE
+                      Common
+                      Geometry
+                      Zilch
+                      SPIRV-Cross
+                      SPIRV-Tools-opt
+)
+target_link_libraries(Widget
+                      PUBLIC
+                      Engine
+)
+target_link_libraries(UiWidget
+                      PUBLIC
+                      Engine
+)
+target_link_libraries(Gameplay
+                      PUBLIC
+                      Common
+                      Zilch
+                      Engine
+                      ${CEFStatic}
+)
+
 
 ################################################################################
 # set the output directories for all of our targets
 ################################################################################
 zero_multitarget_output_directories(
+    CodeTranslator
     Common
     Content
+    Editor
     Engine
+    Gameplay
     Geometry
     Graphics
     Meta
@@ -175,8 +248,11 @@ zero_multitarget_output_directories(
     SpatialPartition
     Startup
     Support
+    UiWidget
+    Widget
     Zilch
     ZilchScript
+    ZilchShaders
     LIBRARY_DIRECTORY ${zero_library_dir}
     RUNTIME_DIRECTORY ${zero_binary_dir}
 )
@@ -185,9 +261,12 @@ zero_multitarget_output_directories(
 # Specify any additional target options such as pdb locations
 ################################################################################
 zero_multitarget_output_settings(
+    CodeTranslator
     Common
     Content
+    Editor
     Engine
+    Gameplay
     Geometry
     Graphics
     Meta
@@ -199,8 +278,11 @@ zero_multitarget_output_settings(
     SpatialPartition
     Startup
     Support
+    UiWidget
+    Widget
     Zilch
     ZilchScript
+    ZilchShaders
     CONFIGS ${supported_configs}
     BASEPATH ${zero_build_out}
     PLATFORM ${platform}
@@ -216,9 +298,12 @@ zero_multitarget_output_settings(
 # set flags and definitions
 ################################################################################
 zero_multitarget_compile_options(
+    CodeTranslator
     Common
     Content
+    Editor
     Engine
+    Gameplay
     Geometry
     Graphics
     Meta
@@ -230,9 +315,13 @@ zero_multitarget_compile_options(
     SpatialPartition
     Startup
     Support
+    UiWidget
+    Widget
     Zilch
     ZilchScript
+    ZilchShaders
     PRIVATE
+    ${SpirVToolsCompileOptions}
     ${common_flags}
 )
 
@@ -241,9 +330,12 @@ zero_multitarget_compile_options(
 ################################################################################
 # set the correct subsystems for executable targets, and set stack size for the editor
 set_target_properties(
+    CodeTranslator
     Common
     Content
+    Editor
     Engine
+    Gameplay
     Geometry
     Graphics
     Meta
@@ -255,8 +347,11 @@ set_target_properties(
     SpatialPartition
     Startup
     Support
+    UiWidget
+    Widget
     Zilch
     ZilchScript
+    ZilchShaders
     PROPERTIES
     LINK_FLAGS "${common_linker_flags}"
     STATIC_LIBRARY_FLAGS "${common_library_flags}"
@@ -266,9 +361,12 @@ set_target_properties(
 ################################################################################
 # Group source into folders
 ################################################################################
+zero_subfolder_source_group(${zero_core_path} Libraries CodeTranslator "")
 zero_subfolder_source_group(${zero_core_path} Libraries Common "")
 zero_subfolder_source_group(${zero_core_path} Libraries Content "")
+zero_subfolder_source_group(${zero_core_path} Libraries Editor "")
 zero_subfolder_source_group(${zero_core_path} Libraries Engine "")
+zero_subfolder_source_group(${zero_core_path} Libraries Gameplay "")
 zero_subfolder_source_group(${zero_core_path} Libraries Geometry "")
 zero_subfolder_source_group(${zero_core_path} Libraries Graphics "")
 zero_subfolder_source_group(${zero_core_path} Libraries Meta "")
@@ -280,15 +378,18 @@ zero_subfolder_source_group(${zero_core_path} Libraries Sound "")
 zero_subfolder_source_group(${zero_core_path} Libraries SpatialPartition "")
 zero_subfolder_source_group(${zero_core_path} Libraries Startup "")
 zero_subfolder_source_group(${zero_core_path} Libraries Support "")
+zero_subfolder_source_group(${zero_core_path} Libraries UiWidget "")
+zero_subfolder_source_group(${zero_core_path} Libraries Widget "")
 zero_subfolder_source_group(${zero_core_path} Libraries Zilch "")
 zero_subfolder_source_group(${zero_core_path} Libraries ZilchScript "")
+zero_subfolder_source_group(${zero_core_path} Libraries ZilchShaders "")
 
 ################################################################################
 # Post build steps
 ################################################################################
 add_custom_command(
-    TARGET Engine PRE_BUILD    
-    COMMAND ${CMAKE_COMMAND} 
+    TARGET Engine PRE_BUILD
+    COMMAND ${CMAKE_COMMAND}
     # options
     -DZERO_CORE_ROOT="${zero_core_path}"
     # command
