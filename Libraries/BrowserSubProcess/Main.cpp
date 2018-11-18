@@ -4,7 +4,7 @@
 /// Copyright 2018, DigiPen Institute of Technology
 ///
 ///////////////////////////////////////////////////////////////////////////////
-#include "CommonStandard.hpp"
+#include "Precompiled.hpp"
 
 namespace Zero
 {

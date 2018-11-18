@@ -102,7 +102,6 @@ add_subdirectory(External)
 
 # zero source and related projects
 add_subdirectory(Libraries)
-add_subdirectory(Projects)
 
 if (generate_with_unit_tests)
     if (NOT EXISTS ${zero_unit_test_dir})

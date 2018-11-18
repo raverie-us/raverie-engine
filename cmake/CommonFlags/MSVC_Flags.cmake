@@ -39,4 +39,4 @@ set(common_flags
 )
 
 set(common_library_flags "/ignore:4099,4221,4075")
-set(common_linker_flags "${common_library_flags} /SAFESEH:NO")
+set(common_linker_flags "${common_library_flags} /SAFESEH:NO /SUBSYSTEM:WINDOWS /STACK:8388608")

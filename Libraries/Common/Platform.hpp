@@ -323,11 +323,8 @@
 #if defined(ZeroImportDll)
 #define ZeroShared ZeroImport
 #define ZeroSharedTemplate
-#elif defined(ZeroExportDll)
-#define ZeroShared ZeroExport
-#define ZeroSharedTemplate
 #else
-#define ZeroShared
+#define ZeroShared ZeroExport
 #define ZeroSharedTemplate
 #endif
 

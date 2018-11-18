@@ -38,6 +38,11 @@ add_library(Zilch "")
 add_library(ZilchScript "")
 add_library(ZilchShaders "")
 
+add_executable(ZeroEditor "")
+add_executable(ZeroLauncher "")
+add_executable(BrowserSubProcess "")
+add_library(ZeroLauncherSharedLibrary SHARED "")
+
 ################################################################################
 # include filelists for each library
 ################################################################################
@@ -63,6 +68,11 @@ include(Widget/CMakeLists.txt)
 include(Zilch/CMakeLists.txt)
 include(ZilchScript/CMakeLists.txt)
 include(ZilchShaders/CMakeLists.txt)
+
+include(ZeroEditor/CMakeLists.txt)
+include(ZeroLauncher/CMakeLists.txt)
+include(ZeroLauncherSharedLibrary/CMakeLists.txt)
+include(BrowserSubProcess/CMakeLists.txt)
 
 add_subdirectory(SpirV)
 
@@ -93,7 +103,6 @@ target_include_directories(UiWidget PUBLIC ${CurrentDirectory} ${CurrentDirector
 target_include_directories(Widget PUBLIC ${CurrentDirectory} ${CurrentDirectory}/Widget)
 target_include_directories(Zilch PUBLIC ${CurrentDirectory} ${CurrentDirectory}/Zilch)
 target_include_directories(ZilchScript PUBLIC ${CurrentDirectory} ${CurrentDirectory}/ZilchScript)
-
 target_include_directories(ZilchShaders
     PUBLIC
         ${CurrentDirectory}
@@ -108,6 +117,11 @@ target_include_directories(ZilchShaders
         ${CurrentDirectory}/SpirV/SpirVFiles/tools
         ${CurrentDirectory}/SpirV/SpirVFiles/source
 )
+
+target_include_directories(ZeroEditor PUBLIC ${CurrentDirectory} ${CurrentDirectory}/ZeroEditor)
+target_include_directories(ZeroLauncher PUBLIC ${CurrentDirectory} ${CurrentDirectory}/ZeroLauncher)
+target_include_directories(ZeroLauncherSharedLibrary PUBLIC ${CurrentDirectory} ${CurrentDirectory}/ZeroLauncherSharedLibrary)
+target_include_directories(BrowserSubProcess PUBLIC ${CurrentDirectory} ${CurrentDirectory}/BrowserSubProcess)
 
 ################################################################################
 # set the linked libraries for all of our targets
@@ -226,6 +240,118 @@ target_link_libraries(Gameplay
                       ${CEFStatic}
 )
 
+target_link_libraries(ZeroEditor
+                      PUBLIC
+                      Common
+                      Gameplay
+                      SpatialPartition
+                      CodeTranslator
+                      ZilchShaders
+                      Serialization
+                      Support
+                      Engine 
+                      Geometry 
+                      Widget 
+                      Editor 
+                      ZilchScript 
+                      Networking 
+                      Meta 
+                      Physics 
+                      Sound 
+                      Platform 
+                      Content 
+                      Replication 
+                      UiWidget
+                      Startup
+                      Zilch
+                      Graphics
+                      ${OpusStatic}
+                      ${FreetypeStatic}
+                      ${ZLibStatic}
+)
+
+target_link_libraries(ZeroLauncher
+                      PUBLIC
+                      Common
+                      Gameplay
+                      SpatialPartition 
+                      ZilchShaders
+                      Serialization 
+                      Support 
+                      Geometry 
+                      Widget 
+                      Editor 
+                      ZilchScript 
+                      Graphics 
+                      Networking 
+                      Meta 
+                      Engine 
+                      Physics 
+                      Sound 
+                      Startup 
+                      Platform 
+                      Content 
+                      Replication 
+                      Zilch 
+                      UiWidget 
+                      CodeTranslator
+) 
+target_link_libraries(ZeroLauncherSharedLibrary
+                      PUBLIC
+                      Common
+                      Gameplay
+                      SpatialPartition 
+                      ZilchShaders
+                      Serialization 
+                      Support 
+                      Geometry 
+                      Widget 
+                      Editor 
+                      ZilchScript 
+                      Graphics 
+                      Networking 
+                      Meta 
+                      Engine 
+                      Physics 
+                      Sound 
+                      Startup 
+                      Platform 
+                      Content 
+                      Replication 
+                      Zilch 
+                      UiWidget 
+                      CodeTranslator
+) 
+
+if(NOT use_spirv_shared_library)
+target_link_libraries(ZeroEditor
+                      PUBLIC
+                      SPIRV-Tools
+                      SPIRV-Tools-opt
+                      )
+endif()
+
+# the launcher is going to need the chrome subprocess to run correctly
+add_dependencies(ZeroLauncherSharedLibrary
+    BrowserSubProcess
+)
+add_dependencies(ZeroEditor
+    BrowserSubProcess
+)
+# launcher needs the dll to run
+add_dependencies(ZeroLauncher
+    ZeroLauncherSharedLibrary
+)
+target_link_libraries(BrowserSubProcess
+                      PUBLIC
+                      Common
+                      Platform
+                      ${FreetypeStatic}
+                      ${ZLibStatic}
+                      ${LibpngStatic}
+                      ${CEFStatic}
+)
+
 
 ################################################################################
 # set the output directories for all of our targets
@@ -253,6 +379,12 @@ zero_multitarget_output_directories(
     Zilch
     ZilchScript
     ZilchShaders
+    
+    ZeroEditor
+    ZeroLauncher 
+    ZeroLauncherSharedLibrary
+    BrowserSubProcess
+    
     LIBRARY_DIRECTORY ${zero_library_dir}
     RUNTIME_DIRECTORY ${zero_binary_dir}
 )
@@ -283,6 +415,12 @@ zero_multitarget_output_settings(
     Zilch
     ZilchScript
     ZilchShaders
+    
+    ZeroEditor
+    ZeroLauncher 
+    ZeroLauncherSharedLibrary
+    BrowserSubProcess
+    
     CONFIGS ${supported_configs}
     BASEPATH ${zero_build_out}
     PLATFORM ${platform}
@@ -320,6 +458,12 @@ zero_multitarget_compile_options(
     Zilch
     ZilchScript
     ZilchShaders
+    
+    ZeroEditor
+    ZeroLauncher 
+    ZeroLauncherSharedLibrary
+    BrowserSubProcess
+    
     PRIVATE
     ${SpirVToolsCompileOptions}
     ${common_flags}
@@ -352,11 +496,30 @@ set_target_properties(
     Zilch
     ZilchScript
     ZilchShaders
+    
+    ZeroEditor
+    ZeroLauncher 
+    ZeroLauncherSharedLibrary
+    BrowserSubProcess
+    
     PROPERTIES
     LINK_FLAGS "${common_linker_flags}"
     STATIC_LIBRARY_FLAGS "${common_library_flags}"
     STATIC_LIBRARY_FLAGS_RELEASE "/LTCG"
 )
+
+if (${platform} STREQUAL "Emscripten")
+    set_target_properties(
+        ZeroEditor
+        PROPERTIES SUFFIX ".html"
+        LINK_FLAGS "--embed-file \"${zero_build_out}/ZeroEditorFileSystem.zip\"@/FileSystem.zip"
+    )
+    set_target_properties(
+        ZeroLauncher
+        PROPERTIES SUFFIX ".html"
+        LINK_FLAGS "--embed-file \"${zero_build_out}/ZeroLauncherFileSystem.zip\"@/FileSystem.zip"
+    )
+endif()
 
 ################################################################################
 # Group source into folders
@@ -383,6 +546,10 @@ zero_subfolder_source_group(${zero_core_path} Libraries Widget "")
 zero_subfolder_source_group(${zero_core_path} Libraries Zilch "")
 zero_subfolder_source_group(${zero_core_path} Libraries ZilchScript "")
 zero_subfolder_source_group(${zero_core_path} Libraries ZilchShaders "")
+zero_subfolder_source_group_ignore_target_folder(${zero_core_path} Libraries ZeroEditor "${zero_core_path}/Libraries")
+zero_subfolder_source_group_ignore_target_folder(${zero_core_path} Libraries ZeroLauncher "${zero_core_path}/Libraries")
+zero_subfolder_source_group(${zero_core_path} Libraries ZeroLauncherSharedLibrary "${zero_core_path}/Libraries")
+zero_subfolder_source_group(${zero_core_path} Libraries BrowserSubProcess "")
 
 ################################################################################
 # Post build steps
@@ -395,3 +562,138 @@ add_custom_command(
     # command
     -P ${cmake_utilities_dir}/Update_Build_Version_Script.cmake
 )
+
+#### ZeroEditor editor
+copy_multiple_shared_objects(
+    ZeroEditor
+    ZeroLauncher
+    OUTPUT_DIRECTORY ${zero_binary_dir}
+    SHARED_OBJECT_LOCATIONS
+    ## setup all dll locations
+    ${AssimpSharedPath}
+    ${CEFSharedPath}
+    ${FreetypeSharedPath}
+    ${GLEWSharedPath}
+    ${MemoryDebuggerSharedPath}
+    ${MemoryTrackerSharedPath}
+    ${NvttSharedPath}
+    ${PortAudioSharedPath}
+    ${SDLSharedPath}
+)
+
+if(use_spirv_shared_library)
+  copy_multiple_shared_objects(
+      ZeroEditor
+      ZeroLauncher
+      OUTPUT_DIRECTORY ${zero_binary_dir}
+      SHARED_OBJECT_LOCATIONS
+      ${SpirVToolsSharedPath}
+  )
+endif()
+
+if("${platform}" STREQUAL "Emscripten")
+    message("should be calling zip directory")
+    multitarget_zip_directory(
+        ZeroEditor 
+        FOLDERS_TO_ZIP
+        "Resources/Loading"
+        "Resources/FragmentCore"
+        "Resources/ZeroCore"
+        "Resources/Editor"
+        "Resources/EditorUi"
+        "Resources/UiWidget"
+        "PrebuiltZeroContent"
+        "Tools/SpriteVersion.txt"
+        "Data/ColorSchemes"
+        "Data/Fallback"
+        "Data/Licenses"
+        "Data/ZilchFragmentSettings"
+        "Data/*.*"
+        OUTPUT_FILE
+        "BuildOutput/ZeroEditorFileSystem.zip"
+    )
+    multitarget_zip_directory(
+        ZeroLauncher 
+        FOLDERS_TO_ZIP
+        "Resources/Loading"
+        "Resources/FragmentCore"
+        "Resources/ZeroCore"
+        "Resources/ZeroLauncherResources"
+        "PrebuiltZeroContent"
+        "Tools/SpriteVersion.txt"
+        "Data/ColorSchemes"
+        "Data/Fallback"
+        "Data/Licenses"
+        "Data/ZilchFragmentSettings"
+        "Data/*.*"
+        OUTPUT_FILE
+        "BuildOutput/ZeroLauncherFileSystem.zip"
+    )
+endif()
+
+
+#function(create_build_info aTarget aSourceDir aBuildOutDir aOutputLocation)
+create_build_info(
+    ZeroEditor
+    ${CurrentDirectory}/ZeroEditor
+    ${zero_core_path}
+    ${zero_binary_dir}
+    ${zero_binary_dir}
+)
+
+#function(CreatePluginDirectory aTarget aZeroCoreDir aBuildOutputDirectory aOS aplatformShortName)
+editor_post_build_step(
+    ZeroEditor
+    ${zero_core_path}
+    ${zero_library_dir}
+    ${zero_binary_dir}
+    ${platform}
+    ${bit}
+)
+
+####
+
+#### ZeroLauncherSharedLibrary
+# launcher_post_build(aTarget aZeroCoreDirectory aProjectDirectory aBuildOutputDirectory)
+launcher_shared_post_build(
+    ZeroLauncherSharedLibrary 
+    ${zero_core_path}
+    ${CurrentDirectory}/ZeroLauncherSharedLibrary
+    ${zero_binary_dir}
+)
+
+#### BrowserSubProcess
+add_custom_command(
+    TARGET BrowserSubProcess POST_BUILD
+    # executes "cmake -E copy_directory
+    COMMAND ${CMAKE_COMMAND} -E copy_directory  
+    # input folder
+    ${zero_binary_dir}/BrowserSubProcess                                  
+    #output folder
+    ${zero_binary_dir}/ZeroEditor
+)
+
+####
+
+#### ZeroLauncher
+launcher_post_build(
+    ZeroLauncher 
+    ${zero_core_path}
+    ${CurrentDirectory}
+    ${zero_binary_dir}
+)
+
+
+#### Copy the CEF files for every project that needs them
+# first check if we need CEF for this platform, then copy cef files over
+if (${CEF_exists})
+    zero_multitarget_copy_folders_to_target_output_directories(
+        ZeroEditor
+        ZeroLauncher
+        BrowserSubProcess
+        OUTPUT_DIRECTORY ${zero_binary_dir}
+        FOLDERS_TO_COPY 
+        ${aZeroCoreDirectory}/External/CEF/bin
+    )
+endif()
+####
