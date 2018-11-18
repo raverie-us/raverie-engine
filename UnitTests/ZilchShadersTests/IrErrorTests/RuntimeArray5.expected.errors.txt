@@ -1,2 +1,0 @@
-  IrErrorTests\RuntimeArray5.zilchFrag(5): Runtime arrays cannot contain runtime arrays:
-  Runtime arrays cannot contain runtime arrays

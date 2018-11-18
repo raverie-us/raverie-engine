@@ -1,2 +1,0 @@
-  IrErrorTests\Attributes\BadGeometry4.zilchFrag(5): Invalid parameter name 'vertex' to attribute 'Geometry'. Signature must be 'maxVertices : Integer':
-  Invalid parameter name 'vertex' to attribute 'Geometry'. Signature must be 'maxVertices : Integer'

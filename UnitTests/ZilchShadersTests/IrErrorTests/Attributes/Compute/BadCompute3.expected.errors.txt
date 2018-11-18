@@ -1,2 +1,0 @@
-  IrErrorTests\Attributes\Compute\BadCompute3.zilchFrag(2): Parameter 'localSizeZ' must be in the range of [1, 64].:
-  Parameter 'localSizeZ' must be in the range of [1, 64].

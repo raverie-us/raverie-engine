@@ -1,6 +1,0 @@
-# use glob syntax.
-syntax: glob
-
-# Ignores for the zilch compositor tests
-*.spv
-*spv.glsl.txt

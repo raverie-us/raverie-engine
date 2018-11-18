@@ -1,6 +1,0 @@
-// UnidentifiedSymbol
-
-class Animal
-{
-  var Variable : Integer §;
-}

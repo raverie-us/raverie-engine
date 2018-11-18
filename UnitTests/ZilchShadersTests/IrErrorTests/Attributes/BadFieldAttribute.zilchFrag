@@ -1,9 +1,0 @@
-[Vertex]
-struct BadFieldAttribute
-{
-  [SomeAttribute] var MyVar : Real = 1.0;
-  
-  function Main()
-  {
-  }
-}

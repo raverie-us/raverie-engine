@@ -1,2 +1,0 @@
-  IrErrorTests\InvalidFunctionType\NonCopyableReturn.zilchFrag(6) in Main: Type 'Sampler' is an invalid return type as it cannot be copied.:
-  Type 'Sampler' is an invalid return type as it cannot be copied.

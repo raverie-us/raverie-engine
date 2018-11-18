@@ -1,4 +1,0 @@
-  IrErrorTests\RequiredExecutionModels\Intrinsics\DdxReal.zilchFrag(4): Invalid shader stage combination
-  'DdxReal.Main' requires shader stage Vertex but references 'ShaderIntrinsics.Ddx' which requires stage Pixel
-  IrErrorTests\RequiredExecutionModels\Intrinsics\DdxReal.zilchFrag(6) in Main:
-

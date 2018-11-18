@@ -1,6 +1,0 @@
-  IrErrorTests\Recursion\InstanceImplementsMethod1.zilchFrag(6) in Main: Recursion is illegal in shaders
-  Object calls itself via the stack:
-  IrErrorTests\Recursion\InstanceImplementsMethod1.zilchFrag(6) in Main:
-  IrErrorTests\Recursion\InstanceImplementsMethod1.zilchFrag(13) in Run:
-  IrErrorTests\Recursion\InstanceImplementsMethod1.zilchFrag(20) in Get:
-

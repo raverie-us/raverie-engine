@@ -1,2 +1,0 @@
-  IrErrorTests\Geometry3.zilchFrag(13) in Main: Geometry shader entry point must have a signature of (inputType, outputType):
-  Geometry shader entry point must have a signature of (inputType, outputType)

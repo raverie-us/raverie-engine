@@ -1,2 +1,0 @@
-  IrErrorTests\Attributes\BadVertex.zilchFrag(1): Invalid parameter count. Attribute 'Vertex' doesn't allow any parameters:
-  Invalid parameter count. Attribute 'Vertex' doesn't allow any parameters

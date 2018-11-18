@@ -1,2 +1,0 @@
-  IrErrorTests\MainFunctions\Geometry1.zilchFrag(7): Geometry shader must have a 'Main' function of signature (InputStream, OutputStream).:
-  Geometry shader must have a 'Main' function of signature (InputStream, OutputStream).

@@ -1,7 +1,0 @@
-[StorageClass("1")]
-struct BadVertex
-{
-  function Main()
-  {
-  }
-}

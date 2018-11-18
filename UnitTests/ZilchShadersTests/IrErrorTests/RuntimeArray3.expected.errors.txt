@@ -1,2 +1,0 @@
-  IrErrorTests\RuntimeArray3.zilchFrag(7) in Helper: Type 'RuntimeArray[Real]' cannot be copied. This parameter must be passed through by reference (ref keyword).:
-  Type 'RuntimeArray[Real]' cannot be copied. This parameter must be passed through by reference (ref keyword).

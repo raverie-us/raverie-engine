@@ -1,2 +1,0 @@
-  IrErrorTests\FixedArray6.zilchFrag(9) in Main: Invalid array initializer list. The left hand side must be an l-value:
-  Invalid array initializer list. The left hand side must be an l-value

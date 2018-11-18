@@ -1,2 +1,0 @@
-  IrErrorTests\InvalidFunctionType\NonCopyableParameter.zilchFrag(4) in Main: Type 'Sampler' cannot be copied. This parameter must be passed through by reference (ref keyword).:
-  Type 'Sampler' cannot be copied. This parameter must be passed through by reference (ref keyword).

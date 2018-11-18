@@ -1,6 +1,0 @@
-  IrErrorTests\Recursion\StaticFunctions1.zilchFrag(7) in Main: Recursion is illegal in shaders
-  Object calls itself via the stack:
-  IrErrorTests\Recursion\StaticFunctions1.zilchFrag(7) in Main:
-  IrErrorTests\Recursion\StaticFunctions1.zilchFrag(13) in Function1:
-  IrErrorTests\Recursion\StaticFunctions1.zilchFrag(19) in Function2:
-

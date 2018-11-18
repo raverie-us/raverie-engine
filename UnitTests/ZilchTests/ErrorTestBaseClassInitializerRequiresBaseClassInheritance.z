@@ -1,6 +1,0 @@
-class Animal
-{
-  constructor() : base()
-  {
-  }
-}

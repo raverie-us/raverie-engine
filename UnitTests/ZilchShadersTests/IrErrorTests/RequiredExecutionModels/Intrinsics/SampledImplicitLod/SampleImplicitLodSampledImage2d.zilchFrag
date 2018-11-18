@@ -1,9 +1,0 @@
-[UnitTest][Vertex]
-struct SampleImplicitLodSampledImage2d
-{
-  var SampledImage : SampledImage2d;
-  function Main()
-  {
-    ShaderIntrinsics.SampleImplicitLod(this.SampledImage, Real2());
-  }
-}

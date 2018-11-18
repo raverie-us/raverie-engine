@@ -1,4 +1,0 @@
-  IrErrorTests\RequiredExecutionModels\Intrinsics\ImageQueryLod\QueryLodImage2d.zilchFrag(7): Invalid shader stage combination
-  'QueryLodImage2d.Main' requires shader stage Vertex but references 'ShaderIntrinsics.ImageQueryLod' which requires stage Pixel
-  IrErrorTests\RequiredExecutionModels\Intrinsics\ImageQueryLod\QueryLodImage2d.zilchFrag(9) in Main:
-

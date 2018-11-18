@@ -1,2 +1,0 @@
-  IrErrorTests\RuntimeArray4.zilchFrag(6): Runtime array cannot directly contain a FixedArray. Please put the FixedArray in a struct.:
-  Runtime array cannot directly contain a FixedArray. Please put the FixedArray in a struct.

@@ -1,9 +1,0 @@
-[Vertex][UnitTest]
-struct Basic_Vertex
-{
-
-  [EntryPoint]
-  function Main()
-  {
-  }
-}

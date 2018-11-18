@@ -1,2 +1,0 @@
-  IrErrorTests\Attributes\BadPixel.zilchFrag(1): Invalid parameter count. Attribute 'Pixel' doesn't allow any parameters:
-  Invalid parameter count. Attribute 'Pixel' doesn't allow any parameters

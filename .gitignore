@@ -25,6 +25,8 @@ syntax: glob
 *.d
 *.dblite
 *.arcconfig
+*.spv
+*spv.glsl.txt
 
 LocalBuildEnvironment.cmd
 LocalPaths.props

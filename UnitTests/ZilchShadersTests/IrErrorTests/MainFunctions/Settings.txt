@@ -1,5 +1,0 @@
-[Version:1]
-ErrorSettings 
-{
-	var ErrorOnNoMain = true
-}

@@ -1,2 +1,0 @@
-  IrErrorTests\Attributes\BadNameOverride1.zilchFrag(5): Parameter 'name' must be a valid zilch uppercase identifier.:
-  Parameter 'name' must be a valid zilch uppercase identifier.

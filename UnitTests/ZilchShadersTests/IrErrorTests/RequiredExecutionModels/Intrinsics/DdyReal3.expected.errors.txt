@@ -1,4 +1,0 @@
-  IrErrorTests\RequiredExecutionModels\Intrinsics\DdyReal3.zilchFrag(4): Invalid shader stage combination
-  'DdyReal3.Main' requires shader stage Vertex but references 'ShaderIntrinsics.Ddy' which requires stage Pixel
-  IrErrorTests\RequiredExecutionModels\Intrinsics\DdyReal3.zilchFrag(6) in Main:
-

@@ -1,8 +1,0 @@
-[UnitTest][Vertex]
-struct FWidthReal2
-{
-  function Main()
-  {
-    ShaderIntrinsics.Kill();
-  }
-}

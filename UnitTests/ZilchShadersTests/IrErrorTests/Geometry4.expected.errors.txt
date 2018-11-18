@@ -1,2 +1,0 @@
-  IrErrorTests\Geometry4.zilchFrag(13) in Main: Argument 1 must be an input stream type.:
-  Argument 1 must be an input stream type.

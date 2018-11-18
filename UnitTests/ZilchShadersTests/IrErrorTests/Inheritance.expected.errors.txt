@@ -1,2 +1,0 @@
-  IrErrorTests\Inheritance.zilchFrag(7): Inheritance is not supported in zilch fragments.:
-  Type 'Derived' inherits from type 'Base' which is not supported.

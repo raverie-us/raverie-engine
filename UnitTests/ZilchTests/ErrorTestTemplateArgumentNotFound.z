@@ -1,6 +1,0 @@
-// TemplateArgumentNotFound
-
-class Animal[
-{
-  var Variable : Integer = 9;
-}

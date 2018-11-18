@@ -1,2 +1,0 @@
-  IrErrorTests\MainFunctions\Vertex.zilchFrag(2): Shader must have a function of signature 'Main()'.:
-  Shader must have a function of signature 'Main()'.

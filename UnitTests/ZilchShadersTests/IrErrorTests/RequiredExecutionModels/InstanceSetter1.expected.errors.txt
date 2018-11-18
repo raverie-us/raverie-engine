@@ -1,6 +1,0 @@
-  IrErrorTests\RequiredExecutionModels\InstanceSetter1.zilchFrag(4): Invalid shader stage combination
-  'InstanceSetter1.Main' requires shader stage Vertex but references 'ShaderIntrinsics.Kill' which requires stage Pixel
-  IrErrorTests\RequiredExecutionModels\InstanceSetter1.zilchFrag(7) in Main:
-  IrErrorTests\RequiredExecutionModels\InstanceSetter1.zilchFrag(16) in [SetValue]:
-  IrErrorTests\RequiredExecutionModels\InstanceSetter1.zilchFrag(22) in Kill:
-

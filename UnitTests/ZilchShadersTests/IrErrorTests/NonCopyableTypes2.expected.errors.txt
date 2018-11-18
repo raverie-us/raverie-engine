@@ -1,2 +1,0 @@
-  IrErrorTests\NonCopyableTypes2.zilchFrag(10) in Main: Type 'SampledImage2d' cannot be copied.:
-  Type 'SampledImage2d' cannot be copied.

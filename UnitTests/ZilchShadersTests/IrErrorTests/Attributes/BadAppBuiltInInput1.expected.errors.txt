@@ -1,2 +1,0 @@
-  IrErrorTests\Attributes\BadAppBuiltInInput1.zilchFrag(5): Field 'LogicTime : Real2' does not match any provided AppBuiltInInput with fragment type 'Vertex'.:
-  Field 'LogicTime : Real2' does not match any provided AppBuiltInInput with fragment type 'Vertex'.

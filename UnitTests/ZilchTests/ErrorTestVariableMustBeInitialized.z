@@ -1,9 +1,0 @@
-// VariableMustBeInitialized
-
-class Animal
-{
-  function Foo()
-  {
-    var variable : Integer;
-  }
-}

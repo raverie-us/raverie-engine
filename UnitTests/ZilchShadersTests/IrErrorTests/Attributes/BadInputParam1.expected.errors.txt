@@ -1,2 +1,0 @@
-  IrErrorTests\Attributes\BadInputParam1.zilchFrag(5): Invalid parameter type to attribute 'Input'. Signature must be 'name : String':
-  Invalid parameter type to attribute 'Input'. Signature must be 'name : String'

@@ -1,4 +1,0 @@
-  IrErrorTests\RequiredExecutionModels\Intrinsics\SampleProjImplicitLod\SampleProjImplicitLodSampledImage.zilchFrag(5): Invalid shader stage combination
-  'SampleProjImplicitLodSampledImage.Main' requires shader stage Vertex but references 'ShaderIntrinsics.SampleProjImplicitLod' which requires stage Pixel
-  IrErrorTests\RequiredExecutionModels\Intrinsics\SampleProjImplicitLod\SampleProjImplicitLodSampledImage.zilchFrag(7) in Main:
-

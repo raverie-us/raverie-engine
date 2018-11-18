@@ -1,2 +1,0 @@
-  IrErrorTests\Attributes\BadCombinations\StaticPropertyInput.zilchFrag(4): Attribute 'PropertyInput' cannot be combined with attribute(s): Static:
-  Attribute 'PropertyInput' cannot be combined with attribute(s): Static

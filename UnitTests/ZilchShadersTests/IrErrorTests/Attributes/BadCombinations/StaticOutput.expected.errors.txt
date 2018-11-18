@@ -1,2 +1,0 @@
-  IrErrorTests\Attributes\BadCombinations\StaticOutput.zilchFrag(4): Attribute 'Output' cannot be combined with attribute(s): Static:
-  Attribute 'Output' cannot be combined with attribute(s): Static

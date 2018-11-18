@@ -1,9 +1,0 @@
-[Vertex][UnitTest]
-struct HardwareBuiltIn2_Vertex
-{
-
-  [EntryPoint]
-  function Main()
-  {
-  }
-}

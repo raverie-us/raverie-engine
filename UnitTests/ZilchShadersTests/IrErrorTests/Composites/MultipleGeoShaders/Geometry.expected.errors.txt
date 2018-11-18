@@ -1,2 +1,0 @@
-  Geometry.zilchFrag(6): Geometry shader stage only supports one fragment at a time.:
-  Geometry shader stage only supports one fragment at a time.

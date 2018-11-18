@@ -1,2 +1,0 @@
-  IrErrorTests\Attributes\BadVertexHardwareBuiltIn4.zilchFrag(5): Field 'PointSize : Real' does not match any provided HardwareBuiltInInput with fragment type 'Vertex'.:
-  Field 'PointSize : Real' does not match any provided HardwareBuiltInInput with fragment type 'Vertex'.

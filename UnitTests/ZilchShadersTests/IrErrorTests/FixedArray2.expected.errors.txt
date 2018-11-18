@@ -1,2 +1,0 @@
-  IrErrorTests\FixedArray2.zilchFrag(9) in Main: Invalid index. Index can only be in the range of [0, 3):
-  Invalid index. Index can only be in the range of [0, 3)

@@ -1,2 +1,0 @@
-  IrErrorTests\Attributes\DuplicateFragmentTypes.zilchFrag(1): Attribute 'Vertex' cannot be combined with attribute 'Pixel':
-  Attribute 'Vertex' cannot be combined with attribute 'Pixel'

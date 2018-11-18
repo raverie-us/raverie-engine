@@ -1,2 +1,0 @@
-  IrErrorTests\Attributes\Compute\BadCompute1.zilchFrag(2): Attribute paramater 'localSizeW' is invalid.:
-  Attribute paramater 'localSizeW' is invalid.

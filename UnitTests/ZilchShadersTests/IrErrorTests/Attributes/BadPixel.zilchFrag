@@ -1,7 +1,0 @@
-[Pixel("Param")]
-struct BadPixel
-{
-  function Main()
-  {
-  }
-}

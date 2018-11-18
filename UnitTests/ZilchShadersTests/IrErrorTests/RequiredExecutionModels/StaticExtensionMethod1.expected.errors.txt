@@ -1,5 +1,0 @@
-  IrErrorTests\RequiredExecutionModels\StaticExtensionMethod1.zilchFrag(4): Invalid shader stage combination
-  'StaticExtensionMethod1.Main' requires shader stage Vertex but references 'ShaderIntrinsics.Kill' which requires stage Pixel
-  IrErrorTests\RequiredExecutionModels\StaticExtensionMethod1.zilchFrag(6) in Main:
-  IrErrorTests\RequiredExecutionModels\StaticExtensionMethod1.zilchFrag(12) in Kill:
-

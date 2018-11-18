@@ -1,8 +1,0 @@
-[UnitTest][Compute]
-struct Compute1
-{
-  [EntryPoint]
-  function Main()
-  {
-  }
-}

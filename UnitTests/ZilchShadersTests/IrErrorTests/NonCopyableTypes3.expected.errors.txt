@@ -1,2 +1,0 @@
-  IrErrorTests\NonCopyableTypes3.zilchFrag(8) in Test: Type 'SampledImage2d' cannot be copied. This parameter must be passed through by reference (ref keyword).:
-  Type 'SampledImage2d' cannot be copied. This parameter must be passed through by reference (ref keyword).

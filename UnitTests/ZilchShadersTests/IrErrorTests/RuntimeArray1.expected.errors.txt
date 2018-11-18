@@ -1,2 +1,0 @@
-  IrErrorTests\RuntimeArray1.zilchFrag(5): Type 'RuntimeArray[Real]' does not support an explicit constructor call.:
-  Type 'RuntimeArray[Real]' does not support an explicit constructor call.

@@ -1,2 +1,0 @@
-  IrErrorTests\Attributes\BadFieldAttribute.zilchFrag(4): Attribute 'SomeAttribute' is not allowed on fields:
-  Attribute 'SomeAttribute' is not allowed on fields
