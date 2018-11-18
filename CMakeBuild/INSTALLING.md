@@ -1,1 +1,0 @@
-Run one of the scripts in ZeroCore or, if you know what you are doing, invoke the cmake command from this directory.
