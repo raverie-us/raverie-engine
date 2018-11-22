@@ -105,12 +105,10 @@
 
 #if ZeroRelease
 #pragma comment(lib, "zlib.lib")
-#pragma comment(lib, "libpng.lib")
 #pragma comment(lib, "libcef_dll_wrapper_release.lib")
 #pragma comment(lib, "glew32s.lib")
 #else
 #pragma comment(lib, "zlibd.lib")
-#pragma comment(lib, "libpngd.lib")
 #pragma comment(lib, "libcef_dll_wrapper_debug.lib")
 #pragma comment(lib, "glew32sd.lib")
 #endif

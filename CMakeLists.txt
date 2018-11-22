@@ -13,7 +13,7 @@ set(CMAKE_CONFIGURATION_TYPES Debug Release RelWithDebInfo)
 ################################################################################
 # Declare project(s) and set used languages
 ################################################################################
-project(Zero CXX)
+project(Zero)
 
 ################################################################################
 # Do platform specific checks for chunks of the library paths

@@ -21,7 +21,6 @@ Curl
 Freetype 
 GL 
 GLEW 
-Libpng 
 MemoryDebugger 
 MemoryTracker 
 Nvtt 

@@ -39,6 +39,7 @@ add_library(ZilchScript "")
 add_library(ZilchShaders "")
 
 add_library(Scintilla "")
+add_library(Libpng "")
 
 add_executable(ZeroEditor "")
 add_executable(ZeroLauncher "")
@@ -72,6 +73,7 @@ include(ZilchScript/CMakeLists.txt)
 include(ZilchShaders/CMakeLists.txt)
 
 include(Scintilla/CMakeLists.txt)
+include(Libpng/CMakeLists.txt)
 
 include(ZeroEditor/CMakeLists.txt)
 include(ZeroLauncher/CMakeLists.txt)
@@ -128,6 +130,11 @@ target_include_directories(Scintilla
     ${CurrentDirectory}/Scintilla/Repo/lexlib
     ${CurrentDirectory}/Scintilla/Repo/include)
 
+target_include_directories(Libpng
+  PUBLIC
+    ${CurrentDirectory}/Libpng/
+    ${CurrentDirectory}/Libpng/Repo/)
+
 target_include_directories(ZeroEditor PUBLIC ${CurrentDirectory} ${CurrentDirectory}/ZeroEditor)
 target_include_directories(ZeroLauncher PUBLIC ${CurrentDirectory} ${CurrentDirectory}/ZeroLauncher)
 target_include_directories(ZeroLauncherSharedLibrary PUBLIC ${CurrentDirectory} ${CurrentDirectory}/ZeroLauncherSharedLibrary)
@@ -164,11 +171,15 @@ target_link_libraries(SpatialPartition
                       PUBLIC
                       Zilch
 )
+target_link_libraries(Libpng
+                      PUBLIC
+                      ${ZLibStatic}
+)
 target_link_libraries(Support
                       PUBLIC
                       Common
+                      Libpng
                       ${ZLibStatic}
-                      ${LibpngStatic}
 )
 target_link_libraries(Content
                       PUBLIC
@@ -365,9 +376,9 @@ target_link_libraries(BrowserSubProcess
                       Platform
                       
                       Scintilla
+                      Libpng
                       ${FreetypeStatic}
                       ${ZLibStatic}
-                      ${LibpngStatic}
                       ${CEFStatic}
 )
 

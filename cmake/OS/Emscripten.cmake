@@ -14,7 +14,6 @@ set(platform_library "Emscripten")
 set(StaticExternals 
 Assimp 
 Freetype 
-Libpng 
 Nvtt 
 Opus 
 ZLib

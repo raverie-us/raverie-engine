@@ -12,7 +12,6 @@ Curl
 Freetype
 GL
 GLEW
-Libpng
 Nvtt
 Opus
 ZLib

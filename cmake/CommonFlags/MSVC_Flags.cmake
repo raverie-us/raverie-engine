@@ -12,6 +12,7 @@ set(common_flags
     -analyze-
     -W3 
     -wd"4302"
+    -wd"4996"
     -Zc:wchar_t
     $<$<CONFIG:Debug>:-Zi>
     $<$<CONFIG:Release>:-Zi>

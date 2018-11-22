@@ -22,7 +22,6 @@ set(AllPossibleStaticExternals
     Freetype 
     GL 
     GLEW 
-    Libpng 
     MemoryDebugger 
     MemoryTracker 
     Nvtt 
@@ -94,7 +93,6 @@ set(CurlPath ${CurrentDirectory}/Curl)
 set(FreetypePath ${CurrentDirectory}/Freetype)
 set(GLPath ${CurrentDirectory}/GL)
 set(GLEWPath ${CurrentDirectory}/GLEW)
-set(LibpngPath ${CurrentDirectory}/libpng)
 set(MemoryDebuggerPath ${CurrentDirectory}/MemoryDebugger)
 set(MemoryTrackerPath ${CurrentDirectory}/MemoryTracker)
 set(NvttPath ${CurrentDirectory}/Nvtt)

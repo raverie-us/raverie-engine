@@ -57,7 +57,7 @@ bool ReadPngInfo(Stream* stream, ImageInfo& info)
 
   if (setjmp(png_jmpbuf(pngPtr)))
   {
-    png_destroy_read_struct(&pngPtr, &infoPtr, png_infopp_NULL);
+    png_destroy_read_struct(&pngPtr, &infoPtr, nullptr);
     stream->Seek(0);
     return false;
   }
@@ -83,7 +83,7 @@ bool ReadPngInfo(Stream* stream, ImageInfo& info)
 
   png_uint_32 color_type = png_get_color_type(pngPtr, infoPtr);
 
-  png_destroy_read_struct(&pngPtr, &infoPtr, png_infopp_NULL);
+  png_destroy_read_struct(&pngPtr, &infoPtr, nullptr);
   stream->Seek(0);
   return true;
 }
@@ -127,7 +127,7 @@ void LoadPng(Status& status, Stream* stream, byte** output, uint* width, uint* h
   png_infop infoPtr = png_create_info_struct(pngPtr);
   if (infoPtr == nullptr)
   {
-    png_destroy_read_struct(&pngPtr, png_infopp_NULL, png_infopp_NULL);
+    png_destroy_read_struct(&pngPtr, nullptr, nullptr);
     status.SetFailed("Can not read png file");
     return;
   }
@@ -140,7 +140,7 @@ void LoadPng(Status& status, Stream* stream, byte** output, uint* width, uint* h
     // Clean up memory
     zDeallocate(imageData);
     // Free all of the memory associated with the pngPtr and infoPtr
-    png_destroy_read_struct(&pngPtr, &infoPtr, png_infopp_NULL);
+    png_destroy_read_struct(&pngPtr, &infoPtr, nullptr);
     // If we get here, we had a problem reading the file
     status.SetFailed("Can not read png file");
     return;
@@ -179,7 +179,8 @@ void LoadPng(Status& status, Stream* stream, byte** output, uint* width, uint* h
 
   // Expand grayscale images to the full 8 bits from 1, 2, or 4 bits/pixel
   if (colorType == PNG_COLOR_TYPE_GRAY && readDepth < 8)
-    png_set_gray_1_2_4_to_8(pngPtr);
+    png_set_expand_gray_1_2_4_to_8(pngPtr);
+
 
   // Expand paletted or RGB images with transparency to full alpha channels
   // so the data will be available as RGBA quartets.
@@ -218,7 +219,7 @@ void LoadPng(Status& status, Stream* stream, byte** output, uint* width, uint* h
   png_read_end(pngPtr, infoPtr);
 
   // Final clean up
-  png_destroy_read_struct(&pngPtr, &infoPtr, png_infopp_NULL);
+  png_destroy_read_struct(&pngPtr, &infoPtr, nullptr);
 
   *output = imageData;
   *width = readWidth;

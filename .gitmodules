@@ -1,3 +1,6 @@
 [submodule "Libraries/Scintilla/Repo"]
 	path = Libraries/Scintilla/Repo
 	url = https://github.com/WelderFoundation/WelderEngineScintilla.git
+[submodule "Libraries/Libpng/Repo"]
+	path = Libraries/Libpng/Repo
+	url = https://github.com/WelderFoundation/WelderEngineLibpng.git
