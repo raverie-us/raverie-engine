@@ -8,8 +8,7 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-
-#include "Scintilla/ScintillaPrecompiled.hpp"
+#include "ScintillaPlatformZero.hpp"
 
 const ByteColor ColorBlack = ByteColorRGBA(0, 0, 0, 0xFF);
 const ByteColor Yellow = ByteColorRGBA(0xFF, 0xFF, 0, 0xFF);
@@ -63,13 +62,11 @@ enum
 
 }
 
-class ScintillaZero : public ScintillaBase
+class ScintillaZero : public Scintilla::ScintillaBase
 {
 public:
   friend class TextEditor;
   friend class ScintillaWidget;
-
-  
 
   ScintillaZero();
   virtual ~ScintillaZero();
@@ -89,17 +86,17 @@ public:
   bool ModifyScrollBars(int nMax, int nPage) override;
   void NotifyChange() override;
   void NotifyFocus(bool focus) override;
-  void NotifyParent(SCNotification scn) override;
-  void NotifyDoubleClick(Point pt, bool shift, bool ctrl, bool alt) override;
+  void NotifyParent(Scintilla::SCNotification scn) override;
+  void NotifyDoubleClick(Scintilla::Point pt, bool shift, bool ctrl, bool alt) override;
   void Copy() override;
   bool CanPaste() override;
   void Paste() override;
-  void CreateCallTipWindow(PRectangle rc) override;
+  void CreateCallTipWindow(Scintilla::PRectangle rc) override;
   void AddToPopUp(const char *label, int cmd = 0, bool enabled = true) override;
   void ClaimSelection() override;
-  void CopyToClipboard(const SelectionText &selectedText) override;
+  void CopyToClipboard(const Scintilla::SelectionText &selectedText) override;
 
-  void InsertPasteText(const char *text, int len, SelectionPosition selStart,
+  void InsertPasteText(const char *text, int len, Scintilla::SelectionPosition selStart,
                        bool isRectangular, bool isLine);
   uint SendEditor(unsigned int Msg, unsigned long wParam = 0, long lParam = 0);
   void InsertAutoCompleteText(const char* text, int length, int removeCount, int charOffset);
@@ -108,7 +105,7 @@ public:
   TextEditor* mOwner;
   bool mMouseCapture;
 
-  ScVector<SelectionRange> mHighlightRanges;
+  std::vector<Scintilla::SelectionRange> mHighlightRanges;
 
   Array<Rectangle> mHighlightIndicators;
   Array<Rectangle> mCursorIndicators;
@@ -120,10 +117,10 @@ protected:
   void MoveSelectedLinesDown();
 
 private:
-  void MoveSelection(SelectionRange& selection, int dir, bool extend);
+  void MoveSelection(Scintilla::SelectionRange& selection, int dir, bool extend);
 
-  bool IsSelected(SelectionRange& range, int* endSelectionOut);
-  bool FindTextNotSelected(int start, int end, const char* text, SelectionRange& newSel);
+  bool IsSelected(Scintilla::SelectionRange& range, int* endSelectionOut);
+  bool FindTextNotSelected(int start, int end, const char* text, Scintilla::SelectionRange& newSel);
 
   void ClearHighlightRanges();
   void UpdateHighlightIndicators();
@@ -163,7 +160,7 @@ void ScintillaWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock,
   // Setting clip rect here because scintilla is not getting the correct client rect
   mSurface.mClipRect = WidgetRect::PointAndSize(Vec2(parentTx.m30, parentTx.m31), mSize);
 
-  PRectangle rcPaint = mScintilla->GetClientRectangle();
+  Scintilla::PRectangle rcPaint = mScintilla->GetClientRectangle();
   mScintilla->Paint(&mSurface, rcPaint);
 }
 
@@ -771,26 +768,26 @@ void TextEditor::OnTextTyped(KeyboardTextEvent* event)
 void TextEditor::OnRightMouseDown(MouseEvent* event)
 {
   Vec2 p = ToLocal(event->Position);
-  mScintilla->ButtonDown(Point(p.x, p.y), mTime , event->ShiftPressed, event->CtrlPressed, event->AltPressed);
-  mScintilla->ButtonUp(Point(p.x, p.y), mTime, false);
+  mScintilla->ButtonDown(Scintilla::Point(p.x, p.y), mTime , event->ShiftPressed, event->CtrlPressed, event->AltPressed);
+  mScintilla->ButtonUp(Scintilla::Point(p.x, p.y), mTime, false);
 }
 
 void TextEditor::OnMouseDown(MouseEvent* event)
 {
   Vec2 p = ToLocal(event->Position);
-  mScintilla->ButtonDown(Point(p.x, p.y), mTime , event->ShiftPressed, event->CtrlPressed, event->AltPressed);
+  mScintilla->ButtonDown(Scintilla::Point(p.x, p.y), mTime , event->ShiftPressed, event->CtrlPressed, event->AltPressed);
 }
 
 void TextEditor::OnMouseMove(MouseEvent* event)
 {
   Vec2 p = ToLocal(event->Position);
-  mScintilla->ButtonMove(Point(p.x, p.y));
+  mScintilla->ButtonMove(Scintilla::Point(p.x, p.y));
 }
 
 void TextEditor::OnMouseUp(MouseEvent* event)
 {
   Vec2 p = ToLocal(event->Position);
-  mScintilla->ButtonUp(Point(p.x, p.y), mTime, false);
+  mScintilla->ButtonUp(Scintilla::Point(p.x, p.y), mTime, false);
 }
 
 void TextEditor::OnMouseFileDrop(MouseFileDropEvent* event)
@@ -1131,7 +1128,7 @@ void TextEditor::GetText(int start, int end, char* buffer, int bufferSize)
   int size = end - start;
   ReturnIf(size >= bufferSize,, "The buffer was too small for the text");
 
-  Sci_TextRange textRange;
+  Scintilla::Sci_TextRange textRange;
   textRange.chrg.cpMin = start;
   textRange.chrg.cpMax = end;
   textRange.lpstrText = buffer;
@@ -1304,7 +1301,7 @@ void TextEditor::UpdateTextMatchHighlighting()
 }
 
 void TextEditor::UpdateIndicators(Array<Rectangle>& indicators,
-                                  const ScVector<SelectionRange>& ranges,
+                                  const std::vector<Scintilla::SelectionRange>& ranges,
                                   Vec4Param indicatorColor,
                                   Vec2Param minIndicatorHeight,
                                   float indicatorWidth,
@@ -1895,7 +1892,7 @@ void ScintillaZero::Clear()
     {
       singleVirtual = true;
     }
-    UndoGroup ug(pdoc, (sel.Count() > 1) || singleVirtual);
+    Scintilla::UndoGroup ug(pdoc, (sel.Count() > 1) || singleVirtual);
     for (size_t r=0; r<sel.Count(); r++)
     {
       if (!RangeContainsProtected(sel.Range(r).caret.Position(), sel.Range(r).caret.Position() + 1))
@@ -1903,9 +1900,9 @@ void ScintillaZero::Clear()
         if (sel.Range(r).Start().VirtualSpace())
         {
           if (sel.Range(r).anchor < sel.Range(r).caret)
-            sel.Range(r) = SelectionPosition(InsertSpace(sel.Range(r).anchor.Position(), sel.Range(r).anchor.VirtualSpace()));
+            sel.Range(r) = Scintilla::SelectionPosition(InsertSpace(sel.Range(r).anchor.Position(), sel.Range(r).anchor.VirtualSpace()));
           else
-            sel.Range(r) = SelectionPosition(InsertSpace(sel.Range(r).caret.Position(), sel.Range(r).caret.VirtualSpace()));
+            sel.Range(r) = Scintilla::SelectionPosition(InsertSpace(sel.Range(r).caret.Position(), sel.Range(r).caret.VirtualSpace()));
         }
         else
         {
@@ -1928,7 +1925,7 @@ void ScintillaZero::Clear()
 
 void ScintillaZero::NewLine()
 {
-  UndoGroup ug(pdoc);
+  Scintilla::UndoGroup ug(pdoc);
 
   ClearSelection();
   const char* eol = StringFromEOLMode(pdoc->eolMode);
@@ -1958,7 +1955,7 @@ void ScintillaZero::NewLine()
 
 void ScintillaZero::MoveSelectedLinesUp()
 {
-  UndoGroup ug(pdoc);
+  Scintilla::UndoGroup ug(pdoc);
 
   // Get every line that every selection touches
   Array<int> selectionLines;
@@ -2033,7 +2030,7 @@ void ScintillaZero::MoveSelectedLinesUp()
 
 void ScintillaZero::MoveSelectedLinesDown()
 {
-  UndoGroup ug(pdoc);
+  Scintilla::UndoGroup ug(pdoc);
 
   // Get every line that every selection touches
   Array<int> selectionLines;
@@ -2160,17 +2157,17 @@ int ScintillaZero::KeyCommand(unsigned int iMessage)
       {
         MoveSelection(sel.Range(i), sel.Range(i).caret.Position() - 1, true);
 
-        SelectionRange& selection = sel.Range(i);
+        Scintilla::SelectionRange& selection = sel.Range(i);
         for (size_t j = 0; j < i; ++j)
         {
-          SelectionRange& other = sel.Range(j);
+          Scintilla::SelectionRange& other = sel.Range(j);
 
           if (other.caret.Position() < selection.anchor.Position() &&
               other.anchor.Position() > selection.caret.Position())
           {
-            SelectionPosition anchor(std::max(other.anchor.Position(), selection.anchor.Position()));
-            SelectionPosition caret(std::min(other.caret.Position(), selection.caret.Position()));
-            SelectionRange newRange(caret, anchor);
+            Scintilla::SelectionPosition anchor(std::max(other.anchor.Position(), selection.anchor.Position()));
+            Scintilla::SelectionPosition caret(std::min(other.caret.Position(), selection.caret.Position()));
+            Scintilla::SelectionRange newRange(caret, anchor);
 
             selection = newRange;
             other = newRange;
@@ -2186,17 +2183,17 @@ int ScintillaZero::KeyCommand(unsigned int iMessage)
       {
         MoveSelection(sel.Range(i), sel.Range(i).caret.Position() + 1, true);
 
-        SelectionRange& selection = sel.Range(i);
+        Scintilla::SelectionRange& selection = sel.Range(i);
         for (size_t j = 0; j < i; ++j)
         {
-          SelectionRange& other = sel.Range(j);
+          Scintilla::SelectionRange& other = sel.Range(j);
 
           if (other.caret.Position() > selection.anchor.Position() &&
               other.anchor.Position() < selection.caret.Position())
           {
-            SelectionPosition anchor(std::min(other.anchor.Position(), selection.anchor.Position()));
-            SelectionPosition caret(std::max(other.caret.Position(), selection.caret.Position()));
-            SelectionRange newRange(caret, anchor);
+            Scintilla::SelectionPosition anchor(std::min(other.anchor.Position(), selection.anchor.Position()));
+            Scintilla::SelectionPosition caret(std::max(other.caret.Position(), selection.caret.Position()));
+            Scintilla::SelectionRange newRange(caret, anchor);
 
             selection = newRange;
             other = newRange;
@@ -2274,7 +2271,7 @@ int ScintillaZero::KeyCommand(unsigned int iMessage)
 
         pdoc->GetCharRange(text, start, size);
 
-        SelectionRange newSel;
+        Scintilla::SelectionRange newSel;
         if (FindTextNotSelected(end, pdoc->Length(), text, newSel))
           sel.AddSelection(newSel);
         else if (FindTextNotSelected(0, start, text, newSel))
@@ -2318,9 +2315,9 @@ int ScintillaZero::KeyCommand(unsigned int iMessage)
   return 0;
 }
 
-void ScintillaZero::MoveSelection(SelectionRange& selection, int pos, bool extend)
+void ScintillaZero::MoveSelection(Scintilla::SelectionRange& selection, int pos, bool extend)
 {
-  SelectionPosition newPos(pos);
+  Scintilla::SelectionPosition newPos(pos);
 
   newPos = ClampPositionIntoDocument(newPos);
   newPos = MovePositionOutsideChar(newPos, pos - selection.caret.Position());
@@ -2330,11 +2327,11 @@ void ScintillaZero::MoveSelection(SelectionRange& selection, int pos, bool exten
     selection.anchor = selection.caret;
 }
 
-bool ScintillaZero::IsSelected(SelectionRange& range, int* endSelectionOut)
+bool ScintillaZero::IsSelected(Scintilla::SelectionRange& range, int* endSelectionOut)
 {
   for(size_t i = 0; i < sel.Count(); ++i)
   {
-    SelectionRange& current = sel.Range(i);
+    Scintilla::SelectionRange& current = sel.Range(i);
     if(range == current)
     {
       *endSelectionOut = std::max(current.caret.Position(), current.anchor.Position());
@@ -2345,17 +2342,17 @@ bool ScintillaZero::IsSelected(SelectionRange& range, int* endSelectionOut)
   return false;
 }
 
-bool ScintillaZero::FindTextNotSelected(int start, int end, const char* text, SelectionRange& newSel)
+bool ScintillaZero::FindTextNotSelected(int start, int end, const char* text, Scintilla::SelectionRange& newSel)
 {
   int length = strlen(text);
   while (start < end)
   {
     int lengthFound = length;
-    int pos = pdoc->FindText(start, end, text, true, false, false, false, 0, &lengthFound, std::unique_ptr<CaseFolder>(CaseFolderForEncoding()).get());
+    int pos = pdoc->FindText(start, end, text, true, false, false, false, 0, &lengthFound, std::unique_ptr<Scintilla::CaseFolder>(CaseFolderForEncoding()).get());
     if (pos == -1)
       return false;
 
-    newSel = SelectionRange(pos + lengthFound, pos);
+    newSel = Scintilla::SelectionRange(pos + lengthFound, pos);
 
     if(!IsSelected(newSel, &start))
       return true;
@@ -2396,7 +2393,7 @@ void ScintillaZero::Copy()
   if(sel.Empty())
   {
     // Copy the line that the main caret is on
-    SelectionText selectedText;
+    Scintilla::SelectionText selectedText;
     CopySelectionRange(&selectedText, true);
     Z::gEngine->has(Zero::OsShell)->SetClipboardText(StringRange(selectedText.s, selectedText.s + selectedText.len));
     return;
@@ -2411,7 +2408,7 @@ void ScintillaZero::Copy()
   int newLineLength = strlen(newLine);
 
   // Sort caret order so text is copied top-down
-  ScVector<SelectionRange> rangesInOrder = sel.RangesCopy();
+  std::vector<Scintilla::SelectionRange> rangesInOrder = sel.RangesCopy();
   std::sort(rangesInOrder.begin(), rangesInOrder.end());
 
   StringBuilder builder;
@@ -2419,7 +2416,7 @@ void ScintillaZero::Copy()
   // Copy characters from every caret
   for (uint i = 0; i < rangesInOrder.size() - 1; ++i)
   {
-    SelectionRange& selection = rangesInOrder[i];
+    Scintilla::SelectionRange& selection = rangesInOrder[i];
 
     int start = selection.Start().Position();
     int end = selection.End().Position();
@@ -2429,7 +2426,7 @@ void ScintillaZero::Copy()
   }
 
   // Last or only caret, no additional newline
-  SelectionRange& selection = rangesInOrder.back();
+  Scintilla::SelectionRange& selection = rangesInOrder.back();
   for (int charIndex = selection.Start().Position(); charIndex < selection.End().Position(); ++charIndex)
     builder.Append(pdoc->CharAt(charIndex));
 
@@ -2439,7 +2436,7 @@ void ScintillaZero::Copy()
 
 void ScintillaZero::Paste()
 {
-  UndoGroup ug(pdoc);
+  Scintilla::UndoGroup ug(pdoc);
 
   Zero::String clipboardText = Z::gEngine->has(Zero::OsShell)->GetClipboardText();
 
@@ -2473,7 +2470,7 @@ void ScintillaZero::Paste()
   }
 
   // Sort caret order to match clipboard for multi-caret copies
-  ScVector<SelectionRange>& ranges = sel.GetRanges();
+  std::vector<Scintilla::SelectionRange>& ranges = sel.GetRanges();
   std::sort(ranges.begin(), ranges.end());
 
   if (newLineCount == ranges.size() - 1)
@@ -2482,7 +2479,7 @@ void ScintillaZero::Paste()
     int offset = 0;
     for (uint i = 0; i < ranges.size(); ++i)
     {
-      SelectionRange& selection = ranges[i];
+      Scintilla::SelectionRange& selection = ranges[i];
 
       InsertSpace(selection.Start().Position(), selection.Start().VirtualSpace());
       selection.ClearVirtualSpace();
@@ -2498,7 +2495,7 @@ void ScintillaZero::Paste()
     // Paste text at each caret
     for (uint i = 0; i < ranges.size(); ++i)
     {
-      SelectionRange& selection = ranges[i];
+      Scintilla::SelectionRange& selection = ranges[i];
 
       InsertSpace(selection.Start().Position(), selection.Start().VirtualSpace());
       selection.ClearVirtualSpace();
@@ -2545,12 +2542,12 @@ void ScintillaZero::UpdateHighlightIndicators()
   // Cleanup old highlighting incase main selection has changed.
   ClearHighlightRanges();
 
-  SelectionRange& main = sel.RangeMain();
+  Scintilla::SelectionRange& main = sel.RangeMain();
 
   int lineAnchor = SendEditor(SCI_LINEFROMPOSITION, main.anchor.Position());
   int lineCaret = SendEditor(SCI_LINEFROMPOSITION, main.caret.Position());
 
-  SelectionRange& rectangle = sel.Rectangular();
+  Scintilla::SelectionRange& rectangle = sel.Rectangular();
   int rectAnchor = SendEditor(SCI_LINEFROMPOSITION, rectangle.anchor.Position());
   int rectCaret = SendEditor(SCI_LINEFROMPOSITION, rectangle.caret.Position());
 
@@ -2705,7 +2702,7 @@ void ScintillaZero::HighlightMatchingText(int begin, int end, const char* text)
 
   int outlineAlpha = GetColorScheme()->TextMatchOutlineAlpha * CS::MaxByte;
   Vec4 matchColor = GetColorScheme()->TextMatchHighlight * CS::MaxByte;
-  ColourDesired color(matchColor.x, matchColor.y, matchColor.z);
+  Scintilla::ColourDesired color(matchColor.x, matchColor.y, matchColor.z);
 
   // Select the custom indicator.
   SendEditor(SCI_SETINDICATORCURRENT, indicator);
@@ -2751,7 +2748,7 @@ void ScintillaZero::HighlightAllTextInstances(int begin, int end, const char* te
     while(start < stop)
     {
       int lengthFound = length;
-      int pos = pdoc->FindText(start, stop, text, true, false, false, false, 0, &lengthFound, std::auto_ptr<CaseFolder>(CaseFolderForEncoding()).get());
+      int pos = pdoc->FindText(start, stop, text, true, false, false, false, 0, &lengthFound, std::unique_ptr<Scintilla::CaseFolder>(CaseFolderForEncoding()).get());
       if(pos == -1)
         break;
 
@@ -2768,7 +2765,7 @@ void ScintillaZero::HighlightAllTextInstances(int begin, int end, const char* te
         continue;
       }
 
-      SelectionRange range(caret, anchor);
+      Scintilla::SelectionRange range(caret, anchor);
 
       if(!IsSelected(range, &caret))
       {
@@ -2815,7 +2812,7 @@ uint ScintillaZero::SendEditor(unsigned int Msg, unsigned long wParam, long lPar
   return WndProc(Msg, wParam, lParam);
 }
 
-void ScintillaZero::NotifyParent(SCNotification scn)
+void ScintillaZero::NotifyParent(Scintilla::SCNotification scn)
 {
   mOwner->OnNotify(scn);
 }
@@ -2835,7 +2832,7 @@ bool ScintillaZero::HaveMouseCapture()
   return mMouseCapture;
 }
 
-void ScintillaZero::CreateCallTipWindow(PRectangle rc)
+void ScintillaZero::CreateCallTipWindow(Scintilla::PRectangle rc)
 {
 }
 
@@ -2879,7 +2876,7 @@ sptr_t ScintillaZero::DefWndProc(unsigned int iMessage, uptr_t wParam, sptr_t lP
     case SCI_GETCURRENTPOS:
     {
       // Easiest way to make the current auto complete logic work without being refactored
-      ScVector<SelectionRange>& ranges = sel.GetRanges();
+      std::vector<Scintilla::SelectionRange>& ranges = sel.GetRanges();
       std::sort(ranges.begin(), ranges.end());
       return ranges.front().Start().Position();
     }
@@ -2891,7 +2888,7 @@ sptr_t ScintillaZero::DefWndProc(unsigned int iMessage, uptr_t wParam, sptr_t lP
 
 void ScintillaZero::InsertAutoCompleteText(const char* text, int length, int removeCount, int charOffset)
 {
-  UndoGroup ug(pdoc);
+  Scintilla::UndoGroup ug(pdoc);
 
   for (uint i = 0; i < sel.Count(); ++i)
   {
@@ -2910,11 +2907,11 @@ void ScintillaZero::UpdateSystemCaret()
   ScintillaBase::UpdateSystemCaret();
 }
 
-void ScintillaZero::CopyToClipboard(const SelectionText &selectedText)
+void ScintillaZero::CopyToClipboard(const Scintilla::SelectionText &selectedText)
 {
 }
 
-void ScintillaZero::NotifyDoubleClick(Point pt, bool shift, bool ctrl, bool alt)
+void ScintillaZero::NotifyDoubleClick(Scintilla::Point pt, bool shift, bool ctrl, bool alt)
 {
 }
 

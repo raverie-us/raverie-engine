@@ -1,4 +1,6 @@
-target_sources(Common
+add_definitions(-DSCI_LEXER -DSCI_NAMESPACE)
+
+target_sources(Scintilla
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/Repo/include/ILexer.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/include/Platform.h
@@ -7,7 +9,6 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/Repo/include/ScintillaWidget.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/lexers/LexCPP.cxx
     ${CMAKE_CURRENT_LIST_DIR}/Repo/lexers/LexPython.cxx
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/lexers/Precompiled.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/lexlib/Accessor.cxx
     ${CMAKE_CURRENT_LIST_DIR}/Repo/lexlib/Accessor.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/lexlib/CharacterSet.cxx
@@ -22,7 +23,6 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/Repo/lexlib/LexerSimple.cxx
     ${CMAKE_CURRENT_LIST_DIR}/Repo/lexlib/LexerSimple.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/lexlib/OptionSet.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/lexlib/Precompiled.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/lexlib/PropSetSimple.cxx
     ${CMAKE_CURRENT_LIST_DIR}/Repo/lexlib/PropSetSimple.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/lexlib/SparseState.h
@@ -44,6 +44,10 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/ContractionState.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/Decoration.cxx
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/Decoration.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/Document.cxx
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/Document.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/Editor.cxx
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/Editor.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/ExternalLexer.cxx
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/ExternalLexer.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/FontQuality.h
@@ -58,7 +62,6 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/PerLine.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/PositionCache.cxx
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/PositionCache.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/Precompiled.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/RESearch.cxx
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/RESearch.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/RunStyles.cxx
@@ -66,10 +69,6 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/SVector.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/ScintillaBase.cxx
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/ScintillaBase.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/ScintillaDocument.cxx
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/ScintillaDocument.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/ScintillaEditor.cxx
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/ScintillaEditor.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/Selection.cxx
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/Selection.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/SplitVector.h

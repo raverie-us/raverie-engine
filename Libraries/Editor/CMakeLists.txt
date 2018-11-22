@@ -213,6 +213,8 @@ target_sources(Editor
     ${CMAKE_CURRENT_LIST_DIR}/RotationBasisGizmos.hpp
     ${CMAKE_CURRENT_LIST_DIR}/SampleCurveEditor.cpp
     ${CMAKE_CURRENT_LIST_DIR}/SampleCurveEditor.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/ScintillaPlatformZero.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/ScintillaPlatformZero.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Scratchboard.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Scratchboard.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ScriptEditor.cpp
