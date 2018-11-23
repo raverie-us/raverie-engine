@@ -21,8 +21,7 @@ GL
 GLEW 
 MemoryDebugger 
 MemoryTracker 
-Nvtt 
-Opus 
+Nvtt
 WinHid
 )
 

@@ -5,7 +5,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "Precompiled.hpp"
-#include "../External/Opus/include/opus.h"
+#include "opus.h"
 
 namespace Zero
 {

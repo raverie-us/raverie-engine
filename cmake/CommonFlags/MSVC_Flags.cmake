@@ -11,10 +11,16 @@ set(common_flags
     $<$<CONFIG:Release>:-GL>
     -analyze-
     -W3 
+    # Ignore truncation warnings.
     -wd"4302"
+    # Libpng uses fopen and other 'deprecated' functions.
     -wd"4996"
+    # FreeType compares signed/unsigned numbers.
     -wd"4018"
+    # FreeType has unreferenced labels.
     -wd"4102"
+    # Opus converts from double to float implicitly.
+    -wd"4244"
     -Zc:wchar_t
     $<$<CONFIG:Debug>:-Zi>
     $<$<CONFIG:Release>:-Zi>

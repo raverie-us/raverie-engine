@@ -43,6 +43,7 @@ add_library(Libpng "")
 add_library(Assimp "")
 add_library(ZLib "")
 add_library(FreeType "")
+add_library(Opus "")
 
 add_executable(ZeroEditor "")
 add_executable(ZeroLauncher "")
@@ -80,6 +81,7 @@ include(Libpng/CMakeLists.txt)
 include(Assimp/CMakeLists.txt)
 include(ZLib/CMakeLists.txt)
 include(FreeType/CMakeLists.txt)
+include(Opus/CMakeLists.txt)
 
 include(ZeroEditor/CMakeLists.txt)
 include(ZeroLauncher/CMakeLists.txt)
@@ -162,6 +164,15 @@ target_include_directories(FreeType
     ${CurrentDirectory}/FreeType/Repo/include/
     ${CurrentDirectory}/FreeType/Repo/include/freetype/)
 
+target_include_directories(Opus
+  PUBLIC
+    ${CurrentDirectory}/Opus/
+    ${CurrentDirectory}/Opus/Repo/
+    ${CurrentDirectory}/Opus/Repo/include/
+    ${CurrentDirectory}/Opus/Repo/silk/
+    ${CurrentDirectory}/Opus/Repo/silk/float/
+    ${CurrentDirectory}/Opus/Repo/celt/)
+
 target_include_directories(ZeroEditor PUBLIC ${CurrentDirectory} ${CurrentDirectory}/ZeroEditor)
 target_include_directories(ZeroLauncher PUBLIC ${CurrentDirectory} ${CurrentDirectory}/ZeroLauncher)
 target_include_directories(ZeroLauncherSharedLibrary PUBLIC ${CurrentDirectory} ${CurrentDirectory}/ZeroLauncherSharedLibrary)
@@ -225,8 +236,8 @@ target_link_libraries(Content
                       Zilch
                       Assimp
                       ZLib
+                      Opus
                       ${NvttStatic}
-                      ${OpusStatic}
 )
 target_link_libraries(Engine
                       PUBLIC
@@ -254,7 +265,7 @@ target_link_libraries(Sound
                       PUBLIC
                       Common
                       Geometry
-                      ${OpusStatic}
+                      Opus
 )
 target_link_libraries(Startup
                       PUBLIC
@@ -333,7 +344,7 @@ target_link_libraries(ZeroEditor
                       Assimp
                       ZLib
                       FreeType
-                      ${OpusStatic}
+                      Opus
 )
 
 target_link_libraries(ZeroLauncher
@@ -367,6 +378,7 @@ target_link_libraries(ZeroLauncher
                       Assimp
                       ZLib
                       FreeType
+                      Opus
 ) 
 target_link_libraries(ZeroLauncherSharedLibrary
                       PUBLIC
@@ -399,6 +411,7 @@ target_link_libraries(ZeroLauncherSharedLibrary
                       Assimp
                       ZLib
                       FreeType
+                      Opus
 ) 
 
 if(NOT use_spirv_shared_library)
@@ -430,6 +443,7 @@ target_link_libraries(BrowserSubProcess
                       Assimp
                       ZLib
                       FreeType
+                      Opus
                       ${CEFStatic}
 )
 
@@ -466,6 +480,7 @@ zero_multitarget_output_directories(
     Assimp
     ZLib
     FreeType
+    Opus
     
     ZeroEditor
     ZeroLauncher 
@@ -525,6 +540,7 @@ zero_multitarget_output_settings(
     Assimp
     ZLib
     FreeType
+    Opus
     
     CONFIGS ${supported_configs}
     BASEPATH ${zero_build_out}
@@ -567,6 +583,7 @@ zero_multitarget_compile_options(
     Assimp
     ZLib
     FreeType
+    Opus
     
     ZeroEditor
     ZeroLauncher 
@@ -611,6 +628,7 @@ set_target_properties(
     Assimp
     ZLib
     FreeType
+    Opus
     
     ZeroEditor
     ZeroLauncher 
@@ -667,6 +685,7 @@ zero_subfolder_source_group(${zero_core_path} Libraries Libpng "")
 zero_subfolder_source_group(${zero_core_path} Libraries Assimp "")
 zero_subfolder_source_group(${zero_core_path} Libraries ZLib "")
 zero_subfolder_source_group(${zero_core_path} Libraries FreeType "")
+zero_subfolder_source_group(${zero_core_path} Libraries Opus "")
 
 zero_subfolder_source_group_ignore_target_folder(${zero_core_path} Libraries ZeroEditor "${zero_core_path}/Libraries")
 zero_subfolder_source_group_ignore_target_folder(${zero_core_path} Libraries ZeroLauncher "${zero_core_path}/Libraries")

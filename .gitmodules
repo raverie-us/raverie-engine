@@ -13,3 +13,6 @@
 [submodule "Libraries/FreeType/Repo"]
 	path = Libraries/FreeType/Repo
 	url = https://github.com/WelderFoundation/WelderEngineFreeType.git
+[submodule "Libraries/Opus/Repo"]
+	path = Libraries/Opus/Repo
+	url = https://github.com/WelderFoundation/WelderEngineOpus.git

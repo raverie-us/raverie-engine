@@ -6,7 +6,7 @@
 
 #include "Precompiled.hpp"
 #include "stb_vorbis.h"
-#include "../External/Opus/include/opus.h"
+#include "opus.h"
 #include "../Sound/Definitions.hpp"
 
 namespace Zero

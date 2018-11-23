@@ -11,7 +11,6 @@ Curl
 GL
 GLEW
 Nvtt
-Opus
 SDL
 )
 

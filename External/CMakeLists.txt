@@ -23,7 +23,6 @@ set(AllPossibleStaticExternals
     MemoryDebugger
     MemoryTracker
     Nvtt
-    Opus
     WinHid
     SDL 
 )
@@ -89,7 +88,6 @@ set(GLEWPath ${CurrentDirectory}/GLEW)
 set(MemoryDebuggerPath ${CurrentDirectory}/MemoryDebugger)
 set(MemoryTrackerPath ${CurrentDirectory}/MemoryTracker)
 set(NvttPath ${CurrentDirectory}/Nvtt)
-set(OpusPath ${CurrentDirectory}/Opus)
 set(WinHidPath ${CurrentDirectory}/WinHid)
 set(SDLPath ${CurrentDirectory}/SDL)
 set(SpirVToolsPath ${CurrentDirectory}/SpirVTools)

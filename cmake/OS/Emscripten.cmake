@@ -13,7 +13,6 @@ set(platform_library "Emscripten")
 
 set(StaticExternals
 Nvtt
-Opus
 )
 
 # list of shared
