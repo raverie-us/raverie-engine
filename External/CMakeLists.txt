@@ -19,8 +19,6 @@ set(AllPossibleStaticExternals
     CEF
     Curl
     GL
-    MemoryDebugger
-    MemoryTracker
     Nvtt
     WinHid
     SDL 
@@ -29,8 +27,6 @@ set(AllPossibleStaticExternals
 # list of shared
 set(AllPossibleSharedExternals
     CEF
-    MemoryDebugger
-    MemoryTracker
     Nvtt
     SDL
 )
@@ -82,8 +78,6 @@ endforeach()
 set(CEFPath ${CurrentDirectory}/CEF)
 set(CurlPath ${CurrentDirectory}/Curl)
 set(GLPath ${CurrentDirectory}/GL)
-set(MemoryDebuggerPath ${CurrentDirectory}/MemoryDebugger)
-set(MemoryTrackerPath ${CurrentDirectory}/MemoryTracker)
 set(NvttPath ${CurrentDirectory}/Nvtt)
 set(WinHidPath ${CurrentDirectory}/WinHid)
 set(SDLPath ${CurrentDirectory}/SDL)

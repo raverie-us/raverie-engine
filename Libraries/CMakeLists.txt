@@ -721,8 +721,6 @@ copy_multiple_shared_objects(
     SHARED_OBJECT_LOCATIONS
     ## setup all dll locations
     ${CEFSharedPath}
-    ${MemoryDebuggerSharedPath}
-    ${MemoryTrackerSharedPath}
     ${NvttSharedPath}
     ${PortAudioSharedPath}
     ${SDLSharedPath}

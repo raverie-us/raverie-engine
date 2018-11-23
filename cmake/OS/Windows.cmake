@@ -18,8 +18,6 @@ set(StaticExternals
 CEF 
 Curl
 GL
-MemoryDebugger 
-MemoryTracker 
 Nvtt
 WinHid
 )
@@ -27,8 +25,6 @@ WinHid
 # list of shared
 set(SharedExternals
 CEF
-MemoryDebugger
-MemoryTracker
 Nvtt
 )
 
