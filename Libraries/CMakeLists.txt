@@ -203,6 +203,7 @@ target_link_libraries(ZLib
 target_link_libraries(FreeType
                       PUBLIC
                       ZLib
+                      Libpng
 )
 target_link_libraries(Libpng
                       PUBLIC
