@@ -32,8 +32,8 @@ target_include_directories(Platform
 target_link_libraries(Platform
                       PUBLIC
                       Common
+                      Glew
                       ${WinHidStatic}
-                      ${GLEWStaticRelease}
                       ${CEFStatic}
                       ${SDLStatic}
 )

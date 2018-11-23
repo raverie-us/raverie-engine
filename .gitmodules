@@ -16,3 +16,6 @@
 [submodule "Libraries/Opus/Repo"]
 	path = Libraries/Opus/Repo
 	url = https://github.com/WelderFoundation/WelderEngineOpus.git
+[submodule "Libraries/Glew/Repo"]
+	path = Libraries/Glew/Repo
+	url = https://github.com/WelderFoundation/WelderEngineGlew.git

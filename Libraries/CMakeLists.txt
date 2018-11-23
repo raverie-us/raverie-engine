@@ -44,6 +44,7 @@ add_library(Assimp "")
 add_library(ZLib "")
 add_library(FreeType "")
 add_library(Opus "")
+add_library(Glew "")
 
 add_executable(ZeroEditor "")
 add_executable(ZeroLauncher "")
@@ -82,6 +83,7 @@ include(Assimp/CMakeLists.txt)
 include(ZLib/CMakeLists.txt)
 include(FreeType/CMakeLists.txt)
 include(Opus/CMakeLists.txt)
+include(Glew/CMakeLists.txt)
 
 include(ZeroEditor/CMakeLists.txt)
 include(ZeroLauncher/CMakeLists.txt)
@@ -172,6 +174,12 @@ target_include_directories(Opus
     ${CurrentDirectory}/Opus/Repo/silk/
     ${CurrentDirectory}/Opus/Repo/silk/float/
     ${CurrentDirectory}/Opus/Repo/celt/)
+    
+target_include_directories(Glew
+  PUBLIC
+    ${CurrentDirectory}/Glew/
+    ${CurrentDirectory}/Glew/Repo/
+    ${CurrentDirectory}/Glew/Repo/include/)
 
 target_include_directories(ZeroEditor PUBLIC ${CurrentDirectory} ${CurrentDirectory}/ZeroEditor)
 target_include_directories(ZeroLauncher PUBLIC ${CurrentDirectory} ${CurrentDirectory}/ZeroLauncher)
@@ -541,6 +549,7 @@ zero_multitarget_output_settings(
     ZLib
     FreeType
     Opus
+    Glew
     
     CONFIGS ${supported_configs}
     BASEPATH ${zero_build_out}
@@ -712,7 +721,6 @@ copy_multiple_shared_objects(
     SHARED_OBJECT_LOCATIONS
     ## setup all dll locations
     ${CEFSharedPath}
-    ${GLEWSharedPath}
     ${MemoryDebuggerSharedPath}
     ${MemoryTrackerSharedPath}
     ${NvttSharedPath}

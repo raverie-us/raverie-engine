@@ -63,9 +63,6 @@
 #include <process.h>
 #include <avrt.h>
 
-// Using static GLEW
-#define GLEW_STATIC
-
 // Include glew before OpenGl
 #include <GL/glew.h>
 #include <GL/wglew.h>
@@ -104,10 +101,8 @@
 
 #if ZeroRelease
 #pragma comment(lib, "libcef_dll_wrapper_release.lib")
-#pragma comment(lib, "glew32s.lib")
 #else
 #pragma comment(lib, "libcef_dll_wrapper_debug.lib")
-#pragma comment(lib, "glew32sd.lib")
 #endif
 
 #pragma comment(lib, "libcurl.lib")

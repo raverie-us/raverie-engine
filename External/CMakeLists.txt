@@ -19,7 +19,6 @@ set(AllPossibleStaticExternals
     CEF
     Curl
     GL
-    GLEW
     MemoryDebugger
     MemoryTracker
     Nvtt
@@ -30,7 +29,6 @@ set(AllPossibleStaticExternals
 # list of shared
 set(AllPossibleSharedExternals
     CEF
-    GLEW
     MemoryDebugger
     MemoryTracker
     Nvtt
@@ -84,7 +82,6 @@ endforeach()
 set(CEFPath ${CurrentDirectory}/CEF)
 set(CurlPath ${CurrentDirectory}/Curl)
 set(GLPath ${CurrentDirectory}/GL)
-set(GLEWPath ${CurrentDirectory}/GLEW)
 set(MemoryDebuggerPath ${CurrentDirectory}/MemoryDebugger)
 set(MemoryTrackerPath ${CurrentDirectory}/MemoryTracker)
 set(NvttPath ${CurrentDirectory}/Nvtt)

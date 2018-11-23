@@ -32,9 +32,6 @@ target_include_directories(Platform
 target_link_libraries(Platform
                       PUBLIC
                       Common
-                      ${WinHidStatic}
-                      ${GLEWStatic}
-                      ${CEFStatic}
 )
 
 ################################################################################
