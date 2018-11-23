@@ -42,6 +42,7 @@ add_library(Scintilla "")
 add_library(Libpng "")
 add_library(Assimp "")
 add_library(ZLib "")
+add_library(FreeType "")
 
 add_executable(ZeroEditor "")
 add_executable(ZeroLauncher "")
@@ -78,6 +79,7 @@ include(Scintilla/CMakeLists.txt)
 include(Libpng/CMakeLists.txt)
 include(Assimp/CMakeLists.txt)
 include(ZLib/CMakeLists.txt)
+include(FreeType/CMakeLists.txt)
 
 include(ZeroEditor/CMakeLists.txt)
 include(ZeroLauncher/CMakeLists.txt)
@@ -153,6 +155,13 @@ target_include_directories(ZLib
     ${CurrentDirectory}/ZLib/
     ${CurrentDirectory}/ZLib/Repo/)
 
+target_include_directories(FreeType
+  PUBLIC
+    ${CurrentDirectory}/FreeType/
+    ${CurrentDirectory}/FreeType/Repo/
+    ${CurrentDirectory}/FreeType/Repo/include/
+    ${CurrentDirectory}/FreeType/Repo/include/freetype/)
+
 target_include_directories(ZeroEditor PUBLIC ${CurrentDirectory} ${CurrentDirectory}/ZeroEditor)
 target_include_directories(ZeroLauncher PUBLIC ${CurrentDirectory} ${CurrentDirectory}/ZeroLauncher)
 target_include_directories(ZeroLauncherSharedLibrary PUBLIC ${CurrentDirectory} ${CurrentDirectory}/ZeroLauncherSharedLibrary)
@@ -191,6 +200,10 @@ target_link_libraries(SpatialPartition
 )
 target_link_libraries(ZLib
 )
+target_link_libraries(FreeType
+                      PUBLIC
+                      ZLib
+)
 target_link_libraries(Libpng
                       PUBLIC
                       ZLib
@@ -225,7 +238,7 @@ target_link_libraries(Graphics
                       Common
                       Geometry
                       ZilchShaders
-                      ${FreetypeStatic}
+                      FreeType
 )
 target_link_libraries(Networking
                       PUBLIC
@@ -318,9 +331,8 @@ target_link_libraries(ZeroEditor
                       Libpng
                       Assimp
                       ZLib
-                      
+                      FreeType
                       ${OpusStatic}
-                      ${FreetypeStatic}
 )
 
 target_link_libraries(ZeroLauncher
@@ -353,6 +365,7 @@ target_link_libraries(ZeroLauncher
                       Libpng
                       Assimp
                       ZLib
+                      FreeType
 ) 
 target_link_libraries(ZeroLauncherSharedLibrary
                       PUBLIC
@@ -384,6 +397,7 @@ target_link_libraries(ZeroLauncherSharedLibrary
                       Libpng
                       Assimp
                       ZLib
+                      FreeType
 ) 
 
 if(NOT use_spirv_shared_library)
@@ -414,7 +428,7 @@ target_link_libraries(BrowserSubProcess
                       Libpng
                       Assimp
                       ZLib
-                      ${FreetypeStatic}
+                      FreeType
                       ${CEFStatic}
 )
 
@@ -450,6 +464,7 @@ zero_multitarget_output_directories(
     Libpng
     Assimp
     ZLib
+    FreeType
     
     ZeroEditor
     ZeroLauncher 
@@ -508,6 +523,7 @@ zero_multitarget_output_settings(
     Libpng
     Assimp
     ZLib
+    FreeType
     
     CONFIGS ${supported_configs}
     BASEPATH ${zero_build_out}
@@ -549,6 +565,7 @@ zero_multitarget_compile_options(
     Libpng
     Assimp
     ZLib
+    FreeType
     
     ZeroEditor
     ZeroLauncher 
@@ -592,6 +609,7 @@ set_target_properties(
     Libpng
     Assimp
     ZLib
+    FreeType
     
     ZeroEditor
     ZeroLauncher 
@@ -647,6 +665,7 @@ zero_subfolder_source_group(${zero_core_path} Libraries Scintilla "")
 zero_subfolder_source_group(${zero_core_path} Libraries Libpng "")
 zero_subfolder_source_group(${zero_core_path} Libraries Assimp "")
 zero_subfolder_source_group(${zero_core_path} Libraries ZLib "")
+zero_subfolder_source_group(${zero_core_path} Libraries FreeType "")
 
 zero_subfolder_source_group_ignore_target_folder(${zero_core_path} Libraries ZeroEditor "${zero_core_path}/Libraries")
 zero_subfolder_source_group_ignore_target_folder(${zero_core_path} Libraries ZeroLauncher "${zero_core_path}/Libraries")
@@ -673,7 +692,6 @@ copy_multiple_shared_objects(
     SHARED_OBJECT_LOCATIONS
     ## setup all dll locations
     ${CEFSharedPath}
-    ${FreetypeSharedPath}
     ${GLEWSharedPath}
     ${MemoryDebuggerSharedPath}
     ${MemoryTrackerSharedPath}

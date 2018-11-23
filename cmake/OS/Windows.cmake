@@ -17,7 +17,6 @@ remove_definitions(-DMBCS -D_MBCS)
 set(StaticExternals
 CEF 
 Curl
-Freetype 
 GL 
 GLEW 
 MemoryDebugger 
@@ -30,7 +29,6 @@ WinHid
 # list of shared
 set(SharedExternals
 CEF
-Freetype
 GLEW
 MemoryDebugger
 MemoryTracker

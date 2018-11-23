@@ -10,3 +10,6 @@
 [submodule "Libraries/ZLib/Repo"]
 	path = Libraries/ZLib/Repo
 	url = https://github.com/WelderFoundation/WelderEngineZLib.git
+[submodule "Libraries/FreeType/Repo"]
+	path = Libraries/FreeType/Repo
+	url = https://github.com/WelderFoundation/WelderEngineFreeType.git

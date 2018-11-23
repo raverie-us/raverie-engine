@@ -16,10 +16,8 @@ set(CurrentDirectory ${CMAKE_CURRENT_LIST_DIR})
 # Specify our list of StaticExternals (use the same name as the folder in External/)
 ################################################################################
 set(AllPossibleStaticExternals
-    Assimp
     CEF
     Curl
-    Freetype
     GL
     GLEW
     MemoryDebugger
@@ -32,9 +30,7 @@ set(AllPossibleStaticExternals
 
 # list of shared
 set(AllPossibleSharedExternals
-    Assimp
     CEF
-    Freetype
     GLEW
     MemoryDebugger
     MemoryTracker
@@ -88,7 +84,6 @@ endforeach()
 # set lib paths
 set(CEFPath ${CurrentDirectory}/CEF)
 set(CurlPath ${CurrentDirectory}/Curl)
-set(FreetypePath ${CurrentDirectory}/Freetype)
 set(GLPath ${CurrentDirectory}/GL)
 set(GLEWPath ${CurrentDirectory}/GLEW)
 set(MemoryDebuggerPath ${CurrentDirectory}/MemoryDebugger)

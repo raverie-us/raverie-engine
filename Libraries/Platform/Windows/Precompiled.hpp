@@ -99,7 +99,6 @@
 #pragma comment(lib, "Avrt.lib")
 
 // Non-windows libraries that we link in
-#pragma comment(lib, "freetype28.lib")
 #pragma comment(lib, "libcef.lib")
 #pragma comment(lib, "OpenGL32.Lib")
 

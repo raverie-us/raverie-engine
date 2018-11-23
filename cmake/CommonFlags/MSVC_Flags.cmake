@@ -13,6 +13,8 @@ set(common_flags
     -W3 
     -wd"4302"
     -wd"4996"
+    -wd"4018"
+    -wd"4102"
     -Zc:wchar_t
     $<$<CONFIG:Debug>:-Zi>
     $<$<CONFIG:Release>:-Zi>

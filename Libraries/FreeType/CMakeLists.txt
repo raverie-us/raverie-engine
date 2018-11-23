@@ -1,0 +1,46 @@
+add_definitions(-DFT2_BUILD_LIBRARY -DFT_CONFIG_OPTION_SYSTEM_ZLIB)
+
+target_sources(FreeType
+  PRIVATE
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/include/ft2build.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/autofit/autofit.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/base/ftbase.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/base/ftbbox.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/base/ftbdf.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/base/ftbitmap.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/base/ftcid.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/base/ftdebug.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/base/ftfstype.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/base/ftgasp.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/base/ftglyph.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/base/ftgxval.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/base/ftinit.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/base/ftmm.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/base/ftotval.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/base/ftpatent.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/base/ftpfr.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/base/ftstroke.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/base/ftsynth.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/base/ftsystem.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/base/fttype1.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/base/ftwinfnt.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/bdf/bdf.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/bzip2/ftbzip2.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/cache/ftcache.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/cff/cff.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/cid/type1cid.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/gzip/ftgzip.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/lzw/ftlzw.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/pcf/pcf.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/pfr/pfr.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/psaux/psaux.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/pshinter/pshinter.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/psnames/psnames.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/raster/raster.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/sfnt/sfnt.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/smooth/smooth.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/truetype/truetype.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/type1/type1.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/type42/type42.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/winfonts/winfnt.c
+)
