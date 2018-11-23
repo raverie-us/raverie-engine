@@ -14,8 +14,7 @@ set(platform_library "Windows")
 
 remove_definitions(-DMBCS -D_MBCS)
 
-set(StaticExternals 
-Assimp 
+set(StaticExternals
 CEF 
 Curl
 Freetype 
@@ -31,7 +30,6 @@ ZLib
 
 # list of shared
 set(SharedExternals
-Assimp
 CEF
 Freetype
 GLEW

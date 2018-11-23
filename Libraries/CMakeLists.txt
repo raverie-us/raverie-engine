@@ -40,6 +40,7 @@ add_library(ZilchShaders "")
 
 add_library(Scintilla "")
 add_library(Libpng "")
+add_library(Assimp "")
 
 add_executable(ZeroEditor "")
 add_executable(ZeroLauncher "")
@@ -74,6 +75,7 @@ include(ZilchShaders/CMakeLists.txt)
 
 include(Scintilla/CMakeLists.txt)
 include(Libpng/CMakeLists.txt)
+include(Assimp/CMakeLists.txt)
 
 include(ZeroEditor/CMakeLists.txt)
 include(ZeroLauncher/CMakeLists.txt)
@@ -126,14 +128,23 @@ target_include_directories(ZilchShaders
 
 target_include_directories(Scintilla
   PUBLIC
+    ${CurrentDirectory}/Scintilla/
     ${CurrentDirectory}/Scintilla/Repo/
-    ${CurrentDirectory}/Scintilla/Repo/lexlib
-    ${CurrentDirectory}/Scintilla/Repo/include)
+    ${CurrentDirectory}/Scintilla/Repo/lexlib/
+    ${CurrentDirectory}/Scintilla/Repo/include/)
 
 target_include_directories(Libpng
   PUBLIC
     ${CurrentDirectory}/Libpng/
     ${CurrentDirectory}/Libpng/Repo/)
+
+target_include_directories(Assimp
+  PUBLIC
+    ${CurrentDirectory}/Assimp/
+    ${CurrentDirectory}/Assimp/Repo/
+    ${CurrentDirectory}/Assimp/Repo/include/
+    ${CurrentDirectory}/Assimp/Repo/contrib/rapidjson/include/
+    ${CurrentDirectory}/Assimp/Repo/contrib/openddlparser/include/)
 
 target_include_directories(ZeroEditor PUBLIC ${CurrentDirectory} ${CurrentDirectory}/ZeroEditor)
 target_include_directories(ZeroLauncher PUBLIC ${CurrentDirectory} ${CurrentDirectory}/ZeroLauncher)
@@ -175,6 +186,10 @@ target_link_libraries(Libpng
                       PUBLIC
                       ${ZLibStatic}
 )
+target_link_libraries(Assimp
+                      PUBLIC
+                      ${ZLibStatic}
+)
 target_link_libraries(Support
                       PUBLIC
                       Common
@@ -185,7 +200,8 @@ target_link_libraries(Content
                       PUBLIC
                       Common
                       Zilch
-                      ${AssimpStatic}
+                      Assimp
+                      ${ZLibStatic}
                       ${NvttStatic}
                       ${OpusStatic}
 )
@@ -288,7 +304,11 @@ target_link_libraries(ZeroEditor
                       Startup
                       Zilch
                       Graphics
+                      
                       Scintilla
+                      Libpng
+                      Assimp
+                      
                       ${OpusStatic}
                       ${FreetypeStatic}
                       ${ZLibStatic}
@@ -321,6 +341,8 @@ target_link_libraries(ZeroLauncher
                       CodeTranslator
                       
                       Scintilla
+                      Libpng
+                      Assimp
 ) 
 target_link_libraries(ZeroLauncherSharedLibrary
                       PUBLIC
@@ -349,6 +371,8 @@ target_link_libraries(ZeroLauncherSharedLibrary
                       CodeTranslator
                       
                       Scintilla
+                      Libpng
+                      Assimp
 ) 
 
 if(NOT use_spirv_shared_library)
@@ -377,6 +401,7 @@ target_link_libraries(BrowserSubProcess
                       
                       Scintilla
                       Libpng
+                      Assimp
                       ${FreetypeStatic}
                       ${ZLibStatic}
                       ${CEFStatic}
@@ -411,6 +436,8 @@ zero_multitarget_output_directories(
     ZilchShaders
     
     Scintilla
+    Libpng
+    Assimp
     
     ZeroEditor
     ZeroLauncher 
@@ -466,6 +493,8 @@ zero_multitarget_output_settings(
 
 zero_multitarget_output_settings(
     Scintilla
+    Libpng
+    Assimp
     
     CONFIGS ${supported_configs}
     BASEPATH ${zero_build_out}
@@ -504,6 +533,8 @@ zero_multitarget_compile_options(
     ZilchShaders
     
     Scintilla
+    Libpng
+    Assimp
     
     ZeroEditor
     ZeroLauncher 
@@ -544,6 +575,8 @@ set_target_properties(
     ZilchShaders
     
     Scintilla
+    Libpng
+    Assimp
     
     ZeroEditor
     ZeroLauncher 
@@ -596,6 +629,8 @@ zero_subfolder_source_group(${zero_core_path} Libraries ZilchScript "")
 zero_subfolder_source_group(${zero_core_path} Libraries ZilchShaders "")
 
 zero_subfolder_source_group(${zero_core_path} Libraries Scintilla "")
+zero_subfolder_source_group(${zero_core_path} Libraries Libpng "")
+zero_subfolder_source_group(${zero_core_path} Libraries Assimp "")
 
 zero_subfolder_source_group_ignore_target_folder(${zero_core_path} Libraries ZeroEditor "${zero_core_path}/Libraries")
 zero_subfolder_source_group_ignore_target_folder(${zero_core_path} Libraries ZeroLauncher "${zero_core_path}/Libraries")
@@ -621,7 +656,6 @@ copy_multiple_shared_objects(
     OUTPUT_DIRECTORY ${zero_binary_dir}
     SHARED_OBJECT_LOCATIONS
     ## setup all dll locations
-    ${AssimpSharedPath}
     ${CEFSharedPath}
     ${FreetypeSharedPath}
     ${GLEWSharedPath}

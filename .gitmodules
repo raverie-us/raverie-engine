@@ -4,3 +4,6 @@
 [submodule "Libraries/Libpng/Repo"]
 	path = Libraries/Libpng/Repo
 	url = https://github.com/WelderFoundation/WelderEngineLibpng.git
+[submodule "Libraries/Assimp/Repo"]
+	path = Libraries/Assimp/Repo
+	url = https://github.com/WelderFoundation/WelderEngineAssimp.git

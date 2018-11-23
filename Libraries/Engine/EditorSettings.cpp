@@ -38,7 +38,7 @@ EditorSettings::EditorSettings()
 void EditorSettings::Serialize(Serializer& stream)
 {
   SerializeNameDefault(mViewCube, true);
-  SerializeNameDefault(mViewCubeSize, 0.15f);
+  SerializeNameDefault(mViewCubeSize, 0.12f);
   SerializeNameDefault(mAutoUpdateContentChanges, true);
 }
 

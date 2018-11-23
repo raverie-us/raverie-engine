@@ -6,8 +6,7 @@
 
 set(platform_library "SDLSTLEmpty")
 
-set(StaticExternals 
-Assimp
+set(StaticExternals
 Curl
 Freetype
 GL
@@ -20,7 +19,6 @@ SDL
 
 # list of shared
 set(SharedExternals
-Assimp
 Freetype
 GLEW
 Nvtt

@@ -24,8 +24,7 @@ set(common_flags
     -fp:fast 
     -errorReport:prompt 
     -WX 
-    -Zc:forScope 
-    -GR- 
+    -Zc:forScope
     -Gd
     $<$<CONFIG:Release>:-arch:SSE2>
     -Oy-

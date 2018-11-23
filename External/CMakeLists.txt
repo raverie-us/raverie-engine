@@ -87,7 +87,6 @@ endforeach()
 ################################################################################
 
 # set lib paths
-set(AssimpPath ${CurrentDirectory}/Assimp)
 set(CEFPath ${CurrentDirectory}/CEF)
 set(CurlPath ${CurrentDirectory}/Curl)
 set(FreetypePath ${CurrentDirectory}/Freetype)

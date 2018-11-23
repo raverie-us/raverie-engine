@@ -11,8 +11,7 @@ add_definitions(-DPLATFORM_EMSCRIPTEN=1 -DPLATFORM_HARDWARE=1 -DPLATFORM_NAME="E
 set(platform "Emscripten")
 set(platform_library "Emscripten")
 
-set(StaticExternals 
-Assimp 
+set(StaticExternals
 Freetype 
 Nvtt 
 Opus 
