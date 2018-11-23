@@ -7,3 +7,6 @@
 [submodule "Libraries/Assimp/Repo"]
 	path = Libraries/Assimp/Repo
 	url = https://github.com/WelderFoundation/WelderEngineAssimp.git
+[submodule "Libraries/ZLib/Repo"]
+	path = Libraries/ZLib/Repo
+	url = https://github.com/WelderFoundation/WelderEngineZLib.git

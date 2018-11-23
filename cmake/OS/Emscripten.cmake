@@ -12,10 +12,9 @@ set(platform "Emscripten")
 set(platform_library "Emscripten")
 
 set(StaticExternals
-Freetype 
-Nvtt 
-Opus 
-ZLib
+Freetype
+Nvtt
+Opus
 )
 
 # list of shared

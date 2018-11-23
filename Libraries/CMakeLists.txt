@@ -41,6 +41,7 @@ add_library(ZilchShaders "")
 add_library(Scintilla "")
 add_library(Libpng "")
 add_library(Assimp "")
+add_library(ZLib "")
 
 add_executable(ZeroEditor "")
 add_executable(ZeroLauncher "")
@@ -76,6 +77,7 @@ include(ZilchShaders/CMakeLists.txt)
 include(Scintilla/CMakeLists.txt)
 include(Libpng/CMakeLists.txt)
 include(Assimp/CMakeLists.txt)
+include(ZLib/CMakeLists.txt)
 
 include(ZeroEditor/CMakeLists.txt)
 include(ZeroLauncher/CMakeLists.txt)
@@ -146,6 +148,11 @@ target_include_directories(Assimp
     ${CurrentDirectory}/Assimp/Repo/contrib/rapidjson/include/
     ${CurrentDirectory}/Assimp/Repo/contrib/openddlparser/include/)
 
+target_include_directories(ZLib
+  PUBLIC
+    ${CurrentDirectory}/ZLib/
+    ${CurrentDirectory}/ZLib/Repo/)
+
 target_include_directories(ZeroEditor PUBLIC ${CurrentDirectory} ${CurrentDirectory}/ZeroEditor)
 target_include_directories(ZeroLauncher PUBLIC ${CurrentDirectory} ${CurrentDirectory}/ZeroLauncher)
 target_include_directories(ZeroLauncherSharedLibrary PUBLIC ${CurrentDirectory} ${CurrentDirectory}/ZeroLauncherSharedLibrary)
@@ -182,26 +189,28 @@ target_link_libraries(SpatialPartition
                       PUBLIC
                       Zilch
 )
+target_link_libraries(ZLib
+)
 target_link_libraries(Libpng
                       PUBLIC
-                      ${ZLibStatic}
+                      ZLib
 )
 target_link_libraries(Assimp
                       PUBLIC
-                      ${ZLibStatic}
+                      ZLib
 )
 target_link_libraries(Support
                       PUBLIC
                       Common
                       Libpng
-                      ${ZLibStatic}
+                      ZLib
 )
 target_link_libraries(Content
                       PUBLIC
                       Common
                       Zilch
                       Assimp
-                      ${ZLibStatic}
+                      ZLib
                       ${NvttStatic}
                       ${OpusStatic}
 )
@@ -308,10 +317,10 @@ target_link_libraries(ZeroEditor
                       Scintilla
                       Libpng
                       Assimp
+                      ZLib
                       
                       ${OpusStatic}
                       ${FreetypeStatic}
-                      ${ZLibStatic}
 )
 
 target_link_libraries(ZeroLauncher
@@ -343,6 +352,7 @@ target_link_libraries(ZeroLauncher
                       Scintilla
                       Libpng
                       Assimp
+                      ZLib
 ) 
 target_link_libraries(ZeroLauncherSharedLibrary
                       PUBLIC
@@ -373,6 +383,7 @@ target_link_libraries(ZeroLauncherSharedLibrary
                       Scintilla
                       Libpng
                       Assimp
+                      ZLib
 ) 
 
 if(NOT use_spirv_shared_library)
@@ -402,8 +413,8 @@ target_link_libraries(BrowserSubProcess
                       Scintilla
                       Libpng
                       Assimp
+                      ZLib
                       ${FreetypeStatic}
-                      ${ZLibStatic}
                       ${CEFStatic}
 )
 
@@ -438,6 +449,7 @@ zero_multitarget_output_directories(
     Scintilla
     Libpng
     Assimp
+    ZLib
     
     ZeroEditor
     ZeroLauncher 
@@ -495,6 +507,7 @@ zero_multitarget_output_settings(
     Scintilla
     Libpng
     Assimp
+    ZLib
     
     CONFIGS ${supported_configs}
     BASEPATH ${zero_build_out}
@@ -535,6 +548,7 @@ zero_multitarget_compile_options(
     Scintilla
     Libpng
     Assimp
+    ZLib
     
     ZeroEditor
     ZeroLauncher 
@@ -577,6 +591,7 @@ set_target_properties(
     Scintilla
     Libpng
     Assimp
+    ZLib
     
     ZeroEditor
     ZeroLauncher 
@@ -631,6 +646,7 @@ zero_subfolder_source_group(${zero_core_path} Libraries ZilchShaders "")
 zero_subfolder_source_group(${zero_core_path} Libraries Scintilla "")
 zero_subfolder_source_group(${zero_core_path} Libraries Libpng "")
 zero_subfolder_source_group(${zero_core_path} Libraries Assimp "")
+zero_subfolder_source_group(${zero_core_path} Libraries ZLib "")
 
 zero_subfolder_source_group_ignore_target_folder(${zero_core_path} Libraries ZeroEditor "${zero_core_path}/Libraries")
 zero_subfolder_source_group_ignore_target_folder(${zero_core_path} Libraries ZeroLauncher "${zero_core_path}/Libraries")

@@ -24,8 +24,7 @@ MemoryDebugger
 MemoryTracker 
 Nvtt 
 Opus 
-WinHid 
-ZLib
+WinHid
 )
 
 # list of shared

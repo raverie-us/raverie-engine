@@ -13,7 +13,6 @@ GL
 GLEW
 Nvtt
 Opus
-ZLib
 SDL
 )
 

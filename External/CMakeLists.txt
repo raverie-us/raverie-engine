@@ -15,19 +15,18 @@ set(CurrentDirectory ${CMAKE_CURRENT_LIST_DIR})
 ################################################################################
 # Specify our list of StaticExternals (use the same name as the folder in External/)
 ################################################################################
-set(AllPossibleStaticExternals 
-    Assimp 
-    CEF 
-    Curl 
-    Freetype 
-    GL 
-    GLEW 
-    MemoryDebugger 
-    MemoryTracker 
-    Nvtt 
-    Opus 
-    WinHid 
-    ZLib
+set(AllPossibleStaticExternals
+    Assimp
+    CEF
+    Curl
+    Freetype
+    GL
+    GLEW
+    MemoryDebugger
+    MemoryTracker
+    Nvtt
+    Opus
+    WinHid
     SDL 
 )
 
@@ -97,7 +96,6 @@ set(MemoryTrackerPath ${CurrentDirectory}/MemoryTracker)
 set(NvttPath ${CurrentDirectory}/Nvtt)
 set(OpusPath ${CurrentDirectory}/Opus)
 set(WinHidPath ${CurrentDirectory}/WinHid)
-set(ZLibPath ${CurrentDirectory}/ZLib)
 set(SDLPath ${CurrentDirectory}/SDL)
 set(SpirVToolsPath ${CurrentDirectory}/SpirVTools)
 
