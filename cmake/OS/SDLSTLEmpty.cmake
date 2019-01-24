@@ -9,13 +9,11 @@ set(platform_library "SDLSTLEmpty")
 set(StaticExternals
 Curl
 GL
-Nvtt
 SDL
 )
 
 # list of shared
 set(SharedExternals
-Nvtt
 SDL
 )
 

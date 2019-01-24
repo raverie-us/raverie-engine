@@ -45,6 +45,7 @@ add_library(ZLib "")
 add_library(FreeType "")
 add_library(Opus "")
 add_library(Glew "")
+add_library(Nvtt "")
 
 add_executable(ZeroEditor "")
 add_executable(ZeroLauncher "")
@@ -84,6 +85,7 @@ include(ZLib/CMakeLists.txt)
 include(FreeType/CMakeLists.txt)
 include(Opus/CMakeLists.txt)
 include(Glew/CMakeLists.txt)
+include(Nvtt/CMakeLists.txt)
 
 include(ZeroEditor/CMakeLists.txt)
 include(ZeroLauncher/CMakeLists.txt)
@@ -174,7 +176,13 @@ target_include_directories(Opus
     ${CurrentDirectory}/Opus/Repo/silk/
     ${CurrentDirectory}/Opus/Repo/silk/float/
     ${CurrentDirectory}/Opus/Repo/celt/)
-    
+
+target_include_directories(Nvtt
+  PUBLIC
+    ${CurrentDirectory}/Nvtt/
+    ${CurrentDirectory}/Nvtt/Repo/src/
+    ${CurrentDirectory}/Nvtt/Repo/extern/poshlib/)
+
 target_include_directories(Glew
   PUBLIC
     ${CurrentDirectory}/Glew/
@@ -245,7 +253,7 @@ target_link_libraries(Content
                       Assimp
                       ZLib
                       Opus
-                      ${NvttStatic}
+                      Nvtt
 )
 target_link_libraries(Engine
                       PUBLIC
@@ -353,6 +361,7 @@ target_link_libraries(ZeroEditor
                       ZLib
                       FreeType
                       Opus
+                      Nvtt
 )
 
 target_link_libraries(ZeroLauncher
@@ -387,6 +396,7 @@ target_link_libraries(ZeroLauncher
                       ZLib
                       FreeType
                       Opus
+                      Nvtt
 ) 
 target_link_libraries(ZeroLauncherSharedLibrary
                       PUBLIC
@@ -420,6 +430,7 @@ target_link_libraries(ZeroLauncherSharedLibrary
                       ZLib
                       FreeType
                       Opus
+                      Nvtt
 ) 
 
 if(NOT use_spirv_shared_library)
@@ -452,6 +463,7 @@ target_link_libraries(BrowserSubProcess
                       ZLib
                       FreeType
                       Opus
+                      Nvtt
                       ${CEFStatic}
 )
 
@@ -489,6 +501,7 @@ zero_multitarget_output_directories(
     ZLib
     FreeType
     Opus
+    Nvtt
     
     ZeroEditor
     ZeroLauncher 
@@ -550,6 +563,7 @@ zero_multitarget_output_settings(
     FreeType
     Opus
     Glew
+    Nvtt
     
     CONFIGS ${supported_configs}
     BASEPATH ${zero_build_out}
@@ -593,6 +607,7 @@ zero_multitarget_compile_options(
     ZLib
     FreeType
     Opus
+    Nvtt
     
     ZeroEditor
     ZeroLauncher 
@@ -638,6 +653,7 @@ set_target_properties(
     ZLib
     FreeType
     Opus
+    Nvtt
     
     ZeroEditor
     ZeroLauncher 
@@ -695,6 +711,7 @@ zero_subfolder_source_group(${zero_core_path} Libraries Assimp "")
 zero_subfolder_source_group(${zero_core_path} Libraries ZLib "")
 zero_subfolder_source_group(${zero_core_path} Libraries FreeType "")
 zero_subfolder_source_group(${zero_core_path} Libraries Opus "")
+zero_subfolder_source_group(${zero_core_path} Libraries Nvtt "")
 
 zero_subfolder_source_group_ignore_target_folder(${zero_core_path} Libraries ZeroEditor "${zero_core_path}/Libraries")
 zero_subfolder_source_group_ignore_target_folder(${zero_core_path} Libraries ZeroLauncher "${zero_core_path}/Libraries")
@@ -721,7 +738,6 @@ copy_multiple_shared_objects(
     SHARED_OBJECT_LOCATIONS
     ## setup all dll locations
     ${CEFSharedPath}
-    ${NvttSharedPath}
     ${PortAudioSharedPath}
     ${SDLSharedPath}
 )

@@ -18,14 +18,12 @@ set(StaticExternals
 CEF 
 Curl
 GL
-Nvtt
 WinHid
 )
 
 # list of shared
 set(SharedExternals
 CEF
-Nvtt
 )
 
 if(use_spirv_shared_library AND NOT generate_spirv_projects)

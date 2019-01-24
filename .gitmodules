@@ -19,3 +19,6 @@
 [submodule "Libraries/Glew/Repo"]
 	path = Libraries/Glew/Repo
 	url = https://github.com/WelderFoundation/WelderEngineGlew.git
+[submodule "Libraries\\Nvtt\\Repo"]
+	path = Libraries\\Nvtt\\Repo
+	url = https://github.com/WelderFoundation/WelderEngineNvtt.git

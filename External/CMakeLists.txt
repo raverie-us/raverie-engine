@@ -19,7 +19,6 @@ set(AllPossibleStaticExternals
     CEF
     Curl
     GL
-    Nvtt
     WinHid
     SDL 
 )
@@ -27,7 +26,6 @@ set(AllPossibleStaticExternals
 # list of shared
 set(AllPossibleSharedExternals
     CEF
-    Nvtt
     SDL
 )
 
@@ -78,7 +76,6 @@ endforeach()
 set(CEFPath ${CurrentDirectory}/CEF)
 set(CurlPath ${CurrentDirectory}/Curl)
 set(GLPath ${CurrentDirectory}/GL)
-set(NvttPath ${CurrentDirectory}/Nvtt)
 set(WinHidPath ${CurrentDirectory}/WinHid)
 set(SDLPath ${CurrentDirectory}/SDL)
 set(SpirVToolsPath ${CurrentDirectory}/SpirVTools)
