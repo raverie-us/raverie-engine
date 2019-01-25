@@ -1,0 +1,2 @@
+You must build the WelderEngineSpirvTools repo with WelderEngineSpirvHeaders checked out in "WelderEngineSpirvTools/externals/".
+After building, copy the *.inc and DebugInfo.h from the WelderEngineSpirvTools root directory into our "Libraries/SpirvTools/Build/".

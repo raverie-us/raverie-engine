@@ -8,10 +8,6 @@ get_filename_component(ParentDirectory ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 # get our current directory
 set(CurrentDirectory ${CMAKE_CURRENT_LIST_DIR})
 
-if(use_spirv_shared_library)
-  set(SpirVToolsCompileOptions -DSPIRV_TOOLS_SHAREDLIB)
-endif()
-
 ################################################################################
 # define all of the libraries that are in this folder
 ################################################################################
@@ -46,6 +42,9 @@ add_library(FreeType "")
 add_library(Opus "")
 add_library(Glew "")
 add_library(Nvtt "")
+add_library(SpirvHeaders "")
+add_library(SpirvTools "")
+add_library(SpirvCross "")
 
 add_executable(ZeroEditor "")
 add_executable(ZeroLauncher "")
@@ -86,13 +85,14 @@ include(FreeType/CMakeLists.txt)
 include(Opus/CMakeLists.txt)
 include(Glew/CMakeLists.txt)
 include(Nvtt/CMakeLists.txt)
+include(SpirvHeaders/CMakeLists.txt)
+include(SpirvTools/CMakeLists.txt)
+include(SpirvCross/CMakeLists.txt)
 
 include(ZeroEditor/CMakeLists.txt)
 include(ZeroLauncher/CMakeLists.txt)
 include(ZeroLauncherSharedLibrary/CMakeLists.txt)
 include(BrowserSubProcess/CMakeLists.txt)
-
-add_subdirectory(SpirV)
 
 # platform is going to define its own target
 add_subdirectory(Platform)
@@ -121,20 +121,7 @@ target_include_directories(UiWidget PUBLIC ${CurrentDirectory} ${CurrentDirector
 target_include_directories(Widget PUBLIC ${CurrentDirectory} ${CurrentDirectory}/Widget)
 target_include_directories(Zilch PUBLIC ${CurrentDirectory} ${CurrentDirectory}/Zilch)
 target_include_directories(ZilchScript PUBLIC ${CurrentDirectory} ${CurrentDirectory}/ZilchScript)
-target_include_directories(ZilchShaders
-    PUBLIC
-        ${CurrentDirectory}
-        ${CurrentDirectory}/ZilchShaders
-        ${CurrentDirectory}/SpirV/SPIRV-Cross
-        ${CurrentDirectory}/SpirV/SpirVFiles
-        ${CurrentDirectory}/SpirV/SpirVFiles/external
-        ${CurrentDirectory}/SpirV/SpirVFiles/external/SPIRV-Headers/include
-        ${CurrentDirectory}/SpirV/SpirVFiles/include
-        ${CurrentDirectory}/SpirV/SpirVFiles/include/spirv-tools
-        ${CurrentDirectory}/SpirV/SpirVFiles/build
-        ${CurrentDirectory}/SpirV/SpirVFiles/tools
-        ${CurrentDirectory}/SpirV/SpirVFiles/source
-)
+target_include_directories(ZilchShaders PUBLIC ${CurrentDirectory} ${CurrentDirectory}/ZilchShaders)
 
 target_include_directories(Scintilla
   PUBLIC
@@ -188,6 +175,25 @@ target_include_directories(Glew
     ${CurrentDirectory}/Glew/
     ${CurrentDirectory}/Glew/Repo/
     ${CurrentDirectory}/Glew/Repo/include/)
+
+target_include_directories(SpirvHeaders
+  PUBLIC
+    ${CurrentDirectory}/SpirvHeaders/
+    ${CurrentDirectory}/SpirvHeaders/Repo/
+    ${CurrentDirectory}/SpirvHeaders/Repo/include/)
+
+target_include_directories(SpirvTools
+  PUBLIC
+    ${CurrentDirectory}/SpirvTools/
+    ${CurrentDirectory}/SpirvTools/Build/
+    ${CurrentDirectory}/SpirvTools/Repo/
+    ${CurrentDirectory}/SpirvTools/Repo/include/)
+
+target_include_directories(SpirvCross
+  PUBLIC
+    ${CurrentDirectory}/SpirvCross/
+    ${CurrentDirectory}/SpirvCross/Repo/
+    ${CurrentDirectory}/SpirvCross/Repo/include/)
 
 target_include_directories(ZeroEditor PUBLIC ${CurrentDirectory} ${CurrentDirectory}/ZeroEditor)
 target_include_directories(ZeroLauncher PUBLIC ${CurrentDirectory} ${CurrentDirectory}/ZeroLauncher)
@@ -309,8 +315,17 @@ target_link_libraries(ZilchShaders
                       Common
                       Geometry
                       Zilch
-                      SPIRV-Cross
-                      SPIRV-Tools-opt
+                      SpirvHeaders
+                      SpirvTools
+                      SpirvCross # opt?
+)
+target_link_libraries(SpirvTools
+                      PUBLIC
+                      SpirvHeaders
+)
+target_link_libraries(SpirvCross
+                      PUBLIC
+                      SpirvHeaders
 )
 target_link_libraries(Widget
                       PUBLIC
@@ -327,7 +342,6 @@ target_link_libraries(Gameplay
                       Engine
                       ${CEFStatic}
 )
-
 
 target_link_libraries(ZeroEditor
                       PUBLIC
@@ -362,6 +376,9 @@ target_link_libraries(ZeroEditor
                       FreeType
                       Opus
                       Nvtt
+                      SpirvHeaders
+                      SpirvTools
+                      SpirvCross
 )
 
 target_link_libraries(ZeroLauncher
@@ -397,6 +414,9 @@ target_link_libraries(ZeroLauncher
                       FreeType
                       Opus
                       Nvtt
+                      SpirvHeaders
+                      SpirvTools
+                      SpirvCross
 ) 
 target_link_libraries(ZeroLauncherSharedLibrary
                       PUBLIC
@@ -431,15 +451,10 @@ target_link_libraries(ZeroLauncherSharedLibrary
                       FreeType
                       Opus
                       Nvtt
+                      SpirvHeaders
+                      SpirvTools
+                      SpirvCross # opt?
 ) 
-
-if(NOT use_spirv_shared_library)
-target_link_libraries(ZeroEditor
-                      PUBLIC
-                      SPIRV-Tools
-                      SPIRV-Tools-opt
-                      )
-endif()
 
 # the launcher is going to need the chrome subprocess to run correctly
 add_dependencies(ZeroLauncherSharedLibrary
@@ -464,6 +479,9 @@ target_link_libraries(BrowserSubProcess
                       FreeType
                       Opus
                       Nvtt
+                      SpirvHeaders
+                      SpirvTools
+                      SpirvCross
                       ${CEFStatic}
 )
 
@@ -502,6 +520,9 @@ zero_multitarget_output_directories(
     FreeType
     Opus
     Nvtt
+    SpirvHeaders
+    SpirvTools
+    SpirvCross
     
     ZeroEditor
     ZeroLauncher 
@@ -564,6 +585,9 @@ zero_multitarget_output_settings(
     Opus
     Glew
     Nvtt
+    SpirvHeaders
+    SpirvTools
+    SpirvCross
     
     CONFIGS ${supported_configs}
     BASEPATH ${zero_build_out}
@@ -608,6 +632,9 @@ zero_multitarget_compile_options(
     FreeType
     Opus
     Nvtt
+    SpirvHeaders
+    SpirvTools
+    SpirvCross
     
     ZeroEditor
     ZeroLauncher 
@@ -615,7 +642,6 @@ zero_multitarget_compile_options(
     BrowserSubProcess
     
     PRIVATE
-    ${SpirVToolsCompileOptions}
     ${common_flags}
 )
 
@@ -654,6 +680,9 @@ set_target_properties(
     FreeType
     Opus
     Nvtt
+    SpirvHeaders
+    SpirvTools
+    SpirvCross
     
     ZeroEditor
     ZeroLauncher 
@@ -712,6 +741,9 @@ zero_subfolder_source_group(${zero_core_path} Libraries ZLib "")
 zero_subfolder_source_group(${zero_core_path} Libraries FreeType "")
 zero_subfolder_source_group(${zero_core_path} Libraries Opus "")
 zero_subfolder_source_group(${zero_core_path} Libraries Nvtt "")
+zero_subfolder_source_group(${zero_core_path} Libraries SpirvHeaders "")
+zero_subfolder_source_group(${zero_core_path} Libraries SpirvTools "")
+zero_subfolder_source_group(${zero_core_path} Libraries SpirvCross "")
 
 zero_subfolder_source_group_ignore_target_folder(${zero_core_path} Libraries ZeroEditor "${zero_core_path}/Libraries")
 zero_subfolder_source_group_ignore_target_folder(${zero_core_path} Libraries ZeroLauncher "${zero_core_path}/Libraries")
@@ -741,16 +773,6 @@ copy_multiple_shared_objects(
     ${PortAudioSharedPath}
     ${SDLSharedPath}
 )
-
-if(use_spirv_shared_library)
-  copy_multiple_shared_objects(
-      ZeroEditor
-      ZeroLauncher
-      OUTPUT_DIRECTORY ${zero_binary_dir}
-      SHARED_OBJECT_LOCATIONS
-      ${SpirVToolsSharedPath}
-  )
-endif()
 
 if("${platform}" STREQUAL "Emscripten")
     message("should be calling zip directory")

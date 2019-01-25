@@ -19,6 +19,15 @@
 [submodule "Libraries/Glew/Repo"]
 	path = Libraries/Glew/Repo
 	url = https://github.com/WelderFoundation/WelderEngineGlew.git
-[submodule "Libraries\\Nvtt\\Repo"]
-	path = Libraries\\Nvtt\\Repo
+[submodule "Libraries/Nvtt/Repo"]
+	path = Libraries/Nvtt/Repo
 	url = https://github.com/WelderFoundation/WelderEngineNvtt.git
+[submodule "Libraries/SpirvTools/Repo"]
+	path = Libraries/SpirvTools/Repo
+	url = https://github.com/WelderFoundation/WelderEngineSpirvTools.git
+[submodule "Libraries/SpirvCross/Repo"]
+	path = Libraries/SpirvCross/Repo
+	url = https://github.com/WelderFoundation/WelderEngineSpirvCross.git
+[submodule "Libraries/SpirvHeaders/Repo"]
+	path = Libraries/SpirvHeaders/Repo
+	url = https://github.com/WelderFoundation/WelderEngineSpirvHeaders.git

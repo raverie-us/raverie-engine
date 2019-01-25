@@ -59,12 +59,6 @@ set(zero_unit_test_dir ${zero_core_path}/UnitTests)
 # Define any user options
 ################################################################################
 option(generate_with_unit_tests "If set to 'ON', project will be generated with the unit tests included." OFF)
-option(generate_spirv_projects "If set to 'ON', spirv tools projects will be created. Allows static linking or generation of dll for tools." OFF)
-option(use_spirv_shared_library "If set to 'ON', project will link against a dll of spirv (allows release dll in debug mode)." ON)
-
-if(NOT generate_spirv_projects AND NOT use_spirv_shared_library)
-  message(FATAL_ERROR "spirv project cannot be statically linked without also generating the spirv projects.")
-endif()
 
 ################################################################################
 # Define any platform options

@@ -29,10 +29,6 @@ set(AllPossibleSharedExternals
     SDL
 )
 
-if(use_spirv_shared_library AND NOT generate_spirv_projects)
-  set(AllPossibleSharedExternals ${AllPossibleSharedExternals} SpirVTools)
-endif()
-
 # define empty values for all externals so if they don't exist they will just result in an empty string
 foreach(possibleStaticLib ${AllPossibleStaticExternals})
     set(${possibleStaticLib}Static "")
@@ -78,7 +74,6 @@ set(CurlPath ${CurrentDirectory}/Curl)
 set(GLPath ${CurrentDirectory}/GL)
 set(WinHidPath ${CurrentDirectory}/WinHid)
 set(SDLPath ${CurrentDirectory}/SDL)
-set(SpirVToolsPath ${CurrentDirectory}/SpirVTools)
 
 ################################################################################
 # Find all libraries from listed dependencies and make them globally available
