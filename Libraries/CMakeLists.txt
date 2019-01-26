@@ -187,6 +187,7 @@ target_include_directories(SpirvTools
     ${CurrentDirectory}/SpirvTools/
     ${CurrentDirectory}/SpirvTools/Build/
     ${CurrentDirectory}/SpirvTools/Repo/
+    ${CurrentDirectory}/SpirvTools/Repo/source/
     ${CurrentDirectory}/SpirvTools/Repo/include/)
 
 target_include_directories(SpirvCross
@@ -304,20 +305,22 @@ target_link_libraries(ZilchScript
 target_link_libraries(CodeTranslator
                       PUBLIC
                       Engine
+                      ZilchShaders
 )
 target_link_libraries(Editor
                       PUBLIC
                       Scintilla
                       Common
+                      ZilchShaders
 )
 target_link_libraries(ZilchShaders
-                      PRIVATE
+                      PUBLIC
                       Common
                       Geometry
                       Zilch
                       SpirvHeaders
                       SpirvTools
-                      SpirvCross # opt?
+                      SpirvCross
 )
 target_link_libraries(SpirvTools
                       PUBLIC
@@ -330,16 +333,19 @@ target_link_libraries(SpirvCross
 target_link_libraries(Widget
                       PUBLIC
                       Engine
+                      ZilchShaders
 )
 target_link_libraries(UiWidget
                       PUBLIC
                       Engine
+                      ZilchShaders
 )
 target_link_libraries(Gameplay
                       PUBLIC
                       Common
                       Zilch
                       Engine
+                      ZilchShaders
                       ${CEFStatic}
 )
 
@@ -453,7 +459,7 @@ target_link_libraries(ZeroLauncherSharedLibrary
                       Nvtt
                       SpirvHeaders
                       SpirvTools
-                      SpirvCross # opt?
+                      SpirvCross
 ) 
 
 # the launcher is going to need the chrome subprocess to run correctly

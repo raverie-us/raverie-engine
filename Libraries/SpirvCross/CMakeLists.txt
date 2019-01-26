@@ -16,6 +16,8 @@ target_sources(SpirvCross
     ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_cpp.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_cross.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_cross.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_cross_parsed_ir.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_cross_parsed_ir.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_cross_util.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_cross_util.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_glsl.cpp
@@ -24,6 +26,8 @@ target_sources(SpirvCross
     ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_hlsl.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_msl.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_msl.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_parser.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_parser.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_reflect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_reflect.hpp
 )

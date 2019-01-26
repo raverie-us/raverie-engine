@@ -6,7 +6,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
-#include "SpirV/SPIRV-Cross/spirv_glsl.hpp"
+#include "spirv_glsl.hpp"
 
 namespace Zero
 {

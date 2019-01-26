@@ -8,8 +8,6 @@
 
 #include "ZilchShaderIRTranslationPass.hpp"
 
-#include "libspirv.h"
-
 namespace Zero
 {
 

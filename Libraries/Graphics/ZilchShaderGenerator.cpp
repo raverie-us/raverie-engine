@@ -716,10 +716,14 @@ bool ZilchShaderGenerator::CompilePipeline(ZilchShaderIRType* shaderType, Shader
     ZilchShaderIRTranslationPass* translationPass = pipeline.mToolPasses[i];
 
     ShaderTranslationPassResult* prevPassData = pipelineResults.Back();
+    ErrorIf(prevPassData->mByteStream.ByteCount() == 0,
+      "No shader bytecode input");
     ShaderTranslationPassResult* toolData = new ShaderTranslationPassResult();
     pipelineResults.PushBack(toolData);
 
     translationPass->RunTranslationPass(*prevPassData, *toolData);
+    ErrorIf(toolData->mByteStream.ByteCount() == 0,
+      "No shader bytecode output");
   }
 
   ShaderTranslationPassResult* lastPassData = pipelineResults.Back();

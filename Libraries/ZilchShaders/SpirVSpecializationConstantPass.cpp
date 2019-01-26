@@ -6,9 +6,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
-#include "libspirv.h"
-#include "spirv_optimizer_options.h"
-
 namespace Zero
 {
 

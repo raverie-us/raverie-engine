@@ -44,7 +44,23 @@ public:
   Vec2 GetBotLeft() { return Vec2(TopLeft.x, BotRight.y); }
 };
 
-typedef HashSet<Shader*> ShaderSet;
+struct ShaderPolicy
+{
+public:
+  typedef ShaderPolicy this_type;
+
+  inline bool Equal(const Shader* lhs, const Shader* rhs) const
+  {
+    return lhs->mName == rhs->mName;
+  }
+
+  inline size_t operator()(const Shader* value) const
+  {
+    return value->mName.Hash();
+  }
+};
+
+typedef HashSet<Shader*, ShaderPolicy> ShaderSet;
 typedef HashMap<String, Shader*> ShaderMap;
 typedef HashMap<String, ShaderSet> ShaderSetMap;
 

@@ -63,6 +63,8 @@ target_sources(SpirvTools
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/cfg.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/cfg_cleanup_pass.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/cfg_cleanup_pass.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/code_sink.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/code_sink.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/combine_access_chains.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/combine_access_chains.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/common_uniform_elim_pass.cpp
@@ -117,10 +119,14 @@ target_sources(SpirvTools
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/inline_opaque_pass.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/inline_pass.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/inline_pass.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/inst_bindless_check_pass.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/inst_bindless_check_pass.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/instruction.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/instruction.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/instruction_list.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/instruction_list.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/instrument_pass.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/instrument_pass.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/ir_builder.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/ir_context.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/ir_context.h
@@ -174,6 +180,8 @@ target_sources(SpirvTools
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/passes.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/private_to_local_pass.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/private_to_local_pass.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/process_lines_pass.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/process_lines_pass.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/propagator.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/propagator.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/reduce_load_size.cpp
@@ -214,6 +222,8 @@ target_sources(SpirvTools
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/types.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/unify_const_pass.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/unify_const_pass.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/upgrade_memory_model.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/upgrade_memory_model.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/value_number_table.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/value_number_table.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/opt/vector_dce.cpp
@@ -293,9 +303,11 @@ target_sources(SpirvTools
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/val/validate_literals.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/val/validate_logicals.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/val/validate_memory.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/source/val/validate_memory_semantics.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/val/validate_mode_setting.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/val/validate_non_uniform.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/val/validate_primitives.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/source/val/validate_scopes.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/val/validate_type.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/val/validation_state.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/val/validation_state.h
