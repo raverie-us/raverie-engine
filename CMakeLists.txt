@@ -78,7 +78,6 @@ set(CMAKE_MODULE_PATH "${Source_Root}/cmake/modules/")
 ################################################################################
 # Includes
 ################################################################################
-include(${cmake_utilities_dir}/zero_source_group.cmake)
 include(${cmake_utilities_dir}/Zero_Mulitarget_Functions.cmake)
 include(${cmake_utilities_dir}/Zero_Custom_Commands.cmake)
 

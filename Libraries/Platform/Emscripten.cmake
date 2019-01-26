@@ -79,7 +79,3 @@ set_target_properties(
     STATIC_LIBRARY_FLAGS "${common_library_flags}"
 )
 
-################################################################################
-# Group source into folders
-################################################################################
-zero_subfolder_source_group_ignore_target_folder(${zero_core_path} Libraries/Platform Platform "${zero_core_path/Platform}")

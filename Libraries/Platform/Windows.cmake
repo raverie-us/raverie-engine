@@ -92,8 +92,3 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC OR (CMAKE_GENERATOR_TOOLSET STREQUAL 
         STATIC_LIBRARY_FLAGS_RELEASE "/LTCG"
     )
 endif()
-
-################################################################################
-# Group source into folders
-################################################################################
-zero_subfolder_source_group_ignore_target_folder(${zero_core_path} Libraries/Platform Platform "${zero_core_path/Platform}")

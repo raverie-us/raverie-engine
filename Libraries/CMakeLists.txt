@@ -2,6 +2,7 @@
 # Author: Joshua Shlemmer
 # Copyright 2017, DigiPen Institute of Technology
 ################################################################################
+
 # get our parent directory
 get_filename_component(ParentDirectory ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 
@@ -713,48 +714,6 @@ if (${platform} STREQUAL "Emscripten")
         LINK_FLAGS "--embed-file \"${zero_build_out}/ZeroLauncherFileSystem.zip\"@/FileSystem.zip"
     )
 endif()
-
-################################################################################
-# Group source into folders
-################################################################################
-zero_subfolder_source_group(${zero_core_path} Libraries CodeTranslator "")
-zero_subfolder_source_group(${zero_core_path} Libraries Common "")
-zero_subfolder_source_group(${zero_core_path} Libraries Content "")
-zero_subfolder_source_group(${zero_core_path} Libraries Editor "")
-zero_subfolder_source_group(${zero_core_path} Libraries Engine "")
-zero_subfolder_source_group(${zero_core_path} Libraries Gameplay "")
-zero_subfolder_source_group(${zero_core_path} Libraries Geometry "")
-zero_subfolder_source_group(${zero_core_path} Libraries Graphics "")
-zero_subfolder_source_group(${zero_core_path} Libraries Meta "")
-zero_subfolder_source_group(${zero_core_path} Libraries Networking "")
-zero_subfolder_source_group(${zero_core_path} Libraries Physics "")
-zero_subfolder_source_group(${zero_core_path} Libraries Replication "")
-zero_subfolder_source_group(${zero_core_path} Libraries Serialization "")
-zero_subfolder_source_group(${zero_core_path} Libraries Sound "")
-zero_subfolder_source_group(${zero_core_path} Libraries SpatialPartition "")
-zero_subfolder_source_group(${zero_core_path} Libraries Startup "")
-zero_subfolder_source_group(${zero_core_path} Libraries Support "")
-zero_subfolder_source_group(${zero_core_path} Libraries UiWidget "")
-zero_subfolder_source_group(${zero_core_path} Libraries Widget "")
-zero_subfolder_source_group(${zero_core_path} Libraries Zilch "")
-zero_subfolder_source_group(${zero_core_path} Libraries ZilchScript "")
-zero_subfolder_source_group(${zero_core_path} Libraries ZilchShaders "")
-
-zero_subfolder_source_group(${zero_core_path} Libraries Scintilla "")
-zero_subfolder_source_group(${zero_core_path} Libraries Libpng "")
-zero_subfolder_source_group(${zero_core_path} Libraries Assimp "")
-zero_subfolder_source_group(${zero_core_path} Libraries ZLib "")
-zero_subfolder_source_group(${zero_core_path} Libraries FreeType "")
-zero_subfolder_source_group(${zero_core_path} Libraries Opus "")
-zero_subfolder_source_group(${zero_core_path} Libraries Nvtt "")
-zero_subfolder_source_group(${zero_core_path} Libraries SpirvHeaders "")
-zero_subfolder_source_group(${zero_core_path} Libraries SpirvTools "")
-zero_subfolder_source_group(${zero_core_path} Libraries SpirvCross "")
-
-zero_subfolder_source_group_ignore_target_folder(${zero_core_path} Libraries ZeroEditor "${zero_core_path}/Libraries")
-zero_subfolder_source_group_ignore_target_folder(${zero_core_path} Libraries ZeroLauncher "${zero_core_path}/Libraries")
-zero_subfolder_source_group(${zero_core_path} Libraries ZeroLauncherSharedLibrary "${zero_core_path}/Libraries")
-zero_subfolder_source_group(${zero_core_path} Libraries BrowserSubProcess "")
 
 ################################################################################
 # Post build steps
