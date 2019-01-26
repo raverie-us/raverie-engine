@@ -1,0 +1,26 @@
+{
+  "name": "welderengine",
+  "version": "1.0.0",
+  "description": "Component based game engine focusing on rapid iteration.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WelderFoundation/WelderEngine.git"
+  },
+  "keywords": [
+    "game",
+    "engine",
+    "components",
+    "rapid iteration",
+    "cross platform"
+  ],
+  "author": "Trevor Sundberg",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/WelderFoundation/WelderEngine/issues"
+  },
+  "homepage": "https://github.com/WelderFoundation/WelderEngine#readme"
+}
