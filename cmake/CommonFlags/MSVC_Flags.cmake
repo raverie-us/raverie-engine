@@ -21,6 +21,8 @@ set(common_flags
     -wd"4102"
     # Opus converts from double to float implicitly.
     -wd"4244"
+    # Assimp uses this in base initializer.
+    -wd"4355"
     -Zc:wchar_t
     $<$<CONFIG:Debug>:-Zi>
     $<$<CONFIG:Release>:-Zi>

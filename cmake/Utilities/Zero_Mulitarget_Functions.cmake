@@ -13,6 +13,23 @@ include(${cmake_utilities_dir}/Helper_Functions.cmake)
 # Functions
 ################################################################################
 
+function(set_precompiled_header target listDir)
+  if(MSVC)
+    target_compile_options(${target} PRIVATE "/FIPrecompiled.hpp")
+    set_target_properties(${target} PROPERTIES COMPILE_FLAGS "/YuPrecompiled.hpp")
+    set_source_files_properties(${listDir}/Precompiled.cpp PROPERTIES COMPILE_FLAGS "/YcPrecompiled.hpp")
+  else()
+    #add_definitions(-include Precompiled.hpp)
+  endif()
+endfunction()
+
+function(set_source_ignore_precompiled_header source)
+  if(MSVC)
+    set_source_files_properties(${source} PROPERTIES COMPILE_FLAGS "/Y-")
+  else()
+  endif()
+endfunction()
+
 #### Sets the given arguments on every passed target
 function(zero_multitarget_compile_options)
     set(oneValueArgs )

@@ -42,7 +42,6 @@ target_sources(Nvtt
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvcore/Memory.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvcore/Ptr.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvcore/RefCounted.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvcore/StdStream.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvcore/StrLib.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvcore/StrLib.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvcore/Stream.h
@@ -116,7 +115,6 @@ target_sources(Nvtt
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvthread/nvthread.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvtt/BlockCompressor.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvtt/BlockCompressor.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvtt/CMakeLists.txt
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvtt/ClusterFit.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvtt/ClusterFit.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvtt/CompressionOptions.cpp
@@ -181,5 +179,9 @@ target_sources(Nvtt
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvtt/squish/weightedclusterfit.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvtt/squish/weightedclusterfit.h
     ${CMAKE_CURRENT_LIST_DIR}/nvconfig.h
+    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
 )
 
+set_precompiled_header(Nvtt ${CMAKE_CURRENT_LIST_DIR})
+set_source_ignore_precompiled_header(${CMAKE_CURRENT_LIST_DIR}/Repo/extern/poshlib/posh.c)

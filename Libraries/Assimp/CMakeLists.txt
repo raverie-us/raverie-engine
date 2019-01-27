@@ -441,47 +441,56 @@ target_sources(Assimp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/code/MD4FileData.h
 #IrrXML
     ${CMAKE_CURRENT_LIST_DIR}/Repo/code/irrXMLWrapper.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/irrXML/CXMLReaderImpl.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/irrXML/heapsort.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/irrXML/irrArray.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/irrXML/irrString.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/irrXML/irrTypes.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/irrXML/irrXML.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/irrXML/irrXML.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/irrXML/CXMLReaderImpl.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/irrXML/heapsort.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/irrXML/irrArray.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/irrXML/irrString.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/irrXML/irrTypes.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/irrXML/irrXML.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/irrXML/irrXML.h
 #ConvertUTF
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/ConvertUTF/ConvertUTF.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/ConvertUTF/ConvertUTF.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/ConvertUTF/ConvertUTF.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/ConvertUTF/ConvertUTF.c
 #Clipper
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/clipper/clipper.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/clipper/clipper.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/clipper/clipper.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/clipper/clipper.cpp
 #Poly2Tri
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/poly2tri/poly2tri/common/shapes.cc
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/poly2tri/poly2tri/common/shapes.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/poly2tri/poly2tri/common/utils.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/poly2tri/poly2tri/sweep/advancing_front.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/poly2tri/poly2tri/sweep/advancing_front.cc
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/poly2tri/poly2tri/sweep/cdt.cc
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/poly2tri/poly2tri/sweep/cdt.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/poly2tri/poly2tri/sweep/sweep.cc
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/poly2tri/poly2tri/sweep/sweep.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/poly2tri/poly2tri/sweep/sweep_context.cc
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/poly2tri/poly2tri/sweep/sweep_context.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/poly2tri/poly2tri/common/shapes.cc
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/poly2tri/poly2tri/common/shapes.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/poly2tri/poly2tri/common/utils.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/poly2tri/poly2tri/sweep/advancing_front.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/poly2tri/poly2tri/sweep/advancing_front.cc
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/poly2tri/poly2tri/sweep/cdt.cc
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/poly2tri/poly2tri/sweep/cdt.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/poly2tri/poly2tri/sweep/sweep.cc
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/poly2tri/poly2tri/sweep/sweep.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/poly2tri/poly2tri/sweep/sweep_context.cc
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/poly2tri/poly2tri/sweep/sweep_context.h
 #unzip
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/unzip/crypt.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/unzip/ioapi.c
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/unzip/ioapi.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/unzip/unzip.c
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/unzip/unzip.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/unzip/crypt.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/unzip/ioapi.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/unzip/ioapi.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/unzip/unzip.c
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/unzip/unzip.h
 #openddl_parser
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/openddlparser/code/OpenDDLParser.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/openddlparser/code/DDLNode.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/openddlparser/code/OpenDDLCommon.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/openddlparser/code/OpenDDLExport.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/openddlparser/code/Value.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/openddlparser/include/openddlparser/OpenDDLParser.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/openddlparser/include/openddlparser/OpenDDLParserUtils.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/openddlparser/include/openddlparser/OpenDDLCommon.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/openddlparser/include/openddlparser/OpenDDLExport.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/openddlparser/include/openddlparser/DDLNode.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/code/../contrib/openddlparser/include/openddlparser/Value.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/openddlparser/code/OpenDDLParser.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/openddlparser/code/DDLNode.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/openddlparser/code/OpenDDLCommon.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/openddlparser/code/OpenDDLExport.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/openddlparser/code/Value.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/openddlparser/include/openddlparser/OpenDDLParser.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/openddlparser/include/openddlparser/OpenDDLParserUtils.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/openddlparser/include/openddlparser/OpenDDLCommon.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/openddlparser/include/openddlparser/OpenDDLExport.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/openddlparser/include/openddlparser/DDLNode.h
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/openddlparser/include/openddlparser/Value.h
+#Precompiled
+    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
 )
+
+set_precompiled_header(Assimp ${CMAKE_CURRENT_LIST_DIR})
+
+set_source_ignore_precompiled_header(${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/ConvertUTF/ConvertUTF.c)
+set_source_ignore_precompiled_header(${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/unzip/ioapi.c)
+set_source_ignore_precompiled_header(${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/unzip/unzip.c)

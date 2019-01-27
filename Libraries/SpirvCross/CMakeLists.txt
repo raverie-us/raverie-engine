@@ -3,9 +3,6 @@ target_sources(SpirvCross
     ${CMAKE_CURRENT_LIST_DIR}/Repo/GLSL.std.450.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/include/spirv_cross/barrier.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/include/spirv_cross/external_interface.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/include/spirv_cross/image.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/include/spirv_cross/internal_interface.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/include/spirv_cross/sampler.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/include/spirv_cross/thread_group.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/main.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv.hpp
@@ -30,4 +27,8 @@ target_sources(SpirvCross
     ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_parser.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_reflect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_reflect.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
 )
+
+set_precompiled_header(SpirvCross ${CMAKE_CURRENT_LIST_DIR})

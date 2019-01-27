@@ -312,4 +312,8 @@ target_sources(SpirvTools
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/val/validation_state.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/source/val/validation_state.h
     ${CMAKE_CURRENT_LIST_DIR}/Build/DebugInfo.h
+    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
 )
+
+set_precompiled_header(SpirvTools ${CMAKE_CURRENT_LIST_DIR})
