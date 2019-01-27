@@ -39,14 +39,6 @@ target_link_libraries(Platform
 )
 
 ################################################################################
-# set the output directories for all of our targets
-################################################################################
-zero_multitarget_output_directories(
-    Platform
-    LIBRARY_DIRECTORY ${zero_library_dir}
-    RUNTIME_DIRECTORY ${zero_binary_dir}
-)
-################################################################################
 # Specify any additional target options such as pdb locations
 ################################################################################
 zero_multitarget_output_settings(

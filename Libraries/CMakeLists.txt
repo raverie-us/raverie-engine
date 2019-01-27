@@ -492,54 +492,6 @@ target_link_libraries(BrowserSubProcess
                       ${CEFStatic}
 )
 
-
-################################################################################
-# set the output directories for all of our targets
-################################################################################
-zero_multitarget_output_directories(
-    CodeTranslator
-    Common
-    Content
-    Editor
-    Engine
-    Gameplay
-    Geometry
-    Graphics
-    Meta
-    Networking
-    Physics
-    Replication
-    Serialization
-    Sound
-    SpatialPartition
-    Startup
-    Support
-    UiWidget
-    Widget
-    Zilch
-    ZilchScript
-    ZilchShaders
-    
-    Scintilla
-    Libpng
-    Assimp
-    ZLib
-    FreeType
-    Opus
-    Nvtt
-    SpirvHeaders
-    SpirvTools
-    SpirvCross
-    
-    ZeroEditor
-    ZeroLauncher 
-    ZeroLauncherSharedLibrary
-    BrowserSubProcess
-    
-    LIBRARY_DIRECTORY ${zero_library_dir}
-    RUNTIME_DIRECTORY ${zero_binary_dir}
-)
-
 ################################################################################
 # Specify any additional target options such as pdb locations
 ################################################################################
