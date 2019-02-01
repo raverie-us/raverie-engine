@@ -1,3 +1,8 @@
+add_library(SpatialPartition)
+
+welder_setup_library(SpatialPartition ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(SpatialPartition ${CMAKE_CURRENT_LIST_DIR})
+
 target_sources(SpatialPartition
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/AabbTreeMethods.hpp
@@ -55,4 +60,9 @@ target_sources(SpatialPartition
     ${CMAKE_CURRENT_LIST_DIR}/StaticAabbTree.inl
     ${CMAKE_CURRENT_LIST_DIR}/StaticAabbTreeBroadPhase.cpp
     ${CMAKE_CURRENT_LIST_DIR}/StaticAabbTreeBroadPhase.hpp
+)
+
+target_link_libraries(SpatialPartition
+  PUBLIC
+    Zilch
 )

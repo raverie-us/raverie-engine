@@ -1,3 +1,8 @@
+add_library(Zilch)
+
+welder_setup_library(Zilch ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(Zilch ${CMAKE_CURRENT_LIST_DIR})
+
 target_sources(Zilch
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/Any.cpp
@@ -133,4 +138,9 @@ target_sources(Zilch
     ${CMAKE_CURRENT_LIST_DIR}/WebSocket.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Wrapper.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Wrapper.hpp
+)
+
+target_link_libraries(Zilch
+  PUBLIC
+    Common
 )

@@ -1,3 +1,8 @@
+add_library(Gameplay)
+
+welder_setup_library(Gameplay ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(Gameplay ${CMAKE_CURRENT_LIST_DIR})
+
 target_sources(Gameplay
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/CameraViewport.cpp
@@ -57,4 +62,12 @@ target_sources(Gameplay
     ${CMAKE_CURRENT_LIST_DIR}/WindowsExportTarget.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Zero.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Zero.hpp
+)
+
+target_link_libraries(Gameplay
+  PUBLIC
+    Common
+    Zilch
+    Engine
+    ZilchShaders
 )

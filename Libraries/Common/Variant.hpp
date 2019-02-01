@@ -297,7 +297,7 @@ public:
     byte   mData[16];
     int    mDataAsInts[4];
     float  mDataAsFloats[4];
-    String mDataAsString;
+    //String mDataAsString;
     void*  mDataAsPointer;
   };
 };

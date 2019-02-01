@@ -345,7 +345,6 @@ ZilchDefineStaticLibrary(EngineLibrary)
   ZilchInitializeType(ZilchPluginConfig);
   ZilchInitializeType(TextEditorConfig);
   ZilchInitializeType(RecentProjects);
-  ZilchInitializeType(BuildInfo);
   ZilchInitializeType(EditorSettings);
   ZilchInitializeType(LauncherConfig);
   ZilchInitializeType(LauncherLegacySettings);

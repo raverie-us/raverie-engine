@@ -1,7 +1,12 @@
-set(MANUAL_ADDITIONS "")
+add_library(Common)
+
+welder_setup_library(Common ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(Common ${CMAKE_CURRENT_LIST_DIR})
+
+set(WELDER_COMMON_VISUALIZER "")
 
 if ("${CMAKE_GENERATOR}" MATCHES "Visual Studio*")
-    set(MANUAL_ADDITIONS "${CMAKE_CURRENT_LIST_DIR}/ZeroVisualizers.natvis")
+    set(WELDER_COMMON_VISUALIZER "${CMAKE_CURRENT_LIST_DIR}/Visualizers.natvis")
 endif()
 
 target_sources(Common
@@ -258,5 +263,5 @@ target_sources(Common
     ${CMAKE_CURRENT_LIST_DIR}/WebRequest.hpp
     ${CMAKE_CURRENT_LIST_DIR}/WeightedProbabilityTable.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZeroAllocator.hpp
-    ${MANUAL_ADDITIONS}
+    ${WELDER_COMMON_VISUALIZER}
 )

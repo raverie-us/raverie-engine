@@ -1,3 +1,8 @@
+add_library(Widget)
+
+welder_setup_library(Widget ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(Widget ${CMAKE_CURRENT_LIST_DIR})
+
 target_sources(Widget
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/Button.cpp
@@ -83,4 +88,10 @@ target_sources(Widget
     ${CMAKE_CURRENT_LIST_DIR}/WidgetTest.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Window.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Window.hpp
+)
+
+target_link_libraries(Widget
+  PUBLIC
+    Engine
+    ZilchShaders
 )

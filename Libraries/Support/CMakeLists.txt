@@ -1,3 +1,8 @@
+add_library(Support)
+
+welder_setup_library(Support ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(Support ${CMAKE_CURRENT_LIST_DIR})
+
 target_sources(Support
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/Archive.cpp
@@ -27,4 +32,12 @@ target_sources(Support
     ${CMAKE_CURRENT_LIST_DIR}/SupportStandard.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Urls.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Urls.hpp
+)
+
+target_link_libraries(Support
+  PUBLIC
+    Common
+  PRIVATE
+    Libpng
+    ZLib
 )

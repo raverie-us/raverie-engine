@@ -1,3 +1,8 @@
+add_library(Graphics)
+
+welder_setup_library(Graphics ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(Graphics ${CMAKE_CURRENT_LIST_DIR})
+
 target_sources(Graphics
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/Atlas.cpp
@@ -105,4 +110,12 @@ target_sources(Graphics
     ${CMAKE_CURRENT_LIST_DIR}/ZilchFragment.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderGenerator.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderGenerator.hpp
+)
+
+target_link_libraries(Graphics
+  PUBLIC
+    Common
+    Geometry
+    ZilchShaders
+    FreeType
 )

@@ -1,109 +1,80 @@
-################################################################################
-# Author: Joshua Shlemmer
-# Copyright 2017, DigiPen Institute of Technology
-################################################################################
-################################################################################
-# Set required version of cmake and any version specific policies
-################################################################################
 cmake_minimum_required(VERSION 3.9.1 FATAL_ERROR)
+
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 set(CMAKE_CONFIGURATION_TYPES Debug Release RelWithDebInfo)
+add_definitions(-D$<$<CONFIG:Debug>:DEBUG>$<$<CONFIG:Release>:NDEBUG>$<$<CONFIG:RelWithDebInfo>:NDEBUG>)
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT WelderEditor)
 
-################################################################################
-# Declare project(s) and set used languages
-################################################################################
-project(Zero)
+project(Welder)
 
-################################################################################
-# Do platform specific checks for chunks of the library paths
-################################################################################
+set(WELDER_CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+set(WELDER_CMAKE_DIR ${WELDER_CORE_DIR}/CMakeFiles/)
+set(WELDER_LIBRARIES_DIR ${WELDER_CORE_DIR}/Libraries/)
+set(WELDER_PLATFORM_DATA_DIR ${WELDER_CORE_PATH}/PlatformData/${platform})
 
-## windows libraries
-#if( ${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-#    set(platform Windows)
-#    # 64 bit windows libraries
-#    if( ${CMAKE_SIZEOF_VOID_P} EQUAL 8 )
-#        message(FATAL_ERROR "64bit windows is currently not supported.")
-#    # 32 bit windows libraries
-#    else()
-#        set(bit x86)
-#    endif()
-## non-windows libraries
-#else()
-#    message(FATAL_ERROR "no other platforms are currently supported besides windows. Current Sys: ${CMAKE_SYSTEM_NAME}")
-#endif()
+function(welder_setup_library target directory)
+  target_include_directories(${target} PUBLIC ${directory} ${WELDER_LIBRARIES_DIR})
+  set_target_properties(
+    ${target}
+    PROPERTIES
+    STATIC_LIBRARY_FLAGS "${WELDER_STATIC_LIBRARY_FLAGS}"
+    STATIC_LIBRARY_FLAGS_RELEASE "${WELDER_STATIC_LIBRARY_RELEASE}"
+    LINK_FLAGS "${WELDER_LINK_FLAGS}"
+  )
+  target_compile_options(${target} PUBLIC "${WELDER_COMPILE_OPTIONS}")
+endfunction()
 
-################################################################################
-# Set up global variables
-################################################################################
+function(welder_use_precompiled_header target directory)
+  if(MSVC)
+    target_compile_options(${target} PRIVATE "/FIPrecompiled.hpp")
+    set_target_properties(${target} PROPERTIES COMPILE_FLAGS "/YuPrecompiled.hpp")
+    set_source_files_properties(${directory}/Precompiled.cpp PROPERTIES COMPILE_FLAGS "/YcPrecompiled.hpp")
+  else()
+    #add_definitions(-include Precompiled.hpp)
+  endif()
+endfunction()
 
-#paths
-set(cmake_include_dir ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-set(cmake_utilities_dir ${cmake_include_dir}/Utilities)
-set(cmake_os_dir ${cmake_include_dir}/OS)
-set(cmake_flags_dir ${cmake_include_dir}/CommonFlags)
-set(cmake_config_dir ${cmake_include_dir}/Configuration)
-set(cmake_compiler_dir ${cmake_include_dir}/Compiler)
+function(welder_source_ignore_precompiled_header source)
+  if(MSVC)
+    set_source_files_properties(${source} PROPERTIES COMPILE_FLAGS "/Y-")
+  else()
+  endif()
+endfunction()
 
+function(welder_get_all_link_libraries outputList TARGET)
+    list(APPEND visitedTargets ${TARGET})
+    get_target_property(linkedLibs ${TARGET} INTERFACE_LINK_LIBRARIES)
+    set(allLinkedLibs "")
+    foreach(linkedLib ${linkedLibs})
+        if (TARGET ${linkedLib})
+            list(FIND visitedTargets ${linkedLib} VISITED)
+            if (${VISITED} EQUAL -1)
+                welder_get_all_link_libraries(childLinkedLibs ${linkedLib})
+                list(APPEND allLinkedLibs ${linkedLib} ${childLinkedLibs})
+            endif()
+        endif()
+    endforeach()
+    set(visitedTargets ${visitedTargets} PARENT_SCOPE)
+    set(${outputList} ${allLinkedLibs} PARENT_SCOPE)
+endfunction()
 
-set(zero_core_path ${CMAKE_CURRENT_SOURCE_DIR})
-message("CorePath: ${zero_core_path}\n")
-set(zero_build_out ${zero_core_path}/BuildOutput)
-set(supported_configs $<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>)
-set(zero_intermediates_dir ${zero_build_out}/Int/${supported_configs})
-set(zero_unit_test_dir ${zero_core_path}/UnitTests)
-
-
-################################################################################
-# Define any user options
-################################################################################
-option(generate_with_unit_tests "If set to 'ON', project will be generated with the unit tests included." OFF)
-
-################################################################################
-# Define any platform options
-################################################################################
-include(${cmake_include_dir}/Platform_Options.cmake)
-
-set(zero_platform_data ${zero_core_path}/PlatformData/${platform})
-
-set(zero_library_dir ${zero_build_out}/Out/${configuration}/${supported_configs})
-set(zero_binary_dir ${zero_build_out}/Out/${configuration}/${supported_configs})
-
-################################################################################
-# Path for finding external CMake modules
-################################################################################
-set(CMAKE_MODULE_PATH "${Source_Root}/cmake/modules/")
-
-################################################################################
-# Includes
-################################################################################
-include(${cmake_utilities_dir}/Zero_Mulitarget_Functions.cmake)
-include(${cmake_utilities_dir}/Zero_Custom_Commands.cmake)
-
-################################################################################
-# Separate Projects into folders for IDEs.
-################################################################################
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-
-
-################################################################################
-# Call CMakeLists.txt in source folders, adding them to the project non-globally
-################################################################################
-# external libraries
-add_subdirectory(External)
-
-# zero source and related projects
-add_subdirectory(Libraries)
-
-if (generate_with_unit_tests)
-    if (NOT EXISTS ${zero_unit_test_dir})
-        message(WARNING "option 'generate_with_unit_tests' set but unit test directory: '${zero_unit_test_dir}' doesn't exist.\n Skipping unit tests.\n")
-    else()
-        message("\nAdding unit tests to project...\n")
-        add_subdirectory(UnitTests)
+function(welder_copy_from_linked_libraries target)
+  welder_get_all_link_libraries(libraries ${target})
+  foreach(library ${libraries})
+    set(directory "${${library}CopyDirectories}")
+    if(directory)
+      add_custom_command(TARGET ${target} POST_BUILD COMMAND
+        ${CMAKE_COMMAND} -E copy_directory ${directory} $<TARGET_FILE_DIR:${target}>)
     endif()
+  endforeach()
+endfunction()
+
+if (EMSCRIPTEN)
+  include(${WELDER_CMAKE_DIR}/Clang_Emscripten_Emscripten.cmake)
+else()
+  include(${WELDER_CMAKE_DIR}/MSVC_Windows_Windows.cmake)
 endif()
 
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ZeroEditor) 
-
+add_subdirectory(External)
+add_subdirectory(Libraries)

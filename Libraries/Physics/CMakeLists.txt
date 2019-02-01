@@ -1,3 +1,8 @@
+add_library(Physics)
+
+welder_setup_library(Physics ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(Physics ${CMAKE_CURRENT_LIST_DIR})
+
 target_sources(Physics
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/Analyzer.cpp
@@ -249,4 +254,9 @@ target_sources(Physics
     ${CMAKE_CURRENT_LIST_DIR}/WindEffect.hpp
     ${CMAKE_CURRENT_LIST_DIR}/WorldTransformation.cpp
     ${CMAKE_CURRENT_LIST_DIR}/WorldTransformation.hpp
+)
+
+target_link_libraries(Physics
+  PUBLIC
+    Zilch
 )

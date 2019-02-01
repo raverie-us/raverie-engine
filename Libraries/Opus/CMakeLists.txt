@@ -1,4 +1,12 @@
-add_definitions(-DOPUS_BUILD -DUSE_ALLOCA)
+add_library(Opus)
+
+welder_setup_library(Opus ${CMAKE_CURRENT_LIST_DIR})
+
+target_compile_definitions(Opus
+  PUBLIC
+    OPUS_BUILD
+    USE_ALLOCA
+)
 
 target_sources(Opus
   PRIVATE
@@ -150,4 +158,12 @@ target_sources(Opus
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/opus_projection_encoder.c
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/repacketizer.c
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/tansig_table.h
+)
+
+target_include_directories(Opus
+  PUBLIC
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/include/
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/silk/
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/silk/float/
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/celt/
 )

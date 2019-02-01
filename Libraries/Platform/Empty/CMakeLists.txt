@@ -1,3 +1,7 @@
+add_library(Platform)
+
+welder_setup_library(Platform ${CMAKE_CURRENT_LIST_DIR})
+
 target_sources(Platform
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/Atomic.cpp
@@ -17,8 +21,6 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/MainLoop.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Peripherals.cpp
     ${CMAKE_CURRENT_LIST_DIR}/PlatformStandard.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Process.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Registry.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Renderer.cpp
@@ -29,5 +31,11 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/ThreadSync.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Timer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Utilities.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/VirtualFileAndFileSytem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/VirtualFileAndFileSystem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/WebRequest.cpp
+)
+
+target_link_libraries(Platform
+  PUBLIC
+    Common
 )

@@ -338,10 +338,10 @@ struct disable_if<false, Type>
 #define TC_DISABLE_IF_IS_SAME(TypeA, TypeB) typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type
 
 /// Enable If via Function Template Parameter (Declaration)
-#define TF_ENABLE_IF(Condition)             typename Zero::enable_if<(Condition)>::type* = (void*)nullptr
-#define TF_ENABLE_IF_IS_SAME(TypeA, TypeB)  typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = (void*)nullptr
-#define TF_DISABLE_IF(Condition)            typename Zero::disable_if<(Condition)>::type* = (void*)nullptr
-#define TF_DISABLE_IF_IS_SAME(TypeA, TypeB) typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = (void*)nullptr
+#define TF_ENABLE_IF(Condition)             typename Zero::enable_if<(Condition)>::type* = nullptr
+#define TF_ENABLE_IF_IS_SAME(TypeA, TypeB)  typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = nullptr
+#define TF_DISABLE_IF(Condition)            typename Zero::disable_if<(Condition)>::type* = nullptr
+#define TF_DISABLE_IF_IS_SAME(TypeA, TypeB) typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = nullptr
 
 /// Enable If via Function Template Parameter (Definition)
 #define TF_ENABLE_IF_DEF(Condition)             typename Zero::enable_if<(Condition)>::type*
@@ -354,10 +354,10 @@ struct disable_if<false, Type>
 #define R_DISABLE_IF(Condition, ReturnType) typename Zero::disable_if<(Condition), ReturnType>::type
 
 /// Enable If via Function Parameter (Declaration)
-#define P_ENABLE_IF(Condition)             typename Zero::enable_if<(Condition)>::type* = (void*)nullptr
-#define P_ENABLE_IF_IS_SAME(TypeA, TypeB)  typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = (void*)nullptr
-#define P_DISABLE_IF(Condition)            typename Zero::disable_if<(Condition)>::type* = (void*)nullptr
-#define P_DISABLE_IF_IS_SAME(TypeA, TypeB) typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = (void*)nullptr
+#define P_ENABLE_IF(Condition)             typename Zero::enable_if<(Condition)>::type* = nullptr
+#define P_ENABLE_IF_IS_SAME(TypeA, TypeB)  typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = nullptr
+#define P_DISABLE_IF(Condition)            typename Zero::disable_if<(Condition)>::type* = nullptr
+#define P_DISABLE_IF_IS_SAME(TypeA, TypeB) typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = nullptr
 
 /// Enable If via Function Parameter (Definition)
 #define P_ENABLE_IF_DEF(Condition)             typename Zero::enable_if<(Condition)>::type*

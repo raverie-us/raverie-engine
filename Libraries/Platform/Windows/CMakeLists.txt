@@ -1,3 +1,8 @@
+add_library(Platform)
+
+welder_setup_library(Platform ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(Platform ${CMAKE_CURRENT_LIST_DIR})
+
 target_sources(Platform
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/../Curl/WebRequest.cpp
@@ -45,4 +50,14 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/WinUtility.hpp
     ${CMAKE_CURRENT_LIST_DIR}/WindowsError.cpp
     ${CMAKE_CURRENT_LIST_DIR}/WindowsError.hpp
+)
+
+target_link_libraries(Platform
+  PUBLIC
+    Common
+    Glew
+    CEF
+    Curl
+    GL
+    WinHid
 )

@@ -1,3 +1,7 @@
+add_library(Libpng)
+
+welder_setup_library(Libpng ${CMAKE_CURRENT_LIST_DIR})
+
 target_sources(Libpng
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/Repo/png.c
@@ -21,4 +25,14 @@ target_sources(Libpng
     ${CMAKE_CURRENT_LIST_DIR}/Repo/pngwrite.c
     ${CMAKE_CURRENT_LIST_DIR}/Repo/pngwtran.c
     ${CMAKE_CURRENT_LIST_DIR}/Repo/pngwutil.c
+)
+
+target_link_libraries(Libpng
+  PUBLIC
+    ZLib
+)
+
+target_include_directories(Libpng
+  PUBLIC
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/
 )

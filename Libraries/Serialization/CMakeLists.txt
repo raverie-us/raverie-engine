@@ -1,3 +1,8 @@
+add_library(Serialization)
+
+welder_setup_library(Serialization ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(Serialization ${CMAKE_CURRENT_LIST_DIR})
+
 target_sources(Serialization
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/Binary.cpp
@@ -38,4 +43,11 @@ target_sources(Serialization
     ${CMAKE_CURRENT_LIST_DIR}/Tokenizer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Tokenizer.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZeroContainers.hpp
+)
+
+target_link_libraries(Serialization
+  PUBLIC
+    Common
+    # TODO(Trevor.Sundberg): Remove this dependency.
+    #Geometry
 )

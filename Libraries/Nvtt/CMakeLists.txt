@@ -1,3 +1,9 @@
+add_library(Nvtt)
+
+welder_setup_library(Nvtt ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(Nvtt ${CMAKE_CURRENT_LIST_DIR})
+welder_source_ignore_precompiled_header(${CMAKE_CURRENT_LIST_DIR}/Repo/extern/poshlib/posh.c)
+
 target_sources(Nvtt
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/Repo/extern/poshlib/posh.c
@@ -183,5 +189,8 @@ target_sources(Nvtt
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
 )
 
-set_precompiled_header(Nvtt ${CMAKE_CURRENT_LIST_DIR})
-set_source_ignore_precompiled_header(${CMAKE_CURRENT_LIST_DIR}/Repo/extern/poshlib/posh.c)
+target_include_directories(Nvtt
+  PUBLIC
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/extern/poshlib/
+)

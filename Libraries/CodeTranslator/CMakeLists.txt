@@ -1,3 +1,8 @@
+add_library(CodeTranslator)
+
+welder_setup_library(CodeTranslator ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(CodeTranslator ${CMAKE_CURRENT_LIST_DIR})
+
 target_sources(CodeTranslator
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/CodeSplitWindow.cpp
@@ -9,4 +14,10 @@ target_sources(CodeTranslator
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ShaderTranslationDebugHelper.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ShaderTranslationDebugHelper.hpp
+)
+
+target_link_libraries(CodeTranslator
+  PUBLIC
+    Engine
+    ZilchShaders
 )

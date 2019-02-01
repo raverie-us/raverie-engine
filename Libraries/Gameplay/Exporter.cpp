@@ -20,7 +20,6 @@ namespace ExportUtility
 HashSet<String>& GetExcludedFiles()
 {
   static HashSet<String> files;
-  files.Insert("BuildInfo.data");
   files.Insert("ZeroEditor.exe");
   files.Insert("exp");
   files.Insert("ilk");

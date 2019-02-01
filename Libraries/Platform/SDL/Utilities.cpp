@@ -80,9 +80,10 @@ u64 GetMacAddress()
 }
 #endif
 
-void DebugBreak()
+bool DebugBreak()
 {
   SDL_TriggerBreakpoint();
+  return true;
 }
 
 #if !defined(ZeroPlatformNoEnableMemoryLeakChecking)

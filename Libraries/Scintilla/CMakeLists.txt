@@ -1,4 +1,13 @@
-add_definitions(-DSCI_LEXER -DSCI_NAMESPACE)
+add_library(Scintilla)
+
+welder_setup_library(Scintilla ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(Scintilla ${CMAKE_CURRENT_LIST_DIR})
+
+target_compile_definitions(Scintilla
+  PUBLIC
+    SCI_LEXER
+    SCI_NAMESPACE
+)
 
 target_sources(Scintilla
   PRIVATE
@@ -80,4 +89,13 @@ target_sources(Scintilla
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/ViewStyle.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/XPM.cxx
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/XPM.h
+    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
+)
+
+target_include_directories(Scintilla
+  PUBLIC
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/lexlib/
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/include/
 )

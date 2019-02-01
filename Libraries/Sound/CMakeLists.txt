@@ -1,3 +1,8 @@
+add_library(Sound)
+
+welder_setup_library(Sound ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(Sound ${CMAKE_CURRENT_LIST_DIR})
+
 target_sources(Sound
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/AttenuatorNode.cpp
@@ -67,4 +72,11 @@ target_sources(Sound
     ${CMAKE_CURRENT_LIST_DIR}/VBAP.hpp
     ${CMAKE_CURRENT_LIST_DIR}/VolumeModifier.cpp
     ${CMAKE_CURRENT_LIST_DIR}/VolumeModifier.hpp
+)
+
+target_link_libraries(Sound
+  PUBLIC
+    Common
+    Geometry
+    Opus
 )

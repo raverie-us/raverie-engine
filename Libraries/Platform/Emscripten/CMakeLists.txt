@@ -1,8 +1,8 @@
-################################################################################
-# Author: Joshua Shlemmer, Dane Curbow
-# Copyright 2018, DigiPen Institute of Technology
-################################################################################
-include(${CMAKE_CURRENT_LIST_DIR}/Generated.cmake)
+add_library(Platform)
+
+welder_setup_library(Platform ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(Platform ${CMAKE_CURRENT_LIST_DIR})
+
 target_sources(Platform
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/../Empty/ComPort.cpp
@@ -28,10 +28,10 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/Shell.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/Timer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/Utilities.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../STL/Atomic.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../STL/File.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../STL/FpControl.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../STL/Process.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/../STD/Atomic.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/../STD/File.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/../STD/FpControl.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/../STD/Process.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Browser.cpp
     ${CMAKE_CURRENT_LIST_DIR}/CallStack.cpp
     ${CMAKE_CURRENT_LIST_DIR}/MainLoop.cpp
@@ -40,4 +40,12 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/WebRequest.cpp
 )
 
-add_definitions(-DZeroPlatformNoShellOpenFile)
+target_compile_definitions(Platform
+  PUBLIC
+    ZeroPlatformNoShellOpenFile
+)
+
+target_link_libraries(Platform
+  PUBLIC
+    Common
+)

@@ -18,14 +18,6 @@
 #endif
 
 //-----------------------------------------------------------------------------Warnings
-#if defined(PLATFORM_WINDOWS)
-#define _SECURE_SCL 0
-#ifndef _CRT_SECURE_NO_WARNINGS
-#define _CRT_SECURE_NO_WARNINGS
-#endif
-#define _NO_CVCONST_H
-#endif
-
 #ifdef COMPILER_MICROSOFT
 
 // Enable these warnings by setting them to level 3
@@ -176,12 +168,10 @@
 // The linker warns us that they could be ambiguous, however they are all exact duplicates.
 #pragma warning(disable : 4067)
 
-#ifdef PLATFORM_64
 // Temporary 64-bit support (ignore size_t conversion warnings)
 #pragma warning(disable: 4244)
 #pragma warning(disable: 4267)
 #pragma warning(disable: 4309)
-#endif
 
 #endif
 

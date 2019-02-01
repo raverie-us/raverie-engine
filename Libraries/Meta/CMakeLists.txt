@@ -1,3 +1,8 @@
+add_library(Meta)
+
+welder_setup_library(Meta ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(Meta ${CMAKE_CURRENT_LIST_DIR})
+
 target_sources(Meta
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/AttributeExtension.cpp
@@ -49,4 +54,9 @@ target_sources(Meta
     ${CMAKE_CURRENT_LIST_DIR}/ThreadSafeReferenceCounted.hpp
     ${CMAKE_CURRENT_LIST_DIR}/VariantTypes.inl
     ${CMAKE_CURRENT_LIST_DIR}/ZeroMetaArray.hpp
+)
+
+target_link_libraries(Meta
+  PUBLIC
+    Zilch
 )

@@ -1,3 +1,8 @@
+add_library(Replication)
+
+welder_setup_library(Replication ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(Replication ${CMAKE_CURRENT_LIST_DIR})
+
 target_sources(Replication
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/BandwidthStats.hpp
@@ -38,4 +43,11 @@ target_sources(Replication
     ${CMAKE_CURRENT_LIST_DIR}/ReplicatorLink.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Route.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Route.hpp
+)
+
+target_link_libraries(Replication
+  PUBLIC
+    Common
+    Zilch
+    Geometry
 )

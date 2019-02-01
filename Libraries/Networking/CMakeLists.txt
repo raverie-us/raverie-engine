@@ -1,3 +1,8 @@
+add_library(Networking)
+
+welder_setup_library(Networking ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(Networking ${CMAKE_CURRENT_LIST_DIR})
+
 target_sources(Networking
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/BitStreamExtended.cpp
@@ -55,4 +60,10 @@ target_sources(Networking
     ${CMAKE_CURRENT_LIST_DIR}/WebRequester.hpp
     ${CMAKE_CURRENT_LIST_DIR}/WebServer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/WebServer.hpp
+)
+
+target_link_libraries(Networking
+  PUBLIC
+    Common
+    Geometry
 )

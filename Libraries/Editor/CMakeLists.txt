@@ -1,3 +1,8 @@
+add_library(Editor)
+
+welder_setup_library(Editor ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(Editor ${CMAKE_CURRENT_LIST_DIR})
+
 target_sources(Editor
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/AddRemoveListBox.cpp
@@ -275,4 +280,11 @@ target_sources(Editor
     ${CMAKE_CURRENT_LIST_DIR}/VariantEditor.hpp
     ${CMAKE_CURRENT_LIST_DIR}/WatchView.cpp
     ${CMAKE_CURRENT_LIST_DIR}/WatchView.hpp
+)
+
+target_link_libraries(Editor
+  PUBLIC
+    Scintilla
+    Common
+    ZilchShaders
 )

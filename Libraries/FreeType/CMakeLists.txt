@@ -1,4 +1,13 @@
-add_definitions(-DFT2_BUILD_LIBRARY -DFT_CONFIG_OPTION_SYSTEM_ZLIB -DFT_CONFIG_OPTION_USE_PNG)
+add_library(FreeType)
+
+welder_setup_library(FreeType ${CMAKE_CURRENT_LIST_DIR})
+
+target_compile_definitions(FreeType
+  PUBLIC
+    FT2_BUILD_LIBRARY
+    FT_CONFIG_OPTION_SYSTEM_ZLIB
+    FT_CONFIG_OPTION_USE_PNG
+)
 
 target_sources(FreeType
   PRIVATE
@@ -43,4 +52,16 @@ target_sources(FreeType
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/type1/type1.c
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/type42/type42.c
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/winfonts/winfnt.c
+)
+
+target_link_libraries(FreeType
+  PUBLIC
+    ZLib
+    Libpng
+)
+
+target_include_directories(FreeType
+  PUBLIC
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/include/
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/include/freetype/
 )

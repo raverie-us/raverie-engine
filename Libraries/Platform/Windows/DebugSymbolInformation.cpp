@@ -132,7 +132,7 @@ void SimpleStackWalker::ShowCallstack(void* context, StringParam extraSymbolPath
 
     STACKFRAME64 stackFrame;
     ZeroMemory(&stackFrame, sizeof(stackFrame));
-#if PLATFORM_64
+#if _WIN64
     stackFrame.AddrPC.Offset = pcontext->Rip;
     stackFrame.AddrFrame.Offset = pcontext->Rbp;
     stackFrame.AddrStack.Offset = pcontext->Rsp;

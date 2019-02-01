@@ -1,3 +1,8 @@
+add_library(UiWidget)
+
+welder_setup_library(UiWidget ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(UiWidget ${CMAKE_CURRENT_LIST_DIR})
+
 target_sources(UiWidget
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
@@ -18,4 +23,10 @@ target_sources(UiWidget
     ${CMAKE_CURRENT_LIST_DIR}/UiWidgetEvents.hpp
     ${CMAKE_CURRENT_LIST_DIR}/UiWidgetStandard.cpp
     ${CMAKE_CURRENT_LIST_DIR}/UiWidgetStandard.hpp
+)
+
+target_link_libraries(UiWidget
+  PUBLIC
+    Engine
+    ZilchShaders
 )

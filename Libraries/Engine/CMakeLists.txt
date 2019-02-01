@@ -1,3 +1,8 @@
+add_library(Engine)
+
+welder_setup_library(Engine ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(Engine ${CMAKE_CURRENT_LIST_DIR})
+
 target_sources(Engine
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/Action.cpp
@@ -205,4 +210,11 @@ target_sources(Engine
     ${CMAKE_CURRENT_LIST_DIR}/ZilchManager.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchResource.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchResource.hpp
+)
+
+target_link_libraries(Engine
+  PUBLIC
+    Common
+    Geometry
+    Zilch
 )

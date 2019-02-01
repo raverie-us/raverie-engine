@@ -1,3 +1,8 @@
+add_library(SpirvCross)
+
+welder_setup_library(SpirvCross ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(SpirvCross ${CMAKE_CURRENT_LIST_DIR})
+
 target_sources(SpirvCross
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/Repo/GLSL.std.450.h
@@ -31,4 +36,8 @@ target_sources(SpirvCross
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
 )
 
-set_precompiled_header(SpirvCross ${CMAKE_CURRENT_LIST_DIR})
+target_include_directories(SpirvCross
+  PUBLIC
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/include/
+)

@@ -1,3 +1,8 @@
+add_library(Content)
+
+welder_setup_library(Content ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(Content ${CMAKE_CURRENT_LIST_DIR})
+
 target_sources(Content
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/AnimationProcessor.cpp
@@ -80,4 +85,14 @@ target_sources(Content
     ${CMAKE_CURRENT_LIST_DIR}/ZilchPluginContent.hpp
     ${CMAKE_CURRENT_LIST_DIR}/stb_vorbis.cpp
     ${CMAKE_CURRENT_LIST_DIR}/stb_vorbis.h
+)
+
+target_link_libraries(Content
+  PUBLIC
+    Common
+    Zilch
+    Assimp
+    ZLib
+    Opus
+    Nvtt
 )

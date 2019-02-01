@@ -1,4 +1,17 @@
-add_definitions(-DOPENDDL_STATIC_LIBARY -DASSIMP_BUILD_NO_OWN_ZLIB -DASSIMP_BUILD_NO_C4D_IMPORTER)
+add_library(Assimp)
+
+welder_setup_library(Assimp ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(Assimp ${CMAKE_CURRENT_LIST_DIR})
+welder_source_ignore_precompiled_header(${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/ConvertUTF/ConvertUTF.c)
+welder_source_ignore_precompiled_header(${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/unzip/ioapi.c)
+welder_source_ignore_precompiled_header(${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/unzip/unzip.c)
+
+target_compile_definitions(Assimp
+  PUBLIC
+    OPENDDL_STATIC_LIBARY
+    ASSIMP_BUILD_NO_OWN_ZLIB
+    ASSIMP_BUILD_NO_C4D_IMPORTER
+)
 
 target_sources(Assimp
   PRIVATE
@@ -489,8 +502,15 @@ target_sources(Assimp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
 )
 
-set_precompiled_header(Assimp ${CMAKE_CURRENT_LIST_DIR})
+target_link_libraries(Assimp
+  PUBLIC
+    ZLib
+)
 
-set_source_ignore_precompiled_header(${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/ConvertUTF/ConvertUTF.c)
-set_source_ignore_precompiled_header(${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/unzip/ioapi.c)
-set_source_ignore_precompiled_header(${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/unzip/unzip.c)
+target_include_directories(Assimp
+  PUBLIC
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/include/
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/rapidjson/include/
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/contrib/openddlparser/include/
+)

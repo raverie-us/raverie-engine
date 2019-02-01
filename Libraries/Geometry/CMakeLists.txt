@@ -1,3 +1,8 @@
+add_library(Geometry)
+
+welder_setup_library(Geometry ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(Geometry ${CMAKE_CURRENT_LIST_DIR})
+
 target_sources(Geometry
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/Aabb.cpp
@@ -69,4 +74,10 @@ target_sources(Geometry
     ${CMAKE_CURRENT_LIST_DIR}/TrapezoidMap.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Triangulator.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Triangulator.hpp
+)
+
+target_link_libraries(Geometry
+  PUBLIC
+    Common
+    Zilch
 )

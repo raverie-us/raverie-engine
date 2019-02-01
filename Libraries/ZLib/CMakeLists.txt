@@ -1,3 +1,7 @@
+add_library(ZLib)
+
+welder_setup_library(ZLib ${CMAKE_CURRENT_LIST_DIR})
+
 target_sources(ZLib
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/Repo/adler32.c
@@ -26,4 +30,9 @@ target_sources(ZLib
     ${CMAKE_CURRENT_LIST_DIR}/Repo/zlib.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/zutil.c
     ${CMAKE_CURRENT_LIST_DIR}/Repo/zutil.h
+)
+
+target_include_directories(ZLib
+  PUBLIC
+    ${CMAKE_CURRENT_LIST_DIR}/Repo/
 )

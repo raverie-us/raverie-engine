@@ -1,3 +1,8 @@
+add_library(ZilchShaders)
+
+welder_setup_library(ZilchShaders ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(ZilchShaders ${CMAKE_CURRENT_LIST_DIR})
+
 target_sources(ZilchShaders
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/ArithmeticInstructions.cpp
@@ -85,4 +90,14 @@ target_sources(ZilchShaders
     ${CMAKE_CURRENT_LIST_DIR}/ZilchSpirVFrontEndValidation.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchSpirVSettings.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchSpirVSettings.hpp
+)
+
+target_link_libraries(ZilchShaders
+  PUBLIC
+    Common
+    Geometry
+    Zilch
+    SpirvHeaders
+    SpirvTools
+    SpirvCross
 )

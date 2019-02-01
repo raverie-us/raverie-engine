@@ -1,3 +1,8 @@
+add_library(ZilchScript)
+
+welder_setup_library(ZilchScript ${CMAKE_CURRENT_LIST_DIR})
+welder_use_precompiled_header(ZilchScript ${CMAKE_CURRENT_LIST_DIR})
+
 target_sources(ZilchScript
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
@@ -10,4 +15,11 @@ target_sources(ZilchScript
     ${CMAKE_CURRENT_LIST_DIR}/ZilchScriptStandard.hpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchZero.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ZilchZero.hpp
+)
+
+target_link_libraries(ZilchScript
+  PUBLIC
+    Common
+    Geometry
+    Editor
 )
