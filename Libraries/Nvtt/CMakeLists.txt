@@ -98,9 +98,6 @@ target_sources(Nvtt
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvmath/Plane.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvmath/Plane.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvmath/Plane.inl
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvmath/SimdVector.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvmath/SimdVector_SSE.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvmath/SimdVector_VE.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvmath/SphericalHarmonic.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvmath/SphericalHarmonic.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvmath/Vector.h
@@ -179,9 +176,6 @@ target_sources(Nvtt
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvtt/squish/fastclusterfit.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvtt/squish/maths.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvtt/squish/maths.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvtt/squish/simd.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvtt/squish/simd_sse.h
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvtt/squish/simd_ve.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvtt/squish/weightedclusterfit.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/nvtt/squish/weightedclusterfit.h
     ${CMAKE_CURRENT_LIST_DIR}/nvconfig.h

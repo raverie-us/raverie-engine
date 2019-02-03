@@ -9,7 +9,6 @@ target_sources(SpirvCross
     ${CMAKE_CURRENT_LIST_DIR}/Repo/include/spirv_cross/barrier.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/include/spirv_cross/external_interface.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/include/spirv_cross/thread_group.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/main.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_cfg.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Repo/spirv_cfg.hpp

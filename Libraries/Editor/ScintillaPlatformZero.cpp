@@ -124,7 +124,7 @@ void SurfaceImpl::Polygon(Point *pts, int npts, ColourDesired fore, ColourDesire
       vertices.PushBack(Math::ToVector2(point));
     }
 
-    Array<size_t> indices;
+    Array<uint> indices;
     if (Geometry::Triangulate(vertices, &indices))
     {
       for (size_t i = 0; i < indices.Size(); i += 3)

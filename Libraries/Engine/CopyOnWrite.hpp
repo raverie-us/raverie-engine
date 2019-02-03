@@ -60,7 +60,7 @@ public:
     ++data->mReferenceCount;
   }
 
-  CopyOnWriteHandle::~CopyOnWriteHandle()
+  ~CopyOnWriteHandle()
   {
     if (!mData)
       return;

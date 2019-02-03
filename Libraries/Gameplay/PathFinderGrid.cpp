@@ -315,9 +315,21 @@ HandleOf<ArrayClass<IntVec3>> PathFinderGrid::FindPath(IntVec3Param start, IntVe
 }
 
 //**************************************************************************************************
+HandleOf<ArrayClass<Vec3>> PathFinderGrid::FindPath(Vec3Param worldStart, Vec3Param worldGoal)
+{
+  return ZilchBase::FindPath(worldStart, worldGoal);
+}
+
+//**************************************************************************************************
 HandleOf<PathFinderRequest> PathFinderGrid::FindPathThreaded(IntVec3Param start, IntVec3Param goal)
 {
   return FindPathThreadedHelper<IntVec3, PathFinderAlgorithmGrid>(mGrid, start, goal, mMaxIterations);
+}
+
+//**************************************************************************************************
+HandleOf<PathFinderRequest> PathFinderGrid::FindPathThreaded(Vec3Param worldStart, Vec3Param worldGoal)
+{
+  return ZilchBase::FindPathThreaded(worldStart, worldGoal);
 }
 
 //**************************************************************************************************

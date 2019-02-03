@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <assert.h>
-#include <basetsd.h>
 #include <ctype.h>
 #include <map>
 #include <memory>

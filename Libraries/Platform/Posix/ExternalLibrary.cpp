@@ -8,7 +8,7 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "Platform/ExternalLibrary.hpp"
+#include "Common/ExternalLibrary.hpp"
 
 namespace Zero
 {

@@ -30,8 +30,8 @@ typedef sockaddr_storage SOCKET_ADDRESS_STORAGE;
 #define TRANSLATE_TO_PLATFORM_ENUM(value)   TranslateToPosix(status, value)
 #define TRANSLATE_FROM_PLATFORM_ENUM(value) TranslateToWinsock(status, value)
 
-#include "Platform/Socket.hpp"
-#include "Platform/Atomic.hpp"
+#include "Common/Socket.hpp"
+#include "Common/Atomic.hpp"
 
 #define CAST_HANDLE_TO_SOCKET(value) (static_cast<SOCKET_TYPE>(reinterpret_cast<size_t>(value)))
 #define CAST_SOCKET_TO_HANDLE(value) (reinterpret_cast<OsHandle>(value))

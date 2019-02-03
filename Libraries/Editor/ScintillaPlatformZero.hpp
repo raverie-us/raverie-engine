@@ -12,6 +12,7 @@
 #undef Assert
 #include <map>
 #include <assert.h>
+#include <vector>
 
 #include "include/Platform.h"
 #include "include/SciLexer.h"

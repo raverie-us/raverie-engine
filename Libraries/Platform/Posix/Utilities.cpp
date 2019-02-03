@@ -5,9 +5,9 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "Platform/Utilities.hpp"
-#include "Platform/FileSystem.hpp"
-#include "Platform/CrashHandler.hpp"
+#include "Common/Utilities.hpp"
+#include "Common/FileSystem.hpp"
+#include "Common/CrashHandler.hpp"
 
 
 #include <unistd.h>

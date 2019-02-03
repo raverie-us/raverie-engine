@@ -148,7 +148,7 @@ namespace Zilch
 
     // Evaluates an expression and outputs the value of the expression as well as sub-properties.
     // Returns the actual value of the expression an an Any.
-    Any Debugger::QueryExpression(StringParam expression, Array<QueryResult>& results);
+    Any QueryExpression(StringParam expression, Array<QueryResult>& results);
 
   protected:
 

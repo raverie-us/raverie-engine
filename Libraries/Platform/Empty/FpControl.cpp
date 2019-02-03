@@ -9,7 +9,7 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "Platform/FpControl.hpp"
+#include "Common/FpControl.hpp"
 
 namespace Zero
 {

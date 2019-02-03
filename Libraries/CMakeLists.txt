@@ -51,30 +51,6 @@ add_subdirectory(WelderLauncher)
 #    )
 #endif()
 
-#################################################################################
-## Post build steps
-#################################################################################
-#add_custom_command(
-#    TARGET Engine PRE_BUILD
-#    COMMAND ${CMAKE_COMMAND}
-#    # options
-#    -DZERO_CORE_ROOT="${zero_core_path}"
-#    # command
-#    -P ${cmake_utilities_dir}/Update_Build_Version_Script.cmake
-#)
-#
-##### ZeroEditor editor
-#copy_multiple_shared_objects(
-#    ZeroEditor
-#    ZeroLauncher
-#    OUTPUT_DIRECTORY ${zero_binary_dir}
-#    SHARED_OBJECT_LOCATIONS
-#    ## setup all dll locations
-#    ${CEFSharedPath}
-#    ${PortAudioSharedPath}
-#    ${SDLSharedPath}
-#)
-#
 #if("${platform}" STREQUAL "Emscripten")
 #    message("should be calling zip directory")
 #    multitarget_zip_directory(
@@ -112,71 +88,4 @@ add_subdirectory(WelderLauncher)
 #        "BuildOutput/ZeroLauncherFileSystem.zip"
 #    )
 #endif()
-#
-#
-##function(create_build_info aTarget aSourceDir aBuildOutDir aOutputLocation)
-#create_build_info(
-#    ZeroEditor
-#    ${CMAKE_CURRENT_LIST_DIR}/ZeroEditor
-#    ${zero_core_path}
-#    ${zero_binary_dir}
-#    ${zero_binary_dir}
-#)
-#
-##function(CreatePluginDirectory aTarget aZeroCoreDir aBuildOutputDirectory aOS aplatformShortName)
-#editor_post_build_step(
-#    ZeroEditor
-#    ${zero_core_path}
-#    ${zero_library_dir}
-#    ${zero_binary_dir}
-#    ${platform}
-#    ${bit}
-#)
-#
-#####
-#
-##### ZeroLauncherSharedLibrary
-## launcher_post_build(aTarget aZeroCoreDirectory aProjectDirectory aBuildOutputDirectory)
-#launcher_shared_post_build(
-#    ZeroLauncherSharedLibrary 
-#    ${zero_core_path}
-#    ${CMAKE_CURRENT_LIST_DIR}/ZeroLauncherSharedLibrary
-#    ${zero_binary_dir}
-#)
-#
-##### BrowserSubProcess
-#add_custom_command(
-#    TARGET BrowserSubProcess POST_BUILD
-#    # executes "cmake -E copy_directory
-#    COMMAND ${CMAKE_COMMAND} -E copy_directory  
-#    # input folder
-#    ${zero_binary_dir}/BrowserSubProcess                                  
-#    #output folder
-#    ${zero_binary_dir}/ZeroEditor
-#)
-#
-#####
-#
-##### ZeroLauncher
-#launcher_post_build(
-#    ZeroLauncher 
-#    ${zero_core_path}
-#    ${CMAKE_CURRENT_LIST_DIR}
-#    ${zero_binary_dir}
-#)
-#
-#
-##### Copy the CEF files for every project that needs them
-## first check if we need CEF for this platform, then copy cef files over
-#if (${CEF_exists})
-#    zero_multitarget_copy_folders_to_target_output_directories(
-#        ZeroEditor
-#        ZeroLauncher
-#        BrowserSubProcess
-#        OUTPUT_DIRECTORY ${zero_binary_dir}
-#        FOLDERS_TO_COPY 
-#        ${aZeroCoreDirectory}/External/CEF/bin
-#    )
-#endif()
-#####
 #

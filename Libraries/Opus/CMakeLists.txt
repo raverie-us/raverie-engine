@@ -147,7 +147,6 @@ target_sources(Opus
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/mlp.h
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/mlp_data.c
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/opus.c
-    ${CMAKE_CURRENT_LIST_DIR}/Repo/src/opus_compare.c
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/opus_decoder.c
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/opus_encoder.c
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/opus_multistream.c

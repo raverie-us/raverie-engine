@@ -8,7 +8,7 @@
 ///
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
-#include "Platform/Timer.hpp"
+#include "Common/Timer.hpp"
 
 namespace Zero
 {

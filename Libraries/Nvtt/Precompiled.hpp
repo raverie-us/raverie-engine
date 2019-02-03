@@ -9,7 +9,6 @@
 #include <cmath>
 #include <cstddef>
 #include <cstring>
-#include <emmintrin.h>
 #include <errno.h>
 #include <float.h>
 #include <limits>
