@@ -30,8 +30,6 @@ public:
   String GetBuildDate();
   String GetBuildVersion();
 
-  void FindSourceDirectory();
-
   /// Name of the application for separating config files.
   String ApplicationName;
   /// Directory source was built from.

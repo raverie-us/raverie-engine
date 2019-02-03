@@ -51,3 +51,5 @@ add_dependencies(WelderLauncherShell
   BrowserSubProcess
   WelderLauncher
 )
+
+welder_copy_from_linked_libraries(WelderLauncherShell)

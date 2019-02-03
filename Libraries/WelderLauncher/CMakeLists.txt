@@ -93,3 +93,5 @@ target_link_libraries(WelderLauncher
 add_dependencies(WelderLauncher
   BrowserSubProcess
 )
+
+welder_copy_from_linked_libraries(WelderLauncher)

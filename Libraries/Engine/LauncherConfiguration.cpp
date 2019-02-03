@@ -181,6 +181,8 @@ Cog* LoadLauncherConfig(Cog* zeroConfigCog, const StringMap& arguments, bool ove
   String applicationPath = GetApplication();
   String editorFolder = FilePath::Combine(documentsDirectory, "ZeroEditor");
   String configPath = FilePath::CombineWithExtension(editorFolder, configName, ".data");
+  String sourceDirectory = FindSourceDirectory();
+  String dataDirectory = FilePath::Combine(sourceDirectory, "Data");
 
   Cog* configCog = nullptr;
   //try to create the config from the documents directory
@@ -200,7 +202,7 @@ Cog* LoadLauncherConfig(Cog* zeroConfigCog, const StringMap& arguments, bool ove
     //if we failed to create the config then create an empty archetype that we'll auto-populate
     if(configCog == nullptr)
     {
-      String defaultConfig = FilePath::Combine(applicationDirectory, "DefaultLauncherConfiguration.data");
+      String defaultConfig = FilePath::Combine(dataDirectory, "DefaultLauncherConfiguration.data");
       if(FileExists(defaultConfig))
         configCog = Z::gFactory->Create(Z::gEngine->GetEngineSpace(), defaultConfig, 0, nullptr);
     }
@@ -221,7 +223,8 @@ Cog* LoadLauncherConfig(Cog* zeroConfigCog, const StringMap& arguments, bool ove
   MainConfig* mainConfig = HasOrAdd<MainConfig>(configCog);
   mainConfig->ApplicationName = "ZeroLauncher";
   mainConfig->mConfigDidNotExist = false;
-  mainConfig->DataDirectory = FilePath::Combine(applicationDirectory, "Data");
+  mainConfig->DataDirectory = dataDirectory;
+  mainConfig->SourceDirectory = sourceDirectory;
   if(zeroConfigCog != nullptr)
   {
     // Copy the application directory from the zero config (should never be null, but just in case)
