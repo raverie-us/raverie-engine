@@ -62,6 +62,7 @@
 #include <functiondiscoverykeys.h>
 #include <process.h>
 #include <avrt.h>
+#include <hidsdi.h>
 
 // Include glew before OpenGl
 #include <GL/glew.h>
@@ -92,16 +93,11 @@
 #pragma comment(lib, "user32.lib")
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "Avrt.lib")
+#pragma comment(lib, "hid.lib")
 
 #pragma comment(linker,"\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
-
-extern "C"
-{
-// This should probably be setup to not use ..
-#include "hidsdi.h"
-}
 
 //Undef windows defines that overlap with core functions
 #undef CopyFile

@@ -59,5 +59,4 @@ target_link_libraries(Platform
     CEF
     Curl
     GL
-    WinHid
 )
