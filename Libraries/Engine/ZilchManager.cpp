@@ -158,6 +158,9 @@ void ZilchManager::OnEngineUpdate(UpdateEvent* event)
 //**************************************************************************************************
 void ZilchManager::OnDebuggerPause(Zilch::DebuggerEvent* event)
 {
+  if (Engine::sInLauncher)
+    return;
+
   ScriptEvent toSend;
   toSend.Location = *event->Location;
   toSend.Script = (DocumentResource*)event->Location->CodeUserData;
@@ -167,6 +170,9 @@ void ZilchManager::OnDebuggerPause(Zilch::DebuggerEvent* event)
 //**************************************************************************************************
 void ZilchManager::OnDebuggerResume(Zilch::DebuggerEvent* event)
 {
+  if (Engine::sInLauncher)
+    return;
+
   ScriptEvent toSend;
   toSend.Location = *event->Location;
   toSend.Script = (DocumentResource*)event->Location->CodeUserData;
@@ -176,6 +182,9 @@ void ZilchManager::OnDebuggerResume(Zilch::DebuggerEvent* event)
 //**************************************************************************************************
 void ZilchManager::OnDebuggerPauseUpdate(Zilch::DebuggerEvent* event)
 {
+  if (Engine::sInLauncher)
+    return;
+
   Z::gEngine->mIsDebugging = true;
   Z::gEngine->Update();
   Z::gEngine->mIsDebugging = false;
@@ -184,6 +193,9 @@ void ZilchManager::OnDebuggerPauseUpdate(Zilch::DebuggerEvent* event)
 //**************************************************************************************************
 void ZilchManager::OnDebuggerBreakNotAllowed(Zilch::DebuggerTextEvent* event)
 {
+  if (Engine::sInLauncher)
+    return;
+
   DoNotifyWarning("Debugger", event->Text);
 }
 

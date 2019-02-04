@@ -443,6 +443,7 @@ void NewProjectMenu::OnMenuHidden(Event* e)
   // No longer want to listen to button presses on the main button
   mLauncher->mMainButton->GetDispatcher()->Disconnect(this);
   mLauncher->mSearch->GetDispatcher()->Disconnect(this);
+  mNameBox->GetDispatcher()->Disconnect(this);
 }
 
 //******************************************************************************

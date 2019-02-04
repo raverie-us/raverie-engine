@@ -555,8 +555,10 @@ bool ZilchShaderGenerator::BuildShaders(ShaderSet& shaders, HashMap<String, Uniq
   // This could be cached and down the line should probably be
   // split up to deal with multiple libraries and caching.
   ShaderPipelineDescription pipelineDescription;
+#if !defined(ZeroDebug)
   pipelineDescription.mToolPasses.PushBack(new SpirVSpecializationConstantPass());
   pipelineDescription.mToolPasses.PushBack(new SpirVOptimizerPass());
+#endif
   ZeroZilchShaderGlslBackend* backend = new ZeroZilchShaderGlslBackend();
   pipelineDescription.mBackend = backend;
 

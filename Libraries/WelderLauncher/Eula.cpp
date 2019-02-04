@@ -21,7 +21,7 @@ String GetEulaFilePath(Cog* configCog)
 {
   MainConfig* mainConfig = configCog->has(MainConfig);
   if(mainConfig != nullptr)
-    return FilePath::Combine(mainConfig->DataDirectory, "ZeroLauncherEula.txt");
+    return FilePath::Combine(mainConfig->SourceDirectory, "LICENSE.md");
 
   ErrorIf(true, "Could not find eula file.");
   return String();
