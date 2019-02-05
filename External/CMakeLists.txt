@@ -1,4 +1,18 @@
+# OS dependent static/source libraries.
 add_subdirectory(CEF)
 add_subdirectory(Curl)
 add_subdirectory(GL)
 add_subdirectory(SDL)
+
+# Cross platform source libraries.
+add_subdirectory(Assimp)
+add_subdirectory(FreeType)
+add_subdirectory(Glew)
+add_subdirectory(Libpng)
+add_subdirectory(Nvtt)
+add_subdirectory(Opus)
+add_subdirectory(Scintilla)
+add_subdirectory(SpirvCross)
+add_subdirectory(SpirvHeaders)
+add_subdirectory(SpirvTools)
+add_subdirectory(ZLib)
