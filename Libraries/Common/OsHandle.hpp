@@ -10,7 +10,7 @@ namespace Zero
 {
 typedef void* OsHandle;
 typedef unsigned long OsInt;
-const OsHandle cInvalidHandle = (OsHandle)0xFFFFFFFF;
+const OsHandle cInvalidHandle = (OsHandle)(uintptr_t)-1;
 const uint cDebugNameMax = 32;
 
 class ZeroShared StackHandle

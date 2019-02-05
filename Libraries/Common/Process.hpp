@@ -71,7 +71,7 @@ public:
   bool IsStandardErrorRedirected();
   bool IsStandardInRedirected();
 protected:
-  ZeroDeclarePrivateData(Process, 32);
+  ZeroDeclarePrivateData(Process, 48);
 };
 
 

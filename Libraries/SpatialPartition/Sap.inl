@@ -11,7 +11,7 @@
 namespace SapInternal
 {
 
-const int cSentinelPattern = 0xffdeadff;
+const uintptr_t cSentinelPattern = (uintptr_t)0xffdeadff;
 
 }//namespace SapInternal
 

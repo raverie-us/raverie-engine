@@ -29,7 +29,7 @@ String CallStackSymbolInfos::ToString() const
   return builder.ToString();
 }
 
-void GetSymbolInfo(OsInt processHandle, SymbolInfo& symbolInfo)
+void GetSymbolInfo(void* processHandle, SymbolInfo& symbolInfo)
 {
   HANDLE process = (HANDLE)processHandle;
 
@@ -96,7 +96,7 @@ void GetStackInfo(CallStackAddresses& callStackAddresses, CallStackSymbolInfos& 
     SymbolInfo& symbolInfo = callStackSymbols.mSymbols[i];
     symbolInfo.mAddress = callStackAddresses.mAddresses[i];
     // Generate the symbol information for each stack entry
-    GetSymbolInfo((OsInt)process, symbolInfo);
+    GetSymbolInfo(process, symbolInfo);
   }
 }
 
@@ -118,7 +118,7 @@ void SimpleStackWalker::ShowCallstack(void* context, StringParam extraSymbolPath
       SymbolInfo symbolInfo;
       symbolInfo.mAddress = stacks[i];
       // Generate the symbol information for each stack entry
-      GetSymbolInfo((OsInt)process, symbolInfo);
+      GetSymbolInfo(process, symbolInfo);
       
       AddSymbolInformation(symbolInfo);
     }
@@ -167,7 +167,7 @@ void SimpleStackWalker::ShowCallstack(void* context, StringParam extraSymbolPath
         ++i;
         SymbolInfo symbolInfo;
         symbolInfo.mAddress = (void*)stackFrame.AddrPC.Offset;
-        GetSymbolInfo((OsInt)process, symbolInfo);
+        GetSymbolInfo(process, symbolInfo);
 
         AddSymbolInformation(symbolInfo);
       }

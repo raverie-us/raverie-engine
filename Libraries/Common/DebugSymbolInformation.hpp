@@ -43,7 +43,7 @@ struct CallStackSymbolInfos
 };
 
 // Given a process fill out the information for the symbol at the mAddress   location on the SymbolInfo class.
-void GetSymbolInfo(OsInt processHandle, SymbolInfo& symbolInfo);
+void GetSymbolInfo(void* processHandle, SymbolInfo& symbolInfo);
 /// Capture the current callstack into memory addresses. This is more efficient than actually looking up
 /// symbol information which can be done at a later time. Default frames to skip is 1 so that this function is ignored.
 size_t GetStackAddresses(CallStackAddresses& callStack, size_t stacksToCapture = CallStackAddresses::mMaxCallstacks, size_t framesToSkip = 1);

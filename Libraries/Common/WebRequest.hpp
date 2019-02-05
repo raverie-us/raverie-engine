@@ -139,7 +139,7 @@ public:
   // May be used to signal we're canceling.
   Atomic<bool> mCancel;
 
-  ZeroDeclarePrivateDataBytes(64);
+  ZeroDeclarePrivateDataBytes(128);
 };
 
 } // namespace Zero

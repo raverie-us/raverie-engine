@@ -556,7 +556,7 @@ void TextEditor::UpdateMargins(ColorScheme& scheme)
 
   if(mLineNumbers && mLineNumberMargin)
   {
-    uint width = SendEditor(SCI_TEXTWIDTH, STYLE_LINENUMBER, (long)"9999");
+    uint width = SendEditor(SCI_TEXTWIDTH, STYLE_LINENUMBER, (intptr_t)"9999");
     width = Math::Max(width, uint(20));
     mTotalMargins += width;
     SendEditor(SCI_SETMARGINWIDTHN, LineNumberMargin, width);
@@ -615,12 +615,12 @@ void TextEditor::Append(StringRange text)
   if(GetReadOnly())
   {
     SetReadOnly(false);
-    SendEditor(SCI_APPENDTEXT, text.ComputeRuneCount(), (long)text.Data());
+    SendEditor(SCI_APPENDTEXT, text.ComputeRuneCount(), (intptr_t)text.Data());
     SetReadOnly(true);
   }
   else
   {
-     SendEditor(SCI_APPENDTEXT, text.ComputeRuneCount(), (long)text.Data());
+     SendEditor(SCI_APPENDTEXT, text.ComputeRuneCount(), (intptr_t)text.Data());
   }
 }
 
@@ -1117,9 +1117,9 @@ bool TextEditor::TakeFocusOverride()
   return true;
 }
 
-int TextEditor::SendEditor(unsigned int Msg, u64 wParam, s64 lParam)
+intptr_t TextEditor::SendEditor(unsigned int Msg, u64 wParam, s64 lParam)
 {
-  return (int)mScintilla->WndProc(Msg, (uptr_t)wParam, (sptr_t)lParam);
+  return (intptr_t)mScintilla->WndProc(Msg, (uptr_t)wParam, (sptr_t)lParam);
 }
 
 void TextEditor::GetText(int start, int end, char* buffer, int bufferSize)
@@ -1576,7 +1576,7 @@ void TextEditor::SetAllText(StringRange text, bool sendEvents)
 {
   mSendEvents = sendEvents;
   ClearAll();
-  SendEditor(SCI_ADDTEXT, text.SizeInBytes(), (long)text.Data());
+  SendEditor(SCI_ADDTEXT, text.SizeInBytes(), (intptr_t)text.Data());
   mSendEvents = true;
 }
 
@@ -1681,7 +1681,7 @@ void TextEditor::SetAnnotation(int lineNumber, StringParam errorMessage, bool go
 
     //ANNOTATION_STANDARD //ANNOTATION_BOXED
     SendEditor(SCI_ANNOTATIONSETVISIBLE, ANNOTATION_STANDARD);
-    SendEditor(SCI_ANNOTATIONSETTEXT, lineNumber, (long)wrappedMessage.c_str());
+    SendEditor(SCI_ANNOTATIONSETTEXT, lineNumber, (intptr_t)wrappedMessage.c_str());
     SendEditor(SCI_ANNOTATIONSETSTYLE, lineNumber, SCE_ERROR);
   }
 

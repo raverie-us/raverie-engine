@@ -1,4 +1,4 @@
-add_definitions(-DPLATFORM_EMSCRIPTEN=1 -DPLATFORM_HARDWARE=1 -DPLATFORM_BITS="32" -DPLATFORM_NAME="Emscripten")
+add_definitions(-DPLATFORM_EMSCRIPTEN=1 -DPLATFORM_NAME="Emscripten")
 add_definitions(-DCOMPILER_CLANG=1)
 
 add_definitions(-DHAVE_UNISTD_H)

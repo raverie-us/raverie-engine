@@ -80,13 +80,15 @@ void BinaryBufferLoader::SetBlock(DataBlock block)
 
 bool BinaryBufferLoader::TestForObjectEnd(BoundType** data)
 {
-  size_t bytesToRead = sizeof(*data);
+  *data = nullptr;
+
+  size_t bytesToRead = sizeof(u32);
   byte* endOfBuffer = mBuffer + mBufferSize;
   byte* ifMoved = mCurrentPosition + bytesToRead;
   if(ifMoved < endOfBuffer)
   {
-    *data = *(BoundType**)mCurrentPosition;
-    if(*data == BinaryEndSignature)
+    //*data = *(BoundType**)mCurrentPosition;
+    if(*(u32*)mCurrentPosition == BinaryEndSignature)
     {
       return false;
     }
@@ -113,12 +115,11 @@ void BinaryBufferLoader::Data(byte* data, uint sizeInBytes)
     memcpy(data, mCurrentPosition, sizeInBytes);
     mCurrentPosition += sizeInBytes;
   }
-
 }
 
 bool BinaryBufferLoader::StringField(cstr typeName, cstr fieldName, StringRange& stringRange)
 {
-  size_t size = 0;
+  u32 size = 0;
   Data((byte*)&size, sizeof(size));
 
   byte* start = mCurrentPosition;
@@ -142,12 +143,15 @@ void BinaryFileLoader::Close()
 
 bool BinaryFileLoader::TestForObjectEnd(BoundType** data)
 {
-  size_t bytesToRead = sizeof(*data);
+  *data = nullptr;
+
+  size_t bytesToRead = sizeof(u32);
   FilePosition fp = mFile.Tell();
   if(fp + bytesToRead < mFile.Size())
   {
-    Data((byte*)data, bytesToRead);
-    if(*data == BinaryEndSignature)
+    u32 end = BinaryEndSignature;
+    Data((byte*)&end, bytesToRead);
+    if(end == BinaryEndSignature)
     {
       //End of object
       //Move back to prevent reading the end tag
@@ -172,7 +176,7 @@ void BinaryFileLoader::Data(byte* data, uint sizeInBytes)
 bool BinaryFileLoader::StringField(cstr typeName, cstr fieldName, StringRange& stringRange)
 {
   Status status;
-  size_t size = 0;
+  u32 size = 0;
   mFile.Read(status, (byte*)&size, sizeof(size));
 
   if(size < 512)

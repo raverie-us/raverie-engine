@@ -1768,7 +1768,7 @@ namespace Zilch
       ErrorIf(property->IsStatic == false, "All properties on the enum should be static");
 
       // If this property's UserData matches our enum's value...
-      if (property->Get->UserData == (void*)inputValue)
+      if (property->Get->UserData == (void*)(uintptr_t)inputValue)
       {
         return property->Name;
       }

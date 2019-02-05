@@ -91,12 +91,8 @@ String ZilchPluginBuilder::GetSharedLibraryPlatformName()
   builder.Append('-');
   
   // Append the target machine architecture
-#if defined(PLATFORM_WINDOWS)
-  #if defined(PLATFORM_32)
-    builder.Append("x86");
-  #else
-    builder.Append("x64");
-  #endif
+#if defined(PLATFORM_ARCHITECTURE)
+  builder.Append(PLATFORM_ARCHITECTURE);
 #endif
   String pluginFileName = builder.ToString();
   return pluginFileName;

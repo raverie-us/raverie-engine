@@ -1,4 +1,4 @@
-add_definitions(-DPLATFORM_WINDOWS=1 -DPLATFORM_HARDWARE=1 -DPLATFORM_BITS="32" -DPLATFORM_NAME="Windows")
+add_definitions(-DPLATFORM_WINDOWS=1 -DPLATFORM_NAME="Windows")
 add_definitions(-DCOMPILER_MICROSOFT=1)
 
 add_definitions(-D_UNICODE -DUNICODE)
@@ -6,13 +6,14 @@ add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_SECURE_SCL=0 -D_NO_CVCONST_H)
 
 set(WELDER_C_CXX_FLAGS "\
   -W3\
-  -WX\
-  -wd4302\
-  -wd4996\
   -wd4018\
   -wd4102\
   -wd4244\
+  -wd4267\
+  -wd4302\
   -wd4355\
+  -wd4996\
+  -wd4312\
   -Zc:wchar_t\
   -Zc:inline\
   -Zc:forScope\
@@ -23,6 +24,7 @@ set(WELDER_C_CXX_FLAGS "\
   -EHsc\
   -nologo\
   -analyze-\
+  -bigobj\
 ")
 
 set(WELDER_C_CXX_FLAGS_DEBUG "\

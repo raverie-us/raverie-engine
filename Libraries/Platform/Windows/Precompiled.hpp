@@ -71,8 +71,6 @@
 // Include OpenGl
 #include <GL/GL.h>
 
-#include "curl.h"
-
 #ifdef min
 #undef min
 #endif

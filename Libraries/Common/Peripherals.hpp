@@ -31,7 +31,7 @@ enum GamepadButtonFlag
 class GamepadState
 {
 public:
-  size_t mPacketNumber;
+  u32 mPacketNumber;
   u16 mButtons;
   u8 mLTrigger;
   u8 mRTrigger;

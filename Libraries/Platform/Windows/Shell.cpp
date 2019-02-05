@@ -622,9 +622,9 @@ void ScanDevice(Array<PlatformInputDevice>& devices, HANDLE deviceHandle, RID_DE
 
     // Build a guid using the name hash, and vendor / product / version info
     Guid guid = deviceName.Hash();
-    guid = guid ^ ridDeviceInfo.hid.dwVendorId * 4187;
-    guid = guid ^ ridDeviceInfo.hid.dwProductId;
-    guid = guid ^ ridDeviceInfo.hid.dwVersionNumber;
+    guid = guid ^ (u64)ridDeviceInfo.hid.dwVendorId * 4187;
+    guid = guid ^ (u64)ridDeviceInfo.hid.dwProductId;
+    guid = guid ^ (u64)ridDeviceInfo.hid.dwVersionNumber;
     device.mGuid = guid;
 
     const bool detailedDeviceInfo = false;

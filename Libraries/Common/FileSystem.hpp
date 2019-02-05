@@ -178,7 +178,7 @@ public:
 
 private:
   String mPath;
-  ZeroDeclarePrivateData(FileRange, 600);
+  ZeroDeclarePrivateData(FileRange, 720);
 };
 
 }//namespace Zero

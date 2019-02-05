@@ -59,7 +59,7 @@ BoundType* InstantiateGeometryInput(LibraryBuilder& builder, StringParam baseNam
   builder.AddBoundGetterSetter(selfType, "Count", core.IntegerType, nullptr, Zero::UnTranslatedBoundFunction, Zilch::MemberOptions::None);
 
   Zilch::HandleOf<GeometryStreamUserData> handle = ZilchAllocate(GeometryStreamUserData);
-  handle->Set((spv::ExecutionMode)(int)userData);
+  handle->Set((spv::ExecutionMode)(uintptr_t)userData);
   selfType->Add(*handle);
 
   return selfType;
@@ -77,7 +77,7 @@ BoundType* InstantiateGeometryOutput(LibraryBuilder& builder, StringParam baseNa
   builder.AddBoundFunction(selfType, "Restart", Zero::UnTranslatedBoundFunction, ParameterArray(), core.VoidType, Zilch::FunctionOptions::None);
 
   Zilch::HandleOf<GeometryStreamUserData> handle = ZilchAllocate(GeometryStreamUserData);
-  handle->Set((spv::ExecutionMode)(int)userData);
+  handle->Set((spv::ExecutionMode)(uintptr_t)userData);
   selfType->Add(*handle);
 
   return selfType;

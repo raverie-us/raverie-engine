@@ -93,7 +93,7 @@ EditorViewport::EditorViewport(Composite* parent, OwnerShip::Enum ownership)
 
 void EditorViewport::OnDestroy()
 {
-  uint index = Z::gEditor->mEditInGameViewports.FindIndex(this);
+  size_t index = Z::gEditor->mEditInGameViewports.FindIndex(this);
   if (index != Z::gEditor->mEditInGameViewports.InvalidIndex)
     Z::gEditor->mEditInGameViewports.EraseAt(index);
   CleanUp();

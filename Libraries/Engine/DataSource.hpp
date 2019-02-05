@@ -172,15 +172,15 @@ public:
   static const u64 RootIndex = (u64)-1;
 
   /// Return the size of the contained array
-  virtual u32 GetArraySize() = 0;
+  virtual u64 GetArraySize() = 0;
   /// Fills out the variant with the data of the given column at the given array index
-  virtual void GetData(u32 index,       Any& any, StringParam column) = 0;
+  virtual void GetData(u64 index,       Any& any, StringParam column) = 0;
   /// Sets the data of the given column at the given array index with the passed in variant.
-  virtual void SetData(u32 index, const Any& any, StringParam column) = 0;
+  virtual void SetData(u64 index, const Any& any, StringParam column) = 0;
 
   // Helpers to get an array index from an entry or index
-  u32 DataEntryToArrayIndex(DataEntry* entry);
-  u32 DataIndexToArrayIndex(DataIndex index);
+  u64 DataEntryToArrayIndex(DataEntry* entry);
+  u64 DataIndexToArrayIndex(DataIndex index);
 
   // DataSource Interface
   DataEntry* GetRoot() override;

@@ -12,7 +12,10 @@
 namespace Zero
 {
 
-BoundType* const BinaryEndSignature = (BoundType*)0xFFFFDEAD;
+// NOTE: We currently don't support polymorphic types with binary serialization.
+// Binary serialization is only used with files that know their types (fixed type tree).
+
+const u32 BinaryEndSignature = 0xFFFFDEAD;
 
 //----------------------------------------------------------------- Binary Saver
 template<typename binaryType>
@@ -38,8 +41,9 @@ public:
   void StartPolymorphicInternal(const PolymorphicInfo& info) override
   {
     ErrorIf(info.mFlags.U32Field != 0, "Patching not supported in binary serialization");
-    BoundType* objectType = info.mObject.StoredType;
-    BinaryType()->Data((byte*)&objectType, sizeof(objectType));
+    //BoundType* objectType = info.mObject.StoredType;
+    u32 signature = 0;
+    BinaryType()->Data((byte*)&signature, sizeof(signature));
   }
 
   bool GetPolymorphic(PolymorphicNode& node) override
@@ -51,7 +55,7 @@ public:
 
   void EndPolymorphic() override
   {
-    BoundType* end = BinaryEndSignature;
+    u32 end = BinaryEndSignature;
     BinaryType()->Data((byte*)&end, sizeof(end));
   }
 
@@ -156,7 +160,7 @@ public:
 
   void EndPolymorphic() override
   {
-    BoundType* end = nullptr;
+    u32 end = BinaryEndSignature;
     BinaryType()->Data((byte*)&end, sizeof(end));
     ErrorIf(end != BinaryEndSignature, "Binary buffer serialization error did "
             "not read the end element. A different number of bytes was "

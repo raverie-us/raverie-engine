@@ -28,11 +28,12 @@ struct Guid
   bool operator!=(const int& rhs) const { return mValue != rhs; }
   Guid operator+(const u64& rhs) const { return mValue + rhs; }
   Guid operator+(const uint& rhs) const { return mValue + rhs; }
-  Guid operator^(const size_t& rhs) const { return mValue ^ rhs; }
+  Guid operator^(const u64& rhs) const { return mValue ^ rhs; }
+  Guid operator^(const uint& rhs) const { return mValue ^ rhs; }
 
   explicit operator bool() const { return mValue; }
   explicit operator u64() const { return mValue; }
-  explicit operator size_t() const { return (size_t)mValue; }
+  explicit operator uint() const { return (uint)mValue; }
 
   size_t Hash() const;
 
