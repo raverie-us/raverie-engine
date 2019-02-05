@@ -12,16 +12,13 @@ target_sources(BrowserSubProcess
 
 target_link_libraries(BrowserSubProcess
   PUBLIC
-    #Scintilla
-    #Libpng
-    #Assimp
-    #ZLib
-    #FreeType
-    #Opus
-    #Nvtt
-    #SpirvHeaders
-    #SpirvTools
-    #SpirvCross
     Common
     Platform
+)
+
+get_target_property(BrowserSubProcessBinaryDir BrowserSubProcess BINARY_DIR)
+
+set(BrowserSubProcessCopyDirectories
+  "$<TARGET_FILE_DIR:BrowserSubProcess>"
+  CACHE INTERNAL ""
 )
