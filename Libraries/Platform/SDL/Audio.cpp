@@ -80,14 +80,6 @@ AudioInputOutput::~AudioInputOutput()
 StreamStatus::Enum AudioInputOutput::InitializeAPI(Zero::String* resultMessage)
 {
   ZPrint("Initializing SDL Audio\n");
-
-  // Initialize SDL audio
-  if (SDL_Init(SDL_INIT_AUDIO) == -1)
-  {
-    LogAudioIoError("Initializing SDL Audio was unsuccessful\n", resultMessage);
-    return StreamStatus::ApiProblem;
-  }
-
   return StreamStatus::Initialized;
 }
 
@@ -199,9 +191,6 @@ StreamStatus::Enum AudioInputOutput::StopStream(StreamTypes::Enum whichStream, Z
 //**************************************************************************************************
 void AudioInputOutput::ShutDownAPI()
 {
-  // Shut down SDL audio
-  SDL_QuitSubSystem(SDL_INIT_AUDIO);
-
   ZPrint("SDL Audio was shut down\n");
 }
 

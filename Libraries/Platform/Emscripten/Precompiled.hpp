@@ -19,6 +19,7 @@
 #include "GL/GL.h"
 
 #include <emscripten.h>
+#include <emscripten/html5.h>
 
 #include <new>
 #include <stdlib.h>

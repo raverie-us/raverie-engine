@@ -21,7 +21,6 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/Audio.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/ExternalLibrary.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/Main.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../SDL/OpenglRendererSDL.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/Peripherals.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/PlatformStandard.cpp
     ${CMAKE_CURRENT_LIST_DIR}/../SDL/Resolution.cpp
@@ -35,6 +34,7 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/Browser.cpp
     ${CMAKE_CURRENT_LIST_DIR}/CallStack.cpp
     ${CMAKE_CURRENT_LIST_DIR}/MainLoop.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/OpenglRendererEmscripten.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
     ${CMAKE_CURRENT_LIST_DIR}/WebRequest.cpp
@@ -49,3 +49,5 @@ target_link_libraries(Platform
   PUBLIC
     Common
 )
+
+add_dependencies(Platform VirtualFileSystemZip)

@@ -4,8 +4,6 @@
 #include "Precompiled.hpp"
 #include "OpenglRenderer.hpp"
 
-//#define ZeroExtraGlDebug
-
 #ifdef PLATFORM_EMSCRIPTEN
 #define ZeroWebgl
 #else
@@ -302,7 +300,7 @@ GLuint GlTextureMipMapping(TextureMipMapping::Enum value)
 //**************************************************************************************************
 void CheckShader(GLuint shader, StringParam shaderCode)
 {
-#ifdef ZeroExtraGlDebug
+#ifdef ZeroDebug
   GLint status = 0;
   glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
   if (status == GL_FALSE)
@@ -586,7 +584,7 @@ void BindTexture(TextureType::Enum textureType, uint textureSlot, uint textureId
 //**************************************************************************************************
 void CheckFramebufferStatus()
 {
-#ifdef ZeroExtraGlDebug
+#ifdef ZeroDebug
   GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
   switch (status)
   {
@@ -2129,7 +2127,7 @@ void OpenglRenderer::SetShaderParameters(u64 objectId, uint shaderInputsId, uint
 //**************************************************************************************************
 void OpenglRenderer::CreateShader(ShaderEntry& entry)
 {
-#ifdef ZeroExtraGlDebug
+#ifdef ZeroDebug
   ZPrint("Compiling shader: %s %s %s\n", entry.mCoreVertex.c_str(), entry.mComposite.c_str(), entry.mRenderPass.c_str());
 #endif
 
@@ -2154,7 +2152,7 @@ void OpenglRenderer::CreateShader(ShaderEntry& entry)
 //**************************************************************************************************
 void OpenglRenderer::CreateShader(StringParam vertexSource, StringParam geometrySource, StringParam pixelSource, GLuint& shader)
 {
-#ifdef ZeroExtraGlDebug
+#ifdef ZeroDebug
   Timer compileTimer;
 #endif
 
@@ -2206,23 +2204,23 @@ void OpenglRenderer::CreateShader(StringParam vertexSource, StringParam geometry
   glBindAttribLocation(program, 14, "Aux4");
   glBindAttribLocation(program, 15, "Aux5");
 
-#ifdef ZeroExtraGlDebug
+#ifdef ZeroDebug
   double compileSeconds = compileTimer.UpdateAndGetTime();
   ZPrint("Compiled shader in %f seconds\n", compileSeconds);
 #endif
 
-#ifdef ZeroExtraGlDebug
+#ifdef ZeroDebug
   Timer linkTimer;
 #endif
 
   glLinkProgram(program);
 
-#ifdef ZeroExtraGlDebug
+#ifdef ZeroDebug
   double linkSeconds = linkTimer.UpdateAndGetTime();
   ZPrint("Linked shader in %f seconds\n", linkSeconds);
 #endif
 
-#ifdef ZeroExtraGlDebug
+#ifdef ZeroDebug
   GLint status;
   glGetProgramiv(program, GL_LINK_STATUS, &status);
   if (status == GL_FALSE)

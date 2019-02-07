@@ -9,10 +9,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
+#if defined(PLATFORM_EMSCRIPTEN)
+#include <emscripten/html5.h>
+#endif
+
 namespace Zero
 {
-
-SDL_Cursor* gSDLCursors[SDL_NUM_SYSTEM_CURSORS] = { 0 };
 
 SDL_GameController* cSDLGamePads[cMaxGamepads];
 SDL_Haptic* cSDLHapticDevices[cMaxGamepads];
@@ -20,14 +22,16 @@ SDL_Haptic* cSDLHapticDevices[cMaxGamepads];
 //**************************************************************************************************
 void PlatformLibrary::Initialize()
 {
+#if defined(PLATFORM_EMSCRIPTEN)
+  SDL_SetHint(SDL_HINT_NO_SIGNAL_HANDLERS, "1");
+  emscripten_sample_gamepad_data();
+#endif
+  
   SDL_Init(SDL_INIT_EVERYTHING);
 
   // We don't want the back buffer to be multi-sampled because we can't blit a frame buffer to it.
   SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
   SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 0);
-
-  for (size_t i = 0; i < SDL_NUM_SYSTEM_CURSORS; ++i)
-    gSDLCursors[i] = SDL_CreateSystemCursor((SDL_SystemCursor)i);
 
   // Initialize all connected gamepads for use
   for (int i = 0; i < cMaxGamepads; ++i)
@@ -58,9 +62,6 @@ void PlatformLibrary::Initialize()
 //**************************************************************************************************
 void PlatformLibrary::Shutdown()
 {
-  for (size_t i = 0; i < SDL_NUM_SYSTEM_CURSORS; ++i)
-    SDL_FreeCursor(gSDLCursors[i]);
-
   SDL_Quit();
 }
 

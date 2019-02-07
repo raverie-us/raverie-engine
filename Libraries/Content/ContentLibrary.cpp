@@ -46,7 +46,7 @@ String ContentLibrary::GetOutputPath()
 {
   //to avoid conflicts of same named libraries in the out directory,
   //include the hash as part of the output file name.
-  Guid hashOfLibraryIdAndLocation = LibraryId ^ SourcePath.Hash();
+  Guid hashOfLibraryIdAndLocation = LibraryId ^ (u64)SourcePath.Hash();
   String hexHash = StripHex0x(ToString(hashOfLibraryIdAndLocation));
   String fileName = BuildString(Name, hexHash);
   return FilePath::Combine(Z::gContentSystem->ContentOutputPath, fileName);

@@ -11,9 +11,9 @@ set(WELDER_C_CXX_FLAGS "\
   -wd4244\
   -wd4267\
   -wd4302\
+  -wd4312\
   -wd4355\
   -wd4996\
-  -wd4312\
   -Zc:wchar_t\
   -Zc:inline\
   -Zc:forScope\

@@ -103,16 +103,19 @@ void AudioMixer::StartMixing(Status& status)
 
   AudioIO.OutputRingBuffer.ResetBuffer();
 
-  // Start up the mix thread
-  MixThread.Initialize(StartMix, this, "Audio mix");
-  if (!MixThread.IsValid())
+  if (ThreadingEnabled)
   {
-    ZPrint("Error creating audio mix thread\n");
-    status.SetFailed("Error creating audio mix thread");
-    return;
-  }
+    // Start up the mix thread
+    MixThread.Initialize(StartMix, this, "Audio mix");
+    if (!MixThread.IsValid())
+    {
+      ZPrint("Error creating audio mix thread\n");
+      status.SetFailed("Error creating audio mix thread");
+      return;
+    }
 
-  ZPrint("Audio mix thread initialized\n");
+    ZPrint("Audio mix thread initialized\n");
+  }
 
   // Start audio output stream
   AudioIO.StartStreams(true, false);
@@ -148,6 +151,18 @@ void AudioMixer::ShutDown()
 //**************************************************************************************************
 void AudioMixer::Update()
 {
+  // If not threaded, run decoding tasks and mix loop
+  if (!Zero::ThreadingEnabled)
+  {
+    for (unsigned i = 0; i < MaxDecodingTasksToRun && !DecodingTasks.Empty(); ++i)
+    {
+      DecodingTasks.Front()->RunDecodingTask();
+      DecodingTasks.PopFront();
+    }
+
+    MixLoopThreaded();
+  }
+
   // Execute tasks from the mix thread
   HandleTasks();
 

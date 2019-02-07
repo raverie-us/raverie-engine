@@ -3,8 +3,8 @@ add_definitions(-DCOMPILER_CLANG=1)
 
 add_definitions(-DHAVE_UNISTD_H)
 
+set(CMAKE_EXECUTABLE_SUFFIX ".html")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-
 set(WELDER_C_CXX_FLAGS "\
   -Wno-expansion-to-defined\
   -Wno-address-of-packed-member\
@@ -13,11 +13,7 @@ set(WELDER_C_CXX_FLAGS "\
   -Wno-switch\
   -Wno-tautological-undefined-compare\
   -Wno-#warnings\
-  -s TOTAL_MEMORY=134217728\
   -s ALLOW_MEMORY_GROWTH=1\
-  -s ASSERTIONS=1\
-  -s DEMANGLE_SUPPORT=1\
-  -s FORCE_FILESYSTEM=1\
   -s WASM=1\
   -s SIMD=0\
   -s USE_SDL=2\
@@ -26,14 +22,40 @@ set(WELDER_C_CXX_FLAGS "\
   -s FULL_ES3=1\
   -s BINARYEN_TRAP_MODE='clamp'\
   -s SINGLE_FILE=1\
-  --shell-file ${WELDER_PLATFORM_DATA_DIR}/PlatformData/Emscripten/ZeroShell.html\
-  --no-heap-copy\
+  --shell-file  ${WELDER_PLATFORM_DATA_DIR}/Shell.html\
   -fdelayed-template-parsing\
   -fexceptions\
-  -fno-omit-frame-pointer\
+  -frtti\
   -fno-vectorize\
   -fno-slp-vectorize\
   -fno-tree-vectorize\
-  -frtti\
-  -O3\
+")
+
+set(WELDER_LINKER_FLAGS "\
+  -s USE_WEBGL2=1\
+  -s FULL_ES2=1\
+  -s FULL_ES3=1\
+")
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  set(WELDER_C_CXX_FLAGS "${WELDER_C_CXX_FLAGS}\
+    -Os\
+    -g\
+    -s ASSERTIONS=2\
+    -s DEMANGLE_SUPPORT=1\
+    -s STACK_OVERFLOW_CHECK=2\
+    -s GL_ASSERTIONS=1\
+    -fno-omit-frame-pointer\
+  ")
+endif()
+
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+  set(WELDER_C_CXX_FLAGS "${WELDER_C_CXX_FLAGS}\
+    -O3\
+  ")
+endif()
+
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}\
+  --embed-file \"${WELDER_VIRTUAL_FILE_SYSTEM_ZIP}\"@/FileSystem.zip\
+  --no-heap-copy\
 ")

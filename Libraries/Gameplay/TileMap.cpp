@@ -381,9 +381,9 @@ bool TileMap::Tile::operator==(const Tile& tile) const
 size_t TileMap::Tile::Hash( ) const
 {
   size_t hash = 0;
-  hash ^= (size_t)ArchetypeResource;
-  hash ^= (size_t)SpriteResource;
-  hash ^= (size_t)CollisionResource;
+  hash ^= (u64)ArchetypeResource;
+  hash ^= (u64)SpriteResource;
+  hash ^= (u64)CollisionResource;
   return hash;
 }
 

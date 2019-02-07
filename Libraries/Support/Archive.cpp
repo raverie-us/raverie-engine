@@ -574,11 +574,8 @@ void Archive::ReadZipFileInternal(ArchiveReadFlags::Enum readFlags, Stream& file
 
       ReadString(file, centralHeader.FileCommentLength, comment);
     }
-    else
+    else if (signature == EndCentralHeader)
     {
-      if(signature!=EndCentralHeader)
-        return;
-
       EndCentral endCentral;
       Read(file, endCentral);
 
@@ -586,6 +583,13 @@ void Archive::ReadZipFileInternal(ArchiveReadFlags::Enum readFlags, Stream& file
 
       ReadString(file, endCentral.CommentLength, comment);
       return;
+    }
+    else
+    {
+      // This is really bad, but we should replace all this logic with a proper zip library...
+      // Just read a byte and continue until we find another good header.
+      u8 temp = 0;
+      Read(file, temp);
     }
   }
 }

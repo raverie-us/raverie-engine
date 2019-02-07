@@ -21,11 +21,10 @@ struct DropFileInfo
 struct ShellPrivateData
 {
   HashMap<Uint32, DropFileInfo> mDropInfos;
+  Array<SDL_Cursor*> mSDLCursors;
 };
 
 static const char* cShellWindow = "ShellWindow";
-
-extern SDL_Cursor* gSDLCursors[];
 
 // In SDL 'global' is synonymous with 'monitor' space and 'relative' means 'client' space.
 
@@ -135,12 +134,21 @@ Shell::Shell() :
   mUserData(nullptr)
 {
   ZeroConstructPrivateData(ShellPrivateData);
+  
+  self->mSDLCursors.Resize(SDL_NUM_SYSTEM_CURSORS);
+  for (size_t i = 0; i < SDL_NUM_SYSTEM_CURSORS; ++i)
+    self->mSDLCursors[i] = SDL_CreateSystemCursor((SDL_SystemCursor)i);
 }
 
 Shell::~Shell()
 {
+  ZeroGetPrivateData(ShellPrivateData);
+  
   while (!mWindows.Empty())
     delete mWindows.Front();
+  
+  for (size_t i = 0; i < SDL_NUM_SYSTEM_CURSORS; ++i)
+    SDL_FreeCursor(self->mSDLCursors[i]);
 
   ZeroDestructPrivateData(ShellPrivateData);
 }
@@ -260,10 +268,10 @@ void Shell::SetMouseCursor(Cursor::Enum cursor)
   case Cursor::SizeAll:   sdlSystemCursor = SDL_SYSTEM_CURSOR_SIZEALL; break;
   case Cursor::TextBeam:  sdlSystemCursor = SDL_SYSTEM_CURSOR_IBEAM; break;
   case Cursor::Hand:      sdlSystemCursor = SDL_SYSTEM_CURSOR_HAND; break;
-  case Cursor::Invisible: sdlSystemCursor = SDL_SYSTEM_CURSOR_ARROW; Error("Not implemented"); break;
+  case Cursor::Invisible: sdlSystemCursor = SDL_SYSTEM_CURSOR_CROSSHAIR; Error("Not implemented"); break;
   }
 
-  SDL_Cursor*& sdlCursor = gSDLCursors[sdlSystemCursor];
+  SDL_Cursor*& sdlCursor = self->mSDLCursors[sdlSystemCursor];
   SDL_SetCursor(sdlCursor);
 }
 
