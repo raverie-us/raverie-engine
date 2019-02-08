@@ -313,7 +313,7 @@ Vec3 VortexEffect::GetWorldVortexAxis()
 PhysicsEffectEndCondition::Enum VortexEffect::GetEndCondition()
 {
   // Convert the bitfield representation of our end condition to the enum value
-  PhysicsEffectEndCondition::Enum state;
+  PhysicsEffectEndCondition::Enum state = PhysicsEffectEndCondition::NoEffect;
   if(mVortexStates.IsSet(VortexFlags::ContinueFalloff))
     state = PhysicsEffectEndCondition::ContinueFalloff;
   else if(mVortexStates.IsSet(VortexFlags::NoEffect))

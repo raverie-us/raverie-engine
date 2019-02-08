@@ -1634,7 +1634,7 @@ void ZilchSpirVFrontEnd::GenerateFunctionParameters(Zilch::GenericFunctionNode* 
 
   // Get the shader function defined for this zilch function
   Zilch::Function* zilchFunction = node->DefinedFunction;
-  ZilchShaderIRFunction* function = mLibrary->FindFunction(zilchFunction, nullptr);
+  ZilchShaderIRFunction* function = mLibrary->FindFunction(zilchFunction, false);
   ErrorIf(function == nullptr, "Class function wasn't already created");
   context->mCurrentFunction = function;
 
@@ -2534,7 +2534,7 @@ void ZilchSpirVFrontEnd::WalkDoWhileNode(Zilch::DoWhileNode*& node, ZilchSpirVFr
 
 void ZilchSpirVFrontEnd::WalkForNode(Zilch::ForNode*& node, ZilchSpirVFrontEndContext* context)
 {
-  Zilch::SyntaxNode* initializer;
+  Zilch::SyntaxNode* initializer = nullptr;
   if(node->ValueVariable != nullptr)
     initializer = node->ValueVariable;
   else if(node->Initialization != nullptr)
@@ -2895,7 +2895,7 @@ ZilchShaderIROp* ZilchSpirVFrontEnd::GetConstant(ZilchShaderIRType* type, Zilch:
 {
   // Each constant should only be declared once. Find if it already exists
   ConstantOpKeyType constantKey = ConstantOpKeyType(type, value);
-  ZilchShaderIROp* opConstant = mLibrary->FindConstantOp(constantKey, nullptr);
+  ZilchShaderIROp* opConstant = mLibrary->FindConstantOp(constantKey, false);
   if(opConstant == nullptr)
   {
     // It doesn't exist so create the constant. Constants are two parts:

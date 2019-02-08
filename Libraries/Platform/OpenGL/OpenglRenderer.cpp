@@ -154,6 +154,7 @@ void WebglConvertRenderTargetFormat(AddTextureInfo* info)
     case TextureFormat::RGB32f:  info->mFormat = TextureFormat::RGBA32f;  break;
     case TextureFormat::SRGB8:   info->mFormat = TextureFormat::SRGB8A8;  break;
     case TextureFormat::Depth32: info->mFormat = TextureFormat::Depth32f; break;
+    default: Error("Invalid"); break;
   }
 }
 
@@ -352,6 +353,7 @@ void SetClearData(void* clearData, TextureFormat::Enum format, Vec4 color, float
     case TextureFormat::Depth24Stencil8:
       // not handled, but this function is not currently being used
     break;
+    default: Error("Invalid"); break;
   }
 }
 
@@ -687,13 +689,13 @@ void StreamedVertexBuffer::Initialize()
   glBufferData(GL_ARRAY_BUFFER, mBufferSize, nullptr, GL_STREAM_DRAW);
 
   glEnableVertexAttribArray(VertexSemantic::Position);
-  glVertexAttribPointer(VertexSemantic::Position, 3, GL_FLOAT, GL_FALSE, sizeof(StreamedVertex), (void*)offsetof(StreamedVertex, mPosition));
+  glVertexAttribPointer(VertexSemantic::Position, 3, GL_FLOAT, GL_FALSE, sizeof(StreamedVertex), (void*)ZeroOffsetOf(StreamedVertex, mPosition));
   glEnableVertexAttribArray(VertexSemantic::Uv);
-  glVertexAttribPointer(VertexSemantic::Uv, 2, GL_FLOAT, GL_FALSE, sizeof(StreamedVertex), (void*)offsetof(StreamedVertex, mUv));
+  glVertexAttribPointer(VertexSemantic::Uv, 2, GL_FLOAT, GL_FALSE, sizeof(StreamedVertex), (void*)ZeroOffsetOf(StreamedVertex, mUv));
   glEnableVertexAttribArray(VertexSemantic::Color);
-  glVertexAttribPointer(VertexSemantic::Color, 4, GL_FLOAT, GL_FALSE, sizeof(StreamedVertex), (void*)offsetof(StreamedVertex, mColor));
+  glVertexAttribPointer(VertexSemantic::Color, 4, GL_FLOAT, GL_FALSE, sizeof(StreamedVertex), (void*)ZeroOffsetOf(StreamedVertex, mColor));
   glEnableVertexAttribArray(VertexSemantic::UvAux);
-  glVertexAttribPointer(VertexSemantic::UvAux, 2, GL_FLOAT, GL_FALSE, sizeof(StreamedVertex), (void*)offsetof(StreamedVertex, mUvAux));
+  glVertexAttribPointer(VertexSemantic::UvAux, 2, GL_FLOAT, GL_FALSE, sizeof(StreamedVertex), (void*)ZeroOffsetOf(StreamedVertex, mUvAux));
 
   glBindVertexArray(0);
 
@@ -942,9 +944,9 @@ void OpenglRenderer::Initialize(OsHandle windowHandle, OsHandle deviceContext, O
   glBufferData(GL_ARRAY_BUFFER, sizeof(StreamedVertex) * 3, triangleVertices, GL_STATIC_DRAW);
 
   glEnableVertexAttribArray(VertexSemantic::Position);
-  glVertexAttribPointer(VertexSemantic::Position, 3, GL_FLOAT, GL_FALSE, sizeof(StreamedVertex), (void*)offsetof(StreamedVertex, mPosition));
+  glVertexAttribPointer(VertexSemantic::Position, 3, GL_FLOAT, GL_FALSE, sizeof(StreamedVertex), (void*)ZeroOffsetOf(StreamedVertex, mPosition));
   glEnableVertexAttribArray(VertexSemantic::Uv);
-  glVertexAttribPointer(VertexSemantic::Uv, 2, GL_FLOAT, GL_FALSE, sizeof(StreamedVertex), (void*)offsetof(StreamedVertex, mUv));
+  glVertexAttribPointer(VertexSemantic::Uv, 2, GL_FLOAT, GL_FALSE, sizeof(StreamedVertex), (void*)ZeroOffsetOf(StreamedVertex, mUv));
 
   glGenBuffers(1, &mTriangleIndex);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mTriangleIndex);
@@ -1130,9 +1132,9 @@ void OpenglRenderer::AddMesh(AddMeshInfo* info)
     bool normalized = element.mType >= VertexElementType::NormByte;
     glEnableVertexAttribArray(element.mSemantic);
     if (element.mType == VertexElementType::Byte || element.mType == VertexElementType::Short)
-      glVertexAttribIPointer(element.mSemantic, element.mCount, ToOpenglType(element.mType), info->mVertexSize, (void*)element.mOffset);
+      glVertexAttribIPointer(element.mSemantic, element.mCount, ToOpenglType(element.mType), info->mVertexSize, (void*)(uintptr_t)element.mOffset);
     else
-      glVertexAttribPointer(element.mSemantic, element.mCount, ToOpenglType(element.mType), normalized, info->mVertexSize, (void*)element.mOffset);
+      glVertexAttribPointer(element.mSemantic, element.mCount, ToOpenglType(element.mType), normalized, info->mVertexSize, (void*)(uintptr_t)element.mOffset);
   }
 
   GLuint indexBuffer = 0;

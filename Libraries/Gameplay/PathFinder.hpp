@@ -86,7 +86,7 @@ public:
       {
         const PathFinderNode* iterator = currentNode;
         pathOut.PushBack(goal);
-        while (iterator = iterator->mCameFrom)
+        while ((iterator = iterator->mCameFrom))
         {
           pathOut.PushBack(iterator->mKey);
         }

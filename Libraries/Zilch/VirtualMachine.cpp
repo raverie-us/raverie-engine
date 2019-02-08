@@ -399,6 +399,8 @@ namespace Zilch
 
       case OperandType::StaticField:
         return GetStatic<T>(stackFrame, reportFrame, operand);
+      default:
+        break;
     }
     
     // This means that something REALLY bad happened...
@@ -466,6 +468,8 @@ namespace Zilch
 
       case CopyMode::FromReturn:
         returnOffset = topFrame->NextFrame - ourFrame->Frame;
+        break;
+      default:
         break;
     }
 
@@ -701,6 +705,8 @@ namespace Zilch
           ourFrame->Queue##T##Cleanup(destination);                                                       \
           break;                                                                                          \
         }                                                                                                 \
+        default:                                                                                          \
+          break;                                                                                          \
       }                                                                                                   \
     }
 

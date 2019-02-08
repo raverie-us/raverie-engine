@@ -141,7 +141,7 @@ Gripper::~Gripper()
 
 Cursor::Enum DockDirectionToMouseCursor(DockMode::Enum dockDirection)
 {
-  switch (dockDirection)
+  switch ((int)dockDirection)
   {
   case DockMode::DockTop:
   case DockMode::DockBottom:

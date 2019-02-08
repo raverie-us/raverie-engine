@@ -1,4 +1,3 @@
-# use glob syntax.
 syntax: glob
 
 *.ncb
@@ -27,27 +26,16 @@ syntax: glob
 *.arcconfig
 *.spv
 *spv.glsl.txt
-
-LocalBuildEnvironment.cmd
-LocalPaths.props
-BuildVersion.inl
-WindowsBuild/
-
-BuildOutput/
-Build/Output/
-Install/
-CMakeBuilds/
-Data/ContentStore/
-Data/ZilchCustomPluginShared/
-Tools/GeometryProcessor/
-Tools/ImageProcessor/
-ZeroDevTools/
-Extensions/UiWidget/Debug/*
-AudioTest/*
-enc_temp_folder/
-DevTools/
-WebBuild/
 *.generated.*
+
+BuildVersion.inl
+compile_commands.json
+
+Temp/
+node_modules/
+enc_temp_folder/
+.vs
+
 CMakeBuild/*
 
 # ...Except these file types since a user might have added source in this folder in error

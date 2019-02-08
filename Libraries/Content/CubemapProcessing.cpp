@@ -359,6 +359,7 @@ Vec3 GetFaceDirection(TextureFace::Enum face, float x, float y, float halfWidth)
     case Zero::TextureFace::NegativeX: return Vec3(-halfWidth, halfWidth - y, halfWidth - x);
     case Zero::TextureFace::NegativeY: return Vec3(halfWidth - x, -halfWidth, halfWidth - y);
     case Zero::TextureFace::NegativeZ: return Vec3(x - halfWidth, halfWidth - y, -halfWidth);
+    case Zero::TextureFace::None: break;
   }
 
   return Vec3::cZero;
@@ -549,6 +550,7 @@ void FaceToWorldDir(TextureFace::Enum face, Vec2 uv, Vec3& worldDir)
     case TextureFace::NegativeX: worldDir = Vec3(-0.5f, -uv.y, -uv.x); break;
     case TextureFace::NegativeY: worldDir = Vec3(-uv.x, -0.5f, -uv.y); break;
     case TextureFace::NegativeZ: worldDir = Vec3( uv.x, -uv.y, -0.5f); break;
+    case TextureFace::None: break;
   }
 
   Math::Normalize(worldDir);
@@ -585,6 +587,7 @@ void WorldDirToFace(Vec3 worldDir, TextureFace::Enum& face, Vec2& uv)
     case TextureFace::NegativeX: uv = Vec2(-worldDir.z, -worldDir.y); break;
     case TextureFace::NegativeY: uv = Vec2(-worldDir.x, -worldDir.z); break;
     case TextureFace::NegativeZ: uv = Vec2( worldDir.x, -worldDir.y); break;
+    case TextureFace::None: break;
   }
 
   uv += Vec2(0.5f);
@@ -927,7 +930,7 @@ void MipmapCubemap(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, Textur
   if (format != TextureFormat::RGB32f)
   {
     uint targetPixelSize = GetPixelSize(TextureFormat::RGBA8);
-    uint dataOffset = 0;
+    uint offset = 0;
 
     for (uint i = 0; i < mipHeaders.Size(); ++i)
     {
@@ -949,8 +952,8 @@ void MipmapCubemap(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, Textur
       imageData[i] = targetFace;
 
       mipHeaders[i].mDataSize = faceSize;
-      mipHeaders[i].mDataOffset = dataOffset;
-      dataOffset += faceSize;
+      mipHeaders[i].mDataOffset = offset;
+      offset += faceSize;
     }
   }
 }

@@ -340,7 +340,7 @@ namespace Zilch
       "When binding a member the type must match the exact size it is expected to be in Zilch "                                                     \
       "(e.g. all reference types must be a Handle). Most likely you want ZilchBindField.");                                                         \
       return ZilchBuilder.AddBoundField(ZilchType, Name, ZilchTypeId(decltype(ZilchSelf::MemberName)),                                           \
-        offsetof(ZilchSelf, MemberName), PropertyBinding);                                                                                          \
+        ZeroOffsetOf(ZilchSelf, MemberName), PropertyBinding);                                                                                          \
   }()
 
   // Bind a property (getter and setter in C++) to Zilch

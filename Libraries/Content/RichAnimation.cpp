@@ -709,6 +709,8 @@ TrackNode* TrackNode::IsValid(Cog* animGraphObject, Status& status)
   // Already valid if we get to this point because our parent property is valid
   case TrackType::SubProperty:
       break;
+  case TrackType::Invalid:
+    break;
   }
 
   // If we're invalid, return ourself as the blocking node
@@ -747,6 +749,8 @@ ObjPtr TrackNode::GetObject(Cog* animGraphObject)
   case TrackType::Property:
   case TrackType::SubProperty:
     return GetProperty(animGraphObject);
+  case TrackType::Invalid:
+    break;
   }
 
   Error("Invalid track type.");

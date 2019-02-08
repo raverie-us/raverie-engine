@@ -152,7 +152,7 @@ void RemoveTextureJob::Execute()
 //**************************************************************************************************
 void SetLazyShaderCompilationJob::Execute()
 {
-  Z::gRenderer->SetLazyShaderCompilation(this);
+  Z::gRenderer->SetLazyShaderCompilation(this->mLazyShaderCompilation);
   delete this;
 }
 

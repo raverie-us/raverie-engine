@@ -1177,6 +1177,7 @@ void GraphicsEngine::ModifiedFragment(ZilchFragmentType::Enum type, StringParam 
     case Zero::ZilchFragmentType::CoreVertex: mModifiedCoreVertex.PushBack(name); break;
     case Zero::ZilchFragmentType::RenderPass: mModifiedRenderPass.PushBack(name); break;
     case Zero::ZilchFragmentType::PostProcess: mModifiedPostProcess.PushBack(name); break;
+    default: break;
   }
 }
 
@@ -1188,6 +1189,7 @@ void GraphicsEngine::RemovedFragment(ZilchFragmentType::Enum type, StringParam n
     case Zero::ZilchFragmentType::CoreVertex: mRemovedCoreVertex.PushBack(name); break;
     case Zero::ZilchFragmentType::RenderPass: mRemovedRenderPass.PushBack(name); break;
     case Zero::ZilchFragmentType::PostProcess: mRemovedPostProcess.PushBack(name); break;
+    default: break;
   }
 }
 

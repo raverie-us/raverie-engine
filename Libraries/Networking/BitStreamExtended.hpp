@@ -389,7 +389,7 @@ inline Bits SerializeKnownExtendedVariant(SerializeDirection::Enum direction, Bi
     // Any is an resource type?
     else if(anyValue.StoredType->IsA(ZilchTypeId(Resource)))
     {
-      Bits startBits = bitStream.GetBitsSerialized(direction);
+      Bits startBitsResource = bitStream.GetBitsSerialized(direction);
 
       // Write?
       if(direction == SerializeDirection::Write)
@@ -440,7 +440,7 @@ inline Bits SerializeKnownExtendedVariant(SerializeDirection::Enum direction, Bi
         }
       }
 
-      return bitStream.GetBitsSerialized(direction) - startBits;
+      return bitStream.GetBitsSerialized(direction) - startBitsResource;
     }
     // Any is a bitstream extended type?
     else if(anyValue.StoredType == ZilchTypeId(BitStreamExtended))

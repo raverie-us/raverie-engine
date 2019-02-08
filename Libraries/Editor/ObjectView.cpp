@@ -1441,7 +1441,7 @@ void ObjectView::OnMouseEnterRow(TreeEvent* e)
     return;
   
   String toolTipMessage;
-  ToolTipColorScheme::Enum toolTipColor;
+  ToolTipColorScheme::Enum toolTipColor = ToolTipColorScheme::Green;
 
   if(RemovedEntry* removed = Type::DynamicCast<RemovedEntry*>(object))
   {

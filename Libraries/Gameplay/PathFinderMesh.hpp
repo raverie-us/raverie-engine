@@ -30,7 +30,7 @@ struct NavMeshNodeKey
 typedef u32 NavMeshEdgeId;
 typedef u32 NavMeshPolygonId;
 
-const NavMeshPolygonId cInvalidMeshId = -1;
+const NavMeshPolygonId cInvalidMeshId = (u32)-1;
 
 class PathFinderAlgorithmMesh;
 

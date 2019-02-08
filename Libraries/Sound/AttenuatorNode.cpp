@@ -11,6 +11,8 @@ namespace Zero
 {
 
 //---------------------------------------------------------------------------------- Attenuator Node
+const float cLowPassCutoffHighValue = 15000.0f;
+const float cLowPassCutoffLowValue = 1000.0f;
 
 //**************************************************************************************************
 ZilchDefineType(AttenuatorNode, builder, type)

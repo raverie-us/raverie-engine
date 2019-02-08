@@ -89,7 +89,8 @@ String PivotProcessor::CollapsePivotHierarchy(HierarchyData& startNode, bool pre
   {
     HierarchyData& childData = mHierarchyDataMap[childName];
     transformData = transformData * childData.mLocalTransform;
-    if(isPivot = childData.mIsPivot)
+    isPivot = childData.mIsPivot;
+    if(isPivot)
     {
       nodesToRemove.PushBack(childName);
       childName = childData.mChildren[0];

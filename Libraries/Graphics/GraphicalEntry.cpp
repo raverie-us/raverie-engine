@@ -73,6 +73,9 @@ s32 GetGraphicalSortValue(Graphical& graphical, GraphicalSortMethod::Enum sortMe
     case GraphicalSortMethod::PositiveToNegativeY: *floatValue = -pos.y; break;
     case GraphicalSortMethod::NegativeToPositiveZ: *floatValue = pos.z; break;
     case GraphicalSortMethod::PositiveToNegativeZ: *floatValue = -pos.z; break;
+    case GraphicalSortMethod::None:
+    case GraphicalSortMethod::SortEvent:
+      break;
   }
 
   return value;

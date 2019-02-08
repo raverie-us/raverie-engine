@@ -285,15 +285,15 @@ void GenerateInternalEdgeInfoDynamic(HeightMapCollider* collider, uint contactId
   // For easy of naming, the bottom left of the current cell is called h11 instead of h00
   // so that cells to the left don't have to deal with negative numbers.
   //      h31
-  //         |\    
-  //         |  \  
-  // h20_____|h21_\ h22
-  //    \    |\    |\
-  //      \  |  \  |  \
-  //        \|____\|____\h13
-  //      h11 \    |h12
-  //            \  |
-  //              \|
+  //         |.    
+  //         |  .  
+  // h20_____|h21_. h22
+  //    .    |.    |.
+  //      .  |  .  |  .
+  //        .|____.|____.h13
+  //      h11 .    |h12
+  //            .  |
+  //              .|
   //              h02
 
   // The 4 vertices of the current cell always need to be sampled

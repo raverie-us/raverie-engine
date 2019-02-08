@@ -572,6 +572,9 @@ namespace Zilch
           case WebSocketPacketType::Close:
             this->SendPacket(event->Data, WebSocketPacketType::Close);
             break;
+          default:
+            Error("Invalid");
+            break;
         }
       }
     }

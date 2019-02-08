@@ -262,6 +262,8 @@ namespace Zilch
         dependencies[type] = DependencyState::Completed;
       }
       return;
+      case DependencyState::Completed:
+        return;
     }
   }
 

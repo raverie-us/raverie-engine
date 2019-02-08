@@ -1032,6 +1032,8 @@ void HeightMapTool::OnKeyDown(KeyboardEvent* e)
         e->Handled = true;
       }
       break;
+    default:
+      break;
   }
 }
 
@@ -1163,7 +1165,7 @@ void HeightMapTool::DrawDebugIndexes( )
 
   Transform* transform = map->GetOwner()->Has<Transform>();
 
-  IntVec2 (HeightMap::*cellIndexFn)(Vec2Param);
+  IntVec2 (HeightMap::*cellIndexFn)(Vec2Param) = nullptr;
   
   if(mCellIndexType == CellIndexType::Local)
     cellIndexFn = &HeightMap::GetCellIndexFromLocal;

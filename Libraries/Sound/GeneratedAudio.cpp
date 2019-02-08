@@ -645,7 +645,7 @@ RaisedCosineGrainWindow::RaisedCosineGrainWindow(unsigned length, unsigned attac
 float RaisedCosineGrainWindow::GetNextValue()
 {
   ++mCounter;
-  float result;
+  float result = 0.0f;
 
   switch (mCurrentState)
   {

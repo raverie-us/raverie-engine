@@ -303,6 +303,8 @@ Any GetValueFromParameter(AttributeParameter* parameter)
     return parameter->BooleanValue;
   case ConstantType::Type:
     return Any(parameter->TypeValue);
+  case ConstantType::Null:
+    return Any(nullptr);
   }
 
   Error("Invalid constant");

@@ -369,7 +369,7 @@ LibraryRef BuildWrapperLibrary(ZilchShaderIRLibraryRef fragmentsLibrary)
   forRange (BoundType* boundType, builder.BoundTypes.Values())
   {
     AttributeStatus status;
-    AttributeExtensions::GetInstance()->ProcessType(status, boundType, nullptr);
+    AttributeExtensions::GetInstance()->ProcessType(status, boundType, false);
     if (status.Failed())
       ZPrint(status.Message.c_str());
     MetaLibraryExtensions::ProcessComponent(builder, boundType);

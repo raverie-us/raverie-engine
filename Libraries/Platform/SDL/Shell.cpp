@@ -35,6 +35,8 @@ Keys::Enum SDLScancodeToKey(SDL_Scancode code)
 #define ProcessInput(Scancode, Keycode, ZeroValue) case Scancode: return ZeroValue;
 #include "Keys.inl"
 #undef ProcessInput
+  default:
+    break;
   }
 
   switch (code)
@@ -51,6 +53,8 @@ Keys::Enum SDLScancodeToKey(SDL_Scancode code)
       return Keys::Shift;
     case SDL_SCANCODE_RALT:
       return Keys::Alt;
+    default:
+      break;
   }
 
   return Keys::Unknown;
@@ -63,6 +67,8 @@ SDL_Scancode KeyToSDLScancode(Keys::Enum key)
 #define ProcessInput(Scancode, Keycode, ZeroValue) case ZeroValue: return Scancode;
 #include "Keys.inl"
 #undef ProcessInput
+  default:
+    break;
   }
   return SDL_SCANCODE_UNKNOWN;
 }
@@ -74,6 +80,8 @@ Keys::Enum SDLKeycodeToKey(SDL_Keycode code)
 #define ProcessInput(Scancode, Keycode, ZeroValue) case Keycode: return ZeroValue;
 #include "Keys.inl"
 #undef ProcessInput
+  default:
+    break;
   }
   
   switch (code)
@@ -101,6 +109,8 @@ SDL_Keycode KeyToSDLKeycode(Keys::Enum key)
 #define ProcessInput(Scancode, Keycode, ZeroValue) case ZeroValue: return Keycode;
 #include "Keys.inl"
 #undef ProcessInput
+  default:
+    break;
   }
 
   return SDLK_UNKNOWN;
@@ -113,6 +123,8 @@ MouseButtons::Enum SDLToMouseButton(int button)
 #define ProcessInput(VKValue, ZeroValue) case VKValue: return ZeroValue;
 #include "MouseButtons.inl"
 #undef ProcessInput
+  default:
+    break;
   }
   return MouseButtons::None;
 }
@@ -124,6 +136,8 @@ int MouseButtonToSDL(MouseButtons::Enum button)
 #define ProcessInput(VKValue, ZeroValue) case ZeroValue: return VKValue;
 #include "MouseButtons.inl"
 #undef ProcessInput
+  default:
+    break;
   }
   return 0;
 }
@@ -268,7 +282,9 @@ void Shell::SetMouseCursor(Cursor::Enum cursor)
   case Cursor::SizeAll:   sdlSystemCursor = SDL_SYSTEM_CURSOR_SIZEALL; break;
   case Cursor::TextBeam:  sdlSystemCursor = SDL_SYSTEM_CURSOR_IBEAM; break;
   case Cursor::Hand:      sdlSystemCursor = SDL_SYSTEM_CURSOR_HAND; break;
-  case Cursor::Invisible: sdlSystemCursor = SDL_SYSTEM_CURSOR_CROSSHAIR; Error("Not implemented"); break;
+  case Cursor::Invisible: sdlSystemCursor = SDL_SYSTEM_CURSOR_CROSSHAIR; break;
+  default:
+    break;
   }
 
   SDL_Cursor*& sdlCursor = self->mSDLCursors[sdlSystemCursor];
@@ -611,6 +627,8 @@ void Shell::Update()
           mainWindow->mOnInputDeviceChanged(*device, 0, Array<uint>(), DataBlock(), mainWindow);
         break;
       }
+      default:
+        break;
     }
   }
 }
@@ -643,6 +661,8 @@ SDL_HitTestResult ShellWindowSDLHitTest(SDL_Window* window, const SDL_Point* cli
     case WindowBorderArea::BottomLeft:  hitTestResult = SDL_HITTEST_RESIZE_BOTTOMLEFT; break;
     case WindowBorderArea::Bottom:      hitTestResult = SDL_HITTEST_RESIZE_BOTTOM; break;
     case WindowBorderArea::BottomRight: hitTestResult = SDL_HITTEST_RESIZE_BOTTOMRIGHT; break;
+    default:
+      break;
   }
 
   return hitTestResult;
@@ -935,6 +955,8 @@ void ShellWindow::SetState(WindowState::Enum windowState)
       SDL_RestoreWindow((SDL_Window*)mHandle);
       break;
     }
+    default:
+      break;
   }
 }
 

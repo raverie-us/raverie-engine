@@ -42,6 +42,8 @@ void NormalSolver::AddJoint(Joint* joint)
   switch(joint->GetJointType())
   {
 #include "JointList.hpp"
+  default:
+    break;
   }
 }
 

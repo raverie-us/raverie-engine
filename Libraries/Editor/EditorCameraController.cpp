@@ -575,6 +575,8 @@ void EditorCameraController::ProcessKeyboardEvent(KeyboardEvent* keyEvent)
         mDragMode = CameraDragMode::NotActive;
     }
     break;
+    default:
+      break;
   }//end switch key event
 }
 

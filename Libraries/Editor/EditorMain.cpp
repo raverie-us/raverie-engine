@@ -129,6 +129,8 @@ void EditorMain::OnKeyDown(KeyboardEvent* keyEvent)
         SelectSpace();
         break;
       }
+      default:
+        break;
     }
   }
 
@@ -155,6 +157,8 @@ void EditorMain::OnKeyDown(KeyboardEvent* keyEvent)
       mouse->ToggleTrapped();
       break;
     }
+    default:
+      break;
   }
 }
 

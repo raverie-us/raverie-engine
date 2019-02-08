@@ -203,13 +203,13 @@ void WindowsExportTarget::CopyInstallerSetupFile(StringParam dest, StringParam s
   {
     DoNotifyWarning("File Read Error", "Failed to read template setup file, aborting installer file setup");
     // cleanup the buffer
-    delete buffer;
+    delete[] buffer;
     return;
   }
 
   // Create a string containing the data and delete our temporary buffer
   String fileContent((char*)buffer, filesize);
-  delete buffer;
+  delete[] buffer;
 
   // Replace the template values with the project name and generate a guid
   String outputFileContent = fileContent.Replace("%PROJECTNAME%", projectName);

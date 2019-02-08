@@ -389,6 +389,7 @@ uint VertexBuffer::GetElementSize(VertexElementType::Enum type)
   {
     case VertexElementType::Byte:      return 1;
     case VertexElementType::Short:     return 2;
+    case VertexElementType::Half:      return 2;
     case VertexElementType::Real:      return 4;
     case VertexElementType::NormByte:  return 1;
     case VertexElementType::NormShort: return 2;
@@ -408,6 +409,7 @@ void VertexBuffer::ReadVertexData(byte* vertexData, VertexAttribute& attribute, 
       case VertexElementType::Real:      output[i] = ((real*)vertexData)[i]; break;
       case VertexElementType::NormByte:  output[i] =   ((u8*)vertexData)[i] / 255.0f;   break;
       case VertexElementType::NormShort: output[i] =  ((u16*)vertexData)[i] / 65535.0f; break;
+      case VertexElementType::Half:      output[i] = HalfFloatConverter::ToFloat(((u16*)vertexData)[i]); break;
     }
   }
 }
@@ -684,7 +686,7 @@ bool Mesh::TestRay(GraphicsRayCast& raycast, Mat4 worldTransform)
       continue;
 
     Intersection::IntersectionPoint point;
-    Intersection::Type result;
+    Intersection::Type result = Intersection::None;
 
     switch (mPrimitiveType)
     {

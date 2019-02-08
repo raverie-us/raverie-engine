@@ -958,7 +958,7 @@ void DocumentationLibrary::CreateFlagOrEnumDocFromBoundType(BoundType *type, boo
 
 void ClassDoc::CreateEventDocFromBoundType(SendsEvent *eventSent)
 {
-  EventDoc* eventDoc;
+  EventDoc* eventDoc = nullptr;
   BoundType* eventType = Type::GetBoundType(eventSent->SentType);
 
   // If we have not seen this event before, create a new event doc

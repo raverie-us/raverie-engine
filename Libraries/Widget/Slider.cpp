@@ -441,6 +441,8 @@ void Slider::OnKeyDown(KeyboardEvent* e)
       OnKeyRepeated(e);
       break;
     }
+    default:
+      break;
   }
 }
 
@@ -469,6 +471,8 @@ void Slider::OnKeyRepeated(KeyboardEvent* e)
       mValueNudged = true;
       break;
     }
+  default:
+    break;
   }
 }
 

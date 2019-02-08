@@ -810,6 +810,8 @@ namespace Zilch
             return this->HandleEquality;
           case Grammar::Inequality:
             return this->HandleInequality;
+          default:
+            break;
         }
       }
       
@@ -824,6 +826,8 @@ namespace Zilch
             return this->HandleEquality;
           case Grammar::Inequality:
             return this->HandleInequality;
+          default:
+            break;
         }
       }
     }
@@ -845,6 +849,8 @@ namespace Zilch
             return this->ValueEquality;
           case Grammar::Inequality:
             return this->ValueInequality;
+          default:
+            break;
         }
       }
 
@@ -860,6 +866,8 @@ namespace Zilch
             return this->DelegateEquality;
           case Grammar::Inequality:
             return this->DelegateInequality;
+          default:
+            break;
         }
       }
 
@@ -875,6 +883,8 @@ namespace Zilch
             return this->AnyEquality;
           case Grammar::Inequality:
             return this->AnyInequality;
+          default:
+            break;
         }
       }
     }

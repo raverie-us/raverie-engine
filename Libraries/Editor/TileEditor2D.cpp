@@ -676,6 +676,8 @@ void TileEditor2D::OnKeyDown(KeyboardEvent* e)
         e->Handled = true;
       }
     break;
+    default:
+      break;
   }
 }
 

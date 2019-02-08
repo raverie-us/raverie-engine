@@ -395,7 +395,7 @@ namespace Zilch
       // Write our object representation to either stack data or handle data
       static void Write(const T& value, byte* to)
       {
-        memcpy(to, &value, sizeof(T));
+        memcpy(to, (void*)&value, sizeof(T));
       }
 
       template <typename U>

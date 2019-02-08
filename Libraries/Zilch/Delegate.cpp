@@ -82,7 +82,7 @@ namespace Zilch
     ReturnIf(this->BoundFunction == nullptr, Any(),
       "Attempted to invoke a null delegate");
 
-    // This is unsafe, but we use a static assert (after the ArrayClass, offsetof with 0) to guarantee it will work
+    // This is unsafe, but we use a static assert (after the ArrayClass, ZeroOffsetOf with 0) to guarantee it will work
     ArrayClass<Any>* zilchArray = reinterpret_cast<ArrayClass<Any>*>(const_cast<Array<Any>*>(&arguments));
     return this->BoundFunction->Invoke(this->ThisHandle, zilchArray);
   }

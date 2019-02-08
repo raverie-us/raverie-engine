@@ -109,6 +109,8 @@ TextureFormat::Enum ToImageFormat(int components, ImageBitDepth::Enum depth)
     case 4: return TextureFormat::RGBA32f;
     }
     break;
+  default:
+    break;
   }
   return TextureFormat::None;
 }
@@ -266,6 +268,8 @@ void LoadImage(Status& status, Stream* stream, byte** output, uint* width, uint*
       break;
     case ImageBitDepth::I8:
       *output = (byte*)stbi_load_from_callbacks(&callbacks, stream, (int*)width, (int*)height, &componentsOut, requireComponents);
+      break;
+    case ImageBitDepth::None:
       break;
   }
 

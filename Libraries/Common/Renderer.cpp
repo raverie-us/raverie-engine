@@ -180,6 +180,7 @@ void SetPixelData(byte* data, uint index, Vec4 value, TextureFormat::Enum format
 
   case TextureFormat::SRGB8:   SetPixelDataGamma(data, index, value, 3);     break;
   case TextureFormat::SRGB8A8: SetPixelDataGamma(data, index, value, 4);     break;
+  default: Error("Invalid"); break;
   }
 }
 
@@ -210,6 +211,7 @@ void ReadPixelData(byte* data, uint index, Vec4& value, TextureFormat::Enum form
 
   case TextureFormat::SRGB8:   ReadPixelDataGamma(data, index, value, 3);     break;
   case TextureFormat::SRGB8A8: ReadPixelDataGamma(data, index, value, 4);     break;
+  default: Error("Invalid"); break;
   }
 }
 

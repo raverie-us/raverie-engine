@@ -1308,6 +1308,7 @@ void HotKeyEditor::Sort(bool updateIndexes, CommandCompare::Enum sortBy)
       QuickSort(sortRange.Begin(), sortRange.End(), &sortRange.Front(), CompareNotCogCommand());
       break;
 
+    case CommandCompare::None:
     case CommandCompare::CommandName:
       QuickSort(sortRange.Begin(), sortRange.End(), &sortRange.Front(), CompareCommandName());
       break;

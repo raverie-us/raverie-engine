@@ -236,7 +236,7 @@ template <typename T>
 bool Mesh::GetPrimitiveData(uint primitiveIndex, VertexSemantic::Enum semantic, VertexElementType::Enum type, uint count, T* data)
 {
   bool result = true;
-  uint i0, i1, i2;
+  uint i0 = 0, i1 = 0, i2 = 0;
   uint verticesPerPrimitive = GetVerticesPerPrimitive();
 
   uint primitiveCount = mIndices.mIndexCount / verticesPerPrimitive;

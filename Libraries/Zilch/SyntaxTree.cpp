@@ -1005,6 +1005,8 @@ namespace Zilch
 
     case Grammar::Null:
       return ZilchTypeId(nullptr_t);
+    default:
+      break;
     }
 
     return nullptr;

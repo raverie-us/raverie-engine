@@ -38,9 +38,9 @@ inline DataTokenType::Enum GetTokenFromState(TokenState::Enum currentState)
   case TokenState::ExplicitFloat:
   case TokenState::ScientificNotationFloat:
     return DataTokenType::Float;
+  default:
+    return DataTokenType::None;
   }
-
-  return DataTokenType::None;
 }
 
 //------------------------------------------------------------------------------ Data Tree Tokenizer

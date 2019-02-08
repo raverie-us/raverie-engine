@@ -287,8 +287,7 @@ public:
     if(!Editable)
       return;
 
-    FloatingSearchView* searchView = mActiveSearch;
-    if(searchView == nullptr)
+    if(mActiveSearch == nullptr)
     {
       FloatingSearchView* viewPopUp = new FloatingSearchView(this);
       Vec3 mousePos = ToVector3(event->GetMouse()->GetClientPosition());

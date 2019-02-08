@@ -260,7 +260,7 @@ void ComputeContours(EdgeGraph& edges, Array<Vec2>& points, Array<uint>& contour
     {
       Vec2 edge = key - contour[contour.Size() - 2];
 
-      uint index;
+      uint index = 0;
       float best = -Math::cInfinite;
       for (uint i = 0; i < endPoints.size; ++i)
       {

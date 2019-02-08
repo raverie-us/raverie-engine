@@ -447,6 +447,8 @@ void JointCreator::CallJointFunctions(Joint* joint, ConnectionInfo& info)
   switch(joint->GetJointType())
   {
 #include "JointList.hpp"
+  default:
+    break;
   }
 }
 

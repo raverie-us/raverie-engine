@@ -198,6 +198,7 @@ BOOL CALLBACK TestZeroMiniDumpCallback(
         return FALSE;
 
       MemoryRange memRange;
+      memset(&memRange, 0, sizeof(memRange));
       memRange.Begin = NULL;
       bool shouldContinue = true;
       //If null is returned windows interprets this as stopping even though we return that we should continue. 

@@ -63,7 +63,7 @@ namespace Zilch
   }
 
 #define ZilchOperand(array, type, member, primitive, isLocal) \
-  array.PushBack(DebugOperand(offsetof(type, member), primitive, isLocal, #member));
+  array.PushBack(DebugOperand(ZeroOffsetOf(type, member), primitive, isLocal, #member));
 
 
 
@@ -82,14 +82,14 @@ namespace Zilch
     // CreateStaticDelegate
     {
       DebugInstruction& info = debugOut[Instruction::CreateStaticDelegate];
-      info.FunctionPointers.PushBack(offsetof(CreateStaticDelegateOpcode, BoundFunction));
+      info.FunctionPointers.PushBack(ZeroOffsetOf(CreateStaticDelegateOpcode, BoundFunction));
       ZilchOperand(info.WriteOperands, CreateStaticDelegateOpcode, SaveLocal, DebugPrimitive::Delegate, true);
     }
 
     // CreateInstanceDelegate
     {
       DebugInstruction& info = debugOut[Instruction::CreateInstanceDelegate];
-      info.FunctionPointers.PushBack(offsetof(CreateInstanceDelegateOpcode, BoundFunction));
+      info.FunctionPointers.PushBack(ZeroOffsetOf(CreateInstanceDelegateOpcode, BoundFunction));
       ZilchOperand(info.ReadOperands, CreateInstanceDelegateOpcode, ThisHandle, DebugPrimitive::Handle, false);
       ZilchOperand(info.WriteOperands, CreateInstanceDelegateOpcode, SaveLocal, DebugPrimitive::Delegate, true);
     }
@@ -108,7 +108,7 @@ namespace Zilch
         Instruction::Enum instruction = instructions[i];
         DebugInstruction& info = debugOut[instruction];
         ZilchOperand(info.ReadOperands, IfOpcode, Condition, DebugPrimitive::Boolean, false);
-        info.OpcodeOffsets.PushBack(offsetof(IfOpcode, JumpOffset));
+        info.OpcodeOffsets.PushBack(ZeroOffsetOf(IfOpcode, JumpOffset));
       }
     }
 
@@ -116,34 +116,34 @@ namespace Zilch
     {
       DebugInstruction& info = debugOut[Instruction::IfTrueRelativeGoTo];
       ZilchOperand(info.ReadOperands, IfOpcode, Condition, DebugPrimitive::Boolean, false);
-      info.OpcodeOffsets.PushBack(offsetof(IfOpcode, JumpOffset));
+      info.OpcodeOffsets.PushBack(ZeroOffsetOf(IfOpcode, JumpOffset));
     }
     
     
     // RelativeGoTo
     {
       DebugInstruction& info = debugOut[Instruction::RelativeGoTo];
-      info.OpcodeOffsets.PushBack(offsetof(RelativeJumpOpcode, JumpOffset));
+      info.OpcodeOffsets.PushBack(ZeroOffsetOf(RelativeJumpOpcode, JumpOffset));
     }
     
     // PrepForFunctionCall
     {
       DebugInstruction& info = debugOut[Instruction::PrepForFunctionCall];
       ZilchOperand(info.ReadOperands, PrepForFunctionCallOpcode, Delegate, DebugPrimitive::Delegate, false);
-      info.OpcodeOffsets.PushBack(offsetof(PrepForFunctionCallOpcode, JumpOffsetIfStatic));
+      info.OpcodeOffsets.PushBack(ZeroOffsetOf(PrepForFunctionCallOpcode, JumpOffsetIfStatic));
     }
     
     // NewObject
     {
       DebugInstruction& info = debugOut[Instruction::NewObject];
-      info.TypePointers.PushBack(offsetof(CreateTypeOpcode, CreatedType));
+      info.TypePointers.PushBack(ZeroOffsetOf(CreateTypeOpcode, CreatedType));
       ZilchOperand(info.WriteOperands, CreateTypeOpcode, SaveHandleLocal, DebugPrimitive::Handle, true);
     }
 
     // LocalObject
     {
       DebugInstruction& info = debugOut[Instruction::LocalObject];
-      info.TypePointers.PushBack(offsetof(CreateLocalTypeOpcode, CreatedType));
+      info.TypePointers.PushBack(ZeroOffsetOf(CreateLocalTypeOpcode, CreatedType));
       ZilchOperand(info.WriteOperands, CreateLocalTypeOpcode, SaveHandleLocal, DebugPrimitive::Handle, true);
       ZilchOperand(info.WriteOperands, CreateLocalTypeOpcode, StackLocal, DebugPrimitive::Memory, true);
     }
@@ -642,8 +642,8 @@ namespace Zilch
         info.IsCopy = true;
         ZilchOperand(info.ReadOperands, CopyOpcode, Source, primitive, false);
         ZilchOperand(info.WriteOperands, CopyOpcode, Destination, primitive, false);
-        info.Sizes.PushBack(offsetof(CopyOpcode, Size));
-        info.Options.PushBack(offsetof(CopyOpcode, Mode));
+        info.Sizes.PushBack(ZeroOffsetOf(CopyOpcode, Size));
+        info.Options.PushBack(ZeroOffsetOf(CopyOpcode, Mode));
       }
     }
   }

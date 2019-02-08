@@ -287,7 +287,7 @@ bool AudioFileDecoder::DecodePacketThreaded()
 {
   // Note: This function happens on the decoding thread
 
-  int frames;
+  int frames = 0;
   byte packetData[AudioFileEncoder::cMaxPacketSize];
   float decodedPackets[cMaxChannels][AudioFileEncoder::cPacketFrames];
 

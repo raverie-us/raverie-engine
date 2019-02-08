@@ -499,6 +499,9 @@ END:
         }
       }
       break;
+      case DebuggerAction::Resume:
+        Error("Invalid");
+        break;
     }
 
     // Note: We always test for breakpoints (when resumed, when stepping in, when stepping out, etc)

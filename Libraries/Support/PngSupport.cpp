@@ -43,7 +43,7 @@ bool IsPng(Stream* stream)
   stream->Read(pngSignature, PngSignatureSize);
   stream->Seek(0);
   // Is this a valid png file?
-  return png_check_sig(pngSignature, PngSignatureSize) != 0;
+  return ((png_check_sig(pngSignature, PngSignatureSize)) != 0);
 }
 
 bool ReadPngInfo(Stream* stream, ImageInfo& info)

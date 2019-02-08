@@ -216,8 +216,7 @@ double Random::DoubleVariance(double base, double variance)
 
 Vector2 Random::PointOnUnitCircle(void)
 {
-  const float cTwoPi = float(Math::cTwoPi);
-  real angle = real(cTwoPi * Float());
+  real angle = real(float(Math::cTwoPi) * Float());
   return Vector2(Math::Cos(angle), Math::Sin(angle));
 }
 

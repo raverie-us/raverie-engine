@@ -143,6 +143,7 @@ namespace Zilch
     switch (lineStyle)
     {
       case LineStyle::NextLine:
+      case LineStyle::UseGlobalDefault:
         // Just write out a standard indented line
         this->WriteLineIndented();
         break;
@@ -258,6 +259,7 @@ namespace Zilch
     switch (lineStyle)
     {
       case LineStyle::NextLine:
+      case LineStyle::UseGlobalDefault:
         // Just write out a standard indented line
         this->WriteLineIndented();
         break;

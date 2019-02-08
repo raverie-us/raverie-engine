@@ -1078,7 +1078,7 @@ void ManipulatorTool::OnMouseDragMove(ViewportMouseEvent* event)
     eventToSend.mEndWorldRectangle = mActiveRect;
     eventToSend.HandledEventScript = false;
 
-    EventDispatcher* dispatcher;
+    EventDispatcher* dispatcher = nullptr;
     Object* object = handle.Get<Object*>();
     if(object != nullptr)
       dispatcher = object->GetDispatcher();
@@ -1263,13 +1263,13 @@ void ManipulatorTool::OnMouseDragEnd(ViewportMouseEvent* event)
     Cog* cog = handle.Get<Cog*>();
     if(cog && mNewObjects.Contains(handle))
     {
-      String name;
+      String createName;
       if(MetaDisplay* display = handle.StoredType->HasInherited<MetaDisplay>())
-        name = display->GetName(handle);
+        createName = display->GetName(handle);
       else
-        name = handle.StoredType->Name;
+        createName = handle.StoredType->Name;
 
-      queue->SetActiveBatchName(BuildString("Create ", name));
+      queue->SetActiveBatchName(BuildString("Create ", createName));
 
       ObjectCreated(queue, cog);
 
@@ -1302,33 +1302,33 @@ void ManipulatorTool::OnMouseDragEnd(ViewportMouseEvent* event)
       ChangeAndQueueProperty(queue, transform.mInstance, propertyPath, target.EndScale);
     }
 
-    if(Cog* cog = handle.Get<Cog*>())
+    if(Cog* areaCog = handle.Get<Cog*>())
     {
       // Area might have changed.
-      Area* area = cog->has(Area);
+      Area* area = areaCog->has(Area);
       if(area && (target.StartSize - target.EndSize).LengthSq() != 0.0f)
       {
         area->SetSize(target.StartSize);
 
         PropertyPath areaPath(area, areaSizeProperty);
-        ChangeAndQueueProperty(queue, cog, areaPath, target.EndSize);
+        ChangeAndQueueProperty(queue, areaCog, areaPath, target.EndSize);
 
         // No need to update an object's BoxCollider if there isn't one, or if
         // that option isn't enabled.
-        BoxCollider* collider = cog->has(BoxCollider);
+        BoxCollider* collider = areaCog->has(BoxCollider);
         if(collider != nullptr && mSizeBoxCollider)
         {
           collider->SetOffset(target.StartColliderOffset);
 
           Vec3 endOffset(area->OffsetOfOffset(Location::Center) * area->GetSize());
           PropertyPath offsetPath(collider, colliderOffsetProperty);
-          ChangeAndQueueProperty(queue, cog, offsetPath, endOffset);
+          ChangeAndQueueProperty(queue, areaCog, offsetPath, endOffset);
 
           collider->SetSize(target.StartColliderSize);
 
           Vec3 endSize(target.EndSize.x, target.EndSize.y, target.StartColliderSize.z);
           PropertyPath sizePath(collider, colliderSizeProperty);
-          ChangeAndQueueProperty(queue, cog, sizePath, endSize);
+          ChangeAndQueueProperty(queue, areaCog, sizePath, endSize);
         }
 
       }
@@ -1388,7 +1388,7 @@ void ManipulatorTool::OnToolDraw(Event*)
   for(uint i = 0; i <= 4; ++i)
   {
     ByteColor c = toolColor;
-    if(2*i == mSelectedPoint)
+    if(2*i == (uint)mSelectedPoint)
       c = hoverColor;
 
     gDebugDraw->Add(Debug::Box(middles[i], gripSize, mObbBasis).Filled(true).ViewScaled(true).Color(c).OnTop(true));
@@ -1410,7 +1410,7 @@ void ManipulatorTool::OnToolDraw(Event*)
   for(uint i = 0; i < 4; ++i)
   {
     ByteColor c = toolColor;
-    if(2*i+1 == mSelectedPoint)
+    if(2*i+1 == (uint)mSelectedPoint)
       c = hoverColor;
     
     // Corner grab spots.

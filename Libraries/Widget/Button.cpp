@@ -169,7 +169,8 @@ void ButtonBase::OnHover(MouseEvent* event)
     bool hasText = false;
     forRange(Command* command, mCommands.All())
     {
-      if(hasText |= (!command->ToolTip.Empty()))
+      hasText |= (!command->ToolTip.Empty());
+      if(hasText)
         toolTip->AddText(command->ToolTip, Vec4(1));
     }
 

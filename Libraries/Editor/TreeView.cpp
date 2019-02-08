@@ -1053,7 +1053,7 @@ void TreeRow::OnMetaDrop(MetaDropEvent* event)
 {
   DataEntry* entry = mTree->mDataSource->ToEntry(mIndex);
 
-  mTree->mMouseOver.Id = -1;
+  mTree->mMouseOver.Id = (u64)-1;
 
   //Dropped on the Row
   if(event->Instance.StoredType->IsA(ZilchTypeId(TreeRow)))
@@ -1113,7 +1113,7 @@ void TreeRow::OnMetaDrop(MetaDropEvent* event)
 
     // If something was dropped, we want to invalidate the mouse over
     // so that nothing is highlighted anymore
-    mTree->mMouseOver.Id = -1;
+    mTree->mMouseOver.Id = (u64)-1;
 
     //Move all selected data indexes
     Array<DataIndex> indexes;
@@ -1423,7 +1423,7 @@ TreeView::TreeView(Composite* parent)
   mArea->SetClientSize(Pixels(20, 20));
   mMinSize = Vec2(100, 100);
 
-  mMouseOver = -1;
+  mMouseOver = (DataIndex )-1;
   mMouseOverMode = InsertMode::On;
 
   mSelection = new HashDataSelection();
@@ -1789,13 +1789,13 @@ void TreeView::OnMouseExit(MouseEvent* event)
       if(row)
         row->UpdateTransformExternal();
     }
-    mMouseOver = -1;
+    mMouseOver = (DataIndex)-1;
   }
 }
 
 void TreeView::OnMouseExitHierarchy(MouseEvent* event)
 {
-  mMouseOver = -1;
+  mMouseOver = (DataIndex)-1;
   MarkAsNeedsUpdate();
 }
 
@@ -1838,7 +1838,7 @@ void TreeView::OnMouseUpdate(MouseEvent* event)
   }
   else
   {
-    mMouseOver = -1;
+    mMouseOver = (DataIndex)-1;
   }
   mMouseOverMode = InsertMode::On;
 }

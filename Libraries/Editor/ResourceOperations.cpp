@@ -261,7 +261,7 @@ bool RenameResource(Resource* resource, StringParam newName)
   if (Z::gEngine->IsReadOnly())
   {
     DoNotifyWarning("Resources", "Cannot rename resources while in read-only mode");
-    return nullptr;
+    return false;
   }
 
   //if there's no resource and no resource builder, there is nothing to do.

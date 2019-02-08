@@ -557,7 +557,7 @@ Vec2 SpriteText::GetLocalCenter()
   }
   else
   {
-    Location::Enum origin;
+    Location::Enum origin = Location::Center;
     switch (mTextAlign)
     {
       case TextAlign::Left: origin = Location::CenterLeft; break;

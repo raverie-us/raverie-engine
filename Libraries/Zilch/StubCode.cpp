@@ -83,6 +83,9 @@ namespace Zilch
         case SpecialType::Standard:
           codeBuilder.WriteKeywordOrSymbol(Grammar::Struct);
           break;
+        case SpecialType::ForceIntegerSize:
+          Error("Invalid");
+          break;
       }
     }
 

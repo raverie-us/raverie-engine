@@ -239,6 +239,7 @@ u32 GetParticleSortValue(SpriteParticleSortMode::Enum sortMode, Vec3 pos, Vec3 c
     case SpriteParticleSortMode::PositiveToNegativeY: *floatValue = -pos.y; break;
     case SpriteParticleSortMode::NegativeToPositiveZ: *floatValue = pos.z; break;
     case SpriteParticleSortMode::PositiveToNegativeZ: *floatValue = -pos.z; break;
+    default: break;
   }
 
   // If sign bit, flip all bits. If no sign bit, flip sign bit.

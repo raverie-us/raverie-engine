@@ -35,9 +35,9 @@ void ResourceHandleManager::Allocate(BoundType* type, Handle& handleToInitialize
 
   ResourceHandleData& data = *(ResourceHandleData*)(handleToInitialize.Data);
   data.mRawObject = (Resource*)zAllocate(type->Size);
+  memset((void*)data.mRawObject, 0, type->Size);
   data.mDebugResource = data.mRawObject;
   data.mId = 0;
-  memset(data.mRawObject, 0, type->Size);
 }
 
 //**************************************************************************************************

@@ -6,13 +6,7 @@ add_definitions(-DHAVE_UNISTD_H)
 set(CMAKE_EXECUTABLE_SUFFIX ".html")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(WELDER_C_CXX_FLAGS "\
-  -Wno-expansion-to-defined\
   -Wno-address-of-packed-member\
-  -Wno-incompatible-pointer-types\
-  -Wno-undefined-var-template\
-  -Wno-switch\
-  -Wno-tautological-undefined-compare\
-  -Wno-#warnings\
   -s ALLOW_MEMORY_GROWTH=1\
   -s WASM=1\
   -s SIMD=0\
@@ -40,22 +34,26 @@ set(WELDER_LINKER_FLAGS "\
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   set(WELDER_C_CXX_FLAGS "${WELDER_C_CXX_FLAGS}\
     -Os\
-    -g\
+    -g4\
     -s ASSERTIONS=2\
+    -s GL_ASSERTIONS=1\
     -s DEMANGLE_SUPPORT=1\
     -s STACK_OVERFLOW_CHECK=2\
-    -s GL_ASSERTIONS=1\
-    -fno-omit-frame-pointer\
+    -s SAFE_HEAP=1\
+    -s ALIASING_FUNCTION_POINTERS=0\
   ")
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
   set(WELDER_C_CXX_FLAGS "${WELDER_C_CXX_FLAGS}\
     -O3\
+    -g2\
   ")
 endif()
 
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}\
-  --embed-file \"${WELDER_VIRTUAL_FILE_SYSTEM_ZIP}\"@/FileSystem.zip\
   --no-heap-copy\
+  --embed-file \"${WELDER_VIRTUAL_FILE_SYSTEM_ZIP}\"@/FileSystem.zip\
 ")
+
+set(WELDER_C_CXX_EXTERNAL_FLAGS -Wno-everything)

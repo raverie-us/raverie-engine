@@ -82,9 +82,6 @@ private:
   Threaded<float> mLowPassCutoff;
   // Interpolator for low pass filter
   InterpolatingObject LowPassInterpolator;
-
-  const float cLowPassCutoffHighValue = 15000.0f;
-  const float cLowPassCutoffLowValue = 1000.0f;
 };
 
 } // namespace Zero

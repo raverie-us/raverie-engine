@@ -381,7 +381,7 @@ void ObjectTransformGizmo::OnMouseDragEnd(ViewportMouseEvent* event)
 
     }
 
-    EventDispatcher* dispatcher;
+    EventDispatcher* dispatcher = nullptr;
     Object* object = target.Get<Object*>();
     if(object != nullptr)
       dispatcher = object->GetDispatcher();
@@ -445,9 +445,9 @@ void ObjectTransformGizmo::OnMouseDragEnd(ViewportMouseEvent* event)
 
     if((objectState.StartSize - objectState.EndSize).LengthSq()!=0.0f)
     {
-      if(Cog* cog = target.Get<Cog*>())
+      if(Cog* areaCog = target.Get<Cog*>())
       {
-        if(Area* area = cog->has(Area))
+        if(Area* area = areaCog->has(Area))
         {
           Property* sizeProperty = ZilchVirtualTypeId(area)->GetProperty("Size");
           area->SetSize(objectState.StartSize);
@@ -458,7 +458,7 @@ void ObjectTransformGizmo::OnMouseDragEnd(ViewportMouseEvent* event)
 
           if(mSizeBoxCollider)
           {
-            if(BoxCollider* collider = cog->has(BoxCollider))
+            if(BoxCollider* collider = areaCog->has(BoxCollider))
             {
               BoundType* colliderType = ZilchVirtualTypeId(collider);
 
@@ -475,11 +475,11 @@ void ObjectTransformGizmo::OnMouseDragEnd(ViewportMouseEvent* event)
 
               Vec3 endSize = Vec3(objectState.EndSize.x, objectState.EndSize.y, startSize.z);
 
-              Property* sizeProperty = colliderType->GetProperty("Size");
+              Property* colliderSizeProperty = colliderType->GetProperty("Size");
               collider->SetSize(startSize);
 
               // Queue the change to size
-              PropertyPath colliderSizePath(sizeProperty);
+              PropertyPath colliderSizePath(colliderSizeProperty);
               ChangeAndQueueProperty(queue, collider, colliderSizePath, endSize);
             }
 
@@ -708,7 +708,7 @@ void ObjectTranslateGizmo::OnGizmoModified(TranslateGizmoUpdateEvent* event)
     if(transform.mLocalTranslation == nullptr)
       continue;
 
-    EventDispatcher* dispatcher;
+    EventDispatcher* dispatcher = nullptr;
     Object* object = target.Get<Object*>();
     if(object != nullptr)
       dispatcher = object->GetDispatcher();
@@ -935,7 +935,7 @@ void ObjectScaleGizmo::OnGizmoModified(ScaleGizmoUpdateEvent* event)
       }
     }
 
-    EventDispatcher* dispatcher;
+    EventDispatcher* dispatcher = nullptr;
     Object* object = target.Get<Object*>();
     if(object != nullptr)
       dispatcher = object->GetDispatcher();
@@ -1050,7 +1050,7 @@ void ObjectRotateGizmo::OnGizmoModified(RotateGizmoUpdateEvent* event)
     if(transform.mLocalRotation == nullptr)
       continue;
 
-    EventDispatcher* dispatcher;
+    EventDispatcher* dispatcher = nullptr;
     Object* object = target.Get<Object*>();
     if(object != nullptr)
       dispatcher = object->GetDispatcher();

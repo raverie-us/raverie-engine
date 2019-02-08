@@ -1887,11 +1887,11 @@ namespace Zilch
 
       if (handleOperand.Type == OperandType::Field)
       {
-        handleOperand.FieldOffset += offsetof(Delegate, ThisHandle);
+        handleOperand.FieldOffset += ZeroOffsetOf(Delegate, ThisHandle);
       }
       else
       {
-        handleOperand.HandleConstantLocal += offsetof(Delegate, ThisHandle);
+        handleOperand.HandleConstantLocal += ZeroOffsetOf(Delegate, ThisHandle);
       }
 
       // Get the instance of the type database

@@ -1313,7 +1313,7 @@ Vec2 TextureCoordinatesFromPointOnObb(Vec3Param point,
                           Math::Abs(Math::Abs(localPoint.y) - obbHalfExtents.y),
                           Math::Abs(Math::Abs(localPoint.z) - obbHalfExtents.z) };
   real maxLength = Math::PositiveMax();
-  uint a, b, c;
+  uint a = 0, b = 0, c = 0;
   for(uint i = 0; i < 3; ++i)
   {
     if(differences[i] < maxLength)

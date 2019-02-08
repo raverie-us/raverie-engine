@@ -1654,7 +1654,7 @@ bool NetObject::RemoveNetChannel(const String& netChannelName)
   if(Replica::IsValid())
   {
     DoNotifyError("NetObject", String::Format("Unable to remove NetChannel named '%s' - NetObject is already online", netChannelName.c_str()));
-    return nullptr;
+    return false;
   }
 
   // Remove net channel

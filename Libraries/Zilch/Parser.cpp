@@ -344,6 +344,7 @@ namespace Zilch
           }
           break;
         }
+        default: Error("Invalid"); break;
       }
     }
 
@@ -2039,6 +2040,8 @@ namespace Zilch
           }
           break;
         }
+        default:
+          break;
       }
     }
 

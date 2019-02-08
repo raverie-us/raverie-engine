@@ -24,7 +24,7 @@ public:
   static void Shutdown();
 };
 
-const Guid cInvalidUniqueId = (Guid)-1;
+const Guid cInvalidUniqueId = (Guid)(u64)-1;
 }//namespace Zero
 
 // Project includes

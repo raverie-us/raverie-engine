@@ -40,7 +40,7 @@ struct Prismatic2dPolicy : public DefaultFragmentPolicy2d<PrismaticJoint2d>
   // Returns baumgarte
   real AxisFragment(MoleculeData& data, int atomIndex, PrismaticJoint2d* joint, ConstraintMolecule& mol)
   {
-    real baumgarte;
+    real baumgarte = 0.1f;
     uint axisIndex = atomIndex % 2;
     real desiredConstraintValue = 0;
     uint filter = joint->GetAtomIndexFilter(atomIndex, desiredConstraintValue);

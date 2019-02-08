@@ -477,6 +477,8 @@ void ListBox::OnKeyDown(KeyboardEvent* event)
   case Keys::Escape:
     this->LoseFocus();
     break;
+  default:
+    break;
   }
 
   this->MarkAsNeedsUpdate();
@@ -692,6 +694,8 @@ void ComboBox::OnKeyDown(KeyboardEvent* event)
     case Keys::Down:
     case Keys::Enter:
       OpenList();
+    default:
+      break;
   }
 }
 

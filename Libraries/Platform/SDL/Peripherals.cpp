@@ -75,7 +75,7 @@ bool GetGamepadState(size_t gamepadIndex, GamepadState* stateOut)
   
   SDL_GameController* gamepad = GetGamePad(gamepadIndex);
   if (!gamepad)
-    return nullptr;
+    return false;
 
   // Get the state of the buttons
   SetButtonState(stateOut, gamepad, GamepadButtonFlag::A, SDL_CONTROLLER_BUTTON_A);

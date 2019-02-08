@@ -242,7 +242,7 @@ void BasicPointEffect::SetLocalPositionOffset(Vec3Param offset)
 PhysicsEffectEndCondition::Enum BasicPointEffect::GetEndCondition()
 {
   // Convert the bitfield representation of our end condition to the enum value
-  PhysicsEffectEndCondition::Enum state;
+  PhysicsEffectEndCondition::Enum state = PhysicsEffectEndCondition::NoEffect;
   if(mPointFlags.IsSet(PointFlags::ContinueFalloff))
     state = PhysicsEffectEndCondition::ContinueFalloff;
   else if(mPointFlags.IsSet(PointFlags::NoEffect))
@@ -269,7 +269,7 @@ void BasicPointEffect::SetEndCondition(PhysicsEffectEndCondition::Enum condition
 PhysicsEffectInterpolationType::Enum BasicPointEffect::GetInterpolationType()
 {
   // Convert the bitfield representation of our interpolation to the enum value
-  PhysicsEffectInterpolationType::Enum state;
+  PhysicsEffectInterpolationType::Enum state = PhysicsEffectInterpolationType::Linear;
   if(mPointFlags.IsSet(PointFlags::LinearInterpolation))
     state = PhysicsEffectInterpolationType::Linear;
   else if(mPointFlags.IsSet(PointFlags::QuadraticInterpolation))

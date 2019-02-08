@@ -579,8 +579,8 @@ Type ObbObbContactGeneration(Vec3Param obbOneCenter,
   //----------------------------------------------------------------------------
   //Find the largest component of the aNormal. The perpendicular components are
   //stored as well.
-  uint aAxis, aOne, aTwo;
-  aAxis = (axisCase <= 3) ? (axisCase - 1) : (axisCase - 4);
+  uint aOne = 1, aTwo = 2;
+  uint aAxis = (axisCase <= 3) ? (axisCase - 1) : (axisCase - 4);
   switch(aAxis)
   {
     case 0: //Normal is largest along A's local x-axis
@@ -1381,7 +1381,7 @@ void ObbTriangleEdgeCase(Vec3Param obbCenter, Vec3Param obbHalfExtents,
   Normalize(triEdgeAxis);
 
   //Index of the box's edge axis is stored in the upper 16 bits of the number.
-  uint boxEdgeIndex;// = (cObbAxes[axisCase - 1] >> 16) - 1;
+  uint boxEdgeIndex = 0;// = (cObbAxes[axisCase - 1] >> 16) - 1;
   switch(axisCase)
   {
     case 5:
@@ -1426,7 +1426,7 @@ Type ClipTriangleAgainstBox(Vec3Param obbCenter, Vec3Param obbHalfExtents,
   //Find the largest component of the normal. The perpendicular components are
   //stored as well.
   uint boxAxis = axisCase - 1;
-  uint boxOne, boxTwo;
+  uint boxOne = 1, boxTwo = 2;
   switch(boxAxis)
   {
     case 0: //Normal is largest along box's local x-axis
