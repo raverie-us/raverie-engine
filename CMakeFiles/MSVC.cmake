@@ -44,3 +44,13 @@ set(WELDER_LINKER_FLAGS_RELEASE "/LTCG")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SAFESEH:NO /SUBSYSTEM:WINDOWS /STACK:8388608")
 
 set(WELDER_C_CXX_EXTERNAL_FLAGS /W0 /wd4267)
+
+function(welder_use_precompiled_header target directory)
+  target_compile_options(${target} PRIVATE "/FIPrecompiled.hpp")
+  set_source_files_properties(${directory}/Precompiled.cpp PROPERTIES COMPILE_FLAGS "/YcPrecompiled.hpp")
+  set_target_properties(${target} PROPERTIES COMPILE_FLAGS "/YuPrecompiled.hpp")
+endfunction()
+
+function(welder_source_ignore_precompiled_header source)
+  set_source_files_properties(${source} PROPERTIES COMPILE_FLAGS "/Y-")
+endfunction()
