@@ -188,14 +188,21 @@ public:
 template <typename T>
 T* RenderTaskHelper::NewRenderTask()
 {
-  if (mBuffer.mCurrentIndex + sizeof(T) > mBuffer.mRenderTaskData.Size())
+  uint alignment = 0;
+  uint leftover = mBuffer.mCurrentIndex % MaxPrimtiveSize;
+  if (leftover != 0)
+    alignment = MaxPrimtiveSize - leftover;
+
+  uint alignedIndex = mBuffer.mCurrentIndex + alignment;
+  uint newIndex = alignedIndex + sizeof(T);
+  if (newIndex > mBuffer.mRenderTaskData.Size())
   {
-    uint newSize = Math::Max(mBuffer.mRenderTaskData.Size() * 2, mBuffer.mCurrentIndex + sizeof(T));
+    uint newSize = Math::Max(mBuffer.mRenderTaskData.Size() * 2, newIndex);
     mBuffer.mRenderTaskData.Resize(newSize);
   }
 
-  T* renderTask = new (&mBuffer.mRenderTaskData[mBuffer.mCurrentIndex]) T;
-  mBuffer.mCurrentIndex += sizeof(T);
+  T* renderTask = new (&mBuffer.mRenderTaskData[alignedIndex]) T;
+  mBuffer.mCurrentIndex = newIndex;
   ++mBuffer.mTaskCount;
   return renderTask;
 }

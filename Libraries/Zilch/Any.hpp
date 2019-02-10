@@ -200,7 +200,13 @@ namespace Zilch
     // We want to store the largest type (the delegate, handle, etc)
     // The delegate stores the handle, so we know delegate is the biggest
     // If the size of the type is bigger then can fit here, then we allocate a pointer instead
-    byte Data[sizeof(Delegate)];
+    union
+    {
+      byte Data[sizeof(Delegate)];
+
+      // Ensure alignment on all platforms.
+      MaxAlignmentType DataAligned[(sizeof(Delegate) + sizeof(MaxAlignmentType) - 1) / sizeof(MaxAlignmentType)];
+    };
 
     // The type that we're storing inside the data
     Type* StoredType;

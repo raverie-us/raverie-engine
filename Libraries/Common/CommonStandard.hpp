@@ -49,6 +49,11 @@ public:
 
 }//namespace Zero
 
+#include "MaxSizeof.hpp"
+
+static const constexpr size_t MaxPrimtiveSize = MaxSizeof4(void*, uintptr_t, uintmax_t, double);
+typedef double MaxAlignmentType;
+
 #include "Standard.hpp"
 #include "Typedefs.hpp"
 #include "Time.hpp"
@@ -108,7 +113,6 @@ public:
 #include "IdSequence.hpp"
 #include "TextStream.hpp"
 #include "HalfFloat.hpp"
-#include "MaxSizeof.hpp"
 #include "VirtualAny.hpp"
 #include "IdStore.hpp"
 #include "ItemCache.hpp"

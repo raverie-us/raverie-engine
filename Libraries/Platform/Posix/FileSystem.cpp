@@ -372,7 +372,9 @@ FileRange::FileRange(StringParam search) :
 FileRange::~FileRange()
 {
   ZeroGetPrivateData(FileRangePrivateData);
-  closedir(self->mDir);
+  if (self->mDir)
+    closedir(self->mDir);
+  ZeroDestructPrivateData(FileRangePrivateData);
 }
 
 bool FileRange::Empty()

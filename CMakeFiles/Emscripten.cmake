@@ -17,6 +17,7 @@ set(WELDER_C_CXX_FLAGS "\
   -s FULL_ES3=1\
   -s BINARYEN_TRAP_MODE='clamp'\
   -s SINGLE_FILE=1\
+  -s DISABLE_EXCEPTION_CATCHING=0\
   --shell-file  ${WELDER_PLATFORM_DATA_DIR}/Shell.html\
   -fdelayed-template-parsing\
   -fexceptions\

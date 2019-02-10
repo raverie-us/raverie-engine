@@ -27,7 +27,6 @@
 #include "Repo/include/assimp/ai_assert.h"
 #include "Repo/include/assimp/camera.h"
 #include "Repo/include/assimp/color4.h"
-#include "Repo/include/assimp/config.h"
 #include "Repo/include/assimp/defs.h"
 #include "Repo/include/assimp/cfileio.h"
 #include "Repo/include/assimp/light.h"
@@ -47,6 +46,8 @@
 #include "Repo/include/assimp/cimport.h"
 #include "Repo/include/assimp/importerdesc.h"
 #include "Repo/include/assimp/Importer.hpp"
+#include "Repo/include/assimp/DefaultIOStream.h"
+#include "Repo/include/assimp/DefaultIOSystem.h"
 #include "Repo/include/assimp/DefaultLogger.hpp"
 #include "Repo/include/assimp/ProgressHandler.hpp"
 #include "Repo/include/assimp/IOStream.hpp"
@@ -68,8 +69,6 @@
 #include "Repo/code/ScenePrivate.h"
 #include "Repo/code/ByteSwapper.h"
 #include "Repo/code/DefaultProgressHandler.h"
-#include "Repo/code/DefaultIOStream.h"
-#include "Repo/code/DefaultIOSystem.h"
 #include "Repo/code/CInterfaceIOWrapper.h"
 #include "Repo/code/Hash.h"
 #include "Repo/code/IFF.h"
@@ -83,7 +82,6 @@
 #include "Repo/code/VertexTriangleAdjacency.h"
 #include "Repo/code/GenericProperty.h"
 #include "Repo/code/SpatialSort.h"
-#include "Repo/code/SceneCombiner.h"
 #include "Repo/code/ScenePreprocessor.h"
 #include "Repo/code/SkeletonMeshBuilder.h"
 #include "Repo/code/SplitByBoneCountProcess.h"
@@ -97,8 +95,6 @@
 #include "Repo/code/TinyFormatter.h"
 #include "Repo/code/Profiler.h"
 #include "Repo/code/LogAux.h"
-// ConvertUTF
-#include "Repo/contrib/ConvertUTF/ConvertUTF.h"
 // Clipper
 #include "Repo/contrib/clipper/clipper.hpp"
 #endif

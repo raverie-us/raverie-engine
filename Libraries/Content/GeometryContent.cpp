@@ -549,18 +549,21 @@ void GeometryContent::BuildContent(BuildOptions& options)
 
         // Get our projects content folder
         ProjectSettings* projectSettings = Z::gEngine->GetProjectSettings();
-        String contentDirectory = FilePath::Normalize(projectSettings->GetContentFolder());
-
-        // If importing the item failed delete the content item but only if that item
-        // is in the projects local content folder since it was copied and will fail
-        // to be processed each time the project is opened until the user deletes the files
-        // manually. Otherwise a core resource failed and should not be deleted.
-        String fileDirectory = FilePath::Normalize(FilePath::GetDirectoryPath(fullFilePath));
-        if (fileDirectory == contentDirectory)
+        if (projectSettings != nullptr)
         {
-          String metaFile = BuildString(fullFilePath, ".meta");
-          DeleteFile(metaFile);
-          DeleteFile(fullFilePath);
+          String contentDirectory = FilePath::Normalize(projectSettings->GetContentFolder());
+
+          // If importing the item failed delete the content item but only if that item
+          // is in the projects local content folder since it was copied and will fail
+          // to be processed each time the project is opened until the user deletes the files
+          // manually. Otherwise a core resource failed and should not be deleted.
+          String fileDirectory = FilePath::Normalize(FilePath::GetDirectoryPath(fullFilePath));
+          if (fileDirectory == contentDirectory)
+          {
+            String metaFile = BuildString(fullFilePath, ".meta");
+            DeleteFile(metaFile);
+            DeleteFile(fullFilePath);
+          }
         }
         return;
       }
@@ -725,6 +728,10 @@ void CreateGeometryContent(ContentSystem* system)
   // Nevercenter Silo Object
   system->CreatorsByExtension["sib"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
 
+  system->CreatorsByExtension["amf"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["x3d"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["mmd"] = ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+
   //system->CreatorsByExtension["wrl"] = ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   
   // UNTESTED FORMAT IMPORTS BELOW, no readily available models to test
@@ -786,6 +793,9 @@ void AddGeometryFileFilters(ResourceManager* manager)
   filters.PushBack(FileDialogFilter("*.ter"));
   filters.PushBack(FileDialogFilter("*.hmp"));
   filters.PushBack(FileDialogFilter("*.sib"));
+  filters.PushBack(FileDialogFilter("*.amf"));
+  filters.PushBack(FileDialogFilter("*.x3d"));
+  filters.PushBack(FileDialogFilter("*.mmd"));
 
   // The first filter should contain the extensions of all other filters
   FileDialogFilter& allFilter = filters[allMeshesIndex];
