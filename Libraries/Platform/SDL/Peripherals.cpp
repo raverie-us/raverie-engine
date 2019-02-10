@@ -6,11 +6,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
-// For right now because they broke Emscripten.. AGAIN.
-#if defined(PLATFORM_EMSCRIPTEN)
-#include <emscripten/html5.h>
-#endif
-
 namespace Zero
 {
 

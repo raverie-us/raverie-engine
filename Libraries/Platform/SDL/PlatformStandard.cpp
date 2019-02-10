@@ -9,10 +9,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
-#if defined(PLATFORM_EMSCRIPTEN)
-#include <emscripten/html5.h>
-#endif
-
 namespace Zero
 {
 

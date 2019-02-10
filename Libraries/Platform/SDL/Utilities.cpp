@@ -82,7 +82,11 @@ u64 GetMacAddress()
 
 bool DebugBreak()
 {
+#if defined(PLATFORM_EMSCRIPTEN)
+  emscripten_debugger();
+#else
   SDL_TriggerBreakpoint();
+#endif
   return true;
 }
 
