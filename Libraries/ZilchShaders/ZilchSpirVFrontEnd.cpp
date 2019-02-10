@@ -935,8 +935,8 @@ ZilchShaderIRFunction* ZilchSpirVFrontEnd::GenerateIRFunction(Zilch::SyntaxNode*
 
   // Generate the function
   ZilchShaderIRFunction* function = currentType->CreateFunction(mLibrary);
-  function->mName = functionName;
-  function->mDebugResultName = functionName;
+  function->mName = GetOverloadedName(functionName, zilchFunction);
+  function->mDebugResultName = function->mName;
   context->mCurrentFunction = function;
 
   // If we don't have a backing function then don't insert this

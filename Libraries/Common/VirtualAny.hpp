@@ -85,7 +85,12 @@ protected:
 
   BaseType* mBasePointer;
   CopyConstructorFn mCopyConstructor;
-  byte mObjectData[MaxDerivedSize];
+
+  union
+  {
+    byte mObjectData[MaxDerivedSize];
+    MaxAlignmentType mObjectDataAligned[ZeroAlignCount(MaxDerivedSize)];
+  };
 
   friend struct MoveWithoutDestructionOperator< VirtualAny<BaseType, MaxDerivedSize> >;
 };

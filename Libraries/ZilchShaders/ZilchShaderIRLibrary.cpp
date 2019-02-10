@@ -662,4 +662,10 @@ OpResolverType ZilchShaderIRLibrary::FindOperatorResolverTemplate(OpIdType& opId
   return mDependencies->FindOperatorResolverTemplate<OpIdType, OpResolverType>(opId, checkDependencies);
 }
 
+String GetOverloadedName(StringParam functionName, Zilch::Function* zilchFunction)
+{
+  Zilch::GuidType thisHash = zilchFunction->This ? zilchFunction->This->ResultType->Hash() : 0;
+  return BuildString(functionName, ToString(zilchFunction->FunctionType->Hash() ^ thisHash));
+}
+
 }//public Zero

@@ -187,9 +187,9 @@ namespace Zilch
     {
       // The user data stored on the handle (of a fixed size)
       byte Data[HandleUserDataSize];
-
+      
       // Ensure alignment on all platforms.
-      MaxAlignmentType DataAligned[(HandleUserDataSize + sizeof(MaxAlignmentType) - 1) / sizeof(MaxAlignmentType)];
+      MaxAlignmentType DataAligned[ZeroAlignCount(HandleUserDataSize)];
 
       // These are only provided for convenience (rather than casting Data into a structure)
       void* HandlePointer;

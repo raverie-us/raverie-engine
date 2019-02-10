@@ -205,7 +205,7 @@ namespace Zilch
       byte Data[sizeof(Delegate)];
 
       // Ensure alignment on all platforms.
-      MaxAlignmentType DataAligned[(sizeof(Delegate) + sizeof(MaxAlignmentType) - 1) / sizeof(MaxAlignmentType)];
+      MaxAlignmentType DataAligned[ZeroAlignCount(sizeof(Delegate))];
     };
 
     // The type that we're storing inside the data

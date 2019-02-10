@@ -154,7 +154,7 @@ void WebglConvertRenderTargetFormat(AddTextureInfo* info)
     case TextureFormat::RGB32f:  info->mFormat = TextureFormat::RGBA32f;  break;
     case TextureFormat::SRGB8:   info->mFormat = TextureFormat::SRGB8A8;  break;
     case TextureFormat::Depth32: info->mFormat = TextureFormat::Depth32f; break;
-    default: Error("Invalid"); break;
+    default: break;
   }
 }
 
@@ -353,7 +353,7 @@ void SetClearData(void* clearData, TextureFormat::Enum format, Vec4 color, float
     case TextureFormat::Depth24Stencil8:
       // not handled, but this function is not currently being used
     break;
-    default: Error("Invalid"); break;
+    default: break;
   }
 }
 
@@ -1978,6 +1978,8 @@ void OpenglRenderer::DrawStreamed(ViewNode& viewNode, FrameNode& frameNode)
 void OpenglRenderer::SetShaderParameter(ShaderInputType::Enum uniformType, StringParam name, void* data)
 {
   GLint location = glGetUniformLocation(mActiveShader, name.c_str());
+  if (location == -1)
+    return;
   mUniformFunctions[uniformType](location, 1, data);
 }
 
@@ -1985,6 +1987,8 @@ void OpenglRenderer::SetShaderParameter(ShaderInputType::Enum uniformType, Strin
 void OpenglRenderer::SetShaderParameterMatrix(StringParam name, Mat3& transform)
 {
   GLint location = glGetUniformLocation(mActiveShader, name.c_str());
+  if (location == -1)
+    return;
   glUniformMatrix3fv(location, 1, cTransposeMatrices, transform.array);
 }
 
@@ -1992,6 +1996,8 @@ void OpenglRenderer::SetShaderParameterMatrix(StringParam name, Mat3& transform)
 void OpenglRenderer::SetShaderParameterMatrix(StringParam name, Mat4& transform)
 {
   GLint location = glGetUniformLocation(mActiveShader, name.c_str());
+  if (location == -1)
+    return;
   glUniformMatrix4fv(location, 1, cTransposeMatrices, transform.array);
 }
 
@@ -1999,22 +2005,21 @@ void OpenglRenderer::SetShaderParameterMatrix(StringParam name, Mat4& transform)
 void OpenglRenderer::SetShaderParameterMatrixInv(StringParam name, Mat3& transform)
 {
   GLint location = glGetUniformLocation(mActiveShader, name.c_str());
-  if (location != -1)
-  {
-    Mat3 inverse = transform.Inverted();
-    glUniformMatrix3fv(location, 1, cTransposeMatrices, inverse.array);
-  }
+  if (location == -1)
+    return;
+  Mat3 inverse = transform.Inverted();
+  glUniformMatrix3fv(location, 1, cTransposeMatrices, inverse.array);
 }
 
 //**************************************************************************************************
 void OpenglRenderer::SetShaderParameterMatrixInv(StringParam name, Mat4& transform)
 {
   GLint location = glGetUniformLocation(mActiveShader, name.c_str());
-  if (location != -1)
-  {
-    Mat4 inverse = transform.Inverted();
-    glUniformMatrix4fv(location, 1, cTransposeMatrices, inverse.array);
-  }
+  if (location == -1)
+    return;
+
+  Mat4 inverse = transform.Inverted();
+  glUniformMatrix4fv(location, 1, cTransposeMatrices, inverse.array);
 }
 
 //**************************************************************************************************
@@ -2061,7 +2066,10 @@ void OpenglRenderer::SetShaderParameters(FrameNode* frameNode, ViewNode* viewNod
     }
 
     GLint location = glGetUniformLocation(mActiveShader, "BoneTransforms");
-    glUniformMatrix4fv(location, remappedBoneTransforms.Size(), cTransposeMatrices, remappedBoneTransforms[0].array);
+    if (location != -1)
+    {
+      glUniformMatrix4fv(location, remappedBoneTransforms.Size(), cTransposeMatrices, remappedBoneTransforms[0].array);
+    }
   }
 
   SetShaderParameterMatrix(cLocalToView, viewNode->mLocalToView);

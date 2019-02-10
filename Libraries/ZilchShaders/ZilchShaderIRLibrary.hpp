@@ -284,4 +284,8 @@ private:
   OpResolverType FindOperatorResolverTemplate(OpIdType& opId, bool checkDependencies);
 };
 
+// Due to a bug in ANGLE, we can't rely on WebGL GLSL overloads on samplers.
+// To fix this, we append the hash of the function signature to the name (different per overload).
+String GetOverloadedName(StringParam functionName, Zilch::Function* zilchFunction);
+
 }//public Zero

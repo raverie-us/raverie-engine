@@ -730,7 +730,12 @@ public:
 class RenderTask
 {
 public:
-  byte mId;
+  // We use a large type to ensure alignment on all platforms.
+  union
+  {
+    u64 mId;
+    MaxAlignmentType mAligned;
+  };
 };
 
 class RenderTaskClearTarget : public RenderTask

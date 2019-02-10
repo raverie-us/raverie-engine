@@ -9,12 +9,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma once
 
-#define PlatformByteAlignmentSize sizeof(double)
-
 // Make sure the private data is of a type that is aligned for proper native alignment
 // (most likely pointer reading alignment). Still take the size in bytes and round up to the nearest whole value.
 #define ZeroDeclarePrivateDataBytes(SizeInBytes)                                                 \
-  double mPrivateData[(SizeInBytes + PlatformByteAlignmentSize - 1) / PlatformByteAlignmentSize];
+  MaxAlignmentType mPrivateData[ZeroAlignCount(SizeInBytes)];
+
+
 
 #define ZeroDeclarePrivateData(Type, SizeInBytes) \
   ZeroDeclarePrivateDataBytes(SizeInBytes);       \

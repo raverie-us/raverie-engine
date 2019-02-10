@@ -53,6 +53,7 @@ public:
 
 static const constexpr size_t MaxPrimtiveSize = MaxSizeof4(void*, uintptr_t, uintmax_t, double);
 typedef double MaxAlignmentType;
+#define ZeroAlignCount(SizeBytes) ((SizeBytes + sizeof(::MaxAlignmentType) - 1) / sizeof(::MaxAlignmentType))
 
 #include "Standard.hpp"
 #include "Typedefs.hpp"

@@ -118,6 +118,11 @@ StreamStatus::Enum AudioInputOutput::InitializeStream(StreamTypes::Enum whichStr
     return StreamStatus::DeviceProblem;
   }
 
+#if defined(PLATFORM_EMSCRIPTEN)
+  // The web now requires audio is started by a user action.
+  return StreamStatus::DeviceProblem;
+#endif
+
   data.mDeviceID = SDL_OpenAudioDevice(nullptr, capture, &want, &have, 
     SDL_AUDIO_ALLOW_CHANNELS_CHANGE || SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
 
