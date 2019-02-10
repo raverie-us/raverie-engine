@@ -68,7 +68,15 @@ public:
 
   /// Fundamental Serialization
   template<typename type>
-  bool FundamentalType(type& value);
+  bool FundamentalType(type& value)
+  {
+    if (GetCurrent() != NULL)
+    {
+      DataNode* treeValue = GetCurrent();
+      ToValue(treeValue->mTextValue.All(), value);
+    }
+    return true;
+  }
 
   virtual PatchResolveMethod::Enum ResolveInheritedData(StringRange inheritId,
                                                         DataNode*& result);

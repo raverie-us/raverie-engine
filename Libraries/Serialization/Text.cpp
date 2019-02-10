@@ -294,21 +294,6 @@ void TextSaver::InnerEnd(cstr typeName, StructType structType)
 
 //---------------------------------------------------- Fundamental Serialization
 //******************************************************************************
-template<typename type>
-bool TextSaver::FundamentalType(type& value)
-{
-  // Make sure its not NAN/IND/INF
-  bool result = CorrectNonFiniteValues(value);
-  mStream << value;
-  return result;
-}
-
-//******************************************************************************
-template bool TextSaver::FundamentalType<int>(int&);
-template bool TextSaver::FundamentalType<unsigned int>(unsigned int&);
-template bool TextSaver::FundamentalType<bool>(bool&);
-
-//******************************************************************************
 bool TextSaver::SimpleField(cstr typeName, cstr fieldName, StringRange& stringRange)
 {
   Start(typeName, fieldName, StructureType::Value);

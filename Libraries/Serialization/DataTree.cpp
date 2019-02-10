@@ -321,26 +321,6 @@ DependencyAction::Enum DataTreeLoader::ResolveDependencies(DataNode* parent,
 
 //---------------------------------------------------- Fundamental Serialization
 //******************************************************************************
-template<typename type>
-bool DataTreeLoader::FundamentalType(type& value)
-{
-  if(GetCurrent() != NULL)
-  {
-    DataNode* treeValue = GetCurrent();
-    ToValue(treeValue->mTextValue.All(), value);
-  }
-  return true;
-}
-
-//******************************************************************************
-template bool DataTreeLoader::FundamentalType<float>(float&);
-template bool DataTreeLoader::FundamentalType<int>(int&);
-template bool DataTreeLoader::FundamentalType<double>(double&);
-template bool DataTreeLoader::FundamentalType<unsigned int>(unsigned int&);
-template bool DataTreeLoader::FundamentalType<bool>(bool&);
-template bool DataTreeLoader::FundamentalType<Guid>(Guid&);
-
-//******************************************************************************
 bool DataTreeLoader::StringField(cstr typeName, cstr fieldName,
                                  StringRange& stringRange)
 {

@@ -46,7 +46,13 @@ public:
 
   //Fundamental Serialization
   template<typename type>
-  bool FundamentalType(type& value);
+  bool FundamentalType(type& value)
+  {
+    // Make sure its not NAN/IND/INF
+    bool result = CorrectNonFiniteValues(value);
+    mStream << value;
+    return result;
+  }
 
   bool SimpleField(cstr typeName, cstr fieldName, StringRange& stringRange) override;
 
