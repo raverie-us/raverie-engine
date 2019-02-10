@@ -61,6 +61,16 @@ function(welder_copy_from_linked_libraries target)
   endforeach()
 endfunction()
 
+function(welder_target_includes target)
+  set(multiValueArgs PUBLIC)
+  cmake_parse_arguments(WELDER "" "" "${multiValueArgs}" "${ARGN}")
+  
+  foreach(fromTarget ${WELDER_PUBLIC})
+  target_include_directories(${target} PUBLIC $<TARGET_PROPERTY:${fromTarget},INTERFACE_INCLUDE_DIRECTORIES>)
+  target_compile_definitions(${target} PUBLIC $<TARGET_PROPERTY:${fromTarget},INTERFACE_COMPILE_DEFINITIONS>)
+  endforeach()
+endfunction()
+
 #Emscripten
 #MSVC
 include(${WELDER_CMAKE_DIR}/${WELDER_TOOLCHAIN}.cmake)

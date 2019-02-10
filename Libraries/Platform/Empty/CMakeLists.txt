@@ -35,7 +35,7 @@ target_sources(Platform
     ${CMAKE_CURRENT_LIST_DIR}/WebRequest.cpp
 )
 
-target_link_libraries(Platform
+welder_target_includes(Platform
   PUBLIC
     Common
 )

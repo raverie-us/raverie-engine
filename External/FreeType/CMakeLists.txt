@@ -54,7 +54,7 @@ target_sources(FreeType
     ${CMAKE_CURRENT_LIST_DIR}/Repo/src/winfonts/winfnt.c
 )
 
-target_link_libraries(FreeType
+welder_target_includes(FreeType
   PUBLIC
     ZLib
     Libpng

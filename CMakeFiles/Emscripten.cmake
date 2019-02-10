@@ -7,6 +7,7 @@ set(CMAKE_EXECUTABLE_SUFFIX ".html")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(WELDER_C_CXX_FLAGS "\
   -Wno-address-of-packed-member\
+  -Wno-empty-body\
   -s ALLOW_MEMORY_GROWTH=1\
   -s WASM=1\
   -s SIMD=0\
@@ -34,20 +35,19 @@ set(WELDER_LINKER_FLAGS "\
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   set(WELDER_C_CXX_FLAGS "${WELDER_C_CXX_FLAGS}\
     -Os\
-    -g4\
+    -g\
     -s ASSERTIONS=2\
     -s GL_ASSERTIONS=1\
     -s DEMANGLE_SUPPORT=1\
     -s STACK_OVERFLOW_CHECK=2\
     -s SAFE_HEAP=1\
-    -s ALIASING_FUNCTION_POINTERS=0\
+    -s WARN_UNALIGNED=1\
   ")
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
   set(WELDER_C_CXX_FLAGS "${WELDER_C_CXX_FLAGS}\
     -O3\
-    -g2\
   ")
 endif()
 

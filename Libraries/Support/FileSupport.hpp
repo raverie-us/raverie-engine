@@ -127,4 +127,8 @@ void CloneBlock(DataBlock& destBlock, const DataBlock& source);
 u64 ComputeFolderSizeRecursive(StringParam folder);
 String HumanReadableFileSize(u64 bytes);
 
+// A callback that we use with the Platform FileSystemInitializer for
+// platforms that don't have an actual file system, so we use memory instead.
+void PopulateVirtualFileSystem(void* userData);
+
 }//namespace Zero

@@ -45,9 +45,7 @@ target_sources(Serialization
     ${CMAKE_CURRENT_LIST_DIR}/ZeroContainers.hpp
 )
 
-target_link_libraries(Serialization
+welder_target_includes(Serialization
   PUBLIC
     Common
-    # TODO(Trevor.Sundberg): Remove this dependency.
-    #Geometry
 )

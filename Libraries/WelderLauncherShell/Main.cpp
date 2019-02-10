@@ -68,7 +68,7 @@ String ChooseDllPath(Zero::StringParam localDllPath, int localDllVersionId, Zero
 
 int PlatformMain(const Array<String>& arguments)
 {
-  FileSystemInitializer fileSystemInitializer(&EngineLibrary::PopulateVirtualFileSystem);
+  FileSystemInitializer fileSystemInitializer(&PopulateVirtualFileSystem);
 
   int restart = 1;
   ExternalLibrary library;

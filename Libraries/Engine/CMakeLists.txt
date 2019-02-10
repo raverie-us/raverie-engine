@@ -31,8 +31,6 @@ target_sources(Engine
     ${CMAKE_CURRENT_LIST_DIR}/AsyncProcess.hpp
     ${CMAKE_CURRENT_LIST_DIR}/BasicActions.cpp
     ${CMAKE_CURRENT_LIST_DIR}/BasicActions.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/BuildVersion.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/BuildVersion.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Cog.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Cog.hpp
     ${CMAKE_CURRENT_LIST_DIR}/CogHelpers.cpp
@@ -212,7 +210,7 @@ target_sources(Engine
     ${CMAKE_CURRENT_LIST_DIR}/ZilchResource.hpp
 )
 
-target_link_libraries(Engine
+welder_target_includes(Engine
   PUBLIC
     Common
     Geometry

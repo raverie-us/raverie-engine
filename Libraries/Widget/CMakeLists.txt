@@ -90,7 +90,7 @@ target_sources(Widget
     ${CMAKE_CURRENT_LIST_DIR}/Window.hpp
 )
 
-target_link_libraries(Widget
+welder_target_includes(Widget
   PUBLIC
     Engine
     ZilchShaders

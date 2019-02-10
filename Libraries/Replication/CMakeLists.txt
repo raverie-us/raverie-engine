@@ -45,7 +45,7 @@ target_sources(Replication
     ${CMAKE_CURRENT_LIST_DIR}/Route.hpp
 )
 
-target_link_libraries(Replication
+welder_target_includes(Replication
   PUBLIC
     Common
     Zilch

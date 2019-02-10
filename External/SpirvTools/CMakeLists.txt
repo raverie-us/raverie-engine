@@ -321,7 +321,7 @@ target_sources(SpirvTools
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
 )
 
-target_link_libraries(SpirvTools
+welder_target_includes(SpirvTools
   PUBLIC
     SpirvHeaders
 )

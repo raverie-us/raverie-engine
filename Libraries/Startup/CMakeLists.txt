@@ -12,7 +12,7 @@ target_sources(Startup
     ${CMAKE_CURRENT_LIST_DIR}/StartupStandard.hpp
 )
 
-target_link_libraries(Startup
+welder_target_includes(Startup
   PUBLIC
     Common
     Geometry

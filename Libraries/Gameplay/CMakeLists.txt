@@ -64,7 +64,7 @@ target_sources(Gameplay
     ${CMAKE_CURRENT_LIST_DIR}/Zero.hpp
 )
 
-target_link_libraries(Gameplay
+welder_target_includes(Gameplay
   PUBLIC
     Common
     Zilch

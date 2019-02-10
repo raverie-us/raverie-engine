@@ -251,4 +251,63 @@ String HumanReadableFileSize(u64 bytes)
   return "File too large";
 }
 
+//**************************************************************************************************
+void PopulateVirtualFileSystem(void* userData)
+{
+  TimerBlock startUp("Virtual File System");
+
+  // It's very important that this uses C's FILE instead of our File since our File could be virtual.
+  // First check to see if it's in the working directory.
+  FILE* file = fopen("FileSystem.zip", "rb");
+
+  // Now check to see if it's next to the executable.
+  if (!file && !gCommandLineArguments.Empty())
+  {
+    // We can't call GetApplicationDirectory because it's the emulated one by the virtual file system
+    String trueApplicationDirectory = FilePath::GetDirectoryPath(gCommandLineArguments.Front());
+    String filePath = FilePath::Combine(trueApplicationDirectory, "FileSystem.zip");
+    file = fopen(filePath.c_str(), "rb");
+  }
+
+  // Finally, check to see if it's in the root.
+  if (!file)
+    file = fopen("/FileSystem.zip", "rb");
+
+  // If we failed to open the archive, early out...
+  ReturnIf(!file, , "Did not find FileSystem.zip (in the working directory, next to the application, or in the root)");
+
+  // We successfully opened the file so read it in as an archive.
+  // Get the size of the file first.
+  fseek(file, 0L, SEEK_END);
+  size_t size = (size_t)ftell(file);
+  fseek(file, 0L, SEEK_SET);
+
+  // Read the entire contents of the file into memory
+  ByteBufferBlock block(size);
+  byte* writeTo = block.GetBegin();
+  while (size != 0)
+  {
+    size_t dataRead = fread(writeTo, 1, size, file);
+    if (dataRead == 0)
+      break;
+
+    size -= dataRead;
+    writeTo += dataRead;
+  }
+  ErrorIf(size != 0, "We didn't read all of the file");
+  fclose(file);
+
+  // Now open the file as an archive
+  Archive archive(ArchiveMode::Decompressing);
+  archive.ReadBuffer(ArchiveReadFlags::All, block);
+
+  // Populate file system entries based on what's in the archive
+  forRange(ArchiveEntry& archiveEntry, archive.GetEntries())
+  {
+    // Create our entries for our files based on name, data, and modified time
+    String absolutePath = BuildString("/", archiveEntry.Name);
+    AddVirtualFileSystemEntry(absolutePath, &archiveEntry.Full, archiveEntry.ModifiedTime);
+  }
+}
+
 }//namespace Zero

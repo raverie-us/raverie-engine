@@ -256,7 +256,7 @@ target_sources(Physics
     ${CMAKE_CURRENT_LIST_DIR}/WorldTransformation.hpp
 )
 
-target_link_libraries(Physics
+welder_target_includes(Physics
   PUBLIC
     Zilch
 )

@@ -55,39 +55,39 @@ target_sources(WelderLauncher
 
 target_link_libraries(WelderLauncher
   PUBLIC
-    Scintilla
-    Libpng
     Assimp
-    ZLib
+    CodeTranslator
+    Common
+    Content
+    Editor
+    Engine
     FreeType
-    Opus
+    Gameplay
+    Geometry
+    Graphics
+    Libpng
+    Meta
+    Networking
     Nvtt
+    Opus
+    Physics
+    Platform
+    Replication
+    Scintilla
+    Serialization
+    Sound
+    SpatialPartition
+    SpirvCross
     SpirvHeaders
     SpirvTools
-    SpirvCross
-    Platform
-    Common
-    Gameplay
-    SpatialPartition
-    CodeTranslator
-    ZilchShaders
-    Serialization
-    Support
-    Engine
-    Geometry
-    Widget
-    Editor
-    ZilchScript
-    Networking
-    Meta
-    Physics
-    Sound
-    Content
-    Replication
-    UiWidget
     Startup
+    Support
+    UiWidget
+    Widget
+    ZLib
     Zilch
-    Graphics
+    ZilchScript
+    ZilchShaders
 )
 
 add_dependencies(WelderLauncher

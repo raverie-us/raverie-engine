@@ -23,3 +23,4 @@
 #include "ImageSupport.hpp"
 #include "PngSupport.hpp"
 #include "HdrSupport.hpp"
+#include "BuildVersion.hpp"

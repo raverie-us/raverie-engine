@@ -17,7 +17,7 @@ target_sources(ZilchScript
     ${CMAKE_CURRENT_LIST_DIR}/ZilchZero.hpp
 )
 
-target_link_libraries(ZilchScript
+welder_target_includes(ZilchScript
   PUBLIC
     Common
     Geometry

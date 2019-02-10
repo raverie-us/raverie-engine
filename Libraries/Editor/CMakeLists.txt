@@ -282,7 +282,7 @@ target_sources(Editor
     ${CMAKE_CURRENT_LIST_DIR}/WatchView.hpp
 )
 
-target_link_libraries(Editor
+welder_target_includes(Editor
   PUBLIC
     Scintilla
     Common

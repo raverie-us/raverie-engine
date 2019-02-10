@@ -76,7 +76,7 @@ target_sources(Geometry
     ${CMAKE_CURRENT_LIST_DIR}/Triangulator.hpp
 )
 
-target_link_libraries(Geometry
+welder_target_includes(Geometry
   PUBLIC
     Common
     Zilch

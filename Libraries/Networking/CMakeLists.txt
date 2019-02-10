@@ -62,7 +62,7 @@ target_sources(Networking
     ${CMAKE_CURRENT_LIST_DIR}/WebServer.hpp
 )
 
-target_link_libraries(Networking
+welder_target_includes(Networking
   PUBLIC
     Common
     Geometry

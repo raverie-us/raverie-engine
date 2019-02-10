@@ -62,10 +62,6 @@ public:
   static bool Initialize(ZeroStartupSettings& settings);
   static void Shutdown();
 
-  // A callback that we use with the Platform FileSystemInitializer for
-  // platforms that don't have an actual file system, so we use memory instead.
-  static void PopulateVirtualFileSystem(void* userData);
-
 private:
 };
 
@@ -142,7 +138,6 @@ private:
 #include "DebugDraw.hpp"
 #include "ScriptEvents.hpp"
 #include "TextResource.hpp"
-#include "BuildVersion.hpp"
 #include "EditorSettings.hpp"
 #include "Documentation.hpp"
 #include "ShortcutsDoc.hpp"

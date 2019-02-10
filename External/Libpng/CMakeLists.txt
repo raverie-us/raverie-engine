@@ -27,7 +27,7 @@ target_sources(Libpng
     ${CMAKE_CURRENT_LIST_DIR}/Repo/pngwutil.c
 )
 
-target_link_libraries(Libpng
+welder_target_includes(Libpng
   PUBLIC
     ZLib
 )

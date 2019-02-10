@@ -502,7 +502,7 @@ target_sources(Assimp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
 )
 
-target_link_libraries(Assimp
+welder_target_includes(Assimp
   PUBLIC
     ZLib
 )

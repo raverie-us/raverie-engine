@@ -74,7 +74,7 @@ target_sources(Sound
     ${CMAKE_CURRENT_LIST_DIR}/VolumeModifier.hpp
 )
 
-target_link_libraries(Sound
+welder_target_includes(Sound
   PUBLIC
     Common
     Geometry

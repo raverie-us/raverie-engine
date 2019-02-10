@@ -112,7 +112,7 @@ target_sources(Graphics
     ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderGenerator.hpp
 )
 
-target_link_libraries(Graphics
+welder_target_includes(Graphics
   PUBLIC
     Common
     Geometry

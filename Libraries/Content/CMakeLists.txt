@@ -87,7 +87,7 @@ target_sources(Content
     ${CMAKE_CURRENT_LIST_DIR}/stb_vorbis.h
 )
 
-target_link_libraries(Content
+welder_target_includes(Content
   PUBLIC
     Common
     Zilch

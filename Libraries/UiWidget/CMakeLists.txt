@@ -25,7 +25,7 @@ target_sources(UiWidget
     ${CMAKE_CURRENT_LIST_DIR}/UiWidgetStandard.hpp
 )
 
-target_link_libraries(UiWidget
+welder_target_includes(UiWidget
   PUBLIC
     Engine
     ZilchShaders
