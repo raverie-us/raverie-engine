@@ -252,7 +252,7 @@ String HumanReadableFileSize(u64 bytes)
 }
 
 //**************************************************************************************************
-void PopulateVirtualFileSystem(void* userData)
+void PopulateVirtualFileSystemWithZip(void* userData)
 {
   TimerBlock startUp("Virtual File System");
 

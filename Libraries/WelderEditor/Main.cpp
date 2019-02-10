@@ -28,7 +28,7 @@ int PlatformMain(const Array<String>& arguments)
   DebuggerListener debuggerOutput;
   Zero::Console::Add(&debuggerOutput);
 
-  FileSystemInitializer fileSystemInitializer(&PopulateVirtualFileSystem);
+  FileSystemInitializer fileSystemInitializer(&PopulateVirtualFileSystemWithZip);
 
   //Mirror console output to a log file
   FileListener fileListener;

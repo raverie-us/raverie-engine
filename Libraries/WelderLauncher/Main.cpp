@@ -22,6 +22,8 @@ extern "C" ZeroShared int RunZeroLauncher(const char* dllPath)
   // typical platform main we don't get everything initialized.
   Zero::gCommandLineArguments.PushBack(FilePath::Combine(dllPath, "ZeroLauncherSharedLibrary.dll"));
 
+  FileSystemInitializer fileSystemInitializer(&PopulateVirtualFileSystemWithZip);
+
   //Set the log and error handlers so debug printing
   //and asserts will print to the Visual Studio Output Window.
   DebuggerListener debuggerOutput;
