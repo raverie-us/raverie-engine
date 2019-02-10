@@ -197,7 +197,7 @@ T* RenderTaskHelper::NewRenderTask()
   uint newIndex = alignedIndex + sizeof(T);
   if (newIndex > mBuffer.mRenderTaskData.Size())
   {
-    uint newSize = Math::Max(mBuffer.mRenderTaskData.Size() * 2, newIndex);
+    size_t newSize = Math::Max(mBuffer.mRenderTaskData.Size() * 2, (size_t)newIndex);
     mBuffer.mRenderTaskData.Resize(newSize);
   }
 
