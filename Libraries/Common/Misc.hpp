@@ -15,9 +15,7 @@ void UnPackLexicographicId(u32& id1, u32& id2, u64 pairId);
 class IndexRange
 {
 public:
-  IndexRange()
-  {
-  }
+  IndexRange() = default;
   IndexRange(uint s, uint e) : start(s), end(e)
   {
   }

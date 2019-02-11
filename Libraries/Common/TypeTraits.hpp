@@ -1068,20 +1068,14 @@ public:
   {
   }
   /// Copy Constructor
-  TypeIndex(const TypeIndex& rhs) : mTypeInfo(rhs.mTypeInfo)
-  {
-  }
+  TypeIndex(const TypeIndex& rhs) = default;
   /// Move Constructor (Behaves like a copy constructor)
   TypeIndex(MoveReference<TypeIndex> rhs) : mTypeInfo(rhs->mTypeInfo)
   {
   }
 
   /// Copy Assignment Operator
-  TypeIndex& operator=(const TypeIndex& rhs)
-  {
-    mTypeInfo = rhs.mTypeInfo;
-    return *this;
-  }
+  TypeIndex& operator=(const TypeIndex& rhs) = default;
   /// Move Assignment Operator (Behaves like a copy assignment operator)
   TypeIndex& operator=(MoveReference<TypeIndex> rhs)
   {

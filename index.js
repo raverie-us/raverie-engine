@@ -607,21 +607,38 @@ async function runClangTidy(sourceFiles)
     cwd: dirs.libraries,
     // We only ignore stderr because it prints 'unable to find compile_commands.json'.
     stdio: ['ignore', 'pipe', 'ignore'],
-    out: fixMode ? printLog : printError,
     reject: false
   };
   for (const filePath of sourceFiles)
   {
-    const args = ['-extra-arg=-Weverything', '-header-filter=.*', filePath];
-    if (fixMode)
+    const fileOptions =
     {
-      args.push('-fix');
-      args.push('-fix-errors');
-    }
+      encoding: 'utf8'
+    };
+    const fullPath = path.join(dirs.libraries, filePath);
+    const oldCode = fs.readFileSync(fullPath, fileOptions);
+
+    // We always tell it to fix the file, and we compare it afterward to see if it changed.
+    const args = ['-extra-arg=-Weverything', '-fix', filePath];
 
     // Clang-tidy emits all the errors to the standard out.
     // We capture them and re-emit them to stderr.
-    await exec(paths.clangTidy, args, clangTidyOptions);
+    const result = await exec(paths.clangTidy, args, clangTidyOptions);
+
+    if (fixMode)
+    {
+      continue;
+    }
+
+    const newCode = fs.readFileSync(fullPath, fileOptions);
+    if (oldCode !== newCode)
+    {
+      printError(`File '${fullPath}' was not clang-tidy'd`);
+      printError(result.stdout);
+
+      // Rewrite the original code back.
+      fs.writeFileSync(fullPath, oldCode, fileOptions);
+    }
   }
 }
 
@@ -890,7 +907,7 @@ async function build()
   await runEslint();
   // TODO(Trevor.Sundberg): Run cmake_format.
   const sourceFiles = gatherSourceFiles();
-  //await runClangTidy(sourceFiles);
+  await runClangTidy(sourceFiles);
   await runClangFormat(sourceFiles);
   await runWelderFormat(sourceFiles);
   // TODO(Trevor.Sundberg): Run cppcheck.

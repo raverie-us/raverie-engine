@@ -6,9 +6,7 @@ namespace Zero
 class Functor
 {
 public:
-  virtual ~Functor()
-  {
-  }
+  virtual ~Functor() = default;
   virtual Functor* Execute() = 0;
 };
 
